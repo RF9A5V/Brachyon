@@ -1,0 +1,64 @@
+.user-details {
+  background-color: #1E1E5D;
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-details > * {
+  margin-bottom: 20px;
+}
+
+.event-details {
+  padding: 30px 50px;
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.event-block {
+  width: 31%;
+  float: left;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.event-block:nth-child(3n) {
+  margin-right: 0px;
+}
+
+.event-block img {
+  width: 100%;
+  height: auto;
+}
+
+.event-display {
+  height: 50%;
+}
+
+.event-display-img {
+  width: 45%;
+  height: auto;
+  float: left;
+  margin-right: 5%;
+}
+
+.event-display-details {
+  float: left;
+  width: 45%;
+}
+
+.profile-photo {
+  width: 50%;
+  height: auto;
+  border-radius: 100%;
+}
