@@ -1,8 +1,8 @@
 import React from 'react'
-import SignUpScreen from './signup.js'
+import SignUpScreen from './signup.jsx'
 import { render } from 'react-dom';
 
-import ShowUserScreen from '../users/show.js';
+import ShowUserScreen from '../users/show.jsx';
 
 export default class LandingScreen extends React.Component {
   onClick(e) {

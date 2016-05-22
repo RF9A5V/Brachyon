@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import App from '../app.js';
+import App from '../app.jsx';
 
 export default class Header extends React.Component {
   onClick(e) {

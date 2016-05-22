@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
 }
 
 .user-details > * {
@@ -27,6 +28,7 @@
 
 .event-block {
   width: 31%;
+  height: 16vh;
   float: left;
   margin-bottom: 10px;
   margin-right: 10px;
@@ -37,17 +39,17 @@
 }
 
 .event-block img {
-  width: 100%;
-  height: auto;
+  height: 100%;
+  width: auto;
 }
 
 .event-display {
-  height: 50%;
+  height: 33vh;
 }
 
 .event-display-img {
-  width: 45%;
-  height: auto;
+  height: 100%;
+  width: auto;
   float: left;
   margin-right: 5%;
 }

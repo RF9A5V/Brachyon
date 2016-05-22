@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom';
-import ShowUserScreen from '../users/show.js';
+import ShowUserScreen from '../users/show.jsx';
 
 export default class SignUpScreen extends React.Component {
   onSubmit(e) {

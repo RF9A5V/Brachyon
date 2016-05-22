@@ -7,6 +7,15 @@
   "dependencies": {
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.0.2",
+    "react-addons-pure-render-mixin": "^15.0.2",
     "react-dom": "^15.0.2"
+  },
+  "devDependencies": {
+    "moment": "^2.13.0",
+    "react-cropper": "^0.8.0",
+    "react-datetime": "^2.1.0",
+    "react-dropzone": "^3.4.0",
+    "react-mounter": "^1.2.0",
+    "react-quill": "^0.4.1"
   }
 }

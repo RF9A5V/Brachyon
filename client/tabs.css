@@ -1,0 +1,23 @@
+.tab-controller {
+  padding: 20px;
+}
+
+.tab-container {
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px;
+}
+
+.tab:first-child {
+  padding-left: 0;
+}
+
+.tab:last-child {
+  padding-right: 0;
+}
+
+.tab:hover {
+  cursor: pointer;
+}
