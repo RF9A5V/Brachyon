@@ -100,7 +100,7 @@ button:hover, input[type="submit"]:hover {
   cursor: pointer;
 }
 
-input[type='text'], input[type="password"] {
+input[type='text'], input[type="password"], input {
   padding: 10px;
   border: none;
   border-bottom: solid 2px white;

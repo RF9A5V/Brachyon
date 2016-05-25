@@ -11,10 +11,13 @@
     "react-dom": "^15.0.2"
   },
   "devDependencies": {
+    "google-map-react": "^0.12.1",
     "moment": "^2.13.0",
     "react-cropper": "^0.8.0",
     "react-datetime": "^2.1.0",
     "react-dropzone": "^3.4.0",
+    "react-google-maps": "^4.10.1",
+    "react-input-autosize": "^0.6.13",
     "react-mounter": "^1.2.0",
     "react-quill": "^0.4.1"
   }

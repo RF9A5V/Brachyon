@@ -22,7 +22,7 @@ export default class EventBanner extends React.Component {
     };
     rez = (
       <div style={style}>
-        <Dropzone accept="image/*" multiple="false" onDrop={this.onDrop.bind(this)}>
+        <Dropzone accept="image/*" multiple={false} onDrop={this.onDrop.bind(this)}>
           <div style={style}>
             <span>Drag file here to upload!</span>
           </div>
