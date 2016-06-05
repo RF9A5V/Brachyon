@@ -5,34 +5,37 @@ import EventLocationForm from './location_form.jsx';
 
 export default class EventLocation extends React.Component {
   componentWillMount() {
+    latlng = !this.props.lat ? [1, 1] : [ this.props.lat, this.props.lng ];
     this.setState({
-      center: [this.props.lat, this.props.lng],
+      center: latlng,
       zoom: 15,
       key: "AIzaSyB4ZpFxDyTtOaSNO35OdUgLmVlBBOsTiu4",
       clicked: false
     });
   }
+
   map() {
     return (
       <GoogleMap
         center={this.state.center}
         zoom={this.state.zoom}
         bootstrapURLKeys={{key: this.state.key}}>
+        <div style={{width:10, height:10, backgroundColor: 'black', borderRadius: '100%'}} lat={this.state.center[0]} lng={this.state.center[1]}></div>
       </GoogleMap>
     )
   }
 
   updateMap(lat, lng, attrs) {
-    console.log(this);
-    console.log(lat, lng);
     center = [lat, lng];
     this.setState({center});
-    console.log(attrs);
-    Events.update(this.props.id, {
-      $set: {
-        location: attrs
+    Meteor.call('events.update_location', this.props.id, attrs, function(err){
+      if(err){
+        toastr.error(err);
       }
-    })
+      else{
+        toastr.success("Successfully updated location!");
+      }
+    });
   }
 
   render(){

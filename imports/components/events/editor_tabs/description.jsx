@@ -23,12 +23,14 @@ export default class EventDescription extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     self = this;
-    Events.update(this.props.id, {
-      $set: {
-        description: self.editor.getEditor().getHTML()
+    Meteor.call('events.update_description', self.props.id, self.editor.getEditor().getHTML(), function(err){
+      if(err){
+        toastr.error(err.reason);
       }
-    });
-    console.log(self.editor.getEditor().getHTML());
+      else {
+        toastr.success("Successfully updated event description!");
+      }
+    })
   }
 
   render() {

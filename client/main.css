@@ -5,7 +5,7 @@
   font-family: 'Roboto';
 }
 
-html, body, #react-root {
+html, body, #react-root, #app {
   height: 100vh;
   margin: 0;
   overflow-y: hidden;
@@ -120,6 +120,7 @@ header {
   box-sizing: border-box;
   position:absolute;
   top: 0;
+  left: 0;
   z-index: 1;
   padding: 20px 20px;
   display: flex;
@@ -135,10 +136,33 @@ a {
   height: 100%;
 }
 
+.screen {
+  position: relative;
+}
+
 .loading-screen {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+select {
+  background: #333;
+  border: none;
+  padding: 5px;
+}
+
+select:active, select:hover, select:focus {
+  outline: none;
+}
+
+option {
+  background: #333;
+  color: white;
+}
+
+option:hover, option:active, option:focus {
+  outline: none;
 }

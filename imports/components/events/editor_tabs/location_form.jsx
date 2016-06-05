@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactiveInput from '/client/components/public/reactive_input.jsx';
+import ReactiveInput from '/imports/components/public/reactive_input.jsx';
 
 export default class EventLocationForm extends React.Component {
 
   geocode(address){
     self = this;
+    console.log(self);
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({address}, function(results, status){
-      console.log(results);
       if(status == google.maps.GeocoderStatus.OK){
         latlng = results[0].geometry.location;
         comps = results[0].address_components.map((value) => { return value.long_name });

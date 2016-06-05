@@ -8,20 +8,23 @@ export default class EventTime extends React.Component {
   }
 
   rerender(){
-    this.setState(this.state);
+    this.forceUpdate();
   }
 
   onClick(e) {
     e.preventDefault();
-    self = this;
-    Events.update(this.props.id, {
-      $set: {
-        time: {
-          regStart: this.refs.regStart.state.inputValue,
-          regEnd: this.refs.regEnd.state.inputValue,
-          eventStart: this.refs.eventStart.state.inputValue,
-          eventEnd: this.refs.eventEnd.state.inputValue
-        }
+    obj = {
+      regStart: this.refs.regStart.state.inputValue,
+      regEnd: this.refs.regEnd.state.inputValue,
+      eventStart: this.refs.eventStart.state.inputValue,
+      eventEnd: this.refs.eventEnd.state.inputValue
+    }
+    Meteor.call('events.update_time', this.props.id, obj, function(err) {
+      if(err){
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated event time!");
       }
     });
   }

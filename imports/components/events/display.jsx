@@ -1,13 +1,17 @@
 import React from 'react';
+import Images from '/imports/api/event/images.js';
+import { unmountComponentAtNode } from 'react-dom';
+import { Link } from 'react-router';
 
 export default class EventDisplay extends React.Component {
 
   imgOrDefault() {
-    if(this.props.imageURL === undefined){
+    img = Images.findOne(this.props.banner);
+    if(img == null){
       return '/images/balls.svg';
     }
     else {
-      return this.props.imageURL;
+      return img.url();
     }
   }
 
@@ -29,11 +33,6 @@ export default class EventDisplay extends React.Component {
     }
   }
 
-  editEvent(e) {
-    e.preventDefault();
-    window.location = '/events/' + this.props._id + '/edit';
-  }
-
   render() {
     if(this.props._id == null){
       return (
@@ -50,10 +49,15 @@ export default class EventDisplay extends React.Component {
           <img className="event-display-img" src={this.imgOrDefault()} />
           <div className="col event-display-details">
             <h2>{this.title()}</h2>
-            <p>{this.description()}</p>
+            <p dangerouslySetInnerHTML={{__html: this.description()}}></p>
             <div className="row center flex-1">
-              <button style={{marginRight: '15px'}} onClick={this.editEvent.bind(this)}>Edit</button>
+              <Link to={`/events/${this.props._id}/edit`}>
+                <button style={{marginRight: '15px'}}>Edit</button>
+              </Link>
               <button style={{marginRight: '15px'}}>Preview</button>
+              <Link to={`/events/${this.props._id}/view`}>
+                <button style={{marginRight: '15px'}}>View (Test)</button>
+              </Link>
               <button>Publish</button>
             </div>
           </div>

@@ -11,35 +11,44 @@ import TabController from '../public/tab_controller.jsx';
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
+  componentWillMount(){
+    self = this;
+    this.setState({
+      event: Meteor.subscribe('event', self.props.params.eventId)
+    })
+  }
+
+  componentWillUnmount() {
+    this.state.event.stop();
+  }
+
   event() {
-    _id = this.props.id;
-    return Events.findOne({_id});
+    return Events.find().fetch()[0];
   }
 
   tabs(){
     event = this.event();
-    console.log(event);
     return [
       {
         title: 'Description',
-        content: <EventDescription id={this.props.id} description={event.description} />
+        content: <EventDescription id={self.props.params.eventId} description={event.description} />
       },
       {
         title: 'Banner',
         content: (
-          <EventBanner />
+          <EventBanner id={self.props.params.eventId} />
         )
       },
       {
         title: 'Time',
         content: (
-          <EventTime id={this.props.id} {...event.time} />
+          <EventTime id={self.props.params.eventId} {...event.time} />
         )
       },
       {
         title: 'Location',
         content: (
-          <EventLocation id={this.props.id} {...event.location} />
+          <EventLocation id={self.props.params.eventId} {...event.location} />
         )
       }
     ]
@@ -53,7 +62,12 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
-        <TabController tabs={this.tabs()} />
+        <div className="col">
+          <TabController tabs={this.tabs()} />
+          <div style={{alignSelf: 'center'}}>
+            <button onClick={(e) => { window.location='/' }}>Back</button>
+          </div>
+        </div>
       )
     }
   }
