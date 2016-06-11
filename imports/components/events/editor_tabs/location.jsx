@@ -5,7 +5,7 @@ import EventLocationForm from './location_form.jsx';
 
 export default class EventLocation extends React.Component {
   componentWillMount() {
-    latlng = !this.props.lat ? [1, 1] : [ this.props.lat, this.props.lng ];
+    latlng = !this.props.coords ? [1, 1] : this.props.coords.reverse();
     this.setState({
       center: latlng,
       zoom: 15,
@@ -25,12 +25,12 @@ export default class EventLocation extends React.Component {
     )
   }
 
-  updateMap(lat, lng, attrs) {
-    center = [lat, lng];
+  updateMap(attrs) {
+    center = [attrs.coords[1], attrs.coords[0]];
     this.setState({center});
     Meteor.call('events.update_location', this.props.id, attrs, function(err){
       if(err){
-        toastr.error(err);
+        toastr.error(err.reason);
       }
       else{
         toastr.success("Successfully updated location!");

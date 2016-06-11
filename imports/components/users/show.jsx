@@ -9,7 +9,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component, { prof
   componentWillMount() {
     self = this;
     this.setState({
-      events: Meteor.subscribe('events', self.props.id),
+      events: Meteor.subscribe('userEvents', Meteor.userId()),
       currentEvent: null
     });
   }
@@ -22,7 +22,11 @@ export default class ShowUserScreen extends TrackerReact(React.Component, { prof
     return Events.find().fetch();
   }
 
-  createEvent(e) {
+  image(id) {
+    return Images.find({ _id: id }).fetch()[0];
+  }
+
+  createEvent(event) {
     event.preventDefault();
     Meteor.call('events.create');
   }
@@ -44,11 +48,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component, { prof
     console.log(events);
     return (
       <div className="row screen">
-        <header>
-          <div className='row'>
-            <a href="#" onClick={this.onLogOut}>Log Out</a>
-          </div>
-        </header>
         <div className="col-1 user-details">
           <img className="profile-photo" src="/images/profile.png" />
           <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
@@ -59,7 +58,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component, { prof
           <div className="event-list">
             {events.map((function(ev){
               return (
-                <EventBlock {...ev} key={ev._id} handler={this.updateDisplay(ev).bind(this)} />
+                <EventBlock {...ev} image={this.image(ev._id)} handler={this.updateDisplay(ev).bind(this)} />
               )
             }).bind(this))}
           </div>

@@ -6,7 +6,15 @@ Meteor.methods({
       return;
     }
     Events.insert({
-      owner: Meteor.userId()
+      owner: Meteor.userId(),
+      location: {}
+    })
+  },
+  'events.update_title'(id, title){
+    Events.update(id, {
+      $set: {
+        title
+      }
     })
   },
   'events.update_description'(id, description){
@@ -40,10 +48,19 @@ Meteor.methods({
       }
     })
   },
-  'events.update_location'(id, items) {
+  'events.update_location'(id, location) {
     Events.update(id, {
       $set: {
-        location: items
+        location: {
+          type: 'Point',
+          coords: location.coords,
+          locationName: location.locationName,
+          streetAddress: location.streetAddress,
+          city: location.city,
+          state: location.state,
+          zip: location.zip
+        }
+
       }
     });
   },

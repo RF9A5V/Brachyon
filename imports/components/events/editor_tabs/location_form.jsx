@@ -5,22 +5,20 @@ export default class EventLocationForm extends React.Component {
 
   geocode(address){
     self = this;
-    console.log(self);
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({address}, function(results, status){
       if(status == google.maps.GeocoderStatus.OK){
         latlng = results[0].geometry.location;
-        comps = results[0].address_components.map((value) => { return value.long_name });
+        comps = results[0].address_components;
         attrs = {
           locationName: self.refs.locationName.getValue(),
-          streetAddress: [comps[0], comps[1]].join(' '),
-          city: comps[3],
-          state: comps[5],
-          zip: comps[7],
-          lat: latlng.lat(),
-          lng: latlng.lng()
+          streetAddress: comps[0].long_name + ' ' + comps[1].long_name,
+          city: comps[3].long_name,
+          state: comps[5].short_name,
+          zip: comps[7].long_name,
+          coords: [latlng.lng(), latlng.lat()]
         }
-        self.props.updateMap(latlng.lat(), latlng.lng(), attrs);
+        self.props.updateMap(attrs);
       }
       else {
         console.log(status);

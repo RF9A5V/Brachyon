@@ -2,6 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import Events from '/imports/api/event/events.js';
 import Images from '/imports/api/event/images.js';
 
+Events._ensureIndex({
+  title: 'text'
+})
+
+Events._ensureIndex({
+  'location.coords': '2dsphere'
+})
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')

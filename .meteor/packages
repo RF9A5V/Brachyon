@@ -19,7 +19,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 accounts-password
 react-meteor-data
-kadira:flow-router
 meteortoys:allthings
 ultimatejs:tracker-react
 velocityjs:velocityjs

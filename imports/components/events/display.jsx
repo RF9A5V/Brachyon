@@ -29,6 +29,10 @@ export default class EventDisplay extends React.Component {
       return "There's no description for this event.";
     }
     else {
+      sizeMax = 450;
+      if(this.props.description.length > sizeMax){
+        return this.props.description.substring(0, sizeMax-3) + '...';
+      }
       return this.props.description;
     }
   }
@@ -45,20 +49,24 @@ export default class EventDisplay extends React.Component {
     }
     else {
       return (
-        <div className="event-display">
+        <div className="event-display row">
           <img className="event-display-img" src={this.imgOrDefault()} />
-          <div className="col event-display-details">
+          <div className="col event-display-details col-1">
             <h2>{this.title()}</h2>
-            <p dangerouslySetInnerHTML={{__html: this.description()}}></p>
-            <div className="row center flex-1">
+            <div className="description-container" dangerouslySetInnerHTML={{__html: this.description()}}></div>
+            <div className="row flex-1">
               <Link to={`/events/${this.props._id}/edit`}>
                 <button style={{marginRight: '15px'}}>Edit</button>
               </Link>
-              <button style={{marginRight: '15px'}}>Preview</button>
+              <Link to={`/events/${this.props._id}/preview`}>
+                <button style={{marginRight: '15px'}}>Preview</button>
+              </Link>
               <Link to={`/events/${this.props._id}/view`}>
                 <button style={{marginRight: '15px'}}>View (Test)</button>
               </Link>
-              <button>Publish</button>
+              <Link to={`/events/${this.props._id}/publish`}>
+                <button>Publish</button>
+              </Link>
             </div>
           </div>
         </div>
