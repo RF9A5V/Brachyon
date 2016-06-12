@@ -22,7 +22,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component, { prof
     return Events.find().fetch();
   }
 
-  createEvent(e) {
+  createEvent(event) {
     event.preventDefault();
     Meteor.call('events.create');
   }
