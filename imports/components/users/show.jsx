@@ -40,8 +40,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     ];
   }
 
-<<<<<<< HEAD
-=======
   unpublishedEvents() {
     return Events.find({published: false, under_review: false}).fetch();
   }
@@ -58,7 +56,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     return Images.find({ _id: id }).fetch()[0];
   }
 
->>>>>>> cdc6fec564d3980f47cf9ea9b5b688aa4331369d
   createEvent(event) {
     event.preventDefault();
     Meteor.call('events.create');
