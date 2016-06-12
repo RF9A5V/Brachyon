@@ -66,7 +66,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         <div className="col">
           <TabController tabs={this.tabs()} />
           <div style={{alignSelf: 'center'}}>
-            <button onClick={(e) => { window.location='/' }}>Back</button>
+            <button onClick={(e) => { window.history.back() }}>Back</button>
           </div>
         </div>
       )

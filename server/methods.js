@@ -7,7 +7,9 @@ Meteor.methods({
     }
     Events.insert({
       owner: Meteor.userId(),
-      location: {}
+      location: {},
+      published: false,
+      under_review: false
     })
   },
   'events.update_title'(id, title){
@@ -143,6 +145,14 @@ Meteor.methods({
             tournament_running: false
           }
         })
+      }
+    })
+  },
+  'events.send_for_review'(id){
+    Events.update(id, {
+      $set: {
+        under_review: true,
+        published: false
       }
     })
   }

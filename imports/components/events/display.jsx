@@ -29,11 +29,39 @@ export default class EventDisplay extends React.Component {
       return "There's no description for this event.";
     }
     else {
-      sizeMax = 450;
+      sizeMax = 350;
       if(this.props.description.length > sizeMax){
         return this.props.description.substring(0, sizeMax-3) + '...';
       }
       return this.props.description;
+    }
+  }
+
+  eventControls() {
+    if(this.props.under_review && !this.props.published){
+      return (
+        <div className="row flex-1">
+          <button>Under Review</button>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="row flex-1">
+          <Link to={`/events/${this.props._id}/edit`}>
+            <button style={{marginRight: '15px'}}>Edit</button>
+          </Link>
+          <Link to={`/events/${this.props._id}/preview`}>
+            <button style={{marginRight: '15px'}}>Preview</button>
+          </Link>
+          <Link to={`/events/${this.props._id}/view`}>
+            <button style={{marginRight: '15px'}}>View (Test)</button>
+          </Link>
+          <Link to={`/events/${this.props._id}/publish`}>
+            <button>Publish</button>
+          </Link>
+        </div>
+      );
     }
   }
 
@@ -54,20 +82,7 @@ export default class EventDisplay extends React.Component {
           <div className="col event-display-details col-1">
             <h2>{this.title()}</h2>
             <div className="description-container" dangerouslySetInnerHTML={{__html: this.description()}}></div>
-            <div className="row flex-1">
-              <Link to={`/events/${this.props._id}/edit`}>
-                <button style={{marginRight: '15px'}}>Edit</button>
-              </Link>
-              <Link to={`/events/${this.props._id}/preview`}>
-                <button style={{marginRight: '15px'}}>Preview</button>
-              </Link>
-              <Link to={`/events/${this.props._id}/view`}>
-                <button style={{marginRight: '15px'}}>View (Test)</button>
-              </Link>
-              <Link to={`/events/${this.props._id}/publish`}>
-                <button>Publish</button>
-              </Link>
-            </div>
+            { this.eventControls() }
           </div>
         </div>
       );

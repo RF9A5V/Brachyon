@@ -8,30 +8,89 @@ export default class PublishEventScreen extends Component {
   constructor() {
     super();
     this.state = {
-      errors: {}
+      errors: {},
+      loaded: false
     };
   }
 
   componentWillMount() {
+    self = this;
     this.setState({
-      event: Meteor.subscribe('event', this.props.params.eventId),
+      event: Meteor.subscribe('event', this.props.params.eventId, {
+        onReady: function(){
+          self.findErrors();
+        }
+      }),
       errors: {}
     });
     this.findErrors();
   }
 
   event() {
-    return Event.find().fetch()[0];
+    return Events.find().fetch()[0];
   }
 
   findErrors() {
     // Todo: validate fields for event.
-    this.setState({
-      errors: {
-        Description: ["Description can't be empty."],
-        Location: ["Location must exist or be online."],
-        Times: ["Event must have times set for start.", "Event must have times set for end."]
+    event = this.event();
+    if(event == null){
+      return;
+    }
+
+    console.log(event);
+
+    // Incoming wall of text.
+
+    errors = {}
+
+    // Description error checking.
+    description = event.description;
+    desc_errs = [];
+
+    if(description == null || description.length == 0){
+      desc_errs.push("Your event has to have a description.");
+    }
+
+    if(desc_errs.length > 0){
+      errors['Description'] = desc_errs;
+    }
+
+    // Location error checking.
+
+    loc = event.location;
+    location_errs = [];
+
+    if(loc == null){
+      location_errs.push("Your event must have a location.");
+    }
+
+    if(location_errs.length > 0){
+      errors['Location'] = location_errs;
+    }
+
+    // DateTime error checking.
+
+    time = event.time;
+    time_errs = [];
+    if(time == null){
+      time_errs.push("Your event must have a start date.", "Your event must have an end date.");
+    }
+    else {
+      if(time.eventStart == ""){
+        time_errs.push("Your event must have a start date.")
       }
+      if(time.eventEnd == ""){
+        time_errs.push("Your event must have an end date.");
+      }
+    }
+
+    if(time_errs.length > 0){
+      errors['Time'] = time_errs;
+    }
+
+    this.setState({
+      errors,
+      loaded: true
     })
   }
 
@@ -71,6 +130,18 @@ export default class PublishEventScreen extends Component {
     )
   }
 
+  sendForReview(e) {
+    Meteor.call('events.send_for_review', this.event()._id, function(err){
+      if(err){
+        toastr.error("Couldn't send your event in for review.")
+      }
+      else {
+        window.location = '/';
+        toastr.success('Event has been sent for review.');
+      }
+    })
+  }
+
   publishView() {
     return (
       <div>
@@ -79,13 +150,23 @@ export default class PublishEventScreen extends Component {
           <Link to={`/events/${this.props.params.eventId}/preview`}>
             <button>Preview Event</button>
           </Link>
-          <button style={{marginLeft: 10}}>Send For Review</button>
+          <Link to={`/events/${this.props.params.eventId}/edit`}>
+            <button style={{marginLeft: 10}}>Edit Event</button>
+          </Link>
+          <button style={{marginLeft: 10}} onClick={this.sendForReview.bind(this)}>Send For Review</button>
         </div>
       </div>
     );
   }
 
   render() {
+    if(!this.state.loaded){
+      return (
+        <div>
+          Loading;
+        </div>
+      )
+    }
     return (
       <div>
         <h2 className="center">Publish Your Event</h2>
