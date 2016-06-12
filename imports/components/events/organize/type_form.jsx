@@ -66,7 +66,7 @@ export default class EventTypeForm extends Component {
         <h3>Double Elimination</h3>
         <select ref="doubleElimFinals" style={{marginBottom: 10}}>
           <option>-- Finals Modifier --</option>
-          <option value={null}>Standard</option>
+          <option value="">Standard</option>
           <option value="single match">Single Match</option>
           <option value="skip">Skip Finals</option>
         </select>

@@ -49,6 +49,10 @@ html, body, #react-root, #app {
   flex: 3;
 }
 
+.col-4 {
+  flex: 4;
+}
+
 .self-end {
   align-self: flex-end;
 }
@@ -130,6 +134,10 @@ header {
   justify-content: flex-end;
 }
 
+header a {
+  margin: 0 10px;
+}
+
 a {
   text-decoration: none;
 }
@@ -141,6 +149,11 @@ a {
 
 .screen {
   position: relative;
+  min-height: 100vh;
+}
+
+.screen > * {
+  padding-top: 70px;
 }
 
 .loading-screen {

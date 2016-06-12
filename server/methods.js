@@ -155,5 +155,23 @@ Meteor.methods({
         published: false
       }
     })
+  },
+
+  'events.approve'(id){
+    Events.update(id, {
+      $set: {
+        under_review: false,
+        published: true
+      }
+    })
+  },
+
+  'events.reject'(id) {
+    Events.update(id, {
+      $set: {
+        under_review: false,
+        published: false
+      }
+    })
   }
 })

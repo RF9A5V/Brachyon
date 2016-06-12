@@ -4,7 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 
-export default class ShowUserScreen extends TrackerReact(React.Component, { profiler: true }) {
+export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillMount() {
     self = this;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import { MainLayout } from '../imports/components/layouts/MainLayout.jsx';
+import MainLayout from '../imports/components/layouts/MainLayout.jsx';
 import LandingScreen from '../imports/components/public/index.jsx';
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
@@ -9,6 +9,7 @@ import OrganizeEventScreen from '../imports/components/events/organize.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import PublishEventScreen from '../imports/components/events/publish.jsx';
+import ApprovalScreen from '../imports/components/events/approval.jsx';
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){
@@ -32,6 +33,7 @@ export const renderRoutes = () => (
       <Route path="events/:eventId/preview" component={PreviewEventScreen} />
       <Route path="events/:eventId/publish" component={PublishEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
+      <Route path="events/approval" component={ApprovalScreen} />
     </Route>
   </Router>
 )

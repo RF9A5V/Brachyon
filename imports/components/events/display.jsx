@@ -28,12 +28,16 @@ export default class EventDisplay extends React.Component {
     if(this.props.description == null){
       return "There's no description for this event.";
     }
+    parsed = this.props.description.replace(/<img .*>/g, "").replace(/<\/?[A-z]+>/, "");
+    if(parsed.length == 0){
+      return "There's no description for this event.";
+    }
     else {
       sizeMax = 350;
-      if(this.props.description.length > sizeMax){
-        return this.props.description.substring(0, sizeMax-3) + '...';
+      if(parsed.length > sizeMax){
+        return parsed.substring(0, sizeMax-3) + '...';
       }
-      return this.props.description;
+      return parsed;
     }
   }
 
@@ -42,10 +46,13 @@ export default class EventDisplay extends React.Component {
       return (
         <div className="row flex-1">
           <button>Under Review</button>
+          <Link to={`/events/${this.props._id}/preview`}>
+            <button style={{marginLeft: '15px'}}>Preview</button>
+          </Link>
         </div>
       );
     }
-    else {
+    else if(!this.props.under_review && !this.props.published) {
       return (
         <div className="row flex-1">
           <Link to={`/events/${this.props._id}/edit`}>
@@ -62,6 +69,18 @@ export default class EventDisplay extends React.Component {
           </Link>
         </div>
       );
+    }
+    else {
+      return (
+        <div className="row flex-1">
+          <Link to={`/events/${this.props._id}/preview`}>
+            <button style={{marginRight: '15px'}}>Preview</button>
+          </Link>
+          <Link to={`/events/${this.props._id}/view`}>
+            <button>Organize</button>
+          </Link>
+        </div>
+      )
     }
   }
 

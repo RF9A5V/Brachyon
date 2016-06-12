@@ -41,3 +41,7 @@ Meteor.publish('event_search', function(params){
   }
   return Events.find(query);
 })
+
+Meteor.publish('events_to_review', function(){
+  return Events.find({ under_review: true });
+})

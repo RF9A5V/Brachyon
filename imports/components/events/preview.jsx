@@ -70,21 +70,23 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     event = this.event();
     banner = this.banner();
     return (
-      <div>
-        <h1 style={{marginTop: 20, marginLeft: 20}}>
-          {event.title}
-        </h1>
-        <div className="row">
-          <div className="col-2" style={{padding: 20, textAlign: 'center'}}>
-            No Sponsorship
-          </div>
-          <div className="col-3" style={{width:'50%'}} style={{padding: 20}}>
-            <div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>
-          </div>
-          <div className="col-2">
-            <img src={banner.url()} style={{width: '100%', height: 'auto'}}/>
-            <div style={{padding: 20}}>
-              {this.location()}
+      <div className="screen">
+        <div className="col">
+          <h1 style={{marginTop: 20, marginLeft: 20, textAlign: 'center'}}>
+            {event.title}
+          </h1>
+          <div className="row">
+            <div className="col-2" style={{padding: 20, textAlign: 'center'}}>
+              No Sponsorship
+            </div>
+            <div className="col-4" style={{width:'50%'}} style={{padding: 20}}>
+              <div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>
+            </div>
+            <div className="col-2">
+              <img src={banner.url()} style={{width: '100%', height: 'auto'}}/>
+              <div style={{padding: 20}}>
+                {this.location()}
+              </div>
             </div>
           </div>
         </div>

@@ -93,6 +93,11 @@
   line-height: 1.5em;
 }
 
+.description-container img {
+  width: 100%;
+  height: auto;
+}
+
 ul.error-container {
   padding: 10px;
   border: solid white 2px;
