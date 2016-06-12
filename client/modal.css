@@ -2,13 +2,18 @@
     width: 60%;
     height: 90%;
     margin: 0 auto;
-    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    box-sizing: border-box;
     z-index: 1;
-    border-radius: 25px;
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
     animation-duration: 0.4s
+}
+
+.create-modal:focus {
+  outline: none;
 }
 
 @-webkit-keyframes animatetop {
@@ -28,7 +33,9 @@
     right: 0;
     bottom: 0;
     z-index: 1;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .div-pad {
@@ -54,4 +61,3 @@
     right: 0;
     bottom: 100%;
 }
-
