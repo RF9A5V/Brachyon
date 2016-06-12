@@ -48,7 +48,7 @@ export default class OrganizeEventScreen extends TrackerReact(Component) {
     if(this.event() && this.event().tournament_running){
       return (
         <div className="row center x-center" style={{height: '100%'}}>
-          <iframe src={`http://challonge.com/${this.event()._id}/module`} width='75%' height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+          <iframe src={`http://challonge.com/${this.event()._id}/module`} style={{ width: '95%', height: '95vh' }} frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
         </div>
       )
     }
@@ -103,7 +103,7 @@ export default class OrganizeEventScreen extends TrackerReact(Component) {
       url = this.image().url();
     }
     return (
-      <div className='row'>
+      <div className='row screen'>
         <div className="col-1 user-details">
           <img src={url} style={{width: '100%', height: 'auto'}}/>
           {this.sideForm()}

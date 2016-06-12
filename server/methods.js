@@ -6,7 +6,17 @@ Meteor.methods({
       return;
     }
     Events.insert({
-      owner: Meteor.userId()
+      owner: Meteor.userId(),
+      location: {},
+      published: false,
+      under_review: false
+    })
+  },
+  'events.update_title'(id, title){
+    Events.update(id, {
+      $set: {
+        title
+      }
     })
   },
   'events.update_description'(id, description){
@@ -40,10 +50,19 @@ Meteor.methods({
       }
     })
   },
-  'events.update_location'(id, items) {
+  'events.update_location'(id, location) {
     Events.update(id, {
       $set: {
-        location: items
+        location: {
+          type: 'Point',
+          coords: location.coords,
+          locationName: location.locationName,
+          streetAddress: location.streetAddress,
+          city: location.city,
+          state: location.state,
+          zip: location.zip
+        }
+
       }
     });
   },
@@ -126,6 +145,32 @@ Meteor.methods({
             tournament_running: false
           }
         })
+      }
+    })
+  },
+  'events.send_for_review'(id){
+    Events.update(id, {
+      $set: {
+        under_review: true,
+        published: false
+      }
+    })
+  },
+
+  'events.approve'(id){
+    Events.update(id, {
+      $set: {
+        under_review: false,
+        published: true
+      }
+    })
+  },
+
+  'events.reject'(id) {
+    Events.update(id, {
+      $set: {
+        under_review: false,
+        published: false
       }
     })
   }

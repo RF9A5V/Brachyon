@@ -28,27 +28,28 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   tabs(){
     event = this.event();
+    console.log(this)
     return [
       {
         title: 'Description',
-        content: <EventDescription id={self.props.params.eventId} description={event.description} />
+        content: <EventDescription id={this.props.params.eventId} title={event.title} description={event.description} />
       },
       {
         title: 'Banner',
         content: (
-          <EventBanner id={self.props.params.eventId} />
+          <EventBanner id={this.props.params.eventId} />
         )
       },
       {
         title: 'Time',
         content: (
-          <EventTime id={self.props.params.eventId} {...event.time} />
+          <EventTime id={this.props.params.eventId} {...event.time} />
         )
       },
       {
         title: 'Location',
         content: (
-          <EventLocation id={self.props.params.eventId} {...event.location} />
+          <EventLocation id={this.props.params.eventId} {...event.location} />
         )
       }
     ]
@@ -62,10 +63,10 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
-        <div className="col">
+        <div className="screen col">
           <TabController tabs={this.tabs()} />
           <div style={{alignSelf: 'center'}}>
-            <button onClick={(e) => { window.location='/' }}>Back</button>
+            <button onClick={(e) => { window.history.back() }}>Back</button>
           </div>
         </div>
       )

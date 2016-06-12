@@ -4,7 +4,8 @@
  *  Copyright (c) 2013, salesforce.com
  */
 
- /* OVERRIDES: SUPER HACKY */
+ /* OVERRIDES: SUPER HACKY, I guess */
+
  .ql-toolbar, .ql-container {
    background-color: white;
  }
@@ -17,7 +18,12 @@
   border-bottom: dashed 3px black;
 }
 
+.quill-contents, .ql-editor {
+  min-height: 300px;
+}
+
 /* //OVERRIDES */
+
 .ql-image-tooltip {
   padding: 10px;
   width: 300px;
