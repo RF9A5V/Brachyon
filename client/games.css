@@ -1,0 +1,18 @@
+.game-block {
+  width: 33%;
+}
+
+.game-block img {
+  width: 100%;
+  height: auto;
+}
+
+.game-icon {
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  background-color: #222;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}

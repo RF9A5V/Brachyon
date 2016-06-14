@@ -31,7 +31,6 @@ export default class LandingScreen extends React.Component {
     if (this.state.status == 0) {
       rez = (
         <div className="main-content" id="main-content">
-          <BasicExample/>
           <h1>B R A C H Y O N</h1>
           <h4>Cogito ergo sum, sit amet dolor quis que something or another</h4>
           <div className="row center">

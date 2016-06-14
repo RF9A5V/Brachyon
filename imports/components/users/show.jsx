@@ -1,8 +1,11 @@
 import React from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import { Link } from 'react-router';
+import FontAwesome from 'react-fontawesome';
 
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
+import BasicExample from '../public/modal.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -89,8 +92,20 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
       <div className="row screen">
         <div className="col-1 user-details">
           <img className="profile-photo" src="/images/profile.png" />
-          <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
-          <button onClick={this.createEvent}>Create Event</button>
+          <div style={{alignSelf: 'stretch'}}>
+            <h2>Alias</h2>
+            <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
+            <h2>Games Played</h2>
+            <div className="game-icon-container">
+              <Link to={`/`}>
+                <div className="game-icon">
+                  <FontAwesome name="plus" />
+                </div>
+              </Link>
+            </div>
+            <h2>Create an Event</h2>
+            <BasicExample/>
+          </div>
         </div>
         <div className="col-3 event-details">
           <EventDisplay {...this.state.currentEvent} />

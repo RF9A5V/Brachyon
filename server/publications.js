@@ -12,8 +12,8 @@ Meteor.publish('events', function(){
 });
 
 Meteor.publish('userEvents', (id) => {
-  console.log(id);
   event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.banner });
+  console.log(event_banners);
   return [
     Events.find({owner: id}),
     Images.find({_id: { $in: event_banners } })

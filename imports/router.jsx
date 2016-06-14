@@ -10,6 +10,7 @@ import EventDiscoveryScreen from '../imports/components/events/discover.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import PublishEventScreen from '../imports/components/events/publish.jsx';
 import ApprovalScreen from '../imports/components/events/approval.jsx';
+import GameSelectScreen from '../imports/components/games/game_select.jsx';
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){

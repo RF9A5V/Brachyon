@@ -2,8 +2,11 @@ import React from 'react';
 import Modal from 'react-modal';
 import Datetime from 'react-datetime';
 import FontAwesome from 'react-fontawesome';
+import Dropzone from 'react-dropzone';
 
 import LocationSelect from '../events/create/location_select.jsx';
+import DateInput from '../events/create/date_input.jsx';
+import TimeInput from '../events/create/time_input.jsx';
 
 export default class BasicExample extends React.Component {
     constructor () {
@@ -11,7 +14,8 @@ export default class BasicExample extends React.Component {
       // this.openModal = this.openModal.bind(this);
       // this.closeModal = this.closeModal.bind(this);
       this.state = {
-        open: false
+        open: false,
+        file: null
       }
     }
 
@@ -20,14 +24,54 @@ export default class BasicExample extends React.Component {
     }
 
     closeModal(){
-      this.setState({open: false});
+      this.setState({open: false, file: null});
+    }
+
+    submit(e) {
+      e.preventDefault();
+      file = this.state.file;
+
+      info = {};
+
+      info.eventName = this.refs.eventName.value;
+      info.location = this.refs.location.value();
+      info.date = this.refs.date.value();
+      info.time = this.refs.time.value();
+
+      reader = new FileReader();
+      reader.onload = function() {
+        data = this.result;
+        len = data.length;
+        arr = new Uint8Array(len);
+        for(var i = 0; i < len; i ++){
+          arr[i] = data.charCodeAt(i);
+        }
+        info.file = {
+          content: arr,
+          type: file.type
+        }
+        Meteor.call('events.create', Meteor.userId(), info, function(err){
+          if(err){
+            toastr.error(err.reason);
+          }
+          else {
+            toastr.success("Successfully updated event banner!");
+          }
+        })
+      }
+      reader.readAsBinaryString(file);
+    }
+
+    onDrop(files) {
+      this.setState({
+        file: files[0]
+      });
     }
 
     render () {
-      console.log(this);
       return (
         <div>
-          <button onClick={this.openModal.bind(this)}>Open Modal</button>
+          <button onClick={this.openModal.bind(this)}>Create Event</button>
           <Modal
             className = "create-modal"
             overlayClassName = "overlay-class"
@@ -36,31 +80,40 @@ export default class BasicExample extends React.Component {
               <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
             </div>
             <h1 style={{textAlign: 'center'}}>Create an Event</h1>
-            <form>
+            <form onSubmit={this.submit.bind(this)}>
               <div className="row">
                 <div className='col' style={{width: '50%'}}>
                   <div>
                     <label>
                       Event Name<br/>
-                      <input type="text" name="eventname" placeholder="Something catchy..."/>
+                      <input type="text" name="eventname" placeholder="Event Name" ref="eventName"/>
                     </label>
                   </div>
-                  <LocationSelect />
+                  <LocationSelect ref="location" />
                   <div>
-                    <input type="checkbox" name="online"/>
-                    <label>Online Event</label>
-                  </div>
-                  <div>
-                    <label for="file-upload" className="custom-file-upload">
-                      <FontAwesome name='picture-o' style={{marginRight: 5}} />
-                      Custom Upload
-                      <input id="file-upload" type="file"/>
+                    <label>
+                      Event Banner (defaults to our logo)
                     </label>
+                    {
+                      this.state.file == null ? (
+                        <Dropzone accept="image/*" multiple={false} onDrop={this.onDrop.bind(this)}>
+                          <div style={{width: '100%', height: '100%'}} className="row x-center center">
+                            Drag And Drop
+                          </div>
+                        </Dropzone>
+                      ) : (
+                        <img src={this.state.file.preview} style={{ width: '70%', height: 'auto' }} />
+                      )
+                    }
                   </div>
                 </div>
                 <div style={{width: '50%'}}>
-                  Date and Time:
-                  <Datetime open={true} input={false} />
+                  <label>
+                    Date And Time
+                  </label>
+                  <br/>
+                  <DateInput ref="date" />
+                  <TimeInput ref="time" />
                 </div>
               </div>
               <div className='row center' style={{marginTop: 20}}>
