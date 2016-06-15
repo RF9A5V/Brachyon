@@ -3,9 +3,12 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 
+import Games from '/imports/api/games/games.js';
+
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import BasicExample from '../public/modal.jsx';
+import ProfileImage from './profile_image.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -91,17 +94,29 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     return (
       <div className="row screen">
         <div className="col-1 user-details">
-          <img className="profile-photo" src="/images/profile.png" />
+          <ProfileImage imgUrl={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>
             <h2>Alias</h2>
             <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
             <h2>Games Played</h2>
             <div className="game-icon-container">
-              <Link to={`/`}>
-                <div className="game-icon">
+              {
+                Games.find().fetch().map(function(game){
+                  return (
+                    <div className="game-icon" style={{
+                      backgroundImage: `url(${Images.findOne(game.banner).url()})`,
+                      backgroundSize: '100% 100%'
+                    }}>
+                    </div>
+                  );
+                })
+              }
+              <div className="game-icon">
+                <Link to={`/games/select`}>
                   <FontAwesome name="plus" />
-                </div>
-              </Link>
+                </Link>
+              </div>
+
             </div>
             <h2>Create an Event</h2>
             <BasicExample/>
