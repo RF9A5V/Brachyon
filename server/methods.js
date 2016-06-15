@@ -1,16 +1,53 @@
 import Images from '/imports/api/event/images.js';
+import Games from '/imports/api/games/games.js';
 
 Meteor.methods({
-  'events.create'() {
-    if(!Meteor.userId()){
-      return;
+  'events.create'(id, attrs) {
+    if(!attrs){
+      throw new Error("Need args.");
     }
-    Events.insert({
-      owner: Meteor.userId(),
-      location: {},
-      published: false,
-      under_review: false
-    })
+    if(!Meteor.userId()){
+      throw new Error("You need to be logged in.");
+    }
+    if(!attrs.eventName){
+      throw new Error("Event needs a name.")
+    }
+    if(!attrs.location){
+      throw new Error("Event needs to specify a location.")
+    }
+    else {
+      if(!attrs.location.online && !attrs.location.coords){
+        throw new Error("Non online event must have a location specified.")
+      }
+    }
+
+    f = function(b) {
+      banner = b || "";
+      Events.insert({
+        owner: Meteor.userId(),
+        location: attrs.location,
+        title: attrs.eventName,
+        published: false,
+        under_review: false,
+        banner
+      })
+    }
+
+    if(attrs.file){
+      file = new FS.File();
+      file.attachData(attrs.file.content, { type: attrs.file.type });
+      Images.insert(file, function(err, obj){
+        if(err){
+          Logger.info(err);
+        }
+        else {
+          f(obj._id);
+        }
+      });
+    }
+    else {
+      f();
+    }
   },
   'events.update_title'(id, title){
     Events.update(id, {
@@ -173,5 +210,75 @@ Meteor.methods({
         published: false
       }
     })
+  },
+
+  'games.create'(attrs) {
+    if(!attrs){
+      throw new Error('Attributes need to be defined.');
+    }
+    if(!attrs.name){
+      throw new Error('Game needs a name.');
+    }
+    if(!attrs.file){
+      throw new Error('Game needs a banner.');
+    }
+
+    file = new FS.File();
+    file.attachData(attrs.file.content, { type: attrs.file.type });
+    Images.insert(file, function(err, obj){
+      if(err){
+        Logger.info(err);
+      }
+      else {
+        Games.insert({
+          name: attrs.name,
+          banner: obj._id,
+          approved: false
+        })
+      }
+    });
+  },
+
+  'games.approve'(id) {
+    Games.update(id, {
+      $set: {
+        approved: true
+      }
+    })
+  },
+
+  'games.reject'(id) {
+    Games.remove(id);
+  },
+
+  'users.update_games'(games){
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.games': games
+      }
+    })
+  },
+
+  'users.update_profile_image'(id, file){
+    f = new FS.File();
+    f.attachData(file.content, { type: file.type });
+    Images.insert(f, function(err, obj){
+      if(err){
+
+      }
+      else {
+        user = Meteor.users.findOne(id);
+        if(user.profile.image_ref){
+          Images.remove(user.profile.image_ref)
+        }
+        Meteor.users.update(id, {
+          $set: {
+            'profile.image': obj.url({brokenIsFine: true}),
+            'profile.image_ref': obj._id
+          }
+        })
+      }
+    })
   }
+
 })

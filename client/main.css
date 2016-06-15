@@ -96,7 +96,7 @@ html, body, #react-root, #app {
   text-align: center;
 }
 
-button, input[type="submit"] {
+button, input[type="submit"], .custom-file-upload {
   background: none;
   border: solid 2px white;
   padding: 5px 10px;
@@ -115,6 +115,21 @@ input[type='text'], input[type="password"], input {
   margin-bottom: 20px;
   font-size: 16px;
   outline: none;
+}
+
+
+input[attribute='value'] {
+  color: #C0C0C0;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }
 
 /* Hacky thing to remove Chrome backgrounds for autofills */
