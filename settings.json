@@ -1,0 +1,15 @@
+{
+  "public": {
+    "stripe": {
+      "testPublishableKey": "***REMOVED***",
+      "livePublishableKey": "***REMOVED***"
+    }
+  },
+  "private": {
+    "stripe": {
+      "testSecretKey": "***REMOVED***",
+      "liveSecretKey": "***REMOVED***"
+    }
+  }
+
+}
