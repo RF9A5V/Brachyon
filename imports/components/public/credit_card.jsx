@@ -2,8 +2,24 @@ import React from 'react';
 
 export default class CreditCardForm extends React.Component {
 
-
-  submitPayment(event) {
+  connectToStripe(event){
+    Meteor.loginWithStripe({
+      stripe_landing: 'register',
+      newAccountDetails: {
+        'stripe_user[business_type]': 'non_profit',
+        'stripe_user[product_category]': 'charity'
+      }
+    }, function(err){
+      if(err){
+        console.log('ERROR: ' + err);
+      }
+      else{
+        console.log('NO ERROR ON LOGIN');
+      }
+    });
+  }
+  
+  submitPayment(event){
     event.preventDefault();
 
     var cardDetails = {
@@ -78,6 +94,9 @@ export default class CreditCardForm extends React.Component {
           </div>
           <input type="submit"/>
         </form>
+        <div>
+          <button onClick={this.connectToStripe.bind(this)}>Connect to Stripe</button>
+        </div>
       </div>
       )
   }

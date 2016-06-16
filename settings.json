@@ -2,7 +2,8 @@
   "public": {
     "stripe": {
       "testPublishableKey": "***REMOVED***",
-      "livePublishableKey": "***REMOVED***"
+      "livePublishableKey": "***REMOVED***",
+      "client_id": "***REMOVED***"
     }
   },
   "private": {
