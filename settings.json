@@ -2,7 +2,8 @@
   "public": {
     "stripe": {
       "testPublishableKey": "pk_test_dzbxXVvTa0bmS88ForcGsF2Y",
-      "livePublishableKey": "pk_live_QMeWWW0ZG66HburlSe6Dvl5u"
+      "livePublishableKey": "pk_live_QMeWWW0ZG66HburlSe6Dvl5u",
+      "client_id": "ca_8dMdapsTG16ZRZfHQ3i10KvxTB6yzxqP"
     }
   },
   "private": {

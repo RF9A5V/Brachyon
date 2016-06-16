@@ -3,6 +3,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
+import CreditCardForm from '../public/credit_card.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -91,6 +92,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           <img className="profile-photo" src="/images/profile.png" />
           <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
           <button onClick={this.createEvent}>Create Event</button>
+          <CreditCardForm/>
         </div>
         <div className="col-3 event-details">
           <EventDisplay {...this.state.currentEvent} />
