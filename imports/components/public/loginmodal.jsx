@@ -21,7 +21,7 @@ export default class LogInModal extends React.Component {
     render () {
       return (
         <div>
-          <button onClick={this.openModal.bind(this)}>Log In</button>
+          <button className="head-margin" onClick={this.openModal.bind(this)}>Log In</button>
           <Modal
             className = "create-modal"
             overlayClassName = "overlay-class"
@@ -29,7 +29,7 @@ export default class LogInModal extends React.Component {
             <div className="div-pad">
               <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
             </div>
-            <h1 style={{textAlign: 'center'}}>Signup</h1>
+            <h1 style={{textAlign: 'center'}}>Log In</h1>
             <LogInScreen />
           </Modal>
         </div>

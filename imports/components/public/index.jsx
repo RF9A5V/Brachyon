@@ -31,8 +31,9 @@ export default class LandingScreen extends React.Component {
         <div className="main-content" id="main-content">
           <h1>B R A C H Y O N</h1>
           <h4>Beyond The Brackets</h4>
-          <div className="row center">
-            <button className="sign-up-link" onClick={(e) => { e.preventDefault(); this.setState({status: 1}) }}>Sign Up</button>
+          <div className="col center">
+            <img className="signup" src="/images/signup.png" />
+            <span>sign Up</span>
           </div>
         </div>
       );

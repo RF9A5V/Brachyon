@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
-import SignUpModal from './signupmodal.jsx'
+import SignUpModal from './signupmodal.jsx';
+import LogInModal from './loginmodal.jsx';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
@@ -15,8 +16,9 @@ export default class Header extends TrackerReact(Component) {
     }
     else {
       userCred = (
-        <div>
+        <div className="head2">
           <SignUpModal />
+          <LogInModal />
         </div>
       )
     }

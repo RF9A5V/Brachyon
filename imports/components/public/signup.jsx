@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom';
 import ShowUserScreen from '../users/show.jsx';
-import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router';
 
 
 export default class SignUpScreen extends React.Component {
@@ -26,19 +26,18 @@ export default class SignUpScreen extends React.Component {
       }
       else {
         browserHistory.push('/events/discover');
-
       }
     });
   }
   render() {
     return (
-      <div className="col center">
+      <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center">
           <input type="text" name="name" placeholder="Name" ref="name" />
           <input type="text" name="email" placeholder="Email" ref="email" />
           <input type="text" name="username" placeholder="Username" ref="username" />
           <input type="password" name="password" placeholder="Password" ref="password" />
-          <input type="submit" val="Submit" />
+          <input type="submit" val="Signup" />
         </form>
       </div>
     )

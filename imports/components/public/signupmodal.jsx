@@ -21,7 +21,7 @@ export default class SignUpModal extends React.Component {
     render () {
       return (
         <div>
-          <button onClick={this.openModal.bind(this)}>Signup</button>
+          <button className="head-margin" onClick={this.openModal.bind(this)}>Signup</button>
           <Modal
             className = "create-modal"
             overlayClassName = "overlay-class"
