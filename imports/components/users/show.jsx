@@ -7,7 +7,6 @@ import Games from '/imports/api/games/games.js';
 
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
-import BasicExample from '../public/modal.jsx';
 import ProfileImage from './profile_image.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {

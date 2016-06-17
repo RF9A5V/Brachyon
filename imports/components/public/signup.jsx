@@ -1,6 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom';
 import ShowUserScreen from '../users/show.jsx';
+import { browserHistory } from 'react-router'
+
 
 export default class SignUpScreen extends React.Component {
   onSubmit(e) {
@@ -14,13 +16,17 @@ export default class SignUpScreen extends React.Component {
       username,
       options: {
         name
+      },
+      profile: {
+        games: []
       }
     }, function(err){
       if(err){
         console.log(err);
       }
       else {
-        self.props.afterSubmit();
+        browserHistory.push('/events/discover');
+
       }
     });
   }

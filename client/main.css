@@ -94,6 +94,12 @@ html, body, #react-root, #app {
 
 .main-content h1 {
   text-align: center;
+  font-size: 70px;
+  margin: 0px;
+}
+
+.main-content h4 {
+  text-align: center;
 }
 
 button, input[type="submit"], .custom-file-upload {
@@ -164,11 +170,10 @@ a {
 
 .screen {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100% - 70px);
 }
 
 .screen > * {
-  padding-top: 70px;
 }
 
 .loading-screen {
