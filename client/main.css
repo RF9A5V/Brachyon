@@ -108,27 +108,44 @@ header {
   padding: 20px 20px;
   display: flex;
   justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.head-align {
+  display: flex;
+  align-items: center;
+}
+
+.head2 {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.head-margin {
+  margin-right: 10px;
 }
 
 .hub:hover {
   cursor: pointer;
-  -webkit-transition: border-bottom 1s ease-out;
-  -moz-transition: border-bottom 1s ease-out;
-  -o-transition: border-bottom 1s ease-out;
-  transition: border-bottom 1s ease-out;
-  border-bottom: #F26522 2px solid;
+  padding: 4px 0;
+  -webkit-transition: border-bottom 0.5s ease-out;
+  -moz-transition: border-bottom 0.5s ease-out;
+  -o-transition: border-bottom 0.5s ease-out;
+  transition: border-bottom 0.5s ease-out;
+  border-bottom: #990000 2px solid;
 }
 
 .hub {
   border-bottom: transparent 2px solid ;
-  font-size: 16px;
-  line-height: 195%;
+  font-size: 18px;
 }
 
 .hub-bar {
-  font-size: 20px;
+  font-size: 22px;
   padding-left: 10px;
   padding-right: 10px;
+  color: #CC0000;
+  font-weight: bold;
 }
 
 .hub-bar:hover {

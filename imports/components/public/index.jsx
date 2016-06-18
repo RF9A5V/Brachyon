@@ -32,8 +32,6 @@ export default class LandingScreen extends React.Component {
           <h1>B R A C H Y O N</h1>
           <h4>Beyond The Brackets</h4>
           <div className="col center">
-            <img className="signup" src="/images/signup.png" />
-            <span>sign Up</span>
           </div>
         </div>
       );
@@ -55,10 +53,11 @@ export default class LandingScreen extends React.Component {
     return (
       <div className="landing-screen screen" style={{position: 'relative'}}>
         <div className="img-background">
-          <img src="http://lorempixel.com/1280/720/" />
+          <img src="/images/bg.jpg" draggable="false" />
           <div className="img-background-overlay"></div>
         </div>
         {rez}
+
       </div>
     );
 
