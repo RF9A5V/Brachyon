@@ -32,7 +32,6 @@ cfs:storage-adapter@0.2.3
 cfs:tempstore@0.1.5
 cfs:upload-http@0.0.20
 cfs:worker@0.1.4
-chadkruser:meteor-accounts-stripe-connect@0.0.7
 check@1.2.1
 chrismbeckett:toastr@2.1.2_1
 ddp@1.2.5
@@ -107,6 +106,8 @@ reactive-var@1.0.9
 reload@1.1.8
 retry@1.0.7
 routepolicy@1.0.10
+secretninjaman:link-accounts@1.2.9
+secretninjaman:meteor-accounts-stripe-connect@0.0.7
 service-configuration@1.0.9
 session@1.1.5
 sha@1.0.7

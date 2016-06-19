@@ -30,4 +30,5 @@ u2622:persistent-session
 cfs:gridfs
 mrgalaxy:stripe
 meteorhacks:async
-chadkruser:meteor-accounts-stripe-connect
+secretninjaman:meteor-accounts-stripe-connect
+secretninjaman:link-accounts
