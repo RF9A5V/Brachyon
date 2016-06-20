@@ -11,8 +11,6 @@ import TimeInput from '../events/create/time_input.jsx';
 export default class BasicExample extends React.Component {
     constructor () {
       super();
-      // this.openModal = this.openModal.bind(this);
-      // this.closeModal = this.closeModal.bind(this);
       this.state = {
         open: false,
         file: null
