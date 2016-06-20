@@ -1,12 +1,14 @@
 import Games from '/imports/api/games/games.js';
 import Sponsorships from '/imports/api/event/sponsorship.js';
+import Ticketing from '/imports/api/ticketing/ticketing.js';
 
 Meteor.publish('event', (_id) => {
   event = Events.findOne(_id);
   return [
     Events.find({_id}),
     Images.find({_id: event.banner}),
-    Sponsorships.find({_id: event.sponsorship})
+    Sponsorships.find({_id: event.sponsorship}),
+    Ticketing.find({_id: event.ticketing})
   ];
 });
 

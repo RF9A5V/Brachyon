@@ -2,6 +2,7 @@ import Images from '/imports/api/event/images.js';
 import Games from '/imports/api/games/games.js';
 import Sponsorships from '/imports/api/event/sponsorship.js';
 import Icons from '/imports/api/sponsorship/icon.js';
+import Tickets from '/imports/api/ticketing/ticketing.js';
 
 Meteor.methods({
   'events.create'(id, attrs) {
@@ -334,6 +335,55 @@ Meteor.methods({
         }
       });
     }
+  },
+
+  'events.create_ticketing'(id) {
+    Tickets.insert({
+      tickets: []
+    }, function(err, obj){
+      console.log(obj)
+      if(err){
+        throw new Error(err.reason)
+      }
+      else {
+        Events.update(id, {
+          $set: {
+            ticketing: obj
+          }
+        })
+      }
+    })
+  },
+
+  'ticketing.create_ticket'(id) {
+    Tickets.update(id, {
+      $push: {
+        tickets: {
+          name: 'Ticket',
+          description: 'This is your ticket description.',
+          limit: 100,
+          amount: 100
+        }
+      }
+    })
+  },
+
+  'ticketing.update_ticket'(id, tickets, index) {
+    Tickets.update(id, {
+      $set: {
+        tickets
+      }
+    })
+  },
+
+  'ticketing.delete_ticket'(id, index) {
+    tickets = Tickets.findOne(id).tickets;
+    tickets.splice(index - 1, 1);
+    Tickets.update(id, {
+      $set: {
+        tickets
+      }
+    })
   }
 
 })
