@@ -8,30 +8,13 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 export default class LandingScreen extends React.Component {
-
-  constructor() {
-    super();
-    this.state = {
-      status: 0
-    }
-  }
-
-  resetState(){
-    this.setState({
-      status: 0
-    });
-  }
-
   render() {
-    rez = "";
-    if (this.state == null) {
-      return (
-        <div>
+    return (
+      <div className="landing-screen screen" style={{position: 'relative'}}>
+        <div className="img-background">
+          <img src="/images/bg.jpg" draggable="false" />
+          <div className="img-background-overlay"></div>
         </div>
-      )
-    }
-    if (this.state.status == 0) {
-      rez = (
         <div className="main-content" id="main-content">
           <h1>B R A C H Y O N</h1>
           <h4>Beyond The Brackets</h4>
@@ -40,8 +23,8 @@ export default class LandingScreen extends React.Component {
             <SignUpModal />
           </div>
           <div className="row center">
-            <button className = "facebook"><FontAwesome name="facebook" /></button>
-            <button className = "google"><FontAwesome name="google-plus" /></button>
+            <button className = "fb"><FontAwesome name="facebook" /></button>
+            <button className = "gplus"><FontAwesome name="google-plus" /></button>
           </div>
           <div className="discover-box">
             <Link to="/events/discover" className="discover row center x-center">
@@ -49,37 +32,26 @@ export default class LandingScreen extends React.Component {
               <span className="discover-text">Discover Competitive Events</span>
             </Link>
           </div>
-          <div className="footer-wrap">
-            <div className="footer">
-              <div className="footer-content">
-                HELLO
+          <div className="row x-center">
+            <div className="footer col-1">
+              <div className="row">
+                <FontAwesome name="twitch" className="twitch icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="youtube-square" className="youtube icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="reddit-square" className="reddit icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="facebook-square " className="facebook icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="snapchat-square" className="snapchat icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="twitter-square" className="twitter icon" />
+                <span className="footer-div">.</span>
+                <FontAwesome name="instagram" className="instagram icon" />
               </div>
             </div>
           </div>
         </div>
-      );
-    }
-    else if(this.state.status == 1){
-      rez = (
-        <div className="main-content" id="main-content">
-        </div>
-      );
-    }
-    else {
-      rez = (
-        <div className="main-content" id="main-content">
-          <LogInScreen afterSubmit={this.resetState.bind(this)} />
-        </div>
-      )
-    }
-    return (
-      <div className="landing-screen screen" style={{position: 'relative'}}>
-        <div className="img-background">
-          <img src="/images/bg.jpg" draggable="false" />
-          <div className="img-background-overlay"></div>
-        </div>
-        {rez}
-
       </div>
     );
 

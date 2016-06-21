@@ -109,18 +109,22 @@
   height: 32px;
 }
 
-.footer-wrap {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-}
 .footer {
-    width:400px;
-    margin:auto;
+  width: 100%;
+  box-sizing: border-box;
+  position:absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px 20px;
+  display: flex;
+  justify-content: center;
+  background-color: #333;
+  z-index: 1;
 }
-.footer-content {
-    float:left;
-    width:100%;
+
+.footer-div {
+  margin: 5px;
+  cursor: default;
 }
 
 .cred-modal:focus {
@@ -139,26 +143,70 @@
     align-items: center;
 }
 
-.facebook {
+.fb {
   border-color: #3B5998;
   width: 100px;
   margin-right: 5px;
 }
 
-.facebook:hover {
+.fb:hover {
   -moz-box-shadow: 0 0 10px #3B5998;
 	-webkit-box-shadow: 0 0 10px #3B5998;
 	box-shadow: 0 0 10px #3B5998;
 }
 
-.google {
+.gplus {
   border-color: #f44336;
   width: 100px;
   margin-left: 5px;
 }
 
-.google:hover {
+.gplus:hover {
   -moz-box-shadow: 0 0 10px #f44336;
 	-webkit-box-shadow: 0 0 10px #f44336;
 	box-shadow: 0 0 10px #f44336;
+}
+
+/*social plugins*/
+.icon.fa {
+  font-size: 36px;
+  margin: 0 2px;
+  color: white;
+}
+
+.icon.fa:hover {
+  cursor: pointer;
+}
+
+.snapchat:hover {
+  color: #FFFC00;
+}
+
+.instagram:hover {
+  color: #517FA4;
+}
+
+.reddit:hover {
+  color: #CEE3F8;
+}
+
+.facebook:hover {
+  color: #3B5998;
+}
+
+.twitch.fa {
+  font-size: 34px;
+  margin-top: 2px;
+}
+
+.twitch:hover {
+  color: #6441A5;
+}
+
+.twitter:hover {
+  color: #55ACEE;
+}
+
+.youtube:hover {
+  color: #CD201F;
 }
