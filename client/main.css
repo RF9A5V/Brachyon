@@ -71,9 +71,8 @@ button:hover, input[type="submit"]:hover {
 input[type='text'], input[type="password"], input {
   padding: 10px;
   border: none;
-  border-bottom: solid 2px white;
-  background: none;
-  margin-bottom: 20px;
+  background: #222;
+  margin: 20px 10px;
   font-size: 16px;
   outline: none;
 }
@@ -198,4 +197,38 @@ option {
 
 option:hover, option:active, option:focus {
   outline: none;
+}
+
+textarea {
+  resize: none;
+  background-color: #222;
+  color: white;
+  border: none;
+  margin: 10px;
+  padding: 10px;
+  height: 100px;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.hover-block {
+  position: absolute;
+  display: flex;
+}
+
+.hover-block-arrow {
+  width: 0;
+  height: 0;
+  margin-top: 20px;
+  border-style: solid;
+  border-width: 12.5px 21.7px 12.5px 0;
+  border-color: transparent #111 transparent transparent;
+}
+
+.hover-block-content {
+  background-color: #111;
+  padding: 10px;
+
 }
