@@ -1,9 +1,9 @@
 .spons-tree-node {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 100%;
   background-color: white;
-  margin-bottom: 20px;
+  margin-bottom: 35px;
   margin-right: 40px;
   display: inline-flex;
   justify-content: center;

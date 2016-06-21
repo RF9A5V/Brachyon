@@ -1,19 +1,6 @@
 import React, { Component } from 'react';
 
-export default class TicketingForm extends Component {
-
-  componentWillMount(){
-    this.setState({
-      loaded: false
-    })
-  }
-
-  componentDidMount() {
-    this.setParams();
-    this.setState({
-      loaded: true
-    })
-  }
+export default class TierForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
@@ -29,9 +16,12 @@ export default class TicketingForm extends Component {
 
   render() {
     Object.keys(this.refs).map( (val) => { this.refs[val].value = this.props[val] } )
+    if(this.refs.amount){
+      this.refs.amount.value = (this.props.amount / 100).toFixed(2)
+    }
     return (
       <form className="col" style={{justifyContent: 'center'}} onSubmit={this.onSubmit.bind(this)}>
-        <label>Ticket Name</label>
+        <label>Tier Name</label>
         <input type="text" ref='name' defaultValue={this.props.name} />
         <label>Description</label>
         <textarea ref="description" defaultValue={this.props.description}></textarea>

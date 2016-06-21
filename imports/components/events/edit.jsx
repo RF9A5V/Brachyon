@@ -5,12 +5,13 @@ import EventDescription from './editor_tabs/description.jsx';
 import EventBanner from './editor_tabs/banner.jsx';
 import EventTime from './editor_tabs/time.jsx';
 import EventLocation from './editor_tabs/location.jsx';
-import CrowdfundingTree from './editor_tabs/crowdfunding.jsx';
+import CrowdfundingPanel from './editor_tabs/crowdfunding.jsx';
 import Ticketing from './editor_tabs/ticketing.jsx';
 
 import LoadingScreen from '../public/loading.jsx';
 import TabController from '../public/tab_controller.jsx';
 
+import Sponsorships from '/imports/api/event/sponsorship.js';
 import Tickets from '/imports/api/ticketing/ticketing.js';
 
 export default class EditEventScreen extends TrackerReact(React.Component){
@@ -72,7 +73,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       {
         title: 'Crowdfunding',
         content: (
-          <CrowdfundingTree id={this.props.params.eventId} {...this.sponsorship()} />
+          <CrowdfundingPanel id={this.props.params.eventId} sponsorship={this.sponsorship()} />
         )
       },
       {

@@ -384,6 +384,27 @@ Meteor.methods({
         tickets
       }
     })
+  },
+
+  'sponsorships.create_tier'(id) {
+    Sponsorships.update(id, {
+      $push: {
+        tiers: {
+          name: 'Tier',
+          description: 'Tier description.',
+          amount: 100,
+          limit: 100
+        }
+      }
+    })
+  },
+
+  'sponsorships.update_tier'(id, tiers){
+    Sponsorships.update(id, {
+      $set: {
+        tiers
+      }
+    })
   }
 
 })

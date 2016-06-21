@@ -9,12 +9,11 @@ export default class HoverBlock extends Component {
   }
 
   render() {
-    self = this;
-    if(!self.props.open){
+    if(!this.props.open){
       return (<div></div>)
     }
     return (
-      <div className="hover-block" style={{left: self.props.x, top: self.props.y + window.scrollY}}>
+      <div className="hover-block" style={{left: this.props.x, top: this.props.y + window.scrollY}}>
         <div className="hover-block-arrow"></div>
         <div className="hover-block-content">
           <div style={{textAlign: 'right', marginBottom: 10}}>
