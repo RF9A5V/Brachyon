@@ -1,5 +1,8 @@
 import Images from '/imports/api/event/images.js';
 import Games from '/imports/api/games/games.js';
+import Sponsorships from '/imports/api/event/sponsorship.js';
+import Icons from '/imports/api/sponsorship/icon.js';
+import Tickets from '/imports/api/ticketing/ticketing.js';
 
 Meteor.methods({
   'events.create'(id, attrs) {
@@ -137,7 +140,6 @@ Meteor.methods({
       headers
     }, function(err, result){
       if(!err){
-        console.log(result.data.tournament);
         Events.update(id, {
           $set: {
             tournament_running: true
@@ -174,7 +176,6 @@ Meteor.methods({
       headers
     }, function(err, result){
       if(err){
-        console.log(err)
       }
       else {
         Events.update(id, {
@@ -277,6 +278,131 @@ Meteor.methods({
             'profile.image_ref': obj._id
           }
         })
+      }
+    })
+  },
+  'events.create_sponsorship'(id) {
+    Sponsorships.insert({
+      eventId: id,
+      start: { amount: 0 },
+      branches: [null, null, null, null, null]
+    }, function(err, obj){
+      Events.update(id, {
+        $set: {
+          sponsorship: obj
+        }
+      })
+    })
+  },
+
+  'sponsorships.update_nodes'(id, branches){
+    branches = branches.map(function(val){
+      if(val != null){
+        if(val.file != null){
+          file = new FS.File();
+          file.attachData(val.file);
+          Icons.insert(file, function(err, obj){
+            if(err){
+              console.log(err);
+              throw new Error('Shit');
+            }
+            else {
+              delete val.file;
+              val.icon = obj.url({brokenIsFine: true});
+              return val;
+            }
+          })
+        }
+      }
+      return val;
+    })
+
+    Sponsorships.update(id, {
+      $set: {
+        branches
+      }
+    })
+  },
+
+  'sponsorships.delete_node'(id, pos, index) {
+    spons = Sponsorships.findOne(id);
+    if(spons){
+      branches = spons.branches;
+      branches[pos].nodes.splice(index, 1);
+      Sponsorships.update(id, {
+        $set: {
+          branches
+        }
+      });
+    }
+  },
+
+  'events.create_ticketing'(id) {
+    Tickets.insert({
+      tickets: []
+    }, function(err, obj){
+      console.log(obj)
+      if(err){
+        throw new Error(err.reason)
+      }
+      else {
+        Events.update(id, {
+          $set: {
+            ticketing: obj
+          }
+        })
+      }
+    })
+  },
+
+  'ticketing.create_ticket'(id) {
+    Tickets.update(id, {
+      $push: {
+        tickets: {
+          name: 'Ticket',
+          description: 'This is your ticket description.',
+          limit: 100,
+          amount: 100
+        }
+      }
+    })
+  },
+
+  'ticketing.update_ticket'(id, tickets, index) {
+    Tickets.update(id, {
+      $set: {
+        tickets
+      }
+    })
+  },
+
+  'ticketing.delete_ticket'(id, index) {
+    tickets = Tickets.findOne(id).tickets;
+    tickets.splice(index - 1, 1);
+    Tickets.update(id, {
+      $set: {
+        tickets
+      }
+    })
+  },
+
+  'sponsorships.create_tier'(id) {
+    Sponsorships.update(id, {
+      $push: {
+        tiers: {
+          name: 'Tier',
+          description: 'Tier description.',
+          amount: 100,
+          limit: 100
+        }
+      }
+    })
+  },
+
+  'sponsorships.update_tier'(id, tiers){
+    Sponsorships.update(id, {
+      $set: {
+        tiers
       }
     })
   }

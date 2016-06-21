@@ -83,15 +83,15 @@
   width: 45%;
 }
 
-
-
 .description-container {
   margin-bottom: 20px;
   line-height: 1.5em;
 }
 
 .description-container img {
-  width: 100%;
+  margin: 0 auto;
+  display: block;
+  max-width: 100%;
   height: auto;
 }
 
