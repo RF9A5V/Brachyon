@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 
-import TestNode from './test_node.jsx';
-import HoverBlock from './hover_block.jsx';
-import TestForm from './test_form.jsx';
+import CFNode from './crowdfunding_node.jsx';
+import HoverBlock from '../../public/hover_block.jsx';
+import CFForm from './crowdfunding_form.jsx';
+import CFDisplay from './crowdfunding_display.jsx';
 
-export default class TestTree extends Component {
+export default class CFTree extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      branches: props.branches
+      branches: props.branches,
+      edit: props.edit
     };
   }
 
@@ -60,8 +62,7 @@ export default class TestTree extends Component {
         }
         continue;
       }
-      renderCircle = true;
-      for(var j = 4; j < 4 + 2 * (branches[i].nodes.length - 1); j += 2){
+      for(var j = 4; j < 2 + 2 * (branches[i].nodes.length) + 1 && j < 13; j += 2){
         ar[this.c(i, j)] = {
           type: 'circle'
         }
@@ -70,18 +71,14 @@ export default class TestTree extends Component {
           orientation: 'vertical'
         }
       }
-      ar[this.c(i, 4 + 2 * (branches[i].nodes.length - 1))] = {
-        type: 'circle'
-      }
-      if(branches[i].nodes.length < 5){
-        ar[this.c(i, 4 + 2 * (branches[i].nodes.length) - 1)] = {
-          type: 'line',
-          orientation: 'vertical'
-        }
+      if(branches[i].nodes.length < 5 && this.state.edit){
         ar[this.c(i, 4 + 2 * (branches[i].nodes.length))] = {
           type: 'circle',
           action: 'add'
         }
+      }
+      if(branches[i].nodes.length < 5 && !this.state.edit){
+        ar[this.c(i, 4 + 2 * (branches[i].nodes.length) - 1)] = {}
       }
     }
 
@@ -95,18 +92,17 @@ export default class TestTree extends Component {
   }
 
   componentWillReceiveProps(next){
+    console.log('reloaded');
     this.state.branches = next.branches;
-    console.log(this.state.branches);
-    console.log(next.branches);
     this.reloadTree();
   }
 
   addNode(x, y) {
     return (e) => {
       e.preventDefault();
-      Meteor.call('sponsorships.add_node', this.props._id, x, function(err){
+      Meteor.call('sponsorships.add_node', this.props.id, x, function(err){
         if(err){
-          toastr.error('Error updating nodes');
+          toastr.error(err.reason);
         }
         else {
           toastr.success('Updated nodes');
@@ -122,6 +118,7 @@ export default class TestTree extends Component {
     return (function(e){
       el = e.target.getBoundingClientRect();
       node = this.state.branches[x].nodes[(12 - y) / 2 - 2];
+      console.log(this.state.branches[x].nodes);
       node.icon = this.state.branches[x].icon;
       node.name = this.state.branches[x].name;
       this.setState({
@@ -135,10 +132,25 @@ export default class TestTree extends Component {
     }).bind(this);
   }
 
+  updateNode(attrs) {
+    self = this;
+    Meteor.call('sponsorships.update_node', this.props.id, this.state.branch, this.state.index, attrs, function(err){
+      if(err){
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success('Great success!');
+      }
+      self.setState({
+        open: false
+      })
+    })
+  }
+
   deleteNode(e){
     e.preventDefault();
     self = this;
-    Meteor.call('sponsorships.delete_node', this.props._id, this.state.branch, this.state.index, function(err){
+    Meteor.call('sponsorships.delete_node', this.props.id, this.state.branch, this.state.index, function(err){
       if(err){
         toastr.error('error');
       }
@@ -154,7 +166,7 @@ export default class TestTree extends Component {
   render() {
     var self = this;
     return (
-      <div className="screen">
+      <div className="col-1">
         <div className="spons-grid">
           {
             this.state.grid.map(function(val, index){
@@ -190,7 +202,7 @@ export default class TestTree extends Component {
                 <div className="spons-grid-element">
                   {
                     val.type == 'circle' ? (
-                      <TestNode action={val.action} handler={handler} icon={self.state.branches[index % 5].icon} />
+                      <CFNode action={val.action} handler={handler} icon={self.state.branches[index % 5] ? self.state.branches[index % 5].icon : null} />
                     ) : (
                       <div className={name}></div>
                     )
@@ -201,8 +213,15 @@ export default class TestTree extends Component {
             })
           }
         </div>
-        <HoverBlock open={this.state.open} x={this.state.x+50} y={this.state.y-80} handler={() => { this.setState({open: false}) }}>
-          <TestForm deleteHandler={this.deleteNode.bind(this)} {...this.state.node} />
+        <HoverBlock open={this.state.open} x={this.state.x+55} y={this.state.y-10} handler={() => { this.setState({open: false}) }}>
+          {
+            this.state.edit ? (
+              <CFForm deleteHandler={this.deleteNode.bind(this)} {...this.state.node} handler={this.updateNode.bind(this)} />
+            ) : (
+              <CFDisplay {...this.state.node} />
+            )
+          }
+
         </HoverBlock>
       </div>
     );

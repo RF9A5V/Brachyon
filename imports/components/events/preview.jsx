@@ -72,20 +72,25 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   tabs() {
-    return [
+    var rez = [
       {
         title: 'Description',
         content: (<div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>)
-      },
-      {
-        title: 'Crowdfunding',
-        content: <CrowdfundingPanel {...Sponsorships.find().fetch()[0]}/>
-      },
-      {
-        title: 'Tickets',
-        content: <TicketPanel {...Ticketing.find().fetch()[0]} />
       }
     ];
+    if(Sponsorships.find().fetch()[0]){
+      rez.push({
+        title: 'Crowdfunding',
+        content: <CrowdfundingPanel {...Sponsorships.find().fetch()[0]}/>
+      });
+    }
+    if(Ticketing.find().fetch()[0]){
+      rez.push({
+        title: 'Tickets',
+        content: <TicketPanel {...Ticketing.find().fetch()[0]} />
+      })
+    }
+    return rez;
   }
 
   render() {

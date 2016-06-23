@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CrowdfundingTree from './crowdfunding_tree.jsx';
+import CFTree from '../crowdfunding/crowdfunding_tree.jsx';
 import TierEditor from './tiers.jsx';
 
 export default class CrowdfundingPanel extends Component {
@@ -7,7 +7,7 @@ export default class CrowdfundingPanel extends Component {
     return (
       <div className="row">
         <TierEditor id={this.props.sponsorship._id} />
-        <CrowdfundingTree id={this.props.sponsorship._id} {...this.props.sponsorship} />
+        <CFTree id={this.props.sponsorship._id} {...this.props.sponsorship} edit={true} />
       </div>
     );
   }

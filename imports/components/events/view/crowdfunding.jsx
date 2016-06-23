@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import CFNode from '/imports/components/events/editor_tabs/cf_node.jsx';
+import CFTree from '/imports/components/events/crowdfunding/crowdfunding_tree.jsx';
 
 export default class CrowdfundingPanel extends Component {
 
@@ -34,30 +34,7 @@ export default class CrowdfundingPanel extends Component {
           }
         </div>
         <div className="col x-center col-1" style={{flexDirection: "column-reverse"}}>
-          <CFNode />
-          <CFNode />
-          <div className="row">
-            {
-              this.props.branches.map(function(branch){
-                if(branch == null){
-                  return (
-                    <div className="col" style={{flexDirection: "column-reverse"}}>
-                    </div>
-                  )
-                }
-                return (
-
-                  <div className="col" style={{flexDirection: "column-reverse"}}>
-                    {
-                      branch.nodes.map(function(node){
-                        return <CFNode icon={branch.icon} />
-                      })
-                    }
-                  </div>
-                )
-              })
-            }
-          </div>
+          <CFTree edit={false} id={this.props._id} branches={this.props.branches} />
         </div>
       </div>
     );

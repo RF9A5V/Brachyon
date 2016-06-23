@@ -12,7 +12,6 @@ import PublishEventScreen from '../imports/components/events/publish.jsx';
 import ApprovalScreen from '../imports/components/events/approval.jsx';
 import GameSelectScreen from '../imports/components/games/game_select.jsx';
 import GameApprovalScreen from '../imports/components/games/approval.jsx';
-import TestScreen from '../imports/components/public/test.jsx';
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){
@@ -39,7 +38,6 @@ export const renderRoutes = () => (
       <Route path="events/approval" component={ApprovalScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="games/approval" component={GameApprovalScreen} />
-      <Route path="test" component={TestScreen} />
     </Route>
   </Router>
 )
