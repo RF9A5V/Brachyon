@@ -285,7 +285,8 @@ Meteor.methods({
     Sponsorships.insert({
       eventId: id,
       start: { amount: 0 },
-      branches: [null, null, null, null, null]
+      branches: [null, null, null, null, null],
+      tiers: []
     }, function(err, obj){
       Events.update(id, {
         $set: {
@@ -295,45 +296,72 @@ Meteor.methods({
     })
   },
 
-  'sponsorships.update_nodes'(id, branches){
-    branches = branches.map(function(val){
-      if(val != null){
-        if(val.file != null){
-          file = new FS.File();
-          file.attachData(val.file);
-          Icons.insert(file, function(err, obj){
-            if(err){
-              console.log(err);
-              throw new Error('Shit');
-            }
-            else {
-              delete val.file;
-              val.icon = obj.url({brokenIsFine: true});
-              return val;
+  'sponsorships.add_node'(id, branch) {
+    var branches = Sponsorships.findOne(id).branches;
+    if(branches[branch] == null){
+      Sponsorships.update(id, {
+        $set: {
+          [`branches.${branch}`]: {
+            name: 'Branch',
+            icon: null,
+            nodes: []
+          }
+        }
+      })
+    }
+    else {
+      Sponsorships.update(id, {
+        $push: {
+          [`branches.${branch}.nodes`]: {
+            amount: 10,
+            description: 'Description'
+          }
+        }
+      })
+    }
+  },
+
+  'sponsorships.update_node'(id, branch, index, attrs){
+    if(attrs.icon){
+      file = new FS.File();
+      file.attachData(attrs.icon);
+      Icons.insert(file, function(err, obj){
+        if(obj){
+          Sponsorships.update(id, {
+            $set: {
+              [`branches.${branch}.name`]: attrs.name,
+              [`branches.${branch}.icon`]: obj.url({brokenIsFine: true}),
+              [`branches.${branch}.nodes.${index}.amount`]: attrs.amount,
+              [`branches.${branch}.nodes.${index}.description`]: attrs.description
             }
           })
         }
-      }
-      return val;
-    })
-
-    Sponsorships.update(id, {
-      $set: {
-        branches
-      }
-    })
+      })
+    }
+    else {
+      Sponsorships.update(id, {
+        $set: {
+          [`branches.${branch}.name`]: attrs.name,
+          [`branches.${branch}.nodes.${index}.amount`]: attrs.amount,
+          [`branches.${branch}.nodes.${index}.description`]: attrs.description
+        }
+      })
+    }
   },
 
   'sponsorships.delete_node'(id, pos, index) {
     spons = Sponsorships.findOne(id);
     if(spons){
-      branches = spons.branches;
-      branches[pos].nodes.splice(index, 1);
       Sponsorships.update(id, {
-        $set: {
-          branches
+        $unset: {
+          [`branches.${pos}.nodes.${index}`]: 1
         }
       });
+      Sponsorships.update(id, {
+        $pull: {
+          [`branches.${pos}.nodes`]: null
+        }
+      })
     }
   },
 
