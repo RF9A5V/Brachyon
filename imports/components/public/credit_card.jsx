@@ -9,12 +9,29 @@ export default class CreditCardForm extends React.Component {
         'stripe_user[business_type]': 'non_profit',
         'stripe_user[product_category]': 'charity'
       }
-    }, function(err, response){
+    }, function(err){
+      var connected = true;
+
       if(err){
         console.log('ERROR: ' + err);
+        Meteor.call("hasStripeLink", !connected, function(err, response){
+          if(err){
+            alert(err.message);
+          }
+          else{
+            alert("wow!");
+          }
+        });
       }
       else{
-        console.log(response);
+        Meteor.call("isStripeConnected", true, function(err, response){
+          if(err){
+            alert(err.message);
+          }
+          else{
+            alert("yay!");
+          }
+        });
         console.log('NO ERROR ON LOGIN');
       }
     });
