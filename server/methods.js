@@ -229,5 +229,8 @@ Meteor.methods({
         return response;
       }
     })*/
+  },
+  "isStripeConnected": function(connected){
+    Meteor.users.update(Meteor.userId(), {$set: {isStripeConnected: connected}});
   }
 })
