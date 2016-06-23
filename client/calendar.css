@@ -1,0 +1,34 @@
+.calendar {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.calendar-container {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.calendar-container input[type="text"] {
+  margin-bottom: 10px;
+}
+
+.calendar-month {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-month-control:hover {
+  cursor: pointer;
+}
+
+.calendar-days {
+  display: flex;
+  padding: 5px 0;
+}
+
+.calendar-days-entry {
+  width: 32px;
+  text-align: center;
+  font-size: 12px;
+}

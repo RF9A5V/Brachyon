@@ -57,46 +57,7 @@ html, body, #react-root, #app {
   align-self: flex-end;
 }
 
-.landing-screen {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.img-background {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 0;
-}
-
-.img-background img {
-  width: 100%;
-  height: 100%;
-}
-
-.img-background-overlay {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: absolute;
-  top: 0;
-}
-
-.main-content {
-  z-index: 1;
-}
-
-.main-content h1 {
-  text-align: center;
-}
-
-button, input[type="submit"] {
+button, input[type="submit"], .custom-file-upload {
   background: none;
   border: solid 2px white;
   padding: 5px 10px;
@@ -110,11 +71,24 @@ button:hover, input[type="submit"]:hover {
 input[type='text'], input[type="password"], input {
   padding: 10px;
   border: none;
-  border-bottom: solid 2px white;
-  background: none;
-  margin-bottom: 20px;
+  background: #222;
+  margin: 20px 10px;
   font-size: 16px;
   outline: none;
+}
+
+input[attribute='value'] {
+  color: #C0C0C0;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }
 
 /* Hacky thing to remove Chrome backgrounds for autofills */
@@ -122,6 +96,7 @@ input:-webkit-autofill {
     -webkit-box-shadow: none;
 }
 
+/* Header style */
 header {
   width: 100%;
   box-sizing: border-box;
@@ -132,6 +107,48 @@ header {
   padding: 20px 20px;
   display: flex;
   justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.head-align {
+  display: flex;
+  align-items: center;
+}
+
+.head2 {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.head-margin {
+  margin-right: 10px;
+}
+
+.hub:hover {
+  cursor: pointer;
+  padding: 4px 0;
+  -webkit-transition: border-bottom 0.5s ease-out;
+  -moz-transition: border-bottom 0.5s ease-out;
+  -o-transition: border-bottom 0.5s ease-out;
+  transition: border-bottom 0.5s ease-out;
+  border-bottom: #990000 2px solid;
+}
+
+.hub {
+  border-bottom: transparent 2px solid ;
+  font-size: 18px;
+}
+
+.hub-bar {
+  font-size: 22px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #CC0000;
+  font-weight: bold;
+}
+
+.hub-bar:hover {
+  cursor: default;
 }
 
 header a {
@@ -149,11 +166,10 @@ a {
 
 .screen {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100% - 70px);
 }
 
 .screen > * {
-  padding-top: 70px;
 }
 
 .loading-screen {
@@ -181,4 +197,38 @@ option {
 
 option:hover, option:active, option:focus {
   outline: none;
+}
+
+textarea {
+  resize: none;
+  background-color: #222;
+  color: white;
+  border: none;
+  margin: 10px;
+  padding: 10px;
+  height: 100px;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.hover-block {
+  position: absolute;
+  display: flex;
+}
+
+.hover-block-arrow {
+  width: 0;
+  height: 0;
+  margin-top: 20px;
+  border-style: solid;
+  border-width: 12.5px 21.7px 12.5px 0;
+  border-color: transparent #111 transparent transparent;
+}
+
+.hover-block-content {
+  background-color: #111;
+  padding: 10px;
+
 }

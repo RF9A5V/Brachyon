@@ -11,18 +11,18 @@ export default class LogInScreen extends Component {
         console.log(err);
       }
       else {
-        self.props.afterSubmit();
+        browserHistory.push('/events/discover');
       }
     })
   }
 
   render(){
     return (
-      <div className="col center">
+      <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center">
           <input type="text" name="email" placeholder="Email or Username" ref="token" />
           <input type="password" name="password" placeholder="Password" ref="password" />
-          <input type="submit" val="Submit" />
+          <input type="submit" value="Submit" />
         </form>
       </div>
     );
