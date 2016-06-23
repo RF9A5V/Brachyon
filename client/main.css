@@ -166,10 +166,11 @@ a {
 
 .screen {
   position: relative;
-  min-height: calc(100% - 70px);
+  min-height: 100vh;
 }
 
-.screen > * {
+.screen:not(.landing-screen) > * {
+  padding-top: 80px;
 }
 
 .loading-screen {
@@ -216,6 +217,7 @@ textarea:focus {
 .hover-block {
   position: absolute;
   display: flex;
+  z-index: 2;
 }
 
 .hover-block-arrow {

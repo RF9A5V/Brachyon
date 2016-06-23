@@ -295,6 +295,31 @@ Meteor.methods({
     })
   },
 
+  'sponsorships.add_node'(id, branch) {
+    var branches = Sponsorships.findOne(id).branches;
+    if(branches[branch] == null){
+      Sponsorships.update(id, {
+        $set: {
+          [`branches.${branch}`]: {
+            name: 'Branch',
+            icon: null,
+            nodes: []
+          }
+        }
+      })
+    }
+    else {
+      Sponsorships.update(id, {
+        $push: {
+          [`branches.${branch}.nodes`]: {
+            amount: 10,
+            description: 'Description'
+          }
+        }
+      })
+    }
+  },
+
   'sponsorships.update_nodes'(id, branches){
     branches = branches.map(function(val){
       if(val != null){
@@ -327,13 +352,17 @@ Meteor.methods({
   'sponsorships.delete_node'(id, pos, index) {
     spons = Sponsorships.findOne(id);
     if(spons){
-      branches = spons.branches;
-      branches[pos].nodes.splice(index, 1);
+      console.log(spons)
       Sponsorships.update(id, {
-        $set: {
-          branches
+        $unset: {
+          [`branches.${pos}.nodes.${index}`]: 1
         }
       });
+      Sponsorships.update(id, {
+        $pull: {
+          [`branches.${pos}.nodes`]: null
+        }
+      })
     }
   },
 

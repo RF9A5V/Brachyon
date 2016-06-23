@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import TrackerReact from 'meteor/ultimatejs:tracker-react'
 import GoogleMapsLoader from 'google-maps';
 
+import Ticketing from '/imports/api/ticketing/ticketing.js';
+
 import TabController from '../public/tab_controller.jsx';
 import CrowdfundingPanel from './view/crowdfunding.jsx';
+import TicketPanel from './view/ticketing.jsx';
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -77,6 +80,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
       {
         title: 'Crowdfunding',
         content: <CrowdfundingPanel {...Sponsorships.find().fetch()[0]}/>
+      },
+      {
+        title: 'Tickets',
+        content: <TicketPanel {...Ticketing.find().fetch()[0]} />
       }
     ];
   }
