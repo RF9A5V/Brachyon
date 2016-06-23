@@ -166,7 +166,7 @@ a {
 
 .screen {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100% - 70px);
 }
 
 .screen:not(.landing-screen) > * {
