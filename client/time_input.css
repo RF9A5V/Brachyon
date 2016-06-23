@@ -1,0 +1,11 @@
+.time-input input[type="text"] {
+  display: inline-block;
+  width: 50px;
+  border: none;
+  background-color: rgba(48, 48, 48, 0.3);
+  margin: 0 5px;
+}
+
+.time-input input:first-child{
+  margin-left: 0;
+}

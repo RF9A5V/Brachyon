@@ -1,0 +1,21 @@
+.spons-tree-node {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  background-color: white;
+  margin-bottom: 35px;
+  margin-right: 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.spons-tree-overlay {
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+}

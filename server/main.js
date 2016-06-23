@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import Events from '/imports/api/event/events.js';
 import Images from '/imports/api/event/images.js';
+import Games from '/imports/api/games/games.js';
 
 Events._ensureIndex({
   title: 'text'

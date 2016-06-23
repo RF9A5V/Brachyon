@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import TrackerReact from 'meteor/ultimatejs:tracker-react'
-
 import GoogleMapsLoader from 'google-maps';
+
+import TabController from '../public/tab_controller.jsx';
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -59,9 +60,21 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     )
   }
 
+  tabs() {
+    return [
+      {
+        title: 'Description',
+        content: (<div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>)
+      },
+      {
+        title: 'Crowdfunding',
+        content: <div>TBD</div>
+      }
+    ];
+  }
+
   render() {
     if(this.event() == null || this.banner() == null){
-
       return (
         <div>
         </div>
@@ -70,25 +83,18 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     event = this.event();
     banner = this.banner();
     return (
-      <div className="screen">
-        <div className="col">
+      <div className="screen row">
+        <div className="col-1 user-details">
+          <img src={banner.url()} style={{width: '100%', height: 'auto'}}/>
+          <div style={{padding: 20}}>
+            {this.location()}
+          </div>
+        </div>
+        <div className="col-3">
           <h1 style={{marginTop: 20, marginLeft: 20, textAlign: 'center'}}>
             {event.title}
           </h1>
-          <div className="row">
-            <div className="col-2" style={{padding: 20, textAlign: 'center'}}>
-              No Sponsorship
-            </div>
-            <div className="col-4" style={{width:'50%'}} style={{padding: 20}}>
-              <div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>
-            </div>
-            <div className="col-2">
-              <img src={banner.url()} style={{width: '100%', height: 'auto'}}/>
-              <div style={{padding: 20}}>
-                {this.location()}
-              </div>
-            </div>
-          </div>
+          <TabController tabs={this.tabs()} />
         </div>
       </div>
     );
