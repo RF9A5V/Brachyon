@@ -2,41 +2,6 @@ import React from 'react';
 
 export default class CreditCardForm extends React.Component {
 
-  connectToStripe(event){
-    Meteor.linkWithStripe({
-      stripe_landing: 'register',
-      newAccountDetails: {
-        'stripe_user[business_type]': 'non_profit',
-        'stripe_user[product_category]': 'charity'
-      }
-    }, function(err){
-      var connected = true;
-
-      if(err){
-        console.log('ERROR: ' + err);
-        Meteor.call("hasStripeLink", !connected, function(err, response){
-          if(err){
-            alert(err.message);
-          }
-          else{
-            alert("wow!");
-          }
-        });
-      }
-      else{
-        Meteor.call("isStripeConnected", true, function(err, response){
-          if(err){
-            alert(err.message);
-          }
-          else{
-            alert("yay!");
-          }
-        });
-        console.log('NO ERROR ON LOGIN');
-      }
-    });
-  }
-
   submitPayment(event){
     event.preventDefault();
 
@@ -49,22 +14,21 @@ export default class CreditCardForm extends React.Component {
 
     Stripe.createToken(cardDetails, function(status, response){
       if(response.error){
-        alert(response.error.message);
+        toastr.error(response.error.message);
       }
       else{
         Meteor.call("addCard", response.id, function(err, response){
           if(err){
-            alert(err.message);
+            toastr.error(err.message);
           }
           else{
             //loadCardInfo();
-            alert("Card Saved");
+            toastr.success("Card Saved");
           }
         })
       }
     })
   }
-
 
   render () {
     return (
@@ -112,9 +76,6 @@ export default class CreditCardForm extends React.Component {
           </div>
           <input type="submit"/>
         </form>
-        <div>
-          <button onClick={this.connectToStripe.bind(this)}>Connect to Stripe</button>
-        </div>
       </div>
       )
   }
