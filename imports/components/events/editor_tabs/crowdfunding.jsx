@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CFTree from '../crowdfunding/crowdfunding_tree.jsx';\
+import CFTree from '../crowdfunding/crowdfunding_tree.jsx';
 import TierEditor from './tiers.jsx';
 
 export default class CrowdfundingPanel extends Component {
