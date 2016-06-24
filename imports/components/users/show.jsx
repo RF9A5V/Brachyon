@@ -9,6 +9,7 @@ import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
+import BasicExample from '../public/modal.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 

@@ -252,9 +252,9 @@ Meteor.methods({
       "hasCard": false
     }
   },
-  "chargeCard": function(cardToken){
-    /*stripe.charges.create({
-      amount: 500,
+  "chargeCard": function(cardToken, chargeAmount, eventId){
+    stripe.charges.create({
+      amount: chargeAmount,
       currency: "usd",
       source: cardToken
     }, function(err, response){
@@ -265,7 +265,7 @@ Meteor.methods({
       else{
         return response;
       }
-    })*/
+    })
   },
   "isStripeConnected": function(connected){
     Meteor.users.update(Meteor.userId(), {$set: {isStripeConnected: connected}});
