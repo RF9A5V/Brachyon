@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import TrackerReact from 'meteor/ultimatejs:tracker-react'
 import GoogleMapsLoader from 'google-maps';
 
+import Ticketing from '/imports/api/ticketing/ticketing.js';
+
 import TabController from '../public/tab_controller.jsx';
+import CrowdfundingPanel from './view/crowdfunding.jsx';
+import TicketPanel from './view/ticketing.jsx';
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -13,7 +17,14 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     GoogleMapsLoader.LIBRARIES = ['geometry', 'places'];
 
     this.setState({
-      event: Meteor.subscribe('event', this.props.params.eventId),
+      event: Meteor.subscribe('event', this.props.params.eventId, {
+        onReady() {
+          self.setState({
+            loaded: true
+          })
+        }
+      }),
+      loaded: false,
       apiLoaded: false
     })
 
@@ -61,20 +72,29 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   tabs() {
-    return [
+    var rez = [
       {
         title: 'Description',
         content: (<div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>)
-      },
-      {
-        title: 'Crowdfunding',
-        content: <div>TBD</div>
       }
     ];
+    if(Sponsorships.find().fetch()[0]){
+      rez.push({
+        title: 'Crowdfunding',
+        content: <CrowdfundingPanel {...Sponsorships.find().fetch()[0]}/>
+      });
+    }
+    if(Ticketing.find().fetch()[0]){
+      rez.push({
+        title: 'Tickets',
+        content: <TicketPanel {...Ticketing.find().fetch()[0]} />
+      })
+    }
+    return rez;
   }
 
   render() {
-    if(this.event() == null || this.banner() == null){
+    if(!(this.state.loaded && this.state.apiLoaded)){
       return (
         <div>
         </div>

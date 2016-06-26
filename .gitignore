@@ -1,3 +1,5 @@
 node_modules/
 uploads/
 notes/
+mup.json
+settings.json

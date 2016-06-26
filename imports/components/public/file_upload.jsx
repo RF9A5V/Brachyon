@@ -6,14 +6,16 @@ export default class FileUpload extends Component {
     super(props);
     this.state = {
       hasFile: props.value != null,
-      file: props.value
+      file: props.value,
+      changed: false
     }
   }
 
   componentWillReceiveProps() {
     this.setState({
       hasFile: false,
-      file: null
+      file: null,
+      changed: false
     })
     return true;
   }
@@ -29,7 +31,8 @@ export default class FileUpload extends Component {
     reader.onload = (function(){
       this.setState({
         hasFile: true,
-        file: reader.result
+        file: reader.result,
+        changed: true
       })
     }).bind(this);
     reader.readAsDataURL(e.target.files[0])

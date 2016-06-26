@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
+import ImageModal from '/imports/components/public/img_modal.jsx';
+import ImageForm from '/imports/components/public/img_form.jsx';
 
 export default class ProfileImage extends Component {
 
   componentWillMount() {
     this.setState({
       hover: false,
-      temp: null,
-      file: null
+      open: false
     })
   }
 
   imgOrDefault() {
-    if(this.state.temp != null){
-      return this.state.temp;
+    if(this.state.preview != null){
+      return this.state.preview;
     }
     if(this.props.imgUrl == null){
       return '/images/profile.png';
@@ -22,47 +23,15 @@ export default class ProfileImage extends Component {
     }
   }
 
-  previewImage(e){
-    self = this;
-    reader = new FileReader();
-    file = e.target.files[0];
-    reader.onload = function(e){
-      self.setState({
-        temp: e.target.result,
-        file
-      })
-    }
-    console.log(file.type)
-    reader.readAsDataURL(file);
-  }
-
-  uploadImage() {
-    self = this;
-    reader = new FileReader();
-    reader.onload = function(e) {
-      data = this.result;
-      len = data.length;
-      arr = new Uint8Array(len);
-      for(var i = 0; i < len; i ++){
-        arr[i] = data.charCodeAt(i);
+  updateProfileImage(file, dimensions) {
+    Meteor.call('users.update_profile_image', Meteor.userId(), file, dimensions, function(err) {
+      if(err){
+        toastr.error(err.reason);
       }
-      f = {
-        type: self.state.file.type,
-        content: arr
+      else {
+        toastr.success("Successfully updated profile image!");
       }
-      Meteor.call('users.update_profile_image', Meteor.userId(), f, function(err){
-        if(err){
-          toastr.error(err.reason);
-        }
-        else {
-          toastr.success("Successfully updated profile image.");
-        }
-        self.setState({
-          file: null
-        })
-      })
-    }
-    reader.readAsBinaryString(this.state.file);
+    });
   }
 
   render() {
@@ -76,7 +45,7 @@ export default class ProfileImage extends Component {
         }>
           {
             this.state.hover ? (
-              <div className="image-overlay" onClick={() => { this.refs.img.click() }}>
+              <div className="image-overlay" onClick={() => { this.setState({open: true}); }}>
                 <b>Edit</b>
               </div>
             ) : (
@@ -84,14 +53,9 @@ export default class ProfileImage extends Component {
             )
           }
         </div>
-        <input type="file" style={{display: 'none'}} ref="img" onChange={this.previewImage.bind(this)} />
-        {
-          this.state.file != null ? (
-            <button style={{marginTop: 15}} onClick={this.uploadImage.bind(this)}>Update Profile Image</button>
-          ) : (
-            ""
-          )
-        }
+        <ImageModal open={this.state.open}>
+          <ImageForm handler={this.updateProfileImage.bind(this)} />
+        </ImageModal>
       </div>
     );
   }

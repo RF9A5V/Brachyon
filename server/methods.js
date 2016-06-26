@@ -3,6 +3,7 @@ import Games from '/imports/api/games/games.js';
 import Sponsorships from '/imports/api/event/sponsorship.js';
 import Icons from '/imports/api/sponsorship/icon.js';
 import Tickets from '/imports/api/ticketing/ticketing.js';
+import ProfileImages from '/imports/api/users/profile_images.js';
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -317,31 +318,28 @@ Meteor.methods({
   },
 
   'users.update_profile_image'(id, file){
-    f = new FS.File();
+    f = new FS.File({dimensions: file.dimensions});
     f.attachData(file.content, { type: file.type });
-    Images.insert(f, function(err, obj){
-      if(err){
-
+    ProfileImages.insert(f, function(err, obj){
+      user = Meteor.users.findOne(id);
+      if(user.profile.image_ref){
+        ProfileImages.remove(user.profile.image_ref)
       }
-      else {
-        user = Meteor.users.findOne(id);
-        if(user.profile.image_ref){
-          Images.remove(user.profile.image_ref)
+      Meteor.users.update(id, {
+        $set: {
+          'profile.image': obj.url({brokenIsFine: true}),
+          'profile.image_ref': obj._id
         }
-        Meteor.users.update(id, {
-          $set: {
-            'profile.image': obj.url({brokenIsFine: true}),
-            'profile.image_ref': obj._id
-          }
-        })
-      }
+      })
     })
   },
+
   'events.create_sponsorship'(id) {
     Sponsorships.insert({
       eventId: id,
       start: { amount: 0 },
-      branches: [null, null, null, null, null]
+      branches: [null, null, null, null, null],
+      tiers: []
     }, function(err, obj){
       Events.update(id, {
         $set: {
@@ -351,45 +349,72 @@ Meteor.methods({
     })
   },
 
-  'sponsorships.update_nodes'(id, branches){
-    branches = branches.map(function(val){
-      if(val != null){
-        if(val.file != null){
-          file = new FS.File();
-          file.attachData(val.file);
-          Icons.insert(file, function(err, obj){
-            if(err){
-              console.log(err);
-              throw new Error('Shit');
-            }
-            else {
-              delete val.file;
-              val.icon = obj.url({brokenIsFine: true});
-              return val;
+  'sponsorships.add_node'(id, branch) {
+    var branches = Sponsorships.findOne(id).branches;
+    if(branches[branch] == null){
+      Sponsorships.update(id, {
+        $set: {
+          [`branches.${branch}`]: {
+            name: 'Branch',
+            icon: null,
+            nodes: []
+          }
+        }
+      })
+    }
+    else {
+      Sponsorships.update(id, {
+        $push: {
+          [`branches.${branch}.nodes`]: {
+            amount: 10,
+            description: 'Description'
+          }
+        }
+      })
+    }
+  },
+
+  'sponsorships.update_node'(id, branch, index, attrs){
+    if(attrs.icon){
+      file = new FS.File();
+      file.attachData(attrs.icon);
+      Icons.insert(file, function(err, obj){
+        if(obj){
+          Sponsorships.update(id, {
+            $set: {
+              [`branches.${branch}.name`]: attrs.name,
+              [`branches.${branch}.icon`]: obj.url({brokenIsFine: true}),
+              [`branches.${branch}.nodes.${index}.amount`]: attrs.amount,
+              [`branches.${branch}.nodes.${index}.description`]: attrs.description
             }
           })
         }
-      }
-      return val;
-    })
-
-    Sponsorships.update(id, {
-      $set: {
-        branches
-      }
-    })
+      })
+    }
+    else {
+      Sponsorships.update(id, {
+        $set: {
+          [`branches.${branch}.name`]: attrs.name,
+          [`branches.${branch}.nodes.${index}.amount`]: attrs.amount,
+          [`branches.${branch}.nodes.${index}.description`]: attrs.description
+        }
+      })
+    }
   },
 
   'sponsorships.delete_node'(id, pos, index) {
     spons = Sponsorships.findOne(id);
     if(spons){
-      branches = spons.branches;
-      branches[pos].nodes.splice(index, 1);
       Sponsorships.update(id, {
-        $set: {
-          branches
+        $unset: {
+          [`branches.${pos}.nodes.${index}`]: 1
         }
       });
+      Sponsorships.update(id, {
+        $pull: {
+          [`branches.${pos}.nodes`]: null
+        }
+      })
     }
   },
 
@@ -397,7 +422,6 @@ Meteor.methods({
     Tickets.insert({
       tickets: []
     }, function(err, obj){
-      console.log(obj)
       if(err){
         throw new Error(err.reason)
       }

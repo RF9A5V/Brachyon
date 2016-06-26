@@ -73,7 +73,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       {
         title: 'Crowdfunding',
         content: (
-          <CrowdfundingPanel id={this.props.params.eventId} sponsorship={this.sponsorship()} />
+          <CrowdfundingPanel id={this.props.params.eventId} {...this.sponsorship()} />
         )
       },
       {
