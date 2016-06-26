@@ -27,3 +27,4 @@ cfs:standard-packages
 lookback:logger
 u2622:persistent-session
 cfs:gridfs
+cfs:graphicsmagick

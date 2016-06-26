@@ -3,6 +3,7 @@ import Games from '/imports/api/games/games.js';
 import Sponsorships from '/imports/api/event/sponsorship.js';
 import Icons from '/imports/api/sponsorship/icon.js';
 import Tickets from '/imports/api/ticketing/ticketing.js';
+import ProfileImages from '/imports/api/users/profile_images.js';
 
 Meteor.methods({
   'events.create'(id, attrs) {
@@ -261,26 +262,22 @@ Meteor.methods({
   },
 
   'users.update_profile_image'(id, file){
-    f = new FS.File();
+    f = new FS.File({dimensions: file.dimensions});
     f.attachData(file.content, { type: file.type });
-    Images.insert(f, function(err, obj){
-      if(err){
-
+    ProfileImages.insert(f, function(err, obj){
+      user = Meteor.users.findOne(id);
+      if(user.profile.image_ref){
+        ProfileImages.remove(user.profile.image_ref)
       }
-      else {
-        user = Meteor.users.findOne(id);
-        if(user.profile.image_ref){
-          Images.remove(user.profile.image_ref)
+      Meteor.users.update(id, {
+        $set: {
+          'profile.image': obj.url({brokenIsFine: true}),
+          'profile.image_ref': obj._id
         }
-        Meteor.users.update(id, {
-          $set: {
-            'profile.image': obj.url({brokenIsFine: true}),
-            'profile.image_ref': obj._id
-          }
-        })
-      }
+      })
     })
   },
+
   'events.create_sponsorship'(id) {
     Sponsorships.insert({
       eventId: id,
@@ -369,7 +366,6 @@ Meteor.methods({
     Tickets.insert({
       tickets: []
     }, function(err, obj){
-      console.log(obj)
       if(err){
         throw new Error(err.reason)
       }
