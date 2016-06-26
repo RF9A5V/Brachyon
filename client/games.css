@@ -50,10 +50,25 @@
   border-radius: 100%;
   width: 30px;
   height: 30px;
-  background-color: #222;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+}
+
+.game-icon.add:hover {
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  background-color: white;
+}
+
+.game-icon.add:hover span {
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  color: black;
 }
 
 .game-icon:not(:first-child) {
