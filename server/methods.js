@@ -260,7 +260,6 @@ Meteor.methods({
     }, function(err, response){
       if(err){
         //throw new Meteor.error(500, "stripe-error", err.message);
-        console.log("wow");
       }
       else{
         return response;
@@ -268,7 +267,7 @@ Meteor.methods({
     })
   },
   "isStripeConnected": function(connected){
-    Meteor.users.update(Meteor.userId(), {$set: {isStripeConnected: connected}});
+    Meteor.users.update(Meteor.userId(), {$set: {"oauth.isStripeConnected": connected}});
   },
   'games.create'(attrs) {
     if(!attrs){
