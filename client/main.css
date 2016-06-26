@@ -126,7 +126,6 @@ header {
 
 .hub:hover {
   cursor: pointer;
-  padding: 4px 0;
   -webkit-transition: border-bottom 0.5s ease-out;
   -moz-transition: border-bottom 0.5s ease-out;
   -o-transition: border-bottom 0.5s ease-out;
@@ -135,6 +134,7 @@ header {
 }
 
 .hub {
+  padding: 4px 0;
   border-bottom: transparent 2px solid ;
   font-size: 18px;
 }
@@ -170,7 +170,7 @@ a {
 }
 
 .screen:not(.landing-screen) > * {
-  padding-top: 80px;
+  padding-top: 130px;
 }
 
 .loading-screen {
@@ -232,5 +232,26 @@ textarea:focus {
 .hover-block-content {
   background-color: #111;
   padding: 10px;
+}
 
+.accordion-container {
+  margin-bottom: 20px;
+}
+
+.accordion-header {
+  background-color: #666;
+  padding: 10px;
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-header h3 {
+  margin: 0;
+}
+
+.accordion-content {
+  padding: 20px;
+  background-color: #444;
 }
