@@ -6,12 +6,38 @@
 }
 
 html, body, #react-root, #app {
+  height: 100%;
   margin: 0;
   background-color: #333;
 }
 
-.main-layout {
-  height: 100vh;
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.footer-div {
+  margin: 4px;
+  cursor: default;
 }
 
 /* Flex rows and column stuff */
@@ -59,6 +85,12 @@ html, body, #react-root, #app {
 
 .self-end {
   align-self: flex-end;
+}
+
+h2 {
+  color: #FFD700;
+  background-color: #222;
+  padding: 5px;
 }
 
 button, input[type="submit"], .custom-file-upload {
@@ -110,7 +142,6 @@ input:-webkit-autofill {
 header {
   width: 100%;
   box-sizing: border-box;
-  position:absolute;
   top: 0;
   left: 0;
   z-index: 1;
@@ -140,7 +171,6 @@ header {
 }
 
 .signup-button {
-  color: #CC0000;
   border-color: #CC0000;
   width: 100px;
 }
@@ -189,14 +219,6 @@ a {
 #app > div {
   width: 100%;
   min-height: 100vh;
-}
-
-.screen {
-  position: relative;
-  min-height: calc(100% - 70px);
-}
-
-.screen > * {
 }
 
 .loading-screen {
