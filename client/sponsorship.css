@@ -1,0 +1,77 @@
+.spons-tree-node {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  background-color: white;
+  margin-bottom: 35px;
+  margin-right: 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.spons-tree-overlay {
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+}
+
+.spons-grid {
+  width: 450px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.spons-grid-element {
+  width: 50px;
+  height: 50px;
+  margin: 0 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.spons-grid-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #222;
+  border-radius: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spons-grid-line {
+  position: relative;
+  background-color: white;
+}
+
+.vertical {
+  height: 105px;
+  width: 5px;
+}
+
+.horizontal {
+  height: 5px;
+  width: 180px;
+  position: absolute;
+  top: 22.5px;
+}
+
+.half {
+  width: 30px;
+}
+
+.left {
+  right: -30px;
+}
+
+.right {
+  left: -62.5px;
+}

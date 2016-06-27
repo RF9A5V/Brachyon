@@ -1,10 +1,14 @@
 import Games from '/imports/api/games/games.js';
+import Sponsorships from '/imports/api/event/sponsorship.js';
+import Ticketing from '/imports/api/ticketing/ticketing.js';
 
 Meteor.publish('event', (_id) => {
   event = Events.findOne(_id);
   return [
     Events.find({_id}),
-    Images.find({_id: event.banner})
+    Images.find({_id: event.banner}),
+    Sponsorships.find({_id: event.sponsorship}),
+    Ticketing.find({_id: event.ticketing})
   ];
 });
 
@@ -14,7 +18,7 @@ Meteor.publish('events', function(){
 
 Meteor.publish('userEvents', (id) => {
   event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.banner });
-  games = Meteor.users.findOne(id).profile.games;
+  games = Meteor.users.findOne(id).profile.games || [];
   game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
   return [
     Events.find({owner: id}),

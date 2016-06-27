@@ -5,16 +5,26 @@ import EventDescription from './editor_tabs/description.jsx';
 import EventBanner from './editor_tabs/banner.jsx';
 import EventTime from './editor_tabs/time.jsx';
 import EventLocation from './editor_tabs/location.jsx';
+import CrowdfundingPanel from './editor_tabs/crowdfunding.jsx';
+import Ticketing from './editor_tabs/ticketing.jsx';
 
 import LoadingScreen from '../public/loading.jsx';
 import TabController from '../public/tab_controller.jsx';
+
+import Sponsorships from '/imports/api/event/sponsorship.js';
+import Tickets from '/imports/api/ticketing/ticketing.js';
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
   componentWillMount(){
     self = this;
     this.setState({
-      event: Meteor.subscribe('event', self.props.params.eventId)
+      event: Meteor.subscribe('event', self.props.params.eventId, {
+        onReady() {
+          self.setState({isLoaded: true})
+        }
+      }),
+      isLoaded: false
     })
   }
 
@@ -24,6 +34,14 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   event() {
     return Events.find().fetch()[0];
+  }
+
+  sponsorship() {
+    return Sponsorships.find().fetch()[0];
+  }
+
+  ticketing() {
+    return Tickets.find().fetch()[0];
   }
 
   tabs(){
@@ -51,12 +69,24 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         content: (
           <EventLocation id={this.props.params.eventId} {...event.location} />
         )
+      },
+      {
+        title: 'Crowdfunding',
+        content: (
+          <CrowdfundingPanel id={this.props.params.eventId} {...this.sponsorship()} />
+        )
+      },
+      {
+        title: 'Ticketing',
+        content: (
+          <Ticketing id={this.props.params.eventId} {...this.ticketing()} />
+        )
       }
     ]
   }
 
   render() {
-    if(this.event() == null){
+    if(!this.state.isLoaded){
       return (
         <LoadingScreen />
       )

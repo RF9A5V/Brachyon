@@ -5,6 +5,7 @@ import FontAwesome from 'react-fontawesome';
 
 import Games from '/imports/api/games/games.js';
 
+import BasicExample from '/imports/components/public/modal.jsx';
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import ProfileImage from './profile_image.jsx';
@@ -110,7 +111,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                   );
                 })
               }
-              <div className="game-icon">
+              <div className="game-icon add">
                 <Link to={`/games/select`}>
                   <FontAwesome name="plus" />
                 </Link>
@@ -118,7 +119,10 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
             </div>
             <h2>Create an Event</h2>
-            <BasicExample/>
+            <Link to='/events/create'>
+              <button>Create Event</button>
+            </Link>
+
           </div>
         </div>
         <div className="col-3 event-details">
