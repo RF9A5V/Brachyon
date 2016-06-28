@@ -8,8 +8,11 @@ export default class TicketingForm extends Component {
     })
   }
 
+  componentWillReceiveProps(next){
+    Object.keys(this.refs).map( (val) => { this.refs[val].value = next[val] } )
+  }
+
   componentDidMount() {
-    this.setParams();
     this.setState({
       loaded: true
     })
@@ -28,7 +31,6 @@ export default class TicketingForm extends Component {
   }
 
   render() {
-    Object.keys(this.refs).map( (val) => { this.refs[val].value = this.props[val] } )
     return (
       <form className="col" style={{justifyContent: 'center'}} onSubmit={this.onSubmit.bind(this)}>
         <label>Ticket Name</label>
