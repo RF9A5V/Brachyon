@@ -253,11 +253,12 @@ Meteor.methods({
       "hasCard": false
     }
   },
-  "chargeCard": function(cardToken, chargeAmount, eventId){
+  "chargeCard": function(payableTo, chargeAmount){
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
-      source: cardToken
+      customer: Meteor.user().stripeCustomer,
+      destination: Meteor.users.findOne(payableTo).services.stripe.id
     }, function(err, response){
       if(err){
         //throw new Meteor.error(500, "stripe-error", err.message);
@@ -442,7 +443,8 @@ Meteor.methods({
           name: 'Ticket',
           description: 'This is your ticket description.',
           limit: 100,
-          amount: 100
+          amount: 100,
+          payableTo: Meteor.userId()
         }
       }
     })

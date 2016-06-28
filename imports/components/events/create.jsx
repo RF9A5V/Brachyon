@@ -27,7 +27,7 @@ export default class EventCreateScreen extends Component {
 
   render() {
     return (
-      <div className='screen'>
+      <div className='box'>
         <div className='col x-center'>
           <h2>Create an Event</h2>
           {

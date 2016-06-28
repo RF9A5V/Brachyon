@@ -10,6 +10,7 @@ import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
 import BasicExample from '../public/modal.jsx';
+import LinkToStripe from '../public/link_to_stripe.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -123,7 +124,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             <Link to='/events/create'>
               <button>Create Event</button>
             </Link>
-
+            <LinkToStripe />
           </div>
         </div>
         <div className="col-3 event-details">
