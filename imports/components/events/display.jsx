@@ -6,29 +6,28 @@ import { Link } from 'react-router';
 export default class EventDisplay extends React.Component {
 
   imgOrDefault() {
-    img = Images.findOne(this.props.banner);
-    if(img == null){
+    if(this.props.banner == null){
       return '/images/balls.svg';
     }
     else {
-      return img.url();
+      return this.props.banner;
     }
   }
 
   title() {
-    if(this.props.title == null){
+    if(this.props.details.name == null){
       return "TBD";
     }
     else {
-      return this.props.title;
+      return this.props.details.name;
     }
   }
 
   description() {
-    if(this.props.description == null){
+    if(this.props.details.description == null){
       return "There's no description for this event.";
     }
-    parsed = this.props.description.replace(/<img .*>/g, "").replace(/<\/?[A-z]+>/, "");
+    parsed = this.props.details.description.replace(/<img .*>/g, "").replace(/<\/?[A-z]+>/, "");
     if(parsed.length == 0){
       return "There's no description for this event.";
     }
