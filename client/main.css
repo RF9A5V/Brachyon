@@ -26,6 +26,7 @@ html, body, #react-root, #app {
 
 .box .row.content {
   flex: 1 1 auto;
+  min-height: 100%;
 }
 
 .box .row.footer {
@@ -53,6 +54,10 @@ html, body, #react-root, #app {
 .center {
   justify-content: center;
   text-align: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .flex-pad {

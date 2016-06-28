@@ -61,7 +61,7 @@ export default class ApprovalScreen extends TrackerReact(Component) {
       )
     }
     return (
-      <div className="screen">
+      <div className="content">
         <div>
           <table className="approval-table">
             <tr>

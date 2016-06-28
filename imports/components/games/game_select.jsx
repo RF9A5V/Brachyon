@@ -85,7 +85,7 @@ export default class GameSelectScreen extends TrackerReact(Component) {
       )
     }
     return (
-      <div className="screen">
+      <div className="content">
         <div>
           <div style={{padding: 10}}>
             <h2>Select Your Games</h2>
