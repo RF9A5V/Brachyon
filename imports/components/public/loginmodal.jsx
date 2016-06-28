@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import LogInScreen from './login.jsx';
+import FontAwesome from 'react-fontawesome';
 
 export default class LogInModal extends React.Component {
     constructor () {
@@ -21,13 +22,13 @@ export default class LogInModal extends React.Component {
     render () {
       return (
         <div>
-          <button className="head-margin" onClick={this.openModal.bind(this)}>Log In</button>
+          <button className="head-margin login-button" onClick={this.openModal.bind(this)}>Log In</button>
           <Modal
-            className = "cred-modal"
+            className = "create-modal"
             overlayClassName = "cred-overlay"
             isOpen={this.state.open}>
-            <div className="div-pad">
-              <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
+            <div className="row justify-end">
+              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
             </div>
             <h1 style={{textAlign: 'center'}}>Log In</h1>
             <LogInScreen />

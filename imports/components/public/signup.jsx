@@ -37,7 +37,7 @@ export default class SignUpScreen extends React.Component {
           <input type="text" name="email" placeholder="Email" ref="email" />
           <input type="text" name="username" placeholder="Username" ref="username" />
           <input type="password" name="password" placeholder="Password" ref="password" />
-          <input type="submit" val="Signup" />
+          <input type="submit" value="Sign Up" />
         </form>
       </div>
     )

@@ -23,27 +23,27 @@ export default class Header extends TrackerReact(Component) {
       )
     }
     return (
-      <header class="row x-center">
+      <header class="row x-center header">
         <div className="col-1 head-align">
           <Link className="hub" to="events/discover">
             DISCOVER
           </Link>
           <span className="hub-bar">
-            /
+            |
           </span>
           <Link className="hub" to="events/discover">
             CREATE
           </Link>
           <span className="hub-bar">
-            /
+            |
           </span>
           <Link className="hub" to="events/discover">
             MARKET
           </Link>
           <span className="hub-bar">
-            /
+            |
           </span>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="about">
             ABOUT
           </Link>
         </div>

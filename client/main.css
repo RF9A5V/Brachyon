@@ -6,12 +6,39 @@
 }
 
 html, body, #react-root, #app {
+  height: 100%;
   margin: 0;
   background-color: #333;
 }
 
-.main-layout {
-  height: 100vh;
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+  min-height: 100%;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.footer-div {
+  margin: 4px;
+  cursor: default;
 }
 
 /* Flex rows and column stuff */
@@ -27,6 +54,14 @@ html, body, #react-root, #app {
 .center {
   justify-content: center;
   text-align: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.flex-pad {
+  justify-content: space-between;
 }
 
 .wrap {
@@ -57,11 +92,19 @@ html, body, #react-root, #app {
   align-self: flex-end;
 }
 
+h2 {
+  color: #FFD700;
+  background-color: #222;
+  padding: 5px;
+}
+
 button, input[type="submit"], .custom-file-upload {
   background: none;
   border: solid 2px white;
   padding: 5px 10px;
   font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 button.inactive, input[type="submit"].inactive {
@@ -71,6 +114,9 @@ button.inactive, input[type="submit"].inactive {
 
 button:not(.inactive):hover, input[type="submit"]:not(.inactive):hover {
   cursor: pointer;
+  -moz-box-shadow: 0 0 10px #ccc;
+	-webkit-box-shadow: 0 0 10px #ccc;
+	box-shadow: 0 0 10px #ccc;
 }
 
 input[type='text'], input[type="password"], input {
@@ -115,7 +161,6 @@ input:-webkit-autofill {
 header {
   width: 100%;
   box-sizing: border-box;
-  position:absolute;
   top: 0;
   left: 0;
   z-index: 1;
@@ -136,7 +181,23 @@ header {
 }
 
 .head-margin {
-  margin-right: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.login-button {
+  width: 100px;
+}
+
+.signup-button {
+  border-color: #CC0000;
+  width: 100px;
+}
+
+.signup-button:hover {
+  -moz-box-shadow: 0 0 10px #CC0000;
+	-webkit-box-shadow: 0 0 10px #CC0000;
+	box-shadow: 0 0 10px #CC0000;
 }
 
 .hub:hover {
@@ -145,7 +206,7 @@ header {
   -moz-transition: border-bottom 0.5s ease-out;
   -o-transition: border-bottom 0.5s ease-out;
   transition: border-bottom 0.5s ease-out;
-  border-bottom: #990000 2px solid;
+  border-bottom: #CC0000 2px solid;
 }
 
 .hub {
@@ -177,15 +238,6 @@ a {
 #app > div {
   width: 100%;
   min-height: 100vh;
-}
-
-.screen {
-  position: relative;
-  min-height: 100vh;
-}
-
-.screen:not(.landing-screen) > * {
-  padding-top: 130px;
 }
 
 .loading-screen {
