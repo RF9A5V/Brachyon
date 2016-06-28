@@ -5,8 +5,7 @@ export default class LinkToStripe extends React.Component {
     Meteor.linkWithStripe({
       stripe_landing: 'register',
       newAccountDetails: {
-        'stripe_user[business_type]': 'non_profit',
-        'stripe_user[product_category]': 'charity'
+        'stripe_user[email]': Meteor.user().emails[0].address
       }
     }, function(err){
       var connected = true;
@@ -17,17 +16,16 @@ export default class LinkToStripe extends React.Component {
             alert(err.message);
           }
           else{
-            alert("wow!");
+            toastr.error("Oh no... looks like you already linked an account")
           }
         });
       }
       else{
         Meteor.call("isStripeConnected", connected, function(err){
           if(err){
-            toastr.success("You are now connected!", "Stripe Link");
           }
           else{
-            toastr.error("Oh no... seems we were rejected", "Stripe Link");
+            toastr.success("You are now connected!", "Stripe Link");
           }
         });
       }

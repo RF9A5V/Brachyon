@@ -5,6 +5,8 @@ export default class CreditCardForm extends React.Component {
   submitPayment(event){
     event.preventDefault();
 
+    var self = this;
+
     var cardDetails = {
       "number": this.refs.cardNumber.value,
       "cvc": this.refs.cvc.value,
@@ -23,7 +25,11 @@ export default class CreditCardForm extends React.Component {
           }
           else{
             //loadCardInfo();
-            toastr.success("Card Saved");
+            Meteor.call("chargeCard", self.props.payableTo, self.props.amount, function(err, res){
+              if(err){
+                toastr.error(err.message);
+              }
+            })
           }
         })
       }
@@ -74,7 +80,7 @@ export default class CreditCardForm extends React.Component {
               />
             </div>
           </div>
-          <input type="submit"/>
+          <input type="submit" value={`Pay $${(this.props.amount / 100).toFixed(2)}`}/>
         </form>
       </div>
       )
