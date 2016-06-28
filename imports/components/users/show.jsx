@@ -104,7 +104,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                 Games.find().fetch().map(function(game){
                   return (
                     <div className="game-icon" style={{
-                      backgroundImage: `url(${Images.findOne(game.banner).url()})`,
+                      backgroundImage: `url(${game.banner})`,
                       backgroundSize: '100% 100%'
                     }}>
                     </div>
@@ -136,7 +136,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock {...ev} image={self.image(ev._id)} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock {...ev} image={ev.banner} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }

@@ -107,7 +107,12 @@ button, input[type="submit"], .custom-file-upload {
   margin-bottom: 5px;
 }
 
-button:hover, input[type="submit"]:hover {
+button.inactive, input[type="submit"].inactive {
+  border: solid 2px #666;
+  color: #666;
+}
+
+button:not(.inactive):hover, input[type="submit"]:not(.inactive):hover {
   cursor: pointer;
   -moz-box-shadow: 0 0 10px #ccc;
 	-webkit-box-shadow: 0 0 10px #ccc;
@@ -119,8 +124,13 @@ input[type='text'], input[type="password"], input {
   border: none;
   background: #222;
   margin: 20px 10px;
+  margin-left: 0;
   font-size: 16px;
   outline: none;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
 }
 
 input[attribute='value'] {
@@ -130,6 +140,11 @@ input[attribute='value'] {
 input[type="file"] {
     display: none;
 }
+
+label {
+  margin-right: 10px;
+}
+
 .custom-file-upload {
     border: 1px solid #ccc;
     display: inline-block;
@@ -258,6 +273,7 @@ textarea {
   color: white;
   border: none;
   margin: 10px;
+  margin-left: 0;
   padding: 10px;
   height: 100px;
 }
@@ -306,4 +322,6 @@ textarea:focus {
 .accordion-content {
   padding: 20px;
   background-color: #444;
+  width: 420px;
+  box-sizing: border-box;
 }

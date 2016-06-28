@@ -9,7 +9,6 @@ export default class TicketingForm extends Component {
   }
 
   componentDidMount() {
-    this.setParams();
     this.setState({
       loaded: true
     })
