@@ -21,7 +21,7 @@ export default class LogInModal extends React.Component {
     render () {
       return (
         <div>
-          <button className="head-margin" onClick={this.openModal.bind(this)}>Log In</button>
+          <button className="head-margin login-button" onClick={this.openModal.bind(this)}>Log In</button>
           <Modal
             className = "cred-modal"
             overlayClassName = "cred-overlay"
