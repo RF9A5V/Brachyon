@@ -53,18 +53,17 @@ Meteor.publish('events_to_review', function(){
 })
 
 Meteor.publish('unapproved_games', function() {
-  games = Games.find({ approved: false }).fetch().map(function(val) { return val.banner });
-  console.log(games);
   return [
-    Games.find({ approved: false }),
-    Images.find({_id: { $in: games } })
+    Games.find({ approved: false })
   ];
 })
 
 Meteor.publish('games', function(){
-  games = Games.find({ approved: true }).fetch().map(function(val) { return val.banner });
   return [
-    Games.find({approved: true}),
-    Images.find({_id: { $in: games } })
+    Games.find({approved: true})
   ]
+})
+
+Meteor.publish('game_search', function(query) {
+  return Games.find( { } );
 })
