@@ -34,6 +34,7 @@ html, body, #react-root, #app {
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
+  padding: 10px 0;
 }
 
 .footer-div {
@@ -196,20 +197,34 @@ header {
 
 .hub {
   padding: 4px 0;
-  border-bottom: transparent 2px solid ;
-  font-size: 18px;
+  border-bottom: transparent 2px solid;
 }
 
-.hub-bar {
-  font-size: 22px;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: #CC0000;
-  font-weight: bold;
+.hub-show {
+  -webkit-animation-name: animatehub;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatehub;
+  animation-duration: 0.4s;
+  -ms-transform: translateX(50px); /* IE 9 */
+  -webkit-transform: translateX(50px); /* Safari */
+  transform: translateX(50px);
 }
 
-.hub-bar:hover {
-  cursor: default;
+.hub-hide {
+  display: none;
+  -ms-transform: translateX(-50px); /* IE 9 */
+  -webkit-transform: translateX(-50px); /* Safari */
+  transform: translateX(-50px);
+}
+
+@-webkit-keyframes animatehub {
+  from {top: 0; opacity: 0; display: none;}
+  to {opacity: 1; display: inline;}
+}
+
+@keyframes animatehub {
+  from {opacity: 0; display: none;}
+  to {opacity: 1; display: inline;}
 }
 
 header a {

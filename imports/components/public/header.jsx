@@ -3,12 +3,32 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
+import Headroom from 'react-headroom';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
     e.preventDefault();
     Meteor.logout();
   }
+
+  constructor () {
+    super();
+    this.state = {
+      hover: false,
+    }
+  }
+
+  mouseOver() {
+    this.setState({hover: true});
+  }
+
+  mouseOut(e) {
+    console.log(e);
+    if(e.target.classList.contains("header")){
+      this.setState({hover: false});
+    }
+  }
+
   render() {
     var userCred = "";
     if(Meteor.userId()){
@@ -22,40 +42,58 @@ export default class Header extends TrackerReact(Component) {
         </div>
       )
     }
-    return (
-      <header class="row x-center header">
-        <div className="col-1 head-align">
+    if(this.state.hover){
+      hub=(
+        <div className = "hub-show">
           <Link className="hub" to="events/discover">
             DISCOVER
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
           <Link className="hub" to="events/discover">
             CREATE
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
           <Link className="hub" to="events/discover">
             MARKET
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
           <Link className="hub" to="about">
             ABOUT
           </Link>
         </div>
-        <div className = "head-align">
-          <Link to="/">
-            <h2 style={{margin: 0}}>BRACHYON</h2>
+      )
+    }
+    else{
+      hub=(
+        <div className = "hub-hide">
+          <Link className="hub" to="events/discover">
+            DISCOVER
+          </Link>
+          <Link className="hub" to="events/discover">
+            CREATE
+          </Link>
+          <Link className="hub" to="events/discover">
+            MARKET
+          </Link>
+          <Link className="hub" to="about">
+            ABOUT
           </Link>
         </div>
-        <div style={{textAlign: 'right'}} className="col-1">
-          {userCred}
-        </div>
-      </header>
+      )
+    }
+    return (
+      <Headroom>
+        <header onMouseOver={this.mouseOver.bind(this)} onMouseOut={this.mouseOut.bind(this)} class="row x-center header">
+          <div className="col-1 head-align">
+            {hub}
+          </div>
+          <div className = "head-align">
+            <Link to="/">
+              <h2 style={{margin: 0}}>BRACHYON</h2>
+            </Link>
+          </div>
+          <div style={{textAlign: 'right'}} className="col-1">
+            {userCred}
+          </div>
+        </header>
+      </Headroom>
     )
   }
 }
