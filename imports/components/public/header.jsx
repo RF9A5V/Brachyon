@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
+import FontAwesome from 'react-fontawesome';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
@@ -22,11 +23,8 @@ export default class Header extends TrackerReact(Component) {
     this.setState({hover: true});
   }
 
-  mouseOut(e) {
-    console.log(e);
-    if(e.target.classList.contains("header")){
-      this.setState({hover: false});
-    }
+  mouseOut() {
+    this.setState({hover: false});
   }
 
   render() {
@@ -45,6 +43,7 @@ export default class Header extends TrackerReact(Component) {
     if(this.state.hover){
       hub=(
         <div className = "hub-show">
+          <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
           <Link className="hub" to="events/discover">
             DISCOVER
           </Link>
@@ -63,6 +62,7 @@ export default class Header extends TrackerReact(Component) {
     else{
       hub=(
         <div className = "hub-hide">
+          <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
           <Link className="hub" to="events/discover">
             DISCOVER
           </Link>
@@ -80,14 +80,15 @@ export default class Header extends TrackerReact(Component) {
     }
     return (
       <Headroom>
-        <header onMouseOver={this.mouseOver.bind(this)} onMouseOut={this.mouseOut.bind(this)} class="row x-center header">
-          <div className="col-1 head-align">
-            {hub}
-          </div>
-          <div className = "head-align">
+        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} class="row x-center header">
+          <div className = "head-align row">
             <Link to="/">
               <h2 style={{margin: 0}}>BRACHYON</h2>
             </Link>
+            <button>
+              <FontAwesome name="search"/>
+            </button>
+            {hub}
           </div>
           <div style={{textAlign: 'right'}} className="col-1">
             {userCred}

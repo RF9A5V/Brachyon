@@ -201,30 +201,41 @@ header {
 }
 
 .hub-show {
-  -webkit-animation-name: animatehub;
+  -webkit-animation-name: animatehubshow;
   -webkit-animation-duration: 0.4s;
-  animation-name: animatehub;
+  animation-name: animatehubshow;
   animation-duration: 0.4s;
-  -ms-transform: translateX(50px); /* IE 9 */
-  -webkit-transform: translateX(50px); /* Safari */
-  transform: translateX(50px);
+  -ms-transform: translateX(0);
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+}
+
+@-webkit-keyframes animatehubshow {
+  from {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+}
+
+@keyframes animatehubshow {
+  from {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
 }
 
 .hub-hide {
-  display: none;
-  -ms-transform: translateX(-50px); /* IE 9 */
-  -webkit-transform: translateX(-50px); /* Safari */
-  transform: translateX(-50px);
+  -webkit-animation-name: animatehubhide;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatehubhide;
+  animation-duration: 0.4s;
+  opacity: 0;
 }
 
-@-webkit-keyframes animatehub {
-  from {top: 0; opacity: 0; display: none;}
-  to {opacity: 1; display: inline;}
+@-webkit-keyframes animatehubhide {
+  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
 }
 
-@keyframes animatehub {
-  from {opacity: 0; display: none;}
-  to {opacity: 1; display: inline;}
+@keyframes animatehubhide {
+  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
 }
 
 header a {
