@@ -10,7 +10,7 @@ import { Link } from 'react-router';
 export default class LandingScreen extends React.Component {
   render() {
     return (
-      <div className="landing-screen" style={{position: 'relative'}}>
+      <div className="landing-screen">
         <div className="img-background">
           <img src="/images/bg.jpg" draggable="false" />
           <div className="img-background-overlay"></div>
