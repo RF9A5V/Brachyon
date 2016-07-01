@@ -43,17 +43,16 @@ export default class Header extends TrackerReact(Component) {
     if(this.state.hover){
       hub=(
         <div className = "hub-show">
-          <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             DISCOVER
           </Link>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             CREATE
           </Link>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             MARKET
           </Link>
-          <Link className="hub" to="about">
+          <Link className="hub" to="/about">
             ABOUT
           </Link>
         </div>
@@ -62,17 +61,16 @@ export default class Header extends TrackerReact(Component) {
     else{
       hub=(
         <div className = "hub-hide">
-          <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             DISCOVER
           </Link>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             CREATE
           </Link>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             MARKET
           </Link>
-          <Link className="hub" to="about">
+          <Link className="hub" to="/about">
             ABOUT
           </Link>
         </div>
@@ -85,6 +83,7 @@ export default class Header extends TrackerReact(Component) {
             <Link to="/">
               <h2 style={{margin: 0}}>BRACHYON</h2>
             </Link>
+            <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
             <button>
               <FontAwesome name="search"/>
             </button>

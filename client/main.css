@@ -6,9 +6,12 @@
 }
 
 html, body, #react-root, #app {
-  height: 100%;
   margin: 0;
   background-color: #333;
+}
+
+body {
+  height: 100%;
 }
 
 .box {
@@ -17,24 +20,26 @@ html, body, #react-root, #app {
   height: 100%;
 }
 
-.box .row {
-}
-
 .box .row.header {
   flex: 0 1 auto;
 }
 
 .box .row.content {
   flex: 1 1 auto;
-  min-height: 100%;
 }
 
 .box .row.footer {
   flex: 0 1 40px;
+}
+
+.footer {
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
   padding: 10px 0;
+  bottom: 0;
+  width: 100%;
+  position: fixed;
 }
 
 .footer-div {
@@ -211,31 +216,31 @@ header {
 }
 
 @-webkit-keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  from {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
   to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
 }
 
 @keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  from {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
   to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
 }
 
 .hub-hide {
   -webkit-animation-name: animatehubhide;
-  -webkit-animation-duration: 0.4s;
+  -webkit-animation-duration: 1.4s;
   animation-name: animatehubhide;
-  animation-duration: 0.4s;
+  animation-duration: 1.4s;
   opacity: 0;
 }
 
 @-webkit-keyframes animatehubhide {
   from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
 }
 
 @keyframes animatehubhide {
   from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-50px); -webkit-transform: translateX(-50px); transform: translateX(-50px);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
 }
 
 header a {
@@ -244,11 +249,6 @@ header a {
 
 a {
   text-decoration: none;
-}
-
-#app > div {
-  width: 100%;
-  min-height: 100vh;
 }
 
 .loading-screen {
