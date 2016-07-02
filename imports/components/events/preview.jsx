@@ -43,26 +43,40 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return Events.find().fetch()[0];
   }
 
-  banner() {
-    return Images.find().fetch()[0];
+  imgOrDefault() {
+    if(this.props.banner == null){
+      return '/images/balls.svg';
+    }
+    else {
+      return this.props.banner;
+    }
   }
 
   location() {
-    event = this.event();
-    if(this.event()){
+    var event = this.event();
+    if(event){
+      if(event.details.location.online){
+        return (
+          <div>
+            <span>Online</span>
+          </div>
+        );
+      }
+      else{
       return (
-        <div>
           <div>
-            <span>{event.location.locationName}</span>
+            <div>
+              <span>{event.location.locationName}</span>
+            </div>
+            <div>
+              <span>{event.location.streetAddress}</span>
+            </div>
+            <div>
+              <span>{`${event.location.city} ${event.location.state}, ${event.location.zip}`}</span>
+            </div>
           </div>
-          <div>
-            <span>{event.location.streetAddress}</span>
-          </div>
-          <div>
-            <span>{`${event.location.city} ${event.location.state}, ${event.location.zip}`}</span>
-          </div>
-        </div>
-      );
+        );
+      }
     }
     return (
       <div>
@@ -72,10 +86,11 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   tabs() {
+    var event = this.event();
     var rez = [
       {
         title: 'Description',
-        content: (<div className="description-container" dangerouslySetInnerHTML={{__html: event.description}}></div>)
+        content: (<div className="description-container" dangerouslySetInnerHTML={{__html: event.details.description}}></div>)
       }
     ];
     if(Sponsorships.find().fetch()[0]){
@@ -100,12 +115,12 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         </div>
       )
     }
-    event = this.event();
-    banner = this.banner();
+    var event = this.event();
+    var banner = this.imgOrDefault();
     return (
       <div className="screen row">
         <div className="col-1 user-details">
-          <img src={banner.url()} style={{width: '100%', height: 'auto'}}/>
+          <img src={banner} style={{width: '100%', height: 'auto'}}/>
           <div style={{padding: 20}}>
             {this.location()}
           </div>

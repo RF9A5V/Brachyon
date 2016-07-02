@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import Modal from 'react-modal';
-import Dropzone from 'react-dropzone';
+import React, { Component } from "react";
+import Modal from "react-modal";
+import Dropzone from "react-dropzone";
 
 export default class CreateGameModal extends Component {
 
@@ -39,7 +39,7 @@ export default class CreateGameModal extends Component {
       for(var i = 0; i < len; i ++){
         arr[i] = data.charCodeAt(i);
       }
-      Meteor.call('games.create', {
+      Meteor.call("games.create", {
         name: self.refs.name.value,
         file: {
           type: self.state.file.type,
@@ -80,7 +80,7 @@ export default class CreateGameModal extends Component {
                     </div>
                   </Dropzone>
                 ) : (
-                  <img src={this.state.file.preview} style={{ width: '70%', height: 'auto' }} />
+                  <img src={this.state.file.preview} style={{ width: "70%", height: "auto" }} />
                 )
               }
               <input type="submit" />

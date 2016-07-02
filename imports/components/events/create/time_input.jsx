@@ -4,8 +4,8 @@ export default class TimeInput extends Component {
 
   componentWillMount() {
     this.setState({
-      hour: "",
-      minute: "",
+      hour: "12",
+      minute: "00",
       half: "AM"
     })
   }
@@ -30,16 +30,16 @@ export default class TimeInput extends Component {
   }
 
   minuteChange(e){
-    val = parseInt(this.state.minute + e.key);
+    var val = parseInt(this.state.minute + e.key);
     if(!isNaN(val)){
       if(val > 59){
         this.setState({
-          minute: e.key
+          minute: "0" + e.key
         })
       }
       else {
         this.setState({
-          minute: val + ""
+          minute: (val < 10 ? ("0" + val) : ("" + val))
         })
       }
     }
@@ -59,16 +59,35 @@ export default class TimeInput extends Component {
   }
 
   value() {
-    return this.state;
+
+    var hour = this.state.hour * 1;
+
+    if(hour === 12 && this.state.half == "AM"){
+      if(this.state.half == "AM"){
+        hour = 0;
+      }
+      else {
+        hour = 12;
+      }
+    }
+    else {
+      hour += ( this.state.half == "AM" ? 0 : 12 );
+    }
+    if(hour < 10){
+      hour = "0" + hour;
+    }
+    return `${hour}:${this.state.minute}`
   }
 
   render() {
     return (
-      <div className="time-input">
-        <input type="text" ref="hour" onKeyDown={this.hourChange.bind(this)} placeholder="Hour" value={(parseInt(this.state.hour) < 10 ? "0" : "") + this.state.hour}/>
-        :
-        <input type="text" ref="minute" placeholder="Minute" value={(parseInt(this.state.minute) < 10 ? "0" : "") + this.state.minute} onKeyDown={this.minuteChange.bind(this)} />
-        <input type="text" ref="half" placeholder="AM/PM" value={this.state.half} onKeyDown={this.halfChange.bind(this)} />
+      <div>
+        <div className="time-input">
+          <input type="text" ref="hour" onKeyDown={this.hourChange.bind(this)} placeholder="Hour" value={(parseInt(this.state.hour) < 10 ? "0" : "") + this.state.hour}/>
+          :
+          <input type="text" ref="minute" placeholder="Minute" value={this.state.minute} onKeyDown={this.minuteChange.bind(this)} />
+          <input type="text" ref="half" placeholder="AM/PM" value={this.state.half} onKeyDown={this.halfChange.bind(this)} />
+        </div>
       </div>
     )
   }

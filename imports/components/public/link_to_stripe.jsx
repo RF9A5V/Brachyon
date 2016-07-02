@@ -2,34 +2,31 @@ import React from 'react';
 
 export default class LinkToStripe extends React.Component {
   connectToStripe(event){
-    Meteor.linkWithStripe({
-      stripe_landing: 'register',
-      newAccountDetails: {
-        'stripe_user[email]': Meteor.user().emails[0].address
-      }
-    }, function(err){
-      var connected = true;
-
-      if(err){
-        Meteor.call("isStripeConnected", !connected, function(err){
-          if(err){
-            alert(err.message);
-          }
-          else{
-            toastr.error("Oh no... looks like you already linked an account")
-          }
-        });
-      }
-      else{
-        Meteor.call("isStripeConnected", connected, function(err){
-          if(err){
-          }
-          else{
-            toastr.success("You are now connected!", "Stripe Link");
-          }
-        });
-      }
-    });
+    if(Meteor.users.isStripeConnected){
+      Meteor.linkWithStripe({
+        stripe_landing: 'register',
+        newAccountDetails: {
+          'stripe_user[email]': Meteor.user().emails[0].address
+        }
+      }, function(err){
+        var connected = true;
+        if(err){
+            toastr.error("Oops... Sorry we spilled that milk")
+        }
+        else{
+          Meteor.call("isStripeConnected", connected, function(err){
+            if(err){
+            }
+            else{
+              toastr.success("You are now connected!", "Stripe Link");
+            }
+          });
+        }
+      });
+    }
+    else{
+      toastr.error("Seems that you already linked an account", "Stripe Link");
+    }
   }
 
   render(){

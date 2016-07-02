@@ -37,7 +37,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
     }
   }
 
-  rejectGame() {
+  rejectGame(id) {
     return function(e){
       Meteor.call('games.reject', id, function(err){
         if(err){
@@ -60,7 +60,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
       )
     }
     return (
-      <div className="screen">
+      <div className="content">
         <div>
           <table className="approval-table">
             <tr>
@@ -75,7 +75,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
                   <tr>
                     <td>{game.name}</td>
                     <td>
-                      <img src={Images.findOne(game.banner).url()} />
+                      <img src={game.banner} />
                     </td>
                     <td>
                       <button onClick={self.approveGame(game._id).bind(self)}>

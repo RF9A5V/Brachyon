@@ -49,11 +49,11 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   unpublishedEvents() {
-    return Events.find({published: false, under_review: false}).fetch();
+    return Events.find({published: false, underReview: false}).fetch();
   }
 
   underReviewEvents() {
-    return Events.find({published: false, under_review: true}).fetch();
+    return Events.find({published: false, underReview: true}).fetch();
   }
 
   publishedEvents() {
@@ -94,7 +94,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     events = this.events();
 
     return (
-      <div className="row screen">
+      <div className="row content">
         <div className="col-1 user-details">
           <ProfileImage imgUrl={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>
@@ -106,7 +106,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                 Games.find().fetch().map(function(game){
                   return (
                     <div className="game-icon" style={{
-                      backgroundImage: `url(${Images.findOne(game.banner).url()})`,
+                      backgroundImage: `url(${game.banner})`,
                       backgroundSize: '100% 100%'
                     }}>
                     </div>
@@ -131,6 +131,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           <EventDisplay {...this.state.currentEvent} />
           {
             events.map(function(eventSet){
+              console.log(eventSet);
               return (
                 <div>
                   <h3>{eventSet.title}</h3>
@@ -138,7 +139,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock {...ev} image={self.image(ev._id)} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock {...ev} image={ev.banner} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }
