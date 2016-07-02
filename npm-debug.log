@@ -1,0 +1,672 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node',
+1 verbose cli   '/home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'react-headroom' ]
+2 info using npm@2.14.22
+3 info using node@v0.10.43
+4 verbose install initial load of /home/tom/Brachyon/package.json
+5 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/font-awesome/package.json
+6 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/google-map-react/package.json
+7 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/google-maps/package.json
+8 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/meteor-node-stubs/package.json
+9 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/moment/package.json
+10 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react/package.json
+11 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-addons-pure-render-mixin/package.json
+12 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-cropper/package.json
+13 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-datetime/package.json
+14 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-dom/package.json
+15 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-dropzone/package.json
+16 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-file-input/package.json
+17 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-fontawesome/package.json
+18 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-google-maps/package.json
+19 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-input-autosize/package.json
+20 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-modal/package.json
+21 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-mounter/package.json
+22 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-quill/package.json
+23 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/react-router/package.json
+24 verbose installManyTop reading scoped package data from /home/tom/Brachyon/node_modules/velocity-react/package.json
+25 verbose readDependencies loading dependencies from /home/tom/Brachyon/package.json
+26 silly cache add args [ 'react-headroom', null ]
+27 verbose cache add spec react-headroom
+28 silly cache add parsed spec { raw: 'react-headroom',
+28 silly cache add   scope: null,
+28 silly cache add   name: 'react-headroom',
+28 silly cache add   rawSpec: '',
+28 silly cache add   spec: 'latest',
+28 silly cache add   type: 'tag' }
+29 silly addNamed react-headroom@latest
+30 verbose addNamed "latest" is being treated as a dist-tag for react-headroom
+31 info addNameTag [ 'react-headroom', 'latest' ]
+32 silly mapToRegistry name react-headroom
+33 silly mapToRegistry using default registry
+34 silly mapToRegistry registry https://registry.npmjs.org/
+35 silly mapToRegistry uri https://registry.npmjs.org/react-headroom
+36 verbose addNameTag registry:https://registry.npmjs.org/react-headroom not in flight; fetching
+37 verbose request uri https://registry.npmjs.org/react-headroom
+38 verbose request no auth needed
+39 info attempt registry request try #1 at 15:48:16
+40 verbose request id cfb329c1496f68b5
+41 http request GET https://registry.npmjs.org/react-headroom
+42 http 200 https://registry.npmjs.org/react-headroom
+43 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+43 verbose headers   etag: '"LMCQ0EUEFAGFAWLHOXCPGZS1"',
+43 verbose headers   'content-type': 'application/json',
+43 verbose headers   'content-encoding': 'gzip',
+43 verbose headers   'cache-control': 'max-age=300',
+43 verbose headers   'content-length': '5571',
+43 verbose headers   'accept-ranges': 'bytes',
+43 verbose headers   date: 'Sat, 02 Jul 2016 22:48:14 GMT',
+43 verbose headers   via: '1.1 varnish',
+43 verbose headers   age: '0',
+43 verbose headers   connection: 'keep-alive',
+43 verbose headers   'x-served-by': 'cache-sea1920-SEA',
+43 verbose headers   'x-cache': 'MISS',
+43 verbose headers   'x-cache-hits': '0',
+43 verbose headers   'x-timer': 'S1467499694.046866,VS0,VE191',
+43 verbose headers   vary: 'Accept-Encoding' }
+44 silly get cb [ 200,
+44 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+44 silly get     etag: '"LMCQ0EUEFAGFAWLHOXCPGZS1"',
+44 silly get     'content-type': 'application/json',
+44 silly get     'content-encoding': 'gzip',
+44 silly get     'cache-control': 'max-age=300',
+44 silly get     'content-length': '5571',
+44 silly get     'accept-ranges': 'bytes',
+44 silly get     date: 'Sat, 02 Jul 2016 22:48:14 GMT',
+44 silly get     via: '1.1 varnish',
+44 silly get     age: '0',
+44 silly get     connection: 'keep-alive',
+44 silly get     'x-served-by': 'cache-sea1920-SEA',
+44 silly get     'x-cache': 'MISS',
+44 silly get     'x-cache-hits': '0',
+44 silly get     'x-timer': 'S1467499694.046866,VS0,VE191',
+44 silly get     vary: 'Accept-Encoding' } ]
+45 verbose get saving react-headroom to /home/tom/.npm/registry.npmjs.org/react-headroom/.cache.json
+46 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+47 silly addNameTag next cb for react-headroom with tag latest
+48 silly addNamed react-headroom@2.1.0
+49 verbose addNamed "2.1.0" is a plain semver version for react-headroom
+50 silly mapToRegistry name react-headroom
+51 silly mapToRegistry using default registry
+52 silly mapToRegistry registry https://registry.npmjs.org/
+53 silly mapToRegistry uri https://registry.npmjs.org/react-headroom
+54 verbose addRemoteTarball https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz not in flight; adding
+55 verbose addRemoteTarball [ 'https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz',
+55 verbose addRemoteTarball   '574e23b56a85df00a1511e162c2871be3ce17425' ]
+56 info retry fetch attempt 1 at 15:48:16
+57 info attempt registry request try #1 at 15:48:16
+58 http fetch GET https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz
+59 http fetch 200 https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz
+60 silly fetchAndShaCheck shasum 574e23b56a85df00a1511e162c2871be3ce17425
+61 verbose addTmpTarball /tmp/npm-7636-e11dd0d5/registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz not in flight; adding
+62 verbose addTmpTarball already have metadata; skipping unpack for react-headroom@2.1.0
+63 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+64 silly cache afterAdd react-headroom@2.1.0
+65 verbose afterAdd /home/tom/.npm/react-headroom/2.1.0/package/package.json not in flight; writing
+66 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+67 verbose afterAdd /home/tom/.npm/react-headroom/2.1.0/package/package.json written
+68 silly install resolved [ { name: 'react-headroom',
+68 silly install resolved     description: 'Hide your header until you need it. React.js port of headroom.js',
+68 silly install resolved     version: '2.1.0',
+68 silly install resolved     author: { name: 'Kyle Mathews', email: 'mathews.kyle@gmail.com' },
+68 silly install resolved     bugs: { url: 'https://github.com/KyleAMathews/react-headroom/issues' },
+68 silly install resolved     dependencies:
+68 silly install resolved      { raf: '^3.2.0',
+68 silly install resolved        'react-addons-pure-render-mixin': '^0.14||^15.0.2' },
+68 silly install resolved     devDependencies:
+68 silly install resolved      { 'babel-cli': '^6.7.5',
+68 silly install resolved        'babel-core': '^6.7.6',
+68 silly install resolved        'babel-eslint': '^6.0.3',
+68 silly install resolved        'babel-loader': '^6.2.4',
+68 silly install resolved        'babel-plugin-transform-undefined-to-void': '^6.8.0',
+68 silly install resolved        'babel-preset-es2015': '^6.6.0',
+68 silly install resolved        'babel-preset-react': '^6.5.0',
+68 silly install resolved        'babel-preset-stage-1': '^6.5.0',
+68 silly install resolved        chai: '^3.5.0',
+68 silly install resolved        eslint: '^2.9.0',
+68 silly install resolved        'eslint-config-airbnb': '^9.0.1',
+68 silly install resolved        'eslint-config-airbnb-base': '^3.0.1',
+68 silly install resolved        'eslint-plugin-import': '^1.6.1',
+68 silly install resolved        'eslint-plugin-jsx-a11y': '^1.0.4',
+68 silly install resolved        'eslint-plugin-react': '^5.1.1',
+68 silly install resolved        mocha: '^2.4.5',
+68 silly install resolved        'mocha-unfunk-reporter': '^0.4.0',
+68 silly install resolved        'pre-commit': '^1.0.5' },
+68 silly install resolved     directories: { example: 'examples' },
+68 silly install resolved     homepage: 'https://github.com/KyleAMathews/react-headroom',
+68 silly install resolved     keywords: [ 'headroom', 'react', 'react-component' ],
+68 silly install resolved     license: 'MIT',
+68 silly install resolved     main: 'dist/index.js',
+68 silly install resolved     peerDependencies: { react: '*' },
+68 silly install resolved     repository:
+68 silly install resolved      { type: 'git',
+68 silly install resolved        url: 'git+https://github.com/KyleAMathews/react-headroom.git' },
+68 silly install resolved     scripts:
+68 silly install resolved      { 'test-watch': 'NODE_ENV=test node_modules/.bin/mocha -w --recursive --compilers coffee:babel-core/register -R mocha-unfunk-reporter',
+68 silly install resolved        'unit-test': 'NODE_ENV=test node_modules/.bin/mocha --recursive --compilers coffee:babel-core/register -R mocha-unfunk-reporter',
+68 silly install resolved        test: 'npm run unit-test && npm run lint',
+68 silly install resolved        watch: 'webpack-dev-server --hot',
+68 silly install resolved        lint: 'eslint --ignore-path .gitignore src/*',
+68 silly install resolved        'lint:fix': 'eslint --ignore-path .gitignore . --fix' },
+68 silly install resolved     gitHead: 'cf41b3a6021d49a72b7ddb3b9b44539e195a4d14',
+68 silly install resolved     _id: 'react-headroom@2.1.0',
+68 silly install resolved     _shasum: '574e23b56a85df00a1511e162c2871be3ce17425',
+68 silly install resolved     _from: 'react-headroom@latest',
+68 silly install resolved     _npmVersion: '3.8.9',
+68 silly install resolved     _nodeVersion: '6.2.0',
+68 silly install resolved     _npmUser: { name: 'kylemathews', email: 'mathews.kyle@gmail.com' },
+68 silly install resolved     maintainers: [ [Object] ],
+68 silly install resolved     dist:
+68 silly install resolved      { shasum: '574e23b56a85df00a1511e162c2871be3ce17425',
+68 silly install resolved        tarball: 'https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz' },
+68 silly install resolved     _npmOperationalInternal:
+68 silly install resolved      { host: 'packages-16-east.internal.npmjs.com',
+68 silly install resolved        tmp: 'tmp/react-headroom-2.1.0.tgz_1464668360648_0.06086619105190039' },
+68 silly install resolved     _resolved: 'https://registry.npmjs.org/react-headroom/-/react-headroom-2.1.0.tgz' } ]
+69 info install react-headroom@2.1.0 into /home/tom/Brachyon
+70 info installOne react-headroom@2.1.0
+71 verbose installOne of react-headroom to /home/tom/Brachyon not in flight; installing
+72 verbose correctMkdir /home/tom/.npm/_locks correctMkdir not in flight; initializing
+73 verbose lock using /home/tom/.npm/_locks/react-headroom-dd92e098451cf887.lock for /home/tom/Brachyon/node_modules/react-headroom
+74 silly install write writing react-headroom 2.1.0 to /home/tom/Brachyon/node_modules/react-headroom
+75 verbose unbuild node_modules/react-headroom
+76 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom is being purged from base /home/tom/Brachyon
+77 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom
+78 verbose tar unpack /home/tom/.npm/react-headroom/2.1.0/package.tgz
+79 verbose tar unpacking to /home/tom/Brachyon/node_modules/react-headroom
+80 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom is being purged
+81 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom
+82 silly gunzTarPerm modes [ '775', '664' ]
+83 silly gunzTarPerm extractEntry package.json
+84 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+85 silly gunzTarPerm extractEntry .npmignore
+86 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+87 silly gunzTarPerm extractEntry README.md
+88 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+89 silly gunzTarPerm extractEntry LICENSE
+90 silly gunzTarPerm modified mode [ 'LICENSE', 420, 436 ]
+91 silly gunzTarPerm extractEntry .gatsby-context.js
+92 silly gunzTarPerm modified mode [ '.gatsby-context.js', 420, 436 ]
+93 silly gunzTarPerm extractEntry .package.json.un~
+94 silly gunzTarPerm modified mode [ '.package.json.un~', 420, 436 ]
+95 silly gunzTarPerm extractEntry .eslintrc
+96 silly gunzTarPerm modified mode [ '.eslintrc', 420, 436 ]
+97 silly gunzTarPerm extractEntry ..babelrc.un~
+98 silly gunzTarPerm modified mode [ '..babelrc.un~', 420, 436 ]
+99 silly gunzTarPerm extractEntry ..travis.yml.un~
+100 silly gunzTarPerm modified mode [ '..travis.yml.un~', 420, 436 ]
+101 silly gunzTarPerm extractEntry ..eslintignore.un~
+102 silly gunzTarPerm modified mode [ '..eslintignore.un~', 420, 436 ]
+103 silly gunzTarPerm extractEntry .travis.yml
+104 silly gunzTarPerm modified mode [ '.travis.yml', 420, 436 ]
+105 silly gunzTarPerm extractEntry .Makefile.un~
+106 silly gunzTarPerm modified mode [ '.Makefile.un~', 420, 436 ]
+107 silly gunzTarPerm extractEntry Makefile
+108 silly gunzTarPerm modified mode [ 'Makefile', 420, 436 ]
+109 silly gunzTarPerm extractEntry .README.md.un~
+110 silly gunzTarPerm modified mode [ '.README.md.un~', 420, 436 ]
+111 silly gunzTarPerm extractEntry dist/index.js
+112 silly gunzTarPerm modified mode [ 'dist/index.js', 420, 436 ]
+113 silly gunzTarPerm extractEntry dist/shouldUpdate.js
+114 silly gunzTarPerm modified mode [ 'dist/shouldUpdate.js', 420, 436 ]
+115 silly gunzTarPerm extractEntry test/calc.js
+116 silly gunzTarPerm modified mode [ 'test/calc.js', 420, 436 ]
+117 silly gunzTarPerm extractEntry test/.calc.coffee.un~
+118 silly gunzTarPerm modified mode [ 'test/.calc.coffee.un~', 420, 436 ]
+119 silly gunzTarPerm extractEntry test/.eslintrc
+120 silly gunzTarPerm modified mode [ 'test/.eslintrc', 420, 436 ]
+121 silly gunzTarPerm extractEntry .babelrc
+122 silly gunzTarPerm modified mode [ '.babelrc', 420, 436 ]
+123 silly gunzTarPerm extractEntry src/index.js
+124 silly gunzTarPerm modified mode [ 'src/index.js', 420, 436 ]
+125 silly gunzTarPerm extractEntry src/shouldUpdate.js
+126 silly gunzTarPerm modified mode [ 'src/shouldUpdate.js', 420, 436 ]
+127 silly gunzTarPerm extractEntry src/.index.cjsx.un~
+128 silly gunzTarPerm modified mode [ 'src/.index.cjsx.un~', 420, 436 ]
+129 silly gunzTarPerm extractEntry src/.index.js.un~
+130 silly gunzTarPerm modified mode [ 'src/.index.js.un~', 420, 436 ]
+131 silly gunzTarPerm extractEntry src/.shouldUpdate.coffee.un~
+132 silly gunzTarPerm modified mode [ 'src/.shouldUpdate.coffee.un~', 420, 436 ]
+133 silly gunzTarPerm extractEntry website/package.json
+134 silly gunzTarPerm modified mode [ 'website/package.json', 420, 436 ]
+135 silly gunzTarPerm extractEntry website/README.md
+136 silly gunzTarPerm modified mode [ 'website/README.md', 420, 436 ]
+137 silly gunzTarPerm extractEntry website/.gatsby-context.js
+138 silly gunzTarPerm modified mode [ 'website/.gatsby-context.js', 420, 436 ]
+139 silly gunzTarPerm extractEntry website/html.js
+140 silly gunzTarPerm modified mode [ 'website/html.js', 420, 436 ]
+141 silly gunzTarPerm extractEntry website/config.toml
+142 silly gunzTarPerm modified mode [ 'website/config.toml', 420, 436 ]
+143 silly gunzTarPerm extractEntry website/.package.json.un~
+144 silly gunzTarPerm modified mode [ 'website/.package.json.un~', 420, 436 ]
+145 silly gunzTarPerm extractEntry website/.eslintrc
+146 silly gunzTarPerm modified mode [ 'website/.eslintrc', 420, 436 ]
+147 silly gunzTarPerm extractEntry website/.config.toml.un~
+148 silly gunzTarPerm modified mode [ 'website/.config.toml.un~', 420, 436 ]
+149 silly gunzTarPerm extractEntry website/css/.code.css.un~
+150 silly gunzTarPerm modified mode [ 'website/css/.code.css.un~', 420, 436 ]
+151 silly gunzTarPerm extractEntry website/css/code.css
+152 silly gunzTarPerm modified mode [ 'website/css/code.css', 420, 436 ]
+153 silly gunzTarPerm extractEntry website/.README.md.un~
+154 silly gunzTarPerm modified mode [ 'website/.README.md.un~', 420, 436 ]
+155 silly gunzTarPerm extractEntry website/public/bundle.js
+156 silly gunzTarPerm modified mode [ 'website/public/bundle.js', 420, 436 ]
+157 silly gunzTarPerm extractEntry website/public/404/index.html
+158 silly gunzTarPerm modified mode [ 'website/public/404/index.html', 420, 436 ]
+159 silly gunzTarPerm extractEntry website/public/bundle.js.map
+160 silly gunzTarPerm modified mode [ 'website/public/bundle.js.map', 420, 436 ]
+161 silly gunzTarPerm extractEntry website/public/index.html
+162 silly gunzTarPerm modified mode [ 'website/public/index.html', 420, 436 ]
+163 silly gunzTarPerm extractEntry website/public/styles.css
+164 silly gunzTarPerm modified mode [ 'website/public/styles.css', 420, 436 ]
+165 silly gunzTarPerm extractEntry website/.html.js.un~
+166 silly gunzTarPerm modified mode [ 'website/.html.js.un~', 420, 436 ]
+167 silly gunzTarPerm extractEntry website/pages/.index.js.un~
+168 silly gunzTarPerm modified mode [ 'website/pages/.index.js.un~', 420, 436 ]
+169 silly gunzTarPerm extractEntry website/pages/.index.md.un~
+170 silly gunzTarPerm modified mode [ 'website/pages/.index.md.un~', 420, 436 ]
+171 silly gunzTarPerm extractEntry website/pages/.test.md.un~
+172 silly gunzTarPerm modified mode [ 'website/pages/.test.md.un~', 420, 436 ]
+173 silly gunzTarPerm extractEntry website/pages/404.md
+174 silly gunzTarPerm modified mode [ 'website/pages/404.md', 420, 436 ]
+175 silly gunzTarPerm extractEntry website/pages/_template.jsx
+176 silly gunzTarPerm modified mode [ 'website/pages/_template.jsx', 420, 436 ]
+177 silly gunzTarPerm extractEntry website/pages/index.md
+178 silly gunzTarPerm modified mode [ 'website/pages/index.md', 420, 436 ]
+179 silly gunzTarPerm extractEntry website/utils/typography.js
+180 silly gunzTarPerm modified mode [ 'website/utils/typography.js', 420, 436 ]
+181 silly gunzTarPerm extractEntry website/utils/.typography.js.un~
+182 silly gunzTarPerm modified mode [ 'website/utils/.typography.js.un~', 420, 436 ]
+183 verbose write writing to /home/tom/Brachyon/node_modules/react-headroom/package.json
+184 info preinstall react-headroom@2.1.0
+185 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/package.json
+186 silly prepareForInstallMany adding raf@^3.2.0 from react-headroom dependencies
+187 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/package.json
+188 silly cache add args [ 'raf@^3.2.0', null ]
+189 verbose cache add spec raf@^3.2.0
+190 silly cache add parsed spec { raw: 'raf@^3.2.0',
+190 silly cache add   scope: null,
+190 silly cache add   name: 'raf',
+190 silly cache add   rawSpec: '^3.2.0',
+190 silly cache add   spec: '>=3.2.0 <4.0.0',
+190 silly cache add   type: 'range' }
+191 silly addNamed raf@>=3.2.0 <4.0.0
+192 verbose addNamed ">=3.2.0 <4.0.0" is a valid semver range for raf
+193 silly addNameRange { name: 'raf', range: '>=3.2.0 <4.0.0', hasData: false }
+194 silly mapToRegistry name raf
+195 silly mapToRegistry using default registry
+196 silly mapToRegistry registry https://registry.npmjs.org/
+197 silly mapToRegistry uri https://registry.npmjs.org/raf
+198 verbose addNameRange registry:https://registry.npmjs.org/raf not in flight; fetching
+199 verbose request uri https://registry.npmjs.org/raf
+200 verbose request no auth needed
+201 info attempt registry request try #1 at 15:48:19
+202 http request GET https://registry.npmjs.org/raf
+203 http 200 https://registry.npmjs.org/raf
+204 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+204 verbose headers   etag: '"9C5YLL0QOK8W4B3VKC8F8UI6X"',
+204 verbose headers   'content-type': 'application/json',
+204 verbose headers   'content-encoding': 'gzip',
+204 verbose headers   'cache-control': 'max-age=300',
+204 verbose headers   'content-length': '3898',
+204 verbose headers   'accept-ranges': 'bytes',
+204 verbose headers   date: 'Sat, 02 Jul 2016 22:48:16 GMT',
+204 verbose headers   via: '1.1 varnish',
+204 verbose headers   age: '134',
+204 verbose headers   connection: 'keep-alive',
+204 verbose headers   'x-served-by': 'cache-sea1926-SEA',
+204 verbose headers   'x-cache': 'HIT',
+204 verbose headers   'x-cache-hits': '1',
+204 verbose headers   'x-timer': 'S1467499696.850599,VS0,VE0',
+204 verbose headers   vary: 'Accept-Encoding' }
+205 silly get cb [ 200,
+205 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+205 silly get     etag: '"9C5YLL0QOK8W4B3VKC8F8UI6X"',
+205 silly get     'content-type': 'application/json',
+205 silly get     'content-encoding': 'gzip',
+205 silly get     'cache-control': 'max-age=300',
+205 silly get     'content-length': '3898',
+205 silly get     'accept-ranges': 'bytes',
+205 silly get     date: 'Sat, 02 Jul 2016 22:48:16 GMT',
+205 silly get     via: '1.1 varnish',
+205 silly get     age: '134',
+205 silly get     connection: 'keep-alive',
+205 silly get     'x-served-by': 'cache-sea1926-SEA',
+205 silly get     'x-cache': 'HIT',
+205 silly get     'x-cache-hits': '1',
+205 silly get     'x-timer': 'S1467499696.850599,VS0,VE0',
+205 silly get     vary: 'Accept-Encoding' } ]
+206 verbose get saving raf to /home/tom/.npm/registry.npmjs.org/raf/.cache.json
+207 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+208 silly addNameRange number 2 { name: 'raf', range: '>=3.2.0 <4.0.0', hasData: true }
+209 silly addNameRange versions [ 'raf',
+209 silly addNameRange   [ '0.0.0',
+209 silly addNameRange     '0.0.1',
+209 silly addNameRange     '0.0.2',
+209 silly addNameRange     '0.0.3',
+209 silly addNameRange     '0.1.0',
+209 silly addNameRange     '0.1.1',
+209 silly addNameRange     '0.1.2',
+209 silly addNameRange     '0.1.3',
+209 silly addNameRange     '0.2.0',
+209 silly addNameRange     '1.0.0',
+209 silly addNameRange     '1.0.1',
+209 silly addNameRange     '2.0.0',
+209 silly addNameRange     '2.0.1',
+209 silly addNameRange     '2.0.2',
+209 silly addNameRange     '2.0.3',
+209 silly addNameRange     '2.0.4',
+209 silly addNameRange     '3.0.0',
+209 silly addNameRange     '3.1.0',
+209 silly addNameRange     '3.2.0' ] ]
+210 silly addNamed raf@3.2.0
+211 verbose addNamed "3.2.0" is a plain semver version for raf
+212 silly mapToRegistry name raf
+213 silly mapToRegistry using default registry
+214 silly mapToRegistry registry https://registry.npmjs.org/
+215 silly mapToRegistry uri https://registry.npmjs.org/raf
+216 verbose addRemoteTarball https://registry.npmjs.org/raf/-/raf-3.2.0.tgz not in flight; adding
+217 verbose addRemoteTarball [ 'https://registry.npmjs.org/raf/-/raf-3.2.0.tgz',
+217 verbose addRemoteTarball   '2aba9a09bb70f8c2e9094dc60ace7c374fadec7e' ]
+218 info retry fetch attempt 1 at 15:48:19
+219 info attempt registry request try #1 at 15:48:19
+220 http fetch GET https://registry.npmjs.org/raf/-/raf-3.2.0.tgz
+221 http fetch 200 https://registry.npmjs.org/raf/-/raf-3.2.0.tgz
+222 silly fetchAndShaCheck shasum 2aba9a09bb70f8c2e9094dc60ace7c374fadec7e
+223 verbose addTmpTarball /tmp/npm-7636-e11dd0d5/registry.npmjs.org/raf/-/raf-3.2.0.tgz not in flight; adding
+224 verbose addTmpTarball already have metadata; skipping unpack for raf@3.2.0
+225 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+226 silly cache afterAdd raf@3.2.0
+227 verbose afterAdd /home/tom/.npm/raf/3.2.0/package/package.json not in flight; writing
+228 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+229 verbose afterAdd /home/tom/.npm/raf/3.2.0/package/package.json written
+230 silly install resolved [ { name: 'raf',
+230 silly install resolved     version: '3.2.0',
+230 silly install resolved     description: 'requestAnimationFrame polyfill for node and the browser',
+230 silly install resolved     main: 'index.js',
+230 silly install resolved     scripts:
+230 silly install resolved      { testling: 'browserify test.js | testling',
+230 silly install resolved        test: 'node test.js' },
+230 silly install resolved     repository: { type: 'git', url: 'git://github.com/chrisdickinson/raf.git' },
+230 silly install resolved     keywords: [ 'requestAnimationFrame', 'polyfill' ],
+230 silly install resolved     author: { name: 'Chris Dickinson', email: 'chris@neversaw.us' },
+230 silly install resolved     contributors: [ [Object] ],
+230 silly install resolved     license: 'MIT',
+230 silly install resolved     devDependencies: { testling: '~1.6.1', browserify: '~4.1.2', tape: '^4.0.0' },
+230 silly install resolved     dependencies: { 'performance-now': '~0.2.0' },
+230 silly install resolved     testling: { files: 'test.js', browsers: [Object] },
+230 silly install resolved     gitHead: '36f73baee1b9bede56e5b21c422091fb4186858a',
+230 silly install resolved     bugs: { url: 'https://github.com/chrisdickinson/raf/issues' },
+230 silly install resolved     homepage: 'https://github.com/chrisdickinson/raf#readme',
+230 silly install resolved     _id: 'raf@3.2.0',
+230 silly install resolved     _shasum: '2aba9a09bb70f8c2e9094dc60ace7c374fadec7e',
+230 silly install resolved     _from: 'raf@>=3.2.0 <4.0.0',
+230 silly install resolved     _npmVersion: '3.3.4',
+230 silly install resolved     _nodeVersion: '4.1.1',
+230 silly install resolved     _npmUser: { name: 'cmtegner', email: 'christian.tegner@gmail.com' },
+230 silly install resolved     maintainers: [ [Object], [Object] ],
+230 silly install resolved     dist:
+230 silly install resolved      { shasum: '2aba9a09bb70f8c2e9094dc60ace7c374fadec7e',
+230 silly install resolved        tarball: 'https://registry.npmjs.org/raf/-/raf-3.2.0.tgz' },
+230 silly install resolved     _npmOperationalInternal:
+230 silly install resolved      { host: 'packages-5-east.internal.npmjs.com',
+230 silly install resolved        tmp: 'tmp/raf-3.2.0.tgz_1455705777394_0.3654659006278962' },
+230 silly install resolved     directories: {},
+230 silly install resolved     _resolved: 'https://registry.npmjs.org/raf/-/raf-3.2.0.tgz' } ]
+231 info install raf@3.2.0 into /home/tom/Brachyon/node_modules/react-headroom
+232 info installOne raf@3.2.0
+233 verbose installOne of raf to /home/tom/Brachyon/node_modules/react-headroom not in flight; installing
+234 verbose correctMkdir /home/tom/.npm/_locks correctMkdir not in flight; initializing
+235 verbose lock using /home/tom/.npm/_locks/raf-9524e853635762c2.lock for /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+236 silly install write writing raf 3.2.0 to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+237 verbose unbuild node_modules/react-headroom/node_modules/raf
+238 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf is being purged from base /home/tom/Brachyon
+239 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+240 verbose tar unpack /home/tom/.npm/raf/3.2.0/package.tgz
+241 verbose tar unpacking to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+242 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf is being purged
+243 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+244 silly gunzTarPerm modes [ '775', '664' ]
+245 silly gunzTarPerm extractEntry package.json
+246 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+247 silly gunzTarPerm extractEntry .npmignore
+248 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+249 silly gunzTarPerm extractEntry README.md
+250 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+251 silly gunzTarPerm extractEntry index.js
+252 silly gunzTarPerm modified mode [ 'index.js', 420, 436 ]
+253 silly gunzTarPerm extractEntry test.js
+254 silly gunzTarPerm modified mode [ 'test.js', 420, 436 ]
+255 silly gunzTarPerm extractEntry window.js
+256 silly gunzTarPerm modified mode [ 'window.js', 420, 436 ]
+257 verbose write writing to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/package.json
+258 info preinstall raf@3.2.0
+259 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/package.json
+260 silly prepareForInstallMany adding performance-now@~0.2.0 from raf dependencies
+261 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/package.json
+262 silly cache add args [ 'performance-now@~0.2.0', null ]
+263 verbose cache add spec performance-now@~0.2.0
+264 silly cache add parsed spec { raw: 'performance-now@~0.2.0',
+264 silly cache add   scope: null,
+264 silly cache add   name: 'performance-now',
+264 silly cache add   rawSpec: '~0.2.0',
+264 silly cache add   spec: '>=0.2.0 <0.3.0',
+264 silly cache add   type: 'range' }
+265 silly addNamed performance-now@>=0.2.0 <0.3.0
+266 verbose addNamed ">=0.2.0 <0.3.0" is a valid semver range for performance-now
+267 silly addNameRange { name: 'performance-now',
+267 silly addNameRange   range: '>=0.2.0 <0.3.0',
+267 silly addNameRange   hasData: false }
+268 silly mapToRegistry name performance-now
+269 silly mapToRegistry using default registry
+270 silly mapToRegistry registry https://registry.npmjs.org/
+271 silly mapToRegistry uri https://registry.npmjs.org/performance-now
+272 verbose addNameRange registry:https://registry.npmjs.org/performance-now not in flight; fetching
+273 verbose request uri https://registry.npmjs.org/performance-now
+274 verbose request no auth needed
+275 info attempt registry request try #1 at 15:48:19
+276 http request GET https://registry.npmjs.org/performance-now
+277 http 200 https://registry.npmjs.org/performance-now
+278 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+278 verbose headers   etag: '"19WYT6TP0Q5NECN0HERZTF24L"',
+278 verbose headers   'content-type': 'application/json',
+278 verbose headers   'content-encoding': 'gzip',
+278 verbose headers   'cache-control': 'max-age=300',
+278 verbose headers   'content-length': '2218',
+278 verbose headers   'accept-ranges': 'bytes',
+278 verbose headers   date: 'Sat, 02 Jul 2016 22:48:17 GMT',
+278 verbose headers   via: '1.1 varnish',
+278 verbose headers   age: '134',
+278 verbose headers   connection: 'keep-alive',
+278 verbose headers   'x-served-by': 'cache-sea1920-SEA',
+278 verbose headers   'x-cache': 'HIT',
+278 verbose headers   'x-cache-hits': '1',
+278 verbose headers   'x-timer': 'S1467499697.338069,VS0,VE0',
+278 verbose headers   vary: 'Accept-Encoding' }
+279 silly get cb [ 200,
+279 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+279 silly get     etag: '"19WYT6TP0Q5NECN0HERZTF24L"',
+279 silly get     'content-type': 'application/json',
+279 silly get     'content-encoding': 'gzip',
+279 silly get     'cache-control': 'max-age=300',
+279 silly get     'content-length': '2218',
+279 silly get     'accept-ranges': 'bytes',
+279 silly get     date: 'Sat, 02 Jul 2016 22:48:17 GMT',
+279 silly get     via: '1.1 varnish',
+279 silly get     age: '134',
+279 silly get     connection: 'keep-alive',
+279 silly get     'x-served-by': 'cache-sea1920-SEA',
+279 silly get     'x-cache': 'HIT',
+279 silly get     'x-cache-hits': '1',
+279 silly get     'x-timer': 'S1467499697.338069,VS0,VE0',
+279 silly get     vary: 'Accept-Encoding' } ]
+280 verbose get saving performance-now to /home/tom/.npm/registry.npmjs.org/performance-now/.cache.json
+281 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+282 silly addNameRange number 2 { name: 'performance-now',
+282 silly addNameRange   range: '>=0.2.0 <0.3.0',
+282 silly addNameRange   hasData: true }
+283 silly addNameRange versions [ 'performance-now',
+283 silly addNameRange   [ '0.1.0', '0.1.1', '0.1.2', '0.1.3', '0.1.4', '0.2.0' ] ]
+284 silly addNamed performance-now@0.2.0
+285 verbose addNamed "0.2.0" is a plain semver version for performance-now
+286 silly mapToRegistry name performance-now
+287 silly mapToRegistry using default registry
+288 silly mapToRegistry registry https://registry.npmjs.org/
+289 silly mapToRegistry uri https://registry.npmjs.org/performance-now
+290 verbose addRemoteTarball https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz not in flight; adding
+291 verbose addRemoteTarball [ 'https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz',
+291 verbose addRemoteTarball   '33ef30c5c77d4ea21c5a53869d91b56d8f2555e5' ]
+292 info retry fetch attempt 1 at 15:48:19
+293 info attempt registry request try #1 at 15:48:19
+294 http fetch GET https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz
+295 http fetch 200 https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz
+296 silly fetchAndShaCheck shasum 33ef30c5c77d4ea21c5a53869d91b56d8f2555e5
+297 verbose addTmpTarball /tmp/npm-7636-e11dd0d5/registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz not in flight; adding
+298 verbose addTmpTarball already have metadata; skipping unpack for performance-now@0.2.0
+299 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+300 silly cache afterAdd performance-now@0.2.0
+301 verbose afterAdd /home/tom/.npm/performance-now/0.2.0/package/package.json not in flight; writing
+302 verbose correctMkdir /home/tom/.npm correctMkdir not in flight; initializing
+303 verbose afterAdd /home/tom/.npm/performance-now/0.2.0/package/package.json written
+304 silly install resolved [ { name: 'performance-now',
+304 silly install resolved     description: 'Implements performance.now (based on process.hrtime).',
+304 silly install resolved     keywords: [],
+304 silly install resolved     version: '0.2.0',
+304 silly install resolved     author: { name: 'Meryn Stol', email: 'merynstol@gmail.com' },
+304 silly install resolved     license: 'MIT',
+304 silly install resolved     homepage: 'https://github.com/meryn/performance-now',
+304 silly install resolved     bugs: { url: 'https://github.com/meryn/performance-now/issues' },
+304 silly install resolved     repository:
+304 silly install resolved      { type: 'git',
+304 silly install resolved        url: 'git://github.com/meryn/performance-now.git' },
+304 silly install resolved     private: false,
+304 silly install resolved     dependencies: {},
+304 silly install resolved     devDependencies: { 'coffee-script': '~1.7.1', mocha: '~1.21.0' },
+304 silly install resolved     optionalDependencies: {},
+304 silly install resolved     main: 'lib/performance-now.js',
+304 silly install resolved     scripts:
+304 silly install resolved      { prepublish: 'npm test',
+304 silly install resolved        pretest: 'make build',
+304 silly install resolved        test: 'make test' },
+304 silly install resolved     _id: 'performance-now@0.2.0',
+304 silly install resolved     dist:
+304 silly install resolved      { shasum: '33ef30c5c77d4ea21c5a53869d91b56d8f2555e5',
+304 silly install resolved        tarball: 'https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz' },
+304 silly install resolved     _from: 'performance-now@>=0.2.0 <0.3.0',
+304 silly install resolved     _npmVersion: '1.3.24',
+304 silly install resolved     _npmUser: { name: 'meryn', email: 'merynstol@gmail.com' },
+304 silly install resolved     maintainers: [ [Object] ],
+304 silly install resolved     directories: {},
+304 silly install resolved     _shasum: '33ef30c5c77d4ea21c5a53869d91b56d8f2555e5',
+304 silly install resolved     _resolved: 'https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz' } ]
+305 info install performance-now@0.2.0 into /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+306 info installOne performance-now@0.2.0
+307 verbose installOne of performance-now to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf not in flight; installing
+308 verbose correctMkdir /home/tom/.npm/_locks correctMkdir not in flight; initializing
+309 verbose lock using /home/tom/.npm/_locks/performance-now-85dbb1fa23e31cb7.lock for /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+310 silly install write writing performance-now 0.2.0 to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+311 verbose unbuild node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+312 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now is being purged from base /home/tom/Brachyon
+313 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+314 verbose tar unpack /home/tom/.npm/performance-now/0.2.0/package.tgz
+315 verbose tar unpacking to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+316 silly gentlyRm /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now is being purged
+317 verbose gentlyRm don't care about contents; nuking /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+318 silly gunzTarPerm modes [ '775', '664' ]
+319 silly gunzTarPerm extractEntry package.json
+320 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+321 silly gunzTarPerm extractEntry .npmignore
+322 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+323 silly gunzTarPerm extractEntry README.md
+324 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+325 silly gunzTarPerm extractEntry .tm_properties
+326 silly gunzTarPerm modified mode [ '.tm_properties', 420, 436 ]
+327 silly gunzTarPerm extractEntry .travis.yml
+328 silly gunzTarPerm modified mode [ '.travis.yml', 420, 436 ]
+329 silly gunzTarPerm extractEntry Makefile
+330 silly gunzTarPerm modified mode [ 'Makefile', 420, 436 ]
+331 silly gunzTarPerm extractEntry lib/performance-now.js
+332 silly gunzTarPerm modified mode [ 'lib/performance-now.js', 420, 436 ]
+333 silly gunzTarPerm extractEntry license.txt
+334 silly gunzTarPerm modified mode [ 'license.txt', 420, 436 ]
+335 silly gunzTarPerm extractEntry src/performance-now.coffee
+336 silly gunzTarPerm modified mode [ 'src/performance-now.coffee', 420, 436 ]
+337 silly gunzTarPerm extractEntry test/mocha.opts
+338 silly gunzTarPerm modified mode [ 'test/mocha.opts', 420, 436 ]
+339 silly gunzTarPerm extractEntry test/performance-now.coffee
+340 silly gunzTarPerm modified mode [ 'test/performance-now.coffee', 420, 436 ]
+341 verbose write writing to /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now/package.json
+342 info preinstall performance-now@0.2.0
+343 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now/package.json
+344 verbose readDependencies loading dependencies from /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now/package.json
+345 silly install resolved []
+346 verbose about to build /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+347 info build /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+348 info linkStuff performance-now@0.2.0
+349 silly linkStuff performance-now@0.2.0 has /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules as its parent node_modules
+350 verbose linkBins performance-now@0.2.0
+351 verbose linkMans performance-now@0.2.0
+352 verbose rebuildBundles performance-now@0.2.0
+353 info install performance-now@0.2.0
+354 info postinstall performance-now@0.2.0
+355 verbose unlock done using /home/tom/.npm/_locks/performance-now-85dbb1fa23e31cb7.lock for /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf/node_modules/performance-now
+356 verbose about to build /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+357 info build /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+358 info linkStuff raf@3.2.0
+359 silly linkStuff raf@3.2.0 has /home/tom/Brachyon/node_modules/react-headroom/node_modules as its parent node_modules
+360 verbose linkBins raf@3.2.0
+361 verbose linkMans raf@3.2.0
+362 verbose rebuildBundles raf@3.2.0
+363 verbose rebuildBundles [ 'performance-now' ]
+364 info install raf@3.2.0
+365 info postinstall raf@3.2.0
+366 verbose unlock done using /home/tom/.npm/_locks/raf-9524e853635762c2.lock for /home/tom/Brachyon/node_modules/react-headroom/node_modules/raf
+367 verbose about to build /home/tom/Brachyon/node_modules/react-headroom
+368 info build /home/tom/Brachyon/node_modules/react-headroom
+369 info linkStuff react-headroom@2.1.0
+370 silly linkStuff react-headroom@2.1.0 has /home/tom/Brachyon/node_modules as its parent node_modules
+371 verbose linkBins react-headroom@2.1.0
+372 verbose linkMans react-headroom@2.1.0
+373 verbose rebuildBundles react-headroom@2.1.0
+374 verbose rebuildBundles [ 'raf' ]
+375 info install react-headroom@2.1.0
+376 info postinstall react-headroom@2.1.0
+377 verbose unlock done using /home/tom/.npm/_locks/react-headroom-dd92e098451cf887.lock for /home/tom/Brachyon/node_modules/react-headroom
+378 verbose validateInstall loading /home/tom/Brachyon/package.json for validation
+379 verbose stack Error: The package react@15.1.0 does not satisfy its siblings' peerDependencies requirements!
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/lib/install.js:125:32
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/lib/install.js:268:7
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/read-installed/read-installed.js:142:5
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+379 verbose stack     at cb (/home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+379 verbose stack     at cb (/home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+379 verbose stack     at cb (/home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+379 verbose stack     at /home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+380 verbose cwd /home/tom/Brachyon
+381 error Linux 3.19.0-58-generic
+382 error argv "node" "/home/tom/.meteor/packages/meteor-tool/.1.3.2_4.10vjklo++os.linux.x86_64+web.browser+web.cordova/mt-os.linux.x86_64/dev_bundle/bin/npm" "install" "--save" "react-headroom"
+383 error node v0.10.43
+384 error npm  v2.14.22
+385 error code EPEERINVALID
+386 error peerinvalid The package react@15.1.0 does not satisfy its siblings' peerDependencies requirements!
+386 error peerinvalid Peer react-addons-pure-render-mixin@15.1.0 wants react@^15.1.0
+386 error peerinvalid Peer react-dom@15.1.0 wants react@^15.1.0
+386 error peerinvalid Peer react-fontawesome@1.1.0 wants react@>=0.12.0
+386 error peerinvalid Peer react-modal@1.3.0 wants react@^0.14.0 || ^15.0.0-0
+386 error peerinvalid Peer react-router@2.4.1 wants react@^0.14.0 || ^15.0.0
+386 error peerinvalid Peer velocity-react@1.1.5 wants react@^0.14.0 || ^15.0.0
+386 error peerinvalid Peer react-file-input@0.2.5 wants react@0.x
+386 error peerinvalid Peer react-input-autosize@0.6.13 wants react@^0.14 || ^15.0.0-rc || ^15.0
+386 error peerinvalid Peer google-map-react@0.12.1 wants react@^0.14.0 || ^15.0.0-rc.1
+386 error peerinvalid Peer react-cropper@0.8.0 wants react@^0.14.6 || ^15.0.0
+386 error peerinvalid Peer react-dropzone@3.5.0 wants react@^0.14.0 || ^15.0.0
+386 error peerinvalid Peer react-quill@0.4.1 wants react@>=0.14.0
+386 error peerinvalid Peer react-datetime@2.2.1 wants react@>=0.13
+386 error peerinvalid Peer react-mounter@1.2.0 wants react@0.14.x || 15.x.x
+386 error peerinvalid Peer react-headroom@2.1.0 wants react@*
+386 error peerinvalid Peer react-google-maps@4.11.0 wants react@^0.14.0 || ^15.0.0
+387 verbose exit [ 1, true ]
