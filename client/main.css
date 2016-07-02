@@ -216,12 +216,12 @@ header {
 }
 
 @-webkit-keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
+  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
   to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
 }
 
 @keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
+  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
   to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
 }
 
@@ -235,12 +235,12 @@ header {
 
 @-webkit-keyframes animatehubhide {
   from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
 }
 
 @keyframes animatehubhide {
   from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-10px); -webkit-transform: translateX(-10px); transform: translateX(-10px);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
 }
 
 header a {
