@@ -14,12 +14,21 @@ export default class DateInput extends Component {
   }
 
   value() {
-    return this.state;
+    return this.stateTime().format("YYYYMMDD");
   }
 
   openCalendar() {
     this.setState({
       open: true
+    })
+  }
+
+  closeCalendar() {
+    this.setState({
+      open: false,
+      month: moment().format("M"),
+      year: moment().format("YYYY"),
+      day: moment().format("DD")
     })
   }
 
@@ -62,13 +71,15 @@ export default class DateInput extends Component {
   }
 
   setValue(e) {
-    if(parseInt(e.target.innerHTML) < moment().date()){
+    var cache = this.state.day;
+    this.state.day = parseInt(e.target.innerText);
+    console.log(this.stateTime());
+    if(this.stateTime() < moment()){
+      this.day = cache;
       return;
     }
-    this.setState({
-      day: e.target.innerHTML
-    });
     this.refs.value.value = this.stateTime().date(e.target.innerHTML).format("MM/DD/YYYY");
+    this.closeCalendar();
   }
 
   prevMonth() {
@@ -92,7 +103,7 @@ export default class DateInput extends Component {
     return (
       <div className='calendar'>
         <div style={{textAlign: 'right', padding: 5}}>
-          <FontAwesome name="times" onClick={(e) => { self.setState({open: false}) }} />
+          <FontAwesome name="times" onClick={this.closeCalendar.bind(this)} />
         </div>
         <div className="calendar-month">
           <div ref="prevMonth" className="calendar-month-control" onClick={this.prevMonth.bind(this)}>

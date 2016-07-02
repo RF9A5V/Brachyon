@@ -28,6 +28,8 @@ Meteor.startup(() => {
 
   Logger.info('Meteor started!')
 
+  SyncedCron.start();
+
   Images.allow({
     insert: function() {
       return true;

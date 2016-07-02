@@ -1,32 +1,35 @@
-import React, { Component } from 'react';
-import GoogleMapsLoader from 'google-maps';
+import React, { Component } from "react";
+import GoogleMapsLoader from "google-maps";
 
 export default class LocationSelect extends Component {
 
   componentWillMount() {
 
     this.setState({
-      online: true
+      online: true,
+      location: {}
     })
 
     self = this;
 
     GoogleMapsLoader.KEY = "AIzaSyB4ZpFxDyTtOaSNO35OdUgLmVlBBOsTiu4";
-    GoogleMapsLoader.LIBRARIES = ['geometry', 'places'];
+    GoogleMapsLoader.LIBRARIES = ["geometry", "places"];
 
     GoogleMapsLoader.load(function(google){
       autocomplete = new google.maps.places.Autocomplete(
-      (document.getElementById('test')),
-      {types: ['geocode']});
-      autocomplete.addListener('place_changed', function(){
+      (document.getElementById("test")),
+      {types: ["geocode"]});
+      autocomplete.addListener("place_changed", function(){
         lat = autocomplete.getPlace().geometry.location.lat();
         lng = autocomplete.getPlace().geometry.location.lng();
 
         // Longitude and Latitude are intentionally set backwards because MongoDB is dumb. DO NOT SWITCH
-        self.setState({
+        self.state.location = {
           type: "Point",
           coords: [ lng, lat ]
-        });
+        }
+        self.props.onChange();
+        self.forceUpdate();
       })
     });
   }
@@ -36,9 +39,9 @@ export default class LocationSelect extends Component {
   }
 
   updateValue(e){
-    this.setState({
-      online: e.target.value == 'true'
-    });
+    this.state.online = (e.target.value == 0);
+    this.props.onChange(e);
+    this.forceUpdate();
   }
 
   value() {
@@ -51,11 +54,13 @@ export default class LocationSelect extends Component {
         <label>
           Is this event online?
           <div>
-            <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={true} /> Yes
-            <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={false} /> No
+            <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={0} checked={this.state.online} />
+            <label>Yes</label>
+            <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={1} checked={!this.state.online} />
+            <label>No</label>
           </div>
-          <div style={this.state.online ? { display: 'none' } : {}}>
-            <input type="text" id="test" ref="location" placeholder="Enter your location" />
+          <div style={this.state.online ? { display: "none" } : {}}>
+            <input type="text" id="test" ref="location" placeholder="Enter your location"  style={{marginLeft: 0}} />
           </div>
         </label>
       </div>

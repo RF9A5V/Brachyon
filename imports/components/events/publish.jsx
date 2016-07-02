@@ -168,7 +168,7 @@ export default class PublishEventScreen extends Component {
       )
     }
     return (
-      <div className="screen">
+      <div className="content">
         <h2 className="center">Publish Your Event</h2>
         <div>
           {

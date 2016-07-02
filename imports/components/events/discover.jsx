@@ -31,7 +31,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
 
   render() {
     return (
-      <div className="screen">
+      <div className="content">
         <DiscoverDisplay />
         <DiscoverSearch handler={this.setSubscription.bind(this)} />
         <BlockContainer events={this.events()} />

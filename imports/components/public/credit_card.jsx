@@ -25,6 +25,7 @@ export default class CreditCardForm extends React.Component {
           }
           else{
             //loadCardInfo();
+            console.log(self.props.payableTo)
             Meteor.call("chargeCard", self.props.payableTo, self.props.amount, function(err, res){
               if(err){
                 toastr.error(err.message);

@@ -33,3 +33,4 @@ meteorhacks:async
 secretninjaman:meteor-accounts-stripe-connect
 secretninjaman:link-accounts
 cfs:graphicsmagick
+percolate:synced-cron

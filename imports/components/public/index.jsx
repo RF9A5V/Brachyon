@@ -35,6 +35,5 @@ export default class LandingScreen extends React.Component {
         </div>
       </div>
     );
-
   }
 }

@@ -4,12 +4,11 @@ import Images from '/imports/api/event/images.js';
 export default class EventBlock extends React.Component {
 
   imgOrDefault() {
-    img = Images.findOne(this.props.banner);
-    if(img == null){
+    if(this.props.banner == null){
       return '/images/balls.svg';
     }
     else {
-      return img.url();
+      return this.props.banner;
     }
   }
 

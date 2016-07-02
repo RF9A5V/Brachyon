@@ -1,75 +1,57 @@
-import Images from '/imports/api/event/images.js';
-import Games from '/imports/api/games/games.js';
-import Sponsorships from '/imports/api/event/sponsorship.js';
-import Icons from '/imports/api/sponsorship/icon.js';
-import Tickets from '/imports/api/ticketing/ticketing.js';
-import ProfileImages from '/imports/api/users/profile_images.js';
+import Images from "/imports/api/event/images.js";
+import Games from "/imports/api/games/games.js";
+import Sponsorships from "/imports/api/event/sponsorship.js";
+import Icons from "/imports/api/sponsorship/icon.js";
+import Tickets from "/imports/api/ticketing/ticketing.js";
+import ProfileImages from "/imports/api/users/profile_images.js";
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
 Meteor.methods({
-  'events.create'(id, attrs) {
-    if(!attrs){
-      throw new Error("Need args.");
+  "events.create"(attrs) {
+    if(!attrs.details){
+      throw new Error("Event needs details.");
     }
     if(!Meteor.userId()){
-      throw new Error("You need to be logged in.");
+      throw new Error("Needs to be logged in.");
     }
-    if(!attrs.eventName){
-      throw new Error("Event needs a name.")
-    }
-    if(!attrs.location){
-      throw new Error("Event needs to specify a location.")
-    }
-    else {
-      if(!attrs.location.online && !attrs.location.coords){
-        throw new Error("Non online event must have a location specified.")
+    attrs.published = true;
+    attrs.underReview = false;
+    attrs.owner = Meteor.userId();
+    if(attrs.organize){
+      if(!attrs.organize.active){
+        attrs.organize = {};
+      }
+      else {
+        attrs.banner = Games.findOne(attrs.organize.game).banner;
       }
     }
-
-    f = function(b) {
-      banner = b || "";
-      Events.insert({
-        owner: Meteor.userId(),
-        location: attrs.location,
-        title: attrs.eventName,
-        published: false,
-        under_review: false,
-        banner
-      })
+    if(attrs.revenue){
+      if(!attrs.revenue.active){
+        attrs.revenue = {};
+      }
+      else {
+        attrs.published = false;
+        attrs.underReview = true;
+      }
     }
-
-    if(attrs.file){
-      file = new FS.File();
-      file.attachData(attrs.file.content, { type: attrs.file.type });
-      Images.insert(file, function(err, obj){
-        if(err){
-          Logger.info(err);
-        }
-        else {
-          f(obj._id);
-        }
-      });
-    }
-    else {
-      f();
-    }
+    Events.insert(attrs);
   },
-  'events.update_title'(id, title){
+  "events.update_title"(id, title){
     Events.update(id, {
       $set: {
         title
       }
     })
   },
-  'events.update_description'(id, description){
+  "events.update_description"(id, description){
     Events.update(id, {
       $set: {
         description: description
       }
     })
   },
-  'events.update_banner'(id, fileData, type){
+  "events.update_banner"(id, fileData, type){
     file = new FS.File();
     file.attachData(fileData, { type });
     Images.insert(file, function(err, obj){
@@ -86,18 +68,18 @@ Meteor.methods({
     });
 
   },
-  'events.update_time'(id, times){
+  "events.update_time"(id, times){
     Events.update(id, {
       $set: {
         time: times
       }
     })
   },
-  'events.update_location'(id, location) {
+  "events.update_location"(id, location) {
     Events.update(id, {
       $set: {
         location: {
-          type: 'Point',
+          type: "Point",
           coords: location.coords,
           locationName: location.locationName,
           streetAddress: location.streetAddress,
@@ -109,12 +91,12 @@ Meteor.methods({
       }
     });
   },
-  'events.add_participant'(id) {
+  "events.add_participant"(id) {
     event = Events.findOne(id);
     if(!event.participants) {
       Events.update(id, {
         $set: {
-          participants: [{name: 'Player 1'}]
+          participants: [{name: "Player 1"}]
         }
       })
     }
@@ -126,11 +108,11 @@ Meteor.methods({
       })
     }
   },
-  'events.create_tournament'(id, obj) {
+  "events.create_tournament"(id, obj) {
     event = Events.findOne(id);
-    api_key = 'LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376';
+    api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
     headers = {
-      contentType: 'json'
+      contentType: "json"
     }
     Meteor.http.post("https://api.challonge.com/v1/tournaments.json", {
       data: {
@@ -167,12 +149,12 @@ Meteor.methods({
       }
     })
   },
-  'events.destroy_tournament'(id) {
-    api_key = 'LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376';
+  "events.destroy_tournament"(id) {
+    api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
     headers = {
-      contentType: 'json'
+      contentType: "json"
     }
-    Meteor.http.call('DELETE', `https://api.challonge.com/v1/tournaments/${id}.json`, {
+    Meteor.http.call("DELETE", `https://api.challonge.com/v1/tournaments/${id}.json`, {
       data: {
         api_key
       },
@@ -189,7 +171,7 @@ Meteor.methods({
       }
     })
   },
-  'events.send_for_review'(id){
+  "events.send_for_review"(id){
     Events.update(id, {
       $set: {
         under_review: true,
@@ -198,7 +180,7 @@ Meteor.methods({
     })
   },
 
-  'events.approve'(id){
+  "events.approve"(id){
     Events.update(id, {
       $set: {
         under_review: false,
@@ -207,7 +189,7 @@ Meteor.methods({
     })
   },
 
-  'events.reject'(id) {
+  "events.reject"(id) {
     Events.update(id, {
       $set: {
         under_review: false,
@@ -254,6 +236,7 @@ Meteor.methods({
     }
   },
   "chargeCard": function(payableTo, chargeAmount){
+    console.log(Meteor.users.findOne(payableTo));
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
@@ -273,13 +256,13 @@ Meteor.methods({
   },
   'games.create'(attrs) {
     if(!attrs){
-      throw new Error('Attributes need to be defined.');
+      throw new Error("Attributes need to be defined.");
     }
     if(!attrs.name){
-      throw new Error('Game needs a name.');
+      throw new Error("Game needs a name.");
     }
     if(!attrs.file){
-      throw new Error('Game needs a banner.');
+      throw new Error("Game needs a banner.");
     }
 
     file = new FS.File();
@@ -291,14 +274,14 @@ Meteor.methods({
       else {
         Games.insert({
           name: attrs.name,
-          banner: obj._id,
+          banner: obj.url({ brokenIsFine: true }),
           approved: false
         })
       }
     });
   },
 
-  'games.approve'(id) {
+  "games.approve"(id) {
     Games.update(id, {
       $set: {
         approved: true
@@ -306,19 +289,19 @@ Meteor.methods({
     })
   },
 
-  'games.reject'(id) {
+  "games.reject"(id) {
     Games.remove(id);
   },
 
-  'users.update_games'(games){
+  "users.update_games"(games){
     Meteor.users.update(Meteor.userId(), {
       $set: {
-        'profile.games': games
+        "profile.games": games
       }
     })
   },
 
-  'users.update_profile_image'(id, file){
+  "users.update_profile_image"(id, file){
     f = new FS.File({dimensions: file.dimensions});
     f.attachData(file.content, { type: file.type });
     ProfileImages.insert(f, function(err, obj){
@@ -328,14 +311,14 @@ Meteor.methods({
       }
       Meteor.users.update(id, {
         $set: {
-          'profile.image': obj.url({brokenIsFine: true}),
-          'profile.image_ref': obj._id
+          "profile.image": obj.url({brokenIsFine: true}),
+          "profile.image_ref": obj._id
         }
       })
     })
   },
 
-  'events.create_sponsorship'(id) {
+  "events.create_sponsorship"(id) {
     Sponsorships.insert({
       eventId: id,
       start: { amount: 0 },
@@ -350,13 +333,13 @@ Meteor.methods({
     })
   },
 
-  'sponsorships.add_node'(id, branch) {
+  "sponsorships.add_node"(id, branch) {
     var branches = Sponsorships.findOne(id).branches;
     if(branches[branch] == null){
       Sponsorships.update(id, {
         $set: {
           [`branches.${branch}`]: {
-            name: 'Branch',
+            name: "Branch",
             icon: null,
             nodes: []
           }
@@ -368,14 +351,14 @@ Meteor.methods({
         $push: {
           [`branches.${branch}.nodes`]: {
             amount: 10,
-            description: 'Description'
+            description: "Description"
           }
         }
       })
     }
   },
 
-  'sponsorships.update_node'(id, branch, index, attrs){
+  "sponsorships.update_node"(id, branch, index, attrs){
     if(attrs.icon){
       file = new FS.File();
       file.attachData(attrs.icon);
@@ -403,7 +386,7 @@ Meteor.methods({
     }
   },
 
-  'sponsorships.delete_node'(id, pos, index) {
+  "sponsorships.delete_node"(id, pos, index) {
     spons = Sponsorships.findOne(id);
     if(spons){
       Sponsorships.update(id, {
@@ -419,9 +402,17 @@ Meteor.methods({
     }
   },
 
-  'events.create_ticketing'(id) {
+  "events.create_ticketing"(id) {
     Tickets.insert({
-      tickets: []
+      tickets: [
+        {
+          name: "Ticket",
+          description: "This is your ticket description.",
+          limit: 100,
+          amount: 100,
+          payableTo: Meteor.userId()
+        }
+      ]
     }, function(err, obj){
       if(err){
         throw new Error(err.reason)
@@ -436,12 +427,12 @@ Meteor.methods({
     })
   },
 
-  'ticketing.create_ticket'(id) {
+  "ticketing.create_ticket"(id) {
     Tickets.update(id, {
       $push: {
         tickets: {
-          name: 'Ticket',
-          description: 'This is your ticket description.',
+          name: "Ticket",
+          description: "This is your ticket description.",
           limit: 100,
           amount: 100,
           payableTo: Meteor.userId()
@@ -450,7 +441,7 @@ Meteor.methods({
     })
   },
 
-  'ticketing.update_ticket'(id, tickets, index) {
+  "ticketing.update_ticket"(id, tickets, index) {
     Tickets.update(id, {
       $set: {
         tickets
@@ -458,7 +449,7 @@ Meteor.methods({
     })
   },
 
-  'ticketing.delete_ticket'(id, index) {
+  "ticketing.delete_ticket"(id, index) {
     tickets = Tickets.findOne(id).tickets;
     tickets.splice(index - 1, 1);
     Tickets.update(id, {
@@ -468,20 +459,21 @@ Meteor.methods({
     })
   },
 
-  'sponsorships.create_tier'(id) {
+  "sponsorships.create_tier"(id) {
     Sponsorships.update(id, {
       $push: {
         tiers: {
-          name: 'Tier',
-          description: 'Tier description.',
+          name: "Tier",
+          description: "Tier description.",
           amount: 100,
-          limit: 100
+          limit: 100,
+          payableTo: Meteor.userId()
         }
       }
     })
   },
 
-  'sponsorships.update_tier'(id, tiers){
+  "sponsorships.update_tier"(id, tiers){
     Sponsorships.update(id, {
       $set: {
         tiers
