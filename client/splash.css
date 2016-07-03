@@ -1,6 +1,6 @@
 .landing-screen {
   width: 100%;
-  min-height: 80vh;
+  min-height: calc(100vh - 150px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,17 +55,17 @@
 }
 
 .cred-modal {
-    width: 30%;
-    height: 50%;
-    margin: 0 auto;
-    background-color: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 1;
-    -webkit-animation-name: animcred;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animcred;
-    animation-duration: 0.4s
+  width: 30%;
+  height: 50%;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1;
+  -webkit-animation-name: animcred;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animcred;
+  animation-duration: 0.4s
 }
 
 @-webkit-keyframes animcred {
@@ -114,15 +114,15 @@
 }
 
 .cred-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .fb {
@@ -147,48 +147,4 @@
   -moz-box-shadow: 0 0 10px #f44336;
 	-webkit-box-shadow: 0 0 10px #f44336;
 	box-shadow: 0 0 10px #f44336;
-}
-
-/*social plugins*/
-.icon.fa {
-  font-size: 36px;
-  margin: 0 2px;
-  color: white;
-}
-
-.icon.fa:hover {
-  cursor: pointer;
-}
-
-.snapchat:hover {
-  color: #FFFC00;
-}
-
-.instagram:hover {
-  color: #517FA4;
-}
-
-.reddit:hover {
-  color: #CEE3F8;
-}
-
-.facebook:hover {
-  color: #3B5998;
-}
-
-.twitch.fa {
-  font-size: 34px;
-  margin-top: 2px;
-}
-
-.twitch:hover {
-  color: #6441A5;
-}
-
-.twitter:hover {
-  color: #55ACEE;
-}
-
-.youtube:hover {
-  color: #CD201F;
 }

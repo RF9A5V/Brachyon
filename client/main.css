@@ -28,25 +28,6 @@ body {
   flex: 1 1 auto;
 }
 
-.box .row.footer {
-  flex: 0 1 40px;
-}
-
-.footer {
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  padding: 10px 0;
-  bottom: 0;
-  width: 100%;
-  position: fixed;
-}
-
-.footer-div {
-  margin: 4px;
-  cursor: default;
-}
-
 /* Flex rows and column stuff */
 
 .row, .col {
@@ -173,6 +154,7 @@ header {
   padding: 20px 20px;
   display: flex;
   justify-content: flex-end;
+  height: 100px;
   background: rgba(0, 0, 0, 0.5);
 }
 
