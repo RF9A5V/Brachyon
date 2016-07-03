@@ -1,5 +1,6 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
+import SnapModal from './snap_modal.jsx'
 
 export default class Footer extends React.Component {
   render() {
@@ -13,7 +14,7 @@ export default class Footer extends React.Component {
         <span className="footer-div">.</span>
         <FontAwesome name="facebook-square " className="facebook icon" />
         <span className="footer-div">.</span>
-        <FontAwesome name="snapchat-square" className="snapchat icon" />
+        <SnapModal />
         <span className="footer-div">.</span>
         <a href="https://twitter.com/brachyon" target="_blank"><FontAwesome name="twitter-square" className="twitter icon" /></a>
         <span className="footer-div">.</span>

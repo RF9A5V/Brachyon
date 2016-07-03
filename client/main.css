@@ -262,6 +262,11 @@ header a {
   margin: 0 10px;
 }
 
+.snapcode-image {
+  width: 1in;
+  height: 1in;
+}
+
 a {
   text-decoration: none;
 }
