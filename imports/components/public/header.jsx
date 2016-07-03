@@ -89,7 +89,7 @@ export default class Header extends TrackerReact(Component) {
             </button>
             {hub}
           </div>
-          <div style={{textAlign: 'right'}} className="col-1">
+          <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
             {userCred}
           </div>
         </header>

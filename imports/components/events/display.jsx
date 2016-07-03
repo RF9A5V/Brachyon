@@ -7,7 +7,7 @@ export default class EventDisplay extends React.Component {
 
   imgOrDefault() {
     if(this.props.details.banner == null){
-      return '/images/balls.svg';
+      return '/images/bg.jpg';
     }
     else {
       return this.props.details.banner;
@@ -60,9 +60,6 @@ export default class EventDisplay extends React.Component {
           <Link to={`/events/${this.props._id}/preview`}>
             <button style={{marginRight: '15px'}}>Preview</button>
           </Link>
-          <Link to={`/events/${this.props._id}/view`}>
-            <button style={{marginRight: '15px'}}>View (Test)</button>
-          </Link>
           <Link to={`/events/${this.props._id}/publish`}>
             <button>Publish</button>
           </Link>
@@ -95,7 +92,7 @@ export default class EventDisplay extends React.Component {
     }
     else {
       return (
-        <div className="event-display row" style={{marginBottom: "33vh"}}>
+        <div className="event-display row">
           <img className="event-display-img" src={this.imgOrDefault()} />
           <div className="col event-display-details col-1">
             <h2>{this.title()}</h2>

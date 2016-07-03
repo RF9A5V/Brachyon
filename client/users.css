@@ -16,7 +16,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  margin-bottom: 30px;
 }
 
 .event-list {
