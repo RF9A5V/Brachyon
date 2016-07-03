@@ -34,6 +34,7 @@ html, body, #react-root, #app {
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
+  padding: 10px;
 }
 
 .footer-div {
@@ -324,4 +325,12 @@ textarea:focus {
   background-color: #444;
   width: 420px;
   box-sizing: border-box;
+}
+
+label {
+  margin-bottom: 15px;
+}
+
+i {
+  margin-bottom: 15px;
 }
