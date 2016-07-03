@@ -5,7 +5,8 @@ export default class ImageForm extends Component {
 
   componentWillMount(){
     this.setState({
-      file: null
+      file: this.props.url,
+      crop: false
     })
   }
 
@@ -21,14 +22,25 @@ export default class ImageForm extends Component {
     reader.onload = (function() {
       this.setState({
         file: reader.result,
-        type: type
+        type: type,
+        crop: true
       })
     }).bind(this)
     reader.readAsDataURL(e.target.files[0]);
   }
 
-  uploadImage(e) {
-    e.preventDefault();
+  componentWillReceiveProps(next) {
+    console.log(next);
+    this.setState({
+      file: next.url,
+      crop: false
+    })
+  }
+
+  value() {
+    if(!this.state.crop){
+      return this.state.file;
+    }
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
     var heightRatio = imageData.naturalHeight / imageData.height;
@@ -39,28 +51,44 @@ export default class ImageForm extends Component {
     boxData.height *= heightRatio;
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
-    this.props.handler({ content: this.state.file, type: this.state.type, dimensions: boxData });
+    return { content: this.state.file, type: this.state.type, dimensions: boxData };
   }
 
   render() {
     if(!this.state.file){
       return (
-        <div>
-          <input type="file" ref="file" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
-          <button onClick={this.onClick.bind(this)}>Update File</button>
+        <div className="col">
+          <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
+          <div>
+            <button onClick={this.onClick.bind(this)}>Update File</button>
+          </div>
         </div>
       )
     }
     else {
+      if(!this.state.crop){
+        return (
+          <div className="col">
+            <img style={{width: "100%", height: "auto"}} src={this.state.file} />
+            <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
+            <div>
+              <button onClick={this.onClick.bind(this)}>Update File</button>
+            </div>
+          </div>
+        )
+      }
       return (
-        <div className="col center x-center">
+        <div className="col">
+          <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
           <Cropper
           ref="cropper"
           src={this.state.file}
-          style={{width: '85%', height: '30vh'}}
+          style={{width: '100%', height: '30vh'}}
           zoomable={false}
           aspectRatio={this.props.aspectRatio || 1} />
-          <button onClick={this.uploadImage.bind(this)}>Submit</button>
+          <div>
+            <button onClick={this.onClick.bind(this)}>Update File</button>
+          </div>
         </div>
       )
     }

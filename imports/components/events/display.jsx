@@ -6,11 +6,11 @@ import { Link } from 'react-router';
 export default class EventDisplay extends React.Component {
 
   imgOrDefault() {
-    if(this.props.banner == null){
+    if(this.props.details.banner == null){
       return '/images/balls.svg';
     }
     else {
-      return this.props.banner;
+      return this.props.details.banner;
     }
   }
 
@@ -41,7 +41,7 @@ export default class EventDisplay extends React.Component {
   }
 
   eventControls() {
-    if(this.props.under_review && !this.props.published){
+    if(this.props.underReview && !this.props.published){
       return (
         <div className="row flex-1">
           <button>Under Review</button>
@@ -51,7 +51,7 @@ export default class EventDisplay extends React.Component {
         </div>
       );
     }
-    else if(!this.props.under_review && !this.props.published) {
+    else if(!this.props.underReview && !this.props.published) {
       return (
         <div className="row flex-1">
           <Link to={`/events/${this.props._id}/edit`}>
@@ -95,7 +95,7 @@ export default class EventDisplay extends React.Component {
     }
     else {
       return (
-        <div className="event-display row">
+        <div className="event-display row" style={{marginBottom: "33vh"}}>
           <img className="event-display-img" src={this.imgOrDefault()} />
           <div className="col event-display-details col-1">
             <h2>{this.title()}</h2>

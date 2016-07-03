@@ -351,3 +351,11 @@ textarea:focus {
   width: 420px;
   box-sizing: border-box;
 }
+
+label {
+  margin-bottom: 15px;
+}
+
+i {
+  margin-bottom: 15px;
+}

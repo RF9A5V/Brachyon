@@ -79,3 +79,25 @@
   max-width: 400px;
   height: auto;
 }
+
+.template-container {
+  width: 100%;
+  position: absolute;
+  top: 50px;
+}
+
+.game-result-template {
+  height: 60px;
+  padding: 20px;
+  background-color: #111;
+}
+
+.game-result-template:hover {
+  cursor: pointer;
+  background-color: #222;
+}
+
+.game-result-template img {
+  width: 80px;
+  height: 45px;
+}

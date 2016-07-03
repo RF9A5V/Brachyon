@@ -47,11 +47,11 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   unpublishedEvents() {
-    return Events.find({published: false, under_review: false}).fetch();
+    return Events.find({published: false, underReview: false}).fetch();
   }
 
   underReviewEvents() {
-    return Events.find({published: false, under_review: true}).fetch();
+    return Events.find({published: false, underReview: true}).fetch();
   }
 
   publishedEvents() {
@@ -136,7 +136,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock {...ev} image={ev.banner} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock image={ev.details.banner} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }
