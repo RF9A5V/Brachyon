@@ -34,7 +34,7 @@ export default class Header extends TrackerReact(Component) {
     }
     else {
       userCred = (
-        <div className="head2">
+        <div className="head-credentials">
           <SignUpModal />
           <LogInModal />
         </div>
@@ -89,7 +89,7 @@ export default class Header extends TrackerReact(Component) {
             </button>
             {hub}
           </div>
-          <div style={{textAlign: 'right'}} className="col-1">
+          <div style={{textAlign: 'right'}} className="col-1 x-center">
             {userCred}
           </div>
         </header>

@@ -144,34 +144,6 @@ input:-webkit-autofill {
     -webkit-box-shadow: none;
 }
 
-/* Header style */
-header {
-  width: 100%;
-  box-sizing: border-box;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  padding: 20px 20px;
-  display: flex;
-  justify-content: flex-end;
-  height: 100px;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.head-align {
-  display: flex;
-  align-items: center;
-}
-
-.head2 {
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.head-margin {
-  margin-right: 5px;
-  margin-left: 5px;
-}
 
 .login-button {
   width: 100px;

@@ -7,7 +7,7 @@ export default class MainLayout extends Component {
     return (
       <div id="app">
         <Header />
-        <div className="box row content">
+        <div className="box row content" style={{marginBottom: '50px'}}>
           {this.props.children}
         </div>
         <Footer />

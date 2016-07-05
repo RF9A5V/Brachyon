@@ -24,7 +24,7 @@ export default class SnapModal extends React.Component {
 		  	<FontAwesome name="snapchat-square" className="snapchat icon" onClick={this.openModal.bind(this)} />
 		  	<Modal
 	        className = "snap-modal"
-	        overlayClassName = "cred-overlay"
+	        overlayClassName = "credential-overlay"
 	        isOpen={this.state.open}>
 	        <div className="row justify-end">
 	          <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>

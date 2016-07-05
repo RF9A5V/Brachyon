@@ -14,31 +14,42 @@
 }
 
 .footer-div {
-  margin: 25px 4px;
+  margin: 0 4px;
   cursor: default;
   line-height: normal;
 }
 
-.foot-room {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
 }
-.foot-room--unfixed {
-  position: relative;
-  transform: translateY(0);
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
 }
-.foot-room--scrolled {
-  transition: transform 200ms ease-in-out;
+@-webkit-keyframes fadein { /* Safari and Chrome */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
 }
-.foot-room--unpinned {
-  position: fixed;
-  transform: translateY(-100%);
-}
-.foot-room--pinned {
-  position: fixed;
-  transform: translateY(0%);
+@-o-keyframes fadein { /* Opera */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /*social plugins*/
