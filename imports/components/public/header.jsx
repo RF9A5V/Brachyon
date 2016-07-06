@@ -78,8 +78,9 @@ export default class Header extends TrackerReact(Component) {
     }
     return (
       <Headroom>
-        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} class="row x-center header">
+        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
           <div className = "head-align row">
+            <img src="/images/b_logo.svg" style={{height: 50, width:50}}></img>
             <Link to="/">
               <h2 style={{margin: 0}}>BRACHYON</h2>
             </Link>
@@ -89,7 +90,7 @@ export default class Header extends TrackerReact(Component) {
             </button>
             {hub}
           </div>
-          <div style={{textAlign: 'right'}} className="col-1 x-center">
+          <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
             {userCred}
           </div>
         </header>

@@ -32,14 +32,34 @@ export default class EventCreateScreen extends Component {
       revenue
     };
     Meteor.call("events.create", obj, function(err){
+
       if(err){
         toastr.error(err.reason);
       }
       else {
-        toastr.success("Successfully created event!");
-        window.location = "/";
+        window.location = "/"
       }
-    })
+    });
+  }
+
+  saveForAdv(e) {
+    e.preventDefault();
+    var details = this.refs.details.value();
+    var organize = this.refs.organization.value();
+    var revenue = this.refs.revenue.value();
+    var obj = {
+      details,
+      organize,
+      revenue
+    };
+    Meteor.call("events.save_for_advanced", obj, function(err, data){
+      if(err){
+        toastr.error(err.reason);
+      }
+      else {
+        window.location = `/events/${data}/edit`;
+      }
+    });
   }
 
   setValid(valid) {
@@ -85,6 +105,7 @@ export default class EventCreateScreen extends Component {
             <button onClick={this.onClick.bind(this)} className={`${valid ? "active" : "inactive"}`}>Publish</button>
           )
         }
+        <button style={{marginLeft: 10}} onClick={this.saveForAdv.bind(this)}>Advanced Options</button>
       </div>
     );
   }
@@ -93,7 +114,7 @@ export default class EventCreateScreen extends Component {
     var self = this;
     return (
       <div className="screen">
-        <div className="col x-center">
+        <div className="col x-center" style={{marginBottom: 30}}>
           <h2>Create an Event</h2>
           {
             this.accordionItems().map(function(item, index){
