@@ -10,6 +10,15 @@
   background-color: white;
 }
 
+.line.horiz.half {
+  width: calc(33% + 8px);
+}
+
+.line.horiz.half.no-bg {
+  background: none;
+  width: calc(33% + 8px);
+}
+
 .form {
   display: none;
 }
