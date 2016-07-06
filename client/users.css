@@ -29,20 +29,24 @@
 .event-block-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   padding: 0 5em;
 }
 
 .event-block-container:after {
   content: "";
-  width: 31%;
+  width: calc(33% - 6.66px);
 }
 
 .event-block {
-  width: 31%;
+  width: calc(33% - 6.66px);
   position: relative;
   margin-bottom: 10px;
+  margin-left: 10px;
   overflow-y: hidden;
+}
+
+.event-block:nth-child(3n - 2) {
+  margin-left: 0;
 }
 
 .event-block-container .event-block {

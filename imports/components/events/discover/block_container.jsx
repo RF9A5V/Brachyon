@@ -14,17 +14,22 @@ export default class BlockContainer extends Component {
     )
   }
 
+  imgOrDefault(event) {
+    if(event.details.banner){
+      return event.details.banner;
+    }
+    return "/images/bg.jpg";
+  }
 
   render() {
-    self = this;
-
+    var self = this;
     return (
       <div className='event-block-container'>
         {
           this.props.events.map(function(event){
             return (
               <div className="event-block" onClick={self.selectEvent(event._id).bind(self)}>
-                <img src="/images/temp.jpg" />
+                <img src={self.imgOrDefault(event)} />
                 <div className="event-block-details">
                   <h2 className="event-block-title">{ event.details.name }</h2>
                   <div className="event-block-content">

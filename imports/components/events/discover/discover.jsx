@@ -7,11 +7,18 @@ import BlockContainer from './block_container.jsx';
 
 export default class EventDiscoveryScreen extends TrackerReact(Component) {
 
-  constructor(){
-    super();
-    this.state = {
-      events: Meteor.subscribe('events')
-    }
+  componentWillMount() {
+    var self = this;
+    this.setState({
+      events: Meteor.subscribe('events', {
+        onReady() {
+          self.setState({
+            loaded: true
+          })
+        }
+      }),
+      loaded: false
+    })
   }
 
   componentWillUnmount(){
@@ -30,6 +37,12 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   render() {
+    if(!this.state.loaded){
+      return (
+        <div>
+        </div>
+      )
+    }
     return (
       <div className="content">
         <DiscoverDisplay />
