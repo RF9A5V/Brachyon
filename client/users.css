@@ -76,6 +76,11 @@
   transition: all 0.5s;
 }
 
+.event-block-title {
+  background: none;
+  color: white;
+}
+
 .event-block-content {
   height: 30px;
 }
