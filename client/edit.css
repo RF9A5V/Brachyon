@@ -1,0 +1,59 @@
+.side-tab-container {
+  display: flex;
+  width: 100%;
+  flex: 1 1;
+}
+
+.side-tab-item-container {
+  background-color: #222;
+  width: 15%;
+  min-width: 200px;
+}
+
+.side-tab-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 30px 0;
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.side-tab-item.active {
+  background-color: #666;
+}
+
+.side-tab-item:hover {
+  cursor: pointer;
+  background-color: #444;
+}
+
+.side-tab-content-container {
+  width: 85%;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.side-tab-content {
+  flex: 1 1;
+}
+
+.side-tab-button {
+  position: fixed;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.side-tab-content.hidden {
+  display: none;
+}
+
+.side-tab-panel {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 400px;
+  margin: 70px 0 0;
+  margin-left: 20px;
+  padding: 30px;
+  background-color: #444;
+}
