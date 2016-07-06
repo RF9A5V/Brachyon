@@ -92,7 +92,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     events = this.events();
 
     return (
-      <div className="row content">
+      <div className="row">
         <div className="col-1 user-details">
           <ProfileImage imgUrl={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>

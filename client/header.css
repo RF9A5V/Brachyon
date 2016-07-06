@@ -1,4 +1,8 @@
 /* Header style */
+.box .row.header {
+  flex: 0 1 auto;
+}
+
 header {
   width: 100%;
   box-sizing: border-box;
@@ -25,7 +29,6 @@ header {
 .head-margin {
   margin: 12px 5px;
 }
-
 
 .headroom {
 }

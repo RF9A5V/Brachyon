@@ -20,12 +20,10 @@ body {
   height: 100%;
 }
 
-.box .row.header {
-  flex: 0 1 auto;
-}
-
-.box .row.content {
-  flex: 1 1 auto;
+.content {
+  top: 100px;
+  bottom: 50px;
+  margin-bottom: 50px;
 }
 
 /* Flex rows and column stuff */
@@ -141,9 +139,8 @@ label {
 
 /* Hacky thing to remove Chrome backgrounds for autofills */
 input:-webkit-autofill {
-    -webkit-box-shadow: none;
+  -webkit-box-shadow: none;
 }
-
 
 .login-button {
   width: 100px;
@@ -154,7 +151,7 @@ input:-webkit-autofill {
   width: 100px;
 }
 
-.signup-button:hover {
+.signup-button.button:hover {
   -moz-box-shadow: 0 0 10px #CC0000;
 	-webkit-box-shadow: 0 0 10px #CC0000;
 	box-shadow: 0 0 10px #CC0000;
