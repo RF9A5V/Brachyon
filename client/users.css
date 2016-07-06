@@ -27,17 +27,24 @@
 .event-block-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 5em;
+}
+
+.event-block-container:after {
+  content: "";
+  width: 31%;
 }
 
 .event-block {
-  display: inline-block;
   width: 31%;
-  float: left;
   position: relative;
   margin-bottom: 10px;
-  margin-right: 10px;
   overflow-y: hidden;
+}
+
+.event-block-container .event-block {
+  box-sizing: border-box;
 }
 
 .event-block:nth-child(3n) {
