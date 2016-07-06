@@ -131,7 +131,7 @@
   margin-right: 5px;
 }
 
-.fb:hover {
+.fb:not(.inactive):hover {
   -moz-box-shadow: 0 0 10px #3B5998;
 	-webkit-box-shadow: 0 0 10px #3B5998;
 	box-shadow: 0 0 10px #3B5998;
@@ -143,7 +143,7 @@
   margin-left: 5px;
 }
 
-.gplus:hover {
+.gplus:not(.inactive):hover {
   -moz-box-shadow: 0 0 10px #f44336;
 	-webkit-box-shadow: 0 0 10px #f44336;
 	box-shadow: 0 0 10px #f44336;

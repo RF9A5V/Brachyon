@@ -151,7 +151,7 @@ input:-webkit-autofill {
   width: 100px;
 }
 
-.signup-button.button:hover {
+.signup-button:not(.inactive):hover{
   -moz-box-shadow: 0 0 10px #CC0000;
 	-webkit-box-shadow: 0 0 10px #CC0000;
 	box-shadow: 0 0 10px #CC0000;

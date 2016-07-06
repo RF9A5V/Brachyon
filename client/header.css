@@ -29,25 +29,3 @@ header {
 .head-margin {
   margin: 12px 5px;
 }
-
-.headroom {
-}
-.headroom--unfixed {
-  position: relative;
-  transform: translateY(0);
-}
-.headroom--scrolled {
-  transition: transform 200ms ease-in-out;
-  animation: fadein 1s;
-  -moz-animation: fadein 1s;
-  -webkit-animation: fadein 1s;
-  -o-animation: fadein 1s;
-}
-.headroom--unpinned {
-  position: fixed;
-  transform: translateY(-100%);
-}
-.headroom--pinned {
-  position: fixed;
-  transform: translateY(0%);
-}
