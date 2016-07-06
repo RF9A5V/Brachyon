@@ -75,15 +75,15 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
             <div className="col" style={{marginBottom: 20}}>
             {
               event.details.location.online ? (
+                ""
+              ) : (
                 <div>
                   {event.details.location.locationName ? (
                     <span>{event.location.locationName}</span>
                   ) : ( "" )}
                   <span>{event.details.location.streetAddress}</span>
-                  <span>{event.details.location.city} {event.location.state}</span>
+                  <span>{event.details.location.city} {event.details.location.state}</span>
                 </div>
-              ) : (
-                ""
               )
             }
             </div>

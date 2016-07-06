@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 
+import ImageForm from '/imports/components/public/img_form.jsx';
+
 export default class ImageModal extends Component {
 
   componentWillMount(){
@@ -21,6 +23,10 @@ export default class ImageModal extends Component {
     })
   }
 
+  onClick() {
+    this.props.handler(this.refs.image.value());
+  }
+
   render() {
     return (
       <div>
@@ -28,7 +34,8 @@ export default class ImageModal extends Component {
           <div className="div-pad">
             <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
           </div>
-          { this.props.children }
+          <ImageForm ref="image" />
+          <button onClick={this.onClick.bind(this)}>Submit</button>
         </Modal>
       </div>
     );

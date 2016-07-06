@@ -5,6 +5,7 @@ import SelectInput from "/imports/components/public/select.jsx";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 
 import Games from "/imports/api/games/games.js";
+import GameResultTemplate from "../../public/search_results/game_template.jsx";
 
 export default class OrganizationPanel extends TrackerReact(Component) {
 
@@ -67,6 +68,19 @@ export default class OrganizationPanel extends TrackerReact(Component) {
     this.forceUpdate();
   }
 
+  onGameChange(obj) {
+    if(obj.banner){
+      this.setState({
+        image: obj.banner
+      })
+    }
+    else {
+      this.setState({
+        image: null
+      })
+    }
+  }
+
   render() {
     if(!this.state.loaded){
       return (
@@ -78,9 +92,9 @@ export default class OrganizationPanel extends TrackerReact(Component) {
         <div style={{marginBottom: 10}}>
           <i style={{lineHeight: 1.5}}>This part lets you set up a bracket through the format and helps people find your event through the games they play.</i>
         </div>
-        <div className="row x-center">
-          <label>Set up organization now?</label>
-          <input type="checkbox" checked={this.state.active} onChange={()=>{ this.state.active=!this.state.active; this.onChange() }}/>
+        <div className="row x-center" style={{marginBottom: 20}}>
+          <label style={{margin: 0, marginRight: 20}}>Set up organization now?</label>
+          <input type="checkbox" checked={this.state.active} onChange={()=>{ this.state.active=!this.state.active; this.onChange() }} style={{margin: 0}}/>
         </div>
         <div style={{
           display: this.state.active ? "initial" : "none"
@@ -97,7 +111,15 @@ export default class OrganizationPanel extends TrackerReact(Component) {
               ""
             )
           }
-          <AutocompleteForm ref="game" items={this.games().map(function(game){ return game.name })} values={this.games().map(function(game){ return {banner: game.banner, id: game._id} })} handler={this.showGameBanner.bind(this)} onChange={this.onChange.bind(this)} />
+          <AutocompleteForm ref="game" publications={[
+            "game_search"
+          ]} types={[
+            {
+              type: Games,
+              template: GameResultTemplate,
+              name: "Game"
+            }
+          ]} onChange={this.onGameChange.bind(this)} id={this.props.gameId} />
         </div>
       </div>
     );

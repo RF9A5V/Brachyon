@@ -255,26 +255,26 @@ Meteor.methods({
     })
   },
 
-  "games.create"(attrs) {
+  "games.create"(name, attrs) {
     if(!attrs){
       throw new Error("Attributes need to be defined.");
     }
-    if(!attrs.name){
+    if(!name){
       throw new Error("Game needs a name.");
     }
-    if(!attrs.file){
+    if(!attrs){
       throw new Error("Game needs a banner.");
     }
 
-    file = new FS.File();
-    file.attachData(attrs.file.content, { type: attrs.file.type });
+    var file = new FS.File({dimensions: attrs.dimensions});
+    file.attachData(attrs.content, { type: attrs.type });
     Images.insert(file, function(err, obj){
       if(err){
         Logger.info(err);
       }
       else {
         Games.insert({
-          name: attrs.name,
+          name: name,
           banner: obj.url({ brokenIsFine: true }),
           approved: false
         })

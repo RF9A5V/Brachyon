@@ -47,15 +47,15 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   unpublishedEvents() {
-    return Events.find({published: false, underReview: false}).fetch();
+    return Events.find({published: false, underReview: false}, {sort: { "details.name": 1 }}).fetch();
   }
 
   underReviewEvents() {
-    return Events.find({published: false, underReview: true}).fetch();
+    return Events.find({published: false, underReview: true}, {sort: { "details.name": 1 }}).fetch();
   }
 
   publishedEvents() {
-    return Events.find({published: true}).fetch();
+    return Events.find({published: true}, {sort: { "details.name": 1 }}).fetch();
   }
 
   image(id) {

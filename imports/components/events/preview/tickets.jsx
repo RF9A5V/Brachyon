@@ -3,6 +3,11 @@ import React, { Component } from "react";
 export default class TicketPanel extends Component {
   render() {
     var self = this;
+    if(!this.props.tickets) {
+      return (
+        <div></div>
+      )
+    }
     return (
       <div>
         {

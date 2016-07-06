@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import ImageModal from '/imports/components/public/img_modal.jsx';
-import ImageForm from '/imports/components/public/img_form.jsx';
+import React, { Component } from "react";
+import ImageModal from "/imports/components/public/img_modal.jsx";
+
 
 export default class ProfileImage extends Component {
 
@@ -16,15 +16,18 @@ export default class ProfileImage extends Component {
       return this.state.preview;
     }
     if(this.props.imgUrl == null){
-      return '/images/profile.png';
+      return "/images/profile.png";
     }
     else {
       return this.props.imgUrl;
     }
   }
 
-  updateProfileImage(file, dimensions) {
-    Meteor.call('users.update_profile_image', Meteor.userId(), file, dimensions, function(err) {
+  updateProfileImage(obj) {
+    this.setState({
+      open: false
+    })
+    Meteor.call("users.update_profile_image", Meteor.userId(), obj, function(err) {
       if(err){
         toastr.error(err.reason);
       }
@@ -40,7 +43,7 @@ export default class ProfileImage extends Component {
         <div className="profile-photo" onMouseEnter={() => this.setState({hover: true})} onMouseLeave={() => this.setState({hover: false})} style={
           {
             backgroundImage: `url(${this.imgOrDefault()})`,
-            backgroundSize: '100% 100%'
+            backgroundSize: "100% 100%"
           }
         }>
           {
@@ -53,9 +56,7 @@ export default class ProfileImage extends Component {
             )
           }
         </div>
-        <ImageModal open={this.state.open}>
-          <ImageForm handler={this.updateProfileImage.bind(this)} />
-        </ImageModal>
+        <ImageModal open={this.state.open} handler={this.updateProfileImage.bind(this)} />
       </div>
     );
   }

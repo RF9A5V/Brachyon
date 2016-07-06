@@ -1,13 +1,13 @@
-import React from 'react';
-import Images from '/imports/api/event/images.js';
-import { unmountComponentAtNode } from 'react-dom';
-import { Link } from 'react-router';
+import React from "react";
+import Images from "/imports/api/event/images.js";
+import { unmountComponentAtNode } from "react-dom";
+import { Link } from "react-router";
 
 export default class EventDisplay extends React.Component {
 
   imgOrDefault() {
     if(this.props.details.banner == null){
-      return '/images/bg.jpg';
+      return "/images/bg.jpg";
     }
     else {
       return this.props.details.banner;
@@ -34,7 +34,7 @@ export default class EventDisplay extends React.Component {
     else {
       sizeMax = 350;
       if(parsed.length > sizeMax){
-        return parsed.substring(0, sizeMax-3) + '...';
+        return parsed.substring(0, sizeMax-3) + "...";
       }
       return parsed;
     }
@@ -46,7 +46,7 @@ export default class EventDisplay extends React.Component {
         <div className="row flex-1">
           <button>Under Review</button>
           <Link to={`/events/${this.props._id}/preview`}>
-            <button style={{marginLeft: '15px'}}>Preview</button>
+            <button style={{marginLeft: "15px"}}>Preview</button>
           </Link>
         </div>
       );
@@ -55,10 +55,10 @@ export default class EventDisplay extends React.Component {
       return (
         <div className="row flex-1">
           <Link to={`/events/${this.props._id}/edit`}>
-            <button style={{marginRight: '15px'}}>Edit</button>
+            <button style={{marginRight: "15px"}}>Edit</button>
           </Link>
           <Link to={`/events/${this.props._id}/preview`}>
-            <button style={{marginRight: '15px'}}>Preview</button>
+            <button style={{marginRight: "15px"}}>Preview</button>
           </Link>
           <Link to={`/events/${this.props._id}/publish`}>
             <button>Publish</button>
@@ -70,7 +70,7 @@ export default class EventDisplay extends React.Component {
       return (
         <div className="row flex-1">
           <Link to={`/events/${this.props._id}/preview`}>
-            <button style={{marginRight: '15px'}}>Preview</button>
+            <button style={{marginRight: "15px"}}>Preview</button>
           </Link>
           <Link to={`/events/${this.props._id}/view`}>
             <button>Organize</button>
@@ -84,7 +84,7 @@ export default class EventDisplay extends React.Component {
     if(this.props._id == null){
       return (
         <div className="event-display">
-          <div className="row center x-center" style={{height: '100%'}}>
+          <div className="row center x-center" style={{height: "100%"}}>
             <h3>Select an Event</h3>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default class EventDisplay extends React.Component {
           <img className="event-display-img" src={this.imgOrDefault()} />
           <div className="col event-display-details col-1">
             <h2>{this.title()}</h2>
-            <div className="description-container" dangerouslySetInnerHTML={{__html: this.description()}}></div>
+            <div className="col-1" style={{lineHeight: 1.5}} dangerouslySetInnerHTML={{__html: this.description()}}></div>
             { this.eventControls() }
           </div>
         </div>

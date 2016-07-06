@@ -9,6 +9,33 @@ export default class CFTree extends Component {
 
   }
 
+  junction() {
+    var kids = this.props.goals.children;
+    var value = "";
+    var temp = [(<div className="line horiz half"></div>), (<div className="line horiz half no-bg"></div>)];
+    if(kids[0] && kids[2]){
+      value = (
+        <div className="line horiz"></div>
+      )
+    }
+    else if(kids[0]) {
+      value = temp;
+    }
+    else if(kids[2]){
+      value = temp.reverse();
+    }
+    else {
+      return (
+        <div></div>
+      )
+    }
+    return (
+      <div className="row center">
+        { value }
+      </div>
+    )
+  }
+
   drawNodes() {
     var self = this;
     return (
@@ -29,34 +56,16 @@ export default class CFTree extends Component {
         <div className="row center">
           <div className="line vert"></div>
         </div>
-        {
-          this.props.goals.children[0] ? (
-            ""
-          ) : (
-            <div className="row center">
-
-              {
-                this.props.goals.children[1] == null ? (
-                  <div className="line horiz half no-bg"></div>
-                ) : (
-                  <div className="line horiz half"></div>
-                )
-              }
-              {
-                this.props.goals.children[2] == null ? (
-                  <div className="line horiz half no-bg"></div>
-                ) : (
-                  <div className="line horiz half"></div>
-                )
-              }
-            </div>
-          )
-        }
-
+        { this.junction() }
         <div className="row">
           {
-            Object.keys(this.props.goals.children).map(function(key, index){
+            [0, 1, 2].map(function(key, index){
               var child = self.props.goals.children[key];
+              if(child == null){
+                return (
+                  <div className="col-1"></div>
+                );
+              }
               return (
                 <div className="col-1">
                   <div className="col x-center">
