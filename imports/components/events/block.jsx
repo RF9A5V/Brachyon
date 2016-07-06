@@ -1,11 +1,11 @@
-import React from 'react';
-import Images from '/imports/api/event/images.js';
+import React from "react";
+import Images from "/imports/api/event/images.js";
 
 export default class EventBlock extends React.Component {
 
   imgOrDefault() {
     if(this.props.image == null){
-      return '/images/bg.jpg';
+      return "/images/bg.jpg";
     }
     else {
       return this.props.image;

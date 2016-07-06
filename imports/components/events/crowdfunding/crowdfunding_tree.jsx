@@ -17,10 +17,14 @@ export default class CFTree extends Component {
     }
     this.state = {
       branch: obj,
-      index: -1,
-      node: -1,
+      node: {},
       active: false
     }
+  }
+
+  componentDidUpdate() {
+    Object.keys(this.state.node).map((key) => { this.refs[key].value = this.state.node[key] });
+    this.refs.amount.value = (this.state.node.amount / 100).toFixed(2);
   }
 
   values() {
@@ -44,16 +48,15 @@ export default class CFTree extends Component {
         this.state.branch.children[index].nodes[num] = {
           name: `Lv. ${num + 1}`,
           description: "Set Description Here",
-          amount: 1
+          amount: 100
         };
       }
       else {
         this.state.branch.children[index] = {
-          name: `Branch ${index + 1}`,
           nodes: [{
             name: `Lv. 1`,
             description: "Set Description Here",
-            amount: 1
+            amount: 100
           }]
         }
       }
@@ -61,10 +64,9 @@ export default class CFTree extends Component {
     }
   }
 
-  editNode(index, node) {
+  editNode(node) {
     return function(e) {
       this.setState({
-        index,
         node,
         active: true
       })
@@ -84,7 +86,7 @@ export default class CFTree extends Component {
       return (
         <div>
           <div className="row center">
-            <span>
+            <span onClick={this.editNode(this.state.branch).bind(self)}>
               { this.state.branch.name }
             </span>
           </div>
@@ -114,7 +116,7 @@ export default class CFTree extends Component {
                               return (
                                 <div className="col x-center">
                                   <div className="line vert"></div>
-                                  <span onClick={self.editNode(index, node).bind(self)}>{ child.name + (val.name == "" ? val.name : ", " + val.name) }</span>
+                                  <span onClick={self.editNode(val).bind(self)}>{ val.name }</span>
                                 </div>
                               )
                             })
@@ -141,32 +143,26 @@ export default class CFTree extends Component {
   }
 
   onChange(e) {
-    var st = this.state;
-    var target = st.branch.children[st.index].nodes[st.node];
-    st.branch.children[st.index].name = this.refs.branchName.value;
+    var target = this.state.node;
     target.name = this.refs.name.value;
     target.description = this.refs.description.value;
-    target.amount = this.refs.amount.value * 1;
-    this.forceUpdate();
+    target.amount = this.refs.amount.value;
   }
 
   render() {
-    var st = this.state;
     return (
       <div>
         {
           this.state.active ? (
             <div className="col">
               <i>Elements update as you type! Don't forget to save!</i>
-              <label>Branch Name</label>
-              <input type="text" onChange={this.onChange.bind(this)} ref="branchName" defaultValue={st.branch.children[st.index].name} />
-              <label>Item Name</label>
-              <input type="text" onChange={this.onChange.bind(this)} ref="name" defaultValue={st.branch.children[st.index].nodes[st.node].name} />
+              <label>Name</label>
+              <input type="text" onChange={this.onChange.bind(this)} ref="name" defaultValue={this.state.node.name} />
               <label>Item Description</label>
-              <textarea ref="description" onChange={this.onChange.bind(this)} defaultValue={st.branch.children[st.index].nodes[st.node].description}></textarea>
+              <textarea ref="description" onChange={this.onChange.bind(this)} defaultValue={this.state.node.description}></textarea>
               <label>Item Amount</label>
-              <input type="text" ref="amount" onChange={this.onChange.bind(this)} defaultValue={st.branch.children[st.index].nodes[st.node].amount} />
-              <button onClick={(e) => { this.setState({active: false}) }}>Close</button>
+              <input type="text" ref="amount" onChange={this.onChange.bind(this)} defaultValue={(this.state.node.amount / 100).toFixed(2)} />
+              <button onClick={(e) => { this.setState({active: false}); this.state.node.amount = this.refs.amount.value * 100; this.forceUpdate() }}>Close</button>
             </div>
           ) : ( "" )
         }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactQuill from 'react-quill';
+import ReactQuill from "react-quill";
 
 import LocationSelect from "../create/location_select.jsx";
 import DateInput from "../create/date_input.jsx";
@@ -20,17 +20,17 @@ export default class DetailsPanel extends Component {
 
   formats() {
     return [
-      { label:'Text', type:'group', items: [
-    		{ type:'bold', label:'Bold' },
-    		{ type:'italic', label:'Italic' },
-    		{ type:'separator' },
-    		{ type:'link', label:'Link' },
-        { type:'separator' },
-        { type:'bullet', label:'Bullet' },
-    		{ type:'separator' },
-    		{ type:'list', label:'List' },
-        { type:'separator' },
-        { type:'image', label:'Image' }
+      { label:"Text", type:"group", items: [
+    		{ type:"bold", label:"Bold" },
+    		{ type:"italic", label:"Italic" },
+    		{ type:"separator" },
+    		{ type:"link", label:"Link" },
+        { type:"separator" },
+        { type:"bullet", label:"Bullet" },
+    		{ type:"separator" },
+    		{ type:"list", label:"List" },
+        { type:"separator" },
+        { type:"image", label:"Image" }
     	]},
     ];
   }

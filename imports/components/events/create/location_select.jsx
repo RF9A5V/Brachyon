@@ -8,10 +8,11 @@ export default class LocationSelect extends Component {
     this.setState({
       online: this.props.online,
       coords: [],
-      streetAddress: "",
-      city: "",
-      state: "",
-      zip: ""
+      locationName: this.props.locationName || "",
+      streetAddress: this.props.streetAddress || "",
+      city: this.props.city || "",
+      state: this.props.state || "",
+      zip: this.props.zip || ""
     })
 
     var self = this;
@@ -23,40 +24,6 @@ export default class LocationSelect extends Component {
       autocomplete = new google.maps.places.Autocomplete(
       (self.refs.streetAddress),
       {types: ["address"]});
-
-      if(self.props.coords){
-        var latLng = {
-          lat: self.props.coords[1],
-          lng: self.props.coords[0]
-        };
-        (new google.maps.Geocoder).geocode({location: latLng }, function(rez, status){
-          if(status === google.maps.GeocoderStatus.OK){
-
-            var parser = (function() {
-              var [ city, state, zip ] = [ null, null, null ];
-              rez[0].address_components.forEach(function(val){
-                if(city == null && val.types.indexOf("locality") >= 0){
-                  city = val.short_name
-                }
-                else if(state == null && val.types.indexOf("administrative_area_level_1") >= 0) {
-                  state = val.short_name;
-                }
-                else if(zip == null && val.types.indexOf("postal_code") >= 0) {
-                  zip = val.short_name;
-                }
-              });
-              return [city, state, zip];
-            })();
-
-            self.setState({
-              streetAddress: rez[0].address_components[0].long_name + " " + rez[0].address_components[1].long_name,
-              city: parser[0],
-              state: parser[1],
-              zip: parser[2]
-            });
-          }
-        })
-      }
 
       autocomplete.addListener("place_changed", function() {
 
@@ -110,13 +77,16 @@ export default class LocationSelect extends Component {
   value() {
     if(this.state.online){
       return {
-        online: true
+        online: this.state.online
       }
     }
-    return {
-      online: false,
-      coords: this.state.coords
-    }
+    return this.state;
+  }
+
+  onLocationNameChange(e) {
+    this.setState({
+      locationName: e.target.value
+    });
   }
 
   render() {
@@ -132,6 +102,8 @@ export default class LocationSelect extends Component {
           <label>No</label>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
+          <label>Location Name</label>
+          <input onChange={this.onLocationNameChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName}/>
           <label>Address</label>
           <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" style={{margin: 0}} defaultValue={this.state.streetAddress} />
           <div className="row" style={{marginTop: 10}}>
