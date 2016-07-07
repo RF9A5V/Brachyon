@@ -6,7 +6,7 @@ export default class LocationSelect extends Component {
   componentWillMount() {
 
     this.setState({
-      online: this.props.online,
+      online: this.props.online || true,
       coords: [],
       locationName: this.props.locationName || "",
       streetAddress: this.props.streetAddress || "",
@@ -75,11 +75,6 @@ export default class LocationSelect extends Component {
   }
 
   value() {
-    if(this.state.online){
-      return {
-        online: this.state.online
-      }
-    }
     return this.state;
   }
 

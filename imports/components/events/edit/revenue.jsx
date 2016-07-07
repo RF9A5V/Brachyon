@@ -143,7 +143,7 @@ export default class RevenuePanel extends Component {
             <TierPanel ref="tickets" type={"Ticket"} stubs={this.props.tickets} />
           </div>
           <div className="side-tab-panel">
-            <label>Stretch Goals</label>
+            <label>Stretch Goals&nbsp;<sup>?</sup></label>
             <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
           </div>
           <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>

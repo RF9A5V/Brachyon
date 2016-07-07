@@ -5,10 +5,12 @@ import FontAwesome from 'react-fontawesome';
 
 import Games from '/imports/api/games/games.js';
 
-import BasicExample from '/imports/components/public/modal.jsx';
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
+import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
+import BasicExample from '../public/modal.jsx';
+import LinkToStripe from '../public/link_to_stripe.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -122,13 +124,14 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             <Link to='/events/create'>
               <button>Create Event</button>
             </Link>
-
+            <LinkToStripe />
           </div>
         </div>
         <div className="col-3 event-details">
           <EventDisplay {...this.state.currentEvent} />
           {
             events.map(function(eventSet){
+              console.log(eventSet);
               return (
                 <div>
                   <h3>{eventSet.title}</h3>

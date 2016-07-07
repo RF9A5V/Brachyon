@@ -28,6 +28,7 @@ export default class CreateGameModal extends Component {
       else {
         toastr.success("Submitted game for review.");
       }
+      self.setState({open: false})
     })
   }
 
