@@ -4,17 +4,12 @@ export default class CFTree extends Component {
 
   constructor(props) {
     super(props);
-    var obj = props.goals || {children: null};
-    if(obj.children == null){
-      obj.children = [null, null, null];
-    }
-    else {
-      for(var i = 0; i < 3; i ++){
-        if(obj.children[i] == null){
-          obj.children[i] = null;
-        }
-      }
-    }
+    var obj = props.goals || {
+      name: "Run the Event",
+      description: "This first node is used to represent the amount you need to get this event up and running. Get enough points allocated into this goal node and you can run your event!",
+      amount: 100,
+      children: [null, null, null]
+    };
     this.state = {
       branch: obj,
       node: {},
@@ -29,16 +24,6 @@ export default class CFTree extends Component {
 
   values() {
     return this.state.branch;
-  }
-
-  createInitialNode(e) {
-    this.setState({
-      branch: {
-        name: "Run the Event",
-        description: "This first node is used to represent the amount you need to get this event up and running. Get enough points allocated into this goal node and you can run your event!",
-        children: [null, null, null]
-      }
-    })
   }
 
   addNode(index) {
@@ -85,7 +70,7 @@ export default class CFTree extends Component {
     else {
       return (
         <div>
-          <div className="row center">
+          <div className="row center" style={{marginTop: 20}}>
             <span onClick={this.editNode(this.state.branch).bind(self)}>
               { this.state.branch.name }
             </span>

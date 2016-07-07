@@ -97,7 +97,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
                 ""
               )
             }
-
           </div>
         </div>
       </div>

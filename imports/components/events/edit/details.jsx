@@ -18,6 +18,14 @@ export default class DetailsPanel extends Component {
     }
   }
 
+  testClientSide(e) {
+    var info = this.refs.image.value()
+    if(!info){
+      return;
+    }
+    var file = new FS.File(info);
+  }
+
   formats() {
     return [
       { label:"Text", type:"group", items: [
@@ -51,6 +59,7 @@ export default class DetailsPanel extends Component {
           <div className="side-tab-panel">
             <label>Banner</label>
             <ImageForm ref="image" aspectRatio={16/9} url={this.props.banner} />
+            <button onClick={this.testClientSide.bind(this)}>Test</button>
           </div>
           <div className="side-tab-panel">
             <label style={{marginBottom: 10}}>Description</label>

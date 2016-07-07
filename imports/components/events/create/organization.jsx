@@ -64,7 +64,7 @@ export default class OrganizationPanel extends TrackerReact(Component) {
 
   onChange(e) {
     console.log(!this.state.active);
-    this.props.onChange(!this.state.active || this.state.game_id != null);
+    this.props.onChange(!this.state.active || this.state.image != null);
     this.forceUpdate();
   }
 
@@ -79,6 +79,7 @@ export default class OrganizationPanel extends TrackerReact(Component) {
         image: null
       })
     }
+    this.props.onChange(!this.state.active || this.state.image != null);
   }
 
   render() {

@@ -5,6 +5,8 @@ import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
 import ProfileImages from "/imports/api/users/profile_images.js";
 
+var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+
 Meteor.methods({
   "events.create"(attrs) {
     if(!attrs.details){
@@ -254,18 +256,64 @@ Meteor.methods({
       }
     })
   },
-
-  "games.create"(name, attrs) {
-    if(!attrs){
-      throw new Error("Attributes need to be defined.");
+  "addCard": function(cardToken){
+    if(Meteor.user().stripeCustomer == null){
+      var customerCreate = Async.runSync(function(done){
+        stripe.customers.create({
+          source: cardToken
+        }, function(err, response){
+          done(err, response);
+        })
+      })
+      if(customerCreate.error){
+        throw new Meteor.Error(500, "stripe-error-create", customerCreate.error.message);
+      }
+      else{
+        Meteor.users.update(Meteor.userId(), {$set: {stripeCustomer: customerCreate.result.id}});
+        return
+      }
     }
-    if(!name){
-      throw new Error("Game needs a name.");
+    else{
+      var customerUpdate = Async.runSync(function(done){
+        stripe.customers.update(Meteor.user().stripeCustomer,{
+          source: cardToken
+        }, function(err, response){
+          done(err, response);
+        })
+      })
+      if(customerUpdate.error){
+        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.messgae);
+      }
+      else{
+        return
+      }
     }
-    if(!attrs){
-      throw new Error("Game needs a banner.");
+  },
+  "loadCardInfo": function(){
+    return {
+      "hasCard": false
     }
-
+  },
+  "chargeCard": function(payableTo, chargeAmount){
+    console.log(Meteor.users.findOne(payableTo));
+    stripe.charges.create({
+      amount: chargeAmount,
+      currency: "usd",
+      customer: Meteor.user().stripeCustomer,
+      destination: Meteor.users.findOne(payableTo).services.stripe.id
+    }, function(err, response){
+      if(err){
+        //throw new Meteor.error(500, "stripe-error", err.message);
+      }
+      else{
+        return response;
+      }
+    })
+  },
+  "isStripeConnected": function(connected){
+    Meteor.users.update(Meteor.userId(), {$set: {"oauth.isStripeConnected": connected}});
+  },
+  'games.create'(name, attrs) {
     var file = new FS.File({dimensions: attrs.dimensions});
     file.attachData(attrs.content, { type: attrs.type });
     Images.insert(file, function(err, obj){
@@ -405,7 +453,15 @@ Meteor.methods({
 
   "events.create_ticketing"(id) {
     Tickets.insert({
-      tickets: []
+      tickets: [
+        {
+          name: "Ticket",
+          description: "This is your ticket description.",
+          limit: 100,
+          amount: 100,
+          payableTo: Meteor.userId()
+        }
+      ]
     }, function(err, obj){
       if(err){
         throw new Error(err.reason)
@@ -427,7 +483,8 @@ Meteor.methods({
           name: "Ticket",
           description: "This is your ticket description.",
           limit: 100,
-          amount: 100
+          amount: 100,
+          payableTo: Meteor.userId()
         }
       }
     })
@@ -458,7 +515,8 @@ Meteor.methods({
           name: "Tier",
           description: "Tier description.",
           amount: 100,
-          limit: 100
+          limit: 100,
+          payableTo: Meteor.userId()
         }
       }
     })
