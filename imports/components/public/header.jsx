@@ -3,12 +3,30 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
+import Headroom from 'react-headroom';
+import FontAwesome from 'react-fontawesome';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
     e.preventDefault();
     Meteor.logout();
   }
+
+  constructor () {
+    super();
+    this.state = {
+      hover: false,
+    }
+  }
+
+  mouseOver() {
+    this.setState({hover: true});
+  }
+
+  mouseOut() {
+    this.setState({hover: false});
+  }
+
   render() {
     var userCred = "";
     if(Meteor.userId()){
@@ -22,40 +40,61 @@ export default class Header extends TrackerReact(Component) {
         </div>
       )
     }
-    return (
-      <header class="row x-center header">
-        <div className="col-1 head-align">
-          <Link className="hub" to="events/discover">
+    if(this.state.hover){
+      hub=(
+        <div className = "hub-show">
+          <Link className="hub" to="/events/discover">
             DISCOVER
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             CREATE
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
-          <Link className="hub" to="events/discover">
+          <Link className="hub" to="/events/discover">
             MARKET
           </Link>
-          <span className="hub-bar">
-            |
-          </span>
-          <Link className="hub" to="about">
+          <Link className="hub" to="/about">
             ABOUT
           </Link>
         </div>
-        <div className = "head-align">
-          <Link to="/">
-            <h2 style={{margin: 0}}>BRACHYON</h2>
+      )
+    }
+    else{
+      hub=(
+        <div className = "hub-hide">
+          <Link className="hub" to="/events/discover">
+            DISCOVER
+          </Link>
+          <Link className="hub" to="/events/discover">
+            CREATE
+          </Link>
+          <Link className="hub" to="/events/discover">
+            MARKET
+          </Link>
+          <Link className="hub" to="/about">
+            ABOUT
           </Link>
         </div>
-        <div style={{textAlign: 'right'}} className="col-1">
-          {userCred}
-        </div>
-      </header>
+      )
+    }
+    return (
+      <Headroom>
+        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
+          <div className = "head-align row">
+            <img src="/images/b_logo_trans.png" style={{height: 50, width:50}}></img>
+            <Link to="/">
+              <h2 style={{margin: 0}}>BRACHYON</h2>
+            </Link>
+            <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
+            <button>
+              <FontAwesome name="search"/>
+            </button>
+            {hub}
+          </div>
+          <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
+            {userCred}
+          </div>
+        </header>
+      </Headroom>
     )
   }
 }

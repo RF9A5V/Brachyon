@@ -1,228 +1,172 @@
 import React, { Component } from 'react';
 
-import CFNode from './crowdfunding_node.jsx';
-import HoverBlock from '../../public/hover_block.jsx';
-import CFForm from './crowdfunding_form.jsx';
-import CFDisplay from './crowdfunding_display.jsx';
-
 export default class CFTree extends Component {
 
   constructor(props) {
     super(props);
+    var obj = props.goals || {children: null};
+    if(obj.children == null){
+      obj.children = [null, null, null];
+    }
+    else {
+      for(var i = 0; i < 3; i ++){
+        if(obj.children[i] == null){
+          obj.children[i] = null;
+        }
+      }
+    }
     this.state = {
-      branches: props.branches,
-      edit: props.edit
-    };
+      branch: obj,
+      node: {},
+      active: false
+    }
   }
 
-  // Origin to range, NOT range to origin.
-  // Returns single number coordinate of given X, Y components.
-  c(x, y){
-    return (12 - y) * 5 + x;
+  componentDidUpdate() {
+    Object.keys(this.state.node).map((key) => { this.refs[key].value = this.state.node[key] });
+    this.refs.amount.value = (this.state.node.amount / 100).toFixed(2);
   }
 
-  reloadTree() {
-    ar = (new Array(13*5)).map(() => { return 0 });
-    for(var i = 0; i < 65; i ++){
-      ar[i] = {}
-    }
-    ar[this.c(2,0)] = {
-      type: 'circle'
-    }
-    ar[this.c(2,1)] = {
-      type: 'line',
-      orientation: 'vertical'
-    }
-    ar[this.c(1,2)] = {
-      type: 'line',
-      orientation: 'horizontal'
-    }
-    ar[this.c(3,2)] = {
-      type: 'line',
-      orientation: 'horizontal'
-    }
-    ar[this.c(2,2)] = {
-      type: 'circle'
-    }
+  values() {
+    return this.state.branch;
+  }
 
-    for(var i = 0; i < 5; i ++){
-      ar[this.c(i, 3)] = {
-        type: 'line',
-        orientation: 'vertical'
-      }
-    }
-
-    branches = this.state.branches;
-
-    for(var i = 0; i < 5; i ++){
-      if(branches[i] == null){
-        ar[this.c(i, 4)] = {
-          type: 'circle',
-          action: 'add'
-        }
-        continue;
-      }
-      for(var j = 4; j < 2 + 2 * (branches[i].nodes.length) + 1 && j < 13; j += 2){
-        ar[this.c(i, j)] = {
-          type: 'circle'
-        }
-        ar[this.c(i, j + 1)] = {
-          type: 'line',
-          orientation: 'vertical'
-        }
-      }
-      if(branches[i].nodes.length < 5 && this.state.edit){
-        ar[this.c(i, 4 + 2 * (branches[i].nodes.length))] = {
-          type: 'circle',
-          action: 'add'
-        }
-      }
-      if(branches[i].nodes.length < 5 && !this.state.edit){
-        ar[this.c(i, 4 + 2 * (branches[i].nodes.length) - 1)] = {}
-      }
-    }
-
+  createInitialNode(e) {
     this.setState({
-      grid: ar
+      branch: {
+        name: "Run the Event",
+        description: "This first node is used to represent the amount you need to get this event up and running. Get enough points allocated into this goal node and you can run your event!",
+        children: [null, null, null]
+      }
     })
   }
 
-  componentWillMount() {
-    this.reloadTree();
-  }
-
-  componentWillReceiveProps(next){
-    console.log('reloaded');
-    this.state.branches = next.branches;
-    this.reloadTree();
-  }
-
-  addNode(x, y) {
-    return (e) => {
-      e.preventDefault();
-      Meteor.call('sponsorships.add_node', this.props.id, x, function(err){
-        if(err){
-          toastr.error(err.reason);
+  addNode(index) {
+    return function(e) {
+      if(this.state.branch.children[index]) {
+        var num = Object.keys(this.state.branch.children[index].nodes).length;
+        this.state.branch.children[index].nodes[num] = {
+          name: `Lv. ${num + 1}`,
+          description: "Set Description Here",
+          amount: 100
+        };
+      }
+      else {
+        this.state.branch.children[index] = {
+          nodes: [{
+            name: `Lv. 1`,
+            description: "Set Description Here",
+            amount: 100
+          }]
         }
-        else {
-          toastr.success('Updated nodes');
-        }
-      })
+      }
+      this.forceUpdate();
     }
   }
 
-  editNode(x, y) {
-    if(this.state.branches[x] == null){
-      return (() => {});
-    }
-    return (function(e){
-      el = e.target.getBoundingClientRect();
-      node = this.state.branches[x].nodes[(12 - y) / 2 - 2];
-      console.log(this.state.branches[x].nodes);
-      node.icon = this.state.branches[x].icon;
-      node.name = this.state.branches[x].name;
+  editNode(node) {
+    return function(e) {
       this.setState({
         node,
-        open: true,
-        branch: x,
-        index: (12 - y) / 2 - 2,
-        x: el.left,
-        y: el.top
+        active: true
       })
-    }).bind(this);
+    }
   }
 
-  updateNode(attrs) {
-    self = this;
-    Meteor.call('sponsorships.update_node', this.props.id, this.state.branch, this.state.index, attrs, function(err){
-      if(err){
-        toastr.error(err.reason);
-      }
-      else {
-        toastr.success('Great success!');
-      }
-      self.setState({
-        open: false
-      })
-    })
+  drawNodes() {
+    var self = this;
+    if(!this.state.branch) {
+      return (
+        <button onClick={this.createInitialNode.bind(this)}>
+          Set Up Crowdfunding!
+        </button>
+      )
+    }
+    else {
+      return (
+        <div>
+          <div className="row center">
+            <span onClick={this.editNode(this.state.branch).bind(self)}>
+              { this.state.branch.name }
+            </span>
+          </div>
+          <div className="row center">
+            <div className="line vert"></div>
+          </div>
+          <div className="row center">
+            <div className="line horiz"></div>
+          </div>
+          <div className="row">
+            {
+              Object.keys(this.state.branch.children).map(function(key, index){
+                var child = self.state.branch.children[key];
+                return (
+                  <div className="col-1">
+                    {
+                      child == null ? (
+                        <div className="col x-center">
+                          <div className="line vert"></div>
+                          <span onClick={self.addNode(index).bind(self)}>Click ME</span>
+                        </div>
+                      ) : (
+                        <div className="col x-center">
+                          {
+                            Object.keys(child.nodes).map(function(key_2, node){
+                              var val = child.nodes[key_2];
+                              return (
+                                <div className="col x-center">
+                                  <div className="line vert"></div>
+                                  <span onClick={self.editNode(val).bind(self)}>{ val.name }</span>
+                                </div>
+                              )
+                            })
+                          }
+                          {
+                            Object.keys(child.nodes).length < 5 ? (
+                              <div className="col x-center">
+                                <div className="line vert"></div>
+                                <span onClick={self.addNode(index).bind(self)}>Click ME</span>
+                              </div>
+                            ) : ( "" )
+                          }
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      )
+    }
   }
 
-  deleteNode(e){
-    e.preventDefault();
-    self = this;
-    Meteor.call('sponsorships.delete_node', this.props.id, this.state.branch, this.state.index, function(err){
-      if(err){
-        toastr.error('error');
-      }
-      else {
-        toastr.success('success');
-      }
-      self.setState({
-        open: false
-      })
-    })
+  onChange(e) {
+    var target = this.state.node;
+    target.name = this.refs.name.value;
+    target.description = this.refs.description.value;
+    target.amount = this.refs.amount.value;
   }
 
   render() {
-    var self = this;
     return (
-      <div className="col-1">
-        <div className="spons-grid">
-          {
-            this.state.grid.map(function(val, index){
-              var name = "";
-              handler = (()=>{});
-              if(val.type == 'circle'){
-                name = 'spons-grid-circle';
-              }
-              if(val.type == 'line'){
-                if(val.orientation == 'vertical'){
-                  name = "spons-grid-line vertical";
-                }
-                else {
-                  name = "spons-grid-line horizontal";
-                  if(val.left){
-                    name += ' left'
-                  }
-                  else {
-                    name += ' right';
-                  }
-                  if(val.half){
-                    name += ' half'
-                  }
-                }
-              }
-              if(val.action == 'add'){
-                handler = self.addNode(index % 5, Math.floor(index / 5)).bind(self);
-              }
-              else {
-                handler = self.editNode(index % 5, Math.floor(index / 5)).bind(self);
-              }
-              return (
-                <div className="spons-grid-element">
-                  {
-                    val.type == 'circle' ? (
-                      <CFNode action={val.action} handler={handler} icon={self.state.branches[index % 5] ? self.state.branches[index % 5].icon : null} />
-                    ) : (
-                      <div className={name}></div>
-                    )
-                  }
-
-                </div>
-              )
-            })
-          }
-        </div>
-        <HoverBlock open={this.state.open} x={this.state.x+55} y={this.state.y-10} handler={() => { this.setState({open: false}) }}>
-          {
-            this.state.edit ? (
-              <CFForm deleteHandler={this.deleteNode.bind(this)} {...this.state.node} handler={this.updateNode.bind(this)} />
-            ) : (
-              <CFDisplay {...this.state.node} />
-            )
-          }
-
-        </HoverBlock>
+      <div>
+        {
+          this.state.active ? (
+            <div className="col">
+              <i>Elements update as you type! Don't forget to save!</i>
+              <label>Name</label>
+              <input type="text" onChange={this.onChange.bind(this)} ref="name" defaultValue={this.state.node.name} />
+              <label>Item Description</label>
+              <textarea ref="description" onChange={this.onChange.bind(this)} defaultValue={this.state.node.description}></textarea>
+              <label>Item Amount</label>
+              <input type="text" ref="amount" onChange={this.onChange.bind(this)} defaultValue={(this.state.node.amount / 100).toFixed(2)} />
+              <button onClick={(e) => { this.setState({active: false}); this.state.node.amount = this.refs.amount.value * 100; this.forceUpdate() }}>Close</button>
+            </div>
+          ) : ( "" )
+        }
+        { this.drawNodes() }
       </div>
     );
   }

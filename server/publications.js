@@ -65,5 +65,10 @@ Meteor.publish('games', function(){
 })
 
 Meteor.publish('game_search', function(query) {
-  return Games.find( { } );
+  if(query == ""){
+    return [];
+  }
+  return Games.find({
+    name: new RegExp(query.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i')
+  });
 })

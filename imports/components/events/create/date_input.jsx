@@ -7,14 +7,14 @@ export default class DateInput extends Component {
   componentWillMount() {
     this.setState({
       open: false,
-      month: moment().format("M"),
-      year: moment().format("YYYY"),
-      day: moment().format("DD")
-    })
+      time: this.props.init == null ? moment() : moment(this.props.init),
+      month: moment().month(),
+      year: moment().year()
+    });
   }
 
   value() {
-    return this.stateTime().format("YYYYMMDD");
+    return this.state.time.format("YYYYMMDD");
   }
 
   openCalendar() {
@@ -25,81 +25,76 @@ export default class DateInput extends Component {
 
   closeCalendar() {
     this.setState({
-      open: false,
-      month: moment().format("M"),
-      year: moment().format("YYYY"),
-      day: moment().format("DD")
+      open: false
     })
   }
 
-  stateTime() {
-    return moment(new Date(this.state.year, parseInt(this.state.month) - 1, this.state.day));
-  }
-
-  days(num) {
+  days() {
     self = this;
-    vals = [];
-    nils = parseInt(moment(new Date(self.state.year, parseInt(self.state.month) - 1, 0)).format('e')) + 1;
-    ar = [];
-    for(var i = 0; i < nils; i++){
-      ar.push("");
-    }
-    for(var i = 0; i < num;){
-      while(ar.length < 7 && i < num){
-        ar.push(++i);
-      }
-      vals.push(ar);
-      ar = [];
-    }
-    return vals.map(function(array){
-      return (
-        <div className="calendar-days">
-          {
-            array.map(function(value){
-              return (
-                <div className="calendar-days-entry" onClick={self.setValue.bind(self)} style={ moment(new Date(self.state.year, parseInt(self.state.month) - 1, value)) < moment() ? {
-                  color: '#999'
-                } : {} } >
-                  {value}
-                </div>
-              )
-            })
-          }
-        </div>
-      )
-    })
+    var cursor = moment().year(this.state.year).month(this.state.month);
+    var vals = Array.apply(null, { length: cursor.endOf("month").date() }).map(Number.call, Number);
+    var empty = Array.apply(null, { length: cursor.startOf("month").day() }).map(Number.call, Number);
+    return (
+      <div className="calendar-days">
+        {
+          empty.map(function() {
+            return (
+              <div className="calendar-days-entry"></div>
+            )
+          })
+        }
+        {
+          vals.map(function(value) {
+
+            var yearPass = self.state.year >= moment().year()
+            var dayPass = self.state.month > moment().month() || (self.state.month == moment().month() && value + 1 >= moment().date());
+
+            var pass = yearPass && dayPass;
+
+            console.log(yearPass);
+            console.log(dayPass);
+
+            return (
+              <div className={`calendar-days-entry ${pass ? "active" : ""}`} onClick={self.setValue.bind(self)}>
+                {value + 1}
+              </div>
+            )
+          })
+        }
+      </div>
+    );
   }
 
   setValue(e) {
-    var cache = this.state.day;
-    this.state.day = parseInt(e.target.innerText);
-    console.log(this.stateTime());
-    if(this.stateTime() < moment()){
-      this.day = cache;
+    if(!e.target.classList.contains("active")){
       return;
     }
-    this.refs.value.value = this.stateTime().date(e.target.innerHTML).format("MM/DD/YYYY");
+    this.refs.value.value = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML).format("MM/DD/YYYY");
+    this.setState({
+      time: moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML)
+    })
     this.closeCalendar();
   }
 
   prevMonth() {
-    value = parseInt(this.state.month) - 1
-    this.setState({
-      month: `${(value + 12) % 12}`,
-      year: `${parseInt(this.state.year) + Math.floor(value / 12)}`
-    })
+    if(--this.state.month < 0){
+      this.state.year--;
+      this.state.month = 11;
+    }
+    this.forceUpdate();
   }
 
   advanceMonth() {
-    value = parseInt(this.state.month) + 1
-    this.setState({
-      month: `${value % 12}`,
-      year: `${parseInt(this.state.year) + Math.floor(value / 12)}`
-    })
+    if(++this.state.month > 11){
+      this.state.month = 0;
+      this.state.year++;
+    }
+    this.forceUpdate();
   }
 
   calendar() {
     self = this;
+    var cursor = moment().year(this.state.year).month(this.state.month);
     return (
       <div className='calendar'>
         <div style={{textAlign: 'right', padding: 5}}>
@@ -110,7 +105,7 @@ export default class DateInput extends Component {
             <FontAwesome name="chevron-left" />
           </div>
           <div style={{textAlign: 'center'}}>
-            { this.stateTime().format("MMMM") + " " + this.stateTime().format("YYYY") }
+            { cursor.format("MMMM YYYY") }
           </div>
           <div className="calendar-month-control" onClick={this.advanceMonth.bind(this)}>
             <FontAwesome name="chevron-right" />
@@ -128,7 +123,7 @@ export default class DateInput extends Component {
           }
         </div>
         {
-          this.days((new Date(self.state.year, self.state.month, 0)).getDate())
+          this.days()
         }
 
       </div>
@@ -138,7 +133,7 @@ export default class DateInput extends Component {
   render() {
     return (
       <div className="calendar-container">
-        <input type="text" ref="value" defaultValue={moment().format("MM/DD/YYYY")} onClick={this.openCalendar.bind(this)} onFocus={(e) => e.target.blur()} />
+        <input type="text" ref="value" defaultValue={this.state.time.format("MM/DD/YYYY")} onClick={this.openCalendar.bind(this)} onFocus={(e) => e.target.blur()} />
         {
           this.state.open ? (
             this.calendar()

@@ -139,7 +139,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock {...ev} image={ev.banner} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock image={ev.details.banner} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }
