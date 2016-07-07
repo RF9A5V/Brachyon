@@ -5,9 +5,11 @@ import Footer from '../public/footer.jsx';
 export default class MainLayout extends Component {
   render() {
     return (
-      <div className="box" id="box">
+      <div id="app">
         <Header />
-        {this.props.children}
+        <div className="box row content">
+          {this.props.children}
+        </div>
         <Footer />
       </div>
     )

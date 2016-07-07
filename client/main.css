@@ -6,18 +6,18 @@
 }
 
 html, body, #react-root, #app {
-  height: 100%;
   margin: 0;
   background-color: #333;
+}
+
+body {
+  height: 100%;
 }
 
 .box {
   display: flex;
   flex-flow: column;
-  height: 100%;
-}
-
-.box .row {
+  min-height: calc(100vh - 83px);
 }
 
 .box .row.header {
@@ -26,14 +26,20 @@ html, body, #react-root, #app {
 
 .box .row.content {
   flex: 1 1 auto;
-  min-height: 100%;
 }
 
 .box .row.footer {
   flex: 0 1 40px;
+}
+
+.footer {
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
+  padding: 10px 0;
+  bottom: 0;
+  width: 100%;
+  position: fixed;
 }
 
 .footer-div {
@@ -211,20 +217,45 @@ header {
 
 .hub {
   padding: 4px 0;
-  border-bottom: transparent 2px solid ;
-  font-size: 18px;
+  border-bottom: transparent 2px solid;
 }
 
-.hub-bar {
-  font-size: 22px;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: #CC0000;
-  font-weight: bold;
+.hub-show {
+  -webkit-animation-name: animatehubshow;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatehubshow;
+  animation-duration: 0.4s;
+  -ms-transform: translateX(0);
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
 }
 
-.hub-bar:hover {
-  cursor: default;
+@-webkit-keyframes animatehubshow {
+  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
+  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+}
+
+@keyframes animatehubshow {
+  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
+  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+}
+
+.hub-hide {
+  -webkit-animation-name: animatehubhide;
+  -webkit-animation-duration: 1.4s;
+  animation-name: animatehubhide;
+  animation-duration: 1.4s;
+  opacity: 0;
+}
+
+@-webkit-keyframes animatehubhide {
+  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
+}
+
+@keyframes animatehubhide {
+  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
+  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
 }
 
 header a {
@@ -233,11 +264,6 @@ header a {
 
 a {
   text-decoration: none;
-}
-
-#app > div {
-  width: 100%;
-  min-height: 100vh;
 }
 
 .loading-screen {
@@ -324,4 +350,12 @@ textarea:focus {
   background-color: #444;
   width: 420px;
   box-sizing: border-box;
+}
+
+label {
+  margin-bottom: 15px;
+}
+
+i {
+  margin-bottom: 15px;
 }

@@ -37,62 +37,121 @@ Meteor.methods({
     }
     Events.insert(attrs);
   },
-  "events.update_title"(id, title){
-    Events.update(id, {
-      $set: {
-        title
-      }
-    })
+
+  "events.save_for_advanced"(attrs) {
+    if(!attrs.details){
+      throw new Error("Event needs details.");
+    }
+    if(!Meteor.userId()){
+      throw new Error("Needs to be logged in.");
+    }
+    attrs.published = false;
+    attrs.underReview = false;
+    attrs.owner = Meteor.userId();
+    return Events.insert(attrs);
   },
-  "events.update_description"(id, description){
-    Events.update(id, {
-      $set: {
-        description: description
-      }
-    })
-  },
-  "events.update_banner"(id, fileData, type){
-    file = new FS.File();
-    file.attachData(fileData, { type });
-    Images.insert(file, function(err, obj){
-      if(err){
-        Logger.info(err);
-      }
-      else {
-        Events.update(id, {
-          $set: {
-            banner: obj._id
+
+  "events.update_details"(id, attrs) {
+    var obj = {};
+    Object.keys(attrs).map(function(key){
+      if(key == "banner"){
+        var file = new FS.File({dimensions: attrs[key].dimensions});
+        file.attachData(attrs[key].content, { type: attrs[key].type });
+        Images.insert(file, function(err, image){
+          if(err){
+            console.log(err);
+          }
+          else {
+            Events.update(id, {
+              $set: {
+                "details.banner": image.url({ brokenIsFine: true })
+              }
+            })
           }
         })
       }
-    });
-
-  },
-  "events.update_time"(id, times){
-    Events.update(id, {
-      $set: {
-        time: times
+      else {
+        obj[`details.${key}`] = attrs[key];
       }
-    })
+    });
+    if(Object.keys(obj).length > 0){
+      Events.update(id, {
+        $set: obj
+      });
+    }
   },
-  "events.update_location"(id, location) {
+
+  "events.update_organize"(id, attrs){
+    if(Object.keys(attrs).length == 0) {
+      return;
+    }
+    var obj = {};
+    Object.keys(attrs).map(function(key){
+      obj[`organize.${key}`] = attrs[key];
+    });
+    obj["organize.active"] = true;
     Events.update(id, {
-      $set: {
-        location: {
-          type: "Point",
-          coords: location.coords,
-          locationName: location.locationName,
-          streetAddress: location.streetAddress,
-          city: location.city,
-          state: location.state,
-          zip: location.zip
+      $set: obj
+    });
+  },
+
+  "events.update_revenue"(id, attrs){
+    if(Object.keys(attrs).length == 0) {
+      return;
+    }
+    var event = Events.findOne(id);
+    var obj = {};
+    var flattener = function(obj) {
+      return Object.keys(obj).map(function(key) {
+        if(typeof obj[key] == "object") {
+          var subItems = flattener(obj[key]);
+          var ensureNoSubArray = [];
+          subItems.map(function(val){
+            ensureNoSubArray = ensureNoSubArray.concat(val);
+          });
+          var splitOrJoin = [];
+          ensureNoSubArray.map(function(val){
+            var subKey = Object.keys(val)[0];
+            splitOrJoin.push({ [key + "." + subKey]: val[subKey] })
+          });
+          return splitOrJoin;
         }
-
-      }
+        else {
+          return { [key]: obj[key] };
+        }
+      })
+    }
+    var items = {};
+    flattener(attrs)[0].map(function(item) {
+      var subKey = Object.keys(item)[0]
+      items["revenue." + subKey] = item[subKey];
+    });
+    items["revenue.active"] = true;
+    Events.update(id, {
+      $set: items
     });
   },
+
+  "events.submit"(id) {
+    var event = Events.findOne(id);
+    if(event.revenue.active) {
+      Events.update(id, {
+        $set: {
+          underReview: true
+        }
+      })
+    }
+    else {
+      Events.update(id, {
+        $set: {
+          published: true
+        }
+      })
+    }
+  },
+
   "events.add_participant"(id) {
-    event = Events.findOne(id);
+    var event = Events.findOne(id);
     if(!event.participants) {
       Events.update(id, {
         $set: {

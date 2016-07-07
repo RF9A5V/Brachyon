@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class DiscoverDisplay extends Component {
   render() {
     return (
-      <div className="discover-display row x-center" style={{height: '30vh', width: '70%', margin: '0 auto'}}>
+      <div className="discover-display row x-center" style={{width: '70%', margin: '0 auto'}}>
         <div className="discover-selector">
 
         </div>

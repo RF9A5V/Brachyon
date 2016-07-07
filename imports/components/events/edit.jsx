@@ -1,31 +1,86 @@
-import React from 'react';
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import React from "react";
+import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-import EventDescription from './editor_tabs/description.jsx';
-import EventBanner from './editor_tabs/banner.jsx';
-import EventTime from './editor_tabs/time.jsx';
-import EventLocation from './editor_tabs/location.jsx';
-import CrowdfundingPanel from './editor_tabs/crowdfunding.jsx';
-import Ticketing from './editor_tabs/ticketing.jsx';
+import SideTabs from "/imports/components/public/side_tabs.jsx";
 
-import LoadingScreen from '../public/loading.jsx';
-import TabController from '../public/tab_controller.jsx';
+import DetailsPanel from "./edit/details.jsx";
+import OrganizationPanel from "./edit/organization.jsx";
+import RevenuePanel from "./edit/revenue.jsx";
+import PromotionPanel from "./edit/promotion.jsx";
+import SubmitPanel from "./edit/submit.jsx";
 
-import Sponsorships from '/imports/api/event/sponsorship.js';
-import Tickets from '/imports/api/ticketing/ticketing.js';
+import LoadingScreen from "../public/loading.jsx";
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      detailsSuite: {}
+    }
+  }
+
   componentWillMount(){
-    self = this;
+    var self = this;
     this.setState({
-      event: Meteor.subscribe('event', self.props.params.eventId, {
+      event: Meteor.subscribe("event", self.props.params.eventId, {
         onReady() {
           self.setState({isLoaded: true})
         }
       }),
       isLoaded: false
-    })
+    });
+    var obj = {};
+    ["details", "organize", "revenue", "promotion"].map((function(val){
+      obj[val] = (function(attrs) {
+        var findDiff = (
+          function(object, item) {
+            if(object == null){
+              return null;
+            }
+            var current = {};
+            Object.keys(object).map((function(key){
+              if(typeof object[key] == "object"){
+                var diffOrNull;
+                if(item){
+                  diffOrNull = item[key];
+                }
+                var check = findDiff(object[key], diffOrNull);
+                if(check != null && Object.keys(check).length){
+                  current[key] = check;
+                }
+              }
+              else {
+                if(!item || item[key] != object[key]){
+                  current[key] = object[key];
+                }
+              }
+            }).bind(this));
+            return current;
+          }
+        )
+        var diff = self.event()[val];
+        var end = findDiff(attrs, diff);
+        console.log(end);
+
+        if(Object.keys(end).length == 0){
+          toastr.success("Nothing to update!");
+          return;
+        }
+
+        Meteor.call(`events.update_${val}`, self.event()._id, end, function(err){
+          if(err){
+            toastr.error(`Error updating ${val}.\n${err.reason}`);
+          }
+          else {
+            toastr.success(`Successfully updated ${val}!`)
+          }
+        })
+      });
+    }).bind(this));
+
+    this.state.updateSuite = obj;
+
   }
 
   componentWillUnmount() {
@@ -36,52 +91,18 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     return Events.find().fetch()[0];
   }
 
-  sponsorship() {
-    return Sponsorships.find().fetch()[0];
+  items() {
+    return ["Details", "Organization", "Revenue", "Promotion", "Submit"];
   }
 
-  ticketing() {
-    return Tickets.find().fetch()[0];
-  }
-
-  tabs(){
+  content() {
     event = this.event();
-    console.log(this)
     return [
-      {
-        title: 'Description',
-        content: <EventDescription id={this.props.params.eventId} title={event.title} description={event.description} />
-      },
-      {
-        title: 'Banner',
-        content: (
-          <EventBanner id={this.props.params.eventId} />
-        )
-      },
-      {
-        title: 'Time',
-        content: (
-          <EventTime id={this.props.params.eventId} {...event.time} />
-        )
-      },
-      {
-        title: 'Location',
-        content: (
-          <EventLocation id={this.props.params.eventId} {...event.location} />
-        )
-      },
-      {
-        title: 'Crowdfunding',
-        content: (
-          <CrowdfundingPanel id={this.props.params.eventId} {...this.sponsorship()} />
-        )
-      },
-      {
-        title: 'Ticketing',
-        content: (
-          <Ticketing id={this.props.params.eventId} {...this.ticketing()} />
-        )
-      }
+      (<DetailsPanel {...event.details} ref="details" updateSuite={this.state.updateSuite.details}/>),
+      (<OrganizationPanel {...event.organize} ref="organization" updateSuite={this.state.updateSuite.organize} />),
+      (<RevenuePanel {...event.revenue} ref="revenue" updateSuite={this.state.updateSuite.revenue} />),
+      (<PromotionPanel />),
+      (<SubmitPanel requiresApproval={event.revenue.active} id={event._id} />)
     ]
   }
 
@@ -93,11 +114,8 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
-        <div className="screen col">
-          <TabController tabs={this.tabs()} />
-          <div style={{alignSelf: 'center'}}>
-            <button onClick={(e) => { window.history.back() }}>Back</button>
-          </div>
+        <div className="box col" style={{flexFlow: "row"}}>
+          <SideTabs items={this.items()} panels={this.content()} />
         </div>
       )
     }

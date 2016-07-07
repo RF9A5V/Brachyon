@@ -1,24 +1,37 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import moment from 'moment';
 
 export default class TimeInput extends Component {
 
   componentWillMount() {
-    this.setState({
+
+    var obj = {
       hour: "12",
       minute: "00",
       half: "AM"
-    })
+    }
+
+    if(this.props.init){
+      var current = moment(this.props.init);
+      obj = {
+        hour: current.format("hh"),
+        minute: current.format("mm"),
+        half: current.format("A")
+      }
+    }
+
+    this.setState(obj);
   }
 
   hourChange(e) {
-    val = parseInt(this.state.hour + e.key);
+    var val = parseInt(this.state.hour + e.key);
     if(!isNaN(val)){
       if(val > 12){
         if(e.key == '0'){
           return;
         }
         this.setState({
-          hour: e.key
+          hour: "0" + e.key
         })
       }
       else {
@@ -83,7 +96,7 @@ export default class TimeInput extends Component {
     return (
       <div>
         <div className="time-input">
-          <input type="text" ref="hour" onKeyDown={this.hourChange.bind(this)} placeholder="Hour" value={(parseInt(this.state.hour) < 10 ? "0" : "") + this.state.hour}/>
+          <input type="text" ref="hour" onKeyDown={this.hourChange.bind(this)} placeholder="Hour" value={this.state.hour}/>
           :
           <input type="text" ref="minute" placeholder="Minute" value={this.state.minute} onKeyDown={this.minuteChange.bind(this)} />
           <input type="text" ref="half" placeholder="AM/PM" value={this.state.half} onKeyDown={this.halfChange.bind(this)} />

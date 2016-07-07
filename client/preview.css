@@ -1,0 +1,16 @@
+.description-container {
+  padding: 40px;
+}
+
+.location-container {
+  padding: 20px;
+  background-color: #666;
+  height: 100%;
+}
+
+.tier-block, .ticket-block {
+  padding: 20px;
+  background-color: #666;
+  margin: 10px;
+  width: 250px;
+}

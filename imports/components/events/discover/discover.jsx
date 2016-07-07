@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-import DiscoverDisplay from './discover/display.jsx';
-import DiscoverSearch from './discover/search.jsx';
-import BlockContainer from './discover/block_container.jsx';
+import DiscoverDisplay from './display_discover.jsx';
+import DiscoverSearch from './search.jsx';
+import BlockContainer from './block_container.jsx';
 
 export default class EventDiscoveryScreen extends TrackerReact(Component) {
 
@@ -15,7 +15,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   componentWillUnmount(){
-    this.events.stop();
+    this.state.events.stop();
   }
 
   events() {
