@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {Component} from "react";
+import { browserHistory } from 'react-router';
 
 export default class LogInScreen extends Component {
 
@@ -11,7 +12,8 @@ export default class LogInScreen extends Component {
         console.log(err);
       }
       else {
-        browserHistory.push('/events/discover');
+        toastr.success("Successfully logged in!", "Success!");
+        browserHistory.push("/events/discover");
       }
     })
   }

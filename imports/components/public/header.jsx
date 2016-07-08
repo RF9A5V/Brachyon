@@ -5,17 +5,20 @@ import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
 import FontAwesome from 'react-fontawesome';
+import { browserHistory } from 'react-router';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
     e.preventDefault();
-    Meteor.logout();
+    Meteor.logout(function(err) {
+      if(!err) browserHistory.push("/");
+    });
   }
 
   constructor () {
     super();
     this.state = {
-      hover: false,
+      hover: false
     }
   }
 
