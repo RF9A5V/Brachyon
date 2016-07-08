@@ -79,7 +79,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
               ) : (
                 <div>
                   {event.details.location.locationName ? (
-                    <span>{event.location.locationName}</span>
+                    <span>{event.details.location.locationName}</span>
                   ) : ( "" )}
                   <span>{event.details.location.streetAddress}</span>
                   <span>{event.details.location.city} {event.details.location.state}</span>

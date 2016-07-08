@@ -17,7 +17,7 @@ body {
 .box {
   display: flex;
   flex-flow: column;
-  min-height: calc(100vh - 83px);
+  min-height: calc(100vh - 90px);
 }
 
 .box .row.header {

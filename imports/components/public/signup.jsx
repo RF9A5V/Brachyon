@@ -9,25 +9,16 @@ export default class SignUpScreen extends React.Component {
     e.preventDefault();
     self = this;
     [name, email, username, password] = Object.keys(this.refs).map((value) => {return this.refs[value].value});
-    console.log(name, email, username, password);
-    Accounts.createUser({
-      email,
-      password,
-      username,
-      options: {
-        name
-      },
-      profile: {
-        games: [],
-      },
-      oauth: {
-        isStripeConnected: false
-      }
-    }, function(err){
+    Meteor.call("users.create", name, email, username, password, function(err, rez) {
       if(err){
-        console.log(err);
+        toastr.error("Issue creating your account.", "Error!");
+      }
+      else if (rez == null){
+        toastr.error("Issue generating login token.", "Call an Admin!");
       }
       else {
+        Meteor.loginWithToken(rez.token);
+        toastr.success("Successfully created your account!", "Success!");
         browserHistory.push('/events/discover');
       }
     });

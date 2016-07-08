@@ -313,6 +313,31 @@ Meteor.methods({
     Games.remove(id);
   },
 
+  "users.create"(name, email, username, password) {
+    var user = Accounts.createUser({
+      email,
+      password,
+      username,
+      options: {
+        name
+      },
+      profile: {
+        games: [],
+      },
+      oauth: {
+        isStripeConnected: false
+      }
+    });
+    if(user){
+      var token = Accounts._generateStampedLoginToken();
+      Accounts._insertLoginToken(user, token);
+      return token;
+    }
+    else {
+      return null;
+    }
+  },
+
   "users.update_games"(games){
     Meteor.users.update(Meteor.userId(), {
       $set: {
