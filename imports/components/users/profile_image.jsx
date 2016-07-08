@@ -11,7 +11,7 @@ export default class ProfileImage extends TrackerReact(Component) {
     this.setState({
       hover: false,
       open: false,
-      image: Meteor.subscribe("profileImage", this.props.imgID)
+      image: null
     })
   }
 
@@ -21,7 +21,7 @@ export default class ProfileImage extends TrackerReact(Component) {
       return "/images/profile.png";
     }
     else {
-      return image.url();
+      return image.url({ uploading: "/images/balls.svg", storing: "/images/balls.svg" });
     }
   }
 
@@ -40,15 +40,16 @@ export default class ProfileImage extends TrackerReact(Component) {
       }
       else {
         toastr.success("Successfully updated profile image!");
-        self.state.image.stop();
+        if(self.state.image){
+          self.state.image.stop();
+        }
         self.state.image = Meteor.subscribe("profileImage", id);
       }
     });
   }
 
   render() {
-    if(!this.state.image.ready() && this.props.imgID != null){
-      setTimeout(() => { this.forceUpdate() }, 500);
+    if(this.state.image && !this.state.image.ready()){
       return (
         <div>
           <img src="/images/balls.svg" />
