@@ -3,43 +3,15 @@ import Cropper from 'react-cropper';
 
 export default class ImageForm extends Component {
 
-  componentWillMount(){
+  componentWillMount() {
     this.setState({
-      file: this.props.url,
-      crop: false
-    })
-  }
-
-  onClick(e) {
-    e.preventDefault();
-    this.refs.file.click();
-  }
-
-  updateImage(e) {
-    e.preventDefault();
-    reader = new FileReader();
-    type = e.target.files[0].type
-    reader.onload = (function() {
-      this.setState({
-        file: reader.result,
-        type: type,
-        crop: true
-      })
-    }).bind(this)
-    reader.readAsDataURL(e.target.files[0]);
-  }
-
-  componentWillReceiveProps(next) {
-    console.log(next);
-    this.setState({
-      file: next.url,
-      crop: false
-    })
+      id: this.props.id,
+    });
   }
 
   value() {
-    if(!this.state.crop){
-      return this.state.file;
+    if(!this.state.url){
+      return this.props.id;
     }
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
@@ -51,46 +23,72 @@ export default class ImageForm extends Component {
     boxData.height *= heightRatio;
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
-    return { content: this.state.file, type: this.state.type, dimensions: boxData };
+
+    var file = new FS.File({dimensions: boxData});
+    file.attachData(this.state.url, { type: this.state.type });
+    var value = this.props.collection.insert(file, function(err, obj){
+      if(err){
+        toastr.error(err.reason);
+      }
+    });
+    return value._id;
+  }
+
+  updateImage(e){
+    e.preventDefault();
+    var self = this;
+    var reader = new FileReader();
+    var type = e.target.files[0].type;
+    reader.onload = function() {
+      self.setState({
+        url: reader.result,
+        type
+      });
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+  componentWillReceiveProps(next) {
+    this.setState({
+      url: null
+    })
+  }
+
+  image() {
+    var img = this.props.collection.find(this.props.id).fetch()[0];
+    if(!img.isUploaded() || !img.hasStored("images")){
+      // Sorta hacky. Should change this sometime.
+      setTimeout(() => { this.forceUpdate() }, 500);
+    }
+    return img;
   }
 
   render() {
-    if(!this.state.file){
-      return (
-        <div className="col">
-          <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
-          <div>
-            <button onClick={this.onClick.bind(this)}>Update File</button>
-          </div>
-        </div>
-      )
+    var value = "";
+    if(this.state.url){
+      value = (<Cropper
+        aspectRatio={this.props.aspectRatio || 1}
+        src={this.state.url}
+        style={{width: "100%", height: 300}}
+        ref="cropper"
+      />);
+    }
+    else if(this.props.id){
+      value = (<img src={this.image().url({ uploading: "/images/balls.svg", storing: "/images/balls.svg" })} style={{width: "100%", height: "auto"}} />);
     }
     else {
-      if(!this.state.crop){
-        return (
-          <div className="col">
-            <img style={{width: "100%", height: "auto"}} src={this.state.file} />
-            <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
-            <div>
-              <button onClick={this.onClick.bind(this)}>Update File</button>
-            </div>
-          </div>
-        )
-      }
-      return (
-        <div className="col">
-          <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.updateImage.bind(this)} />
-          <Cropper
-          ref="cropper"
-          src={this.state.file}
-          style={{width: '100%', height: '30vh'}}
-          zoomable={false}
-          aspectRatio={this.props.aspectRatio || 1} />
-          <div>
-            <button onClick={this.onClick.bind(this)}>Update File</button>
-          </div>
-        </div>
-      )
+      value = (
+        <div></div>
+      );
     }
+    return (
+      <div className="col">
+        { value }
+        <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
+        <div>
+          <button onClick={() => { this.refs.file.click() }}>Update Image</button>
+        </div>
+      </div>
+    )
   }
 }

@@ -17,11 +17,6 @@ export default class CFTree extends Component {
     }
   }
 
-  componentDidUpdate() {
-    Object.keys(this.state.node).map((key) => { this.refs[key].value = this.state.node[key] });
-    this.refs.amount.value = (this.state.node.amount / 100).toFixed(2);
-  }
-
   values() {
     return this.state.branch;
   }

@@ -10,7 +10,7 @@ export default class EventDisplay extends React.Component {
       return "/images/bg.jpg";
     }
     else {
-      return this.props.details.banner;
+      return Images.findOne(this.props.details.banner).url();
     }
   }
 

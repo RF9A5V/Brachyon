@@ -3,12 +3,10 @@ import Sponsorships from '/imports/api/event/sponsorship.js';
 import Ticketing from '/imports/api/ticketing/ticketing.js';
 
 Meteor.publish('event', (_id) => {
-  event = Events.findOne(_id);
+  var event = Events.findOne(_id);
   return [
     Events.find({_id}),
-    Images.find({_id: event.banner}),
-    Sponsorships.find({_id: event.sponsorship}),
-    Ticketing.find({_id: event.ticketing})
+    Images.find({_id: event.details.banner})
   ];
 });
 
@@ -17,9 +15,9 @@ Meteor.publish('events', function(){
 });
 
 Meteor.publish('userEvents', (id) => {
-  event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.banner });
-  games = Meteor.users.findOne(id).profile.games || [];
-  game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
+  var event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.details.banner });
+  var games = Meteor.users.findOne(id).profile.games || [];
+  var game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
   return [
     Events.find({owner: id}),
     Images.find({_id: { $in: event_banners.concat(game_banners) } }),
@@ -27,11 +25,15 @@ Meteor.publish('userEvents', (id) => {
   ];
 })
 
+Meteor.publish("profileImage", (id) => {
+  return ProfileImages.find(id)
+});
+
 Meteor.publish('event_search', function(params){
   if(params == null){
     return Events.find();
   }
-  query = {}
+  var query = {}
   if(params.search){
     query['title'] = new RegExp(params.search.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i');
   }
@@ -53,14 +55,18 @@ Meteor.publish('events_to_review', function(){
 })
 
 Meteor.publish('unapproved_games', function() {
+  var games = Games.find({approved: false}).fetch().map(function(game) { return game.banner });
   return [
-    Games.find({ approved: false })
+    Games.find({ approved: false }),
+    Images.find({_id: { $in: games }})
   ];
 })
 
 Meteor.publish('games', function(){
+  var games = Games.find({approved: true}).fetch().map(function(game) { return game.banner });
   return [
-    Games.find({approved: true})
+    Games.find({approved: true}),
+    Images.find({_id: { $in: games }})
   ]
 })
 
