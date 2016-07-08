@@ -41,16 +41,14 @@ export default class CreateGameModal extends Component {
             <div className="close" onClick={this.toggleModal.bind(this)}>&#10006;</div>
           </div>
           <div>
-            <form onSubmit={this.submit.bind(this)} className="col">
               <label>
                 <h3>Game Name</h3>
               </label>
               <input type="text" ref="name" placeholder="Game Name" />
-              <ImageForm ref="image" aspectRatio={16/9} />
+              <ImageForm ref="image" aspectRatio={16/9} collection={Images} />
               <div>
-                <input type="submit" value="Submit Game" />
+                <button onClick={this.submit.bind(this)}>Submit</button>
               </div>
-            </form>
           </div>
         </Modal>
       </div>

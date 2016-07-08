@@ -3,6 +3,8 @@ import Modal from 'react-modal';
 
 import ImageForm from '/imports/components/public/img_form.jsx';
 
+import ProfileImages from "/imports/api/users/profile_images.js";
+
 export default class ImageModal extends Component {
 
   componentWillMount(){
@@ -34,7 +36,7 @@ export default class ImageModal extends Component {
           <div className="div-pad">
             <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
           </div>
-          <ImageForm ref="image" />
+          <ImageForm ref="image" collection={ProfileImages} id={Meteor.user().profile.image}/>
           <button onClick={this.onClick.bind(this)}>Submit</button>
         </Modal>
       </div>

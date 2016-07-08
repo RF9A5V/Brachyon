@@ -22,9 +22,6 @@ Meteor.methods({
       if(!attrs.organize.active){
         attrs.organize = {};
       }
-      else {
-        attrs.banner = Games.findOne(attrs.organize.game).banner;
-      }
     }
     if(attrs.revenue){
       if(!attrs.revenue.active){
@@ -54,26 +51,9 @@ Meteor.methods({
   "events.update_details"(id, attrs) {
     var obj = {};
     Object.keys(attrs).map(function(key){
-      if(key == "banner"){
-        var file = new FS.File({dimensions: attrs[key].dimensions});
-        file.attachData(attrs[key].content, { type: attrs[key].type });
-        Images.insert(file, function(err, image){
-          if(err){
-            console.log(err);
-          }
-          else {
-            Events.update(id, {
-              $set: {
-                "details.banner": image.url({ brokenIsFine: true })
-              }
-            })
-          }
-        })
-      }
-      else {
-        obj[`details.${key}`] = attrs[key];
-      }
+      obj[`details.${key}`] = attrs[key];
     });
+    console.log(obj);
     if(Object.keys(obj).length > 0){
       Events.update(id, {
         $set: obj
@@ -313,21 +293,12 @@ Meteor.methods({
   "isStripeConnected": function(connected){
     Meteor.users.update(Meteor.userId(), {$set: {"oauth.isStripeConnected": connected}});
   },
-  'games.create'(name, attrs) {
-    var file = new FS.File({dimensions: attrs.dimensions});
-    file.attachData(attrs.content, { type: attrs.type });
-    Images.insert(file, function(err, obj){
-      if(err){
-        Logger.info(err);
-      }
-      else {
-        Games.insert({
-          name: name,
-          banner: obj.url({ brokenIsFine: true }),
-          approved: false
-        })
-      }
-    });
+  'games.create'(name, imgID) {
+    Games.insert({
+      name: name,
+      banner: imgID,
+      approved: false
+    })
   },
 
   "games.approve"(id) {
@@ -350,21 +321,12 @@ Meteor.methods({
     })
   },
 
-  "users.update_profile_image"(id, file){
-    f = new FS.File({dimensions: file.dimensions});
-    f.attachData(file.content, { type: file.type });
-    ProfileImages.insert(f, function(err, obj){
-      user = Meteor.users.findOne(id);
-      if(user.profile.image_ref){
-        ProfileImages.remove(user.profile.image_ref)
+  "users.update_profile_image"(objId){
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        "profile.image": objId
       }
-      Meteor.users.update(id, {
-        $set: {
-          "profile.image": obj.url({brokenIsFine: true}),
-          "profile.image_ref": obj._id
-        }
-      })
-    })
+    });
   },
 
   "events.create_sponsorship"(id) {

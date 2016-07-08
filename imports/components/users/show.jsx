@@ -17,13 +17,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   componentWillMount() {
     self = this;
     this.setState({
-      events: Meteor.subscribe('userEvents', Meteor.userId(), {
-        onReady() {
-          self.setState({ loaded: true })
-        }
-      }),
-      currentEvent: null,
-      loaded: false
+      events: Meteor.subscribe('userEvents', Meteor.userId()),
+      currentEvent: null
     });
   }
 
@@ -80,10 +75,24 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     Meteor.logout();
   }
 
-  render() {
-    self = this;
+  imgUrl(id) {
+    var img = Images.findOne(id);
+    if(img) {
+      return img.url();
+    }
+    else {
+      return "/images/bg.jpg";
+    }
+  }
 
-    if(!this.state.loaded){
+  gameBannerURL(id) {
+    return Images.findOne(id).url();
+  }
+
+  render() {
+    var self = this;
+
+    if(!this.state.events.ready()){
       return (
         <div>
           Loading...
@@ -91,12 +100,12 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
       )
     }
 
-    events = this.events();
+    var events = this.events();
 
     return (
       <div className="row content">
         <div className="col-1 user-details">
-          <ProfileImage imgUrl={Meteor.user().profile.image} />
+          <ProfileImage imgID={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>
             <h2>Alias</h2>
             <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
@@ -106,7 +115,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                 Games.find().fetch().map(function(game){
                   return (
                     <div className="game-icon" style={{
-                      backgroundImage: `url(${game.banner})`,
+                      backgroundImage: `url(${self.gameBannerURL(game.banner)})`,
                       backgroundSize: '100% 100%'
                     }}>
                     </div>
@@ -131,7 +140,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           <EventDisplay {...this.state.currentEvent} />
           {
             events.map(function(eventSet){
-              console.log(eventSet);
               return (
                 <div>
                   <h3>{eventSet.title}</h3>
@@ -139,7 +147,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock image={ev.details.banner} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock image={self.imgUrl(ev.details.banner)} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }
