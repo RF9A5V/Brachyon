@@ -15,18 +15,20 @@ Meteor.publish('events', function(){
 });
 
 Meteor.publish('userEvents', (id) => {
+  var user = Meteor.users.findOne(id);
   var event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.details.banner });
-  var games = Meteor.users.findOne(id).profile.games || [];
+  var games = user.profile.games || [];
   var game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
   return [
     Events.find({owner: id}),
     Images.find({_id: { $in: event_banners.concat(game_banners) } }),
-    Games.find({_id: { $in: games }})
+    Games.find({_id: { $in: games }}),
+    ProfileImages.find({_id: user.profile.image})
   ];
 })
 
 Meteor.publish("profileImage", (id) => {
-  return ProfileImages.find(id)
+  return ProfileImages.find({_id: id});
 });
 
 Meteor.publish('event_search', function(params){
