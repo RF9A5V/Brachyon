@@ -19,6 +19,7 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 accounts-password
 react-meteor-data
+service-configuration
 meteortoys:allthings
 ultimatejs:tracker-react
 velocityjs:velocityjs
@@ -27,4 +28,9 @@ cfs:standard-packages
 lookback:logger
 u2622:persistent-session
 cfs:gridfs
+mrgalaxy:stripe
+meteorhacks:async
+secretninjaman:meteor-accounts-stripe-connect
+secretninjaman:link-accounts
 cfs:graphicsmagick
+percolate:synced-cron

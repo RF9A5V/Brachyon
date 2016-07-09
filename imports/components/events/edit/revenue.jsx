@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
-import CrowdfundingTree from '../crowdfunding/crowdfunding_tree.jsx';
+import CrowdfundingTree from "../crowdfunding/crowdfunding_tree.jsx";
 
 class TierPanel extends Component {
 
@@ -115,6 +117,13 @@ class TierPanel extends Component {
 
 export default class RevenuePanel extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    }
+  }
+
   onClick(e) {
     this.props.updateSuite(this.values());
   }
@@ -134,21 +143,38 @@ export default class RevenuePanel extends Component {
         <div className="row" style={{alignItems: "flex-start"}}>
           <div className="side-tab-panel">
             <label>Crowdfunding Tiers</label>
-            <i>Don't forget to save by hitting the Save button up top!</i>
+            <i>Don"t forget to save by hitting the Save button up top!</i>
             <TierPanel ref="tiers" type={"Tier"} stubs={this.props.tiers} />
           </div>
           <div className="side-tab-panel">
             <label>Ticketing</label>
-            <i>Don't forget to save by hitting the Save button up top!</i>
+            <i>Don"t forget to save by hitting the Save button up top!</i>
             <TierPanel ref="tickets" type={"Ticket"} stubs={this.props.tickets} />
           </div>
           <div className="side-tab-panel">
-            <label>Stretch Goals</label>
+            <label>Stretch Goals&nbsp;<sup onClick={(e) => { e.preventDefault(); this.setState({open: true}) }}><a href="#">?</a></sup></label>
             <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
           </div>
           <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
           </div>
         </div>
+        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
+          <div className="row justify-end">
+            <FontAwesome onClick={() => { this.setState({open: false}) }} name="times" size="2x" className="close-modal"/>
+          </div>
+          <div>
+            <b>So what the hell is this?</b>
+            <div style={{marginTop: 20}}>
+              Don’t fucking lie to yourself. Someday is not a fucking day of the week. To go partway is easy, but mastering anything requires hard fucking work. Never, never assume that what you have achieved is fucking good enough. Use your fucking hands. This design is fucking brilliant. You won’t get good at anything by doing it a lot fucking aimlessly.
+            </div>
+            <div style={{marginTop: 20}}>
+              Nothing of value comes to you without fucking working at it. Remember it’s called the creative process, it’s not the creative fucking moment. Don’t fucking lie to yourself. You need to sit down and sketch more fucking ideas because stalking your ex on facebook isn’t going to get you anywhere.
+            </div>
+            <div style={{marginTop: 20}}>
+              Practice won’t get you anywhere if you mindlessly fucking practice the same thing. Change only occurs when you work deliberately with purpose toward a goal. This design is fucking brilliant. You won’t get good at anything by doing it a lot fucking aimlessly. Don’t worry about what other people fucking think. When you design, you have to draw on your own fucking life experiences. If it’s not something you would want to read/look at/use then why fucking bother? Must-do is a good fucking master. This design is fucking brilliant. The details are not the details. They make the fucking design.
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }

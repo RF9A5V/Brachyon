@@ -14,13 +14,11 @@ export default class GameSelectScreen extends TrackerReact(Component) {
       games: Meteor.subscribe("games", {
         onReady(){
           self.setState({
-            loaded: true,
             played: Meteor.user().profile.games || [],
             diff: Meteor.user().profile.games || []
           })
         }
-      }),
-      loaded: false
+      })
     })
   }
 
@@ -70,9 +68,13 @@ export default class GameSelectScreen extends TrackerReact(Component) {
     return false;
   }
 
+  imageURL(id) {
+    return Images.findOne(id).url();
+  }
+
   render() {
-    self = this;
-    if(!this.state.loaded){
+    var self = this;
+    if(!this.state.games.ready()){
       return (
         <div>
 
@@ -99,7 +101,7 @@ export default class GameSelectScreen extends TrackerReact(Component) {
             {
               this.games().map(function(val){
                 return (
-                  <GameBlock imgUrl={val.banner} key={val._id} handler={() => self.togglePlayed(val._id)} played={self.state.diff.indexOf(val._id) >= 0} />
+                  <GameBlock imgUrl={self.imageURL(val.banner)} key={val._id} handler={() => self.togglePlayed(val._id)} played={self.state.diff.indexOf(val._id) >= 0} />
                 )
               })
             }

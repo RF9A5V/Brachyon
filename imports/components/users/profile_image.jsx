@@ -1,46 +1,67 @@
-import React, { Component } from 'react';
-import ImageModal from '/imports/components/public/img_modal.jsx';
-import ImageForm from '/imports/components/public/img_form.jsx';
+import React, { Component } from "react";
+import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-export default class ProfileImage extends Component {
+import ImageModal from "/imports/components/public/img_modal.jsx";
+import ProfileImages from "/imports/api/users/profile_images.js";
+
+export default class ProfileImage extends TrackerReact(Component) {
 
   componentWillMount() {
+    var self = this;
     this.setState({
       hover: false,
-      open: false
+      open: false,
+      image: null
     })
   }
 
   imgOrDefault() {
-    if(this.state.preview != null){
-      return this.state.preview;
-    }
-    if(this.props.imgUrl == null){
-      return '/images/profile.png';
+    var image = this.image();
+    if(image == null){
+      return "/images/profile.png";
     }
     else {
-      return this.props.imgUrl;
+      return image.url({ uploading: "/images/balls.svg", storing: "/images/balls.svg" });
     }
   }
 
-  updateProfileImage(file, dimensions) {
-    Meteor.call('users.update_profile_image', Meteor.userId(), file, dimensions, function(err) {
+  image() {
+    return ProfileImages.find(this.props.imgID).fetch()[0];
+  }
+
+  updateProfileImage(id) {
+    var self = this;
+    this.setState({
+      open: false
+    });
+    Meteor.call("users.update_profile_image", id, function(err) {
       if(err){
         toastr.error(err.reason);
       }
       else {
         toastr.success("Successfully updated profile image!");
+        if(self.state.image){
+          self.state.image.stop();
+        }
+        self.state.image = Meteor.subscribe("profileImage", id);
       }
     });
   }
 
   render() {
+    if(this.state.image && !this.state.image.ready()){
+      return (
+        <div>
+          <img src="/images/balls.svg" />
+        </div>
+      )
+    }
     return (
       <div className="col x-center">
         <div className="profile-photo" onMouseEnter={() => this.setState({hover: true})} onMouseLeave={() => this.setState({hover: false})} style={
           {
             backgroundImage: `url(${this.imgOrDefault()})`,
-            backgroundSize: '100% 100%'
+            backgroundSize: "cover"
           }
         }>
           {
@@ -53,9 +74,7 @@ export default class ProfileImage extends Component {
             )
           }
         </div>
-        <ImageModal open={this.state.open}>
-          <ImageForm handler={this.updateProfileImage.bind(this)} />
-        </ImageModal>
+        <ImageModal open={this.state.open} handler={this.updateProfileImage.bind(this)} />
       </div>
     );
   }

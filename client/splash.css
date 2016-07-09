@@ -1,10 +1,9 @@
 .landing-screen {
   width: 100%;
-  min-height: 80vh;
+  min-height: calc(100vh - 170px);
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 }
 
 .img-background {
@@ -13,7 +12,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  opacity: 0.5;
+  opacity: 0.4;
   user-drag: none;
   user-select: none;
   -moz-user-select: none;
@@ -21,13 +20,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   pointer-events: none;
-}
-
-.img-background img {
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  opacity: 0.5
+  background: url('/images/bg.jpg') center center no-repeat;
 }
 
 .main-content {
@@ -54,18 +47,18 @@
 	padding-bottom: 10px;
 }
 
-.cred-modal {
-    width: 30%;
-    height: 50%;
-    margin: 0 auto;
-    background-color: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 1;
-    -webkit-animation-name: animcred;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animcred;
-    animation-duration: 0.4s
+.credential-modal {
+  width: 30%;
+  height: 50%;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1;
+  -webkit-animation-name: animcred;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animcred;
+  animation-duration: 0.4s
 }
 
 @-webkit-keyframes animcred {
@@ -105,33 +98,31 @@
 .compass {
   vertical-align: middle;
   padding-right: 3px;
-  width: 32px;
-  height: 32px;
 }
 
-.cred-modal:focus {
+.credential-modal:focus {
   outline: none;
 }
 
-.cred-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.credential-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .fb {
   border-color: #3B5998;
   width: 100px;
-  margin-right: 5px;
+  margin: -2px 5px 5px 0;
 }
 
-.fb:hover {
+.fb:not(.inactive):hover {
   -moz-box-shadow: 0 0 10px #3B5998;
 	-webkit-box-shadow: 0 0 10px #3B5998;
 	box-shadow: 0 0 10px #3B5998;
@@ -140,55 +131,11 @@
 .gplus {
   border-color: #f44336;
   width: 100px;
-  margin-left: 5px;
+  margin: -2px 0 5px 5px;
 }
 
-.gplus:hover {
+.gplus:not(.inactive):hover {
   -moz-box-shadow: 0 0 10px #f44336;
 	-webkit-box-shadow: 0 0 10px #f44336;
 	box-shadow: 0 0 10px #f44336;
-}
-
-/*social plugins*/
-.icon.fa {
-  font-size: 36px;
-  margin: 0 2px;
-  color: white;
-}
-
-.icon.fa:hover {
-  cursor: pointer;
-}
-
-.snapchat:hover {
-  color: #FFFC00;
-}
-
-.instagram:hover {
-  color: #517FA4;
-}
-
-.reddit:hover {
-  color: #CEE3F8;
-}
-
-.facebook:hover {
-  color: #3B5998;
-}
-
-.twitch.fa {
-  font-size: 34px;
-  margin-top: 2px;
-}
-
-.twitch:hover {
-  color: #6441A5;
-}
-
-.twitter:hover {
-  color: #55ACEE;
-}
-
-.youtube:hover {
-  color: #CD201F;
 }

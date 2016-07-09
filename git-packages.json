@@ -1,0 +1,8 @@
+{
+  "secretninjaman:link-accounts": {
+    "git": "https://github.com/secretninjaman/meteor-link-accounts.git"
+  },
+  "secretninjaman:meteor-accounts-stripe-connect": {
+    "git": "https://github.com/secretninjaman/meteor-accounts-stripe-connect.git"
+  }
+}

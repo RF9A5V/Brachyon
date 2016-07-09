@@ -5,23 +5,20 @@ import FontAwesome from 'react-fontawesome';
 
 import Games from '/imports/api/games/games.js';
 
-import BasicExample from '/imports/components/public/modal.jsx';
 import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
+import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
+import BasicExample from '../public/modal.jsx';
+import LinkToStripe from '../public/link_to_stripe.jsx';
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillMount() {
     self = this;
     this.setState({
-      events: Meteor.subscribe('userEvents', Meteor.userId(), {
-        onReady() {
-          self.setState({ loaded: true })
-        }
-      }),
-      currentEvent: null,
-      loaded: false
+      events: Meteor.subscribe('userEvents', Meteor.userId()),
+      currentEvent: null
     });
   }
 
@@ -47,15 +44,15 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   unpublishedEvents() {
-    return Events.find({published: false, underReview: false}).fetch();
+    return Events.find({published: false, underReview: false}, {sort: { "details.name": 1 }}).fetch();
   }
 
   underReviewEvents() {
-    return Events.find({published: false, underReview: true}).fetch();
+    return Events.find({published: false, underReview: true}, {sort: { "details.name": 1 }}).fetch();
   }
 
   publishedEvents() {
-    return Events.find({published: true}).fetch();
+    return Events.find({published: true}, {sort: { "details.name": 1 }}).fetch();
   }
 
   image(id) {
@@ -78,10 +75,24 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     Meteor.logout();
   }
 
-  render() {
-    self = this;
+  imgUrl(id) {
+    var img = Images.findOne(id);
+    if(img) {
+      return img.url();
+    }
+    else {
+      return "/images/bg.jpg";
+    }
+  }
 
-    if(!this.state.loaded){
+  gameBannerURL(id) {
+    return Images.findOne(id).url();
+  }
+
+  render() {
+    var self = this;
+
+    if(!this.state.events.ready()){
       return (
         <div>
           Loading...
@@ -89,12 +100,12 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
       )
     }
 
-    events = this.events();
+    var events = this.events();
 
     return (
-      <div className="row content">
+      <div className="row">
         <div className="col-1 user-details">
-          <ProfileImage imgUrl={Meteor.user().profile.image} />
+          <ProfileImage imgID={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>
             <h2>Alias</h2>
             <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
@@ -104,7 +115,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                 Games.find().fetch().map(function(game){
                   return (
                     <div className="game-icon" style={{
-                      backgroundImage: `url(${game.banner})`,
+                      backgroundImage: `url(${self.gameBannerURL(game.banner)})`,
                       backgroundSize: '100% 100%'
                     }}>
                     </div>
@@ -122,7 +133,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             <Link to='/events/create'>
               <button>Create Event</button>
             </Link>
-
+            <LinkToStripe />
           </div>
         </div>
         <div className="col-3 event-details">
@@ -136,7 +147,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                     {
                       eventSet.events.map(function(ev){
                         return (
-                          <EventBlock image={ev.details.banner} handler={self.updateDisplay(ev).bind(self)} />
+                          <EventBlock image={self.imgUrl(ev.details.banner)} handler={self.updateDisplay(ev).bind(self)} />
                         )
                       })
                     }

@@ -8,20 +8,16 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
   componentWillMount(){
     self = this;
     this.setState({
-      loaded: false,
-      games: Meteor.subscribe('unapproved_games', {
-        onReady(){
-          console.log(this);
-          self.setState({
-            loaded: true
-          })
-        }
-      })
+      games: Meteor.subscribe('unapproved_games')
     })
   }
 
   games() {
     return Games.find().fetch();
+  }
+
+  imageURL(id) {
+    return Images.findOne(id).url();
   }
 
   approveGame(id) {
@@ -52,7 +48,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
 
   render() {
     self = this;
-    if(!this.state.loaded){
+    if(!this.state.games.ready()){
       return (
         <div>
 
@@ -75,7 +71,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
                   <tr>
                     <td>{game.name}</td>
                     <td>
-                      <img src={game.banner} />
+                      <img src={self.imageURL(game.banner)} />
                     </td>
                     <td>
                       <button onClick={self.approveGame(game._id).bind(self)}>
