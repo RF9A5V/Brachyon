@@ -5,6 +5,8 @@ import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
 import ProfileImages from "/imports/api/users/profile_images.js";
 
+var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+
 Meteor.methods({
   "events.create"(attrs) {
     if(!attrs.details){
@@ -20,9 +22,6 @@ Meteor.methods({
       if(!attrs.organize.active){
         attrs.organize = {};
       }
-      else {
-        attrs.banner = Games.findOne(attrs.organize.game).banner;
-      }
     }
     if(attrs.revenue){
       if(!attrs.revenue.active){
@@ -31,6 +30,11 @@ Meteor.methods({
       else {
         attrs.published = false;
         attrs.underReview = true;
+      }
+    }
+    if(attrs.promotion){
+      if(!attrs.promotion.active){
+        attrs.promotion = {};
       }
     }
     Events.insert(attrs);
@@ -52,26 +56,9 @@ Meteor.methods({
   "events.update_details"(id, attrs) {
     var obj = {};
     Object.keys(attrs).map(function(key){
-      if(key == "banner"){
-        var file = new FS.File({dimensions: attrs[key].dimensions});
-        file.attachData(attrs[key].content, { type: attrs[key].type });
-        Images.insert(file, function(err, image){
-          if(err){
-            console.log(err);
-          }
-          else {
-            Events.update(id, {
-              $set: {
-                "details.banner": image.url({ brokenIsFine: true })
-              }
-            })
-          }
-        })
-      }
-      else {
-        obj[`details.${key}`] = attrs[key];
-      }
+      obj[`details.${key}`] = attrs[key];
     });
+    console.log(obj);
     if(Object.keys(obj).length > 0){
       Events.update(id, {
         $set: obj
@@ -127,6 +114,20 @@ Meteor.methods({
     items["revenue.active"] = true;
     Events.update(id, {
       $set: items
+    });
+  },
+
+  "events.update_promotion"(id, attrs){
+    if(Object.keys(attrs).length == 0) {
+      return;
+    }
+    var obj = {};
+    Object.keys(attrs).map(function(key){
+      obj[`promotion.${key}`] = attrs[key];
+    });
+    obj["promotion.active"] = true;
+    Events.update(id, {
+      $set: obj
     });
   },
 
@@ -254,32 +255,69 @@ Meteor.methods({
       }
     })
   },
-
-  "games.create"(attrs) {
-    if(!attrs){
-      throw new Error("Attributes need to be defined.");
-    }
-    if(!attrs.name){
-      throw new Error("Game needs a name.");
-    }
-    if(!attrs.file){
-      throw new Error("Game needs a banner.");
-    }
-
-    file = new FS.File();
-    file.attachData(attrs.file.content, { type: attrs.file.type });
-    Images.insert(file, function(err, obj){
-      if(err){
-        Logger.info(err);
-      }
-      else {
-        Games.insert({
-          name: attrs.name,
-          banner: obj.url({ brokenIsFine: true }),
-          approved: false
+  "addCard": function(cardToken){
+    if(Meteor.user().stripeCustomer == null){
+      var customerCreate = Async.runSync(function(done){
+        stripe.customers.create({
+          source: cardToken
+        }, function(err, response){
+          done(err, response);
         })
+      })
+      if(customerCreate.error){
+        throw new Meteor.Error(500, "stripe-error-create", customerCreate.error.message);
       }
-    });
+      else{
+        Meteor.users.update(Meteor.userId(), {$set: {stripeCustomer: customerCreate.result.id}});
+        return
+      }
+    }
+    else{
+      var customerUpdate = Async.runSync(function(done){
+        stripe.customers.update(Meteor.user().stripeCustomer,{
+          source: cardToken
+        }, function(err, response){
+          done(err, response);
+        })
+      })
+      if(customerUpdate.error){
+        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.messgae);
+      }
+      else{
+        return
+      }
+    }
+  },
+  "loadCardInfo": function(){
+    return {
+      "hasCard": false
+    }
+  },
+  "chargeCard": function(payableTo, chargeAmount){
+    console.log(Meteor.users.findOne(payableTo));
+    stripe.charges.create({
+      amount: chargeAmount,
+      currency: "usd",
+      customer: Meteor.user().stripeCustomer,
+      destination: Meteor.users.findOne(payableTo).services.stripe.id
+    }, function(err, response){
+      if(err){
+        //throw new Meteor.error(500, "stripe-error", err.message);
+      }
+      else{
+        return response;
+      }
+    })
+  },
+  "isStripeConnected": function(connected){
+    Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
+  },
+  'games.create'(name, imgID) {
+    Games.insert({
+      name: name,
+      banner: imgID,
+      approved: false
+    })
   },
 
   "games.approve"(id) {
@@ -294,6 +332,31 @@ Meteor.methods({
     Games.remove(id);
   },
 
+  "users.create"(name, email, username, password) {
+    var user = Accounts.createUser({
+      email,
+      password,
+      username,
+      options: {
+        name
+      },
+      profile: {
+        games: [],
+      },
+      oauth: {
+        isStripeConnected: false
+      }
+    });
+    if(user){
+      var token = Accounts._generateStampedLoginToken();
+      Accounts._insertLoginToken(user, token);
+      return token;
+    }
+    else {
+      return null;
+    }
+  },
+
   "users.update_games"(games){
     Meteor.users.update(Meteor.userId(), {
       $set: {
@@ -302,21 +365,12 @@ Meteor.methods({
     })
   },
 
-  "users.update_profile_image"(id, file){
-    f = new FS.File({dimensions: file.dimensions});
-    f.attachData(file.content, { type: file.type });
-    ProfileImages.insert(f, function(err, obj){
-      user = Meteor.users.findOne(id);
-      if(user.profile.image_ref){
-        ProfileImages.remove(user.profile.image_ref)
+  "users.update_profile_image"(objId){
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        "profile.image": objId
       }
-      Meteor.users.update(id, {
-        $set: {
-          "profile.image": obj.url({brokenIsFine: true}),
-          "profile.image_ref": obj._id
-        }
-      })
-    })
+    });
   },
 
   "events.create_sponsorship"(id) {
@@ -405,7 +459,15 @@ Meteor.methods({
 
   "events.create_ticketing"(id) {
     Tickets.insert({
-      tickets: []
+      tickets: [
+        {
+          name: "Ticket",
+          description: "This is your ticket description.",
+          limit: 100,
+          amount: 100,
+          payableTo: Meteor.userId()
+        }
+      ]
     }, function(err, obj){
       if(err){
         throw new Error(err.reason)
@@ -427,7 +489,8 @@ Meteor.methods({
           name: "Ticket",
           description: "This is your ticket description.",
           limit: 100,
-          amount: 100
+          amount: 100,
+          payableTo: Meteor.userId()
         }
       }
     })
@@ -458,7 +521,8 @@ Meteor.methods({
           name: "Tier",
           description: "Tier description.",
           amount: 100,
-          limit: 100
+          limit: 100,
+          payableTo: Meteor.userId()
         }
       }
     })
@@ -471,5 +535,4 @@ Meteor.methods({
       }
     })
   }
-
 })

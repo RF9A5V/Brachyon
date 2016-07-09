@@ -50,7 +50,7 @@ export default class DetailsPanel extends Component {
           </div>
           <div className="side-tab-panel">
             <label>Banner</label>
-            <ImageForm ref="image" aspectRatio={16/9} url={this.props.banner} />
+            <ImageForm ref="image" aspectRatio={16/9} id={this.props.banner} collection={Images} />
           </div>
           <div className="side-tab-panel">
             <label style={{marginBottom: 10}}>Description</label>

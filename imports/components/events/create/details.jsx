@@ -16,7 +16,6 @@ export default class DetailsPanel extends Component {
 
   onChange(e) {
     var loc = this.refs.location.value();
-    console.log(loc.online);
     var locationValid = loc.online || Object.keys(loc.location).length;
     this.props.onChange(
       this.refs.name.value != "" && this.refs.description.value != "" && locationValid

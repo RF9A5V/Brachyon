@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import FontAwesome from 'react-fontawesome';
 
 export default class BlockContainer extends Component {
 
@@ -7,7 +8,7 @@ export default class BlockContainer extends Component {
     return(
       function(e){
         e.preventDefault();
-        const path = `/events/${eventID}/view`
+        const path = `/events/${eventID}/preview`
         console.log(path)
         browserHistory.push(path)
       }
@@ -34,12 +35,18 @@ export default class BlockContainer extends Component {
                   <h2 className="event-block-title">{ event.details.name }</h2>
                   <div className="event-block-content">
                     <div>
-                      <span>Amount raised</span>
-                      <span>Time remaining</span>
-                      <span>Location</span>
+                      {/*Crowdfunding check goes here */}
+                      <span>{
+                        event.details.location.online ? (
+                          <div><FontAwesome name="signal" /> Online Event</div>
+                        ) : (
+                          `Location: ${event.details.location.city}, ${event.details.location.state}`
+                        )
+                      }
+                      </span>
                     </div>
                     <div>
-                      <span>Hosted by</span>
+                      <span>Hosted By: {Meteor.users.findOne(event.owner).username}</span>
                       <span>Date running</span>
                     </div>
                   </div>

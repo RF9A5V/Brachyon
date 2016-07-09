@@ -11,12 +11,12 @@
 }
 
 .line.horiz.half {
-  width: calc(33% + 8px);
+  width: calc(33% + 6px);
 }
 
 .line.horiz.half.no-bg {
+  width: calc(33% + 2px);
   background: none;
-  width: calc(33% + 8px);
 }
 
 .form {

@@ -10,7 +10,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   componentWillMount() {
     var self = this;
     this.setState({
-      events: Meteor.subscribe('events', {
+      events: Meteor.subscribe('discoverEvents', {
         onReady() {
           self.setState({
             loaded: true
@@ -26,7 +26,11 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   events() {
-    return Events.find().fetch();
+    return Events.find({},{sort: {"details.datetime": -1}}).fetch();
+  }
+
+  promotedEvents() {
+    console.log(Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}}).fetch());
   }
 
   setSubscription(params){
@@ -43,6 +47,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
         </div>
       )
     }
+    this.promotedEvents();
     return (
       <div className="content">
         <DiscoverDisplay />
