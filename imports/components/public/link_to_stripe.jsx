@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class LinkToStripe extends React.Component {
   connectToStripe(event){
-    if(Meteor.users.isStripeConnected){
+    if(!Meteor.user().profile.isStripeConnected){
       Meteor.linkWithStripe({
         stripe_landing: 'register',
         newAccountDetails: {
@@ -11,7 +11,7 @@ export default class LinkToStripe extends React.Component {
       }, function(err){
         var connected = true;
         if(err){
-            toastr.error("Oops... Sorry we spilled that milk")
+            toastr.error("Oops...")
         }
         else{
           Meteor.call("isStripeConnected", connected, function(err){

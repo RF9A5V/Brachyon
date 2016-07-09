@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import PaymentModal from "/imports/components/public/payment.jsx";
 
 import CFTree from "./tree.jsx";
 
@@ -9,8 +10,22 @@ export default class CrowdfundingPanel extends Component {
   constructor(props){
     super(props);
     this.state = {
-      open: false
+      open: false,
+      helpOpen: false,
+      price: 0
     }
+  }
+
+  openModal() {
+    this.setState({
+      open: true
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      open: false
+    });
   }
 
   render() {
@@ -26,7 +41,7 @@ export default class CrowdfundingPanel extends Component {
               Object.keys(this.props.tiers).map(function(key){
                 var tier = self.props.tiers[key];
                 return (
-                  <div className="col tier-block">
+                  <div className="col tier-block" onClick={() => {self.setState({open: true, price: tier.price}); }}>
                     <div className="row x-center flex-pad" style={{marginBottom: 20}}>
                       <b style={{fontSize: 24}}>{ tier.name }</b>
                       <b style={{marginLeft: 20}}>${ (tier.price / 100).toFixed(2) }</b>
@@ -44,12 +59,12 @@ export default class CrowdfundingPanel extends Component {
           }
         </div>
         <div className="col-3 col x-center">
-          <h3>Goals&nbsp;<sup onClick={(e) => { e.preventDefault();this.setState({open: true}) }}><a href="#">?</a></sup></h3>
+          <h3>Goals&nbsp;<sup onClick={(e) => { e.preventDefault();this.setState({helpOpen: true}) }}><a href="#">?</a></sup></h3>
           <CFTree goals={this.props.goals} />
         </div>
-        <Modal className="create-modal" overlayClassName="cred-overlay" isOpen={this.state.open}>
+        <Modal className="create-modal" overlayClassName="cred-overlay" isOpen={this.state.helpOpen}>
           <div className="row justify-end">
-            <FontAwesome onClick={() => { this.setState({open: false}) }} name="times" size="2x" className="close-modal"/>
+            <FontAwesome onClick={() => { this.setState({helpOpen: false}) }} name="times" size="2x" className="close-modal"/>
           </div>
           <div>
             <b>So what the hell is this?</b>
@@ -64,6 +79,7 @@ export default class CrowdfundingPanel extends Component {
             </div>
           </div>
         </Modal>
+        <PaymentModal open={this.state.open} price={this.state.price} owner={this.props.owner} type="tier"/>
       </div>
     );
   }

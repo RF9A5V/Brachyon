@@ -7,7 +7,7 @@ export default class BlockContainer extends Component {
     return(
       function(e){
         e.preventDefault();
-        const path = `/events/${eventID}/view`
+        const path = `/events/${eventID}/preview`
         console.log(path)
         browserHistory.push(path)
       }

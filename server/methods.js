@@ -291,7 +291,7 @@ Meteor.methods({
     })
   },
   "isStripeConnected": function(connected){
-    Meteor.users.update(Meteor.userId(), {$set: {"oauth.isStripeConnected": connected}});
+    Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
   },
   'games.create'(name, imgID) {
     Games.insert({
