@@ -5,17 +5,20 @@ import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
 import FontAwesome from 'react-fontawesome';
+import { browserHistory } from 'react-router';
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
     e.preventDefault();
-    Meteor.logout();
+    Meteor.logout(function(err) {
+      if(!err) browserHistory.push("/");
+    });
   }
 
   constructor () {
     super();
     this.state = {
-      hover: false,
+      hover: false
     }
   }
 
@@ -30,11 +33,14 @@ export default class Header extends TrackerReact(Component) {
   render() {
     var userCred = "";
     if(Meteor.userId()){
-      userCred = (<a href="#" onClick={this.onClick}>Logout</a>);
+      userCred = (
+        <a href="#" onClick={this.onClick}>
+          <button>Logout</button>
+        </a>);
     }
     else {
       userCred = (
-        <div className="head2">
+        <div className="head-credentials">
           <SignUpModal />
           <LogInModal />
         </div>
@@ -80,7 +86,7 @@ export default class Header extends TrackerReact(Component) {
       <Headroom>
         <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
           <div className = "head-align row">
-            <img src="/images/b_logo.svg" style={{height: 50, width:50}}></img>
+            <img src="/images/b_logo_trans.png" style={{height: 50, width:50}}></img>
             <Link to="/">
               <h2 style={{margin: 0}}>BRACHYON</h2>
             </Link>

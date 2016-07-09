@@ -7,8 +7,8 @@ export default class DetailsPanel extends Component {
     return (
       <div className="row" style={{height: "100%", whiteSpace: "normal"}}>
         <div className="col-3 col description-container">
-          <h2>{ this.props.name }</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.description}}></div>
+          <span className="event-title">{ this.props.name || "Set Event Name" }</span>
+          <div dangerouslySetInnerHTML={{__html: (this.props.description ? this.props.description : "Set a description for your event.")}}></div>
         </div>
       </div>
     )

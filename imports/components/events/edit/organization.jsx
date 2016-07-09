@@ -10,7 +10,6 @@ export default class OrganizationPanel extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       gameBanner: props.gameBanner
     };

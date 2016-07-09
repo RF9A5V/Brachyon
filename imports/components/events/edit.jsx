@@ -23,12 +23,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   componentWillMount(){
     var self = this;
     this.setState({
-      event: Meteor.subscribe("event", self.props.params.eventId, {
-        onReady() {
-          self.setState({isLoaded: true})
-        }
-      }),
-      isLoaded: false
+      event: Meteor.subscribe("event", self.props.params.eventId)
     });
     var obj = {};
     ["details", "organize", "revenue", "promotion"].map((function(val){
@@ -61,7 +56,6 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         )
         var diff = self.event()[val];
         var end = findDiff(attrs, diff);
-        console.log(end);
 
         if(Object.keys(end).length == 0){
           toastr.success("Nothing to update!");
@@ -73,7 +67,11 @@ export default class EditEventScreen extends TrackerReact(React.Component){
             toastr.error(`Error updating ${val}.\n${err.reason}`);
           }
           else {
-            toastr.success(`Successfully updated ${val}!`)
+            toastr.success(`Successfully updated ${val}!`);
+            self.state.event.stop();
+            self.setState({
+              event: Meteor.subscribe("event", self.props.params.eventId)
+            })
           }
         })
       });
@@ -101,13 +99,13 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       (<DetailsPanel {...event.details} ref="details" updateSuite={this.state.updateSuite.details}/>),
       (<OrganizationPanel {...event.organize} ref="organization" updateSuite={this.state.updateSuite.organize} />),
       (<RevenuePanel {...event.revenue} ref="revenue" updateSuite={this.state.updateSuite.revenue} />),
-      (<PromotionPanel />),
+      (<PromotionPanel {...event.promotion} ref="promotion" updateSuite={this.state.updateSuite.promotion}/>),
       (<SubmitPanel requiresApproval={event.revenue.active} id={event._id} />)
     ]
   }
 
   render() {
-    if(!this.state.isLoaded){
+    if(!this.state.event.ready()){
       return (
         <LoadingScreen />
       )
