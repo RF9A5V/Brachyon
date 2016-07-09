@@ -1,8 +1,29 @@
 import React, { Component } from "react";
+import PaymentModal from "/imports/components/public/payment.jsx";
 
 import CFTree from "./tree.jsx";
 
 export default class CrowdfundingPanel extends Component {
+
+  componentWillMount() {
+    this.setState({
+      open: false,
+      price: 0
+    })
+  }
+
+  openModal() {
+    this.setState({
+      open: true
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      open: false
+    });
+  }
+
   render() {
     var self = this;
     return (
@@ -16,7 +37,7 @@ export default class CrowdfundingPanel extends Component {
               Object.keys(this.props.tiers).map(function(key){
                 var tier = self.props.tiers[key];
                 return (
-                  <div className="col tier-block">
+                  <div className="col tier-block" onClick={() => {self.setState({open: true, price: tier.price}); }}>
                     <div className="row x-center flex-pad" style={{marginBottom: 20}}>
                       <b style={{fontSize: 24}}>{ tier.name }</b>
                       <b style={{marginLeft: 20}}>${ (tier.price / 100).toFixed(2) }</b>
@@ -37,6 +58,7 @@ export default class CrowdfundingPanel extends Component {
           <h3>Goals&nbsp;<sup>?</sup></h3>
           <CFTree goals={this.props.goals} />
         </div>
+        <PaymentModal open={this.state.open} price={this.state.price} owner={this.props.owner} type="tier"/>
       </div>
     );
   }
