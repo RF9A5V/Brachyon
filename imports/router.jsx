@@ -8,6 +8,7 @@ import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
 import OrganizeEventScreen from '../imports/components/events/organize.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
+import TournamentSingleScreen from '../imports/components/tournaments/single.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import PublishEventScreen from '../imports/components/events/publish.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
@@ -42,6 +43,7 @@ export const renderRoutes = () => (
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="games/approval" component={GameApprovalScreen} />
+      <Route path="tournaments/single" component={TournamentSingleScreen} />
     </Route>
   </Router>
 )
