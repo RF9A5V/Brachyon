@@ -62,7 +62,7 @@ export default class CrowdfundingPanel extends Component {
           <h3>Goals&nbsp;<sup onClick={(e) => { e.preventDefault();this.setState({helpOpen: true}) }}><a href="#">?</a></sup></h3>
           <CFTree goals={this.props.goals} />
         </div>
-        <Modal className="create-modal" overlayClassName="cred-overlay" isOpen={this.state.helpOpen}>
+        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.helpOpen}>
           <div className="row justify-end">
             <FontAwesome onClick={() => { this.setState({helpOpen: false}) }} name="times" size="2x" className="close-modal"/>
           </div>

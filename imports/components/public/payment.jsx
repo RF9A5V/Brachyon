@@ -30,7 +30,7 @@ export default class PaymentModal extends React.Component {
 
   ticketPay(){
     return(
-      <Modal className = "cred-modal" overlayClassName = "cred-overlay" isOpen={this.state.open}>
+      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
         <div className="div-pad">
           <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
         </div>
@@ -42,7 +42,7 @@ export default class PaymentModal extends React.Component {
 
   cfPay() {
     return (
-      <Modal className = "cred-modal" overlayClassName = "cred-overlay" isOpen={this.state.open}>
+      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
         <div className="div-pad">
           <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
         </div>

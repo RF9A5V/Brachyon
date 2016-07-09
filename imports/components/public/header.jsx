@@ -33,11 +33,14 @@ export default class Header extends TrackerReact(Component) {
   render() {
     var userCred = "";
     if(Meteor.userId()){
-      userCred = (<a href="#" onClick={this.onClick}>Logout</a>);
+      userCred = (
+        <a href="#" onClick={this.onClick}>
+          <button>Logout</button>
+        </a>);
     }
     else {
       userCred = (
-        <div className="head2">
+        <div className="head-credentials">
           <SignUpModal />
           <LogInModal />
         </div>
