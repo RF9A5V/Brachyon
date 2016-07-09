@@ -101,7 +101,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       (<DetailsPanel {...event.details} ref="details" updateSuite={this.state.updateSuite.details}/>),
       (<OrganizationPanel {...event.organize} ref="organization" updateSuite={this.state.updateSuite.organize} />),
       (<RevenuePanel {...event.revenue} ref="revenue" updateSuite={this.state.updateSuite.revenue} />),
-      (<PromotionPanel />),
+      (<PromotionPanel {...event.promotion} ref="promotion" updateSuite={this.state.updateSuite.promotion}/>),
       (<SubmitPanel requiresApproval={event.revenue.active} id={event._id} />)
     ]
   }

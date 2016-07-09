@@ -17,13 +17,13 @@ body {
 .box {
   display: flex;
   flex-flow: column;
-  min-height: calc(100vh - 83px);
+  min-height: calc(100vh - 170px);
 }
 
 .content {
   top: 100px;
-  bottom: 50px;
-  margin-bottom: 50px;
+  bottom: 70px;
+  margin-bottom: 70px;
 }
 
 /* Flex rows and column stuff */

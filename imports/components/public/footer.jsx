@@ -42,10 +42,9 @@ export default class Footer extends React.Component {
               <FontAwesome name="instagram" className="instagram social-icon" />
             </div></a>
           </div>
-          <div className="col-1 justify-end">
-            <div className="row">
+          <div className="col-1">
+            <div className="row justify-end">
               <div className="footer-div">Advertise</div>
-              <div className="footer-div">About Us</div>
               <div className="footer-div">Careers</div>
               <div className="footer-div">Terms</div>
               <div className="footer-div">Privacy</div>
