@@ -2,10 +2,25 @@ import React from 'react';
 
 export default class CreditCardForm extends React.Component {
 
+  closeModal(){
+    console.log(this.props.closeHandler)
+    this.props.closeHandler();
+  }
+
+  calcStripeFee() {
+    const stripeFixedFee = 30
+    const stripePercentFee = 0.029
+    var finalAmount = (this.props.amount + stripeFixedFee)/(1 - stripePercentFee)
+
+    return finalAmount
+  }
+
+
   submitPayment(event){
     event.preventDefault();
 
     var self = this;
+    var finalAmount = Math.round(this.calcStripeFee());
 
     var cardDetails = {
       "number": this.refs.cardNumber.value,
@@ -17,6 +32,7 @@ export default class CreditCardForm extends React.Component {
     Stripe.createToken(cardDetails, function(status, response){
       if(response.error){
         toastr.error(response.error.message);
+        self.closeModal();
       }
       else{
         Meteor.call("addCard", response.id, function(err, response){
@@ -25,12 +41,12 @@ export default class CreditCardForm extends React.Component {
           }
           else{
             //loadCardInfo();
-            console.log(self.props.payableTo)
-            Meteor.call("chargeCard", self.props.payableTo, self.props.amount, function(err, res){
+            Meteor.call("chargeCard", self.props.payableTo, finalAmount, function(err, res){
               if(err){
                 toastr.error(err.message);
               }
             })
+            self.closeModal();
           }
         })
       }
@@ -38,6 +54,7 @@ export default class CreditCardForm extends React.Component {
   }
 
   render () {
+    var finalAmount = this.calcStripeFee();
     return (
       <div>
         <form class="payment-form" onSubmit={this.submitPayment.bind(this)}>
@@ -81,7 +98,7 @@ export default class CreditCardForm extends React.Component {
               />
             </div>
           </div>
-          <input type="submit" value={`Pay $${(this.props.amount / 100).toFixed(2)}`}/>
+          <input type="submit" value={`Pay $${(finalAmount / 100).toFixed(2)}`}/>
         </form>
       </div>
       )

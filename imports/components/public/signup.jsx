@@ -19,8 +19,6 @@ export default class SignUpScreen extends React.Component {
       },
       profile: {
         games: [],
-      },
-      oauth: {
         isStripeConnected: false
       }
     }, function(err){

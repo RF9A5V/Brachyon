@@ -311,7 +311,7 @@ Meteor.methods({
     })
   },
   "isStripeConnected": function(connected){
-    Meteor.users.update(Meteor.userId(), {$set: {"oauth.isStripeConnected": connected}});
+    Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
   },
   'games.create'(name, attrs) {
     var file = new FS.File({dimensions: attrs.dimensions});
