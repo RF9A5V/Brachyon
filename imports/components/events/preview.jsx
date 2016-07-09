@@ -53,8 +53,8 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return [
       (<DetailsPanel {...event.details} ref="details"/>),
       (<BracketsPanel />),
-      (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} ref="cf" />),
-      (<TicketsPanel tickets={event.revenue.tickets} ref="tickets" />)
+      (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} owner={event.owner} ref="cf" />),
+      (<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
     ]
   }
 
