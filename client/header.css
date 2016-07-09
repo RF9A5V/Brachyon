@@ -1,0 +1,31 @@
+/* Header style */
+.box .row.header {
+  flex: 0 1 auto;
+}
+
+header {
+  width: 100%;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+  height: 100px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.head-align {
+  display: flex;
+  align-items: center;
+}
+
+.head-credentials {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.head-margin {
+  margin: 12px 5px;
+}

@@ -113,8 +113,8 @@ export default class EventCreateScreen extends Component {
   render() {
     var self = this;
     return (
-      <div className="screen">
-        <div className="col x-center" style={{marginBottom: 30}}>
+      <div className='box'>
+        <div className='col x-center'>
           <h2>Create an Event</h2>
           {
             this.accordionItems().map(function(item, index){

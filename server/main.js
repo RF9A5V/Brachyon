@@ -13,9 +13,22 @@ Events._ensureIndex({
   'location.coords': '2dsphere'
 })
 
+ServiceConfiguration.configurations.upsert(
+  {service: "stripe"},
+  {
+    $set:
+    {
+      appId: Meteor.settings.public.stripe.client_id,
+      secret: Meteor.settings.private.stripe.testSecretKey,
+      scope: 'read_write'
+    }
+  });
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')
+
+  SyncedCron.start();
 
   Images.allow({
     insert: function() {
