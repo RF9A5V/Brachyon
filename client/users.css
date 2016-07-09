@@ -93,12 +93,18 @@
   height: 100%;
   width: auto;
   float: left;
-  margin-right: 5%;
+  margin-right: 2.5%;
 }
 
 .event-display-details {
   float: left;
   width: 45%;
+}
+
+.event-title {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
 .description-container {

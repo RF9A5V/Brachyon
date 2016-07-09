@@ -15,8 +15,8 @@ export default class EventDisplay extends React.Component {
   }
 
   title() {
-    if(this.props.details.name == null){
-      return "TBD";
+    if(this.props.details.name == null || this.props.details.name.length == 0){
+      return "No title set";
     }
     else {
       return this.props.details.name;
@@ -95,7 +95,7 @@ export default class EventDisplay extends React.Component {
         <div className="event-display row">
           <img className="event-display-img" src={this.imgOrDefault()} />
           <div className="col event-display-details col-1">
-            <h2>{this.title()}</h2>
+            <b className="event-title">{this.title()}</b>
             <div className="col-1" style={{lineHeight: 1.5}} dangerouslySetInnerHTML={{__html: this.description()}}></div>
             { this.eventControls() }
           </div>

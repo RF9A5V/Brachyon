@@ -70,12 +70,12 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         <SideTabs items={this.items()} panels={this.content()} />
         <div style={{width: "20%"}}>
           <div className="col location-container">
-            <img src={this.imgOrDefault()} style={{width: "100%", height: "auto"}} />
-            <h2>{ event.details.name }</h2>
+            <img src={this.imgOrDefault()} style={{width: "100%", height: "auto", marginBottom: 20}} />
+            <span className="event-title">{ event.details.name || "Set Event Name" }</span>
             <div className="col" style={{marginBottom: 20}}>
             {
               event.details.location.online ? (
-                ""
+                "Online"
               ) : (
                 <div>
                   {event.details.location.locationName ? (
@@ -87,7 +87,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
               )
             }
             </div>
-            <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM DD YYYY, h:mm A")}</b>
+            <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
             {
               event.published ? (
                 <div className="row center">
