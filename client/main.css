@@ -17,34 +17,13 @@ body {
 .box {
   display: flex;
   flex-flow: column;
-  min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 170px);
 }
 
-.box .row.header {
-  flex: 0 1 auto;
-}
-
-.box .row.content {
-  flex: 1 1 auto;
-}
-
-.box .row.footer {
-  flex: 0 1 40px;
-}
-
-.footer {
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  padding: 10px 0;
-  bottom: 0;
-  width: 100%;
-  position: fixed;
-}
-
-.footer-div {
-  margin: 4px;
-  cursor: default;
+.content {
+  top: 100px;
+  bottom: 70px;
+  margin-bottom: 70px;
 }
 
 /* Flex rows and column stuff */
@@ -160,35 +139,7 @@ label {
 
 /* Hacky thing to remove Chrome backgrounds for autofills */
 input:-webkit-autofill {
-    -webkit-box-shadow: none;
-}
-
-/* Header style */
-header {
-  width: 100%;
-  box-sizing: border-box;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  padding: 20px 20px;
-  display: flex;
-  justify-content: flex-end;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.head-align {
-  display: flex;
-  align-items: center;
-}
-
-.head2 {
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.head-margin {
-  margin-right: 5px;
-  margin-left: 5px;
+  -webkit-box-shadow: none;
 }
 
 .login-button {
@@ -200,7 +151,7 @@ header {
   width: 100px;
 }
 
-.signup-button:hover {
+.signup-button:not(.inactive):hover{
   -moz-box-shadow: 0 0 10px #CC0000;
 	-webkit-box-shadow: 0 0 10px #CC0000;
 	box-shadow: 0 0 10px #CC0000;
@@ -260,6 +211,11 @@ header {
 
 header a {
   margin: 0 10px;
+}
+
+.snapcode-image {
+  width: 1in;
+  height: 1in;
 }
 
 a {

@@ -31,6 +31,16 @@ Meteor.publish("profileImage", (id) => {
   return ProfileImages.find({_id: id});
 });
 
+Meteor.publish("discoverEvents", function(){
+  var eventOwnerIds = Events.find({published: true}).fetch().map(function(event){
+    return event.owner;
+  })
+  return [
+    Events.find({published: true}),
+    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}})
+  ]
+})
+
 Meteor.publish('event_search', function(params){
   if(params == null){
     return Events.find();

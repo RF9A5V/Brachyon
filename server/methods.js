@@ -32,6 +32,11 @@ Meteor.methods({
         attrs.underReview = true;
       }
     }
+    if(attrs.promotion){
+      if(!attrs.promotion.active){
+        attrs.promotion = {};
+      }
+    }
     Events.insert(attrs);
   },
 
@@ -109,6 +114,20 @@ Meteor.methods({
     items["revenue.active"] = true;
     Events.update(id, {
       $set: items
+    });
+  },
+
+  "events.update_promotion"(id, attrs){
+    if(Object.keys(attrs).length == 0) {
+      return;
+    }
+    var obj = {};
+    Object.keys(attrs).map(function(key){
+      obj[`promotion.${key}`] = attrs[key];
+    });
+    obj["promotion.active"] = true;
+    Events.update(id, {
+      $set: obj
     });
   },
 
@@ -516,5 +535,4 @@ Meteor.methods({
       }
     })
   }
-
 })

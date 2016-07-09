@@ -13,7 +13,7 @@
 }
 
 .event-details {
-  padding: 30px 50px;
+  padding: 0 50px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -51,6 +51,7 @@
 
 .event-block-container .event-block {
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .event-block:nth-child(3n) {
@@ -64,6 +65,7 @@
 
 .event-block:hover .event-block-details {
   bottom: 0;
+  cursor: pointer;
 }
 
 .event-block-details {

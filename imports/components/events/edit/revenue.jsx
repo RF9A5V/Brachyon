@@ -158,7 +158,7 @@ export default class RevenuePanel extends Component {
           <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
           </div>
         </div>
-        <Modal className="create-modal" overlayClassName="cred-overlay" isOpen={this.state.open}>
+        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
           <div className="row justify-end">
             <FontAwesome onClick={() => { this.setState({open: false}) }} name="times" size="2x" className="close-modal"/>
           </div>
