@@ -83,7 +83,16 @@ export default class LocationSelect extends Component {
     return this.state;
   }
 
-  onLocationNameChange(e) {
+  onChange(e) {
+    this.setState({
+      streetAddress: this.refs.streetAddress,
+      city: this.refs.city,
+      state: this.refs.state,
+      zip: this.refs.zip
+    })
+  }
+
+  onLocChange(e) {
     this.setState({
       locationName: e.target.value
     });
@@ -103,21 +112,21 @@ export default class LocationSelect extends Component {
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
           <label>Location Name</label>
-          <input onChange={this.onLocationNameChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName}/>
+          <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName}/>
           <label>Address</label>
-          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" style={{margin: 0}} defaultValue={this.state.streetAddress} />
+          <input  type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" style={{margin: 0}} defaultValue={this.state.streetAddress} />
           <div className="row" style={{marginTop: 10}}>
             <div className="col" style={{width: "50%"}}>
               <label>City</label>
-              <input type="text" ref="city" defaultValue={this.state.city} />
+              <input  type="text" ref="city" defaultValue={this.state.city} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <label>State</label>
-              <input type="text" ref="state" defaultValue={this.state.state} />
+              <input  type="text" ref="state" defaultValue={this.state.state} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <label>Zip</label>
-              <input type="text" ref="zip" defaultValue={this.state.zip} />
+              <input  type="text" ref="zip" defaultValue={this.state.zip} />
             </div>
           </div>
         </div>
