@@ -6,11 +6,7 @@ import Icons from '/imports/api/sponsorship/icon.js';
 import ProfileImages from '/imports/api/users/profile_images.js';
 
 Events._ensureIndex({
-  title: 'text'
-})
-
-Events._ensureIndex({
-  'location.coords': '2dsphere'
+  'details.location.coords': '2dsphere'
 })
 
 ServiceConfiguration.configurations.upsert(
