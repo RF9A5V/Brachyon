@@ -58,7 +58,10 @@ Meteor.methods({
     Object.keys(attrs).map(function(key){
       obj[`details.${key}`] = attrs[key];
     });
-    console.log(obj);
+    var event = Events.findOne(id);
+    if(obj["details.banner"] && event.details.banner) {
+      Images.remove(event.details.banner);
+    }
     if(Object.keys(obj).length > 0){
       Events.update(id, {
         $set: obj
@@ -366,6 +369,10 @@ Meteor.methods({
   },
 
   "users.update_profile_image"(objId){
+    var user = Meteor.users.findOne(Meteor.userId());
+    if(user.profile.image){
+      ProfileImages.remove(user.profile.image);
+    }
     Meteor.users.update(Meteor.userId(), {
       $set: {
         "profile.image": objId

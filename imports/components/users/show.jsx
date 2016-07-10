@@ -103,7 +103,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     var events = this.events();
 
     return (
-      <div className="row">
+      <div className="row" style={{flex: 1}}>
         <div className="col-1 user-details">
           <ProfileImage imgID={Meteor.user().profile.image} />
           <div style={{alignSelf: 'stretch'}}>
@@ -133,7 +133,13 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             <Link to='/events/create'>
               <button>Create Event</button>
             </Link>
-            <LinkToStripe />
+            {
+              Meteor.user().profile.isStripeConnected ? (
+                ""
+              ) : (
+                <LinkToStripe />
+              )
+            }
           </div>
         </div>
         <div className="col-3 event-details">

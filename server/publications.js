@@ -47,10 +47,10 @@ Meteor.publish('event_search', function(params){
   }
   var query = {}
   if(params.search){
-    query['title'] = new RegExp(params.search.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i');
+    query['details.name'] = new RegExp(params.search.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i');
   }
   if(params.location){
-    query['location.coords'] = {
+    query['details.location.coords'] = {
       $near: {
         $geometry: {
           type: 'Point',
@@ -59,11 +59,16 @@ Meteor.publish('event_search', function(params){
       }
     }
   }
-  return Events.find(query);
+  var events = Events.find(query);
+  var userIDs = events.map((e) => { return e.owner });
+  return [
+    events,
+    Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } })
+  ];
 })
 
 Meteor.publish('events_to_review', function(){
-  return Events.find({ under_review: true });
+  return Events.find({ underReview: true });
 })
 
 Meteor.publish('unapproved_games', function() {
