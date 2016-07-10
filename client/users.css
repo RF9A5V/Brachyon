@@ -45,6 +45,10 @@
   overflow-y: hidden;
 }
 
+.event-block:hover {
+  cursor: pointer;
+}
+
 .event-block:nth-child(3n - 2) {
   margin-left: 0;
 }
@@ -88,7 +92,8 @@
 }
 
 .event-display {
-  height: 33vh;
+  height: calc(33vh - 40px);
+  margin-top: 40px;
 }
 
 .event-display-img {
