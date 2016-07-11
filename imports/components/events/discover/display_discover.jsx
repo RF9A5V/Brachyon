@@ -6,19 +6,32 @@ export default class DisplayDiscover extends Component {
   constructor () {
     super();
     this.state = {
-      panel: 0
+      panel: 0,
+      loadIn: false
     }
   }
 
   componentWillMount(){
-    this.state.timer = setInterval(() => {
-      this.forceUpdate();
-      this.state.panel = (this.state.panel + 1) % this.props.events.length
-    }, 4000);
+    // this.state.timer = setInterval(() => {
+    //   this.state.panel = (this.state.panel + 1) % this.props.events.length
+    //   this.forceUpdate();
+    // }, 4000);
+    var reset = () => {
+      this.state.timer = setTimeout(() => {
+        this.setState({loadIn: false});
+        setTimeout(() => {
+          this.state.loadIn = true;
+          this.state.panel = (this.state.panel + 1) % this.props.events.length;
+          this.forceUpdate();
+          reset();
+        }, 1000)
+      }, 4000)
+    }
+    reset();
   }
 
   componentWillUnmount(){
-    clearInterval(this.state.timer);
+    clearTimeout(this.state.timer);
   }
 
   render() {
@@ -47,7 +60,7 @@ export default class DisplayDiscover extends Component {
         {
           arr.map((val) => {
             return (
-              <div className={`promotion-animation ${val === this.state.panel ? "in" : "out"}`}>
+              <div className={`promotion-animation ${val === this.state.panel && this.state.loadIn ? "in" : "out"}`}>
                 <DisplayPromotedEvent event={this.props.events[val]} active={val === this.state.panel} />
               </div>
             )
