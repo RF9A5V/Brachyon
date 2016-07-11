@@ -22,7 +22,7 @@ export default class SnapModal extends React.Component {
     return (
 			<div>
         <div className="social-icon-bg col x-center center">
-          <FontAwesome name="snapchat-square" className="snapchat social-icon" onClick={this.openModal.bind(this)} />
+          <FontAwesome name="snapchat-ghost" className="snapchat social-icon" onClick={this.openModal.bind(this)} />
         </div>
 		  	<Modal
 	        className = "snap-modal"

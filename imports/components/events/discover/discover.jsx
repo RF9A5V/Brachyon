@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-import DiscoverDisplay from './display_discover.jsx';
+import DisplayDiscover from './display_discover.jsx';
 import DiscoverSearch from './search.jsx';
 import BlockContainer from './block_container.jsx';
 
@@ -19,11 +19,11 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   events() {
-    return Events.find({},{sort: {"details.datetime": -1}}).fetch();
+    return Events.find({},{sort: {"promotion.bid": -1, "details.datetime": -1}}).fetch();
   }
 
   promotedEvents() {
-    console.log(Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}}).fetch());
+    return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, $limit: 5}).fetch();
   }
 
   setSubscription(params){
@@ -36,8 +36,8 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   render() {
     this.promotedEvents();
     return (
-      <div className="content">
-        <DiscoverDisplay />
+      <div className="content col x-center">
+        <DisplayDiscover events={this.promotedEvents()} />
         <DiscoverSearch handler={this.setSubscription.bind(this)} />
         {
           this.state.events.ready() ? (

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
+import moment from 'moment';
 
 export default class BlockContainer extends Component {
 
@@ -36,18 +37,20 @@ export default class BlockContainer extends Component {
                   <div className="event-block-content">
                     <div>
                       {/*Crowdfunding check goes here */}
-                      <span>{
+                      {
                         event.details.location.online ? (
                           <div><FontAwesome name="signal" /> Online Event</div>
                         ) : (
-                          `Location: ${event.details.location.city}, ${event.details.location.state}`
+                          <div>
+                            <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
+                          </div>
                         )
                       }
-                      </span>
                     </div>
-                    <div>
-                      <span>Hosted By: {Meteor.users.findOne(event.owner).username}</span>
-                      <span>Date running</span>
+                    <div className="row">
+                      <span><FontAwesome name="user" /> {Meteor.users.findOne(event.owner).username}</span>
+                      <div className="col-1"></div>
+                      <span><FontAwesome name="calendar" /> {moment(event.details.datetime).format("MMM Do, YYYY")}</span>
                     </div>
                   </div>
                 </div>
