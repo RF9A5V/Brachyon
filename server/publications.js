@@ -34,10 +34,12 @@ Meteor.publish("profileImage", (id) => {
 Meteor.publish("discoverEvents", function(){
   var eventOwnerIds = Events.find({published: true}).fetch().map(function(event){
     return event.owner;
-  })
+  });
+  var imageIDs = Events.find({published: true}).fetch().map((e)=>{return e.details.banner});
   return [
     Events.find({published: true}),
-    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}})
+    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}}),
+    Images.find({_id: { $in: imageIDs }})
   ]
 })
 
@@ -60,10 +62,12 @@ Meteor.publish('event_search', function(params){
     }
   }
   var events = Events.find(query);
-  var userIDs = events.map((e) => { return e.owner });
+  var userIDs = events.fetch().map((e) => { return e.owner });
+  var imageIDs = events.fetch().map((e)=>{return e.details.banner});
   return [
     events,
-    Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } })
+    Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } }),
+    Images.find({_id: { $in: imageIDs }})
   ];
 })
 
