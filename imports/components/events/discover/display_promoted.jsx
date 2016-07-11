@@ -5,8 +5,9 @@ import moment from 'moment';
 export default class DisplayPromotedEvent extends Component {
 
   imgOrDefault(event) {
-    if(event.details.banner){
-      return event.details.banner;
+    var img = Images.findOne(event.details.banner);
+    if(img){
+      return img.url();
     }
     return "/images/bg.jpg";
   }
