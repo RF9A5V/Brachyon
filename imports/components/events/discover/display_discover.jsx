@@ -12,10 +12,6 @@ export default class DisplayDiscover extends Component {
   }
 
   componentWillMount(){
-    // this.state.timer = setInterval(() => {
-    //   this.state.panel = (this.state.panel + 1) % this.props.events.length
-    //   this.forceUpdate();
-    // }, 4000);
     var reset = () => {
       this.state.timer = setTimeout(() => {
         this.setState({loadIn: false});
