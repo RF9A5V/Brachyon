@@ -1,0 +1,29 @@
+.discover-selector-square {
+  width: 14px;
+  height: 14px;
+  border: 2px solid white;
+  margin: 4px 20px 4px 0;
+}
+
+.discover-selector-square:hover {
+  cursor: pointer;
+  background-color: #666;
+}
+
+.discover-selector-square.active {
+  background-color: white;
+  border-color: white;
+}
+
+.promoted-event-block img {
+  width: 100%;
+  height: auto;
+  position: relative;
+  margin: 10px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.discover-details {
+  padding-left: 20px;
+}
