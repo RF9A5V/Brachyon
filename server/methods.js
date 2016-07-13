@@ -368,18 +368,6 @@ Meteor.methods({
     })
   },
 
-  "users.update_profile_image"(objId){
-    var user = Meteor.users.findOne(Meteor.userId());
-    if(user.profile.image){
-      ProfileImages.remove(user.profile.image);
-    }
-    Meteor.users.update(Meteor.userId(), {
-      $set: {
-        "profile.image": objId
-      }
-    });
-  },
-
   "events.create_sponsorship"(id) {
     Sponsorships.insert({
       eventId: id,

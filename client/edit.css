@@ -28,14 +28,9 @@
   background-color: #444;
 }
 
-.side-tab-content-container {
-  width: 85%;
-  overflow-x: hidden;
-  white-space: nowrap;
-}
-
 .side-tab-content {
   flex: 1 1;
+  padding: 20px;
 }
 
 .side-tab-button {
@@ -52,8 +47,7 @@
   display: inline-flex;
   flex-direction: column;
   min-width: 400px;
-  margin: 70px 0 0;
-  margin-left: 20px;
+  margin: 20px;
   padding: 30px;
   background-color: #444;
 }
