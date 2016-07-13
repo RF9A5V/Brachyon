@@ -87,7 +87,7 @@ export default class Header extends TrackerReact(Component) {
         <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
           <div className = "head-align row">
             <Link to="/">
-              <img src="/images/b_logo_trans.png" style={{height: 50, width:50}}></img>
+              <img src="/images/b_logo_trans.png"></img>
             </Link>
             <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
             <button>

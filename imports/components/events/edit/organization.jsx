@@ -52,30 +52,26 @@ export default class OrganizationPanel extends Component {
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
+      <div style={{position: "relative"}}>
         <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Format</label>
-            <SelectInput ref="format" choices={["Single Elimination", "Double Elimination", "Swiss", "Round Robin"]} />
-          </div>
-          <div className="side-tab-panel">
-            <label style={{marginBottom: (this.state.gameBanner || this.props.gameBanner) ? 15 : 0}}>Game Played</label>
+        <div className="side-tab-panel row col-2">
+          <h3>Format:</h3>
+          <SelectInput ref="format" choices={["Single Elimination", "Double Elimination", "Swiss", "Round Robin"]} />
+        </div>
+        <div className="side-tab-panel row col-2">
+          <h3 style={{marginBottom: (this.state.gameBanner || this.props.gameBanner) ? 15 : 0}}>Games Played:</h3>
+          {
+            this.gameIfExists()
+          }
+          <AutocompleteForm ref="game" publications={[
+            "game_search"
+          ]} types={[
             {
-              this.gameIfExists()
+              type: Games,
+              template: GameResultTemplate,
+              name: "Game"
             }
-            <AutocompleteForm ref="game" publications={[
-              "game_search"
-            ]} types={[
-              {
-                type: Games,
-                template: GameResultTemplate,
-                name: "Game"
-              }
-            ]} onChange={this.onGameChange.bind(this)} id={this.props.gameId} />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
-          </div>
+          ]} onChange={this.onGameChange.bind(this)} id={this.props.gameId} />
         </div>
       </div>
     );

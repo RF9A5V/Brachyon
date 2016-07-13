@@ -6,30 +6,33 @@
 
 .side-tab-item-container {
   background-color: #222;
-  width: 15%;
-  min-width: 200px;
+  min-width: 250px;
 }
 
 .side-tab-item {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 30px 0;
+  padding: 28px 0;
+  border: 2px transparent solid;
   padding-left: 50px;
   font-size: 18px;
 }
 
 .side-tab-item.active {
-  background-color: #666;
+  background-color: #CC0000;
+}
+
+.side-tab-item.active:hover {
+  background-color: #CC0000;
 }
 
 .side-tab-item:hover {
   cursor: pointer;
-  background-color: #444;
+  border: 2px #CC0000 solid;
 }
 
 .side-tab-content-container {
-  width: 85%;
   overflow-x: hidden;
   white-space: nowrap;
 }
@@ -39,7 +42,6 @@
 }
 
 .side-tab-button {
-  position: fixed;
   margin-top: 20px;
   margin-left: 20px;
 }
@@ -49,11 +51,8 @@
 }
 
 .side-tab-panel {
-  display: inline-flex;
   flex-direction: column;
-  min-width: 400px;
-  margin: 70px 0 0;
-  margin-left: 20px;
+  margin: 20px;
   padding: 30px;
   background-color: #444;
 }
