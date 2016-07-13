@@ -43,7 +43,7 @@ export default class ImageForm extends Component {
       self.setState({
         url: reader.result,
         type
-      });
+      })
     }
     reader.readAsDataURL(e.target.files[0]);
   }
@@ -55,8 +55,8 @@ export default class ImageForm extends Component {
   }
 
   image() {
-    var img = this.props.collection.find(this.props.id).fetch()[0];
-    if(!img.isUploaded() || !img.hasStored("images")){
+    var img = this.props.collection.findOne(this.props.id);
+    if(!img.isUploaded() || !img.hasStored(this.props.store)){
       // Sorta hacky. Should change this sometime.
       setTimeout(() => { this.forceUpdate() }, 500);
     }
@@ -69,11 +69,11 @@ export default class ImageForm extends Component {
       value = (<Cropper
         aspectRatio={this.props.aspectRatio || 1}
         src={this.state.url}
-        style={{width: "100%", height: 300}}
+        style={{width: "100%", maxWidth: 500, height: 300}}
         ref="cropper"
       />);
     }
-    else if(this.props.id){
+    else if(this.props.id != null){
       value = (<img src={this.image().url({ uploading: "/images/balls.svg", storing: "/images/balls.svg" })} style={{width: "100%", height: "auto"}} />);
     }
     else {
@@ -85,7 +85,7 @@ export default class ImageForm extends Component {
       <div className="col">
         { value }
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
-        <div>
+        <div style={{marginTop: 20}}>
           <button onClick={() => { this.refs.file.click() }}>Update Image</button>
         </div>
       </div>

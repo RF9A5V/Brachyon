@@ -4,6 +4,7 @@ import Images from '/imports/api/event/images.js';
 import Games from '/imports/api/games/games.js';
 import Icons from '/imports/api/sponsorship/icon.js';
 import ProfileImages from '/imports/api/users/profile_images.js';
+import ProfileBanners from "/imports/api/users/profile_banners.js";
 
 Events._ensureIndex({
   'details.location.coords': '2dsphere'
@@ -57,6 +58,21 @@ Meteor.startup(() => {
   })
 
   ProfileImages.allow({
+    insert: function() {
+      return true;
+    },
+    update:function(userId,project,fields,modifier){
+     return true;
+    },
+    remove:function(userId,project){
+      return true;
+    },
+    download:function(){
+      return true;
+    }
+  })
+
+  ProfileBanners.allow({
     insert: function() {
       return true;
     },

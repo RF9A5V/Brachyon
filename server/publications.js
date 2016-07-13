@@ -10,6 +10,15 @@ Meteor.publish('event', (_id) => {
   ];
 });
 
+Meteor.publish("user", (_id) => {
+  var user = Meteor.users.findOne({_id});
+  return [
+    Meteor.users.find({_id}),
+    ProfileImages.find({_id: ((user || {}).profile || {}).image}),
+    ProfileBanners.find({_id: ((user || {}).profile || {}).banner})
+  ];
+})
+
 Meteor.publish('events', function(){
   return Events.find();
 });
@@ -17,7 +26,7 @@ Meteor.publish('events', function(){
 Meteor.publish('userEvents', (id) => {
   var user = Meteor.users.findOne(id);
   var event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.details.banner });
-  var games = user.profile.games || [];
+  var games = (user.profile || {}).games || [];
   var game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
   return [
     Events.find({owner: id}),

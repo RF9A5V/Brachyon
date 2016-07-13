@@ -9,8 +9,8 @@ import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
-import BasicExample from '../public/modal.jsx';
 import LinkToStripe from '../public/link_to_stripe.jsx';
+import BlockContainer from "/imports/components/events/discover/block_container.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -85,8 +85,24 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     }
   }
 
+  profileBannerURL(id) {
+    var banner = ProfileBanners.findOne(Meteor.user().profile.banner);
+    if(banner){
+      return banner.url();
+    }
+    return "/images/bg.jpg";
+  }
+
   gameBannerURL(id) {
     return Images.findOne(id).url();
+  }
+
+  profileImage() {
+    var image = ProfileImages.findOne(Meteor.user().profile.image);
+    if(image) {
+      return image.url();
+    }
+    return "/images/profile.png";
   }
 
   render() {
@@ -103,67 +119,45 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     var events = this.events();
 
     return (
-      <div className="row" style={{flex: 1}}>
-        <div className="col-1 user-details">
-          <ProfileImage imgID={Meteor.user().profile.image} />
-          <div style={{alignSelf: 'stretch'}}>
-            <h2>Alias</h2>
-            <h3>{Meteor.user() == undefined ? "Loading..." : Meteor.user().username}</h3>
-            <h2>Games Played</h2>
-            <div className="game-icon-container">
-              {
-                Games.find().fetch().map(function(game){
-                  return (
-                    <div className="game-icon" style={{
-                      backgroundImage: `url(${self.gameBannerURL(game.banner)})`,
-                      backgroundSize: '100% 100%'
-                    }}>
-                    </div>
-                  );
-                })
-              }
-              <div className="game-icon add">
-                <Link to={`/games/select`}>
-                  <FontAwesome name="plus" />
-                </Link>
+      <div>
+        <div className="user-banner" style={{backgroundImage: `url(${this.profileBannerURL()})`}}>
+          <div className="user-img-line row flex-pad x-center">
+            <div className="row col-1">
+              <div className="user-game-icon">
+                <div className="user-game-icon-ribbon" style={{backgroundColor: "gold"}}></div>
               </div>
-
+              <div className="user-game-icon">
+                <div className="user-game-icon-ribbon" style={{backgroundColor: "silver"}}></div>
+              </div>
+              <div className="user-game-icon">
+                <div className="user-game-icon-ribbon" style={{backgroundColor: "crimson"}}></div>
+              </div>
             </div>
-            <h2>Create an Event</h2>
-            <Link to='/events/create'>
-              <button>Create Event</button>
-            </Link>
+            <div className="user-profile-image" style={{backgroundImage: `url(${this.profileImage()})`}}>
+            </div>
+          </div>
+        </div>
+        <div className="user-events-container">
+          <div className="event-block-container">
             {
-              Meteor.user().profile.isStripeConnected ? (
-                ""
-              ) : (
-                <LinkToStripe />
-              )
+              events.map((eventSet) => {
+                if(eventSet.events.length === 0) {
+                  return (
+                    <div></div>
+                  );
+                }
+                return (
+                  <div>
+                    <h3>{eventSet.title}</h3>
+                    <BlockContainer events={eventSet.events} />
+                  </div>
+                )
+              })
             }
           </div>
         </div>
-        <div className="col-3 event-details">
-          <EventDisplay {...this.state.currentEvent} />
-          {
-            events.map(function(eventSet){
-              return (
-                <div>
-                  <h3>{eventSet.title}</h3>
-                  <div className="event-list">
-                    {
-                      eventSet.events.map(function(ev){
-                        return (
-                          <EventBlock image={self.imgUrl(ev.details.banner)} handler={self.updateDisplay(ev).bind(self)} />
-                        )
-                      })
-                    }
-                  </div>
-                </div>
-              );
-            })
-          }
-        </div>
       </div>
-    );
+    )
+
   }
 }
