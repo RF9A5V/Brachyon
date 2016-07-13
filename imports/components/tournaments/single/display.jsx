@@ -24,17 +24,16 @@ export default class SingleDisplay extends Component {
     }
     else {
       array = this.flatten(array);
-      console.log(array);
     }
     return array;
   }
 
   formbrackets() {
-    var num = 18, matchn = 1, i, spacing = 0;
+    var num = 15, matchn = 1, i, spacing = 0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
-    var boxes = []
+    var boxes = [], usedspots = []
 
     //This will determine the spacing and placement for the nonbyes.
     var roundparticipants = num - nonbyes/2;
@@ -43,21 +42,21 @@ export default class SingleDisplay extends Component {
       var nbarr = Array.apply(null, Array(roundparticipants*2)).map(function (_, i) {return i+1;});
       var aseed = this.seed(nbarr), w = 0;
       matchn++;
-      for (i = 0; i < nonbyes; i+=2)
+      for (i = 0; i < nonbyes; i++)
       {
-        for (w = 0; w < 2; w++)
-        {
-          var boxid = "match" + i + "nonbye";
-          var style = {
-            top: aseed.indexOf(byes+i+1+w)*50 - 25 + "px",
-            left: 200 + "px"
-          }
-          boxes.push(
-            <div className="tbox" id={boxid} style = {style}>
-              Nonbye {i+1+w}
-            </div>
-          )
+        var spot;
+        spot = aseed.indexOf(byes+i+1);
+        var boxid = "match" + spot + "nonbye";
+        var style = {
+          top: spot*50 - 25 + "px",
+          left: 200 + "px"
         }
+        boxes.push(
+          <div className="tbox" id={boxid} style = {style}>
+            Nonbye {spot}
+          </div>
+        )
+        usedspots[Math.floor(i/2)] = Math.floor((spot)/2);
       }
     }
 
@@ -71,7 +70,7 @@ export default class SingleDisplay extends Component {
             top: i*50*Math.pow(2,matchn-1)+spacing + "px",
             left: matchn*200 + "px"
           };
-          if (roundparticipants == (num - nonbyes/2) && (i == 0 || i+1 > (nonbyes/2 + 1)))
+          if (roundparticipants == (num - nonbyes/2) && (i == 0 || !(usedspots.includes(i))))
           {
             boxes.push(
               <div className="tbox" id={boxid} style = {style}>
@@ -96,8 +95,6 @@ export default class SingleDisplay extends Component {
 
     return boxes;
   }
-
-
 
   render() {
     var boxes = this.formbrackets();
