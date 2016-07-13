@@ -83,6 +83,10 @@ h2 {
   padding: 5px;
 }
 
+h3 {
+  color: #FFD700;
+}
+
 button, input[type="submit"], .custom-file-upload {
   background: none;
   border: solid 2px white;

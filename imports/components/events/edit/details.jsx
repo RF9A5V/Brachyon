@@ -41,39 +41,39 @@ export default class DetailsPanel extends Component {
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
+      <div style={{position: "relative"}}>
         <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Event Name</label>
-            <input type="text" ref="name" ref="name" defaultValue={this.props.name} />
+        <div className="row">
+          <div className="side-tab-panel col-1">
+            <h3>Event Name:</h3>
+            <input type="text" placeholder="Title" ref="name" ref="name" defaultValue={this.props.name} />
           </div>
-          <div className="side-tab-panel">
-            <label>Banner</label>
+          <div className="side-tab-panel col-1">
+            <h3>Banner:</h3>
             <ImageForm ref="image" aspectRatio={16/9} id={this.props.banner} collection={Images} />
           </div>
-          <div className="side-tab-panel">
-            <label style={{marginBottom: 10}}>Description</label>
-            <ReactQuill
-              ref="description"
-              value={this.props.description}
-              theme="snow"
-              toolbar={this.formats()}
-            />
-          </div>
-          <div className="side-tab-panel">
-            <label style={{marginTop: 10, marginBottom: 10}}>Location</label>
+        </div>
+        <div className="side-tab-panel col-1">
+          <h3>Description:</h3>
+          <ReactQuill
+            ref="description"
+            value={this.props.description}
+            theme="snow"
+            toolbar={this.formats()}
+          />
+        </div>
+        <div className="row">
+          <div className="side-tab-panel col-1">
+            <h3>Location:</h3>
             <LocationSelect ref="location" {...this.props.location} />
           </div>
-          <div className="side-tab-panel">
-            <label>Start Date</label>
+          <div className="side-tab-panel col-1">
+            <h3>Start Date:</h3>
             <div>
               <DateInput ref="date" init={this.props.datetime} />
             </div>
-            <label style={{marginBottom: 10}}>Start Time</label>
+            <h3>Start Time:</h3>
             <TimeInput ref="time" init={this.props.datetime} />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
           </div>
         </div>
       </div>

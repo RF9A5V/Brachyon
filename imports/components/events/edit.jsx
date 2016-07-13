@@ -112,7 +112,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
-        <div className="box col" style={{flexFlow: "row"}}>
+        <div className="col">
           <SideTabs items={this.items()} panels={this.content()} />
         </div>
       )
