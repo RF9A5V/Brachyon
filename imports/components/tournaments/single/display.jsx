@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import MatchBlock from './match.jsx';
 
 export default class SingleDisplay extends Component {
 
@@ -29,7 +30,7 @@ export default class SingleDisplay extends Component {
   }
 
   formbrackets() {
-    var num = 15, matchn = 1, i, spacing = 0;
+    var num = 3, matchn = 1, i, spacing = 0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
@@ -52,9 +53,7 @@ export default class SingleDisplay extends Component {
           left: 200 + "px"
         }
         boxes.push(
-          <div className="tbox" id={boxid} style = {style}>
-            Nonbye {spot}
-          </div>
+          <MatchBlock sty={style} eid={boxid} bye={0} sp={spot}/>
         )
         usedspots[Math.floor(i/2)] = Math.floor((spot)/2);
       }
@@ -73,17 +72,13 @@ export default class SingleDisplay extends Component {
           if (roundparticipants == (num - nonbyes/2) && (i == 0 || !(usedspots.includes(i))))
           {
             boxes.push(
-              <div className="tbox" id={boxid} style = {style}>
-                Box {i+1}
-              </div>
+              <MatchBlock sty={style} eid={boxid} bye={1} sp={i+1}/>
             )
           }
           else
           {
             boxes.push(
-              <div className="tbox" id={boxid} style = {style}>
-                Box
-              </div>
+              <MatchBlock sty={style} eid={boxid} bye={1} sp={""}/>
             )
           }
         }
@@ -105,3 +100,13 @@ export default class SingleDisplay extends Component {
     );
   }
 }
+
+/*
+ function(id1, id2){
+ return function(e) {
+ e.preventDefault();
+ // Make changes to box[id_1]
+ // Make changes to box[id_2]
+}
+}
+*/
