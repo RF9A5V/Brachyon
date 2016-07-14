@@ -8,6 +8,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 export default class LandingScreen extends React.Component {
+
   render() {
     return (
       <div className="landing-screen">
@@ -20,8 +21,8 @@ export default class LandingScreen extends React.Component {
             <SignUpModal />
           </div>
           <div className="row center">
-            <button className = "fb"><FontAwesome name="facebook" /></button>
-            <button className = "gplus"><FontAwesome name="google-plus" /></button>
+            <button className="fb"><FontAwesome name="facebook" /></button>
+            <button className="gplus"><FontAwesome name="google-plus" /></button>
           </div>
           <div className="discover-box">
             <Link to="/events/discover" className="discover row center x-center">

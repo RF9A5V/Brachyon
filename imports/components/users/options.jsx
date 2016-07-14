@@ -3,6 +3,9 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import SideTabs from "../public/side_tabs.jsx";
 import UserDetailsPanel from "./options/details.jsx";
+import EventOptionsPanel from "./options/events.jsx";
+import GameOptionsPanel from "./options/games.jsx";
+import OAuthOptionsPanel from "./options/oauth.jsx";
 
 export default class UserOptionsScreen extends TrackerReact(Component) {
 
@@ -35,9 +38,9 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     return (
       [
         (<UserDetailsPanel refresh={this.refresh.bind(this)} />),
-        (<div></div>),
-        (<div></div>),
-        (<div></div>)
+        (<EventOptionsPanel />),
+        (<GameOptionsPanel />),
+        (<OAuthOptionsPanel />)
       ]
     );
   }
