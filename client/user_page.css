@@ -15,9 +15,10 @@
   width: 100px;
   height: 100px;
   border-radius: 100%;
-  background-color: white;
   margin-left: 40px;
   position: relative;
+  background-size: auto 100%;
+  background-position: center;
 }
 
 .user-game-icon-ribbon {

@@ -33,5 +33,12 @@ Meteor.methods({
         "profile.alias": value
       }
     })
+  },
+  "users.add_game"(id) {
+    Meteor.users.update(Meteor.userId(), {
+      $push: {
+        "profile.games": id
+      }
+    })
   }
 })

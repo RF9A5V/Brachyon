@@ -64,14 +64,14 @@ export default class UserDetailsPanel extends Component {
         <div className="row">
           <div className="side-tab-panel">
             <div className="row x-center">
-              <label className="col-1">Profile Image</label>
+              <span className="col-1">Profile Image</span>
               <button onClick={this.saveProfileImage.bind(this)}>Save</button>
             </div>
             <ImageForm aspectRatio={1} collection={ProfileImages} id={Meteor.user().profile.image} ref="profileImage" store="profile_images" />
           </div>
           <div className="side-tab-panel">
             <div className="row x-center">
-              <label className="col-1">Profile Banner</label>
+              <span className="col-1">Profile Banner</span>
               <button onClick={this.saveBannerImage.bind(this)}>Save</button>
             </div>
             <ImageForm aspectRatio={16/4} collection={ProfileBanners} id={Meteor.user().profile.banner} ref="profileBanner" />
@@ -80,7 +80,7 @@ export default class UserDetailsPanel extends Component {
         <div className="row">
           <div className="side-tab-panel">
             <div className="row x-center">
-              <label className="col-1">Alias</label>
+              <span className="col-1">Alias</span>
               <button onClick={this.saveAlias.bind(this)}>Save</button>
             </div>
             <div>

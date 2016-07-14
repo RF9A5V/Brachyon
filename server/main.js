@@ -21,6 +21,16 @@ ServiceConfiguration.configurations.upsert(
     }
   });
 
+ServiceConfiguration.configurations.upsert(
+  {service: "facebook"},
+  {
+    $set: {
+      appId: Meteor.settings.public.facebook.testAppId,
+      secret: Meteor.settings.private.facebook.testAppSecret
+    }
+  }
+);
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')
