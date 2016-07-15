@@ -138,25 +138,23 @@ export default class RevenuePanel extends Component {
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
+      <div style={{position: "relative"}}>
         <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
         <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Crowdfunding Tiers</label>
+          <div className="side-tab-panel col-1">
+            <h3>Crowdfunding Tiers</h3>
             <i>Don"t forget to save by hitting the Save button up top!</i>
             <TierPanel ref="tiers" type={"Tier"} stubs={this.props.tiers} />
           </div>
-          <div className="side-tab-panel">
-            <label>Ticketing</label>
+          <div className="side-tab-panel col-1">
+            <h3>Ticketing</h3>
             <i>Don"t forget to save by hitting the Save button up top!</i>
             <TierPanel ref="tickets" type={"Ticket"} stubs={this.props.tickets} />
           </div>
-          <div className="side-tab-panel">
-            <label>Stretch Goals&nbsp;<sup onClick={(e) => { e.preventDefault(); this.setState({open: true}) }}><a href="#">?</a></sup></label>
-            <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
-          </div>
+        </div>
+        <div className="side-tab-panel row col-2">
+          <h3>Stretch Goals&nbsp;<sup onClick={(e) => { e.preventDefault(); this.setState({open: true}) }}><a href="#">?</a></sup></h3>
+          <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
         </div>
         <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
           <div className="row justify-end">
