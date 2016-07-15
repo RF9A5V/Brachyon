@@ -14,10 +14,12 @@ export default class PromotionPanel extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div>
         <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <label> Enter a promotion bid </label>
-        <input ref="bid" placeholder="Bid Amount" />
+        <div className="side-tab-panel row col-2">
+          <h3>Front Page Access</h3>
+          <input ref="bid" placeholder="Bid Amount" />
+        </div>
       </div>
     )
   }
