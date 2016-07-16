@@ -19,9 +19,13 @@ export default class CrowdfundingPanel extends Component {
                     {tier.description}
                   </div>
                   <div className="col-1 row" style={{alignItems: 'flex-end', justifyContent: 'space-between', alignSelf: 'stretch'}}>
-                    <span>
-                      ${(tier.amount / 100).toFixed(2)}
-                    </span>
+                    <div className="row x-center">
+                      <div style={{width: 25, height: 25, borderRadius: "100%", backgroundColor: "gold", marginRight: 10}}>
+                      </div>
+                      <span>
+                        {tier.amount}
+                      </span>
+                    </div>
                     <span>
                       <i>0</i>
                       &nbsp;&nbsp;out of&nbsp;
