@@ -60,11 +60,19 @@ export default class Header extends TrackerReact(Component) {
       userCred = (
         <div style={{position: "relative"}} className="row x-center">
           <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
-            <img style={{width: 50, height: 50, borderRadius: "100%"}} src={this.imgOrDefault()} />
+            <img style={{width: 75, height: 75, borderRadius: "100%"}} src={this.imgOrDefault()} />
           </a>
-          <a href="#" style={{lineHeight: "32px"}} onClick={this.toggleUserMenu.bind(this)}>
-            <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
-            <FontAwesome style={{position: "relative", top: -2.5}} name="sort-desc" size="2x" />
+          <div className="col">
+            <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
+              <div style={{width: 25, height: 25, backgroundColor: "gold", marginRight: 10, borderRadius: "100%"}}></div>
+              <span style={{fontWeight: "bold"}}>
+                {Meteor.user().profile.amount || 0}
+              </span>
+            </a>
+          </div>
+          <a href="#" className="row x-center" style={{lineHeight: "32px"}} onClick={this.toggleUserMenu.bind(this)}>
+            <FontAwesome style={{position: "relative"}} name="sort-desc" size="2x" />
           </a>
           <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} />
         </div>
@@ -107,7 +115,7 @@ export default class Header extends TrackerReact(Component) {
         <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
           <div className = "head-align row">
             <Link to="/">
-              <img src="/images/b_logo_trans.png" style={{height: 50, width:50}}></img>
+              <img src="/images/b_logo_trans.png" style={{height: 50, width:50}} />
             </Link>
             <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
             <button>

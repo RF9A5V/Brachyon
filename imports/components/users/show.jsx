@@ -2,6 +2,7 @@ import React from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
+import { browserHistory } from "react-router"
 
 import Games from '/imports/api/games/games.js';
 
@@ -156,6 +157,9 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
               })
             }
           </div>
+        </div>
+        <div className="row center">
+          <button onClick={() => { browserHistory.push("/events/create") }}>Create an Event</button>
         </div>
       </div>
     )

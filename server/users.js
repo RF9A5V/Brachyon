@@ -40,5 +40,15 @@ Meteor.methods({
         "profile.games": id
       }
     })
+  },
+  "users.purchase_currency"(value) {
+    if(!Meteor.userId()) {
+      throw new Meteor.Error(401, "Log in to access currency.");
+    }
+    Meteor.users.update(Meteor.userId(), {
+      $inc: {
+        "profile.amount": value
+      }
+    })
   }
 })
