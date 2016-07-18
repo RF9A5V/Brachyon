@@ -12,14 +12,16 @@
   position: fixed;
 }
 
-.footer-plugin-pad {
-  margin: 0 5px;
-  cursor: default;
+.footer-hub-pad {
+  padding: calc((70px - 15px) / 2) 5px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.footer-hub-pad {
-  margin: 0 10px;
-  cursor: default;
+.footer-hub-pad:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #CC0000;
+  cursor: pointer;
 }
 
 #footer.headroom {
@@ -88,8 +90,13 @@
 
 /*social plugins*/
 .social-icon-bg {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 70px;
+}
+
+.social-icon-bg:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .social-icon.fa {
