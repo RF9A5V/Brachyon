@@ -21,7 +21,7 @@ export default class DisplayPromotedEvent extends Component {
       return "There's no description for this event.";
     }
     else {
-      sizeMax = 250;
+      sizeMax = 150;
       if(parsed.length > sizeMax){
         return parsed.substring(0, sizeMax-3) + '...';
       }
@@ -43,7 +43,7 @@ export default class DisplayPromotedEvent extends Component {
         </div>
         <div className="discover-details col-1">
           <h1>{this.props.event.details.name}</h1>
-          <div className="row">
+          <div className="row" style={{fontSize: "13px"}}>
             <div style={{marginRight: '10px'}}>
               {/*Crowdfunding check goes here */}
               {
@@ -61,7 +61,7 @@ export default class DisplayPromotedEvent extends Component {
             <span> | </span>
             <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="user" /> {Meteor.users.findOne(this.props.event.owner).username}</div>
           </div>
-          <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}} style={{margin: '10px 0'}}>
+          <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}} style={{fontSize: "12px", margin: '10px 0'}}>
           </div>
           <div>
             <span>

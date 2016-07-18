@@ -41,6 +41,10 @@ body {
   text-align: center;
 }
 
+.justify-start{
+  align-items: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -161,62 +165,6 @@ input:-webkit-autofill {
 	box-shadow: 0 0 10px #CC0000;
 }
 
-.hub:hover {
-  cursor: pointer;
-  -webkit-transition: border-bottom 0.5s ease-out;
-  -moz-transition: border-bottom 0.5s ease-out;
-  -o-transition: border-bottom 0.5s ease-out;
-  transition: border-bottom 0.5s ease-out;
-  border-bottom: #CC0000 2px solid;
-}
-
-.hub {
-  padding: 4px 0;
-  border-bottom: transparent 2px solid;
-}
-
-.hub-show {
-  -webkit-animation-name: animatehubshow;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatehubshow;
-  animation-duration: 0.4s;
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  transform: translateX(0);
-}
-
-@-webkit-keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-}
-
-@keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-}
-
-.hub-hide {
-  -webkit-animation-name: animatehubhide;
-  -webkit-animation-duration: 1.4s;
-  animation-name: animatehubhide;
-  animation-duration: 1.4s;
-  opacity: 0;
-}
-
-@-webkit-keyframes animatehubhide {
-  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-}
-
-@keyframes animatehubhide {
-  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-}
-
-header a {
-  margin: 0 10px;
-}
-
 .snapcode-image {
   width: 1in;
   height: 1in;
@@ -224,6 +172,7 @@ header a {
 
 a {
   text-decoration: none;
+  outline: none;
 }
 
 .loading-screen {

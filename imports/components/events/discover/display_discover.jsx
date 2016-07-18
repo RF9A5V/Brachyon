@@ -7,7 +7,7 @@ export default class DisplayDiscover extends Component {
     super();
     this.state = {
       panel: 0,
-      loadIn: false
+      loadIn: true
     }
   }
 
@@ -47,6 +47,7 @@ export default class DisplayDiscover extends Component {
                   onClick={
                     (e) => {
                       this.setState({panel: val})
+                      clearTimeout(this.state.timer);
                     }
                   }></div>
               )

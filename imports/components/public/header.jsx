@@ -8,26 +8,12 @@ import FontAwesome from 'react-fontawesome';
 import { browserHistory } from 'react-router';
 
 export default class Header extends TrackerReact(Component) {
+
   onClick(e) {
     e.preventDefault();
     Meteor.logout(function(err) {
       if(!err) browserHistory.push("/");
     });
-  }
-
-  constructor () {
-    super();
-    this.state = {
-      hover: false
-    }
-  }
-
-  mouseOver() {
-    this.setState({hover: true});
-  }
-
-  mouseOut() {
-    this.setState({hover: false});
   }
 
   render() {
@@ -46,45 +32,9 @@ export default class Header extends TrackerReact(Component) {
         </div>
       )
     }
-    if(this.state.hover){
-      hub=(
-        <div className = "hub-show">
-          <Link className="hub" to="/events/discover">
-            DISCOVER
-          </Link>
-          <Link className="hub" to="/events/discover">
-            CREATE
-          </Link>
-          <Link className="hub" to="/events/discover">
-            MARKET
-          </Link>
-          <Link className="hub" to="/about">
-            ABOUT
-          </Link>
-        </div>
-      )
-    }
-    else{
-      hub=(
-        <div className = "hub-hide">
-          <Link className="hub" to="/events/discover">
-            DISCOVER
-          </Link>
-          <Link className="hub" to="/events/discover">
-            CREATE
-          </Link>
-          <Link className="hub" to="/events/discover">
-            MARKET
-          </Link>
-          <Link className="hub" to="/about">
-            ABOUT
-          </Link>
-        </div>
-      )
-    }
     return (
       <Headroom>
-        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
+        <header className="row x-center header">
           <div className = "head-align row">
             <Link to="/">
               <img src="/images/b_logo_trans.png"></img>
@@ -93,7 +43,20 @@ export default class Header extends TrackerReact(Component) {
             <button>
               <FontAwesome name="search"/>
             </button>
-            {hub}
+            <div style={{marginLeft: 10, marginRight: 10}}>
+              <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
+                DISCOVER
+              </Link>
+              {/*<Link className="hub" to="/events/discover">
+                CREATE
+              </Link>
+              <Link className="hub" to="/events/discover">
+                MARKET
+              </Link>*/}
+              <Link to="/about" className={`hub ${window.location.pathname == "/about" ? "active" : ""}`}>
+                ABOUT
+              </Link>
+            </div>
           </div>
           <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
             {userCred}

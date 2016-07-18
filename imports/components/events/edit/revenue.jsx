@@ -140,7 +140,7 @@ export default class RevenuePanel extends Component {
     return (
       <div style={{position: "relative"}}>
         <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
+        <div className="row">
           <div className="side-tab-panel col-1">
             <h3>Crowdfunding Tiers</h3>
             <i>Don"t forget to save by hitting the Save button up top!</i>
@@ -153,7 +153,7 @@ export default class RevenuePanel extends Component {
           </div>
         </div>
         <div className="side-tab-panel row col-2">
-          <h3>Stretch Goals&nbsp;<sup onClick={(e) => { e.preventDefault(); this.setState({open: true}) }}><a href="#">?</a></sup></h3>
+          <h3>Stretch Goals</h3>
           <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
         </div>
         <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>

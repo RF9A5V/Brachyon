@@ -26,6 +26,26 @@ header {
   flex-direction: row-reverse;
 }
 
-.head-margin {
+.header-button-margin {
   margin: 12px 5px;
+}
+
+.hub:hover {
+  cursor: pointer;
+  -webkit-transition: border-bottom 0.5s ease-out;
+  -moz-transition: border-bottom 0.5s ease-out;
+  -o-transition: border-bottom 0.5s ease-out;
+  transition: border-bottom 0.5s ease-out;
+  border-bottom: #CC0000 2px solid;
+}
+
+.hub.active{
+  border-bottom: #CC0000 2px solid;
+}
+
+.hub {
+  font-size: 18px;
+  margin: 0 10px;
+  padding: 7px 0 5px 0;
+  border-bottom: transparent 2px solid;
 }
