@@ -10,7 +10,7 @@ Meteor.methods({
     for(var key in breakdown){
       amt += breakdown[key];
     }
-    if(user.profile.amount < amt) {
+    if((user.profile.amount || 0) < amt) {
       throw new Meteor.Error(403, "You lack the required funds to sponsor this event.");
     }
 
