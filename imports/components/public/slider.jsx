@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 
-// props.tiers: []
+import GoalSelection from "./goal_select.jsx";
 
 export default class PaymentSlider extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props);
     var max = props.tiers[Object.keys(props.tiers).length - 1].price * 1;
     var found = false;
     var size = Object.keys(props.tiers).length;
@@ -20,7 +21,8 @@ export default class PaymentSlider extends Component {
     this.state = {
       sliderPosition: `${Math.min(props.contrib / max * 100, 100)}%`,
       key,
-      amount: 0
+      amount: 0,
+      confirmed: false
     }
   }
 
@@ -71,24 +73,13 @@ export default class PaymentSlider extends Component {
 
   sponsorEvent(e) {
     e.preventDefault();
-    var self = this;
-    Meteor.call("events.sponsor", this.props.id, this.state.amount, function(err){
-      if(err){
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success(`${this.state.amount} successfully sponsored for this event!`, "Success!");
-        self.refs.amount.value = 0;
-        self.setState({
-          amount: 0
-        })
-      }
-    });
+    this.setState({confirmed: true});
   }
 
   moveSlider(e) {
     var amount = e.target.value * 1;
-    if(isNaN(amount)){
+    if(isNaN(amount) || amount === Infinity || amount < 0){
+      e.target.value = "";
       this.setState({
         amount: 0
       })
@@ -137,6 +128,11 @@ export default class PaymentSlider extends Component {
   }
 
   render() {
+    if(this.state.confirmed){
+      return (
+        <GoalSelection amount={this.state.amount} id={this.props.id} goals={this.props.goals} onSubmit={this.props.close} />
+      )
+    }
     return (
       <div style={{position: "relative", padding: "0 40px 0 20px"}}>
         <div className="col slider-control noselect" ref="sliderControl" style={{left: this.state.sliderPosition}}
@@ -166,7 +162,7 @@ export default class PaymentSlider extends Component {
             <div className="col">
               <div className="row x-center">
                 <h3 className="col-1">{ this.props.tiers[this.state.key].name }</h3>
-                <div>{this.props.tiers[this.state.key].limit - (this.props.tiers[this.state.key].count || 0)} left of {this.props.tiers[this.state.key].limit}</div>
+                <div>{this.props.tiers[this.state.key].limit - (this.props.count[this.state.key] || 0)} left of {this.props.tiers[this.state.key].limit}</div>
               </div>
               <span>{ this.props.tiers[this.state.key].description }</span>
               <div className="row center" style={{marginTop: 10}}>

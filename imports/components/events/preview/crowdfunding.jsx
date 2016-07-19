@@ -29,6 +29,23 @@ export default class CrowdfundingPanel extends Component {
     });
   }
 
+  sponsorshipCount() {
+    var obj = {};
+    var max = Infinity;
+    Object.keys(this.props.tiers).reverse().map((value) => {
+      var tierPrice = this.props.tiers[value].price;
+      var count = 0;
+      for(var key in this.props.contributors){
+        if(this.props.contributors[key] >= tierPrice * 1 && this.props.contributors[key] < max){
+          count++;
+        }
+      }
+      obj[value] = count;
+      max = tierPrice;
+    })
+    return obj;
+  }
+
   render() {
     var self = this;
     return (
@@ -73,7 +90,7 @@ export default class CrowdfundingPanel extends Component {
             <h3 className="col-1">Sponsor this Event</h3>
             <FontAwesome name="times" onClick={() => { this.setState({open: false}) }} />
           </div>
-          <PaymentSlider tiers={this.props.tiers} id={this.props.id} contrib={this.props.contributed || 0} />
+          <PaymentSlider tiers={this.props.tiers} id={this.props.id} contrib={this.props.contributors[Meteor.userId()] || 0} goals={this.props.goals} count={this.sponsorshipCount()} close={() => { this.setState({open: false}) }} />
         </Modal>
       </div>
     );
