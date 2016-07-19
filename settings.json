@@ -4,12 +4,18 @@
       "testPublishableKey": "***REMOVED***",
       "livePublishableKey": "***REMOVED***",
       "client_id": "***REMOVED***"
+    },
+    "facebook": {
+      "testAppId": "***REMOVED***"
     }
   },
   "private": {
     "stripe": {
       "testSecretKey": "***REMOVED***",
       "liveSecretKey": "***REMOVED***"
+    },
+    "facebook": {
+      "testAppSecret": "***REMOVED***"
     }
   }
 

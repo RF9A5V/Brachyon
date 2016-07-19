@@ -141,8 +141,13 @@ export default class CFTree extends Component {
               <label>Item Description</label>
               <textarea ref="description" onChange={this.onChange.bind(this)} defaultValue={this.state.node.description}></textarea>
               <label>Item Amount</label>
-              <input type="text" ref="amount" onChange={this.onChange.bind(this)} defaultValue={(this.state.node.amount / 100).toFixed(2)} />
-              <button onClick={(e) => { this.setState({active: false}); this.state.node.amount = this.refs.amount.value * 100; this.forceUpdate() }}>Close</button>
+              <div className="row" style={{position: "relative"}}>
+                <div style={{position: "absolute", top: 7, left: 7, width: 25, height: 25, borderRadius: "100%", backgroundColor: "gold"}}>
+                </div>
+                <input type="text" ref="amount" style={{paddingLeft: 39, margin: 0, marginBottom: 10}} onChange={this.onChange.bind(this)} defaultValue={this.state.node.amount} />
+              </div>
+
+              <button onClick={(e) => { this.setState({active: false}); this.state.node.amount = this.refs.amount.value; this.forceUpdate() }}>Close</button>
             </div>
           ) : ( "" )
         }

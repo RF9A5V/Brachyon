@@ -16,14 +16,6 @@ export default class SideTabs extends Component {
     }
   }
 
-  onWheel(e) {
-    var target = e.target;
-    while(!target.classList.contains("side-tab-content-container")){
-      target = target.parentNode;
-    }
-    target.scrollLeft += e.deltaX;
-  }
-
   values() {
 
   }
@@ -43,17 +35,15 @@ export default class SideTabs extends Component {
             }).bind(this))
           }
         </div>
-        <div className="side-tab-content-container" onWheel={this.onWheel.bind(this)}>
-          {
-            this.props.panels.map((function(value, index){
-              return (
-                <div className={`side-tab-content ${self.state.active === index ? "" : "hidden"}`}>
-                  { value }
-                </div>
-              );
-            }).bind(this))
-          }
-        </div>
+        {
+          this.props.panels.map((function(value, index){
+            return (
+              <div className={`side-tab-content ${self.state.active === index ? "" : "hidden"}`}>
+                { value }
+              </div>
+            );
+          }).bind(this))
+        }
       </div>
     )
   }

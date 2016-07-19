@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import FontAwesome from "react-fontawesome";
 
 // Non-editable preview version of the crowdfunding tree.
 
@@ -49,8 +50,20 @@ export default class CFTree extends Component {
           <div className="line vert"></div>
         </div>
         <div className="row center">
-          <span>
+          <span style={{position: "relative"}}>
+            {
+              (this.props.goals.current || 0) >= this.props.goals.amount ? (
+                <FontAwesome name="check" style={{color: "green", position: "absolute", top: -10, right: -15}} />
+              ) : (
+                ""
+              )
+            }
             { this.props.goals.name }
+            <div className="col" style={{position: "absolute", right: -15}}>
+              <sub className="row">{this.props.goals.current || 0}</sub>
+              <div style={{width: "100%", height: 1, backgroundColor: "white", margin: "2px 0"}}></div>
+              <sub className="row">{this.props.goals.amount}</sub>
+            </div>
           </span>
         </div>
         <div className="row center">
@@ -75,7 +88,21 @@ export default class CFTree extends Component {
                         return (
                           <div className="col x-center">
                             <div className="line vert"></div>
-                            <span>{ val.name }</span>
+                            <span style={{position: "relative"}}>
+                              {
+                                (val.current || 0) >= val.amount ? (
+                                  <FontAwesome name="check" style={{color: "green", position: "absolute", top: -10, right: -15}} />
+                                ) : (
+                                  ""
+                                )
+                              }
+                              { val.name }
+                              <div className="col" style={{position: "absolute", right: -15}}>
+                                <sub className="row">{val.current || 0}</sub>
+                                <div style={{width: "100%", height: 1, backgroundColor: "white", margin: "2px 0"}}></div>
+                                <sub className="row">{val.amount}</sub>
+                              </div>
+                            </span>
                           </div>
                         )
                       })
