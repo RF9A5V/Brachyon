@@ -1,3 +1,5 @@
+var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+
 Meteor.methods({
   "users.update_profile_image"(id) {
     if(!Meteor.userId()){
@@ -41,14 +43,23 @@ Meteor.methods({
       }
     })
   },
-  "users.purchase_currency"(value) {
+  "users.purchase_currency"(value, toCharge) {
     if(!Meteor.userId()) {
       throw new Meteor.Error(401, "Log in to access currency.");
     }
+    Async.runSync((done) => {
+      stripe.charges.create({
+        amount: toCharge,
+        currency: "usd",
+        customer: Meteor.user().stripeCustomer
+      }, function(err, response) {
+        done(err, response)
+      })
+    });
     Meteor.users.update(Meteor.userId(), {
       $inc: {
         "profile.amount": value
       }
-    })
+    });
   }
 })

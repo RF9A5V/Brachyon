@@ -1,19 +1,32 @@
 import React, { Component } from "react";
 
+import PaymentModal from "./payment.jsx";
+
 export default class CurrencyPurchaseScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0
+    }
+  }
 
   amountRequest(value) {
     return function(e) {
       e.preventDefault();
-      // For now, spoof the payment stuff.
-      Meteor.call("users.purchase_currency", value, function(err) {
-        if(err){
-          toastr.error(err.reason);
-        }
-        else {
-          toastr.success(`Successfully added ${value} to your wallet!`, "Success!");
-        }
+      this.setState({
+        value,
+        open: true
       })
+      // For now, spoof the payment stuff.
+      // Meteor.call("users.purchase_currency", value, function(err) {
+      //   if(err){
+      //     toastr.error(err.reason);
+      //   }
+      //   else {
+      //     toastr.success(`Successfully added ${value} to your wallet!`, "Success!");
+      //   }
+      // })
     }
   }
 
@@ -50,6 +63,7 @@ export default class CurrencyPurchaseScreen extends Component {
             <span>1:1 Graphic Goes Here!</span>
           </div>
         </div>
+        <PaymentModal type="tier" price={this.state.value} open={this.state.open}/>
       </div>
     )
   }

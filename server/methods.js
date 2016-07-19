@@ -37,6 +37,7 @@ Meteor.methods({
         attrs.promotion = {};
       }
     }
+    attrs.sponsors = {};
     Events.insert(attrs);
   },
 
@@ -50,6 +51,7 @@ Meteor.methods({
     attrs.published = false;
     attrs.underReview = false;
     attrs.owner = Meteor.userId();
+    attrs.sponsors = {};
     return Events.insert(attrs);
   },
 
@@ -284,7 +286,7 @@ Meteor.methods({
         })
       })
       if(customerUpdate.error){
-        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.messgae);
+        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.message);
       }
       else{
         return
@@ -297,7 +299,6 @@ Meteor.methods({
     }
   },
   "chargeCard": function(payableTo, chargeAmount){
-    console.log(Meteor.users.findOne(payableTo));
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
