@@ -29,3 +29,7 @@ header {
 .head-margin {
   margin: 12px 5px;
 }
+
+.hub-show, .hub-hide {
+  margin-left: 20px;
+}

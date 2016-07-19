@@ -39,13 +39,15 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
       <div className="content col x-center">
         <DisplayDiscover events={this.promotedEvents()} />
         <DiscoverSearch handler={this.setSubscription.bind(this)} />
-        {
-          this.state.events.ready() ? (
-            <BlockContainer events={this.events()} />
-          ) : (
-            <div></div>
-          )
-        }
+        <div style={{padding: "0 5em"}}>
+          {
+            this.state.events.ready() ? (
+              <BlockContainer events={this.events()} />
+            ) : (
+              <div></div>
+            )
+          }
+        </div>
       </div>
     )
   }

@@ -44,12 +44,24 @@ export default class CreditCardForm extends React.Component {
             toastr.error(err.message);
           }
           else{
-            //loadCardInfo();
-            Meteor.call("chargeCard", self.props.payableTo, finalAmount, function(err, res){
-              if(err){
-                toastr.error(err.message);
-              }
-            })
+            if(self.props.payableTo){
+              //loadCardInfo();
+              Meteor.call("chargeCard", self.props.payableTo, finalAmount, function(err, res){
+                if(err){
+                  toastr.error(err.message);
+                }
+              })
+            }
+            else {
+              Meteor.call("users.purchase_currency", self.props.amount, finalAmount, function(err) {
+                if(err){
+                  toastr.error(err.reason, "Error!");
+                }
+                else {
+                  toastr.success("Successfully purchased currency.", "Success!");
+                }
+              })
+            }
             toastr.success("Successfully got your payment!", "Success!")
             self.closeModal();
           }
