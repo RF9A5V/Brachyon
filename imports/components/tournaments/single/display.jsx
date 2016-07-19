@@ -30,7 +30,7 @@ export default class SingleDisplay extends Component {
   }
 
   formbrackets() {
-    var num = 3, matchn = 1, i, spacing = 0;
+    var num = 3, matchn = 1, i, spacing = 0, m=0, n=0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
@@ -50,38 +50,42 @@ export default class SingleDisplay extends Component {
         var boxid = "match" + spot + "nonbye";
         var style = {
           top: spot*50 - 25 + "px",
-          left: 200 + "px"
+          left: 200 + "px",
+          color: "white"
         }
         boxes.push(
-          <MatchBlock sty={style} eid={boxid} bye={0} sp={spot}/>
+          <MatchBlock sty={style} eid={boxid} pos={-1} sp={spot} sp2 = {spot} key={n} ref={boxid} changematches={this.changematches.bind(this)}/>
         )
+        n++;
         usedspots[Math.floor(i/2)] = Math.floor((spot)/2);
       }
     }
 
+    //This is primary function for the style and the actual placement of the byes.
     while (matchn <= rounds+1)
     {
       for (i = 0; i < roundparticipants; i++)
       {
-        {
           var boxid = "match" + i + "round" + matchn;
           var style = {
             top: i*50*Math.pow(2,matchn-1)+spacing + "px",
-            left: matchn*200 + "px"
+            left: matchn*200 + "px",
+            color: "white"
           };
+          if (i%2 == 0 && usedspots.includes(i+1) || i%2 == 1 && usedspots.includes(i-1))
+            style.color = "gray";
           if (roundparticipants == (num - nonbyes/2) && (i == 0 || !(usedspots.includes(i))))
           {
             boxes.push(
-              <MatchBlock sty={style} eid={boxid} bye={1} sp={i+1}/>
+              <MatchBlock sty={style} eid={boxid} pos={matchn} sp={i+1} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
             )
           }
           else
           {
             boxes.push(
-              <MatchBlock sty={style} eid={boxid} bye={1} sp={""}/>
+              <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
             )
           }
-        }
       }
         spacing = spacing+Math.pow(2, matchn-1)*25;
         matchn++;
@@ -89,6 +93,15 @@ export default class SingleDisplay extends Component {
     }
 
     return boxes;
+  }
+
+  changematches(id1, id2, id3, val)
+  {
+    this.refs[id1].cwin();
+    this.refs[id2].closs();
+    this.refs[id3].ctrue();
+    this.refs[id3].cval(val);
+    this.refs[this.refs[id3].gopponent()].ctrue();
   }
 
   render() {
