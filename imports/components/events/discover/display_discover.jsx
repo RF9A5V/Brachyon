@@ -36,33 +36,35 @@ export default class DisplayDiscover extends Component {
       arr[i] = i;
     }
     return (
-      <div className="discover-display row x-center" style={{padding: "0 5em", margin: '20px 0'}}>
-        <div className="discover-selector col">
+      <div style={{paddingLeft: "5em"}}>
+        <div className="row x-center" style={{margin: "20px"}}>
+          <div className="discover-selector col">
+            {
+              arr.map((val) => {
+                return (
+                  <div
+                    className={`discover-selector-square ${val === this.state.panel ? "active" : ""}`}
+                    ref={`panel_${val}`}
+                    onClick={
+                      (e) => {
+                        this.setState({panel: val})
+                        clearTimeout(this.state.timer);
+                      }
+                    }></div>
+                )
+              })
+            }
+          </div>
           {
             arr.map((val) => {
               return (
-                <div
-                  className={`discover-selector-square ${val === this.state.panel ? "active" : ""}`}
-                  ref={`panel_${val}`}
-                  onClick={
-                    (e) => {
-                      this.setState({panel: val})
-                      clearTimeout(this.state.timer);
-                    }
-                  }></div>
+                <div className={`promotion-animation ${val === this.state.panel && this.state.loadIn ? "in" : "out"}`}>
+                  <DisplayPromotedEvent event={this.props.events[val]} active={val === this.state.panel} />
+                </div>
               )
             })
           }
         </div>
-        {
-          arr.map((val) => {
-            return (
-              <div className={`promotion-animation ${val === this.state.panel && this.state.loadIn ? "in" : "out"}`}>
-                <DisplayPromotedEvent event={this.props.events[val]} active={val === this.state.panel} />
-              </div>
-            )
-          })
-        }
       </div>
     );
   }
