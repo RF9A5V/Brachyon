@@ -36,7 +36,7 @@ export default class DisplayDiscover extends Component {
       arr[i] = i;
     }
     return (
-      <div style={{paddingLeft: "5em"}}>
+      <div style={{padding: "0 5em"}}>
         <div className="row x-center" style={{margin: "20px"}}>
           <div className="discover-selector col">
             {

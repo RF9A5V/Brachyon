@@ -21,6 +21,10 @@
   -ms-user-select: none;
   pointer-events: none;
   background: url('/images/bg.jpg') center center no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .main-content {

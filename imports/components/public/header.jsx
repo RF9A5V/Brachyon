@@ -39,10 +39,6 @@ export default class Header extends TrackerReact(Component) {
             <Link to="/">
               <img src="/images/b_logo_trans.png"></img>
             </Link>
-            <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
-            <button>
-              <FontAwesome name="search"/>
-            </button>
             <div style={{marginLeft: 10, marginRight: 10}}>
               <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
                 DISCOVER
