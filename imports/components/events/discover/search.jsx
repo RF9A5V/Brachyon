@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GoogleMapsLoader from 'google-maps';
+import FontAwesome from 'react-fontawesome';
 
 export default class DiscoverSearch extends Component {
 
@@ -63,10 +64,11 @@ export default class DiscoverSearch extends Component {
   render(){
     return (
       <div style={{textAlign: 'center'}}>
-        <input type="text" ref="search" onChange={this.changeSearch.bind(this)} placeholder="Search for events..."/>
-        <input id="test" ref="location" style={{marginLeft: 15}} type="text" placeholder='Location'/>
-        <input style={{marginLeft: 15}} ref="date" type="date" placeholder="Date" onChange={this.changeDate.bind(this)}/>
-        <input style={{marginLeft: 15}} ref="game" type="text" placeholder="Game"/>
+        <input type="text" ref="search" style={{margint: "0 5px"}} onChange={this.changeSearch.bind(this)} placeholder="Search By Name"/>
+        <input id="test" ref="location" style={{margint: "0 5px"}} type="text" placeholder="Search By Location"/>
+        <button style={{margint: "0 5px"}} >
+          <FontAwesome name="search"/>
+        </button>
       </div>
     );
   }
