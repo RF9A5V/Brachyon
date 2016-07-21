@@ -38,5 +38,5 @@
 
   // show a progress bar while uploading.
   // Make it false when you deploy using a CI box.
-  "enableUploadProgressBar": true
+  "enableUploadProgressBar": false
 }
