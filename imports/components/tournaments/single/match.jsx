@@ -69,7 +69,10 @@ export default class MatchBlock extends Component {
     return this.state.opponent;
   }
 
-
+  gval()
+  {
+    return this.state.val;
+  }
 
   cval(val)
   {
