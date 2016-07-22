@@ -37,6 +37,7 @@ Meteor.methods({
         attrs.promotion = {};
       }
     }
+    attrs.sponsors = {};
     Events.insert(attrs);
   },
 
@@ -50,6 +51,7 @@ Meteor.methods({
     attrs.published = false;
     attrs.underReview = false;
     attrs.owner = Meteor.userId();
+    attrs.sponsors = {};
     return Events.insert(attrs);
   },
 
@@ -58,7 +60,10 @@ Meteor.methods({
     Object.keys(attrs).map(function(key){
       obj[`details.${key}`] = attrs[key];
     });
-    console.log(obj);
+    var event = Events.findOne(id);
+    if(obj["details.banner"] && event.details.banner) {
+      Images.remove(event.details.banner);
+    }
     if(Object.keys(obj).length > 0){
       Events.update(id, {
         $set: obj
@@ -281,7 +286,7 @@ Meteor.methods({
         })
       })
       if(customerUpdate.error){
-        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.messgae);
+        throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.message);
       }
       else{
         return
@@ -294,7 +299,6 @@ Meteor.methods({
     }
   },
   "chargeCard": function(payableTo, chargeAmount){
-    console.log(Meteor.users.findOne(payableTo));
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
@@ -363,14 +367,6 @@ Meteor.methods({
         "profile.games": games
       }
     })
-  },
-
-  "users.update_profile_image"(objId){
-    Meteor.users.update(Meteor.userId(), {
-      $set: {
-        "profile.image": objId
-      }
-    });
   },
 
   "events.create_sponsorship"(id) {

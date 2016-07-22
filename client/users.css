@@ -29,7 +29,6 @@
 .event-block-container {
   display: flex;
   flex-wrap: wrap;
-  padding: 0 5em;
 }
 
 .event-block-container:after {
@@ -43,6 +42,10 @@
   margin-bottom: 10px;
   margin-left: 10px;
   overflow-y: hidden;
+}
+
+.event-block:hover {
+  cursor: pointer;
 }
 
 .event-block:nth-child(3n - 2) {
@@ -88,7 +91,8 @@
 }
 
 .event-display {
-  height: 33vh;
+  height: calc(33vh - 40px);
+  margin-top: 40px;
 }
 
 .event-display-img {
