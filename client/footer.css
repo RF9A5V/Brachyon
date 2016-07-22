@@ -12,8 +12,13 @@
   position: fixed;
 }
 
-.footer-div {
+.footer-plugin-pad {
   margin: 0 5px;
+  cursor: default;
+}
+
+.footer-hub-pad {
+  margin: 0 10px;
   cursor: default;
 }
 
@@ -88,8 +93,8 @@
 }
 
 .social-icon.fa {
-  font-size: 36px;
-  margin: 7px 2px;
+  font-size: 30px;
+  margin: 0 2px;
   color: white;
 }
 
@@ -114,8 +119,8 @@
 }
 
 .twitch.fa {
-  font-size: 34px;
-  margin-top: 2px;
+  font-size: 30px;
+  margin: 0 2px;
 }
 
 .twitch:hover {

@@ -15,6 +15,8 @@ import EventCreateScreen from '../imports/components/events/create.jsx';
 import ApprovalScreen from '../imports/components/events/approval.jsx';
 import GameSelectScreen from '../imports/components/games/game_select.jsx';
 import GameApprovalScreen from '../imports/components/games/approval.jsx';
+import UserOptionsScreen from "../imports/components/users/options.jsx";
+import CurrencyPurchaseScreen from "../imports/components/public/currency_purchase.jsx";
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){
@@ -33,6 +35,7 @@ export const renderRoutes = () => (
     <Route path="/" component={MainLayout}>
       <IndexRoute component={LandingScreen} onEnter={isLoggedIn} />
       <Route path="dashboard" component={ShowUserScreen} onEnter={verifyUser} />
+      <Route path="options" component={UserOptionsScreen} onEnter={verifyUser} />
       <Route path="about" component={AboutScreen} />
       <Route path="events/:eventId/edit" component={EditEventScreen} />
       <Route path="events/:eventId/view" component={OrganizeEventScreen} />
@@ -44,6 +47,7 @@ export const renderRoutes = () => (
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="games/approval" component={GameApprovalScreen} />
       <Route path="tournaments/single" component={TournamentSingleScreen} />
+      <Route path="buy_currency" component={CurrencyPurchaseScreen} />
     </Route>
   </Router>
 )

@@ -6,6 +6,7 @@ import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
 import FontAwesome from 'react-fontawesome';
 import { browserHistory } from 'react-router';
+import UserDropdown from "../users/user_dropdown.jsx";
 
 export default class Header extends TrackerReact(Component) {
   onClick(e) {
@@ -18,8 +19,18 @@ export default class Header extends TrackerReact(Component) {
   constructor () {
     super();
     this.state = {
-      hover: false
+      hover: false,
+      user: Meteor.subscribe("user", Meteor.userId()),
+      userMenuOpen: false
     }
+  }
+
+  imgOrDefault() {
+    var profile = ProfileImages.findOne(Meteor.user().profile.image);
+    if(profile) {
+      return profile.url();
+    }
+    return "/images/profile.png";
   }
 
   mouseOver() {
@@ -30,13 +41,42 @@ export default class Header extends TrackerReact(Component) {
     this.setState({hover: false});
   }
 
+  toggleUserMenu(e) {
+    e.preventDefault();
+    this.setState({
+      userMenuOpen: !this.state.userMenuOpen
+    });
+  }
+
   render() {
+    if(!this.state.user.ready()){
+      return (
+        <div>
+        </div>
+      )
+    }
     var userCred = "";
     if(Meteor.userId()){
       userCred = (
-        <a href="#" onClick={this.onClick}>
-          <button>Logout</button>
-        </a>);
+        <div style={{position: "relative"}} className="row x-center">
+          <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
+            <img style={{width: 75, height: 75, borderRadius: "100%"}} src={this.imgOrDefault()} />
+          </a>
+          <div className="col">
+            <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
+              <div style={{width: 25, height: 25, backgroundColor: "gold", marginRight: 10, borderRadius: "100%"}}></div>
+              <span style={{fontWeight: "bold"}}>
+                {Meteor.user().profile.amount || 0}
+              </span>
+            </a>
+          </div>
+          <a href="#" className="row x-center" style={{lineHeight: "32px"}} onClick={this.toggleUserMenu.bind(this)}>
+            <FontAwesome style={{position: "relative"}} name="sort-desc" size="2x" />
+          </a>
+          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} />
+        </div>
+      );
     }
     else {
       userCred = (
@@ -48,15 +88,9 @@ export default class Header extends TrackerReact(Component) {
     }
     if(this.state.hover){
       hub=(
-        <div className = "hub-show">
+        <div className="hub-show">
           <Link className="hub" to="/events/discover">
             DISCOVER
-          </Link>
-          <Link className="hub" to="/events/discover">
-            CREATE
-          </Link>
-          <Link className="hub" to="/events/discover">
-            MARKET
           </Link>
           <Link className="hub" to="/about">
             ABOUT
@@ -66,15 +100,9 @@ export default class Header extends TrackerReact(Component) {
     }
     else{
       hub=(
-        <div className = "hub-hide">
+        <div className="hub-hide">
           <Link className="hub" to="/events/discover">
             DISCOVER
-          </Link>
-          <Link className="hub" to="/events/discover">
-            CREATE
-          </Link>
-          <Link className="hub" to="/events/discover">
-            MARKET
           </Link>
           <Link className="hub" to="/about">
             ABOUT
@@ -86,9 +114,8 @@ export default class Header extends TrackerReact(Component) {
       <Headroom>
         <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
           <div className = "head-align row">
-            <img src="/images/b_logo_trans.png" style={{height: 50, width:50}}></img>
             <Link to="/">
-              <h2 style={{margin: 0}}>BRACHYON</h2>
+              <img src="/images/b_logo_trans.png" style={{height: 50, width:50}} />
             </Link>
             <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
             <button>

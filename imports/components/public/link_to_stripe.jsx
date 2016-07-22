@@ -11,7 +11,7 @@ export default class LinkToStripe extends React.Component {
       }, function(err){
         var connected = true;
         if(err){
-            toastr.error("Oops...")
+          toastr.error(err.error, "Stripe Link");
         }
         else{
           Meteor.call("isStripeConnected", connected, function(err){

@@ -15,40 +15,40 @@ export default class Footer extends React.Component {
             <div className="social-icon-bg col x-center center">
               <FontAwesome name="twitch" className="twitch" />
             </div></a>
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <a href="https://www.youtube.com/channel/UCUrPEefFomt33g048J3nmcg" target="_blank">
             <div className="social-icon-bg col x-center center">
-              <FontAwesome name="youtube-square" className="youtube social-icon" />
+              <FontAwesome name="youtube" className="youtube social-icon" />
             </div></a>
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <a href="https://www.reddit.com/r/brachyon" target="_blank">
             <div className="social-icon-bg col x-center center">
-              <FontAwesome name="reddit-square" className="reddit social-icon" />
+              <FontAwesome name="reddit-alien" className="reddit social-icon" />
             </div></a>
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <div className="social-icon-bg col x-center center">
-              <FontAwesome name="facebook-square " className="facebook social-icon" />
+              <FontAwesome name="facebook " className="facebook social-icon" />
             </div>
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <SnapModal />
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <a href="https://twitter.com/brachyon" target="_blank">
             <div className="social-icon-bg col x-center center">
-              <FontAwesome name="twitter-square" className="twitter social-icon" />
+              <FontAwesome name="twitter" className="twitter social-icon" />
             </div></a>
-            <div className="footer-div"></div>
+            <div className="footer-plugin-pad"></div>
             <a href="https://www.instagram.com/brachyon/" target="_blank">
             <div className="social-icon-bg col x-center center">
               <FontAwesome name="instagram" className="instagram social-icon" />
             </div></a>
           </div>
           <div className="col-1">
-            <div className="row justify-end">
-              <div className="footer-div">Advertise</div>
-              <div className="footer-div">Careers</div>
-              <div className="footer-div">Terms</div>
-              <div className="footer-div">Privacy</div>
-              <div className="footer-div">&copy; Brachyon 2016</div>
+            <div className="row justify-end" style={{padding: '0 20px'}}>
+              <div className="footer-hub-pad">Advertise</div>
+              <div className="footer-hub-pad">Careers</div>
+              <div className="footer-hub-pad">Terms</div>
+              <div className="footer-hub-pad">Privacy</div>
+              <div className="footer-hub-pad">&copy; Brachyon 2016</div>
             </div>
           </div>
         </div>

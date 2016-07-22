@@ -3,3 +3,4 @@ uploads/
 notes/
 mup.json
 settings.json
+.meteor/dev_bundle/
