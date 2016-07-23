@@ -30,7 +30,7 @@ export default class SingleDisplay extends Component {
   }
 
   formbrackets() {
-    var num = 3, matchn = 1, i, spacing = 0, m=0, n=0;
+    var num = 8, matchn = 1, i, spacing = 0, m=0, n=0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));

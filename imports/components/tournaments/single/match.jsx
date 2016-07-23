@@ -36,6 +36,7 @@ export default class MatchBlock extends Component {
       document.getElementById(this.state.opponent).style.color = "red";
       document.getElementById(this.props.eid).style.color = "gray";
       document.getElementById(this.state.successor).innerHTML += " " + this.state.val;
+      Meteor.call("bot.informOnUpdate", `${this.state.val} advances to match ${this.state.successor}. Good for you. Scrub.`);
       this.props.changematches(this.props.eid, this.state.opponent, this.state.successor, this.state.val) //Passing in its own ref, its opponents ref, and its successors ref.
     }
   }
