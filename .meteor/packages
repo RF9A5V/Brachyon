@@ -34,3 +34,6 @@ secretninjaman:link-accounts
 cfs:graphicsmagick
 percolate:synced-cron
 accounts-facebook
+accounts-twitter
+accounts-google
+alexbeauchemin:accounts-twitch
