@@ -11,7 +11,7 @@ export default class SignUpScreen extends React.Component {
     [name, email, username, password] = Object.keys(this.refs).map((value) => {return this.refs[value].value});
     Meteor.call("users.create", name, email, username, password, function(err, rez) {
       if(err){
-        toastr.error("Issue creating your account.", "Error!");
+        toastr.error(err.reason, "Error!");
       }
       else if (rez == null){
         toastr.error("Issue generating login token.", "Call an Admin!");
