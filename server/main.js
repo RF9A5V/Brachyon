@@ -31,6 +31,37 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+ServiceConfiguration.configurations.upsert(
+  {service: "twitch"},
+  {
+    $set: {
+      clientId: Meteor.settings.public.twitch.client_id,
+      redirectUri: Meteor.absoluteUrl() + '_oauth/twitch?close',
+      secret: Meteor.settings.private.twitch.liveSecretKey
+    }
+  }
+);
+
+ServiceConfiguration.configurations.upsert(
+  {service: "twitter"},
+  {
+    $set: {
+      consumerKey: Meteor.settings.public.twitter.consumerKey,
+      secret: Meteor.settings.private.twitter.liveSecretKey
+    }
+  }
+);
+
+ServiceConfiguration.configurations.upsert(
+  {service: "google"},
+  {
+    $set: {
+      clientId: Meteor.settings.public.google.client_id,
+      secret: Meteor.settings.private.google.liveSecretKey
+    }
+  }
+);
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')
