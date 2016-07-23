@@ -9,7 +9,6 @@ import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
-import LinkToStripe from '../public/link_to_stripe.jsx';
 import BlockContainer from "/imports/components/events/discover/block_container.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
