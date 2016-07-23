@@ -2,12 +2,11 @@
   // Server authentication info
   "servers": [
     {
-      "host": "159.203.220.254",
-      "username": "root",
-      "password": "Brachyon01!",
+      "host": "45.55.22.178",
+      "username": "jenkins",
       // or pem file (ssh based authentication)
       // WARNING: Keys protected by a passphrase are not supported
-      //"pem": "~/.ssh/id_rsa"
+      "pem": "~/.ssh/id_rsa",
       // Also, for non-standard ssh port use this
       //"sshOptions": { "port" : 49154 },
       // server specific environment variables
@@ -39,5 +38,5 @@
 
   // show a progress bar while uploading.
   // Make it false when you deploy using a CI box.
-  "enableUploadProgressBar": true
+  "enableUploadProgressBar": false
 }
