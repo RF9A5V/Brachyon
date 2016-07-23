@@ -47,7 +47,6 @@ export default class SingleDisplay extends Component {
       for (i = 0; i < nonbyes; i++)
         spot.push(aseed.indexOf(byes+i+1));
       spot = spot.sort(function(a, b){return a-b});
-      console.log(spot);
       for (i = 0; i < nonbyes; i++) //byes+i+1 is how we access the nonbye numbers.
       {
         var boxid = "match" + spot[i] + "nonbye";
