@@ -43,7 +43,7 @@ export default class DisplayPromotedEvent extends Component {
         </div>
         <div className="discover-details col-1">
           <h1 style={{fontSize: "calc(2vw + 2vmin)"}}>{this.props.event.details.name}</h1>
-          <div className="row" style={{fontSize: "13px"}} style={{fontSize: "calc(0.5vw + 0.1vh + 0.5vmin)"}}>
+          <div className="row" style={{fontSize: "13px"}} style={{fontSize: "calc(0.5vw + 0.5vmin)"}}>
             <div style={{marginRight: '10px'}}>
               {/*Crowdfunding check goes here */}
               {
@@ -61,7 +61,7 @@ export default class DisplayPromotedEvent extends Component {
             <span>|</span>
             <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="user" /> {Meteor.users.findOne(this.props.event.owner).username}</div>
           </div>
-          <div dangerouslySetInnerHTML={{__html: this.description()}} style={{fontSize: "calc(0.5vw + 0.1vh + 0.5vmin)", margin: '10px 0'}}>
+          <div dangerouslySetInnerHTML={{__html: this.description()}} style={{fontSize: "calc(0.5vw + 0.5vmin)", margin: '10px 0'}}>
           </div>
           {/*<div>
             <span>

@@ -90,7 +90,7 @@
 
 /*social plugins*/
 .social-icon-bg {
-  width: 50px;
+  width: 40px;
   height: 70px;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .social-icon.fa {
-  font-size: 30px;
+  font-size: 24px;
   margin: 0 2px;
   color: white;
 }
@@ -126,7 +126,7 @@
 }
 
 .twitch.fa {
-  font-size: 30px;
+  font-size: 24px;
   margin: 0 2px;
 }
 

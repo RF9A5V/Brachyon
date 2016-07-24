@@ -145,18 +145,30 @@ label {
     cursor: pointer;
 }
 
+.font-stretch-big {
+  font-size: calc(2vw + 2vmin);
+}
+
+.font-stretch-mid {
+  font-size: calc(0.5vw + 1vmin);
+}
+
+.font-stretch-small {
+  font-size: calc(0.5vw + 0.5vmin);
+}
+
 /* Hacky thing to remove Chrome backgrounds for autofills */
 input:-webkit-autofill {
   -webkit-box-shadow: none;
 }
 
 .login-button {
-  width: 100px;
+  width: 146px;
 }
 
 .signup-button {
   border-color: #CC0000;
-  width: 100px;
+  width: 146px;
 }
 
 .signup-button:not(.inactive):hover{

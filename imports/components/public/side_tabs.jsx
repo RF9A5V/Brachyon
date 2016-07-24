@@ -16,14 +16,6 @@ export default class SideTabs extends Component {
     }
   }
 
-  onWheel(e) {
-    var target = e.target;
-    while(!target.classList.contains("side-tab-content-container")){
-      target = target.parentNode;
-    }
-    target.scrollLeft += e.deltaX;
-  }
-
   values() {
 
   }
@@ -43,7 +35,7 @@ export default class SideTabs extends Component {
             }).bind(this))
           }
         </div>
-        <div className="side-tab-content-container col-2" style={{marginBottom: "50vh"}} onWheel={this.onWheel.bind(this)}>
+        <div className="side-tab-content-container col-2" style={{marginBottom: "50vh"}}>
           {
             this.props.panels.map((function(value, index){
               return (
