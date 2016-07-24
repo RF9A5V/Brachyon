@@ -9,6 +9,7 @@ import EditEventScreen from '../imports/components/events/edit.jsx';
 import OrganizeEventScreen from '../imports/components/events/organize.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
 import TournamentSingleScreen from '../imports/components/tournaments/single.jsx';
+import TournamentDoubleScreen from '../imports/components/tournaments/double.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import PublishEventScreen from '../imports/components/events/publish.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
@@ -47,6 +48,7 @@ export const renderRoutes = () => (
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="games/approval" component={GameApprovalScreen} />
       <Route path="tournaments/single" component={TournamentSingleScreen} />
+      <Route path="tournaments/double" component={TournamentDoubleScreen} />
       <Route path="buy_currency" component={CurrencyPurchaseScreen} />
     </Route>
   </Router>
