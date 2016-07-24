@@ -63,10 +63,10 @@ export default class DiscoverSearch extends Component {
 
   render(){
     return (
-      <div style={{textAlign: 'center'}}>
-        <input type="text" ref="search" style={{margint: "0 5px"}} onChange={this.changeSearch.bind(this)} placeholder="Search By Name"/>
-        <input id="test" ref="location" style={{margint: "0 5px"}} type="text" placeholder="Search By Location"/>
-        <button style={{margint: "0 5px"}} >
+      <div style={{textAlign: 'center', margin: "10px 0"}}>
+        <input type="text" ref="search" style={{margin: "0 5px"}} onChange={this.changeSearch.bind(this)} placeholder="Search By Name"/>
+        <input id="test" ref="location" style={{margin: "0 5px"}} type="text" placeholder="Search By Location"/>
+        <button style={{margin: "0 5px"}} >
           <FontAwesome name="search"/>
         </button>
       </div>

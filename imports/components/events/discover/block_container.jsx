@@ -34,8 +34,8 @@ export default class BlockContainer extends Component {
               <div className="event-block" onClick={self.selectEvent(event._id).bind(self)}>
                 <img src={self.imgOrDefault(event)} />
                 <div className="event-block-details">
-                  <h2 className="event-block-title" style={{fontSize: "calc(1vw + 1vmin - 0.1vh)"}}>{ event.details.name }</h2>
-                  <div className="event-block-content" style={{fontSize: "calc(0.5vw + 0.1vh + 0.5vmin)"}}>
+                  <h2 className="event-block-title" style={{fontSize: "calc(1vw + 1vmin)"}}>{ event.details.name }</h2>
+                  <div className="event-block-content" style={{fontSize: "calc(0.5vw + 0.5vmin)"}}>
                     <div>
                       {/*Crowdfunding check goes here */}
                       {
