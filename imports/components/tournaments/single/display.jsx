@@ -16,16 +16,14 @@ export default class SingleDisplay extends Component {
   }
 
   seed(array) {
-    if (array.length > 1)
+    while (array.length > 1)
     {
-      var narr = Array(array.length/2)
+      narr = Array(array.length/2);
       for (i = 0; i < array.length/2; i++)
         narr[i] = [array[i], array[array.length-i-1]];
-      array = this.seed(narr);
+      array = narr;
     }
-    else {
-      array = this.flatten(array);
-    }
+    array = this.flatten(array);
     return array;
   }
 
