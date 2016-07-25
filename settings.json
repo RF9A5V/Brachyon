@@ -7,6 +7,15 @@
     },
     "facebook": {
       "testAppId": "***REMOVED***"
+    },
+    "twitch": {
+      "client_id": "***REMOVED***"
+    },
+    "twitter": {
+      "consumerKey": "***REMOVED***"
+    },
+    "google": {
+      "client_id": "***REMOVED***"
     }
   },
   "private": {
@@ -16,6 +25,15 @@
     },
     "facebook": {
       "testAppSecret": "***REMOVED***"
+    },
+    "twitch": {
+      "liveSecretKey": "***REMOVED***"
+    },
+    "twitter": {
+      "liveSecretKey": "***REMOVED***"
+    },
+    "google": {
+      "liveSecretKey": "***REMOVED***"
     }
   }
 
