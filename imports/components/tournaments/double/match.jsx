@@ -9,24 +9,32 @@ export default class MatchBlock extends Component {
     if (this.props.sp2%2 == 0)
       id2 = this.props.sp2+1;
     else
-      id2 = this.props.sp2-1;
+      id2++;
     id3 = Math.floor(this.props.sp2/2);
+    if (this.props.bset)
+      id3 = Math.ceil(this.props.sp2/2);
     round = this.props.pos;
+    str = "", losdiv = 1;
+    if (this.props.loss)
+    {
+      str = "los";
+      losdiv = 2;
+    }
     if (this.props.pos > -1)
     {
-      strid = "match" + id2 + "round" + this.props.pos;
+      strid = "match" + id2 + "round" + str + this.props.pos;
     }
     else
     {
-      strid = "match" + id2 + "nonbye";
+      strid = "match" + id2 + "nonbye" + str;
       round+=2;
     }
-    strid2 = "match" + id3 + "round" + (round+1);
+    strid2 = "match" + id3 + "round" + str + (round+1);
 
     if (this.props.sty.color == "gray")
-      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false}
+      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, mat: id1, opmat: id2, sucmat: id3}
     else
-      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false}
+      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, mat: id1, opmat: id2, sucmat: id3}
   }
 
   advance()
