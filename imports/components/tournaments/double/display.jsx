@@ -86,7 +86,7 @@ export default class DoubleDisplay extends Component {
       }
       if (spacing == 0)
       {
-        var sty = {top: i*50*Math.pow(2,matchn-1)+spacing + "px", position: "absolute", height: "95px", width: "30px"};
+        var sty = {top: 2*i*50*Math.pow(2,matchn-1)+spacing + 300 + "px", position: "absolute", height: "95px", width: "30px"};
         boxes.push(<div style={sty} />);
       }
       spacing = spacing+Math.pow(2, matchn-1)*25;
@@ -97,12 +97,12 @@ export default class DoubleDisplay extends Component {
     //Losers bracket
     var fmspot = spot;
     spot = []
-    matchn = 0, bset = false, mult = 1;
-    if ((losers*3) < num)
+    matchn = 1, bset = false, mult = 1, tpspace = 0;
+    if ((losers*3) >= num)
     {
-      losers = losers/2;
       bset = true;
     }
+    console.log(losers);
     if (byes > 0)
     {
       nbarr = Array.apply(null, Array(losers*2)).map(function (_, i) {return i+1;});
@@ -123,41 +123,36 @@ export default class DoubleDisplay extends Component {
         n++;
       }
     }
-
-
-    tpspace = 0;
+    mleft = matchn;
     while (losers > .99)
     {
-      mult = bset ? 2:1;
-      for (i = 0; i < losers*mult; i++)
+      for (i = 0; i < (losers); i++)
       {
-        if (bset && Math.floor(i/2)%2 == 0)
-          continue;
         var boxid = "match" + i + "roundlos" + matchn;
         var style = {
-          top: i*50*Math.pow(2,matchn-1-tpspace)+tpspace+spacing + "px",
-          left: matchn*200 + "px",
+          top: i*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
+          left: mleft*200 + "px",
           color: "white"
         };
         boxes.push(
-          <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
+          <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} loss={true} sp2 = {i} ref={boxid} bset={bset} changematches={this.changematches.bind(this)}/>
         )
         n++;
       }
-      if (bset)
+      if (bset && losers > 1)
+      {
         bset = false;
+        tpspace = tpspace + (50*Math.pow(2,matchn-1))/2
+      }
       else
       {
+        spacing = spacing+Math.pow(2, matchn-1)*25;
         bset = true;
         losers = losers/2;
+        matchn++;
       }
+      mleft++;
     }
-
-
-
-
-
-
     return boxes;
   }
 
