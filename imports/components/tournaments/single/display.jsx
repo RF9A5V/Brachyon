@@ -75,17 +75,14 @@ export default class SingleDisplay extends Component {
           };
           if (roundparticipants == (num - nonbyes/2) && (i == 0 || !(usedspots.includes(i))))
           {
-            boxes.push(
-              <MatchBlock sty={style} eid={boxid} pos={matchn} sp={w} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
-            )
+            str = w;
             w++;
           }
           else
-          {
-            boxes.push(
-              <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
-            )
-          }
+            str = "";
+          boxes.push(
+            <MatchBlock sty={style} eid={boxid} pos={matchn} sp={str} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
+          )
       }
         if (spacing == 0)
         {

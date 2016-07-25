@@ -19,6 +19,7 @@ export default class MatchBlock extends Component {
     {
       str = "los";
       losdiv = 2;
+      lb = true;
     }
     if (this.props.pos > -1)
     {
@@ -32,9 +33,9 @@ export default class MatchBlock extends Component {
     strid2 = "match" + id3 + "round" + str + (round+1);
 
     if (this.props.sty.color == "gray")
-      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, mat: id1, opmat: id2, sucmat: id3}
+      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
     else
-      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, mat: id1, opmat: id2, sucmat: id3}
+      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
   }
 
   advance()
@@ -80,6 +81,26 @@ export default class MatchBlock extends Component {
   gval()
   {
     return this.state.val;
+  }
+
+  gmatch()
+  {
+    return this.props.sp2;
+  }
+
+  gopmatch()
+  {
+    return this.state.opmat;
+  }
+
+  gsuccmat() //succ
+  {
+    return this.state.succmat; //Levels of irony we have never attained
+  }
+
+  glb()
+  {
+    return this.props.loss;
   }
 
   cval(val)
