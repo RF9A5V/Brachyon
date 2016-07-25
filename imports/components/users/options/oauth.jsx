@@ -5,6 +5,7 @@ import FacebookConnect from "../../oauth/connect/facebook.jsx";
 import TwitchConnect from "../../oauth/connect/twitch.jsx";
 import TwitterConnect from "../../oauth/connect/twitter.jsx";
 import GoogleConnect from "../../oauth/connect/google.jsx";
+import DiscordConnect from "../../oauth/connect/discord.jsx";
 
 export default class OAuthOptionsPanel extends Component {
   render() {
@@ -40,6 +41,12 @@ export default class OAuthOptionsPanel extends Component {
           <label>Twitter</label>
           <div>
             <TwitterConnect />
+          </div>
+        </div>
+        <div className="side-tab-panel">
+          <label>Discord</label>
+          <div>
+            <DiscordConnect />
           </div>
         </div>
       </div>

@@ -16,6 +16,9 @@
     },
     "google": {
       "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
+    },
+    "discord": {
+      "clientId": "205848295413776384"
     }
   },
   "private": {
@@ -34,6 +37,9 @@
     },
     "google": {
       "liveSecretKey": "XUgerKtBpHS6Qu8rrBuD2KjM"
+    },
+    "discord": {
+      "secret": "3r2a2wcymqYtHBLRb9ZJKCj4WbbPhq-i"
     }
   }
 

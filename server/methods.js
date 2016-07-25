@@ -146,11 +146,23 @@ Meteor.methods({
       })
     }
     else {
-      Events.update(id, {
-        $set: {
-          published: true
-        }
-      })
+      if((event.details.discordChannelID || {}).active){
+        Meteor.bot.createEventChannel(event.details.discordChannelID.name, (channel) => {
+          Events.update(id, {
+            $set: {
+              "details.discordChannelID": channel.id,
+              published: true
+            }
+          })
+        })
+      }
+      else {
+        Events.update(id, {
+          $set: {
+            published: true
+          }
+        })
+      }
     }
   },
 
@@ -244,12 +256,26 @@ Meteor.methods({
   },
 
   "events.approve"(id){
-    Events.update(id, {
-      $set: {
-        under_review: false,
-        published: true
-      }
-    })
+    var event = Events.findOne(id);
+    if((event.details.discordChannelID || {}).active){
+      Meteor.bot.createEventChannel(event.details.discordChannelID.name, (channel) => {
+        Events.update(id, {
+          $set: {
+            under_review: false,
+            published: true,
+            "details.discordChannelID": channel.id
+          }
+        });
+      });
+    }
+    else {
+      Events.update(id, {
+        $set: {
+          under_review: false,
+          published: true
+        }
+      })
+    }
   },
 
   "events.reject"(id) {

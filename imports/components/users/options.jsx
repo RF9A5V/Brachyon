@@ -6,6 +6,7 @@ import UserDetailsPanel from "./options/details.jsx";
 import EventOptionsPanel from "./options/events.jsx";
 import GameOptionsPanel from "./options/games.jsx";
 import OAuthOptionsPanel from "./options/oauth.jsx";
+import DiscordServerPanel from "./options/discord.jsx";
 
 export default class UserOptionsScreen extends TrackerReact(Component) {
 
@@ -29,7 +30,8 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
         "Details",
         "Events",
         "Games",
-        "Connected Accounts"
+        "Connected Accounts",
+        "Discord Servers"
       ]
     );
   }
@@ -40,7 +42,8 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
         (<UserDetailsPanel refresh={this.refresh.bind(this)} />),
         (<EventOptionsPanel />),
         (<GameOptionsPanel />),
-        (<OAuthOptionsPanel />)
+        (<OAuthOptionsPanel />),
+        (<DiscordServerPanel />)
       ]
     );
   }

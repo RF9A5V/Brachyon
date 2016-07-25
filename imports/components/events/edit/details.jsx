@@ -14,7 +14,11 @@ export default class DetailsPanel extends Component {
       description: this.refs.description.getEditor().getHTML(),
       location: this.refs.location.value(),
       datetime: this.refs.date.value() + "T" + this.refs.time.value(),
-      banner: this.refs.image.value()
+      banner: this.refs.image.value(),
+      discordChannelID: {
+        active: this.refs.discordChannelID_active.checked,
+        name: this.refs.discordChannelID_name.value
+      }
     }
   }
 
@@ -72,6 +76,16 @@ export default class DetailsPanel extends Component {
             </div>
             <label style={{marginBottom: 10}}>Start Time</label>
             <TimeInput ref="time" init={this.props.datetime} />
+          </div>
+          <div className="side-tab-panel">
+            <label>Discord Channel</label>
+            <span>Do you want a Discord channel generated for this event?</span>
+            <div className="row x-center">
+              <span>Yep!</span>
+              <input type="checkbox" ref="discordChannelID_active" checked={(this.props.discordChannelID || {}).active} />
+            </div>
+            <label>Channel Name</label>
+            <input type="text" ref="discordChannelID_name" value={(this.props.discordChannelID || {}).name} />
           </div>
           <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
           </div>

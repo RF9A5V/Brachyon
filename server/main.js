@@ -6,6 +6,8 @@ import Icons from '/imports/api/sponsorship/icon.js';
 import ProfileImages from '/imports/api/users/profile_images.js';
 import ProfileBanners from "/imports/api/users/profile_banners.js";
 
+import MainBot from "/imports/bots/main.js";
+
 Events._ensureIndex({
   'details.location.coords': '2dsphere'
 })
@@ -62,9 +64,22 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+ServiceConfiguration.configurations.upsert(
+  { service: "discord" },
+  {
+    $set: {
+      clientId: Meteor.settings.public.discord.clientId,
+      secret: Meteor.settings.private.discord.secret,
+      redirect_uris: [Meteor.absoluteUrl() + '_oauth/discord?close']
+    }
+  }
+);
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')
+
+  Meteor.bot = new MainBot();
 
   SyncedCron.start();
 
