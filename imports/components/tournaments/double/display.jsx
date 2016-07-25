@@ -162,6 +162,15 @@ export default class DoubleDisplay extends Component {
     this.refs[id2].closs();
     this.refs[id3].ctrue();
     this.refs[id3].cval(val);
+    if (this.refs[id1].glb())
+    {
+      sendloser(id2);
+    }
+  }
+
+  loser(id2)
+  {
+
   }
 
   render() {
