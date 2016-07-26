@@ -6,7 +6,7 @@ export default class DoubleDisplay extends Component {
   constructor(props)
   {
     super(props);
-    this.state = {num: 16};
+    this.state = {num: 17};
   }
 
   flatten(ary) {
@@ -105,10 +105,10 @@ export default class DoubleDisplay extends Component {
     spot = []
     matchn = 1, bset = false, twoset = false, mult = 1, tpspace = 0; //tpspace changes every second set of matches in the losers to be placed in the right spot
     if ((losers*3) >= num)
-    {
-      twoset = true;
       bset = true;
-    }
+    else
+      twoset = true;
+    mleft = matchn;
     if (byes > 0)
     {
       nbarr = Array.apply(null, Array(losers*2)).map(function (_, i) {return i+1;});
@@ -119,7 +119,7 @@ export default class DoubleDisplay extends Component {
       {
         var boxid = "match" + spot[i] + "nonbyelos";
         var style = {
-          top: spot[i]*50 + losers*200 - 25 + "px",
+          top: spot[i]*50*Math.pow(2,matchn-1)+275-tpspace+spacing + "px",
           left: 200 + "px",
           color: "white"
         }
@@ -128,13 +128,32 @@ export default class DoubleDisplay extends Component {
         )
         n++;
       }
+      mleft++;
+
       if (twoset)
       {
-
+        tpspace += (50*Math.pow(2,matchn-1))/2;
+        for (i = 0; i < (losers); i++)
+        {
+          var boxid = "match" + i + "roundlos" + matchn;
+          var style = {
+            top: i*50*Math.pow(2,matchn-1)+275-tpspace+spacing + "px",
+            left: mleft*200 + "px",
+            color: "white"
+          };
+          boxes.push(
+            <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} loss={true} sp2 = {i} ref={boxid} bset={bset} changematches={this.changematches.bind(this)}/>
+          )
+          n++;
+        }
+        losers=losers/2;
+        mleft++;
+        spacing = spacing+Math.pow(2, matchn-1)*25;
+        bset = true;
       }
+      matchn++;
     }
 
-    mleft = matchn;
     while (losers > .99)
     {
       for (i = 0; i < (losers); i++)
@@ -153,7 +172,7 @@ export default class DoubleDisplay extends Component {
       if (bset && losers > 1)
       {
         bset = false;
-        tpspace = tpspace + (50*Math.pow(2,matchn-1))/2
+        tpspace = tpspace + (50*Math.pow(2,matchn-1))/2;
       }
       else
       {
