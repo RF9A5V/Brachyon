@@ -1,7 +1,10 @@
 accounts-base@1.2.8
 accounts-facebook@1.0.10
+accounts-google@1.0.10
 accounts-oauth@1.1.13
 accounts-password@1.1.13
+accounts-twitter@1.0.10
+alexbeauchemin:accounts-twitch@1.0.3
 allow-deny@1.0.5
 amplify@1.0.0
 autoupdate@1.2.11
@@ -51,6 +54,7 @@ es5-shim@4.5.13
 facebook@1.2.8
 fastclick@1.0.12
 geojson-utils@1.0.9
+google@1.1.13
 hot-code-push@1.0.4
 html-tools@1.0.10
 htmljs@1.0.10
@@ -96,6 +100,7 @@ msavin:mongol@2.0.1
 npm-bcrypt@0.8.6_3
 npm-mongo@1.4.45
 oauth@1.1.11
+oauth1@1.1.10
 oauth2@1.1.10
 observe-sequence@1.0.12
 ordered-dict@1.0.8
@@ -124,6 +129,7 @@ templating@1.1.14
 templating-tools@1.0.4
 tmeasday:check-npm-versions@0.2.0
 tracker@1.0.15
+twitter@1.1.11
 u2622:persistent-session@0.4.4
 ui@1.0.11
 ultimatejs:tracker-react@1.0.5
