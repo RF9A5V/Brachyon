@@ -24,7 +24,10 @@ export default class SideTabs extends Component {
     var self = this;
     return (
       <div className="side-tab-container">
-        <div className="side-tab-item-container">
+        <div className="side-tab-item-placeholder">
+          <div style={{width: window.innerWidth * 0.15, height: 50}}></div>
+        </div>
+        <div className="side-tab-item-container" style={{width: window.innerWidth * 0.15}}>
           {
             this.props.items.map((function(value, index) {
               return (
