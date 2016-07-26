@@ -15,19 +15,14 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   componentWillMount(){
     var self = this;
     this.setState({
-      event: Meteor.subscribe("event", this.props.params.eventId, {
-        onReady() {
-          self.setState({
-            loaded: true
-          })
-        }
-      }),
-      loaded: false
+      event: Meteor.subscribe("event", this.props.params.eventId),
+      users: Meteor.subscribe("event_participants", this.props.params.eventId)
     })
   }
 
   componentWillUnmount(){
     this.state.event.stop();
+    this.state.users.stop();
   }
 
   event() {
@@ -52,19 +47,30 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var event = this.event();
     return [
       (<DetailsPanel {...event.details} ref="details"/>),
-      (<BracketsPanel />),
+      (<BracketsPanel active={event.active} participants={Object.keys(event.participants).map( (key) => { return event.participants[key] } )} id={event._id} />),
       (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />),
       (<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
     ]
   }
 
+  registerUser(e) {
+    e.preventDefault();
+    Meteor.call("events.toggle_participation", this.event()._id, Meteor.user()._id, function(err) {
+      if(err){
+        return toastr.error(err.reason, "Error!");
+      }
+      return toastr.success("Successfully added you to this event.", "Success!");
+    })
+  }
+
   render() {
-    var event = this.event();
-    if(!this.state.loaded){
+
+    if(!this.state.event.ready() || !this.state.users.ready()){
       return (
         <div>Loading...</div>
       )
     }
+    var event = this.event();
     return (
       <div className="box col" style={{flexFlow: "row"}}>
         <SideTabs items={this.items()} panels={this.content()} />
@@ -91,7 +97,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
             {
               event.published ? (
                 <div className="row center">
-                  <button>Register!</button>
+                  <button onClick={this.registerUser.bind(this)}>Register!</button>
                 </div>
               ) : (
                 ""

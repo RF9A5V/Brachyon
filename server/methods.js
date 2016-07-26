@@ -17,6 +17,7 @@ Meteor.methods({
     }
     attrs.published = true;
     attrs.underReview = false;
+    attrs.active = false;
     attrs.owner = Meteor.userId();
     if(attrs.organize){
       if(!attrs.organize.active){
@@ -38,6 +39,7 @@ Meteor.methods({
       }
     }
     attrs.sponsors = {};
+    attrs.participants = [];
     Events.insert(attrs);
   },
 
@@ -50,8 +52,10 @@ Meteor.methods({
     }
     attrs.published = false;
     attrs.underReview = false;
+    attrs.active = false;
     attrs.owner = Meteor.userId();
     attrs.sponsors = {};
+    attrs.participants = [];
     return Events.insert(attrs);
   },
 
