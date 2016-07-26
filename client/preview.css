@@ -3,7 +3,10 @@
 }
 
 .location-container {
+  position: fixed;
+  top: 0;
   padding: 20px;
+  padding-top: 120px;
   background-color: #666;
   height: 100%;
   box-sizing: border-box;
