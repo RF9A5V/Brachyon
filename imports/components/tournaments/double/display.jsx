@@ -3,6 +3,12 @@ import MatchBlock from './match.jsx';
 
 export default class DoubleDisplay extends Component {
 
+  constructor(props)
+  {
+    super(props);
+    this.state = {num: 16};
+  }
+
   flatten(ary) {
       var ret = [];
       for(var i = 0; i < ary.length; i++) {
@@ -28,7 +34,7 @@ export default class DoubleDisplay extends Component {
   }
 
   formbrackets() {
-    var num = 16, matchn = 1, i, spacing = 0, m=0, n=0;
+    var num = this.state.num, matchn = 1, i, spacing = 0, m=0, n=0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
@@ -97,12 +103,12 @@ export default class DoubleDisplay extends Component {
     //Losers bracket
     var fmspot = spot;
     spot = []
-    matchn = 1, bset = false, mult = 1, tpspace = 0;
+    matchn = 1, bset = false, twoset = false, mult = 1, tpspace = 0; //tpspace changes every second set of matches in the losers to be placed in the right spot
     if ((losers*3) >= num)
     {
+      twoset = true;
       bset = true;
     }
-    console.log(losers);
     if (byes > 0)
     {
       nbarr = Array.apply(null, Array(losers*2)).map(function (_, i) {return i+1;});
@@ -122,7 +128,12 @@ export default class DoubleDisplay extends Component {
         )
         n++;
       }
+      if (twoset)
+      {
+
+      }
     }
+
     mleft = matchn;
     while (losers > .99)
     {
@@ -162,15 +173,15 @@ export default class DoubleDisplay extends Component {
     this.refs[id2].closs();
     this.refs[id3].ctrue();
     this.refs[id3].cval(val);
-    if (this.refs[id1].glb())
+    if (!(this.refs[id2].glb()))
     {
-      sendloser(id2);
+      sendloser(this.refs[id2].gval(), this.refs[id2].gmatch(), this.refs[id2].ground());
     }
   }
 
-  loser(id2)
+  sendloser(str, mat, round)
   {
-
+    this.state.num
   }
 
   render() {
