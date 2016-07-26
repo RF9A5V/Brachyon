@@ -6,8 +6,10 @@
 
 .side-tab-item-container {
   background-color: #222;
-  width: 15%;
-  min-width: 200px;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  padding-top: 100px;
 }
 
 .side-tab-item {
@@ -29,7 +31,7 @@
 }
 
 .side-tab-content {
-  flex: 1 1;
+  flex: 3 3;
   padding: 20px;
 }
 

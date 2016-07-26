@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class LinkToStripe extends React.Component {
+export default class StripeConnect extends React.Component {
   connectToStripe(event){
     if(!Meteor.user().profile.isStripeConnected){
       Meteor.linkWithStripe({
