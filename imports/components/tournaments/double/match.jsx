@@ -98,6 +98,11 @@ export default class MatchBlock extends Component {
     return this.state.succmat; //Levels of irony we have never attained
   }
 
+  ground()
+  {
+    return this.state.round;
+  }
+
   glb()
   {
     return this.props.loss;
