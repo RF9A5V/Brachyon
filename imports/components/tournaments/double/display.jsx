@@ -103,18 +103,27 @@ export default class DoubleDisplay extends Component {
     //Losers bracket
     var fmspot = spot;
     spot = []
-    matchn = 1, bset = false, twoset = false, mult = 1, tpspace = 0; //tpspace changes every second set of matches in the losers to be placed in the right spot
+    matchn = 1, mleft = 1, bset = false, twoset = false, mult = 1, tpspace = 0; //tpspace changes every second set of matches in the losers to be placed in the right spot
     if ((losers*3) >= num)
+    {
       bset = true;
+    }
     else
+    {
+      nonbyes = (num-losers*3)*2;
+      losers=losers*2;
       twoset = true;
-    mleft = matchn;
-    if (byes > 0)
+    }
+    byes = losers-nonbyes/2;
+
+    if (nonbyes > 0)
     {
       nbarr = Array.apply(null, Array(losers*2)).map(function (_, i) {return i+1;});
+      var aseed = this.seed(nbarr);
       for (i = 0; i < nonbyes; i++)
         spot.push(aseed.indexOf(byes+i+1));
       spot = spot.sort(function(a, b){return a-b});
+      console.log(spot);
       for (i = 0; i < nonbyes; i++) //byes+i+1 is how we access the nonbye numbers.
       {
         var boxid = "match" + spot[i] + "nonbyelos";
@@ -129,15 +138,14 @@ export default class DoubleDisplay extends Component {
         n++;
       }
       mleft++;
-
+      matchn++;
       if (twoset)
       {
-        tpspace += (50*Math.pow(2,matchn-1))/2;
-        for (i = 0; i < (losers); i++)
+        for (i = 0; i < losers; i++)
         {
           var boxid = "match" + i + "roundlos" + matchn;
           var style = {
-            top: i*50*Math.pow(2,matchn-1)+275-tpspace+spacing + "px",
+            top: i*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
             left: mleft*200 + "px",
             color: "white"
           };
@@ -150,10 +158,9 @@ export default class DoubleDisplay extends Component {
         mleft++;
         spacing = spacing+Math.pow(2, matchn-1)*25;
         bset = true;
+        matchn++;
       }
-      matchn++;
     }
-
     while (losers > .99)
     {
       for (i = 0; i < (losers); i++)
