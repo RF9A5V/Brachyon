@@ -17,7 +17,20 @@ body {
 .tbox {
   cursor: pointer;
   position: absolute;
-  margin-top: 100px;
+  margin-top: 50px;
+}
+
+.bracket-line-h {
+  width: 60px;
+  height: 5px;
+  position: relative;
+  background-color: white;
+}
+
+.bracket-line-v {
+  width: 5px;
+  background-color: white;
+  position: relative;
 }
 
 .box {
