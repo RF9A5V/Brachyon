@@ -28,7 +28,7 @@ export default class SingleDisplay extends Component {
   }
 
   formbrackets() {
-    var num = 10, matchn = 1, i, spacing = 0, m=0, n=0;
+    var num = 31, matchn = 1, i, spacing = 0, m=0, n=0;
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
@@ -50,12 +50,30 @@ export default class SingleDisplay extends Component {
         var boxid = "match" + spot[i] + "nonbye";
         var style = {
           top: spot[i]*50 - 25 + "px",
-          left: 200 + "px",
+          left: 10,
           color: "white"
         }
         boxes.push(
           <MatchBlock sty={style} eid={boxid} pos={-1} sp={byes+1+i} sp2 = {spot[i]} key={n} ref={boxid} changematches={this.changematches.bind(this)}/>
-        )
+        );
+        if(spot[i] % 2) {
+          boxes.push(
+            <div style={{position: "absolute", top: spot[i]*50 - 25 + 7, left: 80}}>
+              <div className="bracket-line-h"></div>
+              <div className="bracket-line-v" style={{height: 19.5, left: 55}}></div>
+              <div className="bracket-line-h" style={{left: 55}}></div>
+            </div>
+          );
+        }
+        else {
+          boxes.push(
+            <div style={{position: "absolute", top: spot[i]*50 + 50 + 7, left: 80}}>
+              <div className="bracket-line-h" style={{left: 55}}></div>
+              <div className="bracket-line-v" style={{height: 19.5, left: 55}}></div>
+              <div className="bracket-line-h"></div>
+            </div>
+          );
+        }
         n++;
         usedspots[Math.floor(i/2)] = Math.floor((spot[i])/2);
       }
@@ -69,8 +87,8 @@ export default class SingleDisplay extends Component {
       {
           var boxid = "match" + i + "round" + matchn;
           var style = {
-            top: i*50*Math.pow(2,matchn-1)+spacing + "px",
-            left: matchn*200 + "px",
+            top: i*50*Math.pow(2,matchn-1)+spacing,
+            left: (matchn - 1)*200 + 10,
             color: "white"
           };
           if (roundparticipants == (num - nonbyes/2) && (i == 0 || !(usedspots.includes(i))))
@@ -82,7 +100,25 @@ export default class SingleDisplay extends Component {
             str = "";
           boxes.push(
             <MatchBlock sty={style} eid={boxid} pos={matchn} sp={str} sp2 = {i} ref={boxid} changematches={this.changematches.bind(this)}/>
-          )
+          );
+          if(i % 2 === 0){
+            boxes.push(
+              <div style={{position: "absolute", top: style.top + 50 + 7, left: style.left + 50 + 10}}>
+                <div className="bracket-line-h"></div>
+                <div className="bracket-line-v" style={{height: 50*Math.pow(2,matchn-2) - 5, left: 55}}></div>
+                <div className="bracket-line-h" style={{left: 55}}></div>
+              </div>
+            );
+          }
+          else {
+            boxes.push(
+              <div style={{position: "absolute", top: style.top + 7 + 50 - (50*Math.pow(2,matchn-2)), left: style.left + 50 + 10}}>
+                <div className="bracket-line-h" style={{left: 55}}></div>
+                <div className="bracket-line-v" style={{height: 50*Math.pow(2,matchn-2) - 5, left: 55}}></div>
+                <div className="bracket-line-h"></div>
+              </div>
+            );
+          }
       }
         if (spacing == 0)
         {
@@ -94,7 +130,7 @@ export default class SingleDisplay extends Component {
         roundparticipants = roundparticipants/2;
     }
 
-    return boxes;
+    return boxes.slice(0, -1);
   }
 
   changematches(id1, id2, id3, val)
@@ -108,7 +144,7 @@ export default class SingleDisplay extends Component {
   render() {
     var boxes = this.formbrackets();
     return (
-    <div>
+    <div style={{position: "relative"}}>
       {boxes}
     </div>
     );
