@@ -43,7 +43,6 @@ export default class Footer extends React.Component {
           </div>
           <div className="col-1">
             <div className="row justify-end" style={{margin: '0 10px 0 0'}}>
-                <div className="footer-hub-pad col x-center">About</div>
                 <div className="footer-hub-pad col x-center">Advertise</div>
                 <div className="footer-hub-pad col x-center">Terms</div>
                 <div className="footer-hub-pad col x-center">Privacy</div>

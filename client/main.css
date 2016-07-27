@@ -89,6 +89,7 @@ h2 {
 
 h3 {
   color: #FFD700;
+  margin: 0;
 }
 
 button, input[type="submit"], .custom-file-upload {

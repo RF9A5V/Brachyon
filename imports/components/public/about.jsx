@@ -1,36 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import FontAwesome from 'react-fontawesome';
 
-export default class LandingScreen extends React.Component {
+import BlockContainer from '/imports/components/events/discover/block_container.jsx';
+
+export default class About extends TrackerReact(Component) {
 
   componentWillMount() {
     var self = this;
     this.setState({
-      events: Meteor.subscribe('discoverEvents'),
-      index: 0
+      events: Meteor.subscribe('discoverEvents')
     })
   }
 
+  componentWillUnmount(){
+    this.state.events.stop();
+  }
+
   promotedEvents() {
-    return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, $limit: 5}).fetch();
+    return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, limit: 3}).fetch();
   }
 
   render() {
     return(
       <div className="about-layout">
-        <div className="side-tab-item-container">
-          <div className={`side-tab-item ${index == 0 ? "active" : ""}`}>What Is Brachyon?</div>
-          <div className={`side-tab-item ${index == 1 ? "active" : ""}`}>Brachyon Lets You...</div>
-          <div className={`side-tab-item ${index == 2 ? "active" : ""}`}>Why?</div>
-          <div className={`side-tab-item ${index == 3 ? "active" : ""}`}>What Is Brachyon?</div>
-        </div>
         <div className="side-tab-content">
           <div className="side-tab-panel">
             <div className="row center"><h2>What is Brachyon?</h2></div>
             <div className="row center about-what font-stretch-mid">
-              We made a website which allows you to find, fund,
+              Welcome to Brachyon - a website which allows you to find, fund,
               create and promote competitive gaming events.
-              <br/>
               Brachyon makes it easy to build passionate communities
               around competitive games.
             </div>
@@ -43,7 +42,7 @@ export default class LandingScreen extends React.Component {
                   <FontAwesome name="search" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
                 <div className="col center x-center about-desc font-stretch-mid">
-                  Quickly search events by area, game and time.
+                  <h3>Search</h3>Quickly search events by area, game and time.
                 </div>
               </div>
               <div className="col">
@@ -51,7 +50,7 @@ export default class LandingScreen extends React.Component {
                   <FontAwesome name="plus" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
                 <div className="col center x-center about-desc font-stretch-mid">
-                  Generate competitive events in seconds.
+                  <h3>Create</h3>Generate competitive events in seconds.
                 </div>
               </div>
               <div className="col">
@@ -59,7 +58,7 @@ export default class LandingScreen extends React.Component {
                   <FontAwesome name="arrow-up" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
                 <div className="col center x-center about-desc font-stretch-mid">
-                  Share and publicize your events.
+                  <h3>Promote</h3>Share and publicize your events.
                 </div>
               </div>
               <div className="col">
@@ -67,10 +66,14 @@ export default class LandingScreen extends React.Component {
                   <FontAwesome name="usd" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
                 <div className="col center x-center about-desc font-stretch-mid">
-                  Make your event a reality with unique crowdfunding options.
+                  <h3>Fund</h3>Make your event a reality with unique crowdfunding options.
                 </div>
               </div>
             </div>
+          </div>
+          <div className="side-tab-panel">
+            <div className="row center"><h2>Which leads to...</h2></div>
+              <BlockContainer events={this.promotedEvents()} />
           </div>
         </div>
       </div>

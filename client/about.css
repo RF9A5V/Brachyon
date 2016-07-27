@@ -16,17 +16,16 @@
 
 .about-blocks {
   background-color: #666;
-  width: 11vw;
+  width: 18vw;
   height: 150px;
   margin: 5px;
   padding: 5px;
 }
 
 .about-desc {
-  width: 11vw;
+  width: 18vw;
   height: 75px;
   margin: 5px;
-  font-size: 13px;
   padding: 5px;
 }
 
