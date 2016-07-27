@@ -20,17 +20,26 @@ body {
   margin-top: 50px;
 }
 
-.bracket-line-h {
-  width: 60px;
-  height: 5px;
-  position: relative;
-  background-color: white;
-}
-
 .bracket-line-v {
   width: 5px;
   background-color: white;
+  position: absolute;
+  right: 0;
+}
+
+.match-block {
+  width: 150px;
+  margin: 20px 0;
   position: relative;
+  text-align: left;
+}
+
+.match-participant {
+  padding: 10px 5px;
+}
+
+.match-participant:first-child {
+  border-bottom: solid 5px white;
 }
 
 .box {
