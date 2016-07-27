@@ -32,8 +32,7 @@ Meteor.methods({
     }
     var event = Events.findOne(eventID);
     //var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
-    var participants = Array(10).fill("").map( (x, i) => { return i } );
-    console.log(participants);
+    var participants = Array(11).fill("").map( (x, i) => { return i + 1 } );
 
     var rounds = OrganizeSuite.singleElim(participants);
     console.log(rounds);
@@ -42,6 +41,33 @@ Meteor.methods({
       $set: {
         active: true,
         rounds: rounds
+      }
+    })
+  },
+
+  "events.advance_match"(eventID, roundNumber, matchNumber, placement) {
+    var event = Events.findOne(eventID);
+    if(!event){
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    var match = event.rounds[roundNumber][matchNumber];
+    if(placement == 0) {
+      match.winner = match.playerOne;
+    }
+    else {
+      match.winner = match.playerTwo;
+    }
+    var advMatch = event.rounds[roundNumber + 1][Math.floor(matchNumber / 2)];
+    if(matchNumber % 2 == 0){
+      advMatch.playerOne = match.winner;
+    }
+    else {
+      advMatch.playerTwo = match.winner;
+    }
+    Events.update(eventID, {
+      $set: {
+        [`rounds.${roundNumber}.${matchNumber}`]: match,
+        [`rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
       }
     })
   }

@@ -11,13 +11,21 @@ var OrganizeSuite = {
 
     byes = byes.concat(Array(nullByeCount).fill(null));
 
-    var crush = function(arr) {
+    var crush = function(arr, appendNullAfterCrush=false) {
       var res = arr;
-      var iterations = Math.ceil(Math.log(arr.length) / Math.log(2))
-      for(var i = 0; i < iterations; i ++){
+      var iterations = Math.ceil(Math.log(arr.length) / Math.log(2));
+      while(res.length > 1){
         var temp = [];
         for(var j = 0; j < res.length / 2; j ++){
           temp.push([res[j], res[res.length - j - 1]]);
+        }
+        if(appendNullAfterCrush) {
+          var nulls = [];
+          for(var k = 0; k < nullNonByeCount / 2; k ++){
+            nulls.push([null, null])
+          }
+          temp = nulls.concat(temp);
+          appendNullAfterCrush = false;
         }
         res = temp;
       }
@@ -35,7 +43,7 @@ var OrganizeSuite = {
       return flatten(res);
     }
 
-    nonByes = crush(nonByes);
+    nonByes = crush(nonByes, true);
     byes = crush(byes);
 
     var rounds = [];
@@ -57,7 +65,7 @@ var OrganizeSuite = {
       rounds.push(temp);
     }
 
-    for(var i = roundCount - 3; i > 0; i --){
+    for(var i = roundCount - 3; i >= 0; i --){
       rounds.push(Array(Math.pow(2, i)).fill({
         playerOne: null,
         playerTwo: null,

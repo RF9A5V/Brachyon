@@ -19,7 +19,7 @@ export default class BracketPanel extends Component {
     if(this.props.active){
       return (
         <div>
-          <SingleDisplay participants={this.props.participants} />
+          <SingleDisplay rounds={this.props.rounds} id={this.props.id} />
         </div>
       )
     }

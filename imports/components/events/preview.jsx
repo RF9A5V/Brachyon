@@ -47,7 +47,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var event = this.event();
     return [
       (<DetailsPanel {...event.details} ref="details"/>),
-      (<BracketsPanel active={event.active} participants={Object.keys(event.participants).map( (key) => { return event.participants[key] } )} id={event._id} />),
+      (<BracketsPanel active={event.active} participants={Object.keys(event.participants).map( (key) => { return event.participants[key] } )} id={event._id} rounds={event.rounds} />),
       (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />),
       (<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
     ]
