@@ -35,8 +35,8 @@ export default class MatchBlock extends Component {
                   ) : (
                     () => {}
                   )
-                }>
-                  <span style={{color: isLoser ? "#999" : "white"}}>
+                } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                  <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
                     {
                       p == null ? (
                         "TBD"
@@ -55,9 +55,9 @@ export default class MatchBlock extends Component {
             ""
           ) : (
             j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * i), top: 50 * Math.pow(2, i - 1) - 2.5}}></div>
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * i), top: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
             ) : (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * i), bottom: 50 * Math.pow(2, i - 1) - 2.5}}></div>
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * i), bottom: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
             )
           )
         }

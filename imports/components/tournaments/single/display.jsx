@@ -23,8 +23,22 @@ export default class SingleDisplay extends Component {
                 <div className="col" style={{justifyContent: "space-around"}}>
                   {
                     round.map((match, j) => {
+                      var isFutureLoser = false;
+                      if(i < this.props.rounds.length - 1){
+                        var nextMatch = this.props.rounds[i + 1][Math.floor(j / 2)];
+                        var rNum = i + 1;
+                        var mNum = Math.floor(j / 2);
+                        while(++rNum < this.props.rounds.length && nextMatch.winner != null) {
+                          if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
+                            isFutureLoser = true;
+                            break;
+                          }
+                          mNum = Math.floor(mNum / 2);
+                          nextMatch = this.props.rounds[rNum][mNum];
+                        }
+                      }
                       return (
-                        <MatchBlock match={match} roundNumber={i} matchNumber={j} roundSize={this.props.rounds.length} id={this.props.id} />
+                        <MatchBlock match={match} roundNumber={i} matchNumber={j} roundSize={this.props.rounds.length} id={this.props.id} isFutureLoser={isFutureLoser} />
                       );
                     })
                   }
