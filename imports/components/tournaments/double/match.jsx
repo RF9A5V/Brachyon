@@ -9,10 +9,10 @@ export default class MatchBlock extends Component {
     if (this.props.sp2%2 == 0)
       id2 = this.props.sp2+1;
     else
-      id2++;
+      id2 = this.props.sp2-1;
     id3 = Math.floor(this.props.sp2/2);
     if (this.props.bset)
-      id3 = Math.ceil(this.props.sp2/2);
+      id3 = this.props.sp2%2 == 0 ? id2:this.props.sp2;
     round = this.props.pos;
     str = "", losdiv = 1;
     if (this.props.loss)
@@ -44,9 +44,11 @@ export default class MatchBlock extends Component {
     {
       document.getElementById(this.state.opponent).style.color = "red";
       document.getElementById(this.props.eid).style.color = "gray";
-      document.getElementById(this.state.successor).innerHTML += " " + this.state.val;
       this.props.changematches(this.props.eid, this.state.opponent, this.state.successor, this.state.val) //Passing in its own ref, its opponents ref, and its successors ref.
     }
+    console.log(this.props.eid);
+    console.log(this.state.opponent);
+    console.log(this.state.successor);
   }
 
   cwait()
@@ -110,7 +112,13 @@ export default class MatchBlock extends Component {
 
   cval(val)
   {
+    document.getElementById(this.props.eid).innerHTML += " " + val;
     this.setState({val: val});
+  }
+
+  setloser(loser)
+  {
+    this.setState({loss: loser});
   }
 
   render()
