@@ -31,7 +31,11 @@ export default class MatchBlock extends Component {
       round+=2;
     }
     strid2 = "match" + id3 + "round" + str + (round+1);
-
+    if (this.props.twoset)
+    {
+      strid = "match" + id2 + "nonbye2los";
+      strid2 = "match" + id3 + "nonbyelos";
+    }
     if (this.props.sty.color == "gray")
       this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
     else
