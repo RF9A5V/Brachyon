@@ -27,11 +27,15 @@ export default class About extends TrackerReact(Component) {
         <div className="side-tab-content">
           <div className="side-tab-panel">
             <div className="row center"><h2>What is Brachyon?</h2></div>
-            <div className="row center about-what font-stretch-mid">
-              Welcome to Brachyon - a website which allows you to find, fund,
-              create and promote competitive gaming events.
-              Brachyon makes it easy to build passionate communities
-              around competitive games.
+            <div className="row center">
+              <div className="about-what font-stretch-mid">
+                Welcome to Brachyon - a website which allows you to find, fund,
+                create and promote competitive gaming events.
+                Brachyon makes it easy to build passionate communities
+                around competitive games.
+                Brachyon's mission is to empower competitive gaming communities from the
+                ground up.
+              </div>
             </div>
           </div>
           <div className="side-tab-panel">
@@ -72,8 +76,17 @@ export default class About extends TrackerReact(Component) {
             </div>
           </div>
           <div className="side-tab-panel">
-            <div className="row center"><h2>Which leads to...</h2></div>
+            <div className="row center"><h2>Which Leads To...</h2></div>
               <BlockContainer events={this.promotedEvents()} />
+          </div>
+          <div className="side-tab-panel">
+            <div className="row center"><h2>Why?</h2></div>
+            <div className="row center">
+              <div className="about-what font-stretch-mid">
+                We love competitive gaming. No website or app catered to our needs
+                as competitors. Brachyon formed out of our pure love for the game.
+              </div>
+            </div>
           </div>
         </div>
       </div>

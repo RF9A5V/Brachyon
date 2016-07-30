@@ -7,7 +7,7 @@
 .about-what {
   background-color: #666;
   padding: 10px;
-  margin: 0 13vw;
+  max-width: 600px;
 }
 
 .about-icons {
@@ -18,14 +18,14 @@
   background-color: #666;
   width: 18vw;
   height: 150px;
-  margin: 5px;
+  margin: 10px;
   padding: 5px;
 }
 
 .about-desc {
   width: 18vw;
   height: 75px;
-  margin: 5px;
+  margin: 10px;
   padding: 5px;
 }
 
