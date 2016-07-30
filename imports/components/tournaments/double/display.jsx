@@ -7,7 +7,7 @@ export default class DoubleDisplay extends Component {
   {
     super(props);
     loserarr = []
-    this.state = {num: 24, loserarr: loserarr};
+    this.state = {num: 25, loserarr: loserarr};
   }
 
   flatten(ary) {
@@ -39,7 +39,7 @@ export default class DoubleDisplay extends Component {
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
-    var boxes = [], usedspots = [], spot = [], boxidarr = []
+    var boxes = [], usedspots = [], spot = [], lspot = [], boxidarr = []
 
     //This will determine the spacing and placement for the nonbyes.
     var roundparticipants = num - nonbyes/2, losers = roundparticipants/2;
@@ -106,6 +106,7 @@ export default class DoubleDisplay extends Component {
     //Losers bracket
     var fmspot = spot;
     spot = [];
+    twobyeleft = 0;
     usedspots = [];
     matchn = 1, mleft = 1, bset = false, twoset = false, mult = 1, tpspace = 0; //tpspace changes every second set of matches in the losers to be placed in the right spot
     if ((losers*3) >= num)
@@ -114,14 +115,25 @@ export default class DoubleDisplay extends Component {
     }
     else
     {
-      nonbyes = (num-losers*3)*2;
-      losers=losers*2;
+      for (i = 0; i < fmspot.length; i++)
+      {
+        if (Math.floor(fmspot[i]/2)%2 == 0)
+        {
+          fmspot.splice(i, 1);
+            i--;
+        }
+      }
+      nonbyes2 = (num-losers*3)*2;
+      byes2 = losers-nonbyes2/2;
+      nonbyes = nonbyes - nonbyes2;
       twoset = true;
+      twobyeleft = 200;
     }
     byes = losers-nonbyes/2;
 
     //loserarr = getlosers(spot, num, twoset);
     loserarr = []
+    usedbyes = []
     losernum = 0;
     if (nonbyes > 0)
     {
@@ -130,6 +142,38 @@ export default class DoubleDisplay extends Component {
       losernum+=2;
       var nbarr = Array.apply(null, Array(losers*2)).map(function (_, i) {return i+1;});
       var aseed = this.seed(nbarr);
+      if (twoset)
+      {
+        bset = true;
+        for (i = 0; i < nonbyes2; i++)
+          spot.push(aseed.indexOf(byes2+i+1))
+        spot = spot.sort(function(a, b){return a-b});
+        for (i = 0; i < nonbyes2; i++)
+        {
+          var boxid = "match" + (spot[i]+4) + "nonbye2los";
+          var style = {
+            top: (spot[i])*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
+            left: 200 + "px",
+            color: "white"
+          }
+          boxes.push(
+            <MatchBlock sty={style} eid={boxid} pos={-1} sp={""} sp2={spot[i]+4} key={n} loss={true} twoset={true} ref={boxid} changematches={this.changematches.bind(this)}/>
+          )
+          usedbyes[Math.floor((spot[i]+4)/2)] = true;
+          if (i%2 == 0) //Algorithm we're looking for: losers - spot[i]/4 gives us the challonge matching
+          {
+            loserarr[0][spot[i]+2] = boxid;
+            loserarr[0][spot[i]+3] = boxid;
+          }
+          else
+          {
+            loserarr[0][spot[i]+3] = boxid;
+            loserarr[0][spot[i]+4] = boxid;
+          }
+          n++;
+        }
+        spot = [];
+      }
       for (i = 0; i < nonbyes; i++)
         spot.push(aseed.indexOf(byes+i+1));
       spot = spot.sort(function(a, b){return a-b});
@@ -138,7 +182,7 @@ export default class DoubleDisplay extends Component {
         var boxid = "match" + spot[i] + "nonbyelos";
         var style = {
           top: spot[i]*50*Math.pow(2,matchn-1)+275-tpspace+spacing + "px",
-          left: 200 + "px",
+          left: 200 + twobyeleft + "px",
           color: "white"
         }
         boxes.push(
@@ -150,7 +194,7 @@ export default class DoubleDisplay extends Component {
           loserarr[1][(losers - Math.floor(fmspot[i]/4))*2 - 2] = boxid;
           loserarr[1][(losers - Math.floor(fmspot[i]/4))*2 - 1] = boxid;
         }
-        else
+        else if (!(usedbyes[i]))
         {
           loserarr[0][fmspot[i]] = boxid;
           loserarr[0][fmspot[i]-1] = boxid;
@@ -161,27 +205,6 @@ export default class DoubleDisplay extends Component {
 
       mleft++;
       matchn++;
-      if (twoset)
-      {
-        for (i = 0; i < losers; i++)
-        {
-          var boxid = "match" + i + "roundlos" + mleft;
-          var style = {
-            top: i*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
-            left: mleft*200 + "px",
-            color: "white"
-          };
-          boxes.push(
-            <MatchBlock sty={style} eid={boxid} pos={matchn} sp={""} loss={true} sp2 = {i} ref={boxid} bset={bset} changematches={this.changematches.bind(this)}/>
-          )
-          n++;
-        }
-        losers=losers/2;
-        mleft++;
-        spacing = spacing+Math.pow(2, matchn-1)*25;
-        bset = true;
-        matchn++;
-      }
     }
 
     rev = false;
@@ -195,7 +218,7 @@ export default class DoubleDisplay extends Component {
         var boxid = "match" + i + "roundlos" + mleft;
         var style = {
           top: i*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
-          left: mleft*200 + "px",
+          left: mleft*200 + twobyeleft + "px",
           color: "white"
         };
         boxes.push(
@@ -288,11 +311,6 @@ export default class DoubleDisplay extends Component {
       this.refs[loserarr[this.refs[id2].ground()-1][this.refs[id2].gmatch()]].ctrue(); //loserarr[round][match]
     }
   }
-
-  // sendloser(str, mat, round)
-  // {
-  //   this.state.num
-  // }
 
   render() {
     var boxes = this.formbrackets();
