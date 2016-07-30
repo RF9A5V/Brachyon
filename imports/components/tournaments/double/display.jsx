@@ -39,7 +39,7 @@ export default class DoubleDisplay extends Component {
     var nonbyes = (num - Math.pow(2, Math.floor(Math.log2(num))))*2;
     var byes = num - nonbyes;
     var rounds = Math.ceil(Math.log2(num));
-    var boxes = [], usedspots = [], spot = [], lspot = [], boxidarr = []
+    var boxes = [], usedspots = [], spot = [], boxidarr = []
 
     //This will determine the spacing and placement for the nonbyes.
     var roundparticipants = num - nonbyes/2, losers = roundparticipants/2;
