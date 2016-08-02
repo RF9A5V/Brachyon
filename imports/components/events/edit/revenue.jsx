@@ -26,7 +26,7 @@ class TierPanel extends Component {
       if(this.refs.name){
         this.refs.name.value = val.name;
         this.refs.description.value = val.description;
-        this.refs.price.value = (val.price / 100).toFixed(2);
+        this.refs.price.value = val.price;
         this.refs.limit.value = val.limit;
       }
     }
@@ -49,7 +49,7 @@ class TierPanel extends Component {
 
     this.refs.name.value = val.name;
     this.refs.description.value = val.description;
-    this.refs.price.value = (val.price / 100).toFixed(2);
+    this.refs.price.value = val.price;
     this.refs.limit.value = val.limit;
 
     this.forceUpdate();
@@ -70,7 +70,7 @@ class TierPanel extends Component {
     this.state.stubs[this.state.index] = {
       name: this.refs.name.value,
       description: this.refs.description.value,
-      price: this.refs.price.value * 100,
+      price: this.refs.price.value,
       limit: this.refs.limit.value
     };
   }
@@ -91,7 +91,11 @@ class TierPanel extends Component {
           <label>Description</label>
           <textarea ref="description" onChange={this.onChange.bind(this)} ></textarea>
           <label>Amount</label>
-          <input type="text" ref="price" style={temp} onChange={this.onChange.bind(this)} />
+          <div className="row" style={{position: "relative"}}>
+            <div style={{position: "absolute", top: 7, left: 7, width: 25, height: 25, borderRadius: "100%", backgroundColor: "gold"}}>
+            </div>
+            <input style={{paddingLeft: 39, margin: 0, marginBottom: 10}} type="text" ref="price" onChange={this.onChange.bind(this)} />
+          </div>
           <label>Limit</label>
           <input type="text" ref="limit" style={temp} onChange={this.onChange.bind(this)} />
           <div>
@@ -101,8 +105,10 @@ class TierPanel extends Component {
         {
           Object.keys(this.state.stubs).map(function(val, index) {
             return (
-              <div className="tier-stub" onClick={self.setForm(self.state.stubs[val], index).bind(self)}>
-                { self.state.stubs[val].name } - ${ (self.state.stubs[val].price * 1 / 100).toFixed(2) }
+              <div className="tier-stub x-center" style={{display: "inline-flex"}} onClick={self.setForm(self.state.stubs[val], index).bind(self)}>
+                <span>{ self.state.stubs[val].name }</span>
+                <div style={{width: 10, height: 10, backgroundColor: "gold", borderRadius: "100%", margin: "0 5px 0 10px" }}></div>
+                <span>{ (self.state.stubs[val].price) }</span>
               </div>
             )
           })

@@ -1,0 +1,34 @@
+.slider-bar {
+  width: 100%;
+  height: 5px;
+  background-color: white;
+  position: relative;
+}
+
+.triangle-bottom {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 0;
+  border-color: white transparent transparent transparent;
+}
+
+.slider-control {
+  position: relative;
+}
+
+.slider-control-header {
+  padding: 5px;
+  /* Hacky, but works? */
+  display: table;
+  background-color: white;
+  color: black;
+}
+
+.slider-tier {
+  position: absolute;
+}
+
+.slider-tier:hover {
+  cursor: pointer;
+}

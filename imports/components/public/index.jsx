@@ -8,6 +8,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 export default class LandingScreen extends React.Component {
+
   render() {
     return (
       <div className="landing-screen">

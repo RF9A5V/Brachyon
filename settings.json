@@ -4,12 +4,36 @@
       "testPublishableKey": "pk_test_dzbxXVvTa0bmS88ForcGsF2Y",
       "livePublishableKey": "pk_live_QMeWWW0ZG66HburlSe6Dvl5u",
       "client_id": "ca_8dMdapsTG16ZRZfHQ3i10KvxTB6yzxqP"
+    },
+    "facebook": {
+      "testAppId": "1033113610129174"
+    },
+    "twitch": {
+      "client_id": "dtd7tnwg9h6kpdm6169qwdv4wpwu66"
+    },
+    "twitter": {
+      "consumerKey": "DPnvY6SAUe0pwgfNPky1r2WaP"
+    },
+    "google": {
+      "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
     }
   },
   "private": {
     "stripe": {
       "testSecretKey": "sk_test_KupqP1XemQb5r4z25FAfZVOI",
       "liveSecretKey": "sk_live_kBq9nemn0mBwUvHKVC3w5tci"
+    },
+    "facebook": {
+      "testAppSecret": "65357189ff78915a8d752da87b4a30e9"
+    },
+    "twitch": {
+      "liveSecretKey": "s78zcg4hatsuvwbzybah43bmm6ujuz8"
+    },
+    "twitter": {
+      "liveSecretKey": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8"
+    },
+    "google": {
+      "liveSecretKey": "XUgerKtBpHS6Qu8rrBuD2KjM"
     }
   }
 

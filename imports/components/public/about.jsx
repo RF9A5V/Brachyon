@@ -28,7 +28,7 @@ export default class About extends TrackerReact(Component) {
           <div className="side-tab-panel">
             <div className="row center"><h2>What is Brachyon?</h2></div>
             <div className="row center">
-              <div className="about-what font-stretch-mid">
+              <div className="about-what">
                 Welcome to Brachyon - a website which allows you to find, fund,
                 create and promote competitive gaming events.
                 Brachyon makes it easy to build passionate communities
@@ -45,7 +45,7 @@ export default class About extends TrackerReact(Component) {
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="search" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc font-stretch-mid">
+                <div className="col center x-center about-desc">
                   <h3>Search</h3>Quickly search events by area, game and time.
                 </div>
               </div>
@@ -53,7 +53,7 @@ export default class About extends TrackerReact(Component) {
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="plus" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc font-stretch-mid">
+                <div className="col center x-center about-desc">
                   <h3>Create</h3>Generate competitive events in seconds.
                 </div>
               </div>
@@ -61,7 +61,7 @@ export default class About extends TrackerReact(Component) {
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="arrow-up" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc font-stretch-mid">
+                <div className="col center x-center about-desc">
                   <h3>Promote</h3>Share and publicize your events.
                 </div>
               </div>
@@ -69,7 +69,7 @@ export default class About extends TrackerReact(Component) {
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="usd" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc font-stretch-mid">
+                <div className="col center x-center about-desc">
                   <h3>Fund</h3>Make your event a reality with unique crowdfunding options.
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default class About extends TrackerReact(Component) {
           <div className="side-tab-panel">
             <div className="row center"><h2>Why?</h2></div>
             <div className="row center">
-              <div className="about-what font-stretch-mid">
+              <div className="about-what">
                 We love competitive gaming. No website or app catered to our needs
                 as competitors. Brachyon formed out of our pure love for the game.
               </div>

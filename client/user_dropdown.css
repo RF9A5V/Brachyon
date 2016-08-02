@@ -1,0 +1,28 @@
+.user-dropdown {
+  position: absolute;
+  right: 20px;
+  top: 60px;
+}
+
+.user-dropdown-content {
+  background-color: #222;
+}
+
+.triangle-top {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0px 20px 20px;
+  border-color: transparent transparent #222 transparent;
+}
+
+.user-dropdown-option {
+  margin: 0;
+  padding: 20px 40px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-dropdown-option:hover {
+  background-color: #333;
+}
