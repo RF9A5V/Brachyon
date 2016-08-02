@@ -86,7 +86,7 @@ export default class AutocompleteForm extends TrackerReact(Component) {
   render() {
     return (
       <div className="col" style={{position: "relative"}}>
-        <input ref="input" type="text" onChange={this.search.bind(this)} style={{margin: 0, marginTop: 15}} />
+        <input ref="input" type="text" onChange={this.search.bind(this)} style={{margin: 0}} />
         <div className="template-container">
           {
             this.state.readyList.every( (value) => {return value} ) && this.state.active ? (

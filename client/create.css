@@ -1,0 +1,47 @@
+.module-block {
+  width: 400px;
+  background-color: #555;
+  margin-bottom: 20px;
+  padding: 10px;
+  position: relative;
+}
+
+.module-block.active {
+  background-color: #1FCB2A;
+}
+
+.module-block-header {
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+.module-block-overlay {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.game-bracket-container {
+  width: 100%;
+  justify-content: space-between;
+  background-color: #666;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.game-bracket-container > * {
+  margin-bottom: 15px;
+}
+
+.format-select {
+  font-size: 20px;
+}
+
+.format-select:hover {
+  cursor: pointer;
+}
+
+.format-select.active {
+  font-weight: bold;
+}
