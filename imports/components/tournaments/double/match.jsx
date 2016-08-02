@@ -9,24 +9,33 @@ export default class MatchBlock extends Component {
     if (this.props.sp2%2 == 0)
       id2 = this.props.sp2+1;
     else
-      id2 = this.props.sp2-1;
+      id2++;
     id3 = Math.floor(this.props.sp2/2);
+    if (this.props.bset)
+      id3 = Math.ceil(this.props.sp2/2);
     round = this.props.pos;
+    str = "", losdiv = 1;
+    if (this.props.loss)
+    {
+      str = "los";
+      losdiv = 2;
+      lb = true;
+    }
     if (this.props.pos > -1)
     {
-      strid = "match" + id2 + "round" + this.props.pos;
+      strid = "match" + id2 + "round" + str + this.props.pos;
     }
     else
     {
-      strid = "match" + id2 + "nonbye";
+      strid = "match" + id2 + "nonbye" + str;
       round+=2;
     }
-    strid2 = "match" + id3 + "round" + (round+1);
+    strid2 = "match" + id3 + "round" + str + (round+1);
 
     if (this.props.sty.color == "gray")
-      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false}
+      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
     else
-      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false}
+      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
   }
 
   advance()
@@ -36,7 +45,6 @@ export default class MatchBlock extends Component {
       document.getElementById(this.state.opponent).style.color = "red";
       document.getElementById(this.props.eid).style.color = "gray";
       document.getElementById(this.state.successor).innerHTML += " " + this.state.val;
-      Meteor.call("bot.informOnUpdate", `${this.state.val} advances to match ${this.state.successor}. Good for you. Scrub.`);
       this.props.changematches(this.props.eid, this.state.opponent, this.state.successor, this.state.val) //Passing in its own ref, its opponents ref, and its successors ref.
     }
   }
@@ -73,6 +81,26 @@ export default class MatchBlock extends Component {
   gval()
   {
     return this.state.val;
+  }
+
+  gmatch()
+  {
+    return this.props.sp2;
+  }
+
+  gopmatch()
+  {
+    return this.state.opmat;
+  }
+
+  gsuccmat() //succ
+  {
+    return this.state.succmat; //Levels of irony we have never attained
+  }
+
+  glb()
+  {
+    return this.props.loss;
   }
 
   cval(val)
