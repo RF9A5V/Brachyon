@@ -225,7 +225,7 @@ export default class OrganizePanel extends Component {
     };
   }
 
-  values() {
+  value() {
     return Object.keys(this.refs).map((key, index) => {
       try {
         return this.refs[key].values();
@@ -258,7 +258,6 @@ export default class OrganizePanel extends Component {
             ""
           )
         }
-        <button onClick={(e) => { console.log(this.values()) }}>Test</button>
       </div>
     )
   }

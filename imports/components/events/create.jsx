@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { browserHistory } from "react-router";
+
 import AccordionContainer from "/imports/components/public/accordion_container.jsx";
 import DetailsPanel from "./create/details.jsx";
 import RevenuePanel from "./create/module_dropdowns/revenue.jsx";
@@ -22,10 +24,10 @@ export default class EventCreateScreen extends Component {
 
   panels() {
     return {
-      organization: (<OrganizePanel />),
-      bot: (<BotPanel />),
-      promotion: (<PromotionPanel />),
-      revenue: (<RevenuePanel />)
+      organization: (<OrganizePanel ref="organize" />),
+      bot: (<BotPanel ref="bot" />),
+      promotion: (<PromotionPanel ref="promotion" />),
+      revenue: (<RevenuePanel ref="revenue" />)
     }
   }
 
@@ -77,17 +79,19 @@ export default class EventCreateScreen extends Component {
   submit(e) {
     e.preventDefault();
     var refKeys = Object.keys(this.refs);
+    console.log(refKeys);
     var args = {};
     for(var i in refKeys) {
       var key = refKeys[i];
       args[key] = this.refs[key].value();
     }
-    Meteor.call("events.create", args, function(err){
+    Meteor.call("events.create", args, function(err, event){
       if(err){
-        console.log("error!");
+        console.log(err.reason);
       }
       else {
-        toastr.success("Whee")
+        console.log(event);
+        browserHistory.push("/dashboard");
       }
     });
   }
@@ -100,7 +104,7 @@ export default class EventCreateScreen extends Component {
       <div style={{marginBottom: 20}}>
         {
           reviewRequired ? (
-            <button>Advanced Options</button>
+            <button onClick={this.submit.bind(this)}>Advanced Options</button>
           ) : (
             <button onClick={this.submit.bind(this)}>Publish</button>
           )
