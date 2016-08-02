@@ -31,8 +31,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var event = Events.findOne(eventID);
-    //var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
-    var participants = Array(16).fill("").map( (x, i) => { return i + 1 } );
+    var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
 
     var rounds = OrganizeSuite.singleElim(participants);
     console.log(rounds);
@@ -57,19 +56,29 @@ Meteor.methods({
     else {
       match.winner = match.playerTwo;
     }
-    var advMatch = event.rounds[roundNumber + 1][Math.floor(matchNumber / 2)];
-    if(matchNumber % 2 == 0){
-      advMatch.playerOne = match.winner;
+    if(roundNumber + 1 >= event.rounds.length){
+      Events.update(eventID, {
+        $set: {
+          [`rounds.${roundNumber}.${matchNumber}`]: match,
+          complete: true
+        }
+      })
     }
     else {
-      advMatch.playerTwo = match.winner;
-    }
-    Events.update(eventID, {
-      $set: {
-        [`rounds.${roundNumber}.${matchNumber}`]: match,
-        [`rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+      var advMatch = event.rounds[roundNumber + 1][Math.floor(matchNumber / 2)];
+      if(matchNumber % 2 == 0){
+        advMatch.playerOne = match.winner;
       }
-    })
+      else {
+        advMatch.playerTwo = match.winner;
+      }
+      Events.update(eventID, {
+        $set: {
+          [`rounds.${roundNumber}.${matchNumber}`]: match,
+          [`rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+        }
+      })
+    }
   }
 
 })
