@@ -6,6 +6,18 @@ import TimeInput from './time_input.jsx';
 export default class DetailsPanel extends Component {
 
   value() {
+    if(this.refs.name.value == "") {
+      throw new Error("Details name needs definition.");
+    }
+    if(this.refs.location.value() == null) {
+      throw new Error("Details location needs definition.");
+    }
+    if(this.refs.description.value == "") {
+      throw new Error("Details description needs definition.");
+    }
+    if(this.refs.date.value() == null || this.refs.time.value() == null) {
+      throw new Error("Details datetime needs definition.");
+    }
     return {
       name: this.refs.name.value,
       location: this.refs.location.value(),

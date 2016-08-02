@@ -2,11 +2,9 @@ import React, { Component } from "react";
 
 export default class PromotionPanel extends Component {
 
-  values() {
+  value() {
     return {
-      promotion: {
-        mainPagePromo: this.refs.mainPagePromo.checked
-      }
+      mainPagePromo: this.refs.mainPagePromo.checked
     }
   }
 
