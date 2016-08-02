@@ -81,6 +81,8 @@ Meteor.startup(() => {
 
   Meteor.bot = new MainBot();
 
+  Meteor.bot.startListening();
+
   SyncedCron.start();
 
   Images.allow({

@@ -52,6 +52,7 @@ Meteor.methods({
     attrs.underReview = false;
     attrs.owner = Meteor.userId();
     attrs.sponsors = {};
+    attrs.discordServers = {};
     return Events.insert(attrs);
   },
 
@@ -131,6 +132,18 @@ Meteor.methods({
       obj[`promotion.${key}`] = attrs[key];
     });
     obj["promotion.active"] = true;
+    Events.update(id, {
+      $set: obj
+    });
+  },
+
+  "events.link_discord_server"(id, discordServerId) {
+    var owndedEvents = Events.find({owner: Meteor.userId(), _id: id}).fetch();
+    if(owndedEvents.length == 0){
+      Meteor.Error(403, "WOW");
+    }
+    var obj = {};
+    obj["discordServers.id"] = discordServerId;
     Events.update(id, {
       $set: obj
     });

@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "bufferutil": "^1.2.1",
+    "discord.js": "^8.0.0",
     "font-awesome": "^4.6.3",
     "google-map-react": "^0.12.1",
     "google-maps": "^3.2.1",
