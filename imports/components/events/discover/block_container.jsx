@@ -5,13 +5,16 @@ import moment from 'moment';
 
 export default class BlockContainer extends Component {
 
-  selectEvent(eventID) {
+  selectEvent(event) {
     return(
       function(e){
         e.preventDefault();
-        const path = `/events/${eventID}/preview`
-        console.log(path)
-        browserHistory.push(path)
+        if(event.published || event.underReview){
+          browserHistory.push(`/events/${event._id}/preview`);
+        }
+        else {
+          browserHistory.push(`/events/${event._id}/edit`);
+        }
       }
     )
   }
@@ -31,7 +34,7 @@ export default class BlockContainer extends Component {
         {
           this.props.events.map(function(event){
             return (
-              <div className="event-block" onClick={self.selectEvent(event._id).bind(self)}>
+              <div className="event-block" onClick={self.selectEvent(event).bind(self)}>
                 <img src={self.imgOrDefault(event)} />
                 <div className="event-block-details">
                   <h2 className="event-block-title" style={{fontSize: "calc(1vw + 1vmin)"}}>{ event.details.name }</h2>

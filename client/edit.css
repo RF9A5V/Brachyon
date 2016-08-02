@@ -31,12 +31,9 @@
   border: 2px #CC0000 solid;
 }
 
-.side-tab-content-container {
-  white-space: nowrap;
-}
-
 .side-tab-content {
   flex: 1 1;
+  padding: 20px;
 }
 
 .side-tab-button {

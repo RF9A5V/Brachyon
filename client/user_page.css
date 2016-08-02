@@ -1,0 +1,43 @@
+.user-banner {
+  width: 100%;
+  height: 50vh;
+  position: relative;
+  background-size: cover;
+}
+
+.user-img-line {
+  position: absolute;
+  width: 100%;
+  top: calc(100% - 100px);
+}
+
+.user-game-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  margin-left: 40px;
+  position: relative;
+  background-size: auto 100%;
+  background-position: center;
+}
+
+.user-game-icon-ribbon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  bottom: 0;
+  right: 0;
+}
+
+.user-profile-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  background-size: cover;
+  margin-right: 40px;
+}
+
+.user-events-container {
+  margin-top: 200px;
+  padding: 40px;
+}

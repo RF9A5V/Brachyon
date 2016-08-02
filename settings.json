@@ -4,11 +4,35 @@
       "testPublishableKey": "***REMOVED***",
       "livePublishableKey": "***REMOVED***",
       "client_id": "***REMOVED***"
+    },
+    "facebook": {
+      "testAppId": "***REMOVED***"
+    },
+    "twitch": {
+      "client_id": "***REMOVED***"
+    },
+    "twitter": {
+      "consumerKey": "***REMOVED***"
+    },
+    "google": {
+      "client_id": "***REMOVED***"
     }
   },
   "private": {
     "stripe": {
       "testSecretKey": "***REMOVED***",
+      "liveSecretKey": "***REMOVED***"
+    },
+    "facebook": {
+      "testAppSecret": "***REMOVED***"
+    },
+    "twitch": {
+      "liveSecretKey": "***REMOVED***"
+    },
+    "twitter": {
+      "liveSecretKey": "***REMOVED***"
+    },
+    "google": {
       "liveSecretKey": "***REMOVED***"
     }
   }
