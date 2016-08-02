@@ -4,11 +4,19 @@ import Ticketing from '/imports/api/ticketing/ticketing.js';
 
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
+  var users = Meteor.users.find({_id: { $in: event.participants || [] }});
+  var profileImages = ProfileImages.find({_id: { $in: (users.fetch().map( (user) => { return user.profile.image } )) }})
   return [
     Events.find({_id}),
-    Images.find({_id: event.details.banner})
+    Images.find({_id: event.details.banner}),
+    users,
+    profileImages
   ];
 });
+
+Meteor.publish("event_participants", (id) => {
+  return Meteor.users.find({ _id: { $in: Events.findOne(id).participants } })
+})
 
 Meteor.publish("user", (_id) => {
   var user = Meteor.users.findOne({_id});
