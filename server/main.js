@@ -80,8 +80,17 @@ Meteor.startup(() => {
   Logger.info('Meteor started!')
 
   Meteor.bot = new MainBot();
-
   Meteor.bot.startListening();
+  // SyncedCron.add({
+  //   name: "Test cron job",
+  //   schedule: function(parser){
+  //     return parser.recur().every().minute()
+  //   },
+  //   job: function() {
+  //     console.log("Job run!");
+  //     return true;
+  //   }
+  // })
 
   SyncedCron.start();
 
