@@ -55,10 +55,10 @@ export default class Header extends TrackerReact(Component) {
             <img style={{width: 75, height: 75, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
           </a>
           <div className="col">
-            <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
             <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
               <div style={{width: 25, height: 25, backgroundColor: "gold", marginRight: 10, borderRadius: "100%"}}></div>
-              <span style={{fontWeight: "bold"}}>
+              <span className="bold">
                 {Meteor.user().profile.amount || 0}
               </span>
             </a>
