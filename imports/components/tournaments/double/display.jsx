@@ -7,7 +7,7 @@ export default class DoubleDisplay extends Component {
   {
     super(props);
     loserarr = []
-    this.state = {num: 16, loserarr: loserarr};
+    this.state = {num: 15, loserarr: loserarr};
   }
 
   flatten(ary) {
@@ -148,28 +148,22 @@ export default class DoubleDisplay extends Component {
         for (i = 0; i < nonbyes2; i++)
           spot.push(aseed.indexOf(byes2+i+1));
         spot = spot.sort(function(a, b){return a-b});
+        var place;
         for (i = 0; i < nonbyes2; i++)
         {
-          var boxid = "match" + (spot[i]+4) + "nonbye2los";
+          place = spot[i]%2 == 0 ? (spot[i]+1)*2:((spot[i])*2+1);
+          var boxid = "match" + (place) + "nonbye2los";
           var style = {
             top: (spot[i])*50*Math.pow(2,matchn-1)+300-tpspace+spacing + "px",
             left: 200 + "px",
             color: "white"
           }
           boxes.push(
-            <MatchBlock sty={style} eid={boxid} pos={-1} sp={""} sp2={spot[i]+4} key={n} loss={true} twoset={true} ref={boxid} changematches={this.changematches.bind(this)}/>
+            <MatchBlock sty={style} eid={boxid} pos={-1} sp={""} sp2={place} key={n} loss={true} twoset={true} ref={boxid} changematches={this.changematches.bind(this)}/>
           )
-          usedbyes[Math.floor((spot[i]+4)/2)] = true;
-          if (i%2 == 0) //Algorithm we're looking for: losers - spot[i]/4 gives us the challonge matching
-          {
-            loserarr[0][spot[i]+2] = boxid;
-            loserarr[0][spot[i]+3] = boxid;
-          }
-          else
-          {
-            loserarr[0][spot[i]+3] = boxid;
-            loserarr[0][spot[i]+4] = boxid;
-          }
+          usedbyes[Math.floor((spot[i]*2)/2)] = true;
+          loserarr[0][spot[i]*2] = boxid;
+          loserarr[0][spot[i]*2+1] = boxid;
           n++;
         }
         spot = [];
@@ -329,7 +323,6 @@ export default class DoubleDisplay extends Component {
     this.refs[id2].closs();
     this.refs[id3].ctrue();
     this.refs[id3].cval(val);
-    console.log(this.refs[id2].glb());
     if (this.refs[id1].glb() && this.refs[id1].gpos() == -2)
     {
       this.refs["final1l"].cval(this.refs[id2].gval())
