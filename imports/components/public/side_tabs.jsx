@@ -35,7 +35,7 @@ export default class SideTabs extends Component {
             }).bind(this))
           }
         </div>
-        <div className="side-tab-content-container col-2" style={{marginBottom: "50vh"}}>
+        <div className="col-2">
           {
             this.props.panels.map((function(value, index){
               return (

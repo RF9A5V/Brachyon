@@ -81,14 +81,20 @@ body {
   align-self: flex-end;
 }
 
-h2 {
+h2 { /* Titles for pages or for more prominent tabs like About.jsx */
   color: #FFD700;
   background-color: #222;
   padding: 5px;
 }
 
-h3 {
+h3 { /* For side-tab-panels and any heading where there are other headings on the same page */
   color: #FFD700;
+  margin: 0;
+}
+
+h4 {
+  color: white;
+  font-weight: bold;
   margin: 0;
 }
 
@@ -156,6 +162,10 @@ label {
 
 .font-stretch-small {
   font-size: calc(0.5vw + 0.5vmin);
+}
+
+.bold {
+  font-weight: bold;
 }
 
 /* Hacky thing to remove Chrome backgrounds for autofills */
