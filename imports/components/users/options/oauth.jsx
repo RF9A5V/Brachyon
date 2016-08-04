@@ -39,7 +39,7 @@ export default class OAuthOptionsPanel extends Component {
           <div>
             <button >
               <FontAwesome style={{marginRight: 10}} name="google-plus" />
-              Connect to Twitch
+              Connect to Google
             </button>
           </div>
         </div>

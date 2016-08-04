@@ -10,11 +10,11 @@ export default class EventOptionsPanel extends Component {
         <h4>Select the events you want to display on your page:</h4>
         <div className="row x-center">
           <input type="checkbox" />
-          <span>Unpublished*</span>
+          <span>Unpublished *</span>
         </div>
         <div className="row x-center">
           <input type="checkbox" />
-          <span>Under Review*</span>
+          <span>Under Review *</span>
         </div>
         <div className="row x-center">
           <input type="checkbox" />
@@ -28,7 +28,7 @@ export default class EventOptionsPanel extends Component {
           <input type="checkbox" />
           <span>Completed</span>
         </div>
-        <div style={{fontSize: "8px"}}>* NOT PUBLICLY VIEWABLE</div>
+        <div style={{fontSize: "10px"}}>* NOT PUBLICLY VIEWABLE</div>
       </div>
     )
   }
