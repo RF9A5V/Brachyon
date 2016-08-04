@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 
 import BlockContainer from '/imports/components/events/discover/block_container.jsx';
 
-export default class About extends TrackerReact(Component) {
+export default class AboutScreen extends TrackerReact(Component) {
 
   componentWillMount() {
     var self = this;

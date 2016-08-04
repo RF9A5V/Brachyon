@@ -138,6 +138,10 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             </div>
           </div>
         </div>
+        <div className="row center">
+          <button onClick={() => { browserHistory.push("/events/create") }} style={{marginTop: 100}}>Create an Event</button>
+        </div>
+        <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="user-events-container">
           <div className="event-block-container">
             {
@@ -156,9 +160,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
               })
             }
           </div>
-        </div>
-        <div className="row center">
-          <button onClick={() => { browserHistory.push("/events/create") }}>Create an Event</button>
         </div>
       </div>
     )
