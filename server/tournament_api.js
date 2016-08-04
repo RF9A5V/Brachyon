@@ -46,7 +46,7 @@ var OrganizeSuite = {
     nonByes = crush(nonByes, true);
     byes = crush(byes);
 
-    var rounds = [];
+    var rouns = [];
     var baseMatches = [nonByes, byes];
 
     for(var i = 0; i < 2; i ++){
@@ -75,6 +75,20 @@ var OrganizeSuite = {
       }));
     }
     return rounds;
+  },
+  doubleElim: function(participants) {
+    rounds = Array(2);
+    rounds[0] = singleElim(participants);
+    var roundCount = Math.ceil(Math.log2(participants.length));
+
+    var byeCount = (Math.pow(2, roundCount) - participants.length);
+    var [byes, nonByes] = [participants.slice(0, byeCount), participants.slice(byeCount)];
+    var [nullByeCount, nullNonByeCount] = [
+      Math.pow(2, roundCount - 1) - byes.length,
+      Math.pow(2, roundCount) - nonByes.length
+    ];
+
+    byes = byes.concat(Array(nullByeCount).fill(null));
   }
 }
 

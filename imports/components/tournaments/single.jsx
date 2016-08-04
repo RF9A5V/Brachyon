@@ -6,9 +6,11 @@ import SingleDisplay from './single/display.jsx';
 export default class TournamentSingleScreen extends TrackerReact(Component) {
 
   render() {
+    var id = "heh";
+    
     return (
       <div className="screen">
-        <SingleDisplay />
+        <SingleDisplay rounds={x} id={id}/>
       </div>
     )
   }

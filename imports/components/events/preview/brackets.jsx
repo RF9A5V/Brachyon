@@ -33,9 +33,12 @@ export default class BracketPanel extends Component {
         <div className="col">
            {
              this.props.participants.map((participant) => {
-               return (
-                 <span>{Meteor.users.findOne(participant).username}</span>
-               )
+              //  return (
+              //    <span>{Meteor.users.findOne(participant).username}</span>
+              //  )
+              return (
+                <span>{ participant }</span>
+              )
              })
            }
            <div>

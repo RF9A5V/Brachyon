@@ -18,7 +18,8 @@ export default class MatchBlock extends Component {
   }
 
   getUsername(id) {
-    return Meteor.users.findOne(id).username;
+    // return Meteor.users.findOne(id).username;
+    return id;
   }
 
   render() {

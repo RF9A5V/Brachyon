@@ -31,8 +31,8 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var event = Events.findOne(eventID);
-    var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
-
+    //var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
+    var participants = Array(15).fill("").map((_, i) => { return i });
     var rounds = OrganizeSuite.singleElim(participants);
     console.log(rounds);
 

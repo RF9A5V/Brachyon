@@ -313,7 +313,6 @@ export default class DoubleDisplay extends Component {
       <MatchBlock sty={{top: wintp + 15 + "px", left: winl + 400 + "px", color: "white"}} eid={"winner"} pos={-3} sp={""} sp2={0} key={n} loss={false} ref={"winner"}
       changematches={this.changematches.bind(this)}/>
     );
-    console.log(loserarr);
     return boxes;
   }
 
@@ -355,13 +354,3 @@ export default class DoubleDisplay extends Component {
     );
   }
 }
-
-/*
- function(id1, id2){
- return function(e) {
- e.preventDefault();
- // Make changes to box[id_1]
- // Make changes to box[id_2]
-}
-}
-*/
