@@ -15,7 +15,7 @@ Meteor.publish('event', (_id) => {
 });
 
 Meteor.publish("event_participants", (id) => {
-  return Meteor.users.find({ _id: { $in: Events.findOne(id).participants } })
+  return Meteor.users.find({ _id: { $in: Events.findOne(id).participants || [] } })
 })
 
 Meteor.publish("user", (_id) => {

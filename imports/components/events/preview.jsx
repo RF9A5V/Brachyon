@@ -63,48 +63,50 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-
-    if(!this.state.event.ready() || !this.state.users.ready()){
+    console.log(this.state.event.ready());
+    if(!this.state.event.ready() && !this.state.users.ready()){
       return (
         <div>Loading...</div>
       )
     }
     var event = this.event();
+    console.log(event);
     return (
-      <div className="box col" style={{flexFlow: "row"}}>
-        <SideTabs items={this.items()} panels={this.content()} />
-        <div style={{width: "20%"}}>
-          <div className="col location-container">
-            <img src={this.imgOrDefault()} style={{width: "100%", height: "auto", marginBottom: 20}} />
-            <span className="event-title">{ event.details.name || "Set Event Name" }</span>
-            <div className="col" style={{marginBottom: 20}}>
-            {
-              event.details.location.online ? (
-                "Online"
-              ) : (
-                <div>
-                  {event.details.location.locationName ? (
-                    <span>{event.details.location.locationName}</span>
-                  ) : ( "" )}
-                  <span>{event.details.location.streetAddress}</span>
-                  <span>{event.details.location.city} {event.details.location.state}</span>
-                </div>
-              )
-            }
-            </div>
-            <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
-            {
-              event.published ? (
-                <div className="row center">
-                  <button onClick={this.registerUser.bind(this)}>Register!</button>
-                </div>
-              ) : (
-                ""
-              )
-            }
-          </div>
-        </div>
-      </div>
+      <BracketsPanel rounds={event.rounds} id={event._id} participants={[1, 2, 3, 4, 5, 6, 7, 8]} active={event.active} />
+      // <div className="box col" style={{flexFlow: "row"}}>
+      //   <SideTabs items={this.items()} panels={this.content()} />
+      //   <div style={{width: "20%"}}>
+      //     <div className="col location-container">
+      //       <img src={this.imgOrDefault()} style={{width: "100%", height: "auto", marginBottom: 20}} />
+      //       <span className="event-title">{ event.details.name || "Set Event Name" }</span>
+      //       <div className="col" style={{marginBottom: 20}}>
+      //       {
+      //         event.details.location.online ? (
+      //           "Online"
+      //         ) : (
+      //           <div>
+      //             {event.details.location.locationName ? (
+      //               <span>{event.details.location.locationName}</span>
+      //             ) : ( "" )}
+      //             <span>{event.details.location.streetAddress}</span>
+      //             <span>{event.details.location.city} {event.details.location.state}</span>
+      //           </div>
+      //         )
+      //       }
+      //       </div>
+      //       <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
+      //       {
+      //         event.published ? (
+      //           <div className="row center">
+      //             <button onClick={this.registerUser.bind(this)}>Register!</button>
+      //           </div>
+      //         ) : (
+      //           ""
+      //         )
+      //       }
+      //     </div>
+      //   </div>
+      // </div>
     )
   }
 }
