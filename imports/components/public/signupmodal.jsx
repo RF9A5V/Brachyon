@@ -26,7 +26,9 @@ export default class SignUpModal extends React.Component {
           <Modal
             className = "create-modal"
             overlayClassName = "credential-overlay"
-            isOpen={this.state.open}>
+            isOpen={this.state.open}
+            onRequestClose={this.closeModal.bind(this)}
+          >
             <div className="row justify-end">
               <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
             </div>
