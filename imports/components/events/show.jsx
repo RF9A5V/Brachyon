@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import SideTabs from "../public/side_tabs.jsx";
-import LeaderboardPanel from "./show/leaderboard.jsx";
-import BracketPanel from "./show/bracket.jsx";
-import ParticipantList from "./show/participant_list.jsx";
+
 
 export default class ShowEventScreen extends TrackerReact(Component) {
 

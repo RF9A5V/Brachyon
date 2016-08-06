@@ -5,17 +5,53 @@ import Ticketing from '/imports/api/ticketing/ticketing.js';
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
   var users = Meteor.users.find({_id: { $in: event.participants || [] }});
-  var profileImages = ProfileImages.find({_id: { $in: (users.fetch().map( (user) => { return user.profile.image } )) }})
+  var profileImages = ProfileImages.find({_id: { $in: (users.fetch().map( (user) => { return user.profile.image } )) }});
+  var games = [];
+  var banners = [event.details.banner];
+  if(event.organize != null) {
+    console.log(event.organize);
+    games = event.organize.map((bracket) => { return bracket.game });
+    var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
+    banners = banners.concat(gameBanners);
+  }
   return [
     Events.find({_id}),
-    Images.find({_id: event.details.banner}),
+    Images.find({
+      _id: {
+        $in: banners
+      }
+    }),
     users,
-    profileImages
+    profileImages,
+    Games.find({
+      _id: {
+        $in: games
+      }
+    })
   ];
 });
 
 Meteor.publish("event_participants", (id) => {
-  return Meteor.users.find({ _id: { $in: Events.findOne(id).participants } })
+  var event = Events.findOne(id);
+  if(event.organize) {
+    var users = Meteor.users.find({
+      _id: {
+        $in: event.organize[0].participants || []
+      }
+    });
+    var imgIDs = users.fetch().map((user) => { return user.profile.image });
+    return [
+      users,
+      ProfileImages.find({
+        _id: {
+          $in: imgIDs
+        }
+      })
+    ]
+  }
+  else {
+    return Meteor.users.find({ _id: null })
+  }
 })
 
 Meteor.publish("user", (_id) => {

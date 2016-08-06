@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
 import DetailsPanel from "./details.jsx";
+import OrganizationPanel from "./organization.jsx";
+import PromotionPanel from "./promotion.jsx";
 
 export default class EditMenu extends Component {
 
@@ -31,9 +33,9 @@ export default class EditMenu extends Component {
   panels() {
     return {
       details: (<DetailsPanel />),
-      organize: (<div>organize</div>),
+      organize: (<OrganizationPanel />),
       bot: (<div>bot</div>),
-      promotion: (<div>Promotion</div>),
+      promotion: (<PromotionPanel />),
       revenue: (<div>Revenue</div>),
     }
   }

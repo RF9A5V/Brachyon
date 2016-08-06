@@ -89,7 +89,7 @@ export default class LeaderboardPanel extends Component {
                   <div className="row x-center col-1">
                     <h1 className="col-1">{ i + 1 }</h1>
                     <div className="col-1">
-                      <img className="leaderboard-photo" src={this.imgOrDefault(user.profile.image)} style={style} />
+                      <img className="leaderboard-photo" src={this.imgOrDefault(user.profile.image)} style={this.props.isDone ? style : {}} />
                     </div>
                     <div className="col-3">{ user.username }</div>
                   </div>

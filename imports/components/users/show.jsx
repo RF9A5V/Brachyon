@@ -139,23 +139,18 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           </div>
         </div>
         <div className="user-events-container">
-          <div className="event-block-container">
-            {
-              events.map((eventSet) => {
-                if(eventSet.events.length === 0) {
-                  return (
-                    <div></div>
-                  );
-                }
+          {
+            events.map((eventSet) => {
+              if(eventSet.events.length === 0) {
                 return (
-                  <div>
-                    <h3>{eventSet.title}</h3>
-                    <BlockContainer events={eventSet.events} />
-                  </div>
-                )
-              })
-            }
-          </div>
+                  <div></div>
+                );
+              }
+              return (
+                <BlockContainer title={eventSet.title} events={eventSet.events} />
+              )
+            })
+          }
         </div>
         <div className="row center">
           <button onClick={() => { browserHistory.push("/events/create") }}>Create an Event</button>
