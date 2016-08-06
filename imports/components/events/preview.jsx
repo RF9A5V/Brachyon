@@ -7,6 +7,9 @@ import DetailsPanel from "./preview/details.jsx";
 import BracketsPanel from "./preview/brackets.jsx";
 import CrowdfundingPanel from "./preview/crowdfunding.jsx";
 import TicketsPanel from "./preview/tickets.jsx";
+import LeaderboardPanel from "./show/leaderboard.jsx";
+import BracketPanel from "./show/bracket.jsx";
+import ParticipantList from "./show/participant_list.jsx";
 
 import moment from "moment";
 
@@ -40,30 +43,37 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   items() {
-    return ["Details", "Crowdfunding", "Tickets"];
+    var event = this.event();
+    var items = ["Details"];
+
+    if(event.revenue) {
+      items.push("Crowdfunding");
+      items.push("Tickets");
+    }
+    if(event.organize) {
+      items = items.concat(["Leaderboard", "Participant List", "Brackets"]);
+    }
+    return items;
   }
 
   content() {
     var event = this.event();
-    return [
-      (<DetailsPanel {...event.details} ref="details"/>),
-      (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />),
-      (<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
-    ]
-  }
-
-  registerUser(e) {
-    e.preventDefault();
-    Meteor.call("events.toggle_participation", this.event()._id, Meteor.user()._id, function(err) {
-      if(err){
-        return toastr.error(err.reason, "Error!");
-      }
-      return toastr.success("Successfully added you to this event.", "Success!");
-    })
+    var panels = [
+      (<DetailsPanel {...event.details} ref="details"/>)
+    ];
+    if(event.revenue) {
+      panels.push(<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />);
+      panels.push(<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
+    }
+    if(event.organize) {
+      panels.push(<LeaderboardPanel isDone={event.complete} participants={event.organize[0].participants || []} />);
+      panels.push(<ParticipantList participants={event.organize[0].participants || []} isOwner={event.owner == Meteor.userId()} id={event._id} rounds={event.organize[0].rounds || []} />);
+      panels.push(<BracketPanel rounds={event.organize[0].rounds} id={event._id} />);
+    }
+    return panels;
   }
 
   render() {
-
     if(!this.state.event.ready() || !this.state.users.ready()){
       return (
         <div>Loading...</div>
@@ -93,15 +103,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
             }
             </div>
             <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
-            {
-              event.published ? (
-                <div className="row center">
-                  <button onClick={this.registerUser.bind(this)}>Register!</button>
-                </div>
-              ) : (
-                ""
-              )
-            }
           </div>
         </div>
       </div>

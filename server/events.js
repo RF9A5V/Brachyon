@@ -1,7 +1,7 @@
 import OrganizeSuite from "./tournament_api.js";
 
 Meteor.methods({
-  "events.toggle_participation"(eventID, userID) {
+  "events.toggle_participation"(eventID, userID, bracketNumber) {
     if(Events.findOne(eventID) == null){
       throw new Meteor.Error(404, "Couldn't find this event.");
     }
@@ -10,18 +10,22 @@ Meteor.methods({
     }
     var event = Events.findOne({
       _id: eventID,
-      participants: {
+      [`organize.${bracketNumber}.participants`]: {
         $in: [userID]
       }
     });
     if(event == null){
       Events.update(eventID, {
-        $push: { participants: userID }
+        $push: {
+          [`organize.${bracketNumber}.participants`]: userID
+        }
       });
     }
     else {
       Events.update(eventID, {
-        $pull: { participants: userID }
+        $pull: {
+          [`organize.${bracketNumber}.participants`]: userID
+        }
       });
     }
   },
@@ -31,15 +35,14 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var event = Events.findOne(eventID);
-    var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
 
-    var rounds = OrganizeSuite.singleElim(participants);
+    var rounds = OrganizeSuite.singleElim(event.organize[0].participants);
     console.log(rounds);
 
     Events.update(eventID, {
       $set: {
         active: true,
-        rounds: rounds
+        "organize.0.rounds": rounds
       }
     })
   },
@@ -49,6 +52,7 @@ Meteor.methods({
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
+    event = event.organize[0];
     var match = event.rounds[roundNumber][matchNumber];
     if(placement == 0) {
       match.winner = match.playerOne;
@@ -74,8 +78,8 @@ Meteor.methods({
       }
       Events.update(eventID, {
         $set: {
-          [`rounds.${roundNumber}.${matchNumber}`]: match,
-          [`rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+          [`organize.0.rounds.${roundNumber}.${matchNumber}`]: match,
+          [`organize.0.rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
         }
       })
     }

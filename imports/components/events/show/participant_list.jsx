@@ -33,7 +33,7 @@ export default class ParticipantListPanel extends Component {
   toggleRegistration(id) {
     return function(e) {
       e.preventDefault();
-      Meteor.call("events.toggle_participation", this.props.id, id, function(err) {
+      Meteor.call("events.toggle_participation", this.props.id, id, 0, function(err) {
         if(err){
           toastr.error(err.reason, "Error!");
         }
@@ -44,6 +44,9 @@ export default class ParticipantListPanel extends Component {
   isEliminated(userID) {
     var matchID = null;
     var currentRound = 0;
+    if(this.props.rounds.length == 0){
+      return false;
+    }
     for(var i = 0; i < this.props.rounds[0].length; i ++){
       var match = this.props.rounds[0][i];
       if(userID == match.playerOne || userID == match.playerTwo){
@@ -67,10 +70,11 @@ export default class ParticipantListPanel extends Component {
         return true;
       }
       currentRound += 1;
+      matchID = Math.floor(matchID / 2);
       if(currentRound == this.props.rounds.length) {
         break;
       }
-      match = this.props.rounds[currentRound][Math.floor(matchID / 2)];
+      match = this.props.rounds[currentRound][matchID];
     }
     return false;
   }
