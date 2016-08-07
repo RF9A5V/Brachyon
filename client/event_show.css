@@ -77,19 +77,19 @@
 }
 
 .leaderboard-third img {
-  width: 200px;
-  height: 200px;
+  width: 50%;
+  height: auto;
   border: solid 5px #CD7F32;
 }
 
 .leaderboard-second img {
-  width: 300px;
-  height: 300px;
+  width: 75%;
+  height: auto;
   border: solid 5px silver;
 }
 
 .leaderboard-first img {
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: auto;
   border: solid 5px gold;
 }
