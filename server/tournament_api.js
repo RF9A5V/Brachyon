@@ -67,15 +67,20 @@ var OrganizeSuite = {
     }
 
     for(var i = roundCount - 3; i >= 0; i --){
-      rounds.push(Array(Math.pow(2, i)).fill({
-        playerOne: null,
-        playerTwo: null,
-        scoreOne: 0,
-        scoreTwo: 0,
-        winner: null,
-        losm: null,
-        losr: null
-      }));
+      var temp = [];
+      for (var j = 0; j < Math.pow(2, i); j++){
+        var matchObj = {
+          playerOne: null,
+          playerTwo: null,
+          scoreOne: 0,
+          scoreTwo: 0,
+          winner: null,
+          losm: null,
+          losr: null
+        }
+        temp.push(matchObj);
+      }
+      rounds.push(temp);
     }
     return rounds;
   },
@@ -118,13 +123,18 @@ var OrganizeSuite = {
 
     for(var i = roundCount - 3; i >= 0; i-=.5){
       q = Math.ceil(i);
-      rounds.push(Array(Math.pow(2, q)).fill({
-        playerOne: null,
-        playerTwo: null,
-        scoreOne: 0,
-        scoreTwo: 0,
-        winner: null
-      }));
+      var temp = [];
+      for (var j = 0; j < Math.pow(2, q); j++){
+        var matchObj = {
+          playerOne: null,
+          playerTwo: null,
+          scoreOne: 0,
+          scoreTwo: 0,
+          winner: null,
+        }
+        temp.push(matchObj);
+      }
+      rounds.push(temp);
     }
     frounds[1] = rounds;
 
@@ -170,7 +180,6 @@ var OrganizeSuite = {
           while ((frounds[0][1][frounds[0][1].length - q - 1].losr)) //Every loser goes orderly up from the bottom of the 2nd round given it's not already used.
           {
             q++;
-            console.log(q);
             if (q >= frounds[0][1].length)
               throw error;
           }
@@ -188,23 +197,46 @@ var OrganizeSuite = {
     }
 
     for (i = 3; i < frounds[1].length; i+=2)
+    {
+      k = 1+(i-1)/2;
       for (j = 0; j < frounds[1][i].length; j++)
       {
-        if (i%2 == 0) //Start from bottom of top half of winners and move up, then bottom of bottom half of winners and move up
+        if (k%2 == 0) //Start from bottom of top half of winners and move up, then bottom of bottom half of winners and move up
         {
-          if (j < frounds[1][i].length/2) //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
-            [frounds[1][i][frounds[1][i].length/2 - j - 1].losr, frounds[1][i][frounds[1][i].length/2 - j - 1].losm] = [i, j];
+          if (j < frounds[0][k].length/2)  //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
+          {
+            console.log((frounds[0][k].length/2 - j - 1) + " and " + k + " and " + i + " and " + j);
+            frounds[0][k][frounds[0][k].length/2 - j - 1].losr = i;
+            frounds[0][k][frounds[0][k].length/2 - j - 1].losm = j;
+          }
           else //if in bottom half of winners
-            [frounds[1][i][frounds[1][i].length - (j - frounds[1][i].length/2) - 1].losr, frounds[1][i][frounds[1][i].length - (j - frounds[1][i].length/2) - 1].losm] = [i, j];
+          {
+            console.log((frounds[0][k].length - (j - frounds[0][k].length/2) - 1) + " and " + k + " and " + i + " and " + j);
+            frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losr = i;
+            frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losm = j;
+          }
+          if (frounds[0][2][0] == frounds[0][2][1])
+          {
+            console.log("HOW");
+          }
+          console.log(frounds[0][2][0]);
+          console.log(frounds[0][2][1]);
         }
         else //Start from top of bottom half and move down, then top of top half and move down
         {
-          if (j < frounds[1][i].length/2)
-            [frounds[1][i][frounds[1][i].length/2 + j - 1].losr, frounds[1][i][frounds[1][i].length/2 + j - 1].losm] = [i, j]
+          if (j < frounds[0][k].length/2)
+          {
+            frounds[0][k][frounds[0][k].length/2 + j].losr = i;
+            frounds[0][k][frounds[0][k].length/2 + j].losm = j;
+          }
           else
-            [frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losr, frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losm] = [i, j]
+          {
+            frounds[0][k][j - frounds[0][k].length/2].losr = i;
+            frounds[0][k][j - frounds[0][k].length/2].losm = j;
+          }
         }
       }
+    }
 
     return frounds[0];
   }
