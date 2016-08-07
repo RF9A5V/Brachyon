@@ -142,10 +142,10 @@ var OrganizeSuite = {
         {
           if (i == 0 && ovhalf) //If in leftmost set of byes, matches up with winners' nonbyes
           {
-            frounds[0][0][j-1].losr = i;
-            frounds[0][0][j-1].losm = j;
-            frounds[0][0][j].losr = i;
-            frounds[0][0][j].losm = j;
+            frounds[0][0][j*2].losr = i;
+            frounds[0][0][j*2].losm = j;
+            frounds[0][0][j*2+1].losr = i;
+            frounds[0][0][j*2+1].losm = j;
           }
           else if (i == 1)
           {
