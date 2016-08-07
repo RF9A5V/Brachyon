@@ -152,26 +152,26 @@ var OrganizeSuite = {
             while (!(frounds[0][0][q].playerOne)) //Find a valid bye in the winners bracket as this set of byes goes orderly down the list.
             {
               q++;
-              console.log(q);
-              if (q > frounds[0][i].length) //For every valid bye, there is a valid winners bracket bye.
+              if (q >= frounds[0][0].length) //For every valid bye, there is a valid winners bracket bye.
                 throw error;
             }
-            console.log(frounds[0][1].length-q);
-            frounds[0][1][frounds[0][1].length-q].losr = i;
-            frounds[0][1][frounds[0][1].length-q].losm = j;
-            if (!(frounds[0][0][j].losm)) //These sets are left empty in the scenario where the first set of byes use them.
+            frounds[0][1][frounds[0][1].length-Math.floor(q/2)-1].losr = i;
+            frounds[0][1][frounds[0][1].length-Math.floor(q/2)-1].losm = j;
+            if (!(frounds[0][0][q].losm)) //These sets are left empty in the scenario where the first set of byes use them.
             {
               frounds[0][0][q].losr = i;
               frounds[0][0][q].losm = j;
             }
+            q++;
           }
         }
-        if (i == 2 && !(frounds[1][0][j*2].truebye)) //Find every place in the 3rd set of rounds where there isn't two byes leading up to it.
+        if (i == 2 && !(frounds[1][1][j*2].truebye)) //Find every place in the 3rd set of rounds where there isn't two byes leading up to it.
         {
           while ((frounds[0][1][frounds[0][1].length - q - 1].losr)) //Every loser goes orderly up from the bottom of the 2nd round given it's not already used.
           {
             q++;
-            if (q > frounds[1][1].length)
+            console.log(q);
+            if (q >= frounds[0][1].length)
               throw error;
           }
           frounds[0][1][frounds[0][1].length-q-1].losr = i;
