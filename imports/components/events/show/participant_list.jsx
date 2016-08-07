@@ -65,15 +65,15 @@ export default class ParticipantListPanel extends Component {
       }
     }
     var match = this.props.rounds[currentRound][matchID];
-    while(currentRound < this.props.rounds.length && match.winner != null){
+    while(this.props.rounds[currentRound] != null && match.winner != null){
       if(match.winner != userID){
         return true;
       }
       currentRound += 1;
-      matchID = Math.floor(matchID / 2);
       if(currentRound == this.props.rounds.length) {
         break;
       }
+      matchID = Math.floor(matchID / 2);
       match = this.props.rounds[currentRound][matchID];
     }
     return false;

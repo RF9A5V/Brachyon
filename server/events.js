@@ -63,7 +63,7 @@ Meteor.methods({
     if(roundNumber + 1 >= event.rounds.length){
       Events.update(eventID, {
         $set: {
-          [`rounds.${roundNumber}.${matchNumber}`]: match,
+          [`organize.0.rounds.${roundNumber}.${matchNumber}`]: match,
           complete: true
         }
       })
