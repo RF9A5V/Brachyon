@@ -43,8 +43,8 @@ var OrganizeSuite = {
 
     byes = byes.concat(Array(nullByeCount).fill(null));
 
-    nonByes = crush(nonByes, nullNonByeCount, true);
-    byes = crush(byes, nullNonByeCount);
+    nonByes = OrganizeSuite.crush(nonByes, nullNonByeCount, true);
+    byes = OrganizeSuite.crush(byes, nullNonByeCount);
     var rounds = [];
     var baseMatches = [nonByes, byes];
 
@@ -83,26 +83,24 @@ var OrganizeSuite = {
 
   doubleElim: function(participants) {
     frounds = Array(2);
-    frounds[0] = singleElim(participants);
+    frounds[0] = OrganizeSuite.singleElim(participants);
     var roundCount = Math.ceil(Math.log(participants.length) / Math.log(2));
-    var HalfPoint = (Math.pow(2, roundcount-1) + Math.pow(2, roundcount-2));
+    var HalfPoint = (Math.pow(2, roundCount-1) + Math.pow(2, roundCount-2));
     var ovhalf = participants.length > HalfPoint ? true:false;
     var NonbyeCount = ovhalf ? (participants.length - HalfPoint):(HalfPoint - participants.length);
-    var nullNonByeCount = (Math.pow(2, roundcount-1) - NonbyeCount);
-    nonByes = Array(NonbyeCount).fill(true);
+    var nullNonByeCount = (Math.pow(2, roundCount) - HalfPoint - NonbyeCount);
+    var nonByes = Array(NonbyeCount*2).fill(true);
 
-    nonByes = crush(nonByes, nullNonByeCount, true);
-    if (ovhalf && participants.length < Math.pow(2, roundcount)) {
-      nonByes.unshift(null, null);
-      nonByes.splice(nonByes.length-2, 2);
-    }
+    nonByes = OrganizeSuite.crush(nonByes, nullNonByeCount*2, true);
+    var newbyes = nonByes;
+    var nonBye = [];
     nonBye[0] = ovhalf ? nonByes:Array(nonByes.length).fill(null);
     nonBye[1] = ovhalf ? Array(nonByes.length).fill(true):nonByes;
 
     var rounds = [];
-    var temp = [];
     for (i = 0; i < 2; i++)
     {
+      var temp = [];
       for(var j = 0; j < nonBye[i].length; j += 2) {
         var matchUp = nonBye[i].slice(j, j + 2);
         var matchObj = {
@@ -115,12 +113,12 @@ var OrganizeSuite = {
         }
         temp.push(matchObj);
       }
+      rounds.push(temp);
     }
-    rounds.push(temp);
 
     for(var i = roundCount - 3; i >= 0; i-=.5){
-      q = Math.floor(i);
-      rounds.push(Array(Math.pow(2, i)).fill({
+      q = Math.ceil(i);
+      rounds.push(Array(Math.pow(2, q)).fill({
         playerOne: null,
         playerTwo: null,
         scoreOne: 0,
@@ -130,8 +128,14 @@ var OrganizeSuite = {
     }
     frounds[1] = rounds;
 
-    for (i = 0; i < 2; i++)
+    //This pile of shit down here is the loser placement. Idea is as follows, we load them as if we had the ceiling of the next power of 2 as we currently have
+    //From there the first set of byes, if existing, will have the crush pairing equivalent in the winner's bracket and the bye above that (-1 on their array) as their placers
+    //Second set of byes will match up based on the order of existing byes in the winners' bracket. Janky, but we keep going down each "match" until we find a valid one, then place the loser.
+    //In the scenario where there's already a winner placed in there (because of ovhalf), then we ignore it and move on.
+    for (i = 0; i < 3; i++)
     {
+      var q = 0;
+
       for (j = 0; j < frounds[1][i].length; j++)
       {
         if (frounds[1][i][j].truebye)
@@ -140,20 +144,46 @@ var OrganizeSuite = {
           {
             frounds[0][0][j-1].losr = i;
             frounds[0][0][j-1].losm = j;
-            frounds[0][0][j].losm = i;
+            frounds[0][0][j].losr = i;
             frounds[0][0][j].losm = j;
           }
-          else if (i == 1) //If in second leftmost, first player is always going to be the reverse of round 2, second is potentially
+          else if (i == 1)
           {
-            frounds[0][1][frounds[0][1].length-j].losr = i;
-            frounds[0][1][frounds[0][1].length-j].losm = j;
-            if (!(frounds[0][0][j].losm))
+            while (!(frounds[0][0][q].playerOne)) //Find a valid bye in the winners bracket as this set of byes goes orderly down the list.
             {
-              frounds[0][0][j].losr = i;
-              frounds[0][0][j].losm = j;
+              q++;
+              console.log(q);
+              if (q > frounds[0][i].length) //For every valid bye, there is a valid winners bracket bye.
+                throw error;
+            }
+            console.log(frounds[0][1].length-q);
+            frounds[0][1][frounds[0][1].length-q].losr = i;
+            frounds[0][1][frounds[0][1].length-q].losm = j;
+            if (!(frounds[0][0][j].losm)) //These sets are left empty in the scenario where the first set of byes use them.
+            {
+              frounds[0][0][q].losr = i;
+              frounds[0][0][q].losm = j;
             }
           }
         }
+        if (i == 2 && !(frounds[1][0][j*2].truebye)) //Find every place in the 3rd set of rounds where there isn't two byes leading up to it.
+        {
+          while ((frounds[0][1][frounds[0][1].length - q - 1].losr)) //Every loser goes orderly up from the bottom of the 2nd round given it's not already used.
+          {
+            q++;
+            if (q > frounds[1][1].length)
+              throw error;
+          }
+          frounds[0][1][frounds[0][1].length-q-1].losr = i;
+          frounds[0][1][frounds[0][1].length-q-1].losm = j;
+          if (!(frounds[1][0][j*2+1].truebye))
+          {
+            q++;
+            frounds[0][1][frounds[0][1].length-q-1].losr = i;
+            frounds[0][1][frounds[0][1].length-q-1].losm = j;
+          }
+        }
+        q++;
       }
     }
 
@@ -172,11 +202,11 @@ var OrganizeSuite = {
           if (j < frounds[1][i].length/2)
             [frounds[1][i][frounds[1][i].length/2 + j - 1].losr, frounds[1][i][frounds[1][i].length/2 + j - 1].losm] = [i, j]
           else
-            [frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losr, frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losm] = [i, j]          
+            [frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losr, frounds[1][i][frounds[1][i].length/2 + (j - frounds[1][i].length/2) - 1].losm] = [i, j]
         }
       }
 
-    return frounds;
+    return frounds[0];
   }
 }
 
