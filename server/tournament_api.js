@@ -205,22 +205,14 @@ var OrganizeSuite = {
         {
           if (j < frounds[0][k].length/2)  //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
           {
-            console.log((frounds[0][k].length/2 - j - 1) + " and " + k + " and " + i + " and " + j);
             frounds[0][k][frounds[0][k].length/2 - j - 1].losr = i;
             frounds[0][k][frounds[0][k].length/2 - j - 1].losm = j;
           }
           else //if in bottom half of winners
           {
-            console.log((frounds[0][k].length - (j - frounds[0][k].length/2) - 1) + " and " + k + " and " + i + " and " + j);
             frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losr = i;
             frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losm = j;
           }
-          if (frounds[0][2][0] == frounds[0][2][1])
-          {
-            console.log("HOW");
-          }
-          console.log(frounds[0][2][0]);
-          console.log(frounds[0][2][1]);
         }
         else //Start from top of bottom half and move down, then top of top half and move down
         {

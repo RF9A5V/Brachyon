@@ -32,9 +32,9 @@ Meteor.methods({
     }
     var event = Events.findOne(eventID);
     //var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
-    var participants = Array(15).fill("").map((_, i) => { return i });
-    var rounds = OrganizeSuite.singleElim(participants);
-    console.log(rounds);
+    var participants = Array(10).fill("").map((_, i) => { return i });
+    //var rounds = OrganizeSuite.singleElim(participants);
+    var rounds = OrganizeSuite.doubleElim(participants);
 
     Events.update(eventID, {
       $set: {
