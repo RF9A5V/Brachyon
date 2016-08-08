@@ -185,7 +185,7 @@ var OrganizeSuite = {
           }
           frounds[0][1][frounds[0][1].length-q-1].losr = i;
           frounds[0][1][frounds[0][1].length-q-1].losm = j;
-          if (!(frounds[1][0][j*2+1].truebye))
+          if (!(frounds[1][1][j*2+1].truebye))
           {
             q++;
             frounds[0][1][frounds[0][1].length-q-1].losr = i;
