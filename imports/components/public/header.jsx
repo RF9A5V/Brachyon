@@ -58,7 +58,7 @@ export default class Header extends TrackerReact(Component) {
     var userCred = "";
     if(Meteor.userId()){
       userCred = (
-        <div style={{position: "relative"}} className="row x-center">
+        <div style={{position: "relative"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
           <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
             <img style={{width: 75, height: 75, borderRadius: "100%"}} src={this.imgOrDefault()} />
           </a>
@@ -71,7 +71,7 @@ export default class Header extends TrackerReact(Component) {
               </span>
             </a>
           </div>
-          <a href="#" className="row x-center" style={{lineHeight: "32px"}} onClick={this.toggleUserMenu.bind(this)}>
+          <a href="#" className="row x-center" style={{lineHeight: "32px"}}>
             <FontAwesome style={{position: "relative"}} name="sort-desc" size="2x" />
           </a>
           <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} />

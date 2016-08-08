@@ -9,7 +9,10 @@ export default class BlockContainer extends Component {
     return(
       function(e){
         e.preventDefault();
-        if(event.published || event.underReview){
+        if(event.active){
+          browserHistory.push(`/events/${event._id}/show`)
+        }
+        else if(event.published || event.underReview){
           browserHistory.push(`/events/${event._id}/preview`);
         }
         else {
