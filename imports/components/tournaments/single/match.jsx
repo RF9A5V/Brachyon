@@ -5,7 +5,7 @@ export default class MatchBlock extends Component {
   onMatchUserClick(index) {
     return function(e) {
       e.preventDefault();
-      Meteor.call("events.advance_match", this.props.id, this.props.roundNumber, this.props.matchNumber, index, function(err) {
+      Meteor.call("events.advance_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, index, function(err) {
         if(err){
           console.log(err);
           toastr.error("Couldn't advance this match.", "Error!");
