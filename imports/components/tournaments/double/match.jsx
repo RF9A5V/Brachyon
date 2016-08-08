@@ -4,15 +4,14 @@ export default class MatchBlock extends Component {
 
   constructor(props) {
     super(props);
-
     var id2, id3, round, strid, strid2;
     if (this.props.sp2%2 == 0)
       id2 = this.props.sp2+1;
     else
-      id2++;
+      id2 = this.props.sp2-1;
     id3 = Math.floor(this.props.sp2/2);
     if (this.props.bset)
-      id3 = Math.ceil(this.props.sp2/2);
+      id3 = this.props.sp2%2 == 0 ? id2:this.props.sp2;
     round = this.props.pos;
     str = "", losdiv = 1;
     if (this.props.loss)
@@ -31,7 +30,21 @@ export default class MatchBlock extends Component {
       round+=2;
     }
     strid2 = "match" + id3 + "round" + str + (round+1);
-
+    if (this.props.twoset)
+    {
+      strid = "match" + id2 + "nonbye2los";
+      strid2 = "match" + id3 + "nonbyelos";
+    }
+    else if (this.props.pos == -2)
+    {
+      strid = "final" + (id2+1) + "w"
+      strid2 = this.props.sp2%2 == 0 ? "winner":"final2l";
+    }
+    else if (this.props.pos == -3)
+    {
+      strid = "final" + (id2+1) + "l";
+      strid2 = "winner";
+    }
     if (this.props.sty.color == "gray")
       this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
     else
@@ -44,7 +57,6 @@ export default class MatchBlock extends Component {
     {
       document.getElementById(this.state.opponent).style.color = "red";
       document.getElementById(this.props.eid).style.color = "gray";
-      document.getElementById(this.state.successor).innerHTML += " " + this.state.val;
       this.props.changematches(this.props.eid, this.state.opponent, this.state.successor, this.state.val) //Passing in its own ref, its opponents ref, and its successors ref.
     }
   }
@@ -98,14 +110,35 @@ export default class MatchBlock extends Component {
     return this.state.succmat; //Levels of irony we have never attained
   }
 
+  ground()
+  {
+    return this.state.round;
+  }
+
   glb()
   {
     return this.props.loss;
   }
 
+  gpos()
+  {
+    return this.props.pos;
+  }
+
+  gfin()
+  {
+    return this.props.final;
+  }
+
   cval(val)
   {
+    document.getElementById(this.props.eid).innerHTML += " " + val;
     this.setState({val: val});
+  }
+
+  setloser(loser)
+  {
+    this.setState({loss: loser});
   }
 
   render()
@@ -115,6 +148,8 @@ export default class MatchBlock extends Component {
       this.props.sty.color = "gray";
     if (this.props.pos == -1)
       string = "Nonbye ";
+    else if (this.props.pos < -1)
+      string = "Final ";
     else
       string = "Box ";
     return(
