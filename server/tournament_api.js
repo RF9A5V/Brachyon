@@ -92,7 +92,7 @@ var OrganizeSuite = {
     var roundCount = Math.ceil(Math.log(participants.length) / Math.log(2));
     var HalfPoint = (Math.pow(2, roundCount-1) + Math.pow(2, roundCount-2));
     var ovhalf = participants.length > HalfPoint ? true:false;
-    var NonbyeCount = ovhalf ? (participants.length - HalfPoint):(HalfPoint - participants.length);
+    var NonbyeCount = ovhalf ? (participants.length - HalfPoint):(participants.length - Math.pow(2, roundCount-1));
     var nullNonByeCount = (Math.pow(2, roundCount) - HalfPoint - NonbyeCount);
     var nonByes = Array(NonbyeCount*2).fill(true);
 
