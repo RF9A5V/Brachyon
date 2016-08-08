@@ -167,7 +167,7 @@ var OrganizeSuite = {
             }
             frounds[0][1][frounds[0][1].length-Math.floor(q/2)-1].losr = i;
             frounds[0][1][frounds[0][1].length-Math.floor(q/2)-1].losm = j;
-            if (!(frounds[0][0][q].losm)) //These sets are left empty in the scenario where the first set of byes use them.
+            if (frounds[0][0][q].losm == null) //These sets are left empty in the scenario where the first set of byes use them.
             {
               frounds[0][0][q].losr = i;
               frounds[0][0][q].losm = j;
