@@ -74,12 +74,15 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.users.ready()){
+    console.log(this.state.event.ready());
+    if(!this.state.event.ready() && !this.state.users.ready()){
       return (
         <div>Loading...</div>
       )
     }
     var event = this.event();
+    console.log(event);
+    // Note: Check out the BracketsPanel thing Alex put up.
     return (
       <div className="box col" style={{flexFlow: "row"}}>
         <SideTabs items={this.items()} panels={this.content()} />
