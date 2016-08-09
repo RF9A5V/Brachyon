@@ -90,7 +90,7 @@ var OrganizeSuite = {
 
   doubleElim: function(participants) {
     frounds = Array(2);
-    sinround = OrganizeSuite.singleElim(participants)[0];
+    frounds[0] = OrganizeSuite.singleElim(participants)[0];
     var roundCount = Math.ceil(Math.log(participants.length) / Math.log(2));
     var HalfPoint = (Math.pow(2, roundCount-1) + Math.pow(2, roundCount-2));
     var ovhalf = participants.length > HalfPoint ? true:false;
@@ -161,7 +161,6 @@ var OrganizeSuite = {
           }
           else if (i == 1)
           {
-            console.log(frounds[0][0]);
             while (!(frounds[0][0][q].playerOne)) //Find a valid bye in the winners bracket as this set of byes goes orderly down the list.
             {
               q++;

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SingleDisplay from "/imports/components/tournaments/single/display.jsx";
+import DoubleDisplay from "/imports/components/tournaments/double/display.jsx";
 
 export default class BracketPanel extends Component {
 
@@ -19,7 +20,7 @@ export default class BracketPanel extends Component {
     if(this.props.active){
       return (
         <div>
-          <SingleDisplay rounds={this.props.rounds} id={this.props.id} />
+          <DoubleDisplay rounds={this.props.rounds} id={this.props.id} />
         </div>
       )
     }
