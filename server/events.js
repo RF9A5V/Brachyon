@@ -46,15 +46,18 @@ Meteor.methods({
 
   "events.advance_match"(eventID, bracket, roundNumber, matchNumber, placement) {
     var event = Events.findOne(eventID);
+    var loser;
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var match = event.rounds[bracket][roundNumber][matchNumber];
     if(placement == 0) {
       match.winner = match.playerOne;
+      loser = match.playerTwo;
     }
     else {
       match.winner = match.playerTwo;
+      loser = match.playerOne;
     }
     if(roundNumber + 1 >= event.rounds[bracket].length){
       Events.update(eventID, {
@@ -65,27 +68,32 @@ Meteor.methods({
       })
     }
     else {
-      var advMatch = (bracket == 1 && matchnumber%2==0) ? event.rounds[bracket][roundNumber + 1][matchNumber]:event.rounds[bracket][roundNumber + 1][Math.floor(matchNumber / 2)];
+      var advMatch = (bracket == 1 && matchNumber%2==0) ? event.rounds[bracket][roundNumber + 1][matchNumber]:event.rounds[bracket][roundNumber + 1][Math.floor(matchNumber / 2)];
       if(matchNumber % 2 == 0){
         advMatch.playerOne = match.winner;
       }
       else {
         advMatch.playerTwo = match.winner;
       }
-      Events.update(eventID, {
-        $set: {
-          [`rounds.${bracket}.${roundNumber}.${matchNumber}`]: match,
-          [`rounds.${bracket}.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
-        }
-      })
       if (bracket == 0 && advMatch.losm != null)
       {
-        var losMatch = event.rounds[1][advMatch.losr][advMatch.losm];
-        if (advMatch.playerOne == null) losMatch.playerOne = losMatch;
-        else losMatch.playerTwo = losMatch;
+        var losMatch = event.rounds[1][match.losr][match.losm];
+        if (losMatch.playerOne == null) losMatch.playerOne = loser;
+        else losMatch.playerTwo = loser;
+        var losr = match.losr, losm = match.losm;
         Events.update(eventID, {
           $set: {
-            [`rounds.${1}.${advMatch.losr}.${advMatch.losm}`]: losMatch
+            [`rounds.${1}.${losr}.${losm}`]: losMatch,
+            [`rounds.${bracket}.${roundNumber}.${matchNumber}`]: match,
+            [`rounds.${bracket}.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+          }
+        })
+      }
+      else {
+        Events.update(eventID, {
+          $set: {
+            [`rounds.${bracket}.${roundNumber}.${matchNumber}`]: match,
+            [`rounds.${bracket}.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
           }
         })
       }
