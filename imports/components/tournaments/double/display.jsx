@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import MatchBlock from './match.jsx';
 
-export default class SingleDisplay extends Component {
+export default class DoubleDisplay extends Component {
   render() {
     return (
       <div classname="delim">
