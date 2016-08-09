@@ -25,9 +25,9 @@ export default class MatchBlock extends Component {
   render() {
     var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
     return (
-      <div className="match-block col center" style={{height: 50 * Math.pow(2, i)}}>
+      <div className="match-block col center" style={{height: 50 * Math.pow(2, Math.floor(i/2))}}>
         {
-          match.playerOne == match.playerTwo && i == 0 ? (
+          match.playerOne == match.playerTwo && i == 0 && bracket == 0 || bracket == 1 && (i == 0 || i == 1) && match.truebye == true ? (
             ""
           ) : (
             [match.playerOne, match.playerTwo].map((p, index) => {

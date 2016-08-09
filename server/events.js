@@ -65,7 +65,7 @@ Meteor.methods({
       })
     }
     else {
-      var advMatch = event.rounds[bracket][roundNumber + 1][Math.floor(matchNumber / 2)];
+      var advMatch = (bracket == 1 && matchnumber%2==0) ? event.rounds[bracket][roundNumber + 1][matchNumber]:event.rounds[bracket][roundNumber + 1][Math.floor(matchNumber / 2)];
       if(matchNumber % 2 == 0){
         advMatch.playerOne = match.winner;
       }
@@ -78,6 +78,17 @@ Meteor.methods({
           [`rounds.${bracket}.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
         }
       })
+      if (bracket == 0 && advMatch.losm != null)
+      {
+        var losMatch = event.rounds[1][advMatch.losr][advMatch.losm];
+        if (advMatch.playerOne == null) losMatch.playerOne = losMatch;
+        else losMatch.playerTwo = losMatch;
+        Events.update(eventID, {
+          $set: {
+            [`rounds.${1}.${advMatch.losr}.${advMatch.losm}`]: losMatch
+          }
+        })
+      }
     }
   }
 
