@@ -27,7 +27,7 @@ export default class MatchBlock extends Component {
     return (
       <div className="match-block col center" style={{height: 50 * Math.pow(2, Math.floor(i/2))}}>
         {
-          match.playerOne == match.playerTwo && i == 0 && bracket == 0 || bracket == 1 && (i == 0 || i == 1) && match.truebye == true ? (
+          match.playerOne == match.playerTwo && i == 0 && this.props.bracket == 0 || this.props.bracket == 1 && (i == 0 || i == 1) && match.truebye == null ? (
             ""
           ) : (
             [match.playerOne, match.playerTwo].map((p, index) => {
