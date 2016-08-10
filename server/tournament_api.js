@@ -152,8 +152,8 @@ var OrganizeSuite = {
       var k = frounds[0][1].length - Math.floor(j/2) - 1;
       if (frounds[0][0][j].playerOne != null) //Even nonbye exists.
       {
-        [frounds[0][0][j].losr, frounds[0][0][j].losm] = [0, j];
-        [frounds[0][0][j+1].losr, frounds[0][0][j+1].losm] = [0, j+1];
+        [frounds[0][0][j].losr, frounds[0][0][j].losm] = [0, Math.floor(j/2)];
+        [frounds[0][0][j+1].losr, frounds[0][0][j+1].losm] = [0, Math.floor(j/2)];
         [frounds[0][1][k].losr, frounds[0][1][k].losm] = [1, Math.floor(j/2)];
       }
       else if (frounds[0][0][j+1].playerOne != null) //Even doesn't exist, odd does.

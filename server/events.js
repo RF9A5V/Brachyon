@@ -32,7 +32,7 @@ Meteor.methods({
     }
     var event = Events.findOne(eventID);
     //var participants = Object.keys(event.participants).map( (key) => { return event.participants[key] } );
-    var participants = Array(10).fill("").map((_, i) => { return i });
+    var participants = Array(15).fill("").map((_, i) => { return i });
     //var rounds = OrganizeSuite.singleElim(participants);
     var rounds = OrganizeSuite.doubleElim(participants);
 
@@ -68,17 +68,25 @@ Meteor.methods({
       })
     }
     else {
-      var advMatch = (bracket == 1 && matchNumber%2==0) ? event.rounds[bracket][roundNumber + 1][matchNumber]:event.rounds[bracket][roundNumber + 1][Math.floor(matchNumber / 2)];
-      if(matchNumber % 2 == 0){
-        advMatch.playerOne = match.winner;
+      var advMN = (bracket == 1 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
+      var advMatch = event.rounds[bracket][roundNumber + 1][advMN];
+      if (bracket == 0 || roundNumber%2 == 1)
+      {
+        if(matchNumber % 2 == 0){
+          advMatch.playerOne = match.winner;
+        }
+        else {
+          advMatch.playerTwo = match.winner;
+        }
       }
-      else {
-        advMatch.playerTwo = match.winner;
+      else
+      {
+        if (advMatch.playerTwo == null) advMatch.playerTwo = match.winner;
+        else advMatch.playerOne = match.winner;
       }
       if (bracket == 0 && match.losm != null)
       {
         var losMatch = event.rounds[1][match.losr][match.losm];
-        console.log(match.losr + " and " + match.losm);
         if (losMatch.playerOne == null) losMatch.playerOne = loser;
         else losMatch.playerTwo = loser;
         var losr = match.losr, losm = match.losm;
@@ -94,7 +102,7 @@ Meteor.methods({
         Events.update(eventID, {
           $set: {
             [`rounds.${bracket}.${roundNumber}.${matchNumber}`]: match,
-            [`rounds.${bracket}.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+            [`rounds.${bracket}.${roundNumber + 1}.${advMN}`]: advMatch
           }
         })
       }
