@@ -4,7 +4,8 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import MainLayout from '../imports/components/layouts/MainLayout.jsx';
 import LandingScreen from '../imports/components/public/index.jsx';
 import AboutScreen from '../imports/components/public/about.jsx';
-import AdvertiseScreen from '../imports/components/public/advertise.jsx';
+import AdvertiseScreen from '../imports/components/public/footer/advertise.jsx';
+import TermsScreen from '../imports/components/public/footer/terms.jsx'
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
 import OrganizeEventScreen from '../imports/components/events/organize.jsx';
@@ -38,6 +39,7 @@ export const renderRoutes = () => (
       <Route path="options" component={UserOptionsScreen} onEnter={verifyUser} />
       <Route path="about" component={AboutScreen} />
       <Route path="advertise" component={AdvertiseScreen} />
+      <Route path="terms" component={TermsScreen} />
       <Route path="events/:eventId/edit" component={EditEventScreen} />
       <Route path="events/:eventId/view" component={OrganizeEventScreen} />
       <Route path="events/:eventId/preview" component={PreviewEventScreen} />
