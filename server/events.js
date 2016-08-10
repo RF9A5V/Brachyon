@@ -75,9 +75,10 @@ Meteor.methods({
       else {
         advMatch.playerTwo = match.winner;
       }
-      if (bracket == 0 && advMatch.losm != null)
+      if (bracket == 0 && match.losm != null)
       {
         var losMatch = event.rounds[1][match.losr][match.losm];
+        console.log(match.losr + " and " + match.losm);
         if (losMatch.playerOne == null) losMatch.playerOne = loser;
         else losMatch.playerTwo = loser;
         var losr = match.losr, losm = match.losm;
