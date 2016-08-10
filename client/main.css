@@ -8,6 +8,7 @@
 html, body, #react-root, #app {
   margin: 0;
   background-color: #333;
+  overflow-x: hidden;
 }
 
 body {

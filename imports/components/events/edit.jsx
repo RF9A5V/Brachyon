@@ -15,10 +15,6 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
   }
 
-  componentWillMount(){
-
-  }
-
   componentWillUnmount() {
     this.state.event.stop();
   }
