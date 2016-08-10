@@ -19,6 +19,7 @@ import GameApprovalScreen from '../imports/components/games/approval.jsx';
 import UserOptionsScreen from "../imports/components/users/options.jsx";
 import CurrencyPurchaseScreen from "../imports/components/public/currency_purchase.jsx";
 import ShowEventScreen from "../imports/components/events/show.jsx";
+import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){
@@ -52,6 +53,7 @@ export const renderRoutes = () => (
       <Route path="tournaments/single" component={TournamentSingleScreen} />
       <Route path="tournaments/double" component={TournamentDoubleScreen} />
       <Route path="buy_currency" component={CurrencyPurchaseScreen} />
+      <Route path="events/:eventId/brackets/:bracketIndex" component={BracketShowScreen} />
     </Route>
   </Router>
 )

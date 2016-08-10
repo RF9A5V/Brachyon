@@ -54,6 +54,40 @@ Meteor.publish("event_participants", (id) => {
   }
 })
 
+Meteor.publish("bracket", (eventID, bracketIndex) => {
+  var event = Events.findOne(eventID);
+  if(!event) {
+    throw new Meteor.error(404, "Event not found.");
+  }
+  if(!event.organize || !event.organize[bracketIndex]) {
+    throw new Meteor.error(404, "Bracket not found for event.");
+  }
+  var game = Games.findOne(event.organize[bracketIndex].game);
+  var participantIDs = (event.organize[bracketIndex].participants || []).map((participant) => {
+    if(participant.isUser){
+      return participant.user;
+    }
+    return "";
+  });
+  var users = Meteor.users.find({_id: {
+    $in: participantIDs
+  }});
+  var profileImageIDs = users.fetch().map((user) => {
+    return user.profile.image
+  })
+  return [
+    Events.find({_id: eventID}),
+    Games.find({_id: event.organize[bracketIndex].game}),
+    Images.find({_id: game.banner}),
+    users,
+    ProfileImages.find({
+      _id: {
+        $in: profileImageIDs
+      }
+    })
+  ]
+})
+
 Meteor.publish("user", (_id) => {
   var user = Meteor.users.findOne({_id});
   if(!user){
@@ -127,6 +161,27 @@ Meteor.publish('event_search', function(params){
     events,
     Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } }),
     Images.find({_id: { $in: imageIDs }})
+  ];
+})
+
+Meteor.publish("userSearch", function(usernameSubstring) {
+  if(usernameSubstring == null || usernameSubstring.length == 0) {
+    return Events.find({ _id: null });
+  }
+  var users = Meteor.users.find({
+    username: new RegExp(usernameSubstring, "i")
+  }, {
+    username: 1,
+    profile: 1
+  });
+  var profileImages = ProfileImages.find({
+    _id: {
+      $in: users.fetch().map((user) => { return user.profile.image })
+    }
+  });
+  return [
+    users,
+    profileImages
   ];
 })
 

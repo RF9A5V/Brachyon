@@ -8,5 +8,9 @@ import ProfileBanners from "/imports/api/users/profile_banners.js";
 
 Meteor.startup(() => {
   // code to run on server at startup
+
+  toastr.options.progressBar = true;
+  toastr.options.positionClass = "toast-bottom-right";
+
   render(renderRoutes(), document.getElementById('app'));
 });
