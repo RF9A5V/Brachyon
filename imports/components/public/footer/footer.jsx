@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome';
 import Headroom from 'react-headroom';
 import { Link } from 'react-router';
 
-import SnapModal from './snap_modal.jsx';
+import SnapModal from '../snap_modal.jsx';
 
 export default class Footer extends React.Component {
   render() {
@@ -45,7 +45,7 @@ export default class Footer extends React.Component {
           <div className="col-1">
             <div className="row justify-end" style={{margin: '0 10px 0 0'}}>
                 <Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>
-                <div className="footer-hub-pad col x-center">Terms</div>
+                <Link to="/terms" className="footer-hub-pad col x-center">Terms</Link>
                 <div className="footer-hub-pad col x-center">Privacy</div>
                 <div className="footer-hub-pad col x-center">&copy; Brachyon 2016</div>
             </div>
