@@ -6,8 +6,7 @@ export default class DoubleDisplay extends Component {
   constructor(props)
   {
     super(props);
-    loserarr = []
-    this.state = {num: 15, loserarr: loserarr};
+    this.state = {num: 4, loserarr: []};
   }
 
   flatten(ary) {

@@ -7,9 +7,6 @@ import DetailsPanel from "./preview/details.jsx";
 import BracketsPanel from "./preview/brackets.jsx";
 import CrowdfundingPanel from "./preview/crowdfunding.jsx";
 import TicketsPanel from "./preview/tickets.jsx";
-import LeaderboardPanel from "./show/leaderboard.jsx";
-import BracketPanel from "./show/bracket.jsx";
-import ParticipantList from "./show/participant_list.jsx";
 
 import moment from "moment";
 
@@ -51,7 +48,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
       items.push("Tickets");
     }
     if(event.organize) {
-      items = items.concat(["Leaderboard", "Participant List", "Brackets"]);
+      items = items.concat(["Brackets"]);
+    }
+    if(event.owner == Meteor.userId()) {
+      items.push("Options");
     }
     return items;
   }
@@ -65,17 +65,17 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
       panels.push(<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />);
       panels.push(<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
     }
-    if(event.organize) {
-      panels.push(<LeaderboardPanel isDone={event.complete} participants={event.organize[0].participants || []} />);
-      panels.push(<ParticipantList participants={event.organize[0].participants || []} isOwner={event.owner == Meteor.userId()} id={event._id} rounds={event.organize[0].rounds || []} />);
-      panels.push(<BracketPanel rounds={event.organize[0].rounds} id={event._id} />);
+    if(event.organize[0]) {
+      panels.push(<BracketsPanel brackets={event.organize} />);
+    }
+    if(event.owner == Meteor.userId()) {
+      panels.push(<div></div>);
     }
     return panels;
   }
 
   render() {
-    console.log(this.state.event.ready());
-    if(!this.state.event.ready() && !this.state.users.ready()){
+    if(!this.state.event.ready() || !this.state.users.ready()){
       return (
         <div>Loading...</div>
       )

@@ -25,7 +25,7 @@ export default class EventCreateScreen extends Component {
   panels() {
     return {
       organization: (<OrganizePanel ref="organize" />),
-      bot: (<BotPanel ref="bot" />),
+      // bot: (<BotPanel ref="bot" />),
       promotion: (<PromotionPanel ref="promotion" />),
       revenue: (<RevenuePanel ref="revenue" />)
     }
@@ -33,7 +33,7 @@ export default class EventCreateScreen extends Component {
 
   availableModules() {
     return {
-      nonReview: ["organization", "bot"],
+      nonReview: ["organization"],
       review: ["revenue", "promotion"]
     }
   }
