@@ -85,6 +85,7 @@ export default class EventCreateScreen extends Component {
       var key = refKeys[i];
       args[key] = this.refs[key].value();
     }
+    console.log(args);
     Meteor.call("events.create", args, function(err, event){
       if(err){
         console.log(err.reason);

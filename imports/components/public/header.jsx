@@ -65,9 +65,8 @@ export default class Header extends TrackerReact(Component) {
           <div className="col">
             <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
             <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
-              <div style={{width: 25, height: 25, backgroundColor: "gold", marginRight: 10, borderRadius: "100%"}}></div>
               <span style={{fontWeight: "bold"}}>
-                {Meteor.user().profile.amount || 0}
+                ${((Meteor.user().profile.amount || 0) / 100).toFixed(2)}
               </span>
             </a>
           </div>
