@@ -24,8 +24,9 @@ export default class MatchBlock extends Component {
 
   render() {
     var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
+    var k = this.props.bracket ? Math.floor(i/2):i;
     return (
-      <div className="match-block col center" style={{height: 50 * Math.pow(2, Math.floor(i/2))}}>
+      <div className="match-block col center" style={{height: 50 * Math.pow(2, k)}}>
         {
           match.playerOne == match.playerTwo && i == 0 && this.props.bracket == 0 || this.props.bracket == 1 && (i == 0 || i == 1) && match.truebye == null ? (
             ""
@@ -57,13 +58,13 @@ export default class MatchBlock extends Component {
           )
         }
         {
-          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 ? (
+          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 || this.props.bracket == 1 && (i%2 == 0 || (i < 2 && match.truebye == null)) ? (
             ""
           ) : (
             j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)), top: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), top: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
             ) : (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)), bottom: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), bottom: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 1 : 2 }}></div>
             )
           )
         }

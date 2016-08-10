@@ -54,42 +54,49 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             { //Loser's bracket block
               Array(this.props.rounds[1].length).fill("").map((_, i) => {
-                return (
-                  <div style={{width: 150, textAlign: "center"}}>
-                    Round { i + 1 }
-                  </div>
-                )
+                  if (i > 0 || this.props.rounds[1][0][1].truebye)
+                  {
+                    i = this.props.rounds[1][0][1].truebye ? i:i-1;
+                    return (
+                      <div style={{width: 150, textAlign: "center"}}>
+                        Round { i + 1 }
+                      </div>
+                    )
+                  }
               })
             }
           </div>
           <div className="row">
             {
               this.props.rounds[1].map((round, i) => {
-                return (
-                  <div className="col" style={{justifyContent: "space-around"}}>
-                    {
-                      round.map((match, j) => {
-                        var isFutureLoser = false;
-                        if(i < this.props.rounds[1].length - 1){
-                          var nextMatch = i%2==0 ? this.props.rounds[1][i+1][j]:this.props.rounds[1][i + 1][Math.floor(j / 2)];
-                          var rNum = i + 1;
-                          var mNum = i%2==0 ? j:Math.floor(j / 2);
-                          while(++rNum < this.props.rounds[1].length && nextMatch.winner != null) {
-                            if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
-                              isFutureLoser = true;
-                              break;
+                if (i > 0 || this.props.rounds[1][0][1].truebye)
+                {
+                    return (
+                    <div className="col" style={{justifyContent: "space-around"}}>
+                      {
+                        round.map((match, j) => {
+                          var isFutureLoser = false;
+                          if(i < this.props.rounds[1].length - 1){
+                            var nextMatch = i%2==0 ? this.props.rounds[1][i+1][j]:this.props.rounds[1][i + 1][Math.floor(j / 2)];
+                            var rNum = i + 1;
+                            var mNum = i%2==0 ? j:Math.floor(j / 2);
+                            while(++rNum < this.props.rounds[1].length && nextMatch.winner != null) {
+                              if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
+                                isFutureLoser = true;
+                                break;
+                              }
+                              mNum = Math.floor(mNum / 2);
+                              nextMatch = this.props.rounds[1][rNum][mNum];
                             }
-                            mNum = Math.floor(mNum / 2);
-                            nextMatch = this.props.rounds[1][rNum][mNum];
                           }
-                        }
-                        return (
-                          <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                        );
-                      })
-                    }
-                  </div>
-                );
+                          return (
+                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                          );
+                        })
+                      }
+                    </div>
+                  );
+                }
               })
             }
           </div>
