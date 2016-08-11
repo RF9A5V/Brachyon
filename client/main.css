@@ -14,12 +14,6 @@ body {
   height: 100%;
 }
 
-.tbox {
-  cursor: pointer;
-  position: absolute;
-  margin-top: 50px;
-}
-
 .bracket-line-v {
   width: 5px;
   background-color: white;
@@ -36,6 +30,7 @@ body {
 
 .match-participant {
   padding: 10px 5px;
+  cursor: pointer;
 }
 
 .match-participant:first-child {
