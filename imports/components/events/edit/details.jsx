@@ -1,94 +1,92 @@
 import React, { Component } from "react";
-import ReactQuill from "react-quill";
 
 import LocationSelect from "../create/location_select.jsx";
 import DateInput from "../create/date_input.jsx";
 import TimeInput from "../create/time_input.jsx";
 import ImageForm from "../../public/img_form.jsx";
 
-export default class DetailsPanel extends Component {
+class DateTimeWrapper extends Component {
 
-  values() {
-    return {
-      name: this.refs.name.value,
-      description: this.refs.description.getEditor().getHTML(),
-      location: this.refs.location.value(),
-      datetime: this.refs.date.value() + "T" + this.refs.time.value(),
-      banner: this.refs.image.value(),
-      discordChannelID: {
-        active: this.refs.discordChannelID_active.checked,
-        name: this.refs.discordChannelID_name.value
-      }
-    }
-  }
-
-  formats() {
-    return [
-      { label:"Text", type:"group", items: [
-    		{ type:"bold", label:"Bold" },
-    		{ type:"italic", label:"Italic" },
-    		{ type:"separator" },
-    		{ type:"link", label:"Link" },
-        { type:"separator" },
-        { type:"bullet", label:"Bullet" },
-    		{ type:"separator" },
-    		{ type:"list", label:"List" },
-        { type:"separator" },
-        { type:"image", label:"Image" }
-    	]},
-    ];
-  }
-
-  onClick(e) {
-    this.props.updateSuite(this.values());
+  value() {
+    return this.refs.date.value() + "T" + this.refs.time.value();
   }
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
-        <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Event Name</label>
-            <input type="text" ref="name" ref="name" defaultValue={this.props.name} />
+      <div>
+        <div>
+          <DateInput init={this.props.time} ref="date" />
+        </div>
+        <TimeInput init={this.props.time} ref="time" />
+      </div>
+    )
+  }
+}
+
+export default class DetailsPanel extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: Events.findOne()._id
+    }
+  }
+
+  updateAction(action){
+    return (e) => {
+      var value = this.refs[action].value;
+      if(typeof(value) == "function"){
+        value = this.refs[action].value();
+      }
+      Meteor.call(`events.updateDetails${action[0].toUpperCase() + action.slice(1)}`, this.state.id, value, function(err) {
+        if(err){
+          toastr.error(err.reason, "Error!");
+        }
+        else {
+          toastr.success(`Updated ${action}.`, "Success!");
+        }
+      });
+    }
+  }
+
+  render() {
+    var details = Events.findOne().details;
+    return (
+      <div className="col x-center">
+        <div className="side-tab-panel col">
+          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+            <label style={{margin: 0}}>Event Name</label>
+            <button style={{margin: 0}} onClick={this.updateAction("name").bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <label>Banner</label>
-            <ImageForm ref="image" aspectRatio={16/9} id={this.props.banner} collection={Images} />
+          <input type="text" defaultValue={details.name} ref="name" />
+        </div>
+        <div className="side-tab-panel col">
+          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+            <label style={{margin: 0}}>Event Description</label>
+            <button style={{margin: 0}} onClick={this.updateAction("description").bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <label style={{marginBottom: 10}}>Description</label>
-            <ReactQuill
-              ref="description"
-              value={this.props.description}
-              theme="snow"
-              toolbar={this.formats()}
-            />
+          <textarea defaultValue={details.description} ref="description"></textarea>
+        </div>
+        <div className="side-tab-panel col">
+          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+            <label style={{margin: 0}}>Event Banner</label>
+            <button style={{margin: 0}} onClick={this.updateAction("banner").bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <label style={{marginTop: 10, marginBottom: 10}}>Location</label>
-            <LocationSelect ref="location" {...this.props.location} />
+          <ImageForm id={(Images.findOne(details.banner) || {})._id} aspectRatio={16/9} ref="banner" collection={Images} />
+        </div>
+        <div className="side-tab-panel col">
+          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+            <label style={{margin: 0}}>Event Location</label>
+            <button style={{margin: 0}} onClick={this.updateAction("location").bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <label>Start Date</label>
-            <div>
-              <DateInput ref="date" init={this.props.datetime} />
-            </div>
-            <label style={{marginBottom: 10}}>Start Time</label>
-            <TimeInput ref="time" init={this.props.datetime} />
+          <LocationSelect {...details.location} ref="location" />
+        </div>
+        <div className="side-tab-panel col">
+          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+            <label style={{margin: 0}}>Event Start Time</label>
+            <button style={{margin: 0}} onClick={this.updateAction("startTime").bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <label>Discord Channel</label>
-            <span>Do you want a Discord channel generated for this event?</span>
-            <div className="row x-center">
-              <span>Yep!</span>
-              <input type="checkbox" ref="discordChannelID_active" checked={(this.props.discordChannelID || {}).active} />
-            </div>
-            <label>Channel Name</label>
-            <input type="text" ref="discordChannelID_name" value={(this.props.discordChannelID || {}).name} />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
-          </div>
+          <DateTimeWrapper time={details.startTime} ref="startTime" />
         </div>
       </div>
     )

@@ -30,20 +30,41 @@ export default class ParticipantListPanel extends Component {
     return "th";
   }
 
-  toggleRegistration(id) {
+  registerUser(e) {
+    e.preventDefault();
+    Meteor.call("events.registerUser", Events.findOne()._id, this.props.bracketIndex, function(err) {
+      if(err){
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully registered for this bracket!", "Success!");
+      }
+    })
+  }
+
+  removeParticipant(index) {
     return function(e) {
       e.preventDefault();
-      Meteor.call("events.toggle_participation", this.props.id, id, function(err) {
+      Meteor.call("events.removeParticipant", Events.findOne()._id, this.props.bracketIndex, index, function(err) {
         if(err){
           toastr.error(err.reason, "Error!");
+        }
+        else {
+          toastr.success("Successfully removed user from this bracket!", "Success!");
         }
       });
     }
   }
 
-  isEliminated(userID) {
+  isEliminated(alias) {
     var matchID = null;
     var currentRound = 0;
+    if(this.props.rounds == null) {
+      return false;
+    }
+    if(this.props.rounds.length == 0 || !Events.findOne().active){
+      return false;
+    }
     for(var i = 0; i < this.props.rounds[0].length; i ++){
       var match = this.props.rounds[0][i];
       if(userID == match.playerOne || userID == match.playerTwo){
@@ -62,7 +83,7 @@ export default class ParticipantListPanel extends Component {
       }
     }
     var match = this.props.rounds[currentRound][matchID];
-    while(currentRound < this.props.rounds.length && match.winner != null){
+    while(this.props.rounds[currentRound] != null && match.winner != null){
       if(match.winner != userID){
         return true;
       }
@@ -70,7 +91,8 @@ export default class ParticipantListPanel extends Component {
       if(currentRound == this.props.rounds.length) {
         break;
       }
-      match = this.props.rounds[currentRound][Math.floor(matchID / 2)];
+      matchID = Math.floor(matchID / 2);
+      match = this.props.rounds[currentRound][matchID];
     }
     return false;
   }
@@ -79,28 +101,32 @@ export default class ParticipantListPanel extends Component {
     return (
       <div className="participant-panel-container">
         {
-          (this.props.participants).map((id, i) => {
-            var participant = Meteor.users.findOne(id);
-            var isElim = this.isEliminated(id);
+          (this.props.participants).map((obj, i) => {
+            var participant = null;
+            if(obj.id != null){
+              participant = Meteor.users.findOne(obj.id);
+            }
+            var isElim = this.isEliminated(obj.alias);
             return (
               <div className="participant-panel" style={{opacity: isElim ? (0.3) : (1)}}>
                 <div className="participant-panel-image">
                   <div className="participant-panel-overlay">
                     <div className="row x-center">
-                      <span className="col-1">{i + 1}{this.numberDecorator(i+1)} Seed</span>
+                      <span style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}}>{i + 1}{this.numberDecorator(i+1)} Seed</span>
+                      <div className="col-1"></div>
                       {
                         isElim ? "" : (
                           <div className="row">
                             {
                               this.props.isOwner ? (
-                                <FontAwesome name="cog" size="2x" style={{marginRight: 10}} />
+                                <FontAwesome name="cog" style={{marginRight: 10, backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
                               ) : (
                                 ""
                               )
                             }
                             {
-                              (participant._id == Meteor.userId() || this.props.isOwner) ? (
-                                <FontAwesome name="minus" size="2x" onClick={this.toggleRegistration(participant._id).bind(this)} />
+                              (obj.id == Meteor.userId() || this.props.isOwner) ? (
+                                <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
                               ) : (
                                 ""
                               )
@@ -110,11 +136,17 @@ export default class ParticipantListPanel extends Component {
                       }
                     </div>
                   </div>
-                  <img src={this.imgOrDefault(participant.profile.image)} />
+                  {
+                    participant != null ? (
+                      <img src={this.imgOrDefault(participant.profile.image)} />
+                    ) : (
+                      <img src={this.imgOrDefault(null)} />
+                    )
+                  }
                 </div>
                 <div className="participant-panel-desc">
                   {
-                    participant.username
+                    obj.alias
                   }
                 </div>
 
@@ -123,10 +155,10 @@ export default class ParticipantListPanel extends Component {
           })
         }
         {
-          this.props.participants.includes(Meteor.userId()) ? (
+          this.props.participants.some((obj) => { return obj.id == Meteor.userId() || Meteor.userId() == null }) ? (
             ""
           ) : (
-            <div className="participant-panel" onClick={this.toggleRegistration(Meteor.userId()).bind(this)}>
+            <div className="participant-panel" onClick={this.registerUser.bind(this)}>
               <div className="participant-panel-image">
                 <FontAwesome name="plus" size="5x" />
               </div>

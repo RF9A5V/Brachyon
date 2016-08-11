@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-
-import SingleDisplay from './single/display.jsx';
+import SingleDisplay from './swiss/display.jsx';
 
 export default class TournamentSingleScreen extends TrackerReact(Component) {
 
-  componentWillMount() {
-    Meteor.call("bot.sayHello");
-  }
-
   render() {
-    var id = "heh";
-    
     return (
       <div className="screen">
-        <SingleDisplay rounds={x} id={id}/>
+        <SwissDisplay />
       </div>
     )
   }

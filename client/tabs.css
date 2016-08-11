@@ -22,3 +22,61 @@
 .tab:hover {
   cursor: pointer;
 }
+
+.side-tab-container {
+  position: relative;
+  flex: 1 1;
+}
+
+.side-tab-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #111;
+  padding-top: 100px;
+  padding-bottom: 70px;
+  width: 20%;
+  min-width: 300px;
+  box-sizing: border-box;
+}
+
+.side-tab-menu-item {
+  padding: 30px;
+  padding-left: 50px;
+  font-size: 18px;
+}
+
+.side-tab-menu-item:hover {
+  background-color: #555;
+  cursor: pointer;
+}
+
+.side-tab-menu-item.active {
+  background-color: #666;
+}
+
+.side-tab-content {
+  position: relative;
+  left: 20vw;
+  width: 80%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.side-tab-content-item {
+  padding: 20px;
+  display: none;
+}
+
+.side-tab-content-item.active {
+  display: block;
+}
+
+.side-tab-panel {
+  padding: 40px;
+  width: 50%;
+  background-color: #666;
+  margin-bottom: 30px;
+  min-width: 300px;
+}
