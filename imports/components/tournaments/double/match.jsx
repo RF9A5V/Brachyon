@@ -58,7 +58,7 @@ export default class MatchBlock extends Component {
           )
         }
         {
-          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 || this.props.bracket == 1 && (i%2 == 0 || (i < 2 && match.truebye == null)) ? (
+          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 || this.props.bracket == 1 && (i%2 == 0 || (i < 2 && match.truebye == null)) || this.props.bracket == 2 ? (
             ""
           ) : (
             j % 2 == 0 ? (

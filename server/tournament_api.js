@@ -123,7 +123,7 @@ var OrganizeSuite = {
       rounds.push(temp);
     }
 
-    for(var i = roundCount - 3; i >= 0; i-=.5){
+    for(var i = roundCount - 3; i > -1; i-=.5){
       q = Math.ceil(i);
       var temp = [];
       for (var j = 0; j < Math.pow(2, q); j++){
@@ -179,7 +179,7 @@ var OrganizeSuite = {
 
     //This shits pretty weird, but essentially for every loser round that is even, you want to start from the last element of the top half and move bottom to top, then do the same for the bottom half.
     //For odds, you go on the top of the bottom half and work from top to bottom, then from the top half, top to bottom.
-    for (i = 3; i < frounds[1].length; i+=2)
+    for (i = 3; i < frounds[1].length-1; i+=2)
     {
       k = 1+(i-1)/2;
       for (j = 0; j < frounds[1][i].length; j++)
@@ -212,6 +212,24 @@ var OrganizeSuite = {
         }
       }
     }
+
+    [frounds[0][frounds[0].length-1][0].losr, frounds[0][frounds[0].length-1][0].losm] = [frounds[1].length-1, 0]; //Got too lazy to program into the above loop, sorry
+
+    var finalround = [], temp = [];
+    for (i = 0; i < 2; i++)
+    {
+      temp = []
+      var matchObj = {
+        playerOne: null,
+        playerTwo: null,
+        scoreOne: 0,
+        scoreTwo: 0,
+        winner: null,
+      }
+      temp.push(matchObj);
+      finalround.push(temp);
+    }
+    frounds.push(finalround);
     return frounds;
   }
 }
