@@ -17,7 +17,7 @@ export default class DoubleDisplay extends Component {
                     </div>
                   )
                 }
-                else
+                else if (!((i - this.props.rounds[0].length == 1) && this.props.rounds[2][1][0].playerOne == null)) 
                 {
                   return (
                     <div style={{width: 150, textAlign: "center"}}>
@@ -63,27 +63,31 @@ export default class DoubleDisplay extends Component {
             <div className="row">
             {
               this.props.rounds[2].map((round, i) => {
+                var finr = "finalround" + i
                 return (
-                  <div className="col" style={{justifyContent: "space-around"}}>
+                  <div className="col finalr" id={finr} style={{justifyContent: "space-around"}}>
                     {
                       round.map((match, j) => {
-                        var isFutureLoser = false;
-                        if(i < this.props.rounds[2].length - 1){
-                          var nextMatch = this.props.rounds[2][i + 1][Math.floor(j / 2)];
-                          var rNum = i + 1;
-                          var mNum = Math.floor(j / 2);
-                          while(++rNum < this.props.rounds[2].length && nextMatch.winner != null) {
-                            if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
-                              isFutureLoser = true;
-                              break;
+                        if (!(i == 1 && this.props.rounds[2][i][j].playerOne == null))
+                        {
+                          var isFutureLoser = false;
+                          if(i < this.props.rounds[2].length - 1){
+                            var nextMatch = this.props.rounds[2][i + 1][Math.floor(j / 2)];
+                            var rNum = i + 1;
+                            var mNum = Math.floor(j / 2);
+                            while(++rNum < this.props.rounds[2].length && nextMatch.winner != null) {
+                              if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
+                                isFutureLoser = true;
+                                break;
+                              }
+                              mNum = Math.floor(mNum / 2);
+                              nextMatch = this.props.rounds[2][rNum][mNum];
                             }
-                            mNum = Math.floor(mNum / 2);
-                            nextMatch = this.props.rounds[2][rNum][mNum];
                           }
+                          return (
+                            <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                          );
                         }
-                        return (
-                          <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                        );
                       })
                     }
                   </div>
