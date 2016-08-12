@@ -9,6 +9,7 @@ import { browserHistory } from 'react-router';
 import UserDropdown from "../users/user_dropdown.jsx";
 
 export default class Header extends TrackerReact(Component) {
+
   onClick(e) {
     e.preventDefault();
     Meteor.logout(function(err) {
@@ -19,7 +20,6 @@ export default class Header extends TrackerReact(Component) {
   constructor () {
     super();
     this.state = {
-      hover: false,
       user: Meteor.subscribe("user", Meteor.userId()),
       userMenuOpen: false
     }
@@ -31,14 +31,6 @@ export default class Header extends TrackerReact(Component) {
       return profile.url();
     }
     return "/images/profile.png";
-  }
-
-  mouseOver() {
-    this.setState({hover: true});
-  }
-
-  mouseOut() {
-    this.setState({hover: false});
   }
 
   toggleUserMenu(e) {
@@ -60,10 +52,10 @@ export default class Header extends TrackerReact(Component) {
       userCred = (
         <div style={{position: "relative"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
           <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
-            <img style={{width: 75, height: 75, borderRadius: "100%"}} src={this.imgOrDefault()} />
+            <img style={{width: 75, height: 75, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
           </a>
           <div className="col">
-            <span style={{fontSize: 20, fontWeight: "bold", marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
             <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
               <span style={{fontWeight: "bold"}}>
                 ${((Meteor.user().profile.amount || 0) / 100).toFixed(2)}
@@ -85,42 +77,27 @@ export default class Header extends TrackerReact(Component) {
         </div>
       )
     }
-    if(this.state.hover){
-      hub=(
-        <div className="hub-show">
-          <Link className="hub" to="/events/discover">
-            DISCOVER
-          </Link>
-          <Link className="hub" to="/about">
-            ABOUT
-          </Link>
-        </div>
-      )
-    }
-    else{
-      hub=(
-        <div className="hub-hide">
-          <Link className="hub" to="/events/discover">
-            DISCOVER
-          </Link>
-          <Link className="hub" to="/about">
-            ABOUT
-          </Link>
-        </div>
-      )
-    }
     return (
       <Headroom>
-        <header onMouseEnter={this.mouseOver.bind(this)} onMouseLeave={this.mouseOut.bind(this)} className="row x-center header">
+        <header className="row x-center header">
           <div className = "head-align row">
             <Link to="/">
-              <img src="/images/b_logo_trans.png" style={{height: 50, width:50}} />
+              <img src="/images/b_logo_trans.png"></img>
             </Link>
-            <input type="search" placeholder="Search Brachyon" style={{margin: 0}} />
-            <button>
-              <FontAwesome name="search"/>
-            </button>
-            {hub}
+            <div style={{marginLeft: 10, marginRight: 10}}>
+              <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
+                DISCOVER
+              </Link>
+              {/*<Link className="hub" to="/events/discover">
+                CREATE
+              </Link>
+              <Link className="hub" to="/events/discover">
+                MARKET
+              </Link>*/}
+              <Link to="/about" className={`hub ${window.location.pathname == "/about" ? "active" : ""}`}>
+                ABOUT
+              </Link>
+            </div>
           </div>
           <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
             {userCred}

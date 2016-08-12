@@ -21,13 +21,15 @@ export default class SnapModal extends React.Component {
   render () {
     return (
 			<div>
-        <div className="social-icon-bg col x-center center">
-          <FontAwesome name="snapchat-ghost" className="snapchat social-icon" onClick={this.openModal.bind(this)} />
+        <div className="social-icon-bg col x-center center" onClick={this.openModal.bind(this)} >
+          <FontAwesome name="snapchat-ghost" className="snapchat social-icon" />
         </div>
 		  	<Modal
 	        className = "snap-modal"
 	        overlayClassName = "credential-overlay"
-	        isOpen={this.state.open}>
+	        isOpen={this.state.open}
+          onRequestClose={this.closeModal}
+        >
 	        <div className="row justify-end">
             <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
 	        </div>

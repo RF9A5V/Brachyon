@@ -16,13 +16,9 @@ export default class LandingScreen extends React.Component {
         <div className="main-content" id="main-content">
           <h1>B R A C H Y O N</h1>
           <h4>Beyond The Brackets</h4>
-          <div className="row center">
+          <div className="row x-center center">
             <LogInModal />
             <SignUpModal />
-          </div>
-          <div className="row center">
-            <button className="fb"><FontAwesome name="facebook" /></button>
-            <button className="gplus"><FontAwesome name="google-plus" /></button>
           </div>
           <div className="discover-box">
             <Link to="/events/discover" className="discover row center x-center">

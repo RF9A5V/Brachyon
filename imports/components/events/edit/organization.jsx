@@ -33,20 +33,34 @@ export default class OrganizationPanel extends Component {
   setIndex(index) {
     return (e) => {
       this.setState({
-        index
+        index,
+        create: false
       })
     }
   }
 
   onBracketSave(e) {
-    Meteor.call("events.updateOrganizationBracket", Events.findOne()._id, this.state.index, this.refs[this.state.index].values(), (err) => {
-      if(err){
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success("Updated your bracket.", "Success!");
-      }
-    });
+    if(this.state.create) {
+
+    }
+    else {
+      Meteor.call("events.updateOrganizationBracket", Events.findOne()._id, this.state.index, this.refs[this.state.index].values(), (err) => {
+        if(err){
+          toastr.error(err.reason, "Error!");
+        }
+        else {
+          toastr.success("Updated your bracket.", "Success!");
+        }
+      });
+    }
+  }
+
+  setCreateMode(e) {
+    e.preventDefault();
+    this.setState({
+      index: -1,
+      create: true
+    })
   }
 
   render() {
@@ -60,23 +74,32 @@ export default class OrganizationPanel extends Component {
               )
             })
           }
-          <div className="row center x-center" style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, backgroundColor: "#555"}}>
-            <FontAwesome name="plus" size="2x" style={{position: "relative", top: 5}} />
+          <div className="row center x-center" style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, backgroundColor: "#555"}} onClick={this.setCreateMode.bind(this)}>
+            <FontAwesome name="plus" size="2x" style={{position: "relative", top: 2}} />
           </div>
         </div>
         <div className="side-tab-panel col x-center">
           <div className="row x-center flex-pad" style={{marginBottom: 20, alignSelf: "stretch"}}>
-            <label style={{margin: 0}}>{this.state.organize[this.state.index].name}</label>
+            <h3 style={{margin: 0}}>{this.state.index >= 0 ? this.state.organize[this.state.index].name : "New Bracket"}</h3>
             <button style={{margin: 0}} onClick={this.onBracketSave.bind(this)}>Save</button>
           </div>
           {
             this.state.organize.map((bracket, index) => {
               return (
-                <div style={{width: "75%", display: index == this.state.index ? ("inherit") : ("none")}}>
+                <div style={{width: "85%", display: index == this.state.index && !this.state.create ? ("inherit") : ("none")}}>
                   <BracketForm ref={index} {...bracket}/>
                 </div>
               )
             })
+          }
+          {
+            this.state.create ? (
+              <div style={{width: "85%", display: "inherit"}}>
+                <BracketForm ref="create"/>
+              </div>
+            ) : (
+              ""
+            )
           }
         </div>
       </div>

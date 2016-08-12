@@ -31,7 +31,9 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
-        <EditMenu event={this.event()} />
+        <div className="col">
+          <EditMenu event={this.event()} />
+        </div>
       )
     }
   }

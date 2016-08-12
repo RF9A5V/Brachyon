@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import FontAwesome from "react-fontawesome";
 
 import StripeConnect from "../../oauth/connect/stripe.jsx";
 import FacebookConnect from "../../oauth/connect/facebook.jsx";
@@ -11,13 +12,13 @@ export default class OAuthOptionsPanel extends Component {
     return (
       <div>
         <div className="side-tab-panel">
-          <label>Facebook</label>
+          <h3>Facebook</h3>
           <div>
             <FacebookConnect />
           </div>
         </div>
         <div className="side-tab-panel">
-          <label>Stripe</label>
+          <h3>Stripe</h3>
           {
             Meteor.user().profile.isStripeConnected ? (
               "Already connected!"
@@ -28,16 +29,22 @@ export default class OAuthOptionsPanel extends Component {
 
         </div>
         <div className="side-tab-panel">
-          <label>Twitch</label>
+          <h3>Twitch</h3>
           <div>
             <TwitchConnect />
           </div>
         </div>
         <div className="side-tab-panel">
-          <label>Google</label>
+          <h3>Google</h3>
+          <div>
+            <button >
+              <FontAwesome style={{marginRight: 10}} name="google-plus" />
+              Connect to Google
+            </button>
+          </div>
         </div>
         <div className="side-tab-panel">
-          <label>Twitter</label>
+          <h3>Twitter</h3>
           <div>
             <TwitterConnect />
           </div>

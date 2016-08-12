@@ -70,6 +70,10 @@ body {
   text-align: center;
 }
 
+.justify-start{
+  align-items: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -106,10 +110,21 @@ body {
   align-self: flex-end;
 }
 
-h2 {
+h2 { /* Titles for pages or for more prominent tabs like About.jsx */
   color: #FFD700;
   background-color: #222;
   padding: 5px;
+}
+
+h3 { /* For side-tab-panels and any heading where there are other headings on the same page */
+  color: #FFD700;
+  margin: 0;
+}
+
+h4 {
+  color: white;
+  font-weight: bold;
+  margin: 0;
 }
 
 button, input[type="submit"], .custom-file-upload {
@@ -166,80 +181,40 @@ label {
     cursor: pointer;
 }
 
+.font-stretch-big {
+  font-size: calc(2vw + 2vmin);
+}
+
+.font-stretch-mid {
+  font-size: calc(0.5vw + 0.5vmin + 0.1vh);
+}
+
+.font-stretch-small {
+  font-size: calc(0.5vw + 0.5vmin);
+}
+
+.bold {
+  font-weight: bold;
+}
+
 /* Hacky thing to remove Chrome backgrounds for autofills */
 input:-webkit-autofill {
   -webkit-box-shadow: none;
 }
 
 .login-button {
-  width: 100px;
+  width: 146px;
 }
 
 .signup-button {
   border-color: #CC0000;
-  width: 100px;
+  width: 146px;
 }
 
 .signup-button:not(.inactive):hover{
   -moz-box-shadow: 0 0 10px #CC0000;
 	-webkit-box-shadow: 0 0 10px #CC0000;
 	box-shadow: 0 0 10px #CC0000;
-}
-
-.hub:hover {
-  cursor: pointer;
-  -webkit-transition: border-bottom 0.5s ease-out;
-  -moz-transition: border-bottom 0.5s ease-out;
-  -o-transition: border-bottom 0.5s ease-out;
-  transition: border-bottom 0.5s ease-out;
-  border-bottom: #CC0000 2px solid;
-}
-
-.hub {
-  padding: 4px 0;
-  border-bottom: transparent 2px solid;
-}
-
-.hub-show {
-  -webkit-animation-name: animatehubshow;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatehubshow;
-  animation-duration: 0.4s;
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  transform: translateX(0);
-}
-
-@-webkit-keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-}
-
-@keyframes animatehubshow {
-  from {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-  to {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-}
-
-.hub-hide {
-  -webkit-animation-name: animatehubhide;
-  -webkit-animation-duration: 1.4s;
-  animation-name: animatehubhide;
-  animation-duration: 1.4s;
-  opacity: 0;
-}
-
-@-webkit-keyframes animatehubhide {
-  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-}
-
-@keyframes animatehubhide {
-  from {opacity: 1; display: inline; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}
-  to {opacity: 0; display: none; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
-}
-
-header a {
-  margin: 0 10px;
 }
 
 .snapcode-image {
@@ -249,6 +224,7 @@ header a {
 
 a {
   text-decoration: none;
+  outline: none;
 }
 
 .loading-screen {
@@ -353,9 +329,13 @@ i {
   user-select: none;           /* Non-prefixed version, currently                                not supported by any browser */
 }
 
-.currency-symbol {
-  width: 25px;
-  height: 25px;
-  border-radius: 100%;
-  background-color: gold;
+.modal-content {
+  position: relative;
+  background-color: #666;
+  width: 50%;
+  min-width: 300px;
+  height: 50%;
+  border-radius: 0;
+  border: none;
+  position: relative;
 }

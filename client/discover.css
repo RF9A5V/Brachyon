@@ -44,6 +44,14 @@
   opacity: 0;
 }
 
+.discover-divider {
+  width: 75%;
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 @keyframes slidein {
     from {opacity:0; -ms-transform: translateX(-5px); -webkit-transform: translateX(-5px); transform: translateX(-5px);}
     to {opacity:1; -ms-transform: translateX(0); -webkit-transform: translateX(0); transform: translateX(0);}

@@ -52,41 +52,47 @@ export default class DetailsPanel extends Component {
   render() {
     var details = Events.findOne().details;
     return (
-      <div className="col x-center">
-        <div className="side-tab-panel col">
-          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-            <label style={{margin: 0}}>Event Name</label>
-            <button style={{margin: 0}} onClick={this.updateAction("name").bind(this)}>Save</button>
+      <div className="col">
+        <div className="row">
+          <div className="side-tab-panel col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+              <h3 style={{margin: 0}}>Event Name</h3>
+              <button style={{margin: 0}} onClick={this.updateAction("name").bind(this)}>Save</button>
+            </div>
+            <input type="text" defaultValue={details.name} ref="name" />
           </div>
-          <input type="text" defaultValue={details.name} ref="name" />
+          <div className="side-tab-panel col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+              <h3 style={{margin: 0}}>Event Banner</h3>
+              <button style={{margin: 0}} onClick={this.updateAction("banner").bind(this)}>Save</button>
+            </div>
+            <ImageForm id={(Images.findOne(details.banner) || {})._id} aspectRatio={16/9} ref="banner" collection={Images} />
+          </div>
         </div>
-        <div className="side-tab-panel col">
-          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-            <label style={{margin: 0}}>Event Description</label>
-            <button style={{margin: 0}} onClick={this.updateAction("description").bind(this)}>Save</button>
+        <div className="row">
+          <div className="side-tab-panel col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+              <h3 style={{margin: 0}}>Event Description</h3>
+              <button style={{margin: 0}} onClick={this.updateAction("description").bind(this)}>Save</button>
+            </div>
+            <textarea defaultValue={details.description} ref="description" style={{width: "100%"}}></textarea>
           </div>
-          <textarea defaultValue={details.description} ref="description"></textarea>
         </div>
-        <div className="side-tab-panel col">
-          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-            <label style={{margin: 0}}>Event Banner</label>
-            <button style={{margin: 0}} onClick={this.updateAction("banner").bind(this)}>Save</button>
+        <div className="row">
+          <div className="side-tab-panel col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+              <h3 style={{margin: 0}}>Event Location</h3>
+              <button style={{margin: 0}} onClick={this.updateAction("location").bind(this)}>Save</button>
+            </div>
+            <LocationSelect {...details.location} ref="location" />
           </div>
-          <ImageForm id={(Images.findOne(details.banner) || {})._id} aspectRatio={16/9} ref="banner" collection={Images} />
-        </div>
-        <div className="side-tab-panel col">
-          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-            <label style={{margin: 0}}>Event Location</label>
-            <button style={{margin: 0}} onClick={this.updateAction("location").bind(this)}>Save</button>
+          <div className="side-tab-panel col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+              <h3 style={{margin: 0}}>Event Start Time</h3>
+              <button style={{margin: 0}} onClick={this.updateAction("startTime").bind(this)}>Save</button>
+            </div>
+            <DateTimeWrapper time={details.startTime} ref="startTime" />
           </div>
-          <LocationSelect {...details.location} ref="location" />
-        </div>
-        <div className="side-tab-panel col">
-          <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-            <label style={{margin: 0}}>Event Start Time</label>
-            <button style={{margin: 0}} onClick={this.updateAction("startTime").bind(this)}>Save</button>
-          </div>
-          <DateTimeWrapper time={details.startTime} ref="startTime" />
         </div>
       </div>
     )

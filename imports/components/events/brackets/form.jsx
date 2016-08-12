@@ -187,7 +187,7 @@ export default class BracketForm extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div className="col" style={{width: "100%"}}>
         {
           this.props.deletable ? (
             <div className="row">
