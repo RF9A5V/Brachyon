@@ -5,5 +5,12 @@ Meteor.methods({
         [`organize.${bracketIndex}`]: value
       }
     })
+  },
+  "events.addOrganizationBracket"(eventID, value) {
+    Events.update(eventID, {
+      $push: {
+        organize: value
+      }
+    });
   }
 })
