@@ -9,7 +9,6 @@ Meteor.publish('event', (_id) => {
   var games = [];
   var banners = [event.details.banner];
   if(event.organize != null) {
-    console.log(event.organize);
     games = event.organize.map((bracket) => { return bracket.game });
     var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
     banners = banners.concat(gameBanners);

@@ -87,7 +87,7 @@ export default class RevenuePanel extends Component {
           </div>
         </div>
         {
-          revenue.crowdfunding !== false || revenue.crowdfunding != null ? (
+          revenue.crowdfunding !== false && revenue.crowdfunding != null ? (
             <div className="side-tab-panel col">
               <h3>Crowdfunding</h3>
               <h3>Requested Amount</h3>
@@ -98,7 +98,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.tierRewards !== false || revenue.tierRewards != null ? (
+          revenue.tierRewards !== false && revenue.tierRewards != null ? (
             <div className="side-tab-panel col">
               <h3>Tier Rewards</h3>
               <TierRewardCollection tiers={revenue.tierRewards} />
@@ -108,7 +108,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.stretchGoals !== false || revenue.stretchGoals != null ? (
+          revenue.stretchGoals !== false && revenue.stretchGoals != null ? (
             <div className="side-tab-panel col">
               <h3>Stretch Goals</h3>
             </div>
@@ -117,7 +117,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.ticketing !== false || revenue.ticketing != null ? (
+          revenue.ticketing !== false && revenue.ticketing != null ? (
             <div className="side-tab-panel col">
               <h3>Tickets</h3>
             </div>
