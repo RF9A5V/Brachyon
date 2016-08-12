@@ -22,7 +22,7 @@ export default class PromotionPanel extends Component {
       <div className="col x-center">
         <div className="side-tab-panel col">
           <div className="row x-center flex-pad">
-            <label>Bid Amount</label>
+            <h3>Front Page Access</h3>
             <button onClick={this.submitBid.bind(this)}>Save</button>
           </div>
           <CurrencyInput ref="bid" amount={promotion.bid} />

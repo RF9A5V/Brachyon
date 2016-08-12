@@ -1,1 +1,17 @@
+.module-select-block {
+  padding: 20px;
+  width: 100px;
+  background-color: #333;
+  margin-right: 20px;
+}
 
+.module-select-block.active, .submodule-block.active {
+  background-color: #0C0;
+}
+
+.submodule-block {
+  padding: 10px;
+  background-color: #333;
+  margin-bottom: 20px;
+  width: 200px;
+}

@@ -120,7 +120,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
     return (
       <div>
-        <div className="user-banner" style={{backgroundImage: `url(${this.profileBannerURL()})`}}>
+        <div className="user-banner" style={{background: `url(${this.profileBannerURL()}) no-repeat center center`}}>
           <div className="user-img-line row flex-pad x-center">
             <div className="row col-1">
               {
@@ -138,6 +138,10 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             </div>
           </div>
         </div>
+        <div className="row center">
+          <button onClick={() => { browserHistory.push("/events/create") }} style={{marginTop: 100}}>Create an Event</button>
+        </div>
+        <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="user-events-container">
           {
             events.map((eventSet) => {
@@ -151,9 +155,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
               )
             })
           }
-        </div>
-        <div className="row center">
-          <button onClick={() => { browserHistory.push("/events/create") }}>Create an Event</button>
         </div>
       </div>
     )
