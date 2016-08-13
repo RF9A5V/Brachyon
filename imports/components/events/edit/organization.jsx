@@ -62,6 +62,21 @@ export default class OrganizationPanel extends Component {
     }
   }
 
+  onBracketDelete(e) {
+    e.preventDefault();
+    if(this.state.index < 0 || this.state.create) {
+      return;
+    }
+    Meteor.call("events.deleteOrganizationBracket", Events.findOne()._id, this.state.index, function(err) {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully deleted bracket.", "Success!");
+      }
+    })
+  }
+
   setCreateMode(e) {
     e.preventDefault();
     this.setState({
@@ -100,7 +115,10 @@ export default class OrganizationPanel extends Component {
             <div className="side-tab-panel col x-center">
               <div className="row x-center flex-pad" style={{marginBottom: 20, alignSelf: "stretch"}}>
                 <h3 style={{margin: 0}}>{this.state.index >= 0 ? this.state.organize[this.state.index].name : "New Bracket"}</h3>
-                <button style={{margin: 0}} onClick={this.onBracketSave.bind(this)}>Save</button>
+                <div>
+                  <button style={{margin: 0}} onClick={this.onBracketDelete.bind(this)}>Delete</button>
+                  <button style={{margin: 0, marginLeft: 10}} onClick={this.onBracketSave.bind(this)}>Save</button>
+                </div>
               </div>
               {
                 this.state.organize.map((bracket, index) => {
