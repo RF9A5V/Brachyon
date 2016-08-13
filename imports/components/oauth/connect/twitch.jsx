@@ -21,7 +21,7 @@ export default class FacebookConnect extends Component {
   render() {
     if(Meteor.user().services.twitch == null) {
       return (
-        <button onClick={this.onClick.bind(this)}>
+        <button onClick={this.onClick.bind(this)} >
           <FontAwesome style={{marginRight: 10}} name="twitch" />
           Connect to Twitch
         </button>
