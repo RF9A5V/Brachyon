@@ -179,7 +179,7 @@ var OrganizeSuite = {
 
     //This shits pretty weird, but essentially for every loser round that is even, you want to start from the last element of the top half and move bottom to top, then do the same for the bottom half.
     //For odds, you go on the top of the bottom half and work from top to bottom, then from the top half, top to bottom.
-    for (i = 3; i < frounds[1].length-1; i+=2)
+    for (i = 3; i < frounds[1].length; i+=2)
     {
       k = 1+(i-1)/2;
       for (j = 0; j < frounds[1][i].length; j++)
@@ -201,19 +201,17 @@ var OrganizeSuite = {
         {
           if (j < frounds[0][k].length/2)
           {
-            frounds[0][k][frounds[0][k].length/2 + j].losr = i;
-            frounds[0][k][frounds[0][k].length/2 + j].losm = j;
+            frounds[0][k][Math.floor(frounds[0][k].length/2) + j].losr = i;
+            frounds[0][k][Math.floor(frounds[0][k].length/2) + j].losm = j;
           }
           else
           {
-            frounds[0][k][j - frounds[0][k].length/2].losr = i;
-            frounds[0][k][j - frounds[0][k].length/2].losm = j;
+            frounds[0][k][j - Math.floor(frounds[0][k].length/2)].losr = i;
+            frounds[0][k][j - Math.floor(frounds[0][k].length/2)].losm = j;
           }
         }
       }
     }
-
-    [frounds[0][frounds[0].length-1][0].losr, frounds[0][frounds[0].length-1][0].losm] = [frounds[1].length-1, 0]; //Got too lazy to program into the above loop, sorry
 
     var finalround = [], temp = [];
     for (i = 0; i < 2; i++)
