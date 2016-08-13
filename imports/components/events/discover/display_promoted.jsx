@@ -21,7 +21,7 @@ export default class DisplayPromotedEvent extends Component {
       return "There's no description for this event.";
     }
     else {
-      sizeMax = 250;
+      sizeMax = 200;
       if(parsed.length > sizeMax){
         return parsed.substring(0, sizeMax-3) + '...';
       }
@@ -42,13 +42,13 @@ export default class DisplayPromotedEvent extends Component {
           <img src={this.imgOrDefault(this.props.event)} />
         </div>
         <div className="discover-details col-1">
-          <h1>{this.props.event.details.name}</h1>
-          <div className="row">
+          <h1 style={{fontSize: "calc(2vw + 2vmin)"}}>{this.props.event.details.name}</h1>
+          <div className="row" style={{fontSize: "13px"}} style={{fontSize: "calc(0.5vw + 0.5vmin)"}}>
             <div style={{marginRight: '10px'}}>
               {/*Crowdfunding check goes here */}
               {
                 this.props.event.details.location.online ? (
-                  <div><FontAwesome name="signal" /> Online Event</div>
+                  <div><FontAwesome name="signal" /> Online</div>
                 ) : (
                   <div>
                     <FontAwesome name="map-marker" /> {this.props.event.details.location.city}, {this.props.event.details.location.state}
@@ -56,14 +56,14 @@ export default class DisplayPromotedEvent extends Component {
                 )
               }
             </div>
-            <span> | </span>
-            <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="calendar" /> {moment(this.props.event.details.datetime).format("MMM Do, YYYY")}</div>
-            <span> | </span>
+            <span>|</span>
+            <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="calendar" /> {moment(this.props.event.details.datetime).format("MMM Do")}</div>
+            <span>|</span>
             <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="user" /> {Meteor.users.findOne(this.props.event.owner).username}</div>
           </div>
-          <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}} style={{margin: '10px 0'}}>
+          <div dangerouslySetInnerHTML={{__html: this.description()}} style={{fontSize: "calc(0.5vw + 0.5vmin)", margin: '10px 0'}}>
           </div>
-          <div>
+          {/*<div>
             <span>
               Amount
             </span>
@@ -82,7 +82,7 @@ export default class DisplayPromotedEvent extends Component {
             <span>
               Followers
             </span>
-          </div>
+          </div>*/}
         </div>
       </div>
     )

@@ -17,7 +17,7 @@ export default class DoubleDisplay extends Component {
                     </div>
                   )
                 }
-                else if (!((i - this.props.rounds[0].length == 1) && this.props.rounds[2][1][0].playerOne == null)) 
+                else if (!((i - this.props.rounds[0].length == 1) && this.props.rounds[2][1][0].playerOne == null))
                 {
                   return (
                     <div style={{width: 150, textAlign: "center"}}>

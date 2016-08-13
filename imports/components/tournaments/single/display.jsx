@@ -24,17 +24,34 @@ export default class SingleDisplay extends Component {
                   {
                     round.map((match, j) => {
                       var isFutureLoser = false;
+<<<<<<< HEAD
                       if(i < this.props.rounds[0].length - 1){
                         var nextMatch = this.props.rounds[0][i + 1][Math.floor(j / 2)];
+=======
+                      if(i < this.props.rounds.length - 1){
+>>>>>>> refs/remotes/origin/active_flow
                         var rNum = i + 1;
+                        var nextMatch = this.props.rounds[rNum][Math.floor(j / 2)];
                         var mNum = Math.floor(j / 2);
+<<<<<<< HEAD
                         while(++rNum < this.props.rounds[0].length && nextMatch.winner != null) {
+=======
+                        while(rNum < this.props.rounds.length && nextMatch.winner != null) {
+>>>>>>> refs/remotes/origin/active_flow
                           if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
                             isFutureLoser = true;
                             break;
                           }
                           mNum = Math.floor(mNum / 2);
+<<<<<<< HEAD
                           nextMatch = this.props.rounds[0][rNum][mNum];
+=======
+                          rNum += 1;
+                          if(rNum == this.props.rounds.length) {
+                            break;
+                          }
+                          nextMatch = this.props.rounds[rNum][mNum];
+>>>>>>> refs/remotes/origin/active_flow
                         }
                       }
                       return (

@@ -86,15 +86,20 @@
   top: 50px;
 }
 
-.game-result-template {
+.game-result-template, .user-result-template {
   height: 60px;
   padding: 20px;
   background-color: #111;
 }
 
-.game-result-template:hover {
+.game-result-template:hover .user-result-template:hover {
   cursor: pointer;
   background-color: #222;
+}
+
+.user-result-template img {
+  width: 50px;
+  height: 50px;
 }
 
 .game-result-template img {

@@ -1,127 +1,10 @@
 import React, { Component } from "react";
-import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import Modal from "react-modal";
 
-import CrowdfundingTree from "../crowdfunding/crowdfunding_tree.jsx";
+import DateInput from "/imports/components/events/create/date_input.jsx";
 
-class TierPanel extends Component {
-
-  constructor(props) {
-    super(props);
-    var obj = {};
-    this.state = {
-      active: false,
-      stubs: props.stubs || {},
-      index: 0
-    }
-  }
-
-  setForm(val, index) {
-    return function(e){
-      e.preventDefault();
-      this.setState({
-        active: true,
-        index
-      })
-      if(this.refs.name){
-        this.refs.name.value = val.name;
-        this.refs.description.value = val.description;
-        this.refs.price.value = val.price;
-        this.refs.limit.value = val.limit;
-      }
-    }
-  }
-
-  addTier(e) {
-    e.preventDefault();
-    var len = Object.keys(this.state.stubs).length
-    this.state.stubs[len] = {
-      name: "Name This " + this.props.type,
-      description: "Add a description!",
-      price: 100,
-      limit: 100
-    };
-
-    this.state.index = len;
-    this.state.active = true;
-
-    var val = this.state.stubs[len];
-
-    this.refs.name.value = val.name;
-    this.refs.description.value = val.description;
-    this.refs.price.value = val.price;
-    this.refs.limit.value = val.limit;
-
-    this.forceUpdate();
-  }
-
-  removeTier(e) {
-    e.preventDefault();
-    delete this.state.stubs[this.state.index];
-    this.state.index = 0;
-    this.state.active = false;
-    this.forceUpdate();
-  }
-
-  onChange(e) {
-    if(this.refs.name.value == ""){
-      this.refs.name.value = "No Value";
-    }
-    this.state.stubs[this.state.index] = {
-      name: this.refs.name.value,
-      description: this.refs.description.value,
-      price: this.refs.price.value,
-      limit: this.refs.limit.value
-    };
-  }
-
-  values() {
-    return this.state.stubs;
-  }
-
-  render() {
-    var self = this;
-    var temp = {margin: 0, marginBottom: 10};
-    return (
-      <div className="tier-stub-container">
-        <div className="col" style={{display: this.state.active ? "flex" : "none"}}>
-          <i>Your changes are saved as you type!</i>
-          <label>{ this.props.type } Name</label>
-          <input type="text" ref="name" style={temp} onChange={this.onChange.bind(this)} />
-          <label>Description</label>
-          <textarea ref="description" onChange={this.onChange.bind(this)} ></textarea>
-          <label>Amount</label>
-          <div className="row" style={{position: "relative"}}>
-            <div style={{position: "absolute", top: 7, left: 7, width: 25, height: 25, borderRadius: "100%", backgroundColor: "gold"}}>
-            </div>
-            <input style={{paddingLeft: 39, margin: 0, marginBottom: 10}} type="text" ref="price" onChange={this.onChange.bind(this)} />
-          </div>
-          <label>Limit</label>
-          <input type="text" ref="limit" style={temp} onChange={this.onChange.bind(this)} />
-          <div>
-            <button onClick={this.removeTier.bind(this)}>Delete {this.props.type}</button>
-          </div>
-        </div>
-        {
-          Object.keys(this.state.stubs).map(function(val, index) {
-            return (
-              <div className="tier-stub x-center" style={{display: "inline-flex"}} onClick={self.setForm(self.state.stubs[val], index).bind(self)}>
-                <span>{ self.state.stubs[val].name }</span>
-                <div style={{width: 10, height: 10, backgroundColor: "gold", borderRadius: "100%", margin: "0 5px 0 10px" }}></div>
-                <span>{ (self.state.stubs[val].price) }</span>
-              </div>
-            )
-          })
-        }
-        <div className="tier-stub" onClick={this.addTier.bind(this)}>
-          Add A { this.props.type }
-        </div>
-      </div>
-    )
-  }
-}
-
-export default class RevenuePanel extends Component {
+class TierRewardCollection extends Component {
 
   constructor(props) {
     super(props);
@@ -130,58 +13,119 @@ export default class RevenuePanel extends Component {
     }
   }
 
-  onClick(e) {
-    this.props.updateSuite(this.values());
+  onTierCreate(e) {
+    e.preventDefault();
+    this.setState({
+      open: true,
+      tier: {}
+    })
   }
 
-  values(){
-    return {
-      tiers: this.refs.tiers.values(),
-      tickets: this.refs.tickets.values(),
-      goals: this.refs.goals.values()
+  onTierEdit(index, tier) {
+    return function(e) {
+      e.preventDefault();
+      this.setState({
+        open: true,
+        tier,
+        index
+      })
     }
   }
 
   render() {
+    var tiers = typeof(this.props.tiers) == "boolean" ? [] : this.props.tiers;
     return (
-      <div className="col" style={{position: "relative"}}>
-        <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Crowdfunding Tiers</label>
-            <i>Don"t forget to save by hitting the Save button up top!</i>
-            <TierPanel ref="tiers" type={"Tier"} stubs={this.props.tiers} />
+      <div className="row" style={{flexWrap: "wrap"}}>
+        {
+          tiers.map((tier, i) => {
+            return (
+              <div className="tier-block col" onClick={this.onTierEdit(i, tier).bind(this)}>
+
+              </div>
+            )
+          })
+        }
+        <div className="tier-block col x-center" onClick={this.onTierCreate.bind(this)}>
+          <div className="row center x-center" style={{padding: 20}}>
+            <FontAwesome name="plus" size="2x" />
           </div>
-          <div className="side-tab-panel">
-            <label>Ticketing</label>
-            <i>Don"t forget to save by hitting the Save button up top!</i>
-            <TierPanel ref="tickets" type={"Ticket"} stubs={this.props.tickets} />
-          </div>
-          <div className="side-tab-panel">
-            <label>Stretch Goals&nbsp;<sup onClick={(e) => { e.preventDefault(); this.setState({open: true}) }}><a href="#">?</a></sup></label>
-            <CrowdfundingTree edit={true} goals={this.props.goals} ref="goals" />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
-          </div>
+          <span>Add a Tier</span>
         </div>
-        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
-          <div className="row justify-end">
-            <FontAwesome onClick={() => { this.setState({open: false}) }} name="times" size="2x" className="close-modal"/>
-          </div>
-          <div>
-            <b>So what the hell is this?</b>
-            <div style={{marginTop: 20}}>
-              Don’t fucking lie to yourself. Someday is not a fucking day of the week. To go partway is easy, but mastering anything requires hard fucking work. Never, never assume that what you have achieved is fucking good enough. Use your fucking hands. This design is fucking brilliant. You won’t get good at anything by doing it a lot fucking aimlessly.
-            </div>
-            <div style={{marginTop: 20}}>
-              Nothing of value comes to you without fucking working at it. Remember it’s called the creative process, it’s not the creative fucking moment. Don’t fucking lie to yourself. You need to sit down and sketch more fucking ideas because stalking your ex on facebook isn’t going to get you anywhere.
-            </div>
-            <div style={{marginTop: 20}}>
-              Practice won’t get you anywhere if you mindlessly fucking practice the same thing. Change only occurs when you work deliberately with purpose toward a goal. This design is fucking brilliant. You won’t get good at anything by doing it a lot fucking aimlessly. Don’t worry about what other people fucking think. When you design, you have to draw on your own fucking life experiences. If it’s not something you would want to read/look at/use then why fucking bother? Must-do is a good fucking master. This design is fucking brilliant. The details are not the details. They make the fucking design.
+        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
+          <div className="col">
+            <label>Amount</label>
+            <input type="text" style={{margin: 0, marginBottom: 10}} />
+            <label>Description</label>
+            <textarea></textarea>
+            <label>Limit</label>
+            <input type="text" style={{margin: 0, marginBottom: 10}} />
+            <div className="row center">
+            <button>Submit</button>
             </div>
           </div>
         </Modal>
       </div>
     );
+  }
+}
+
+
+export default class RevenuePanel extends Component {
+
+  revenue() {
+    return Events.find().fetch()[0].revenue;
+  }
+
+  render() {
+    var revenue = this.revenue();
+    return (
+      <div className="col x-center">
+        <div className="side-tab-panel col">
+          <h3>Due Date</h3>
+          <div>
+            <DateInput init={revenue.dueDate} />
+          </div>
+        </div>
+        {
+          revenue.crowdfunding !== false && revenue.crowdfunding != null ? (
+            <div className="side-tab-panel col">
+              <h3>Crowdfunding</h3>
+              <h3>Requested Amount</h3>
+              <input type="text" ref="amountRequested" placeholder="Minimum threshold for you to run your event." style={{margin: "0 0 10px"}} />
+            </div>
+          ) : (
+            ""
+          )
+        }
+        {
+          revenue.tierRewards !== false && revenue.tierRewards != null ? (
+            <div className="side-tab-panel col">
+              <h3>Tier Rewards</h3>
+              <TierRewardCollection tiers={revenue.tierRewards} />
+            </div>
+          ) : (
+            ""
+          )
+        }
+        {
+          revenue.stretchGoals !== false && revenue.stretchGoals != null ? (
+            <div className="side-tab-panel col">
+              <h3>Stretch Goals</h3>
+            </div>
+          ) : (
+            ""
+          )
+        }
+        {
+          revenue.ticketing !== false && revenue.ticketing != null ? (
+            <div className="side-tab-panel col">
+              <h3>Tickets</h3>
+            </div>
+          ) : (
+            ""
+          )
+        }
+      </div>
+    )
   }
 }
