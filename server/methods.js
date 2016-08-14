@@ -150,67 +150,10 @@ Meteor.methods({
     }
   },
   "events.create_tournament"(id, obj) {
-    event = Events.findOne(id);
-    api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
-    headers = {
-      contentType: "json"
-    }
-    Meteor.http.post("https://api.challonge.com/v1/tournaments.json", {
-      data: {
-        api_key,
-        tournament: Object.assign({
-          name: id,
-          url: id
-        }, obj)
-      },
-      headers
-    }, function(err, result){
-      if(!err){
-        Events.update(id, {
-          $set: {
-            tournament_running: true
-          }
-        })
-        Meteor.http.post(`https://api.challonge.com/v1/tournaments/${id}/participants/bulk_add.json`, {
-          data: {
-            api_key,
-            participants: event.participants
-          },
-          headers
-        }, function(err, result) {
-          if(!err){
-            Meteor.http.post(`https://api.challonge.com/v1/tournaments/${id}/start.json`, {
-              data: {
-                api_key
-              },
-              headers
-            })
-          }
-        })
-      }
-    })
+    //update for new tournament API
   },
   "events.destroy_tournament"(id) {
-    api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
-    headers = {
-      contentType: "json"
-    }
-    Meteor.http.call("DELETE", `https://api.challonge.com/v1/tournaments/${id}.json`, {
-      data: {
-        api_key
-      },
-      headers
-    }, function(err, result){
-      if(err){
-      }
-      else {
-        Events.update(id, {
-          $set: {
-            tournament_running: false
-          }
-        })
-      }
-    })
+    //update for new tournament API
   },
   "events.send_for_review"(id){
     Events.update(id, {

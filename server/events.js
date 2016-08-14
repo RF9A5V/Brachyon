@@ -160,6 +160,57 @@ Meteor.methods({
         }
       })
     }
+  },
+
+  "events.updateMatchFromDiscordID"(discordID, eventID){
+    var alias = null;
+    var user = Meteor.users.findOne({"services.discord.id": discordID});
+    var event = Events.findOne(eventID);
+
+    if(!user){
+      throw new Meteor.Error(404, "User not found");
+    }
+
+    if(!event){
+      throw new Meteor.Error(404, "Event not found");
+    }
+
+    var bracket = event.organize[0]
+
+    for(var participant = bracket.participants.length - 1; participant >= 0; participant--){
+      if(user._id == bracket.participants[participant].id){
+        alias = bracket.participants[participant].alias;
+      }
+    }
+
+    for(var bracketNumber = bracket.rounds.length - 1; bracketNumber >= 0; bracketNumber--){
+      for(var roundNumber = bracket.rounds[bracketNumber].length - 1; roundNumber >= 0; roundNumber--){
+        for(var matchNumber = bracket.rounds[bracketNumber][roundNumber].length - 1; matchNumber >= 0; matchNumber--){
+          if(bracket.rounds[bracketNumber][roundNumber][matchNumber].playerOne != null){
+            if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerOne.id){
+              Meteor.call("events.advance_match", eventID, bracket.rounds[bracketNumber][roundNumber],
+              bracket.rounds[bracketNumber][roundNumber][matchNumber], 0 ,function(err){
+                if(err){
+                  throw new Meteor.Error(404, "Match not updated");
+                }
+              });
+
+              return;
+            }
+            else if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerTwo.id){
+              Meteor.call("events.advance_match", eventID, bracket.rounds[bracketNumber][roundNumber],
+              bracket.rounds[bracketNumber][roundNumber][matchNumber], 1,function(err){
+                if(err){
+                  throw new Meteor.Error(404, "Match not updated");
+                }
+              });
+
+              return;
+            }
+          }
+        }
+      }
+    }
   }
 
 })

@@ -10,6 +10,8 @@ export default class MainBot extends Discord.Client {
 
   startListening() {
 
+    var self = this;
+
     var initAttrsAdmin = {
       color: 0xCC0000,
       hoist: true,
@@ -42,14 +44,39 @@ export default class MainBot extends Discord.Client {
         this.createRole(message.server, initAttrsAdmin);
       }
       else if(cmd == "!test") {
-        // events = Meteor.subscribe('userEvents', userId);
+        console.log(message);
       }
       else if (cmd == "!link" || cmd == "!zelda" || cmd == "link!navi") {
         Meteor.call("events.link_discord_server", messageContent[1], message.server.id, function(error) {
           if (error) {
             console.log(error);
           }
+          else{
+            var initAttrsEventRef = {
+              color: 0xFFFFFF,
+              hoist: true,
+              name: "eventRefID-" + messageContent[1],
+              permissions: [
+                // see the constants documentation for full permissions
+              ],
+              mentionable: false
+            }
+
+            self.createRole(message.server, initAttrsEventRef);
+          }
         });
+      }
+      else if(cmd = "!win") {
+        for(var role = message.server.roles.length - 1; role >= 0; role--){
+          if(message.server.roles[role].name.indexOf("eventRefID-")){
+            var eventIdFromRole = this.splitMessage(message.server.roles[role].name, "-");
+            Meteor.call("events.updateMatchFromDiscordID", message.author.id, eventIdFromRole[1], function(err){
+              if(err){
+                throw new Meteor.Error(404, "Could not update through bot");
+              }
+            });
+          }
+        }
       }
     };
     var meteorWrappedCallback = Meteor.bindEnvironment(callback);
