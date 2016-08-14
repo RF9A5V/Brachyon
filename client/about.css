@@ -1,15 +1,13 @@
 .about-layout {
-  width: 100%;
-  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  width: 100%;
+  flex: 1 1;
 }
 
 .about-what {
-  background-color: #666;
-  width: 400px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  max-width: calc(600px + 64vmin);
 }
 
 .about-icons {
@@ -17,25 +15,34 @@
 }
 
 .about-blocks {
-  background-color: #666;
-  width: 200px;
-  height: 200px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 18vw;
+  height: 230px;
   margin: 10px;
+  padding: 5px;
 }
 
 .about-desc {
-  background-color: #333;
-  width: 200px;
-  height: 200px;
+  width: 18vw;
+  height: 115px;
   margin: 10px;
+  padding: 5px;
 }
 
 .about-blocks:hover {
   background-color: #CC0000;
-  cursor: default;
+  cursor: pointer;
 }
 
 .about-desc:hover {
-  background-color: #666;
-  cursor: default;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+#about-block-cred {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 18vw;
+  height: 230px;
+  margin: 10px;
+  padding: 5px;
 }

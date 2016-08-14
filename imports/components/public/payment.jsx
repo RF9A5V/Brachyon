@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from 'react-modal';
 import CreditCardForm from '/imports/components/public/credit_card.jsx';
+import FontAwesome from 'react-fontawesome';
 
 export default class PaymentModal extends React.Component {
 
@@ -30,9 +31,14 @@ export default class PaymentModal extends React.Component {
 
   ticketPay(){
     return(
-      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
-        <div className="div-pad">
-          <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
+      <Modal
+        className="create-modal"
+        overlayClassName="overlay-class"
+        isOpen={this.state.open}
+        onRequestClose={this.closeModal.bind(this)}
+      >
+        <div className="row justify-end">
+          <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
         </div>
         <h1 style={{textAlign: 'center'}}>Ticket Payment</h1>
         {this.ccForm()}
@@ -42,9 +48,14 @@ export default class PaymentModal extends React.Component {
 
   cfPay() {
     return (
-      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
-        <div className="div-pad">
-          <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
+      <Modal
+        className="create-modal"
+        overlayClassName="overlay-class"
+        isOpen={this.state.open}
+        onRequestClose={this.closeModal.bind(this)}
+      >
+        <div className="row justify-end">
+          <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
         </div>
         <h1 style={{textAlign: 'center'}}>Tier Payment</h1>
         {this.ccForm()}
