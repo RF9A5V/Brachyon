@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import Modal from "react-modal";
 
 import DetailsPanel from "./details.jsx";
 import OrganizationPanel from "./organization.jsx";
 import PromotionPanel from "./promotion.jsx";
 import RevenuePanel from "./revenue.jsx";
 
+import ModuleSelectForm from "./module_select_form.jsx";
+
 export default class EditMenu extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      selected: 0
+      selected: 0,
+      open: false
     }
   }
 
@@ -21,7 +25,7 @@ export default class EditMenu extends Component {
 
   acceptedKeys() {
     var event = this.event();
-    var editable = ["details", "organize", "bot", "promotion", "revenue"];
+    var editable = ["details", "organize", "promotion", "revenue"];
     var eventKeys = Object.keys(event);
     var intersect = editable.filter((item) => { return eventKeys.indexOf(item) >= 0 });
     var fields = {};
@@ -35,10 +39,24 @@ export default class EditMenu extends Component {
     return {
       details: (<DetailsPanel />),
       organize: (<OrganizationPanel />),
-      bot: (<div>bot</div>),
       promotion: (<PromotionPanel />),
       revenue: (<RevenuePanel />),
     }
+  }
+
+  updateModules(e) {
+    e.preventDefault();
+    this.setState({
+      open: false
+    });
+    Meteor.call("events.updateModules", this.event()._id, this.refs.moduleSelect.values(), function(err) {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully updated modules.", "Success!");
+      }
+    })
   }
 
   render() {
@@ -61,11 +79,17 @@ export default class EditMenu extends Component {
               })
             }
           </div>
-          <div className="side-tab-menu-item">
+          <div className="side-tab-menu-item" onClick={() => { this.setState({open: true})} }>
             <FontAwesome name="plus" />
             <span style={{marginLeft: 15}}>
               Add a Module
             </span>
+            <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
+              <ModuleSelectForm {...this.event()} ref="moduleSelect" />
+              <div>
+                <button onClick={this.updateModules.bind(this)}>Submit</button>
+              </div>
+            </Modal>
           </div>
         </div>
         <div className="side-tab-content">

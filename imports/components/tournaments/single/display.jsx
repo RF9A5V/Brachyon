@@ -7,7 +7,7 @@ export default class SingleDisplay extends Component {
       <div className="col">
         <div className="row">
           {
-            Array(this.props.rounds.length).fill("").map((_, i) => {
+            Array(this.props.rounds[0].length).fill("").map((_, i) => {
               return (
                 <div style={{width: 150, textAlign: "center"}}>
                   Round { i + 1 }
@@ -18,31 +18,31 @@ export default class SingleDisplay extends Component {
         </div>
         <div className="row">
           {
-            this.props.rounds.map((round, i) => {
+            this.props.rounds[0].map((round, i) => {
               return (
                 <div className="col" style={{justifyContent: "space-around"}}>
                   {
                     round.map((match, j) => {
                       var isFutureLoser = false;
-                      if(i < this.props.rounds.length - 1){
+                      if(i < this.props.rounds[0].length - 1){
                         var rNum = i + 1;
-                        var nextMatch = this.props.rounds[rNum][Math.floor(j / 2)];
+                        var nextMatch = this.props.rounds[0][rNum][Math.floor(j / 2)];
                         var mNum = Math.floor(j / 2);
-                        while(rNum < this.props.rounds.length && nextMatch.winner != null) {
+                        while(rNum < this.props.rounds[0].length && nextMatch.winner != null) {
                           if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
                             isFutureLoser = true;
                             break;
                           }
                           mNum = Math.floor(mNum / 2);
                           rNum += 1;
-                          if(rNum == this.props.rounds.length) {
+                          if(rNum == this.props.rounds[0].length) {
                             break;
                           }
-                          nextMatch = this.props.rounds[rNum][mNum];
+                          nextMatch = this.props.rounds[0][rNum][mNum];
                         }
                       }
                       return (
-                        <MatchBlock match={match} roundNumber={i} matchNumber={j} roundSize={this.props.rounds.length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                        <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
                       );
                     })
                   }

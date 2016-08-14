@@ -20,7 +20,7 @@ export default class TwitterConnect extends Component {
   render() {
     if(Meteor.user().services.twitter == null) {
       return (
-        <button onClick={this.onClick.bind(this)}>
+        <button onClick={this.onClick.bind(this)} >
           <FontAwesome style={{marginRight: 10}} name="twitter" />
           Connect to Twitter
         </button>

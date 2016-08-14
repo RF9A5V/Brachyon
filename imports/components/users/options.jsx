@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import SideTabs from "../public/side_tabs.jsx";
-import UserDetailsPanel from "./options/details.jsx";
-import EventOptionsPanel from "./options/events.jsx";
-import GameOptionsPanel from "./options/games.jsx";
+import UserDetailsPanel from "./options/user_details.jsx";
+import EventOptionsPanel from "./options/event_options.jsx";
+import GameOptionsPanel from "./options/games_played.jsx";
 import OAuthOptionsPanel from "./options/oauth.jsx";
 import DiscordServerPanel from "./options/discord.jsx";
 

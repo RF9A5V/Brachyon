@@ -3,5 +3,3 @@ uploads/
 notes/
 settings.json
 .meteor/dev_bundle/*
-
-.meteor/dev_bundle
