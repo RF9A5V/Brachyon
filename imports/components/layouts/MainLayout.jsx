@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Header from '../public/header.jsx';
-import Footer from '../public/footer.jsx';
+import Footer from '../public/footer/footer.jsx';
 
 export default class MainLayout extends Component {
   render() {

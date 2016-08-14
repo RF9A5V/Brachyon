@@ -87,6 +87,55 @@ var OrganizeSuite = {
     return frounds;
   },
 
+  testDoubleElim: function(participants) {
+    var brackets = {
+      winners: OrganizeSuite.singleElim(participants),
+      losers: []
+    };
+    var initArray = brackets.winners.slice(0, 2);
+    var [losersRoundOne, nullPush] = [[], []];
+
+    for(var i = 0; i < initArray[0].length; i += 2){
+      if(initArray[0][i].playerOne != initArray[0][i].playerTwo) {
+        var matchIndex = i / 2;
+        [initArray[0][i].loserMatch, initArray[0][i + 1].loserMatch] = [matchIndex, matchIndex];
+        [initArray[0][i].loserRound, initArray[0][i + 1].loserRound] = [0, 0];
+        losersRoundOne.push({
+          playerOne: null,
+          playerTwo: null,
+          scoreOne: 0,
+          scoreTwo: 0,
+          winner: null,
+          isPlaceholder: false
+        });
+      }
+      else {
+        nullPush.push(i + 1);
+        losersRoundOne.push({
+          playerOne: null,
+          playerTwo: null,
+          scoreOne: 0,
+          scoreTwo: 0,
+          winner: null,
+          isPlaceholder: true
+        })
+      }
+    }
+    var losersRoundTwo = [];
+    var counter = initArray[1].length - 1;
+    for(var i = 0; i < losersRoundOne.length; i ++){
+      if(losersRoundOne[i].isPlaceholder) {
+        var byeIndex = nullPush.shift();
+        [initArray[0][byeIndex].loserMatch, initArray[0][byeIndex].loserRound] = [i, 1];
+      }
+      [initArray[1][counter].loserMatch, initArray[1][counter].loserRound] = [i, 1];
+      counter -= 1;
+    }
+    brackets.winners[0] = initArray[0];
+    brackets.winners[1] = initArray[1];
+    console.log(brackets);
+    return brackets;
+  },
 
   doubleElim: function(participants) {
     frounds = Array(2);

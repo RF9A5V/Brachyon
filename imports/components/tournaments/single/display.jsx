@@ -25,15 +25,19 @@ export default class SingleDisplay extends Component {
                     round.map((match, j) => {
                       var isFutureLoser = false;
                       if(i < this.props.rounds[0].length - 1){
-                        var nextMatch = this.props.rounds[0][i + 1][Math.floor(j / 2)];
                         var rNum = i + 1;
+                        var nextMatch = this.props.rounds[0][rNum][Math.floor(j / 2)];
                         var mNum = Math.floor(j / 2);
-                        while(++rNum < this.props.rounds[0].length && nextMatch.winner != null) {
+                        while(rNum < this.props.rounds[0].length && nextMatch.winner != null) {
                           if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
                             isFutureLoser = true;
                             break;
                           }
                           mNum = Math.floor(mNum / 2);
+                          rNum += 1;
+                          if(rNum == this.props.rounds[0].length) {
+                            break;
+                          }
                           nextMatch = this.props.rounds[0][rNum][mNum];
                         }
                       }
