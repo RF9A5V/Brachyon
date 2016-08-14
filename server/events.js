@@ -139,6 +139,8 @@ Meteor.methods({
     }
     event = event.organize[0];
     var match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    if (match.winner != null || match.playerOne == null || match.playerTwo == null)
+      return false;
     if(placement == 0) {
       match.winner = match.playerOne;
       loser = match.playerTwo;

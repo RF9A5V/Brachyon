@@ -36,7 +36,7 @@ export default class MatchBlock extends Component {
               var isLoser = match.winner != null && match.winner != p;
 
               return (
-                <div className="match-participant" onClick={
+                <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
                   match.winner == null && match.playerOne != null && match.playerTwo != null ? (
                     this.onMatchUserClick(index).bind(this)
                   ) : (

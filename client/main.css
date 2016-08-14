@@ -31,6 +31,9 @@ body {
 
 .match-participant {
   padding: 10px 5px;
+}
+
+.match-active{
   cursor: pointer;
 }
 
