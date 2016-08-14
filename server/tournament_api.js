@@ -235,20 +235,21 @@ var OrganizeSuite = {
       {
         if (k%2 == 0) //Start from bottom of top half of winners and move up, then bottom of bottom half of winners and move up
         {
-          if (j < frounds[0][k].length/2)  //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
+          if (j < Math.floor(frounds[0][k].length/2))  //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
           {
-            frounds[0][k][frounds[0][k].length/2 - j - 1].losr = i;
-            frounds[0][k][frounds[0][k].length/2 - j - 1].losm = j;
+            console.log(Math.floor(frounds[0][k].length/2) - j - 1);
+            frounds[0][k][Math.floor(frounds[0][k].length/2) - j - 1].losr = i;
+            frounds[0][k][Math.floor(frounds[0][k].length/2) - j - 1].losm = j;
           }
           else //if in bottom half of winners
           {
-            frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losr = i;
-            frounds[0][k][frounds[0][k].length - (j - frounds[0][k].length/2) - 1].losm = j;
+            frounds[0][k][frounds[0][k].length - (j - Math.floor(frounds[0][k].length/2)) - 1].losr = i;
+            frounds[0][k][frounds[0][k].length - (j - Math.floor(frounds[0][k].length/2)) - 1].losm = j;
           }
         }
         else //Start from top of bottom half and move down, then top of top half and move down
         {
-          if (j < frounds[0][k].length/2)
+          if (j < Math.floor(frounds[0][k].length/2))
           {
             frounds[0][k][Math.floor(frounds[0][k].length/2) + j].losr = i;
             frounds[0][k][Math.floor(frounds[0][k].length/2) + j].losm = j;
