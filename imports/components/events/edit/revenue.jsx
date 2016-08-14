@@ -1,74 +1,9 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
-import Modal from "react-modal";
 
 import DateInput from "/imports/components/events/create/date_input.jsx";
-
-class TierRewardCollection extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    }
-  }
-
-  onTierCreate(e) {
-    e.preventDefault();
-    this.setState({
-      open: true,
-      tier: {}
-    })
-  }
-
-  onTierEdit(index, tier) {
-    return function(e) {
-      e.preventDefault();
-      this.setState({
-        open: true,
-        tier,
-        index
-      })
-    }
-  }
-
-  render() {
-    var tiers = typeof(this.props.tiers) == "boolean" ? [] : this.props.tiers;
-    return (
-      <div className="row" style={{flexWrap: "wrap"}}>
-        {
-          tiers.map((tier, i) => {
-            return (
-              <div className="tier-block col" onClick={this.onTierEdit(i, tier).bind(this)}>
-
-              </div>
-            )
-          })
-        }
-        <div className="tier-block col x-center" onClick={this.onTierCreate.bind(this)}>
-          <div className="row center x-center" style={{padding: 20}}>
-            <FontAwesome name="plus" size="2x" />
-          </div>
-          <span>Add a Tier</span>
-        </div>
-        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
-          <div className="col">
-            <label>Amount</label>
-            <input type="text" style={{margin: 0, marginBottom: 10}} />
-            <label>Description</label>
-            <textarea></textarea>
-            <label>Limit</label>
-            <input type="text" style={{margin: 0, marginBottom: 10}} />
-            <div className="row center">
-            <button>Submit</button>
-            </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  }
-}
-
+import TierRewardCollection from "./tier_rewards.jsx";
+import TicketCollection from "./ticket_collection.jsx";
 
 export default class RevenuePanel extends Component {
 
@@ -120,6 +55,7 @@ export default class RevenuePanel extends Component {
           revenue.ticketing !== false && revenue.ticketing != null ? (
             <div className="side-tab-panel col">
               <h3>Tickets</h3>
+              <TicketCollection tickets={revenue.ticketing} />
             </div>
           ) : (
             ""
