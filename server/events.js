@@ -109,12 +109,19 @@ Meteor.methods({
     })
   },
 
-  "events.start_event"(eventID) {
+  "events.start_event"(eventID, format) {
     if(Events.findOne(eventID) == null) {
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var organize = Events.findOne(eventID).organize[0];
-    var rounds = OrganizeSuite.singleElim(organize.participants);
+    if (format == "single_elim")
+      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
+    else
+      var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
 
     Events.update(eventID, {
       $set: {
@@ -131,7 +138,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     event = event.organize[0];
-    var match = event.rounds[0][roundNumber][matchNumber];
+    var match = event.rounds[bracket][roundNumber][matchNumber];
     if(placement == 0) {
       match.winner = match.playerOne;
       loser = match.playerTwo;
@@ -149,7 +156,7 @@ Meteor.methods({
       var losr = match.losr, losm = match.losm;
       Events.update(eventID, {
         $set: {
-          [`rounds.${1}.${losr}.${losm}`]: losMatch
+          [`organize.0.rounds.${1}.${losr}.${losm}`]: losMatch
         }
       })
     }

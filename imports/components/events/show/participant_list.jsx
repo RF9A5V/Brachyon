@@ -57,6 +57,7 @@ export default class ParticipantListPanel extends Component {
   }
 
   isEliminated(alias) {
+    return false;
     var matchID = null;
     var currentRound = 0;
     if(this.props.rounds == null) {
