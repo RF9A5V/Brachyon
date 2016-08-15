@@ -47,6 +47,18 @@ body {
   min-height: calc(100vh - 170px);
 }
 
+.participant-active{
+  color: red;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.participant-inactive{
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
+}
+
 .content {
   top: 100px;
   bottom: 70px;
@@ -78,6 +90,10 @@ body {
 
 .flex-pad {
   justify-content: space-between;
+}
+
+.flex-padaround{
+  justify-content: space-around;
 }
 
 .wrap {
