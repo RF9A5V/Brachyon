@@ -1,83 +1,108 @@
 import React, { Component } from 'react';
+import FontAwesome from "react-fontawesome";
 
-import SelectInput from "../../public/select.jsx";
-import AutocompleteForm from "../../public/autocomplete_form.jsx";
+import BracketForm from "../brackets/form.jsx";
 
 import Games from "/imports/api/games/games.js";
-import GameResultTemplate from "../../public/search_results/game_template.jsx";
 
 export default class OrganizationPanel extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      gameBanner: props.gameBanner
-    };
-  }
-
-  onClick(e) {
-    this.props.updateSuite(this.values());
-  }
-
-  values() {
-    return {
-      format: this.refs.format.value(),
-      gameId: this.refs.game.value(),
-      gameBanner: this.state.gameBanner
+      index: 0,
+      organize: Events.findOne().organize
     }
   }
 
-  gameIfExists() {
-    if(this.state.gameBanner) {
-      return (<img style={{width: "100%", height: "auto"}} src={this.state.gameBanner} />)
-    }
-    else if(this.props.gameBanner) {
-      return (<img style={{width: "100%", height: "auto"}} src={this.props.gameBanner} />)
-    }
-    return (<div></div>);
+  componentWillReceiveProps(next) {
+    this.setState({
+      organize: Events.findOne().organize
+    })
   }
 
-  onGameChange(obj) {
-    if(obj.banner){
-      this.setState({
-        gameBanner: obj.banner
-      })
+  bracketSelectBorder(index){
+    if(this.state.index == index) {
+      return "solid 2px #1FCB2A"
     }
     else {
+      return "none";
+    }
+  }
+
+  setIndex(index) {
+    return (e) => {
       this.setState({
-        gameBanner: null
+        index,
+        create: false
       })
     }
+  }
+
+  onBracketSave(e) {
+    if(this.state.create) {
+
+    }
+    else {
+      Meteor.call("events.updateOrganizationBracket", Events.findOne()._id, this.state.index, this.refs[this.state.index].values(), (err) => {
+        if(err){
+          toastr.error(err.reason, "Error!");
+        }
+        else {
+          toastr.success("Updated your bracket.", "Success!");
+        }
+      });
+    }
+  }
+
+  setCreateMode(e) {
+    e.preventDefault();
+    this.setState({
+      index: -1,
+      create: true
+    })
   }
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
-        <button className="side-tab-button" onClick={this.onClick.bind(this)}>Save</button>
-        <div className="row" style={{alignItems: "flex-start"}}>
-          <div className="side-tab-panel">
-            <label>Format</label>
-            <SelectInput ref="format" choices={["Single Elimination", "Double Elimination", "Swiss", "Round Robin"]} />
-          </div>
-          <div className="side-tab-panel">
-            <label style={{marginBottom: (this.state.gameBanner || this.props.gameBanner) ? 15 : 0}}>Game Played</label>
-            {
-              this.gameIfExists()
-            }
-            <AutocompleteForm ref="game" publications={[
-              "game_search"
-            ]} types={[
-              {
-                type: Games,
-                template: GameResultTemplate,
-                name: "Game"
-              }
-            ]} onChange={this.onGameChange.bind(this)} id={this.props.gameId} />
-          </div>
-          <div style={{minWidth: "calc(85vw - 480px)", height: 1}}>
+      <div className="col x-center">
+        <div className="row" style={{width: "calc(50% + 80px)"}}>
+          {
+            this.state.organize.map((bracket, index) => {
+              return (
+                <img style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, border: this.bracketSelectBorder(index)}} src={Images.findOne(Games.findOne(bracket.game).banner).url()} onClick={this.setIndex.bind(this)(index)} />
+              )
+            })
+          }
+          <div className="row center x-center" style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, backgroundColor: "#555"}} onClick={this.setCreateMode.bind(this)}>
+            <FontAwesome name="plus" size="2x" style={{position: "relative", top: 2}} />
           </div>
         </div>
+        <div className="side-tab-panel col x-center">
+          <div className="row x-center flex-pad" style={{marginBottom: 20, alignSelf: "stretch"}}>
+            <h3 style={{margin: 0}}>{this.state.index >= 0 ? this.state.organize[this.state.index].name : "New Bracket"}</h3>
+            <button style={{margin: 0}} onClick={this.onBracketSave.bind(this)}>Save</button>
+          </div>
+          {
+            this.state.organize.map((bracket, index) => {
+              return (
+                <div style={{width: "85%", display: index == this.state.index && !this.state.create ? ("inherit") : ("none")}}>
+                  <BracketForm ref={index} {...bracket}/>
+                </div>
+              )
+            })
+          }
+          {
+            this.state.create ? (
+              <div style={{width: "85%", display: "inherit"}}>
+                <BracketForm ref="create"/>
+              </div>
+            ) : (
+              ""
+            )
+          }
+        </div>
       </div>
-    );
+    )
   }
 }

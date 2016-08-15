@@ -76,7 +76,7 @@ export default class GameOptionsPanel extends Component {
         }
         <div className="side-tab-panel">
           <div className="row x-center">
-            <span className="col-1">Add Game</span>
+            <h3 className="col-1">Add Games</h3>
             <button onClick={this.saveGame.bind(this)}>Save</button>
           </div>
           {

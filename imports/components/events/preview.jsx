@@ -15,19 +15,14 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   componentWillMount(){
     var self = this;
     this.setState({
-      event: Meteor.subscribe("event", this.props.params.eventId, {
-        onReady() {
-          self.setState({
-            loaded: true
-          })
-        }
-      }),
-      loaded: false
+      event: Meteor.subscribe("event", this.props.params.eventId),
+      users: Meteor.subscribe("event_participants", this.props.params.eventId)
     })
   }
 
   componentWillUnmount(){
     this.state.event.stop();
+    this.state.users.stop();
   }
 
   event() {
@@ -45,26 +40,49 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   items() {
-    return ["Details", "Brackets", "Crowdfunding", "Tickets"];
+    var event = this.event();
+    var items = ["Details"];
+
+    if(event.revenue) {
+      items.push("Crowdfunding");
+      items.push("Tickets");
+    }
+    if(event.organize) {
+      items = items.concat(["Brackets"]);
+    }
+    if(event.owner == Meteor.userId()) {
+      items.push("Options");
+    }
+    return items;
   }
 
   content() {
     var event = this.event();
-    return [
-      (<DetailsPanel {...event.details} ref="details"/>),
-      (<BracketsPanel />),
-      (<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />),
-      (<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
-    ]
+    var panels = [
+      (<DetailsPanel {...event.details} ref="details"/>)
+    ];
+    if(event.revenue) {
+      panels.push(<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />);
+      panels.push(<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
+    }
+    if(event.organize[0]) {
+      panels.push(<BracketsPanel brackets={event.organize} />);
+    }
+    if(event.owner == Meteor.userId()) {
+      panels.push(<div></div>);
+    }
+    return panels;
   }
 
   render() {
-    var event = this.event();
-    if(!this.state.loaded){
+    if(!this.state.event.ready() || !this.state.users.ready()){
       return (
         <div>Loading...</div>
       )
     }
+    var event = this.event();
+    console.log(event);
+    // Note: Check out the BracketsPanel thing Alex put up.
     return (
       <div className="box col" style={{flexFlow: "row"}}>
         <SideTabs items={this.items()} panels={this.content()} />
@@ -88,15 +106,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
             }
             </div>
             <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
-            {
-              event.published ? (
-                <div className="row center">
-                  <button>Register!</button>
-                </div>
-              ) : (
-                ""
-              )
-            }
           </div>
         </div>
       </div>
