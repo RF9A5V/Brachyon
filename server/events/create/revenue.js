@@ -15,7 +15,7 @@ var validateFields = (tierObj) => {
   if(!tierObj.description) {
     throw new Meteor.Error(403, "Description can't be blank.");
   }
-  if(isNaN(tierObj.limit)) {
+  if(tierObj.limit != null && isNaN(tierObj.limit)) {
     throw new Meteor.Error(403, "Limit must be numeric.");
   }
   return tierObj;
@@ -68,7 +68,6 @@ Meteor.methods({
     }
     var tiers = event.revenue.tierRewards;
     tiers.splice(tierIndex, 1);
-    console.log(tiers);
     Events.update(eventID, {
       $set: {
         [`revenue.tierRewards`]: tiers
@@ -135,5 +134,42 @@ Meteor.methods({
         "revenue.ticketing": tickets
       }
     });
+  },
+
+  "events.addGoal"(eventID, parentIndex, goalObj) {
+    var event = Events.findOne(eventID);
+    if(!event) {
+      throw new Meteor.Error(404, "Event not found.");
+    }
+    if(!event.revenue || !event.revenue.stretchGoals) {
+      throw new Meteor.Error(403, "Stretch goals for this event have not been set up.");
+    }
+    goalObj.children = [];
+    if(typeof(event.revenue.stretchGoals) == "boolean") {
+      Events.update(eventID, {
+        $set: {
+          "revenue.stretchGoals": {
+            0: goalObj
+          }
+        }
+      })
+    }
+    else {
+      console.log(parentIndex);
+      if(!event.revenue.stretchGoals[parentIndex]){
+        throw new Meteor.Error(404, "Parent goal not found.");
+      }
+      var goalObj = validateFields(goalObj);
+      var objCount = parseInt(Object.keys(event.revenue.stretchGoals).slice(-1)[0]) + 1;
+      Events.update(eventID, {
+        $set: {
+          [`revenue.stretchGoals.${objCount}`]: goalObj
+        },
+        $push: {
+          [`revenue.stretchGoals.${parentIndex}.children`]: objCount
+        }
+      })
+    }
   }
+
 })
