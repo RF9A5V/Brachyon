@@ -93,7 +93,7 @@ export default class TicketCollection extends Component {
         {
           tickets.map((ticket, i) => {
             return (
-              <div className="ticket-block col" onClick={ this.onTicketEdit(ticket, i).bind(this) }>
+              <div className="ticket-block col" onClick={ this.onTicketEdit(ticket, i).bind(this) } key={i}>
                 <h3>{ ticket.name }</h3>
                 <div className="row flex-pad x-center">
                   <span>{ (ticket.amount / 100).toFixed(2) }</span>

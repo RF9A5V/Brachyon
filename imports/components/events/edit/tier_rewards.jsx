@@ -95,7 +95,7 @@ export default class TierRewardCollection extends Component {
         {
           tiers.map((tier, i) => {
             return (
-              <div className="tier-block col" onClick={this.onTierEdit(i, tier).bind(this)}>
+              <div className="tier-block col" onClick={this.onTierEdit(i, tier).bind(this)} key={i}>
                 <div className="row x-center flex-pad" style={{marginBottom: 15}}>
                   <h3>${(tier.amount / 100).toFixed(2)}</h3>
                   <span>Limit of {tier.limit}</span>

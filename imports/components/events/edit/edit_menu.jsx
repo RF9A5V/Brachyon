@@ -72,7 +72,7 @@ export default class EditMenu extends Component {
                   <div
                     className={`side-tab-menu-item ${this.state.selected === index ? "active" : ""}`}
                     key={index}
-                    onClick={(e) => { this.setState({selected: index}) }}>
+                    onClick={(e) => { this.setState({selected: index}) }} key={index}>
                     { value[0].toUpperCase() + value.slice(1) }
                   </div>
                 )
@@ -96,7 +96,7 @@ export default class EditMenu extends Component {
           {
             Object.keys(keys).map((value, index) => {
               return (
-                <div className={`side-tab-content-item ${this.state.selected === index ? "active" : ""}`}>
+                <div className={`side-tab-content-item ${this.state.selected === index ? "active" : ""}`} key={index}>
                   { panels[value] }
                 </div>
               );
