@@ -3,6 +3,12 @@ import React, { Component } from "react";
 import SliderBars from "/imports/components/public/sliders.jsx";
 
 export default class PrizePoolBreakdown extends Component {
+
+  constructor(props) {
+    super(props);
+
+  }
+
   render() {
     var event = Events.findOne();
     if(!event.organize || event.organize.length == 0) {
@@ -17,8 +23,11 @@ export default class PrizePoolBreakdown extends Component {
         {
           event.organize.map((bracket, i) => {
             return (
-              <div className="row" key={i}>
+              <div className="col" key={i}>
                 <SliderBars />
+                <div>
+                  <button>Add a Label</button>
+                </div>
               </div>
             )
           })
