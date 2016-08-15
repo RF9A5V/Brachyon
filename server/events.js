@@ -109,11 +109,12 @@ Meteor.methods({
     })
   },
 
-  "events.start_event"(eventID, format) {
+  "events.start_event"(eventID) {
     if(Events.findOne(eventID) == null) {
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var organize = Events.findOne(eventID).organize[0];
+    var format = Events.findOne(eventID).organize[0].format.baseFormat;
     if (format == "single_elim")
       var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
