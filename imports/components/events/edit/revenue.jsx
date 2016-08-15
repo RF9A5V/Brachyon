@@ -4,6 +4,7 @@ import FontAwesome from "react-fontawesome";
 import DateInput from "/imports/components/events/create/date_input.jsx";
 import TierRewardCollection from "./tier_rewards.jsx";
 import TicketCollection from "./ticket_collection.jsx";
+import StretchGoals from "./stretch.jsx";
 
 export default class RevenuePanel extends Component {
 
@@ -46,6 +47,7 @@ export default class RevenuePanel extends Component {
           revenue.stretchGoals !== false && revenue.stretchGoals != null ? (
             <div className="side-tab-panel col">
               <h3>Stretch Goals</h3>
+              <StretchGoals goals={revenue.stretchGoals}/>
             </div>
           ) : (
             ""

@@ -13,6 +13,12 @@ Meteor.publish('event', (_id) => {
     var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
     banners = banners.concat(gameBanners);
   }
+  var iconIDs = [];
+  if(event.revenue != null && typeof(event.revenue.stretchGoals) == "object") {
+    iconIDs = Object.keys(event.revenue.stretchGoals).map((key) => {
+      return event.revenue.stretchGoals[key].icon;
+    });
+  }
   return [
     Events.find({_id}),
     Images.find({
@@ -25,6 +31,11 @@ Meteor.publish('event', (_id) => {
     Games.find({
       _id: {
         $in: games
+      }
+    }),
+    Icons.find({
+      _id: {
+        $in: iconIDs
       }
     })
   ];
