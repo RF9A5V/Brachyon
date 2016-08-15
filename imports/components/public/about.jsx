@@ -75,23 +75,19 @@ export default class AboutScreen extends TrackerReact(Component) {
       }
     }
     return(
-      <div>
-        <div className="side-tab-panel">
-          <div className="row center"><h2>What is Brachyon?</h2></div>
-          <div className="row center">
-            <div className="about-what">
-              Welcome to Brachyon - a website which allows you to find,
-              create, promote, and fund competitive gaming events.
-              Brachyon makes it easy to build passionate communities
-              around competitive games.
-              Brachyon's mission is to empower competitive gaming communities from the
-              ground up.
-            </div>
+      <div className="row center">
+        <div className="col side-tab-panel">
+          <h2 style={{margin: 0}}>What is Brachyon?</h2>
+          <div className="about-what">
+            Welcome to Brachyon - a website which allows you to find,
+            create, promote, and fund competitive gaming events.
+            Brachyon makes it easy to build passionate communities
+            around competitive games.
+            Brachyon's mission is to empower competitive gaming communities from the
+            ground up.
           </div>
-        </div>
-        <div className="side-tab-panel">
-          <div className="row center"><h2>Brachyon Lets You...</h2></div>
-          <div className="col">
+          <h4>Brachyon Lets You...</h4>
+          <div className="col" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div className="row center">
               <Link to="/events/discover" className="col">
                 <div className="col center x-center about-blocks">
@@ -107,8 +103,6 @@ export default class AboutScreen extends TrackerReact(Component) {
                   <h3>Create</h3>Generate competitive events in seconds.
                 </div>
               </div>
-            </div>
-            <div className="row center">
               <Link to="/advertise" className="col">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="arrow-up" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
@@ -127,19 +121,17 @@ export default class AboutScreen extends TrackerReact(Component) {
               </div>
             </div>
           </div>
-        </div>
-        <div className="side-tab-panel">
-          <div className="row center"><h2>Which Leads To...</h2></div>
-            <BlockContainer events={this.promotedEvents()} />
-        </div>
-        <div className="side-tab-panel">
-          <div className="row center"><h2>Why?</h2></div>
-          <div className="row center">
-            <div className="about-what">
-              We love competitive gaming. Nothing catered to our needs
-              as competitors, so we built it ourselves. Brachyon formed out
-              of our pure love for the game.
+          <h4>Which Leads To...</h4>
+          <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
+            <div style={{marginLeft: 10}}>
+              <BlockContainer events={this.promotedEvents()} />
             </div>
+          </div>
+          <h4>Why?</h4>
+          <div className="about-what">
+            We love competitive gaming. Nothing catered to our needs
+            as competitors, so we built it ourselves. Brachyon formed out
+            of our pure love for the game.
           </div>
         </div>
       </div>

@@ -92,6 +92,7 @@
 .event-block-title {
   background: none;
   color: white;
+  text-align: left;
 }
 
 .event-block-content {
