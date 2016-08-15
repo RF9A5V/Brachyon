@@ -61,31 +61,27 @@ export default class UserDetailsPanel extends Component {
   render() {
     return (
       <div className="col">
-        <div className="row">
-          <div className="side-tab-panel">
-            <div className="row x-center">
-              <span className="col-1">Profile Image</span>
-              <button onClick={this.saveProfileImage.bind(this)}>Save</button>
-            </div>
-            <ImageForm aspectRatio={1} collection={ProfileImages} id={Meteor.user().profile.image} ref="profileImage" store="profile_images" />
+        <div className="side-tab-panel">
+          <div className="row x-center">
+            <h3 className="col-1">Profile Image</h3>
+            <button onClick={this.saveProfileImage.bind(this)}>Save</button>
           </div>
-          <div className="side-tab-panel">
-            <div className="row x-center">
-              <span className="col-1">Profile Banner</span>
-              <button onClick={this.saveBannerImage.bind(this)}>Save</button>
-            </div>
-            <ImageForm aspectRatio={16/4} collection={ProfileBanners} id={Meteor.user().profile.banner} ref="profileBanner" />
-          </div>
+          <ImageForm aspectRatio={1} collection={ProfileImages} id={Meteor.user().profile.image} ref="profileImage" store="profile_images" />
         </div>
-        <div className="row">
-          <div className="side-tab-panel">
-            <div className="row x-center">
-              <span className="col-1">Alias</span>
-              <button onClick={this.saveAlias.bind(this)}>Save</button>
-            </div>
-            <div>
-              <input type="text" ref="alias" style={{width: 400}} maxlength={40} defaultValue={Meteor.user().profile.alias || Meteor.user().username} />
-            </div>
+        <div className="side-tab-panel">
+          <div className="row x-center">
+            <h3 className="col-1">Profile Banner</h3>
+            <button onClick={this.saveBannerImage.bind(this)}>Save</button>
+          </div>
+          <ImageForm aspectRatio={16/4} collection={ProfileBanners} id={Meteor.user().profile.banner} ref="profileBanner" />
+        </div>
+        <div className="side-tab-panel">
+          <div className="row x-center">
+            <h3 className="col-1">Alias</h3>
+            <button onClick={this.saveAlias.bind(this)}>Save</button>
+          </div>
+          <div>
+            <input type="text" ref="alias" style={{width: 400}} maxlength={40} defaultValue={Meteor.user().profile.alias || Meteor.user().username} />
           </div>
         </div>
       </div>

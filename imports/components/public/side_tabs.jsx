@@ -16,34 +16,34 @@ export default class SideTabs extends Component {
     }
   }
 
-  values() {
-
-  }
-
   render() {
     var self = this;
     return (
       <div className="side-tab-container">
-        <div className="side-tab-item-container">
+        <div className="side-tab-menu col flex-pad">
+          <div className="col">
+            {
+              this.props.items.map((function(value, index) {
+                return (
+                  <span className={`side-tab-menu-item ${self.state.active === index ? "active" : ""}`} key={index} onClick={this.onTabClick(index).bind(this)}>
+                    { value }
+                  </span>
+                );
+              }).bind(this))
+            }
+          </div>
+        </div>
+        <div className="side-tab-content">
           {
-            this.props.items.map((function(value, index) {
+            this.props.panels.map((function(value, index){
               return (
-                <span className={`side-tab-item ${self.state.active === index ? "active" : ""}`} key={index} onClick={this.onTabClick(index).bind(this)}>
+                <div className={`side-tab-content-item ${self.state.active === index ? "active" : ""}`}>
                   { value }
-                </span>
+                </div>
               );
             }).bind(this))
           }
         </div>
-        {
-          this.props.panels.map((function(value, index){
-            return (
-              <div className={`side-tab-content ${self.state.active === index ? "" : "hidden"}`}>
-                { value }
-              </div>
-            );
-          }).bind(this))
-        }
       </div>
     )
   }

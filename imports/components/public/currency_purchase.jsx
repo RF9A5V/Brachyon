@@ -18,15 +18,6 @@ export default class CurrencyPurchaseScreen extends Component {
         value,
         open: true
       })
-      // For now, spoof the payment stuff.
-      // Meteor.call("users.purchase_currency", value, function(err) {
-      //   if(err){
-      //     toastr.error(err.reason);
-      //   }
-      //   else {
-      //     toastr.success(`Successfully added ${value} to your wallet!`, "Success!");
-      //   }
-      // })
     }
   }
 
@@ -36,10 +27,6 @@ export default class CurrencyPurchaseScreen extends Component {
         <div className="col-1" style={{padding: 10}}>
           <div className="col x-center currency-option" onClick={this.amountRequest(value * 100).bind(this)}>
             <b>${value.toFixed(2)}<sup>*</sup></b>
-            <div className="row x-center" style={{marginTop: 20}}>
-              <div style={{width: 25, height: 25, backgroundColor: "gold", marginRight: 10, borderRadius: "100%"}}></div>
-              { (value * 100).toLocaleString() }
-            </div>
           </div>
         </div>
       )
@@ -49,7 +36,7 @@ export default class CurrencyPurchaseScreen extends Component {
   render() {
     return (
       <div className="box" style={{padding: "0 20px 10px"}}>
-        <h3>Get $CURRENCY_NAME</h3>
+        <h3>Add Credits to your Wallet</h3>
         <div>
           <h3 style={{textAlign: "center"}}>Buy Credits</h3>
           <div className="row col-1">

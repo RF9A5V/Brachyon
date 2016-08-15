@@ -8,38 +8,6 @@ import ProfileImages from "/imports/api/users/profile_images.js";
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
 Meteor.methods({
-  "events.create"(attrs) {
-    if(!attrs.details){
-      throw new Error("Event needs details.");
-    }
-    if(!Meteor.userId()){
-      throw new Error("Needs to be logged in.");
-    }
-    attrs.published = true;
-    attrs.underReview = false;
-    attrs.owner = Meteor.userId();
-    if(attrs.organize){
-      if(!attrs.organize.active){
-        attrs.organize = {};
-      }
-    }
-    if(attrs.revenue){
-      if(!attrs.revenue.active){
-        attrs.revenue = {};
-      }
-      else {
-        attrs.published = false;
-        attrs.underReview = true;
-      }
-    }
-    if(attrs.promotion){
-      if(!attrs.promotion.active){
-        attrs.promotion = {};
-      }
-    }
-    attrs.sponsors = {};
-    Events.insert(attrs);
-  },
 
   "events.save_for_advanced"(attrs) {
     if(!attrs.details){
@@ -50,8 +18,11 @@ Meteor.methods({
     }
     attrs.published = false;
     attrs.underReview = false;
+    attrs.active = false;
+    attrs.complete = false;
     attrs.owner = Meteor.userId();
     attrs.sponsors = {};
+    attrs.participants = [];
     return Events.insert(attrs);
   },
 
@@ -149,24 +120,6 @@ Meteor.methods({
       Events.update(id, {
         $set: {
           published: true
-        }
-      })
-    }
-  },
-
-  "events.add_participant"(id) {
-    var event = Events.findOne(id);
-    if(!event.participants) {
-      Events.update(id, {
-        $set: {
-          participants: [{name: "Player 1"}]
-        }
-      })
-    }
-    else {
-      Events.update(id, {
-        $push: {
-          participants: {name: `Player ${event.participants.length + 1}`}
         }
       })
     }
@@ -341,11 +294,9 @@ Meteor.methods({
       email,
       password,
       username,
-      options: {
-        name
-      },
       profile: {
         games: [],
+        name
       },
       oauth: {
         isStripeConnected: false

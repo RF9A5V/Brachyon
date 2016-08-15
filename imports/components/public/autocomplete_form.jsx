@@ -44,6 +44,14 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     return this.state.id;
   }
 
+  reset() {
+    this.state.id = null;
+    this.state.active = false;
+    this.refs.input.value = "";
+    this.props.onChange({});
+    this.forceUpdate();
+  }
+
   results() {
     var self = this;
     return this.props.types.map(function(item){
@@ -86,7 +94,7 @@ export default class AutocompleteForm extends TrackerReact(Component) {
   render() {
     return (
       <div className="col" style={{position: "relative"}}>
-        <input ref="input" type="text" onChange={this.search.bind(this)} style={{margin: 0, marginTop: 15}} />
+        <input ref="input" type="text" onChange={this.search.bind(this)} style={{margin: 0, marginBottom: 10}} placeholder={this.props.placeholder || ""} />
         <div className="template-container">
           {
             this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
