@@ -7,7 +7,7 @@
 .about-what {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  max-width: calc(600px + 64vmin);
+  margin: 0;
 }
 
 .about-icons {
@@ -16,15 +16,15 @@
 
 .about-blocks {
   background-color: rgba(0, 0, 0, 0.5);
-  width: 18vw;
-  height: 230px;
+  width: 250px;
+  height: 250px;
   margin: 10px;
   padding: 5px;
 }
 
 .about-desc {
-  width: 18vw;
-  height: 115px;
+  width: 250px;
+  height: 125px;
   margin: 10px;
   padding: 5px;
 }

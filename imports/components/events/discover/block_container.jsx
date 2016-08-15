@@ -41,7 +41,7 @@ export default class BlockContainer extends Component {
                   <div className="event-block-details">
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     <div className="event-block-content">
-                      <div>
+                      <div style={{textAlign: "left"}}>
                         {/*Crowdfunding check goes here */}
                         {
                           event.details.location.online ? (
