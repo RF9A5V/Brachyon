@@ -25,13 +25,13 @@ import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 
 function isLoggedIn(nextState, replaceState){
   if(Meteor.userId()){
-    replaceState( { nextPathname: nextState.location.pathname }, '/dashboard' );
+    browserHistory.replace('/dashboard');
   }
 }
 
 function verifyUser(nextState, replaceState) {
   if(!Meteor.userId()){
-    replaceState({nextPathname: nextState.location.pathname}, '/');
+    browserHistory.replace('/');
   }
 }
 

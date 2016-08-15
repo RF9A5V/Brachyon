@@ -5,6 +5,7 @@ import DateInput from "/imports/components/events/create/date_input.jsx";
 import TierRewardCollection from "./tier_rewards.jsx";
 import TicketCollection from "./ticket_collection.jsx";
 import StretchGoals from "./stretch.jsx";
+import PrizePools from "./prize_pool.jsx";
 
 export default class RevenuePanel extends Component {
 
@@ -21,6 +22,10 @@ export default class RevenuePanel extends Component {
           <div>
             <DateInput init={revenue.dueDate} />
           </div>
+        </div>
+        <div className="side-tab-panel col">
+          <h3>Prize Pools</h3>
+          <PrizePools />
         </div>
         {
           revenue.crowdfunding !== false && revenue.crowdfunding != null ? (

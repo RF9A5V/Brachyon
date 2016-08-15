@@ -1,0 +1,27 @@
+.slider-container {
+  width: 100%;
+  position: relative;
+  margin: 10px 0;
+}
+
+.slider-track {
+  width: 280px;
+  height: 10px;
+  background-color: white;
+}
+
+.slider-bar {
+  width: 30px;
+  height: 20px;
+  position: absolute;
+  top: -5px;
+  background-color: #222;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.slider-decoration {
+  width: 20%;
+  height: 100%;
+  background-color: #666;
+}
