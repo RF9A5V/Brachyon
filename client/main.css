@@ -15,12 +15,6 @@ body {
   height: 100%;
 }
 
-.tbox {
-  cursor: pointer;
-  position: absolute;
-  margin-top: 50px;
-}
-
 .bracket-line-v {
   width: 5px;
   background-color: white;
@@ -39,6 +33,10 @@ body {
   padding: 10px 5px;
 }
 
+.match-active{
+  cursor: pointer;
+}
+
 .match-participant:first-child {
   border-bottom: solid 5px white;
 }
@@ -47,6 +45,18 @@ body {
   display: flex;
   flex-flow: column;
   min-height: calc(100vh - 170px);
+}
+
+.participant-active{
+  color: red;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.participant-inactive{
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .content {
@@ -80,6 +90,10 @@ body {
 
 .flex-pad {
   justify-content: space-between;
+}
+
+.flex-padaround{
+  justify-content: space-around;
 }
 
 .wrap {
