@@ -15,8 +15,11 @@ Meteor.publish('event', (_id) => {
   }
   var iconIDs = [];
   if(event.revenue != null && typeof(event.revenue.stretchGoals) == "object") {
-    iconIDs = Object.keys(event.revenue.stretchGoals).map((key) => {
-      return event.revenue.stretchGoals[key].icon;
+    iconIDs = event.revenue.stretchGoals.map((key) => {
+      if(key == null) {
+        return null;
+      }
+      return key.icon;
     });
   }
   return [

@@ -145,31 +145,96 @@ Meteor.methods({
       throw new Meteor.Error(403, "Stretch goals for this event have not been set up.");
     }
     goalObj.children = [];
-    if(typeof(event.revenue.stretchGoals) == "boolean") {
+    if(typeof(event.revenue.stretchGoals) == "boolean" || Object.keys(event.revenue.stretchGoals).length == 0) {
       Events.update(eventID, {
-        $set: {
-          "revenue.stretchGoals": {
-            0: goalObj
-          }
+        $push: {
+          "revenue.stretchGoals": goalObj
         }
       })
     }
     else {
-      console.log(parentIndex);
       if(!event.revenue.stretchGoals[parentIndex]){
         throw new Meteor.Error(404, "Parent goal not found.");
       }
       var goalObj = validateFields(goalObj);
-      var objCount = parseInt(Object.keys(event.revenue.stretchGoals).slice(-1)[0]) + 1;
+      var objCount = event.revenue.stretchGoals.length;
       Events.update(eventID, {
-        $set: {
-          [`revenue.stretchGoals.${objCount}`]: goalObj
-        },
+        $push: {
+          [`revenue.stretchGoals`]: goalObj
+        }
+      });
+      Events.update(eventID, {
         $push: {
           [`revenue.stretchGoals.${parentIndex}.children`]: objCount
         }
-      })
+      });
     }
+  },
+
+  "events.editGoal"(eventID, goalIndex, goalObj) {
+    var event = Events.findOne(eventID);
+    if(!event) {
+      throw new Meteor.Error(404, "Event not found.");
+    }
+    if(!event.revenue || !event.revenue.stretchGoals) {
+      throw new Meteor.Error(403, "Stretch goals are not enabled for this event.");
+    }
+    if(!event.revenue.stretchGoals[goalIndex]){
+      throw new Meteor.Error(404, "Goal for event was not found.");
+    }
+    var children = event.revenue.stretchGoals[goalIndex].children;
+    goalObj.children = children;
+    Events.update(eventID, {
+      $set: {
+        [`revenue.stretchGoals.${goalIndex}`]: goalObj
+      }
+    });
+  },
+
+  "events.removeGoal"(eventID, goalIndex) {
+    var event = Events.findOne(eventID);
+    if(!event) {
+      throw new Meteor.Error(404, "Event not found.");
+    }
+    if(!event.revenue || !event.revenue.stretchGoals) {
+      throw new Meteor.Error(403, "Stretch goals are not enabled for this event.");
+    }
+    if(!event.revenue.stretchGoals[goalIndex]){
+      throw new Meteor.Error(404, "Goal for event was not found.");
+    }
+    if(goalIndex == 0) {
+      throw new Meteor.Error(403, "Can't remove your base goal.");
+    }
+    var goals = event.revenue.stretchGoals;
+    var child = goals[goalIndex].children[0];
+    var parent = null;
+    var index = -1;
+    for(var i = 0; i < goalIndex; i ++) {
+      if(goals[i].children.indexOf(goalIndex) >= 0) {
+        index = i;
+        parent = goals[i];
+        break;
+      }
+    }
+    if(!parent) {
+      throw new Meteor.Error(404, "Couldn't find parent node for deletable node.");
+    }
+    var childIndex = parent.children.indexOf(goalIndex);
+    if(child){
+      parent.children[childIndex] = child;
+    }
+    else {
+      parent.children.pop();
+    }
+
+    Events.update(eventID, {
+      $set: {
+        [`revenue.stretchGoals.${index}`]: parent
+      },
+      $unset: {
+        [`revenue.stretchGoals.${goalIndex}`]: 1
+      }
+    });
   }
 
 })
