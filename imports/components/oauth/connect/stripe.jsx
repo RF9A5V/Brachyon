@@ -1,6 +1,7 @@
 import React from 'react';
+import FontAwesome from "react-fontawesome";
 
-export default class LinkToStripe extends React.Component {
+export default class StripeConnect extends React.Component {
   connectToStripe(event){
     if(!Meteor.user().profile.isStripeConnected){
       Meteor.linkWithStripe({
@@ -32,7 +33,10 @@ export default class LinkToStripe extends React.Component {
   render(){
     return (
       <div>
-        <button onClick={this.connectToStripe.bind(this)}>Connect to Stripe</button>
+        <button onClick={this.connectToStripe.bind(this)}>
+          <FontAwesome style={{marginRight: 10}} name="cc-stripe" />
+          Connect to Stripe
+        </button>
       </div>
     )
   }

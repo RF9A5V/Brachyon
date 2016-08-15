@@ -10,7 +10,6 @@ import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
-import LinkToStripe from '../public/link_to_stripe.jsx';
 import BlockContainer from "/imports/components/events/discover/block_container.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
@@ -121,7 +120,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
     return (
       <div>
-        <div className="user-banner" style={{backgroundImage: `url(${this.profileBannerURL()})`}}>
+        <div className="user-banner" style={{background: `url(${this.profileBannerURL()}) no-repeat center center`}}>
           <div className="user-img-line row flex-pad x-center">
             <div className="row col-1">
               {
@@ -139,27 +138,23 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
             </div>
           </div>
         </div>
-        <div className="user-events-container">
-          <div className="event-block-container">
-            {
-              events.map((eventSet) => {
-                if(eventSet.events.length === 0) {
-                  return (
-                    <div></div>
-                  );
-                }
-                return (
-                  <div>
-                    <h3>{eventSet.title}</h3>
-                    <BlockContainer events={eventSet.events} />
-                  </div>
-                )
-              })
-            }
-          </div>
-        </div>
         <div className="row center">
-          <button onClick={() => { browserHistory.push("/events/create") }}>Create an Event</button>
+          <button onClick={() => { browserHistory.push("/events/create") }} style={{marginTop: 100}}>Create an Event</button>
+        </div>
+        <div className="row col-1"><hr className="user-divider"></hr></div>
+        <div className="user-events-container">
+          {
+            events.map((eventSet) => {
+              if(eventSet.events.length === 0) {
+                return (
+                  <div></div>
+                );
+              }
+              return (
+                <BlockContainer title={eventSet.title} events={eventSet.events} />
+              )
+            })
+          }
         </div>
       </div>
     )
