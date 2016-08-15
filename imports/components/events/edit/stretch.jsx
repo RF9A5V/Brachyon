@@ -21,10 +21,11 @@ export default class StretchGoals extends Component {
 
   renderInitialChildren(nodeChildren) {
     var rez = [];
+    console.log(nodeChildren);
     for(var i in nodeChildren){
       var index = nodeChildren[i];
       rez.push(
-        <div className="circle" style={{backgroundImage: this.props.goals[i].icon ? `url(${Icons.findOne(this.props.goals[index].icon).url()})` : "initial"}}>
+        <div className="circle" style={{backgroundImage: this.props.goals[i].icon ? `url(${Icons.findOne(this.props.goals[index].icon).url()})` : "initial"}} onClick={this.onGoalEdit(index, this.props.goals[index])}>
         </div>
       )
       rez.push(
@@ -52,6 +53,10 @@ export default class StretchGoals extends Component {
   renderDirectChildren(nodeChildren) {
     var rez = [];
     var count = 0;
+    if(nodeChildren.length == 0) {
+      return "";
+    }
+    console.log("here");
     while(count++ < 4 && nodeChildren.some((val) => {
       return val != null;
     })) {
@@ -184,9 +189,22 @@ export default class StretchGoals extends Component {
     }
   }
 
+  onGoalDelete(e) {
+    e.preventDefault();
+    Meteor.call("events.removeGoal", this.state.id, this.state.index, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Test test", "Success!");
+        Meteor.subscribe("event", this.state.id);
+      }
+    })
+  }
+
   render() {
     var initial = this.props.goals[0];
-    var ary = {};
+    var ary = [];
     if(initial != null) {
       ary = initial.children;
     }
@@ -196,7 +214,11 @@ export default class StretchGoals extends Component {
           this.renderDirectChildren(ary)
         }
         {
-          this.renderInitialChildren(ary)
+          initial ? (
+            this.renderInitialChildren(ary)
+          ) : (
+            ""
+          )
         }
         {
           initial ? (
@@ -232,6 +254,13 @@ export default class StretchGoals extends Component {
             <ImageForm aspectRatio={1} ref="icon" collection={Icons} id={this.state.goal.icon} />
             <div>
               <button onClick={this.onGoalSubmit.bind(this)}>Submit</button>
+              {
+                !this.state.create ? (
+                  <button onClick={this.onGoalDelete.bind(this)}>Delete</button>
+                ) : (
+                  ""
+                )
+              }
             </div>
           </div>
         </Modal>
