@@ -4,8 +4,19 @@ export default class SliderContainer extends Component {
 
   constructor(props) {
     super(props);
+    for(var i in props.labels) {
+      if(!props.labels[i].percentage) {
+        props.labels[i].position = 0;
+      }
+      else {
+        props.labels[i].position = props.labels[i].percentage * 400;
+      }
+    }
+    if(props.labels[0].position == 0) {
+      props.labels[0].position = 400;
+    }
     this.state = {
-      barPositions: [250, 0, 0, 0]
+      labels: props.labels
     }
   }
 
@@ -17,64 +28,65 @@ export default class SliderContainer extends Component {
       }
       var leftOffset = document.getElementById("track").getBoundingClientRect().left;
       var diff = mousePos - leftOffset;
+      var limit = 400;
+      for(var i = 0; i < index; i ++) {
+        limit -= this.state.labels[i].position;
+      }
       if(diff < 0) {
         diff = 0;
       }
-      else if(diff > 250) {
-        diff = 250;
+      else if(diff > limit) {
+        diff = limit;
       }
-      var dx = diff - this.state.barPositions[index];
+      var dx = diff - this.state.labels[index].position;
       var rem = 0;
-      for(var i = 0; i < this.state.barPositions.length; i ++) {
-        if(i == index) {
-          continue;
-        }
-        rem += this.state.barPositions[i];
+      for(var i = index + 1; i < this.state.labels.length; i ++) {
+        rem += this.state.labels[i].position;
       }
-      for(var i = 0; i < this.state.barPositions.length; i ++){
-        if(i == index) {
-          continue;
-        }
+      for(var i = index + 1; i < this.state.labels.length; i ++){
         if(rem == 0) {
-          this.state.barPositions[i] -= dx / (this.state.barPositions.length - 1);
+          this.state.labels[i].position -= dx / (this.state.labels.length - 1);
         }
         else {
-          this.state.barPositions[i] -= dx * this.state.barPositions[i] / rem;
-          if(this.state.barPositions[i] < 0){
-            this.state.barPositions[i] = 0;
+          this.state.labels[i].position -= dx * this.state.labels[i].position / rem;
+          if(this.state.labels[i].position < 0){
+            this.state.labels[i].position = 0;
           }
-          if(this.state.barPositions[i] > 250) {
-            this.state.barPositions[i] = 250;
+          if(this.state.labels[i].position > 400) {
+            this.state.labels[i].position = 400;
           }
         }
       }
-      this.state.barPositions[index] = diff;
+      this.state.labels[index].position = diff;
       this.forceUpdate();
     }
   }
 
   render() {
-    console.log(this.props.labels)
+    // TODO: Fix floating point precision errors.
     return (
       <div className="col">
       {
-        this.state.barPositions.map((value, index) => {
+        this.state.labels.map((labelObj, index) => {
+          var value = labelObj.position;
+          var percent = parseFloat((value * 100 / 400).toFixed(1))
           return (
             <div className="col" key={index}>
+              <span>{ labelObj.name }</span>
               <div className="row x-center flex-pad">
-                <span>{Math.round(value * 100 / 250)}%</span>
+                <span>{ percent }%</span>
                 <span>
                   {
                     this.props.value != null ? (
-                      `$${(this.props.value * value / 250).toFixed(2)}`
+                      `$${(this.props.value * percent / 100).toFixed(2)}`
                     ) : (
-                      `$${(1000 * value / 250).toFixed(2)}`
+                      `$${(1000 * percent / 100).toFixed(2)}`
                     )
                   }
                 </span>
               </div>
               <div className="slider-container" key={index}>
-                <div className="slider-bar row flex-pad" id="bar" ref="bar" onDrag={this.onSliderBarDrag(index).bind(this)} style={{left: this.state.barPositions[index] }}>
+                <div className="slider-bar row flex-pad" id="bar" ref="bar" onDrag={this.onSliderBarDrag(index).bind(this)} style={{left: value }}>
                   <div className="slider-decoration"></div>
                   <div className="slider-decoration"></div>
                   <div className="slider-decoration"></div>
