@@ -44,6 +44,23 @@ export default class MatchBlock extends Component {
     }
   }
 
+  onUndoUserClick()
+  {
+    return function(e) {
+      e.preventDefault();
+      Meteor.call("events.undo_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, function(err) {
+        if(err){
+          console.log(err);
+          toastr.error("Couldn't undo this match.", "Error!");
+        }
+        else {
+          toastr.success("Match has been undone!", "Success!");
+        }
+      })
+      this.closeModal();
+    }
+  }
+
   getUsername(id) {
     // return Meteor.users.findOne(id).username;
     return id;
@@ -64,7 +81,7 @@ export default class MatchBlock extends Component {
 
               return (
                 <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
-                  match.winner == null && match.playerOne != null && match.playerTwo != null ? (
+                  match.playerOne != null && match.playerTwo != null ? (
                     () => {this.setState({open: true}); }
                   ) : (
                     () => {}
@@ -96,25 +113,37 @@ export default class MatchBlock extends Component {
           )
         }
         <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-          <div className="col" style={{height: "100%"}}>
-            <div className="self-end">
-              <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
-            </div>
-            <h3 className="col-1 center">Choose the Winner</h3>
-            <div className="row flex-padaround col-1">
-              <div className={ this.state.chosen == 0 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 0}) }}>
-              {
-                (this.getUsername(match.playerOne))
-              }
+          {
+            match.winner == null ?
+            (
+              <div className="col" style={{height: "100%"}}>
+                <div className="self-end">
+                  <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                </div>
+                <h3 className="col-1 center">Choose the Winner</h3>
+                <div className="row flex-padaround col-1">
+                  <div className={ this.state.chosen == 0 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 0}) }}>
+                  {
+                    (this.getUsername(match.playerOne))
+                  }
+                  </div>
+                  <div className={ this.state.chosen == 1 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 1}) }}>
+                  {
+                    (this.getUsername(match.playerTwo))
+                  }
+                  </div>
+                </div>
+                <button onClick={this.state.chosen < 2 ? (this.onMatchUserClick(this.state.chosen).bind(this)) : (() => {})}>Send Winner</button>
               </div>
-              <div className={ this.state.chosen == 1 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 1}) }}>
-              {
-                (this.getUsername(match.playerTwo))
-              }
+            ):(
+              <div className="col" style={{height: "100%"}}>
+                <div className="self-end">
+                  <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                </div>
+                <button onClick={(this.onUndoUserClick()).bind(this)}>Undo</button>
               </div>
-            </div>
-            <button onClick={this.state.chosen < 2 ? (this.onMatchUserClick(this.state.chosen).bind(this)) : (() => {})}>Send Winner</button>
-          </div>
+            )
+          }
         </Modal>
       </div>
     )
