@@ -62,6 +62,14 @@ export default class SliderContainer extends Component {
     }
   }
 
+  values() {
+    return this.state.labels.map((labelObj) => {
+      labelObj.percentage = labelObj.position / 400;
+      delete labelObj.position;
+      return labelObj;
+    })
+  }
+
   render() {
     // TODO: Fix floating point precision errors.
     return (
@@ -85,7 +93,7 @@ export default class SliderContainer extends Component {
                   }
                 </span>
               </div>
-              <div className="slider-container" key={index}>
+              <div className="slider-container">
                 <div className="slider-bar row flex-pad" id="bar" ref="bar" onDrag={this.onSliderBarDrag(index).bind(this)} style={{left: value }}>
                   <div className="slider-decoration"></div>
                   <div className="slider-decoration"></div>
@@ -94,6 +102,16 @@ export default class SliderContainer extends Component {
                 <div className="slider-track" id="track" ref="track">
                 </div>
               </div>
+              {
+                this.state.labels.length > 1 ? (
+                  <div>
+                    <button onClick={this.props.onRemove(index)}>Delete This</button>
+                  </div>
+                ) : (
+                  ""
+                )
+              }
+
             </div>
           )
         })

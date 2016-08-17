@@ -13,6 +13,19 @@ export default class RevenuePanel extends Component {
     return Events.find().fetch()[0].revenue;
   }
 
+  savePrizePool(e) {
+    e.preventDefault();
+    var breakdown = this.refs.prizePools.value();
+    Meteor.call("events.savePrizePool", Events.findOne()._id, breakdown, function(err) {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully updated your prize pool.", "Success!");
+      }
+    })
+  }
+
   render() {
     var revenue = this.revenue();
     return (
@@ -24,8 +37,11 @@ export default class RevenuePanel extends Component {
           </div>
         </div>
         <div className="side-tab-panel col">
-          <h3>Prize Pools</h3>
-          <PrizePools />
+          <div className="row x-center flex-pad">
+            <h3>Prize Pools</h3>
+            <button onClick={this.savePrizePool.bind(this)}>Save</button>
+          </div>
+          <PrizePools ref="prizePools" />
         </div>
         {
           revenue.crowdfunding !== false && revenue.crowdfunding != null ? (
