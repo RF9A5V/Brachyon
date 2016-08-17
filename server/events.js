@@ -134,11 +134,11 @@ Meteor.methods({
 
   "events.advance_match"(eventID, bracketNumber, roundNumber, matchNumber, placement) {
     var event = Events.findOne(eventID);
-    var loser;
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     event = event.organize[0];
+    var loser;
     var match = event.rounds[bracketNumber][roundNumber][matchNumber];
     if (match.winner != null || match.playerOne == null || match.playerTwo == null)
       return false;
@@ -217,6 +217,76 @@ Meteor.methods({
         }
       })
     }
+  },
+
+  "events.undo_match"(eventID, bracketNumber, roundNumber, matchNumber) {
+    var event = Events.findOne(eventID);
+    if (!event){
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    event = event.organize[0];
+    match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
+    var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
+    if (fr >= event.rounds[bracketNumber].length)
+      var [fb, fr, fm] = [2, 0, 0];
+    console.log(fb + " " + fr + " " + fm);
+    var advMatch = event.rounds[fb][fr][fm];
+    if (advMatch.winner)
+    {
+      Meteor.call("events.undo_match", eventID, fb, fr, fm);
+      event = Events.findOne(eventID).organize[0];
+      advMatch = event.rounds[fb][fr][fm];
+      match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    }
+    if (event.rounds.length > 1 && bracketNumber == 0)
+    {
+      loserround = event.rounds[1][match.losr][match.losm];
+      if (loserround.winner != null)
+      {
+        Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
+        loserround = event.rounds[1][match.losr][match.losm];
+      }
+      loserround.playerOne = null;
+      Events.update(eventID, {
+        $set: {
+          [`organize.0.rounds.${1}.${match.losr}.${match.losm}`]: loserround
+        }
+      });
+    }
+    match.winner = null;
+    if (roundNumber >= event.rounds[bracketNumber].length)
+    {
+      if (bracketNumber == 0)
+        advMatch.playerOne = null;
+      else
+        advMatch.playerTwo = null;
+    }
+    else if (bracketNumber == 0 || roundNumber%2 == 1)
+    {
+      if(matchNumber % 2 == 0){
+        advMatch.playerOne = null;
+      }
+      else {
+        advMatch.playerTwo = null;
+      }
+    }
+    else if (bracketNumber == 2)
+    {
+      advMatch.playerOne = null;
+      advMatch.playerTwo = null;
+    }
+    else
+    {
+      advMatch.playerTwo = null;
+    }
+    Events.update(eventID, {
+      $set: {
+        [`organize.0.rounds.${fb}.${fr}.${fm}`]: advMatch,
+        [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
+      }
+    })
+    return;
   }
 
 })
