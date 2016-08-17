@@ -207,8 +207,7 @@ Meteor.methods({
       }
       else
       {
-        if (advMatch.playerTwo == null) advMatch.playerTwo = match.winner;
-        else advMatch.playerOne = match.winner;
+        advMatch.playerTwo = match.winner;
       }
       Events.update(eventID, {
         $set: {
@@ -229,8 +228,17 @@ Meteor.methods({
     var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
     var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
     if (fr >= event.rounds[bracketNumber].length)
-      var [fb, fr, fm] = [2, 0, 0];
-    console.log(fb + " " + fr + " " + fm);
+      var [fb, fr, fm] = bracketNumber == 2 ? [2, 1, 0]:[2, 0, 0];
+    if (bracketNumber == 2 && roundNumber == 1)
+    {
+      match.winner = null;
+      Events.update(eventID, {
+        $set: {
+          [`organize.0.rounds.${2}.${1}.${0}`]: match
+        }
+      });
+      return;
+    }
     var advMatch = event.rounds[fb][fr][fm];
     if (advMatch.winner)
     {
@@ -241,13 +249,18 @@ Meteor.methods({
     }
     if (event.rounds.length > 1 && bracketNumber == 0)
     {
+      loser = match.winner == match.playerOne ? (match.playerTwo):(match.playerOne);
       loserround = event.rounds[1][match.losr][match.losm];
       if (loserround.winner != null)
       {
         Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
+        event = Events.findOne(eventID).organize[0];
+        advMatch = event.rounds[fb][fr][fm];
+        match = event.rounds[bracketNumber][roundNumber][matchNumber];
         loserround = event.rounds[1][match.losr][match.losm];
       }
-      loserround.playerOne = null;
+      if (loserround.playerOne == loser) loserround.playerOne = null;
+      else loserround.playerTwo = null;
       Events.update(eventID, {
         $set: {
           [`organize.0.rounds.${1}.${match.losr}.${match.losm}`]: loserround
@@ -255,7 +268,7 @@ Meteor.methods({
       });
     }
     match.winner = null;
-    if (roundNumber >= event.rounds[bracketNumber].length)
+    if (roundNumber >= event.rounds[bracketNumber].length-1)
     {
       if (bracketNumber == 0)
         advMatch.playerOne = null;
