@@ -116,25 +116,6 @@ Meteor.methods({
       }
     })
   },
-  "events.deleteTicket"(eventID, index) {
-    var event = Events.findOne(eventID);
-    if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
-    }
-    if(!event.revenue) {
-      throw new Meteor.Error(404, "Revenue module is not set up for this event.");
-    }
-    if(!event.revenue.ticketing || typeof(event.revenue.ticketing) == "boolean" || event.revenue.ticketing.length <= index) {
-      throw new Meteor.Error(404, "Ticket not found.");
-    }
-    var tickets = event.revenue.ticketing;
-    tickets.splice(index, 1);
-    Events.update(eventID, {
-      $set: {
-        "revenue.ticketing": tickets
-      }
-    });
-  },
 
   "events.addGoal"(eventID, parentIndex, goalObj) {
     var event = Events.findOne(eventID);
@@ -235,6 +216,14 @@ Meteor.methods({
         [`revenue.stretchGoals.${goalIndex}`]: 1
       }
     });
+  },
+
+  "events.savePrizePool"(eventID, prizePool) {
+    Events.update(eventID, {
+      $set: {
+        "revenue.prizePool": prizePool
+      }
+    })
   }
 
 })
