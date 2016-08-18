@@ -229,17 +229,19 @@ Meteor.methods({
     var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
     if (fr >= event.rounds[bracketNumber].length)
       var [fb, fr, fm] = bracketNumber == 2 ? [2, 1, 0]:[2, 0, 0];
-    if (bracketNumber == 2 && roundNumber == 1)
+    if ((bracketNumber == 2 && roundNumber == 1) || (event.rounds.length < 2 && roundNumber >= event.rounds[0].length-1))
     {
       match.winner = null;
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${2}.${1}.${0}`]: match
+          [`organize.0.rounds.${bracketNumber}.${roundNumber}.${0}`]: match
         }
       });
       return;
     }
     var advMatch = event.rounds[fb][fr][fm];
+
+    //Call the function recursively on the ahead losers and update the matches
     if (advMatch.winner)
     {
       Meteor.call("events.undo_match", eventID, fb, fr, fm);
@@ -247,6 +249,8 @@ Meteor.methods({
       advMatch = event.rounds[fb][fr][fm];
       match = event.rounds[bracketNumber][roundNumber][matchNumber];
     }
+
+    //This is the function to undo loser bracket placement
     if (event.rounds.length > 1 && bracketNumber == 0)
     {
       loser = match.winner == match.playerOne ? (match.playerTwo):(match.playerOne);
@@ -268,6 +272,8 @@ Meteor.methods({
       });
     }
     match.winner = null;
+
+    //Depending on the bracket is how the winner will be sent.
     if (roundNumber >= event.rounds[bracketNumber].length-1)
     {
       if (bracketNumber == 0)
@@ -293,12 +299,15 @@ Meteor.methods({
     {
       advMatch.playerTwo = null;
     }
+
+    //Update the round
     Events.update(eventID, {
       $set: {
         [`organize.0.rounds.${fb}.${fr}.${fm}`]: advMatch,
         [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
       }
     })
+    //Return for recursion
     return;
   }
 
