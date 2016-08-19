@@ -24,7 +24,7 @@ export default class StretchGoals extends Component {
     for(var i in nodeChildren){
       var index = nodeChildren[i];
       rez.push(
-        <div className="circle" style={{backgroundImage: this.props.goals[i].icon ? `url(${Icons.findOne(this.props.goals[index].icon).url()})` : "initial"}} onClick={this.onGoalEdit(index, this.props.goals[index])} key={"a"+index}>
+        <div className="circle" style={{backgroundImage: this.props.goals[index].icon == null ? "initial" : `url(${Icons.findOne(this.props.goals[index].icon).url()})`}} onClick={this.onGoalEdit(index, this.props.goals[index])} key={"a"+index}>
         </div>
       )
       rez.push(
@@ -132,7 +132,8 @@ export default class StretchGoals extends Component {
       this.setState({
         open: true,
         create: true,
-        index
+        index,
+        goal: {}
       })
     }
   }
@@ -154,7 +155,7 @@ export default class StretchGoals extends Component {
 
     var goals = {
       name: this.refs.name.value,
-      amount: this.refs.amount.value() * 100,
+      amount: this.refs.amount.value(),
       description: this.refs.description.value,
       icon: this.refs.icon.value()
     }
@@ -245,7 +246,7 @@ export default class StretchGoals extends Component {
             <label>Name</label>
             <input type="text" ref="name" style={{margin: 0}} defaultValue={this.state.goal.name}/>
             <label>Amount</label>
-            <MoneyInput ref="amount" defaultValue={this.state.goal.amount} />
+            <MoneyInput ref="amount" defaultValue={(this.state.goal.amount / 100).toFixed(2)} />
             <label>Description</label>
             <textarea ref="description" style={{margin: 0, marginBottom: 10}} defaultValue={this.state.goal.description}></textarea>
             <label>Icon (Optional)</label>

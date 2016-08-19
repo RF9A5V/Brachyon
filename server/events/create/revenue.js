@@ -38,7 +38,12 @@ Meteor.methods({
     else {
       Events.update(eventID, {
         $push: {
-          "revenue.tierRewards": tierObj
+          "revenue.tierRewards": {
+            $each: [tierObj],
+            $sort: {
+              amount: 1
+            }
+          }
         }
       });
     }
@@ -93,7 +98,12 @@ Meteor.methods({
     else {
       Events.update(eventID, {
         $push: {
-          "revenue.ticketing": ticketObj
+          "revenue.ticketing": {
+            $each: [ticketObj],
+            $sort: {
+              amount: 1
+            }
+          }
         }
       })
     }
@@ -128,8 +138,8 @@ Meteor.methods({
     goalObj.children = [];
     if(typeof(event.revenue.stretchGoals) == "boolean" || Object.keys(event.revenue.stretchGoals).length == 0) {
       Events.update(eventID, {
-        $push: {
-          "revenue.stretchGoals": goalObj
+        $set: {
+          "revenue.stretchGoals": [goalObj]
         }
       })
     }
