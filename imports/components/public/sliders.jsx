@@ -66,6 +66,7 @@ export default class SliderContainer extends Component {
     return this.state.labels.map((labelObj) => {
       labelObj.percentage = labelObj.position / 400;
       delete labelObj.position;
+      delete labelObj.name;
       return labelObj;
     })
   }
@@ -76,8 +77,8 @@ export default class SliderContainer extends Component {
       <div className="col">
       {
         this.state.labels.map((labelObj, index) => {
-          var value = labelObj.position;
-          var percent = parseFloat((value * 100 / 400).toFixed(1))
+          var value = labelObj.position || 0;
+          var percent = (Math.round(parseFloat((value * 100 / 400)) / 5) * 5)
           return (
             <div className="col" key={index}>
               <span>{ labelObj.name }</span>
@@ -103,7 +104,7 @@ export default class SliderContainer extends Component {
                 </div>
               </div>
               {
-                this.state.labels.length > 1 ? (
+                this.state.labels.length > 1 && this.state.labels[index].deletable ? (
                   <div>
                     <button onClick={this.props.onRemove(index)}>Delete This</button>
                   </div>

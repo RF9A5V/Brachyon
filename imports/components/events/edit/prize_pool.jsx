@@ -12,7 +12,7 @@ export default class PrizePoolBreakdown extends Component {
       labels = event.revenue.prizePool;
     }
     else {
-      labels = event.organize.map(function() {
+      labels = (event.organize || []).map(function() {
         return [
           {
             name: "First Place",

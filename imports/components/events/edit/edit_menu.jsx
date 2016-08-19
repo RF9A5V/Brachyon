@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import Modal from "react-modal";
+import { browserHistory } from "react-router";
 
 import DetailsPanel from "./details.jsx";
 import OrganizationPanel from "./organization.jsx";
@@ -59,6 +60,19 @@ export default class EditMenu extends Component {
     })
   }
 
+  submitForReview(e) {
+    e.preventDefault();
+    Meteor.call("events.submitForReview", Events.findOne()._id, function(err) {
+      if(err){
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        browserHistory.push("/dashboard");
+        toastr.success("Successfully submitted event for review!", "Success!");
+      }
+    })
+  }
+
   render() {
     var keys = this.acceptedKeys();
     var panels = this.panels();
@@ -70,26 +84,34 @@ export default class EditMenu extends Component {
               Object.keys(keys).map((value, index) => {
                 return (
                   <div
-                    className={`side-tab-menu-item ${this.state.selected === index ? "active" : ""}`}
+                    className={`side-tab-menu-item ${this.state.selected === index && !this.state.publish ? "active" : ""}`}
                     key={index}
-                    onClick={(e) => { this.setState({selected: index}) }} key={index}>
+                    onClick={(e) => { this.setState({selected: index, publish: false}); }} key={index}>
                     { value[0].toUpperCase() + value.slice(1) }
                   </div>
                 )
               })
             }
           </div>
-          <div className="side-tab-menu-item" onClick={() => { this.setState({open: true})} }>
-            <FontAwesome name="plus" />
-            <span style={{marginLeft: 15}}>
-              Add a Module
-            </span>
-            <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
-              <ModuleSelectForm {...this.event()} ref="moduleSelect" />
-              <div>
-                <button onClick={this.updateModules.bind(this)}>Submit</button>
-              </div>
-            </Modal>
+          <div className="col">
+            <div
+              className={`side-tab-menu-item ${this.state.publish ? "active" : ""}`}
+              onClick={ (e) => { this.setState({ publish: true, selected: -1 }) } }
+            >
+              Publish
+            </div>
+            <div className="side-tab-menu-item" onClick={() => { this.setState({open: true})} }>
+              <FontAwesome name="plus" />
+              <span style={{marginLeft: 15}}>
+                Add a Module
+              </span>
+              <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
+                <ModuleSelectForm {...this.event()} ref="moduleSelect" />
+                <div>
+                  <button onClick={this.updateModules.bind(this)}>Submit</button>
+                </div>
+              </Modal>
+            </div>
           </div>
         </div>
         <div className="side-tab-content">
@@ -102,6 +124,11 @@ export default class EditMenu extends Component {
               );
             })
           }
+          <div className={`side-tab-content-item ${this.state.publish ? "active" : ""}`}>
+            <div className="row center x-center">
+              <button onClick={this.submitForReview.bind(this)}>Submit</button>
+            </div>
+          </div>
         </div>
       </div>
     )
