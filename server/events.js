@@ -132,6 +132,7 @@ Meteor.methods({
   },
 
   "events.advance_match"(eventID, bracket, roundNumber, matchNumber, placement) {
+    console.log("we in there bois");
     var event = Events.findOne(eventID);
     var loser;
     if(!event){
@@ -241,9 +242,8 @@ Meteor.methods({
       for(var roundNumber = bracket.rounds[bracketNumber].length - 1; roundNumber >= 0; roundNumber--){
         for(var matchNumber = bracket.rounds[bracketNumber][roundNumber].length - 1; matchNumber >= 0; matchNumber--){
           if(bracket.rounds[bracketNumber][roundNumber][matchNumber].playerOne != null){
-            if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerOne.id){
-              Meteor.call("events.advance_match", eventID, bracket.rounds[bracketNumber][roundNumber],
-              bracket.rounds[bracketNumber][roundNumber][matchNumber], 0 ,function(err){
+            if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerOne){
+              Meteor.call("events.advance_match", eventID, bracketNumber, roundNumber, matchNumber, 0,function(err){
                 if(err){
                   throw new Meteor.Error(404, "Match not updated");
                 }
@@ -251,9 +251,8 @@ Meteor.methods({
 
               return;
             }
-            else if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerTwo.id){
-              Meteor.call("events.advance_match", eventID, bracket.rounds[bracketNumber][roundNumber],
-              bracket.rounds[bracketNumber][roundNumber][matchNumber], 1,function(err){
+            else if(alias == bracket.rounds[bracketNumber][roundNumber][matchNumber].playerTwo){
+              Meteor.call("events.advance_match", eventID, bracketNumber, roundNumber, matchNumber, 1,function(err){
                 if(err){
                   throw new Meteor.Error(404, "Match not updated");
                 }

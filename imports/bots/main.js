@@ -68,10 +68,11 @@ export default class MainBot extends Discord.Client {
       }
       else if(cmd = "!win") {
         for(var role = message.server.roles.length - 1; role >= 0; role--){
-          if(message.server.roles[role].name.indexOf("eventRefID-")){
+            if(!message.server.roles[role].name.indexOf("eventRefID-")){
             var eventIdFromRole = this.splitMessage(message.server.roles[role].name, "-");
             Meteor.call("events.updateMatchFromDiscordID", message.author.id, eventIdFromRole[1], function(err){
               if(err){
+                console.log(err);
                 throw new Meteor.Error(404, "Could not update through bot");
               }
             });
