@@ -8,17 +8,10 @@ export default class PaymentProcess extends Component {
 
   constructor(props) {
     super(props);
-    var pools = Events.findOne().organize.map((bracket, index) => {
-      return {
-        name: "Prize Pool for " + bracket.name,
-        deletable: false,
-        poolID: index
-      }
-    })
     this.state = {
       step: 0,
       option: null,
-      labels: pools
+      labels: []
     };
   }
 
@@ -28,7 +21,7 @@ export default class PaymentProcess extends Component {
     this.state.labels.push({
       name: goal.name,
       deletable: true,
-      index: this.refs.goalSelect.value
+      index: parseInt(this.refs.goalSelect.value)
     });
     this.forceUpdate();
   }
@@ -40,11 +33,10 @@ export default class PaymentProcess extends Component {
     }
     var open = [0];
     var count = 0;
+    var labels = this.state.labels.map((label) => { return parseInt(label.index) });
     while(count < open.length) {
       var goal = goals[open[count]];
-      var containsLabel = this.state.labels.some((label) => {
-        return label.index == open[count];
-      });
+      var containsLabel = labels.indexOf(open[count]) >= 0;
       if(containsLabel){
         open = open.slice(1);
       }
@@ -68,6 +60,34 @@ export default class PaymentProcess extends Component {
             return (
               <option value={key}>
                 { goals[key].name }
+              </option>
+            )
+          })
+        }
+      </select>
+    )
+  }
+
+  onBracketSelect() {
+    var brackets = Events.findOne().organize;
+    this.state.labels[0] = {
+      name: "Prize Pool for " + brackets[this.refs.bracketID.value].name,
+      deletable: false,
+      poolID: this.refs.bracketID.value
+    }
+    this.forceUpdate();
+  }
+
+  bracketSelect() {
+    var brackets = Events.findOne().organize;
+    return (
+      <select value="" ref="bracketID" onChange={this.onBracketSelect.bind(this)}>
+        <option value="" disabled={true}></option>
+        {
+          brackets.map((bracket, index) => {
+            return (
+              <option value={index}>
+                { bracket.name }
               </option>
             )
           })
@@ -118,14 +138,24 @@ export default class PaymentProcess extends Component {
           <div className="row">
             <button onClick={() => { this.setState({ step: 0, options: null })}}>Back</button>
           </div>
-          <SliderBars labels={this.state.labels} onRemove={(index) => {
-            (e) => {
-              this.state.labels.splice(index, 1);
-              this.forceUpdate();
-            }
-          }} value={this.props.price / 100} ref="breakdown"/>
           {
-            this.openGoals()
+            this.state.labels.length == 0 ? (
+              ""
+            ) : (
+              <SliderBars labels={this.state.labels} onRemove={(index) => {
+                (e) => {
+                  this.state.labels.splice(index, 1);
+                  this.forceUpdate();
+                }
+              }} value={this.props.price / 100} ref="breakdown"/>
+            )
+          }
+
+          {
+            this.bracketSelect()
+          }
+          {
+            this.state.labels.length == 0 ? "" : this.openGoals()
           }
           <button onClick={() => {
             this.setState({
