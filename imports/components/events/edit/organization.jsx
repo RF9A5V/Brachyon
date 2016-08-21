@@ -100,7 +100,7 @@ export default class OrganizationPanel extends Component {
           {
             this.state.organize.map((bracket, index) => {
               return (
-                <img style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, border: this.bracketSelectBorder(index)}} src={Images.findOne(Games.findOne(bracket.game).banner).url()} onClick={this.setIndex.bind(this)(index)} />
+                <img style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20, marginBottom: 20, border: this.bracketSelectBorder(index)}} src={Images.findOne(Games.findOne(bracket.game).banner).url()} onClick={this.setIndex.bind(this)(index)} key={index} />
               )
             })
           }
@@ -123,7 +123,7 @@ export default class OrganizationPanel extends Component {
               {
                 this.state.organize.map((bracket, index) => {
                   return (
-                    <div style={{width: "85%", display: index == this.state.index && !this.state.create ? ("inherit") : ("none")}}>
+                    <div style={{width: "85%", display: index == this.state.index && !this.state.create ? ("inherit") : ("none")}} key={index}>
                       <BracketForm ref={index} {...bracket}/>
                     </div>
                   )
