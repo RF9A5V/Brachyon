@@ -23,15 +23,15 @@ import CurrencyPurchaseScreen from "../imports/components/public/currency_purcha
 import ShowEventScreen from "../imports/components/events/show.jsx";
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 
-function isLoggedIn(nextState, replaceState){
+function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
-    replaceState( { nextPathname: nextState.location.pathname }, '/dashboard' );
+    replace('/dashboard');
   }
 }
 
-function verifyUser(nextState, replaceState) {
+function verifyUser(nextState, replace) {
   if(!Meteor.userId()){
-    replaceState({nextPathname: nextState.location.pathname}, '/');
+    replace('/');
   }
 }
 

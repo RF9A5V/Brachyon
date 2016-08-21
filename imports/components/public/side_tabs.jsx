@@ -37,7 +37,7 @@ export default class SideTabs extends Component {
           {
             this.props.panels.map((function(value, index){
               return (
-                <div className={`side-tab-content-item ${self.state.active === index ? "active" : ""}`}>
+                <div className={`side-tab-content-item ${self.state.active === index ? "active" : ""}`} key={index}>
                   { value }
                 </div>
               );
