@@ -43,7 +43,6 @@ export default class CrowdfundingPanel extends Component {
     if(this.state.goal) {
       percent = Math.min((this.state.goal.current || 0) / this.state.goal.amount * 100, 100);
     }
-    console.log(percent);
     return (
       <div className="row">
         <div className="col-2" style={{padding: 20}}>
@@ -56,7 +55,7 @@ export default class CrowdfundingPanel extends Component {
           <h3>{ this.state.goal ? this.state.goal.name : "" }</h3>
           {
             this.state.goal ? (
-              <span>{ ((this.state.goal.current || 0) / 100).toFixed(2) } / { (this.state.goal.amount / 100).toFixed(2) }</span>
+              <span>{ ((this.state.goal.current || 0) / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) } / { (this.state.goal.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) }</span>
             ) : (
               ""
             )
@@ -72,8 +71,8 @@ export default class CrowdfundingPanel extends Component {
                   return (
                     <div className="tier-display-block" style={{padding: 10, backgroundColor: "#111", margin: 10, marginTop: 0, width: "100%"}} onClick={() => { this.setState({ open: true, price: tier.amount, index: index }) }}>
                       <div className="row x-center flex-pad" style={{marginBottom: 10}}>
-                        <h3>${(tier.amount / 100).toFixed(2)}</h3>
-                        <span>{ tier.limit } available</span>
+                        <h3>{(tier.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}</h3>
+                        <span>{ tier.limit.toLocaleString() } available</span>
                       </div>
                       <p>
                         {
