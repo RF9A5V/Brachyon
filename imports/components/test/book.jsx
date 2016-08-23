@@ -3,7 +3,7 @@ import React, { Component } from "react";
 export default class BookScreen extends Component {
   render() {
     return (
-      <div className="col-1 row flex-pad" style={{backgroundImage: "url(/images/bg.jpg)", padding: 30}}>
+      <div className="col-1 row flex-pad" style={{backgroundImage: "url(/images/bg.jpg)", padding: 30, backgroundSize: "cover"}}>
         <div className="col flex-pad">
           <span style={{padding: 10, background: "rgba(0, 0, 0, 0.8)", fontSize: "2.5em", color: "#FFD700"}}>
             Event Name
