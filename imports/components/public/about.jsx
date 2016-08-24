@@ -48,11 +48,12 @@ export default class AboutScreen extends TrackerReact(Component) {
     var createEvent = "";
     if(Meteor.userId()) {
       createEvent = (
-        <div>
-          <Link to="/events/create">
-            <div className="col center x-center about-blocks">
-              <FontAwesome name="plus" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
-            </div>
+        <div className="col">
+          <Link to="/events/create" className="col center x-center about-blocks">
+            <FontAwesome name="plus" size="5x" className="about-icons" />
+          </Link>
+          <Link to="events/create" className="col about-desc">
+            <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
           </Link>
         </div>
       );
@@ -60,16 +61,26 @@ export default class AboutScreen extends TrackerReact(Component) {
     else {
       if(this.state.clicked){
         createEvent = (
-          <div id="about-block-cred" className="col center x-center">
-            <LogInModal />
-            <SignUpModal />
+          <div className="col">
+            <div id="about-block-cred" className="col center x-center">
+              <LogInModal />
+              <SignUpModal />
+            </div>
+            <div className="col about-desc">
+              <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+            </div>
           </div>
         );
       }
       else {
         createEvent = (
-          <div onClick={this.toggleCreate.bind(this)} className="col center x-center about-blocks">
-            <FontAwesome name="plus" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
+          <div className="col">
+            <div onClick={this.toggleCreate.bind(this)} className="col center x-center about-blocks">
+              <FontAwesome name="plus" size="5x" className="about-icons" />
+            </div>
+            <div onClick={this.toggleCreate.bind(this)} className="col about-desc">
+              <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+            </div>
           </div>
         );
       }
@@ -91,32 +102,27 @@ export default class AboutScreen extends TrackerReact(Component) {
             <div className="row center">
               <Link to="/events/discover" className="col">
                 <div className="col center x-center about-blocks">
-                  <FontAwesome name="search" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
+                  <FontAwesome name="search" size="5x" className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc">
-                  <h3>Search</h3>Quickly find events by area, game and time.
+                <div className="col about-desc">
+                  <h3 style={{marginTop: 10}}>Search</h3><div style={{marginTop: 10}}>Quickly find events by area, game and time.</div>
                 </div>
               </Link>
-              <div className="col">
-                {createEvent}
-                <div onClick={this.toggleCreate.bind(this)} className="col center x-center about-desc">
-                  <h3>Create</h3>Generate competitive events in seconds.
-                </div>
-              </div>
+              {createEvent}
               <Link to="/advertise" className="col">
                 <div className="col center x-center about-blocks">
-                  <FontAwesome name="arrow-up" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
+                  <FontAwesome name="arrow-up" size="5x" className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc">
-                  <h3>Promote</h3>Share and publicize your events.
+                <div className="col about-desc">
+                  <h3 style={{marginTop: 10}}>Promote</h3><div style={{marginTop: 10}}>Share and publicize your events.</div>
                 </div>
               </Link>
               <div className="col">
                 <div className="col center x-center about-blocks">
-                  <FontAwesome name="usd" style={{fontSize: "calc(3vw + 3vmin)"}} className="about-icons" />
+                  <FontAwesome name="usd" size="5x" className="about-icons" />
                 </div>
-                <div className="col center x-center about-desc">
-                  <h3>Fund</h3>Make your event a reality with unique crowdfunding options.
+                <div className="col about-desc">
+                  <h3 style={{marginTop: 10}}>Fund</h3><div style={{marginTop: 10}}>Make your event a reality with unique crowdfunding options.</div>
                 </div>
               </div>
             </div>

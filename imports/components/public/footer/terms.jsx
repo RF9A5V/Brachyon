@@ -7,7 +7,7 @@ export default class TermsScreen extends React.Component {
     return(
       <div className="row center">
         <div className="col side-tab-panel">
-          <h2 style={{margin: 0}}>Terms of service</h2>
+          <h2 style={{margin: 0}}>Terms of Service</h2>
           <div className="about-what" style={{textAlign: "left"}}>
             Our terms of services cover any access to any of our services including
             Brachyon's applications, websites, APIs, email notifications, commerce

@@ -18,11 +18,17 @@
 
 .user-dropdown-option {
   margin: 0;
-  padding: 20px 40px;
+  border: 2px transparent solid;
+  padding: 18px 28px;
   display: inline-flex;
   align-items: center;
+  width: 150px;
 }
 
 .user-dropdown-option:hover {
-  background-color: #333;
+  border: 2px #CC0000 solid;
+}
+
+.user-dropdown-option:active {
+  background-color: #CC0000;
 }

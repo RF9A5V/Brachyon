@@ -319,10 +319,6 @@ label {
   margin-bottom: 15px;
 }
 
-i {
-  margin-bottom: 15px;
-}
-
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
