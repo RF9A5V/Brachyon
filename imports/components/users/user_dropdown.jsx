@@ -10,6 +10,18 @@ export default class UserDropdown extends Component {
     this.props.clear();
   }
 
+  accessProfile(e) {
+    e.preventDefault();
+    browserHistory.push("/dashboard");
+    this.props.clear();
+  }
+
+  accessWallet(e) {
+    e.preventDefault();
+    browserHistory.push("/buy_currency");
+    this.props.clear();
+  }
+
   logout(e){
     e.preventDefault();
     this.props.clear();
@@ -22,25 +34,29 @@ export default class UserDropdown extends Component {
   }
 
   render() {
-    if(this.props.active){
-      return (
-        <div className="user-dropdown col" style={{alignItems: "flex-end"}}>
-          <div className="triangle-top"></div>
-          <div className="user-dropdown-content col">
-            <a className="user-dropdown-option" href="#" onClick={this.accessOptions.bind(this)}>
-              <FontAwesome style={{marginRight: 15}} name="cog" size="2x" />
-              <span>Options</span>
-            </a>
-            <a className="user-dropdown-option" href="#" onClick={this.logout.bind(this)}>
-              <FontAwesome name="sign-out" size="2x" style={{marginRight: 15}} />
-              <span>Logout</span>
-            </a>
-          </div>
-        </div>
-      );
-    }
     return (
-      <div></div>
-    )
+      <div className="user-dropdown col" style={{alignItems: "flex-end", display: this.props.active ? "inherit" : "none"}}>
+        <div className="triangle-top"></div>
+        <div className="user-dropdown-content col">
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessProfile.bind(this)}>
+            <div className="col-2 row center"><i className="fa fa-user fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Profile</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessWallet.bind(this)}>
+            <div className="col-2 row center"><i className="fa fa-usd fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Wallet</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOptions.bind(this)}>
+            <div className="col-2 row center"><i className="fa fa-cog fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Options</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
+            <div className="col-2 row center"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Logout</span>
+          </a>
+        </div>
+      </div>
+    );
+
   }
 }

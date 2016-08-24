@@ -120,7 +120,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
     return (
       <div>
-        <div className="user-banner" style={{background: `url(${this.profileBannerURL()}) no-repeat center center`}}>
+        <div className="user-banner" style={{background: `url(${this.profileBannerURL()}) no-repeat center center fixed`}}>
           <div className="user-img-line row flex-pad x-center">
             <div className="row col-1">
               {
