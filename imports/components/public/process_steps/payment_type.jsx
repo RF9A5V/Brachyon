@@ -9,7 +9,9 @@ export default class PaymentType extends Component {
   }
 
   value() {
-    return this.state.option;
+    return {
+      paymentType: this.state.option
+    }
   }
 
   valid() {

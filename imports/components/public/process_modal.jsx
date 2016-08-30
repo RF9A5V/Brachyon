@@ -13,7 +13,8 @@ export default class ProcessModal extends Component {
     this.state = {
       open: false,
       step: 0,
-      steps
+      steps,
+      dataStore: {}
     }
   }
 
@@ -31,11 +32,17 @@ export default class ProcessModal extends Component {
 
   advanceStep(process) {
     return (e) => {
-      console.log(this.refs[this.state.step].valid);
       if(typeof(this.refs[this.state.step].valid) != "function") {
         throw new Error("Process for process modal should implement bool valid().");
       }
+      if(typeof(this.refs[this.state.step].value) != "function" || typeof(this.refs[this.state.step].value()) != "object") {
+        throw new Error("Process for process modal should implement obj value()");
+      }
       if(this.refs[this.state.step].valid()){
+        var process = this.refs[this.state.step].value();
+        for(var key in process) {
+          this.state.dataStore[key] = process[key];
+        }
         this.setState({
           step: this.state.step + 1
         });
@@ -58,12 +65,18 @@ export default class ProcessModal extends Component {
   }
 
   values() {
-    return this.state.steps.map((process) => {
-      if(typeof(process.value) != "function"){
-        return "";
-      }
-      return process.value();
-    })
+    return this.state.dataStore;
+  }
+
+  updateAfterCB(values) {
+    for(var key in values) {
+      this.state.dataStore[key] = values[key];
+    }
+    this.props.onComplete(this.state.dataStore);
+  }
+
+  complete() {
+    this.refs[this.state.step].value();
   }
 
   render() {
@@ -74,20 +87,20 @@ export default class ProcessModal extends Component {
             this.state.steps.map((process, index) => {
               return (
                 <div className="col" style={{display: this.state.step == index ? "inherit" : "none"}}>
-                  <process.component ref={index} {...process.args}/>
-                  <div className="row">
+                  <process.component ref={index} {...process.args} {...this.state.dataStore} cb={this.updateAfterCB.bind(this)}/>
+                  <div className="row center">
                     {
                       index > 0 ? (
-                        <button onClick={this.backStep.bind(this)}>Back</button>
+                        <button onClick={this.backStep.bind(this)} style={{margin: "0 10px"}}>Back</button>
                       ) : (
                         ""
                       )
                     }
                     {
                       index < this.state.steps.length - 1 ? (
-                        <button onClick={this.advanceStep(process).bind(this)}>Next Step</button>
+                        <button onClick={this.advanceStep(process).bind(this)} style={{margin: "0 10px"}}>Next Step</button>
                       ) : (
-                        <button onClick={this.props.onComplete}>Submit</button>
+                        <button onClick={this.complete.bind(this)} style={{margin: "0 10px"}}>Submit</button>
                       )
                     }
                   </div>

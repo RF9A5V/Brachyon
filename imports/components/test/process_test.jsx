@@ -1,38 +1,32 @@
 import React, { Component } from "react";
+import TrackerReact from "meteor/ultimatejs:tracker-react"
 
-import ProcessModal from "../public/process_modal.jsx";
-import PaymentType from "../public/process_steps/payment_type.jsx";
+import PaymentContainer from "../events/crowdfunding/payment_container.jsx";
 
-export default class ProcessTestScreen extends Component {
+export default class ProcessTestScreen extends TrackerReact(Component) {
 
-  onModalOpen() {
-    this.refs.process.openModal();
+  constructor() {
+    super();
+    this.state = {
+      event: Meteor.subscribe("event", "x4B8oqDvJhDmejqFa")
+    }
   }
 
-  steps() {
-    return [
-      {
-        component: PaymentType,
-        args: {}
-      },
-      {
-        component: PaymentType,
-        args: {}
-      }
-    ]
-  }
-
-  onComplete() {
-    var values = this.refs.process.values();
-    console.log(values);
-    this.refs.process.reset();
+  openModal() {
+    this.refs.wrapper.openModal();
   }
 
   render() {
+    if(!this.state.event.ready()) {
+      return (
+        <div>
+        </div>
+      )
+    }
     return (
       <div>
-        <ProcessModal ref="process" onComplete={this.onComplete.bind(this)} steps={this.steps()} />
-        <button onClick={this.onModalOpen.bind(this)}>Open Modal</button>
+        <PaymentContainer ref="wrapper" />
+        <button onClick={this.openModal.bind(this)}>Open Modal</button>
       </div>
     )
   }
