@@ -234,6 +234,14 @@ Meteor.methods({
         "revenue.prizePool": prizePool
       }
     })
+  },
+
+  "events.setSkillPointThreshold"(eventID, amount) {
+    Events.update(eventID, {
+      $set: {
+        "revenue.stretchGoalThreshold": amount
+      }
+    })
   }
 
 })
