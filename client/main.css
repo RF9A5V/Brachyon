@@ -138,7 +138,10 @@ h3 { /* For side-tab-panels and any heading where there are other headings on th
 h4 {
   color: white;
   font-weight: bold;
-  margin: 0;
+  background-color: #222;
+  font-size: 18px;
+  padding: 5px;
+  margin-bottom: 0px;
 }
 
 button, input[type="submit"], .custom-file-upload {

@@ -62,10 +62,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
       (<DetailsPanel {...event.details} ref="details"/>)
     ];
     if(event.revenue) {
-      panels.push(<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />);
+      panels.push(<CrowdfundingPanel tiers={event.revenue.tierRewards} goals={event.revenue.stretchGoals} id={event._id} contributors={event.sponsors} ref="cf" />);
       panels.push(<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
     }
-    if(event.organize[0]) {
+    if(event.organize && event.organize[0]) {
       panels.push(<BracketsPanel brackets={event.organize} />);
     }
     if(event.owner == Meteor.userId()) {

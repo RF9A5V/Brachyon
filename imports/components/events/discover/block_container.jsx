@@ -34,14 +34,14 @@ export default class BlockContainer extends Component {
         <h3>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
-            this.props.events.map(function(event){
+            this.props.events.map(function(event, i){
               return (
-                <div className="event-block" onClick={self.selectEvent(event).bind(self)}>
+                <div className="event-block" onClick={self.selectEvent(event).bind(self)} key={i}>
                   <img src={self.imgOrDefault(event)} />
                   <div className="event-block-details">
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     <div className="event-block-content">
-                      <div>
+                      <div style={{textAlign: "left"}}>
                         {/*Crowdfunding check goes here */}
                         {
                           event.details.location.online ? (

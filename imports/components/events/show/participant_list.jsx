@@ -60,6 +60,7 @@ export default class ParticipantListPanel extends Component {
     return false;
     var matchID = null;
     var currentRound = 0;
+    console.log(this.props);
     if(this.props.rounds == null) {
       return false;
     }
@@ -68,7 +69,7 @@ export default class ParticipantListPanel extends Component {
     }
     for(var i = 0; i < this.props.rounds[0].length; i ++){
       var match = this.props.rounds[0][i];
-      if(userID == match.playerOne || userID == match.playerTwo){
+      if(alias == match.playerOne.alias || alias == match.alias){
         matchID = i;
         break;
       }
@@ -77,7 +78,7 @@ export default class ParticipantListPanel extends Component {
       currentRound = 1;
       for(var i = 0; i < this.props.rounds[1].length; i ++){
         var match = this.props.rounds[1][i];
-        if(userID == match.playerOne || userID == match.playerTwo){
+        if(alias == match.playerOne || alias == match.playerTwo){
           matchID = i;
           break;
         }
@@ -85,7 +86,7 @@ export default class ParticipantListPanel extends Component {
     }
     var match = this.props.rounds[currentRound][matchID];
     while(this.props.rounds[currentRound] != null && match.winner != null){
-      if(match.winner != userID){
+      if(match.winner != alias){
         return true;
       }
       currentRound += 1;

@@ -15,3 +15,49 @@
   margin-bottom: 20px;
   width: 200px;
 }
+
+.circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #C00;
+  background-size: 100% 100%;
+}
+
+.circle.indirect {
+  margin-right: 60px;
+}
+
+.circle.indirect:last-child {
+  margin-right: 0;
+}
+
+.circle.indirect.hidden {
+  background-color: transparent;
+}
+
+.line-vert {
+  width: 5px;
+  height: 60px;
+  background-color: white;
+  margin-right: 95px;
+}
+
+.line-vert:last-child {
+  margin-right: 0;
+}
+
+.line-vert.hidden {
+  background-color: transparent;
+}
+
+.line-horiz {
+  width: 60px;
+  height: 5px;
+  background-color: white;
+}
+
+.goal-row {
+  position: relative;
+  top: 20px;
+}
