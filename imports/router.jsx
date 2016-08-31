@@ -22,6 +22,7 @@ import UserOptionsScreen from "../imports/components/users/options.jsx";
 import CurrencyPurchaseScreen from "../imports/components/public/currency_purchase.jsx";
 import ShowEventScreen from "../imports/components/events/show.jsx";
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
+import ProcessTest from "../imports/components/test/process_test.jsx";
 
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
@@ -58,6 +59,7 @@ export const renderRoutes = () => (
       <Route path="tournaments/double" component={TournamentDoubleScreen} />
       <Route path="buy_currency" component={CurrencyPurchaseScreen} />
       <Route path="events/:eventId/brackets/:bracketIndex" component={BracketShowScreen} />
+      <Route path="test" component={ProcessTest} />
     </Route>
   </Router>
 )
