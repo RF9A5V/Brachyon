@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import moment from "moment";
+
 import LocationSelect from './location_select.jsx';
 import DateInput from './date_input.jsx';
 import TimeInput from './time_input.jsx';
@@ -22,7 +24,7 @@ export default class DetailsPanel extends Component {
       name: this.refs.name.value,
       location: this.refs.location.value(),
       description: this.refs.description.value,
-      datetime: this.refs.date.value() + "T" + this.refs.time.value()
+      datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
     }
   }
 

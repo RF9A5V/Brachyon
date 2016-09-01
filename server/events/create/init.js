@@ -78,8 +78,7 @@ Meteor.methods({
       "name",
       "location",
       "description",
-      "startDate",
-      "startTime"
+      "datetime"
     ].sort((a, b) => {
       return a < b;
     });
