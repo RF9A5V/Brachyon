@@ -1,79 +1,29 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
-import Modal from "react-modal";
 
 import DateInput from "/imports/components/events/create/date_input.jsx";
-
-class TierRewardCollection extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    }
-  }
-
-  onTierCreate(e) {
-    e.preventDefault();
-    this.setState({
-      open: true,
-      tier: {}
-    })
-  }
-
-  onTierEdit(index, tier) {
-    return function(e) {
-      e.preventDefault();
-      this.setState({
-        open: true,
-        tier,
-        index
-      })
-    }
-  }
-
-  render() {
-    var tiers = typeof(this.props.tiers) == "boolean" ? [] : this.props.tiers;
-    return (
-      <div className="row" style={{flexWrap: "wrap"}}>
-        {
-          tiers.map((tier, i) => {
-            return (
-              <div className="tier-block col" onClick={this.onTierEdit(i, tier).bind(this)}>
-
-              </div>
-            )
-          })
-        }
-        <div className="tier-block col x-center" onClick={this.onTierCreate.bind(this)}>
-          <div className="row center x-center" style={{padding: 20}}>
-            <FontAwesome name="plus" size="2x" />
-          </div>
-          <span>Add a Tier</span>
-        </div>
-        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
-          <div className="col">
-            <label>Amount</label>
-            <input type="text" style={{margin: 0, marginBottom: 10}} />
-            <label>Description</label>
-            <textarea></textarea>
-            <label>Limit</label>
-            <input type="text" style={{margin: 0, marginBottom: 10}} />
-            <div className="row center">
-            <button>Submit</button>
-            </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  }
-}
-
+import TierRewardCollection from "./tier_rewards.jsx";
+import TicketCollection from "./ticket_collection.jsx";
+import StretchGoals from "./stretch.jsx";
+import PrizePools from "./prize_pool.jsx";
 
 export default class RevenuePanel extends Component {
 
   revenue() {
     return Events.find().fetch()[0].revenue;
+  }
+
+  savePrizePool(e) {
+    e.preventDefault();
+    var breakdown = this.refs.prizePools.value();
+    Meteor.call("events.savePrizePool", Events.findOne()._id, breakdown, function(err) {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully updated your prize pool.", "Success!");
+      }
+    })
   }
 
   render() {
@@ -86,8 +36,15 @@ export default class RevenuePanel extends Component {
             <DateInput init={revenue.dueDate} />
           </div>
         </div>
+        <div className="side-tab-panel col">
+          <div className="row x-center flex-pad">
+            <h3>Prize Pools</h3>
+            <button onClick={this.savePrizePool.bind(this)}>Save</button>
+          </div>
+          <PrizePools ref="prizePools" />
+        </div>
         {
-          revenue.crowdfunding !== false || revenue.crowdfunding != null ? (
+          revenue.crowdfunding !== false && revenue.crowdfunding != null ? (
             <div className="side-tab-panel col">
               <h3>Crowdfunding</h3>
               <h3>Requested Amount</h3>
@@ -98,7 +55,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.tierRewards !== false || revenue.tierRewards != null ? (
+          revenue.tierRewards !== false && revenue.tierRewards != null ? (
             <div className="side-tab-panel col">
               <h3>Tier Rewards</h3>
               <TierRewardCollection tiers={revenue.tierRewards} />
@@ -108,18 +65,20 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.stretchGoals !== false || revenue.stretchGoals != null ? (
+          revenue.stretchGoals !== false && revenue.stretchGoals != null ? (
             <div className="side-tab-panel col">
               <h3>Stretch Goals</h3>
+              <StretchGoals goals={revenue.stretchGoals}/>
             </div>
           ) : (
             ""
           )
         }
         {
-          revenue.ticketing !== false || revenue.ticketing != null ? (
+          revenue.ticketing !== false && revenue.ticketing != null ? (
             <div className="side-tab-panel col">
               <h3>Tickets</h3>
+              <TicketCollection tickets={revenue.ticketing} />
             </div>
           ) : (
             ""

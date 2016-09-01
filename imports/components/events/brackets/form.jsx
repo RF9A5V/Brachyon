@@ -73,17 +73,17 @@ export default class BracketForm extends Component {
             All participants will go straight into this bracket!
           </span>
           <label>Bracket Organization</label>
-          <select ref="format">
-            <option value="single_elim" selected={"single_elim" == this.state.baseFormat}>
+          <select ref="format" defaultValue={this.state.baseFormat}>
+            <option value="single_elim">
               Single Elimination
             </option>
-            <option value="double_elim" selected={"double_elim" == this.state.baseFormat}>
+            <option value="double_elim">
               Double Elimination
             </option>
-            <option value="swiss" selected={"swiss" == this.state.baseFormat}>
+            <option value="swiss">
               Swiss
             </option>
-            <option value="round_robin" selected={"round_robin" == this.state.baseFormat}>
+            <option value="round_robin">
               Round Robin
             </option>
           </select>

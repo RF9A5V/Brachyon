@@ -1,39 +1,27 @@
 Meteor.methods({
-  "events.sponsor"(id, breakdown) {
-    var event = Events.findOne(id);
-    var user = Meteor.users.findOne(Meteor.userId());
+  "events.updatePaymentValues"(userID, eventID, breakdown, amount) {
+    var user = Meteor.users.findOne(userID);
+    if(!user){
+      throw new Meteor.Error(404, "User not found.");
+    }
+    var event = Events.findOne(eventID);
     if(!event){
-      throw new Meteor.Error(404, "Event not found!");
+      throw new Meteor.Error(404, "Event not found.");
     }
-
-    var amt = 0;
-    for(var key in breakdown){
-      amt += breakdown[key];
-    }
-    if((user.profile.amount || 0) < amt) {
-      throw new Meteor.Error(403, "You lack the required funds to sponsor this event.");
-    }
-
-    var obj = {
-      [`sponsors.${Meteor.userId()}`]: amt
-    }
-    for(var key in breakdown) {
-      if(key == "main") {
-        obj[`revenue.goals.current`] = breakdown[key];
+    var updateObj = {};
+    for(var i = 0; i < breakdown.length; i ++){
+      if(breakdown[i].hasOwnProperty("poolID")) {
+        updateObj[`organize.${breakdown[i].poolID}.prizePool`] = breakdown[i].percentage * amount;
       }
-      else {
-        [branch, node] = key.split(",");
-        obj[`revenue.goals.children.${branch}.nodes.${node}.current`] = breakdown[key];
+      else if(breakdown[i].hasOwnProperty("index")) {
+        updateObj[`revenue.stretchGoals.${breakdown[i].index}.current`] = breakdown[i].percentage * amount;
       }
     }
-
-    Events.update(id, {
-      $inc: obj
+    Events.update(eventID, {
+      $inc: updateObj,
+      $set: {
+        [`sponsors.${userID}`]: 1
+      }
     });
-    Meteor.users.update(Meteor.userId(), {
-      $inc: {
-        "profile.amount": -amt
-      }
-    })
   }
 })

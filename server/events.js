@@ -114,7 +114,15 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var organize = Events.findOne(eventID).organize[0];
-    var rounds = OrganizeSuite.singleElim(organize.participants);
+    var format = Events.findOne(eventID).organize[0].format.baseFormat;
+    if (format == "single_elim")
+      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
+    else
+      var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
 
     Events.update(eventID, {
       $set: {
@@ -124,39 +132,88 @@ Meteor.methods({
     })
   },
 
-  "events.advance_match"(eventID, roundNumber, matchNumber, placement) {
+  "events.advance_match"(eventID, bracketNumber, roundNumber, matchNumber, placement) {
     var event = Events.findOne(eventID);
+    var loser;
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     event = event.organize[0];
-    var match = event.rounds[roundNumber][matchNumber];
+    var match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    if (match.winner != null || match.playerOne == null || match.playerTwo == null)
+      return false;
     if(placement == 0) {
       match.winner = match.playerOne;
+      loser = match.playerTwo;
     }
     else {
       match.winner = match.playerTwo;
+      loser = match.playerOne;
     }
-    if(roundNumber + 1 >= event.rounds.length){
+
+    if (bracketNumber == 0 && match.losm != null)
+    {
+      var losMatch = event.rounds[1][match.losr][match.losm];
+      if (losMatch.playerOne == null) losMatch.playerOne = loser;
+      else losMatch.playerTwo = loser;
+      var losr = match.losr, losm = match.losm;
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${roundNumber}.${matchNumber}`]: match,
-          complete: true
+          [`organize.0.rounds.${1}.${losr}.${losm}`]: losMatch
         }
       })
     }
-    else {
-      var advMatch = event.rounds[roundNumber + 1][Math.floor(matchNumber / 2)];
-      if(matchNumber % 2 == 0){
-        advMatch.playerOne = match.winner;
+
+    if((roundNumber + 1 >= event.rounds[bracketNumber].length && event.rounds.length == 1) || (bracketNumber == 2 && (match.playerOne == match.winner || (roundNumber == 1)))){
+      if (event.rounds.length == 1 || bracketNumber == 2)
+      {
+        Events.update(eventID, {
+          $set: {
+            [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+            complete: true
+          }
+        })
       }
-      else {
-        advMatch.playerTwo = match.winner;
+    }
+
+    else if (roundNumber + 1 >= event.rounds[bracketNumber].length){
+      advMatch = event.rounds[2][0][0];
+      if (bracketNumber == 0) advMatch.playerOne = match.winner;
+      else advMatch.playerTwo = match.winner;
+      Events.update(eventID, {
+        $set: {
+          [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`organize.0.rounds.${2}.${0}.${0}`]: advMatch
+        }
+      })
+    }
+
+    else {
+      var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
+      var advMatch = event.rounds[bracketNumber][roundNumber + 1][advMN];
+      if (bracketNumber == 0 || roundNumber%2 == 1)
+      {
+        if(matchNumber % 2 == 0){
+          advMatch.playerOne = match.winner;
+        }
+        else {
+          advMatch.playerTwo = match.winner;
+        }
+      }
+      else if (bracketNumber == 2)
+      {
+        advMatch.playerOne = match.playerOne;
+        advMatch.playerTwo = match.playerTwo;
+      }
+      else
+      {
+        if (advMatch.playerTwo == null) advMatch.playerTwo = match.winner;
+        else advMatch.playerOne = match.winner;
       }
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${roundNumber}.${matchNumber}`]: match,
-          [`organize.0.rounds.${roundNumber + 1}.${Math.floor(matchNumber / 2)}`]: advMatch
+          [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`organize.0.rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
         }
       })
     }

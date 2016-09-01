@@ -1,160 +1,121 @@
 import React, { Component } from 'react'
+import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
 export default class MatchBlock extends Component {
 
-  constructor(props) {
-    super(props);
-    var id2, id3, round, strid, strid2;
-    if (this.props.sp2%2 == 0)
-      id2 = this.props.sp2+1;
-    else
-      id2 = this.props.sp2-1;
-    id3 = Math.floor(this.props.sp2/2);
-    if (this.props.bset)
-      id3 = this.props.sp2%2 == 0 ? id2:this.props.sp2;
-    round = this.props.pos;
-    str = "", losdiv = 1;
-    if (this.props.loss)
-    {
-      str = "los";
-      losdiv = 2;
-      lb = true;
-    }
-    if (this.props.pos > -1)
-    {
-      strid = "match" + id2 + "round" + str + this.props.pos;
-    }
-    else
-    {
-      strid = "match" + id2 + "nonbye" + str;
-      round+=2;
-    }
-    strid2 = "match" + id3 + "round" + str + (round+1);
-    if (this.props.twoset)
-    {
-      strid = "match" + id2 + "nonbye2los";
-      strid2 = "match" + id3 + "nonbyelos";
-    }
-    else if (this.props.pos == -2)
-    {
-      strid = "final" + (id2+1) + "w"
-      strid2 = this.props.sp2%2 == 0 ? "winner":"final2l";
-    }
-    else if (this.props.pos == -3)
-    {
-      strid = "final" + (id2+1) + "l";
-      strid2 = "winner";
-    }
-    if (this.props.sty.color == "gray")
-      this.state = {clickable: false, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
-    else
-      this.state = {clickable: true, val: this.props.sp, opponent: strid, successor: strid2, loss: false, win: false, round: round, opmat: id2, succmat: id3}
+  componentWillMount() {
+    this.setState({
+      open: false,
+      chosen: 2
+    })
   }
 
-  advance()
-  {
-    if (document.getElementById(this.props.eid).style.color == "white" && document.getElementById(this.state.opponent).style.color == "white")
-    {
-      document.getElementById(this.state.opponent).style.color = "red";
-      document.getElementById(this.props.eid).style.color = "gray";
-      this.props.changematches(this.props.eid, this.state.opponent, this.state.successor, this.state.val) //Passing in its own ref, its opponents ref, and its successors ref.
+  openModal() {
+    this.setState({
+      open: true,
+      chosen: 2
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      open: false,
+      chosen: 2
+    });
+  }
+
+  onMatchUserClick(index) {
+    return function(e) {
+      e.preventDefault();
+      if (index != 2)
+      {
+        Meteor.call("events.advance_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, index, function(err) {
+          if(err){
+            console.log(err);
+            toastr.error("Couldn't advance this match.", "Error!");
+          }
+          else {
+            toastr.success("Player advanced to next round!", "Success!");
+          }
+        })
+        this.closeModal();
+      }
     }
   }
 
-  cwait()
-  {
-    this.setState({clickable: false})
-    document.getElementById(this.props.eid).style.color = "gray";
+  getUsername(id) {
+    // return Meteor.users.findOne(id).username;
+    return id;
   }
 
-  cwin()
-  {
-    document.getElementById(this.props.eid).style.color = "green";
-    this.setState({clickable: false, win: true});
-  }
+  render() {
+    var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
+    var k = this.props.bracket ? Math.floor(i/2):i;
+    return (
+      <div className="match-block col center" style={{height: 50 * Math.pow(2, k)}}>
+        {
+          match.playerOne == match.playerTwo && i == 0 && this.props.bracket == 0 || this.props.bracket == 1 && (i == 0 || i == 1) && match.truebye == null ? (
+            ""
+          ) : (
+            [match.playerOne, match.playerTwo].map((p, index) => {
 
-  closs()
-  {
-    document.getElementById(this.props.eid).style.color = "red";
-    this.setState({clickable: false, loss: true});
-  }
+              var isLoser = match.winner != null && match.winner != p;
 
-  ctrue()
-  {
-    this.setState({clickable: true});
-    document.getElementById(this.props.eid).style.color = "white";
-  }
-
-  gopponent()
-  {
-    return this.state.opponent;
-  }
-
-  gval()
-  {
-    return this.state.val;
-  }
-
-  gmatch()
-  {
-    return this.props.sp2;
-  }
-
-  gopmatch()
-  {
-    return this.state.opmat;
-  }
-
-  gsuccmat() //succ
-  {
-    return this.state.succmat; //Levels of irony we have never attained
-  }
-
-  ground()
-  {
-    return this.state.round;
-  }
-
-  glb()
-  {
-    return this.props.loss;
-  }
-
-  gpos()
-  {
-    return this.props.pos;
-  }
-
-  gfin()
-  {
-    return this.props.final;
-  }
-
-  cval(val)
-  {
-    document.getElementById(this.props.eid).innerHTML += " " + val;
-    this.setState({val: val});
-  }
-
-  setloser(loser)
-  {
-    this.setState({loss: loser});
-  }
-
-  render()
-  {
-    var string;
-    if (this.props.sp == "")
-      this.props.sty.color = "gray";
-    if (this.props.pos == -1)
-      string = "Nonbye ";
-    else if (this.props.pos < -1)
-      string = "Final ";
-    else
-      string = "Box ";
-    return(
-      <div className="tbox" id={this.props.eid} style = {this.props.sty} onClick={this.advance.bind(this)}>
-        {string+this.props.sp}
+              return (
+                <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
+                  match.winner == null && match.playerOne != null && match.playerTwo != null ? (
+                    () => {this.setState({open: true}); }
+                  ) : (
+                    () => {}
+                  )
+                } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                  <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
+                    {
+                      p == null ? (
+                        "TBD"
+                      ) : (
+                        this.getUsername(p)
+                      )
+                    }
+                  </span>
+                </div>
+              )
+            })
+          )
+        }
+        {
+          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 || this.props.bracket == 1 && (i%2 == 0 || (i < 2 && match.truebye == null)) || this.props.bracket == 2 ? (
+            ""
+          ) : (
+            j % 2 == 0 ? (
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), top: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+            ) : (
+              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), bottom: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+            )
+          )
+        }
+        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
+          <div className="col" style={{height: "100%"}}>
+            <div className="self-end">
+              <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+            </div>
+            <h3 className="col-1 center">Choose the Winner</h3>
+            <div className="row flex-padaround col-1">
+              <div className={ this.state.chosen == 0 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 0}) }}>
+              {
+                (this.getUsername(match.playerOne))
+              }
+              </div>
+              <div className={ this.state.chosen == 1 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 1}) }}>
+              {
+                (this.getUsername(match.playerTwo))
+              }
+              </div>
+            </div>
+            <button onClick={this.state.chosen < 2 ? (this.onMatchUserClick(this.state.chosen).bind(this)) : (() => {})}>Send Winner</button>
+          </div>
+        </Modal>
       </div>
     )
   }
