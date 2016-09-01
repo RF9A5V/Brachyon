@@ -29,7 +29,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   setSubscription(params){
     this.state.events.stop();
     this.setState({
-      events: Meteor.subscribe('event_search', params)
+      events: Meteor.subscribe('searchEvents', params)
     })
   }
 
