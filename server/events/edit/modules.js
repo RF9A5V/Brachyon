@@ -55,7 +55,12 @@ Meteor.methods({
 
     for(var i in modules) {
       if(modules[i].length == 0){
-        toSet[i] = {};
+        if(i == "organize") {
+          toSet[i] = [];
+        }
+        else {
+          toSet[i] = {};
+        }
       }
       else {
         for(var j in modules[i]) {

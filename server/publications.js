@@ -9,10 +9,18 @@ Meteor.publish('event', (_id) => {
   var games = [];
   var banners = [event.details.banner];
   if(event.organize != null) {
-    console.log(event.organize);
     games = event.organize.map((bracket) => { return bracket.game });
     var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
     banners = banners.concat(gameBanners);
+  }
+  var iconIDs = [];
+  if(event.revenue != null && typeof(event.revenue.stretchGoals) == "object") {
+    iconIDs = event.revenue.stretchGoals.map((key) => {
+      if(key == null) {
+        return null;
+      }
+      return key.icon;
+    });
   }
   return [
     Events.find({_id}),
@@ -26,6 +34,11 @@ Meteor.publish('event', (_id) => {
     Games.find({
       _id: {
         $in: games
+      }
+    }),
+    Icons.find({
+      _id: {
+        $in: iconIDs
       }
     })
   ];

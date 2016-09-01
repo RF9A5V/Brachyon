@@ -36,7 +36,7 @@ export default class CreditCardForm extends React.Component {
     Stripe.createToken(cardDetails, function(status, response){
       if(response.error){
         toastr.error(response.error.message);
-        self.closeModal();
+        //self.closeModal();
       }
       else{
         Meteor.call("addCard", response.id, function(err, response){
@@ -50,6 +50,15 @@ export default class CreditCardForm extends React.Component {
                 if(err){
                   toastr.error(err.message);
                 }
+                else {
+                  if(self.props.cb){
+                    self.props.cb();
+                  }
+                  else {
+                    toastr.success("Successfully got your payment!", "Success!");
+                  }
+                  self.closeModal();
+                }
               })
             }
             else {
@@ -58,12 +67,12 @@ export default class CreditCardForm extends React.Component {
                   toastr.error(err.reason, "Error!");
                 }
                 else {
-                  toastr.success("Successfully purchased currency.", "Success!");
+                  toastr.success(`Added $${(self.props.amount / 100).toFixed(2)} to your wallet!`, "Success!");
+                  self.closeModal();
                 }
               })
             }
-            toastr.success("Successfully got your payment!", "Success!")
-            self.closeModal();
+
           }
         })
       }
@@ -162,27 +171,19 @@ export default class CreditCardForm extends React.Component {
           </div>
           <br />
           <div className="col">
-            <div className="row">
-              <label className="col-1">Base Amount</label>
-              <span className="col-1">{ (this.props.amount / 100).toFixed(2) }</span>
-              <div className="col-1"></div>
+            <div className="row flex-pad">
+              <label>Base Amount</label>
+              <span>{ (this.props.amount / 100).toFixed(2) }</span>
             </div>
-            <div className="row">
-              <label className="col-1">Processing Fee<sup>?</sup></label>
-              <div className="col col-1">
-                <span>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</span>
-              </div>
-              <div className="col-1"></div>
+            <div className="row flex-pad">
+              <label>Processing Fee<sup>?</sup></label>
+              <span>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</span>
             </div>
-            <div className="row">
-              <label className="col-1">Total</label>
-              <div className="col col-1">
-                <span>{(finalAmount / 100).toFixed(2)}</span>
-              </div>
-              <div className="col-1"></div>
+            <div className="row flex-pad">
+              <label>Total</label>
+              <span>{(finalAmount / 100).toFixed(2)}</span>
             </div>
           </div>
-
           <input type="submit" value={`Pay $${(finalAmount / 100).toFixed(2)}`}/>
         </form>
       </div>

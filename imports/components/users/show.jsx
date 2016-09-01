@@ -124,10 +124,10 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           <div className="user-img-line row flex-pad x-center">
             <div className="row col-1">
               {
-                Meteor.user().profile.games.slice(0, 3).map((game) => {
+                Meteor.user().profile.games.slice(0, 3).map((game, i) => {
                   var g = Games.findOne(game);
                   return (
-                    <div className="user-game-icon" style={{backgroundImage: `url(${Images.findOne(g.banner).url()})`}}>
+                    <div className="user-game-icon" style={{backgroundImage: `url(${Images.findOne(g.banner).url()})`}} key={i}>
 
                     </div>
                   );
@@ -144,14 +144,14 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="user-events-container">
           {
-            events.map((eventSet) => {
+            events.map((eventSet, i) => {
               if(eventSet.events.length === 0) {
                 return (
-                  <div></div>
+                  <div key={i}></div>
                 );
               }
               return (
-                <BlockContainer title={eventSet.title} events={eventSet.events} />
+                <BlockContainer title={eventSet.title} events={eventSet.events} key={i}/>
               )
             })
           }

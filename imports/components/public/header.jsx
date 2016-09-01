@@ -50,10 +50,10 @@ export default class Header extends TrackerReact(Component) {
     var userCred = "";
     if(Meteor.userId()){
       userCred = (
-        <div style={{position: "relative", cursor: "pointer"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
-          <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
+        <div style={{position: "relative"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
+          <Link to="/dashboard">
             <img style={{width: 75, height: 75, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
-          </a>
+          </Link>
           <div className="col">
             <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
             <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>

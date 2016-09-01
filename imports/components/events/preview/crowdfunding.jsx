@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 
-import PaymentModal from "/imports/components/public/payment.jsx";
-import CFTree from "./tree.jsx";
-import PaymentSlider from "/imports/components/public/slider.jsx";
+import Goals from "./stretch.jsx";
+import Payment from "/imports/components/public/payment_process.jsx";
 
 export default class CrowdfundingPanel extends Component {
 
@@ -29,81 +28,69 @@ export default class CrowdfundingPanel extends Component {
     });
   }
 
-  sponsorshipCount() {
-    var obj = {};
-    var max = Infinity;
-    Object.keys(this.props.tiers).reverse().map((value) => {
-      var tierPrice = this.props.tiers[value].price;
-      var count = 0;
-      for(var key in this.props.contributors){
-        if(this.props.contributors[key] >= tierPrice * 1 && this.props.contributors[key] < max){
-          count++;
-        }
-      }
-      obj[value] = count;
-      max = tierPrice;
-    })
-    return obj;
+  setGoal(goal){
+    return (e) => {
+      console.log(goal);
+      this.setState({
+        goal
+      })
+    }
   }
 
   render() {
-    var self = this;
+    var event = Events.findOne();
+    var percent = 0;
+    if(this.state.goal) {
+      percent = Math.min((this.state.goal.current || 0) / this.state.goal.amount * 100, 100);
+    }
     return (
       <div className="row">
-        <div className="col col-2 x-center">
-          <h3>Tiers</h3>
+        <div className="col-2" style={{padding: 20}}>
+          <div className="row center">
+          <h3 style={{marginBottom: 20}}>Stretch Goals</h3>
+          </div>
+          <Goals goals={Events.findOne().revenue.stretchGoals} onGoalSelect={this.setGoal.bind(this)} />
+        </div>
+        <div className="col-1" style={{padding: 20}}>
+          <h3>{ this.state.goal ? this.state.goal.name : "" }</h3>
           {
-            this.props.tiers == null ? (
-              ""
+            this.state.goal ? (
+              <span>{ ((this.state.goal.current || 0) / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) } / { (this.state.goal.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) }</span>
             ) : (
-              Object.keys(this.props.tiers).map(function(key){
-                var tier = self.props.tiers[key];
-                return (
-                  <div className="col tier-block" onClick={() => {self.setState({open: true, price: tier.price}); }}>
-                    <div className="row x-center flex-pad" style={{marginBottom: 20}}>
-                      <b style={{fontSize: 24}}>{ tier.name }</b>
-                      <div className="row x-center">
-                        <div style={{width: 25, height: 25, borderRadius: "100%", backgroundColor: "gold", marginRight: 10}}>
-                        </div>
-                        <b>{ tier.price }</b>
-                      </div>
-
-                    </div>
-                    <span>{ tier.description }</span>
-                    <div style={{textAlign: "right"}}>
-                      <span style={{fontSize: 10}}>
-                        Limit: <i>{ tier.limit }</i>
-                      </span>
-                    </div>
-                  </div>
-                )
-              })
+              ""
             )
           }
+
+          <div className="row" style={{width: "100%", backgroundColor: "#111", border: "solid 2px white", boxSizing: "border-box", marginBottom: 10}}>
+            <div style={{backgroundColor: "#0C0", width: percent + "%", height: 30}}></div>
+          </div>
+          <div className="col x-center">
+            {
+              typeof(event.revenue.tierRewards) == "object" && event.revenue.tierRewards != null ? (
+                event.revenue.tierRewards.map((tier, index) => {
+                  return (
+                    <div className="tier-display-block" style={{padding: 10, backgroundColor: "#111", margin: 10, marginTop: 0, width: "100%"}} onClick={() => { this.setState({ open: true, price: tier.amount, index: index }) }}>
+                      <div className="row x-center flex-pad" style={{marginBottom: 10}}>
+                        <h3>{(tier.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}</h3>
+                        <span>{ tier.limit.toLocaleString() } available</span>
+                      </div>
+                      <p>
+                        {
+                          tier.description
+                        }
+                      </p>
+                    </div>
+                  )
+                })
+              ) : (
+                "No Tiers Found"
+              )
+            }
+          </div>
         </div>
-        {
-          this.props.goals == null ? (
-            ""
-          ) : (
-            <div className="col-3 col x-center">
-              <h3>Goals&nbsp;<sup onClick={(e) => { e.preventDefault();this.setState({helpOpen: true}) }}><a href="#">?</a></sup></h3>
-              <CFTree goals={this.props.goals} />
-            </div>
-          )
-        }
-        {
-          this.props.goals == null && this.props.tiers == null ? (
-            ""
-          ) : (
-            <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open}>
-              <div className="row">
-                <h3 className="col-1">Sponsor this Event</h3>
-                <FontAwesome name="times" onClick={() => { this.setState({open: false}) }} />
-              </div>
-              <PaymentSlider tiers={this.props.tiers} id={this.props.id} contrib={this.props.contributors[Meteor.userId()] || 0} goals={this.props.goals} count={this.sponsorshipCount()} close={() => { this.setState({open: false}) }} />
-            </Modal>
-          )
-        }
+        <Modal isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
+          <Payment price={this.state.price} index={this.state.index} closeHandler={this.closeModal.bind(this)} />
+        </Modal>
       </div>
     );
   }

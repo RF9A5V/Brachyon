@@ -81,7 +81,7 @@ export default class UserDetailsPanel extends Component {
             <button onClick={this.saveAlias.bind(this)}>Save</button>
           </div>
           <div>
-            <input type="text" ref="alias" style={{width: 400}} maxlength={40} defaultValue={Meteor.user().profile.alias || Meteor.user().username} />
+            <input type="text" ref="alias" style={{width: 400}} maxLength={40} defaultValue={Meteor.user().profile.alias || Meteor.user().username} />
           </div>
         </div>
       </div>
