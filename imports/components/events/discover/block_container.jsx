@@ -20,9 +20,14 @@ export default class BlockContainer extends Component {
   }
 
   imgOrDefault(event) {
-    var img = Images.findOne(event.details.banner);
-    if(img){
-      return img.url();
+    if(event.bannerUrl != null){
+      return event.bannerUrl;
+    }
+    var games = event.games.fetch();
+    for(var i in games) {
+      if(games[i].bannerUrl != null){
+        return games[i].bannerUrl;
+      }
     }
     return "/images/bg.jpg";
   }
