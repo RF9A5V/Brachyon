@@ -1,3 +1,5 @@
+import moment from "moment";
+
 var generateQuery = {};
 
 generateQuery["name"] = (name) => {
@@ -31,6 +33,21 @@ generateQuery["game"] = (gameId) => {
   }
 }
 
+generateQuery["date"] = (dateObj) => {
+  var dateString = dateObj.date;
+  if(dateObj.time != null) {
+    dateString += "T" + dateObj.time;
+  }
+  var start = moment(dateString).toDate();
+  var end = moment(dateString).endOf("day").toDate();
+  return {
+    "details.datetime": {
+      $gte: start,
+      $lt: end
+    }
+  }
+}
+
 Meteor.methods({
   "events.search"(params) {
     var query = {};
@@ -44,6 +61,7 @@ Meteor.methods({
       }
     }
     query["published"] = true;
+    console.log(query);
     return query;
   }
 })
