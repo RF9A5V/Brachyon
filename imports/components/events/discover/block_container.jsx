@@ -32,6 +32,10 @@ export default class BlockContainer extends Component {
     return "/images/bg.jpg";
   }
 
+  participantCount(event) {
+    
+  }
+
   render() {
     var self = this;
     return (

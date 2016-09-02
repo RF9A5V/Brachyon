@@ -89,6 +89,8 @@
 .event-block img, .bracket-block img {
   width: 100%;
   height: auto;
+  border: solid 2px #666;
+  box-sizing: border-box;
 }
 
 .bracket-block span {
@@ -115,7 +117,6 @@
 }
 
 .event-block-content {
-  height: 60px;
   padding: 20px;
   border: solid 2px #666;
   border-top: none;
