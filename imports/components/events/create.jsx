@@ -160,7 +160,7 @@ export default class EventCreateScreen extends Component {
             })
           }
           <div>
-            <h3>Add Modules</h3>
+            <h5>Add Modules</h5>
           </div>
           {
             this.modulePanels()
