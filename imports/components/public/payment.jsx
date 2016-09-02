@@ -63,6 +63,40 @@ export default class PaymentModal extends React.Component {
     )
   }
 
+  walletPay() {
+    return (
+      <Modal
+        className="create-modal"
+        overlayClassName="overlay-class"
+        isOpen={this.state.open}
+        onRequestClose={this.closeModal.bind(this)}
+      >
+        <div className="row justify-end">
+          <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
+        </div>
+        <h1 style={{textAlign: 'center'}}>Add Funds to Your Wallet</h1>
+        {this.ccForm()}
+      </Modal>
+    )
+  }
+
+  promotionPayment() {
+    return (
+      <Modal
+        className="create-modal"
+        overlayClassName="overlay-class"
+        isOpen={this.state.open}
+        onRequestClose={this.closeModal.bind(this)}
+      >
+        <div className="row justify-end">
+          <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
+        </div>
+        <h1 style={{textAlign: 'center'}}>Promotion Payment</h1>
+        {this.ccForm()}
+      </Modal>
+    )
+  }
+
   render() {
     if(this.props.type == "ticket")
     {
@@ -80,6 +114,26 @@ export default class PaymentModal extends React.Component {
         <div>
         {
           this.cfPay()
+        }
+        </div>
+      )
+    }
+    else if (this.props.type == "wallet")
+    {
+      return(
+        <div>
+        {
+          this.walletPay()
+        }
+        </div>
+      )
+    }
+    else if (this.props.type == "promotion")
+    {
+      return(
+        <div>
+        {
+          this.promotionPay()
         }
         </div>
       )

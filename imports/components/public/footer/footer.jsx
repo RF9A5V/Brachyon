@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome';
 import Headroom from 'react-headroom';
 import { Link } from 'react-router';
 
-import SnapModal from '../snap_modal.jsx';
+import SnapModal from './snap_modal.jsx';
 
 export default class Footer extends React.Component {
   render() {
