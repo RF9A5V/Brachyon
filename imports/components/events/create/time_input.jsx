@@ -30,45 +30,39 @@ export default class TimeInput extends Component {
         if(e.key == '0'){
           return;
         }
-        this.setState({
-          hour: "0" + e.key
-        })
+        this.state.hour = "0" + e.key;
       }
       else {
-        this.setState({
-          hour: val + ""
-        })
+        this.state.hour = val + "";
       }
     }
+    this.props.onChange();
+    this.forceUpdate();
   }
 
   minuteChange(e){
     var val = parseInt(this.state.minute + e.key);
     if(!isNaN(val)){
       if(val > 59){
-        this.setState({
-          minute: "0" + e.key
-        })
+        this.state.minute = "0" + e.key;
       }
       else {
-        this.setState({
-          minute: (val < 10 ? ("0" + val) : ("" + val))
-        })
+        this.state.minute = (val < 10 ? ("0" + val) : ("" + val));
       }
     }
+    this.props.onChange();
+    this.forceUpdate();
   }
 
   halfChange(e) {
     if(e.key == 'a'){
-      this.setState({
-        half: 'AM'
-      })
+      this.state.half = "AM";
     }
     else if(e.key == 'p'){
-      this.setState({
-        half: 'PM'
-      })
+      this.state.half = "PM";
     }
+    this.props.onChange();
+    this.forceUpdate();
   }
 
   value() {

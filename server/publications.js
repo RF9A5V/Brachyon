@@ -122,14 +122,38 @@ Meteor.publish('events', function(){
 
 Meteor.publish('userEvents', (id) => {
   var user = Meteor.users.findOne(id);
-  var event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.details.banner });
-  var games = (user.profile || {}).games || [];
-  var game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
+  var events = Events.find({owner: id});
+  var gameSet = new Set();
+  var imgIds = [];
+  events.forEach((e) => {
+    if(e.organize != null) {
+      e.organize.forEach((bracket) => {
+        gameSet.add(bracket.game);
+      })
+    }
+    if(e.details.banner != null){
+      imgIds.push(e.details.banner);
+    }
+  });
+  var games = Games.find({
+    _id: {
+      $in: Array.from(gameSet)
+    }
+  });
+  games.forEach((game) => {
+    imgIds.push(game.banner);
+  })
+  var images = Images.find({
+    _id: {
+      $in: imgIds
+    }
+  })
+  console.log(gameSet);
   return [
     Events.find({owner: id}),
-    Images.find({_id: { $in: event_banners.concat(game_banners) } }),
-    Games.find({_id: { $in: games }}),
-    ProfileImages.find({_id: user.profile.image})
+    games,
+    ProfileImages.find({_id: user.profile.image}),
+    images
   ];
 })
 
@@ -138,43 +162,27 @@ Meteor.publish("profileImage", (id) => {
 });
 
 Meteor.publish("discoverEvents", function(){
-  var eventOwnerIds = Events.find({published: true}).fetch().map(function(event){
+  var events = Events.find({published: true});
+  var eventOwnerIds = events.map(function(event){
     return event.owner;
   });
-  var imageIDs = Events.find({published: true}).fetch().map((e)=>{return e.details.banner});
+  var imageIDs = events.map((e)=>{return e.details.banner});
+  var gameSet = new Set();
+  events.forEach((e) => {
+    if(e.organize != null){
+      e.organize.forEach((bracket) => {
+        gameSet.add(bracket.game);
+      })
+    }
+  });
+  var games = Games.find({_id: { $in: Array.from(gameSet) }});
+  imageIDs = imageIDs.concat(games.map((game) => { return game.banner }));
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}}),
-    Images.find({_id: { $in: imageIDs }})
+    Images.find({_id: { $in: imageIDs }}),
+    games
   ]
-})
-
-Meteor.publish('event_search', function(params){
-  if(params == null){
-    return Events.find();
-  }
-  var query = {}
-  if(params.search){
-    query['details.name'] = new RegExp(params.search.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i');
-  }
-  if(params.location){
-    query['details.location.coords'] = {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [ params.location.lng, params.location.lat ]
-        }
-      }
-    }
-  }
-  var events = Events.find(query);
-  var userIDs = events.fetch().map((e) => { return e.owner });
-  var imageIDs = events.fetch().map((e)=>{return e.details.banner});
-  return [
-    events,
-    Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } }),
-    Images.find({_id: { $in: imageIDs }})
-  ];
 })
 
 Meteor.publish("userSearch", function(usernameSubstring) {
