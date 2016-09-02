@@ -8,7 +8,7 @@ import ImageForm from "../../public/img_form.jsx";
 class DateTimeWrapper extends Component {
 
   value() {
-    return this.refs.date.value() + "T" + this.refs.time.value();
+    return new Date(this.refs.date.value() + "T" + this.refs.time.value());
   }
 
   render() {

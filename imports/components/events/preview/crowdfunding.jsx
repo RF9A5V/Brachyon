@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 
 import Goals from "./stretch.jsx";
-import Payment from "/imports/components/public/payment_process.jsx";
+import PaymentContainer from "../crowdfunding/payment_container.jsx";
 
 export default class CrowdfundingPanel extends Component {
 
@@ -17,15 +17,7 @@ export default class CrowdfundingPanel extends Component {
   }
 
   openModal() {
-    this.setState({
-      open: true
-    });
-  }
-
-  closeModal() {
-    this.setState({
-      open: false
-    });
+    this.refs.wrapper.openModal();
   }
 
   setGoal(goal){
@@ -55,7 +47,7 @@ export default class CrowdfundingPanel extends Component {
           <h3>{ this.state.goal ? this.state.goal.name : "" }</h3>
           {
             this.state.goal ? (
-              <span>{ ((this.state.goal.current || 0) / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) } / { (this.state.goal.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }) }</span>
+              <span>{ this.state.goal.current || 0 } / { this.state.goal.amount }</span>
             ) : (
               ""
             )
@@ -69,7 +61,7 @@ export default class CrowdfundingPanel extends Component {
               typeof(event.revenue.tierRewards) == "object" && event.revenue.tierRewards != null ? (
                 event.revenue.tierRewards.map((tier, index) => {
                   return (
-                    <div className="tier-display-block" style={{padding: 10, backgroundColor: "#111", margin: 10, marginTop: 0, width: "100%"}} onClick={() => { this.setState({ open: true, price: tier.amount, index: index }) }}>
+                    <div className="tier-display-block" style={{padding: 10, backgroundColor: "#111", margin: 10, marginTop: 0, width: "100%"}} onClick={this.openModal.bind(this)}>
                       <div className="row x-center flex-pad" style={{marginBottom: 10}}>
                         <h3>{(tier.amount / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}</h3>
                         <span>{ tier.limit.toLocaleString() } available</span>
@@ -88,9 +80,7 @@ export default class CrowdfundingPanel extends Component {
             }
           </div>
         </div>
-        <Modal isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-          <Payment price={this.state.price} index={this.state.index} closeHandler={this.closeModal.bind(this)} />
-        </Modal>
+        <PaymentContainer ref="wrapper" />
       </div>
     );
   }

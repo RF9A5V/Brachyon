@@ -155,7 +155,7 @@ export default class StretchGoals extends Component {
 
     var goals = {
       name: this.refs.name.value,
-      amount: this.refs.amount.value(),
+      amount: parseInt(this.refs.amount.value),
       description: this.refs.description.value,
       icon: this.refs.icon.value()
     }
@@ -201,6 +201,15 @@ export default class StretchGoals extends Component {
     })
   }
 
+  setThreshold() {
+    Meteor.call("events.setSkillPointThreshold", this.state.id, this.refs.threshold.value * 100, (err) => {
+      if(err){
+        return toastr.error(err.reason, "Error!");
+      }
+      return toastr.success("Successfully set thresholds!", "Success!");
+    })
+  }
+
   render() {
     var initial = this.props.goals[0];
     var ary = [];
@@ -241,12 +250,17 @@ export default class StretchGoals extends Component {
           }
         </div>
 
+        <div className="row" style={{marginTop: 10}}>
+          <input ref="threshold" type="number" style={{margin: 0}} defaultValue={(Events.findOne().revenue.stretchGoalThreshold / 100).toFixed(2)}/>
+          <button style={{marginLeft: 15}} onClick={this.setThreshold.bind(this)}>Set Threshold</button>
+        </div>
+
         <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({open: false}) }}>
           <div className="col">
             <label>Name</label>
             <input type="text" ref="name" style={{margin: 0}} defaultValue={this.state.goal.name}/>
-            <label>Amount</label>
-            <MoneyInput ref="amount" defaultValue={(this.state.goal.amount / 100).toFixed(2)} />
+            <label>Required Skill Points</label>
+            <input type="number" ref="amount" defaultValue={this.state.goal.amount} />
             <label>Description</label>
             <textarea ref="description" style={{margin: 0, marginBottom: 10}} defaultValue={this.state.goal.description}></textarea>
             <label>Icon (Optional)</label>

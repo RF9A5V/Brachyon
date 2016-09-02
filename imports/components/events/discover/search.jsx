@@ -1,74 +1,60 @@
 import React, { Component } from 'react';
-import GoogleMapsLoader from 'google-maps';
 import FontAwesome from 'react-fontawesome';
+
+import NameSearch from "./search/name.jsx";
+import LocationSearch from "./search/location.jsx";
+import GameSearch from "./search/game.jsx";
+import DateFilter from "./search/date_filter.jsx";
 
 export default class DiscoverSearch extends Component {
 
-  componentWillMount(){
-
-    self = this;
-
-    GoogleMapsLoader.KEY = "AIzaSyB4ZpFxDyTtOaSNO35OdUgLmVlBBOsTiu4";
-    GoogleMapsLoader.LIBRARIES = ['geometry', 'places'];
-
-    GoogleMapsLoader.load(function(google){
-      autocomplete = new google.maps.places.Autocomplete(
-      (document.getElementById('test')),
-      {types: ['geocode']});
-      autocomplete.addListener('place_changed', function(){
-        lat = autocomplete.getPlace().geometry.location.lat();
-        lng = autocomplete.getPlace().geometry.location.lng();
-        self.setState({
-          location: {
-            lat, lng
-          }
-        })
-        self.stateChanged();
-      })
-    });
-  }
-
-  componentWillUnmount() {
-    GoogleMapsLoader.release();
-  }
-
-  changeSearch(e){
-    self = this;
-    e.preventDefault();
-    if(this.state && this.state.timeout){
-      clearTimeout(this.state.timeout);
+  constructor() {
+    super();
+    this.state = {
+      moreOptions: false,
+      params: {}
     }
-    this.setState({
-      search: this.refs.search.value,
-      timeout: setTimeout(function(){
-        self.stateChanged();
-        console.log('here');
-        clearTimeout(this);
-      }, 500)
-    })
   }
 
-  changeDate(e){
-    e.preventDefault();
-    this.setState({
-      date: this.refs.date.value
-    })
-    this.stateChanged();
+  setSearchParams(paramName){
+    return (value) => {
+      this.state.params[paramName] = value;
+      this.forceUpdate();
+    }
   }
 
-  stateChanged() {
-    console.log(this.state);
-    this.props.handler(this.state);
+  getSearchResults() {
+    if(!this.state.moreOptions){
+      delete this.state.params.date;
+    }
+    this.props.handler(this.state.params);
   }
 
   render(){
     return (
-      <div style={{textAlign: 'center', margin: "10px 0"}}>
-        <input type="text" ref="search" style={{margin: "0 5px"}} onChange={this.changeSearch.bind(this)} placeholder="Search By Name"/>
-        <input id="test" ref="location" style={{margin: "0 5px"}} type="text" placeholder="Search By Location"/>
-        <button style={{margin: "0 5px"}} >
-          <FontAwesome name="search"/>
-        </button>
+      <div className="col">
+        <div className="row center" style={{textAlign: 'left', margin: "10px 0", alignItems: "flex-end"}}>
+          <NameSearch onChange={this.setSearchParams("name")} />
+          <LocationSearch onChange={this.setSearchParams("location")} />
+          <GameSearch onChange={this.setSearchParams("game")} />
+          <button style={{margin: 2.5}} onClick={this.getSearchResults.bind(this)}>
+            <FontAwesome name="search"/>
+          </button>
+          <button style={{margin: 2.5}} onClick={() => { this.setState({ moreOptions: !this.state.moreOptions }) }}>
+            {
+              this.state.moreOptions ? "Less" : "More"
+            }
+          </button>
+        </div>
+        {
+          this.state.moreOptions ? (
+            <div className="row center" style={{textAlign: 'left', margin: "10px 0"}}>
+              <DateFilter onChange={this.setSearchParams("date")} />
+            </div>
+          ) : (
+            ""
+          )
+        }
       </div>
     );
   }

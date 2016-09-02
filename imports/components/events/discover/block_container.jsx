@@ -20,11 +20,20 @@ export default class BlockContainer extends Component {
   }
 
   imgOrDefault(event) {
-    var img = Images.findOne(event.details.banner);
-    if(img){
-      return img.url();
+    if(event.bannerUrl != null){
+      return event.bannerUrl;
+    }
+    var games = event.games.fetch();
+    for(var i in games) {
+      if(games[i].bannerUrl != null){
+        return games[i].bannerUrl;
+      }
     }
     return "/images/bg.jpg";
+  }
+
+  participantCount(event) {
+    
   }
 
   render() {
@@ -40,24 +49,23 @@ export default class BlockContainer extends Component {
                   <img src={self.imgOrDefault(event)} />
                   <div className="event-block-details">
                     <h2 className="event-block-title">{ event.details.name }</h2>
-                    <div className="event-block-content">
-                      <div style={{textAlign: "left"}}>
-                        {/*Crowdfunding check goes here */}
-                        {
-                          event.details.location.online ? (
-                            <div><FontAwesome name="signal" /> Online Event</div>
-                          ) : (
-                            <div>
-                              <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
-                            </div>
-                          )
-                        }
-                      </div>
-                      <div className="row">
-                        <span><FontAwesome name="user" /> {Meteor.users.findOne(event.owner).username}</span>
-                        <div className="col-1"></div>
-                        <span><FontAwesome name="calendar" /> {moment(event.details.datetime).format("MMM Do, YYYY")}</span>
-                      </div>
+                  </div>
+                  <div className="event-block-content">
+                    <div style={{textAlign: "left"}}>
+                      {/*Crowdfunding check goes here */}
+                      {
+                        event.details.location.online ? (
+                          <div><FontAwesome name="signal" /> Online Event</div>
+                        ) : (
+                          <div>
+                            <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
+                          </div>
+                        )
+                      }
+                    </div>
+                    <div className="row flex-pad">
+                      <span><FontAwesome name="user" /> {Meteor.users.findOne(event.owner).username}</span>
+                      <span><FontAwesome name="calendar" /> {moment(event.details.datetime).format("MMM Do, YYYY")}</span>
                     </div>
                   </div>
                 </div>
