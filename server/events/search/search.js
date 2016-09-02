@@ -34,16 +34,26 @@ generateQuery["game"] = (gameId) => {
 }
 
 generateQuery["date"] = (dateObj) => {
-  var dateString = dateObj.date;
-  if(dateObj.time != null) {
-    dateString += "T" + dateObj.time;
+  var dateString = dateObj.startDate.date;
+  if(dateObj.startDate.time != null) {
+    dateString += "T" + dateObj.startDate.time;
   }
   var start = moment(dateString).toDate();
-  var end = moment(dateString).endOf("day").toDate();
+  var end;
+  if(dateObj.endDate.date != null){
+    var end = dateObj.endDate.date;
+    if(dateObj.endDate.time != null) {
+      end += dateObj.endDate.time;
+    }
+    end = moment(end).toDate();
+  }
+  else {
+    end = moment(dateString).endOf("day").toDate();
+  }
   return {
     "details.datetime": {
       $gte: start,
-      $lt: end
+      $lte: end
     }
   }
 }

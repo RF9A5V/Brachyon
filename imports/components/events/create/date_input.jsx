@@ -67,9 +67,7 @@ export default class DateInput extends Component {
       return;
     }
     this.refs.value.value = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML).format("MM/DD/YYYY");
-    this.setState({
-      time: moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML)
-    })
+    this.state.time = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML);
     if(this.props.onChange){
       this.props.onChange();
     }

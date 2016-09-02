@@ -24,6 +24,9 @@ export default class DiscoverSearch extends Component {
   }
 
   getSearchResults() {
+    if(!this.state.moreOptions){
+      delete this.state.params.date;
+    }
     this.props.handler(this.state.params);
   }
 
