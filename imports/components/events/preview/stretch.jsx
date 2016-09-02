@@ -7,8 +7,7 @@ export default class StretchGoals extends Component {
     var rez = [];
     for(var i = 0; i < children.length; i ++){
       rez.push(
-        <div className="circle" style={{backgroundImage: this.props.goals[children[i]].icon ? `url(${Icons.findOne(this.props.goals[children[i]].icon).url()})` : "initial"}} key={"a"+i} onClick={this.props.onGoalSelect(this.props.goals[children[i]])}>
-        </div>
+        <div className="circle" style={{backgroundImage: this.props.goals[children[i]].icon ? `url(${Icons.findOne(this.props.goals[children[i]].icon).url()})` : "initial"}} key={"a"+i} onClick={this.props.onGoalSelect(this.props.goals[children[i]])}></div>
       );
       rez.push(
         <div className="line-horiz" key={"b"+i}></div>
