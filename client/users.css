@@ -37,7 +37,6 @@
   position: relative;
   margin-bottom: 10px;
   margin-left: 10px;
-  overflow-y: hidden;
 }
 
 @media only screen
@@ -78,8 +77,6 @@
   cursor: pointer;
 }
 
-
-
 .event-block-container .event-block {
   box-sizing: border-box;
   cursor: pointer;
@@ -101,19 +98,14 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.event-block:hover .event-block-details {
-  bottom: 0;
-  cursor: pointer;
-}
-
 .event-block-details {
   width: 100%;
   position: absolute;
-  bottom: -55px;
-  padding: 0 10px 20px;
+  top: 0;
   background-color: rgba(0, 0, 0, 0.7);
   box-sizing: border-box;
   transition: all 0.5s;
+  padding: 0 20px;
 }
 
 .event-block-title {
@@ -123,7 +115,16 @@
 }
 
 .event-block-content {
-  height: 30px;
+  height: 60px;
+  padding: 20px;
+  border: solid 2px #666;
+  border-top: none;
+  position: relative;
+  top: -4px;
+}
+
+.event-block-content > * {
+  margin-bottom: 10px;
 }
 
 .event-display {
