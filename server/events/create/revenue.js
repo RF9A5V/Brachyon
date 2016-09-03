@@ -1,3 +1,5 @@
+import moment from "moment";
+
 var validateFields = (tierObj) => {
 
   if(tierObj.name !== undefined) {
@@ -240,6 +242,15 @@ Meteor.methods({
     Events.update(eventID, {
       $set: {
         "revenue.stretchGoalThreshold": amount
+      }
+    })
+  },
+
+  "events.saveCFDetails"(eventID, dateString, amount) {
+    Events.update(eventID,{
+      $set: {
+        "revenue.crowdfunding.dueDate": moment(dateString).toDate(),
+        "revenue.crowdfunding.amount": amount * 100
       }
     })
   }

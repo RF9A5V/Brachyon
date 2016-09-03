@@ -4,10 +4,10 @@ export default class RevenuePanel extends Component {
 
   value() {
     return {
-      crowdfunding: this.refs.crowdfunding.checked,
-      tierRewards: this.refs.tierRewards.checked,
-      stretchGoals: this.refs.stretchGoals.checked,
-      ticketing: this.refs.ticketing.checked
+      crowdfunding: this.refs.crowdfunding.checked ? {} : null,
+      tierRewards: this.refs.tierRewards.checked ? [] : null,
+      stretchGoals: this.refs.stretchGoals.checked ? [] : null,
+      ticketing: this.refs.ticketing.checked ? [] : null
     };
   }
 
