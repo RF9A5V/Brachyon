@@ -8,12 +8,18 @@ import PaymentWrapper from "../../public/process_steps/payment_wrapper.jsx";
 export default class PaymentContainer extends Component {
 
   chargeCard(data) {
-    Meteor.call("chargeCard", Events.findOne().owner, data.amount, data.token, function(err) {
+    Meteor.call("chargeCard", Events.findOne().owner, data.amount, data.token, (err) => {
       if(err){
         toastr.error("Error in processing payment");
       }
       else {
-        toastr.success("Successfully received payment!");
+        Meteor.call("events.updatePayment", Events.findOne()._id, data.baseAmount, (err) => {
+          if(err){
+            return toastr.error(err.reason, "Error!");
+          }
+          toastr.success("Successfully received payment!");
+          this.closeModal();
+        });
       }
     })
   }
@@ -53,6 +59,10 @@ export default class PaymentContainer extends Component {
 
   openModal() {
     this.refs.process.openModal();
+  }
+
+  closeModal() {
+    this.refs.process.closeModal();
   }
 
   render() {

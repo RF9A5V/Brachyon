@@ -36,7 +36,9 @@ export default class TimeInput extends Component {
         this.state.hour = val + "";
       }
     }
-    this.props.onChange();
+    if(this.props.onChange != null){
+      this.props.onChange();
+    }
     this.forceUpdate();
   }
 
@@ -50,7 +52,9 @@ export default class TimeInput extends Component {
         this.state.minute = (val < 10 ? ("0" + val) : ("" + val));
       }
     }
-    this.props.onChange();
+    if(this.props.onChange != null){
+      this.props.onChange();
+    }
     this.forceUpdate();
   }
 
@@ -61,7 +65,9 @@ export default class TimeInput extends Component {
     else if(e.key == 'p'){
       this.state.half = "PM";
     }
-    this.props.onChange();
+    if(this.props.onChange != null){
+      this.props.onChange();
+    }
     this.forceUpdate();
   }
 
