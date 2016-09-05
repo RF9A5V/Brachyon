@@ -53,7 +53,7 @@ export default class EventTitlePage extends Component {
             </div>
             <div>
               {
-                revenue.crowdfunding.sponsors ? (
+                revenue && revenue.crowdfunding && revenue.crowdfunding.sponsors ? (
                   revenue.crowdfunding.sponsors.slice(0, 3).map((sponsor) => {
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
@@ -80,7 +80,7 @@ export default class EventTitlePage extends Component {
             <div className="col center x-center col-2">
               <h3 className="sponsor-event-header">{ this.props.event.details.name }</h3>
               {
-                this.props.event.revenue.crowdfunding ? (
+                revenue && revenue.crowdfunding ? (
                   <span className="cf-progress-amount">
                     ${(this.props.event.revenue.crowdfunding.current || 0) / 100} raised!
                   </span>

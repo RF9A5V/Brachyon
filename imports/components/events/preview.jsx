@@ -2,12 +2,6 @@ import React, { Component } from "react"
 import TrackerReact from "meteor/ultimatejs:tracker-react"
 import GoogleMapsLoader from "google-maps";
 
-// import SideTabs from "../public/side_tabs.jsx";
-// import DetailsPanel from "./preview/details.jsx";
-// import BracketsPanel from "./preview/brackets.jsx";
-// import CrowdfundingPanel from "./preview/crowdfunding.jsx";
-// import TicketsPanel from "./preview/tickets.jsx";
-
 import SlideMain from "./preview/slides/slide_main.jsx";
 
 import TitlePage from "./preview/slides/title.jsx";
@@ -36,16 +30,19 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   slides() {
     var event = this.event();
-    return [
+    var pages = [
       {
         name: "Details",
         component: <TitlePage event={event} />
-      },
-      {
+      }
+    ];
+    if(event.revenue) {
+      pages.push({
         name: "Crowdfunding",
         component: <CFPage event={event} />
-      }
-    ]
+      });
+    }
+    return pages
   }
 
   render() {
