@@ -21,6 +21,8 @@ Meteor.methods({
       }
     }
 
+    console.log(amount);
+
     if(sponsIndex === null) {
       Events.update(eventID, {
         $inc: {
