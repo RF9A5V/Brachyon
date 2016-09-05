@@ -54,7 +54,7 @@ export default class EventTitlePage extends Component {
             <div>
               {
                 revenue && revenue.crowdfunding && revenue.crowdfunding.sponsors ? (
-                  revenue.crowdfunding.sponsors.slice(0, 3).map((sponsor) => {
+                  revenue.crowdfunding.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
                       <div className="sponsor-item col center">
