@@ -1,6 +1,8 @@
 .slide-page {
   min-height: 100%;
   overflow-y: visible;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .slide-page-container {
@@ -63,6 +65,10 @@
   line-height: 1.2;
 }
 
+.sponsor-event-header {
+  font-size: 32px;
+}
+
 .slide-schedule {
   padding: 20px;
 }
@@ -85,6 +91,7 @@
 
 .schedule-item p {
   font-size: 14px;
+  line-height: 1.7;
 }
 
 .slide-bracket-list {
@@ -124,7 +131,7 @@
 
 .slide-description p {
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1.7;
 }
 
 .slide-control {

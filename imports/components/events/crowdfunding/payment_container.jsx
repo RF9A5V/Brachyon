@@ -13,7 +13,7 @@ export default class PaymentContainer extends Component {
         toastr.error("Error in processing payment");
       }
       else {
-        Meteor.call("events.updatePayment", Events.findOne()._id, data.baseAmount, (err) => {
+        Meteor.call("events.updatePayment", Events.findOne()._id, data.baseAmount, data.comment, (err) => {
           if(err){
             return toastr.error(err.reason, "Error!");
           }
