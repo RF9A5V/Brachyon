@@ -144,6 +144,12 @@ h4 {
   margin-bottom: 0px;
 }
 
+h5 {
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+}
+
 button, input[type="submit"], .custom-file-upload {
   background: none;
   border: solid 2px white;
@@ -318,10 +324,6 @@ textarea:focus {
   align-items: center;
 }
 
-.accordion-header h3 {
-  margin: 0;
-}
-
 .accordion-content {
   padding: 20px;
   background-color: #444;
@@ -330,10 +332,6 @@ textarea:focus {
 }
 
 label {
-  margin-bottom: 15px;
-}
-
-i {
   margin-bottom: 15px;
 }
 
