@@ -2,6 +2,7 @@
   position: absolute;
   right: 20px;
   top: 60px;
+  z-index: 4;
 }
 
 .user-dropdown-content {

@@ -28,7 +28,7 @@
   right: 0;
   background-color: #333;
   opacity: 0.3;
-  z-index: 3;
+  z-index: 2;
 }
 
 .toc:hover {
@@ -221,4 +221,14 @@
 
 .cf-leaderboard {
   padding: 0 20px;
+}
+
+.cf-tickets {
+  padding: 0 10px;
+}
+
+.cf-ticket {
+  padding: 20px;
+  background-color: #333;
+  margin-bottom: 10px;
 }

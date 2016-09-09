@@ -44,7 +44,9 @@ body {
 .box {
   display: flex;
   flex-flow: column;
+  position: relative;
   min-height: calc(100vh - 170px);
+  z-index: 1;
 }
 
 .participant-active{
@@ -60,8 +62,6 @@ body {
 }
 
 .content {
-  top: 100px;
-  bottom: 70px;
   margin-bottom: 70px;
 }
 

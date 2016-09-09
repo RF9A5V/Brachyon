@@ -1,0 +1,43 @@
+.tab-container {
+  flex: 1 1;
+}
+
+.tab-icon {
+  padding: 20px;
+}
+
+.tab-content {
+  flex: 1 1;
+  padding: 20px;
+}
+
+.tab-menu {
+  background-color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tab-header, .tab-subtext {
+  padding: 20px;
+}
+
+.tab-subtext {
+  padding-left: 30px;
+}
+
+.tab-menu-item:hover .tab-header, .tab-menu-item.active .tab-header, .tab-menu-item:hover .tab-icon, .tab-menu-item.active .tab-icon {
+  background-color: #666;
+}
+
+.tab-menu-item .tab-subtext:hover, .tab-subtext.active {
+  background-color: #666;
+}
+
+.tab-menu .tab-text, .tab-menu.active .tab-icon {
+  display: none;
+}
+
+.tab-menu.active .tab-text {
+  display: inline-block;
+}
