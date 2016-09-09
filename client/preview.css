@@ -33,3 +33,16 @@
 .payment-amount:last-child {
   border-top: solid 2px white;
 }
+
+.ticket-modal {
+  position: absolute;
+  right: 80px;
+  top: 10px;
+  z-index: 2;
+  opacity: 0.3;
+  padding: 10px;
+}
+
+.ticket-modal:hover {
+  opacity: 1;
+}
