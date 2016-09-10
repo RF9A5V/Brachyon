@@ -1,25 +1,45 @@
 import React, { Component } from "react";
+import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import TabController from "./tab_controller.jsx";
 
-import OrganizeMain from "./modules/organize/main.jsx";
-import JudgePage from "./modules/organize/submodules/judges.jsx";
-import StaffPage from "./modules/organize/submodules/staff.jsx";
+import Main from "./modules/main.jsx";
 
-export default class SideTabTest extends Component {
+import StaffPage from "./modules/organize/staff.jsx";
+
+import BracketMain from "./modules/bracket/edit.jsx";
+import AddBracket from "./modules/bracket/add.jsx";
+import EditBracket from "./modules/bracket/edit.jsx";
+
+import DescriptionPage from "./modules/details/description.jsx";
+import LocationPage from "./modules/details/location.jsx";
+import DatetimePage from "./modules/details/datetime.jsx";
+import ImagePage from "./modules/details/image.jsx";
+
+import RevenueDetailsPage from "./modules/revenue/details.jsx";
+import TicketsPage from "./modules/revenue/tickets.jsx";
+
+export default class SideTabTest extends TrackerReact(Component) {
+
+  constructor(){
+    super();
+    this.state = {
+      event: Meteor.subscribe("event", "Eb4tWi7MYh9MnAYo9")
+    }
+  }
 
   items() {
+    var event = Events.findOne();
     return [
       {
         text: "Organize",
-        icon: "cog",
+        icon: "bullhorn",
         subitems: [
           {
-            component: OrganizeMain
-          },
-          {
-            text: "Judges",
-            component: JudgePage
+            component: Main,
+            args: {
+              name: "Organize"
+            }
           },
           {
             text: "Staff",
@@ -28,29 +48,80 @@ export default class SideTabTest extends Component {
         ]
       },
       {
-        text: "Organize",
-        icon: "cog",
+        text: "Brackets",
+        icon: "gamepad",
         subitems: [
           {
-            component: OrganizeMain
+            component: Main,
+            args: {
+              name: "Brackets"
+            }
+          }
+        ].concat((event.brackets ? (
+          event.brackets.map((bracket, index) => {
+            return {
+              component: EditBracket,
+              text: bracket.name,
+              args: {
+                index,
+                bracket
+              }
+            }
+          })
+        ) : (
+          []
+        ))).concat([
+          {
+            component: AddBracket,
+            text: "Add Bracket"
+          }
+        ])
+      },
+      {
+        text: "Details",
+        icon: "file-text",
+        subitems: [
+          {
+            component: Main,
+            args: {
+              name: "Details"
+            }
+          },
+          {
+            component: DescriptionPage,
+            text: "Description"
+          },
+          {
+            component: LocationPage,
+            text: "Location"
+          },
+          {
+            component: DatetimePage,
+            text: "Date and Time"
+          },
+          {
+            component: ImagePage,
+            text: "Banner"
           }
         ]
       },
       {
-        text: "Organize",
-        icon: "cog",
+        text: "Revenue",
+        icon: "money",
         subitems: [
           {
-            component: OrganizeMain
-          }
-        ]
-      },
-      {
-        text: "Organize",
-        icon: "cog",
-        subitems: [
+            component: Main,
+            args: {
+              name: "Revenue"
+            }
+          },
           {
-            component: OrganizeMain
+            component: RevenueDetailsPage,
+            text: "Details"
+          },
+          {
+            component: TicketsPage,
+            text: "Tickets"
           }
         ]
       }
@@ -58,6 +129,13 @@ export default class SideTabTest extends Component {
   }
 
   render() {
+    if(!this.state.event.ready()){
+      return (
+        <div>
+          Loading
+        </div>
+      )
+    }
     return (
       <TabController items={this.items()} />
     )

@@ -6,7 +6,7 @@ export default class SideTabMain extends Component {
     return (
       <div className="tab-content">
         {
-          <subItem.component item={this.props.items[this.props.activeItem]} />
+          <subItem.component item={this.props.items[this.props.activeItem]} onItemSelect={this.props.onItemSelect} activeItem={this.props.activeItem} { ...(subItem.args || {}) } />
         }
       </div>
     )

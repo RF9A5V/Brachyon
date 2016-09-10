@@ -1,7 +1,7 @@
 import Games from '/imports/api/games/games.js';
 
 Meteor.publish('event', (_id) => {
-  var event = Events.findOne(_id);;
+  var event = Events.findOne(_id);
   var sponsors = [];
   if(event.revenue && event.revenue.crowdfunding.sponsors){
     sponsors = event.revenue.crowdfunding.sponsors.map((sponsor) => {
@@ -10,14 +10,16 @@ Meteor.publish('event', (_id) => {
   }
   var users = Meteor.users.find({_id: {$in: sponsors}}); // later join with participants.
   var profileImages = ProfileImages.find({_id: { $in: (users.map( (user) => { return user.profile.image } )) }});
-  var games = [];
+  var gameIds = [];
   var banners = [event.details.banner];
-  if(event.organize != null) {
-    games = event.organize.map((bracket) => { return bracket.game });
-    var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
-    banners = banners.concat(gameBanners);
-  }
   var iconIDs = [];
+  if(event.brackets) {
+    event.brackets.forEach((bracket) => {
+      gameIds.push(bracket.gameId);
+    })
+  }
+  var games = Games.find({_id: { $in: gameIds }});
+  banners = banners.concat(games.map((game) => { return game.banner }));
   if(event.revenue != null && event.revenue.stretchGoals != null) {
     console.log(event.revenue);
     iconIDs = event.revenue.stretchGoals.map((key) => {
@@ -36,11 +38,7 @@ Meteor.publish('event', (_id) => {
     }),
     users,
     profileImages,
-    Games.find({
-      _id: {
-        $in: games
-      }
-    }),
+    games,
     Icons.find({
       _id: {
         $in: iconIDs
