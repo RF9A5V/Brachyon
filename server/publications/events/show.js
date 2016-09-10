@@ -21,7 +21,6 @@ Meteor.publish('event', (_id) => {
   var games = Games.find({_id: { $in: gameIds }});
   banners = banners.concat(games.map((game) => { return game.banner }));
   if(event.revenue != null && event.revenue.stretchGoals != null) {
-    console.log(event.revenue);
     iconIDs = event.revenue.stretchGoals.map((key) => {
       if(key == null) {
         return null;
