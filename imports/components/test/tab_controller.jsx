@@ -14,8 +14,6 @@ export default class TabController extends Component {
   }
 
   setActive(item, subItem){
-    console.log(item);
-    console.log(subItem);
     this.setState({
       activeItem: item,
       activeSub: subItem

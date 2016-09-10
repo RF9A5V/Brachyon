@@ -18,12 +18,19 @@
   align-items: center;
 }
 
+.tab-menu-item {
+  align-self: stretch;
+  text-align: center;
+}
+
 .tab-header, .tab-subtext {
   padding: 20px;
 }
 
-.tab-subtext {
-  padding-left: 30px;
+.tab-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
 .tab-menu-item:hover .tab-header, .tab-menu-item.active .tab-header, .tab-menu-item:hover .tab-icon, .tab-menu-item.active .tab-icon {
@@ -39,5 +46,14 @@
 }
 
 .tab-menu.active .tab-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.subitem-nav {
+  padding: 20px;
+  background-color: #666;
+  margin-right: 10px;
+  margin-bottom: 10px;
   display: inline-block;
 }

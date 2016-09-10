@@ -82,11 +82,6 @@ Meteor.publish('userEvents', (id) => {
   var gameSet = new Set();
   var imgIds = [];
   events.forEach((e) => {
-    if(e.organize != null) {
-      e.organize.forEach((bracket) => {
-        gameSet.add(bracket.game);
-      })
-    }
     if(e.details.banner != null){
       imgIds.push(e.details.banner);
     }
