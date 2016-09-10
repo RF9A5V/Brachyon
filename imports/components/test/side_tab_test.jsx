@@ -18,6 +18,7 @@ import ImagePage from "./modules/details/image.jsx";
 
 import RevenueDetailsPage from "./modules/revenue/details.jsx";
 import TicketsPage from "./modules/revenue/tickets.jsx";
+import TierPage from "./modules/revenue/tiers.jsx";
 
 export default class SideTabTest extends TrackerReact(Component) {
 
@@ -122,6 +123,10 @@ export default class SideTabTest extends TrackerReact(Component) {
           {
             component: TicketsPage,
             text: "Tickets"
+          },
+          {
+            component: TierPage,
+            text: "Tiers"
           }
         ]
       }
