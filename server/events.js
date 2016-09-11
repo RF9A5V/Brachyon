@@ -11,10 +11,10 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Couldn't find this event.");
     }
-    if(event.organize == null || event.organize[bracketIndex] == null) {
+    if(event.brackets == null || event.brackets[bracketIndex] == null) {
       throw new Meteor.Error(404, "Couldn't find this bracket.");
     }
-    var bracket = event.organize[bracketIndex];
+    var bracket = event.brackets[bracketIndex];
 
     var bracketContainsAlias = (bracket.participants || []).some((player) => {
       return player.alias.toLowerCase() == alias.toLowerCase();
@@ -44,7 +44,7 @@ Meteor.methods({
     }
     Events.update(eventID, {
       $push: {
-        [`organize.${bracketIndex}.participants`]: {
+        [`brackets.${bracketIndex}.participants`]: {
           id: userID,
           alias
         }
@@ -57,7 +57,7 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.organize[bracketIndex];
+    var bracket = event.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
@@ -66,12 +66,12 @@ Meteor.methods({
     }
     Events.update(eventID, {
       $unset: {
-        [`organize.${bracketIndex}.participants.${participantIndex}`]: 1
+        [`brackets.${bracketIndex}.participants.${participantIndex}`]: 1
       }
     });
     Events.update(eventID, {
       $pull: {
-        [`organize.${bracketIndex}.participants`]: null
+        [`brackets.${bracketIndex}.participants`]: null
       }
     })
   },
@@ -81,7 +81,7 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.organize[bracketIndex];
+    var bracket = event.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
@@ -101,7 +101,7 @@ Meteor.methods({
     }
     Events.update(eventID, {
       $push: {
-        [`organize.${bracketIndex}.participants`]: {
+        [`brackets.${bracketIndex}.participants`]: {
           id: user._id,
           alias
         }
@@ -113,10 +113,10 @@ Meteor.methods({
     if(Events.findOne(eventID) == null) {
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
-    var organize = Events.findOne(eventID).organize[0];
-    var format = Events.findOne(eventID).organize[0].format.baseFormat;
+    var organize = Events.findOne(eventID).brackets[0];
+    var format = Events.findOne(eventID).brackets[0].format.baseFormat;
     if (format == "single_elim")
-      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
+      var rounds = OrganizeSuite.singleElim(brackets.participants.map(function(participant) {
         return participant.alias;
       }));
     else
@@ -127,7 +127,7 @@ Meteor.methods({
     Events.update(eventID, {
       $set: {
         active: true,
-        "organize.0.rounds": rounds
+        "brackets.0.rounds": rounds
       }
     })
   },
@@ -138,7 +138,7 @@ Meteor.methods({
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
-    event = event.organize[0];
+    event = event.brackets[0];
     var match = event.rounds[bracketNumber][roundNumber][matchNumber];
     if (match.winner != null || match.playerOne == null || match.playerTwo == null)
       return false;
@@ -159,7 +159,7 @@ Meteor.methods({
       var losr = match.losr, losm = match.losm;
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${1}.${losr}.${losm}`]: losMatch
+          [`brackets.0.rounds.${1}.${losr}.${losm}`]: losMatch
         }
       })
     }
@@ -169,7 +169,7 @@ Meteor.methods({
       {
         Events.update(eventID, {
           $set: {
-            [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+            [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
             complete: true
           }
         })
@@ -182,8 +182,8 @@ Meteor.methods({
       else advMatch.playerTwo = match.winner;
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`organize.0.rounds.${2}.${0}.${0}`]: advMatch
+          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`brackets.0.rounds.${2}.${0}.${0}`]: advMatch
         }
       })
     }
@@ -212,8 +212,8 @@ Meteor.methods({
       }
       Events.update(eventID, {
         $set: {
-          [`organize.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`organize.0.rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
+          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`brackets.0.rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
         }
       })
     }
