@@ -8,7 +8,7 @@ import SnapModal from './snap_modal.jsx';
 export default class Footer extends React.Component {
   render() {
     return(
-      <Headroom id="footer" disableInlineStyles={true}>
+      <Headroom id="footer" disableInlineStyles={true} downTolerance={"calc(100vh - 50px)"}>
         <div className="row col-2 footer x-center center">
           <div className="col-1 row x-center justify-start" style={{margin: '0 0 0 10px'}}>
             <a href="https://www.twitch.tv/brachyon" target="_blank">
