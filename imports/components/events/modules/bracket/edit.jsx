@@ -13,13 +13,25 @@ export default class EditBracket extends Component {
 
   onBracketSave() {
     var bracket = this.refs.form.value();
-    Meteor.call("events.brackets.edit", this.state.id, this.props.index, bracket.name, bracket.game, (err) => {
+    Meteor.call("events.brackets.edit", this.state.id, this.props.index, bracket.name, bracket.game, bracket.format, (err) => {
       if(err) {
-        return toastr.err("Error in updating brackets!", "Error!");
+        return toastr.error("Error in updating brackets!", "Error!");
       }
       else {
         this.props.onItemSelect(this.props.activeItem, 0);
         return toastr.success("Successfully updated brackets!", "Success!");
+      }
+    })
+  }
+
+  onBracketDelete() {
+    Meteor.call("events.brackets.delete", this.state.id, this.props.index, (err) => {
+      if(err) {
+        return toastr.error(err.reason, "Error!");
+      }
+      else {
+        this.props.onItemSelect(this.props.activeItem, 0);
+        return toastr.success("Successfully deleted bracket!");
       }
     })
   }
@@ -29,7 +41,10 @@ export default class EditBracket extends Component {
       <div>
         <div className="row flex-pad x-center">
           <span>{ this.props.bracket.name }</span>
-          <button onClick={this.onBracketSave.bind(this)}>Save</button>
+          <div>
+            <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
+            <button onClick={this.onBracketSave.bind(this)}>Save</button>
+          </div>
         </div>
         <BracketForm ref="form" {...(this.props.bracket || {})} />
       </div>

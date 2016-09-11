@@ -13,7 +13,7 @@ export default class AddBracket extends Component {
 
   onBracketSave(){
     var bracket = this.refs.form.value();
-    Meteor.call("events.brackets.add", this.state.id, bracket.name, bracket.game, (err) => {
+    Meteor.call("events.brackets.add", this.state.id, bracket.name, bracket.game, bracket.format, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }

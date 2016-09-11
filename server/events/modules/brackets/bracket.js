@@ -1,7 +1,7 @@
 import Games from "/imports/api/games/games.js";
 
 Meteor.methods({
-  "events.brackets.add"(id, name, gameId) {
+  "events.brackets.add"(id, name, gameId, format) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Couldn't find event!");
@@ -17,12 +17,13 @@ Meteor.methods({
       $push: {
         "brackets": {
           name,
-          gameId
+          game: gameId,
+          format
         }
       }
     })
   },
-  "events.brackets.edit"(id, index, name, game) {
+  "events.brackets.edit"(id, index, name, game, format) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Couldn't find event.");
@@ -33,7 +34,24 @@ Meteor.methods({
     Events.update(id, {
       $set: {
         [`brackets.${index}.name`]: name,
-        [`brackets.${index}.gameId`]: game
+        [`brackets.${index}.game`]: game,
+        [`brackets.${index}.format`]: format
+      }
+    })
+  },
+  "events.brackets.delete"(id, index) {
+    var event = Events.findOne(id);
+    if(!event) {
+      throw new Meteor.Error(404, "Couldn't find event.");
+    }
+    Events.update(id, {
+      $unset: {
+        [`brackets.${index}`]: 1
+      }
+    });
+    Events.update(id, {
+      $pull: {
+        "brackets": null
       }
     })
   }
