@@ -1,8 +1,7 @@
 .user-dropdown {
   position: absolute;
-  right: 20px;
-  top: 60px;
-  z-index: 4;
+  right: 10px;
+  top: 42px;
 }
 
 .user-dropdown-content {
