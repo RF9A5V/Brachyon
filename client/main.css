@@ -44,9 +44,7 @@ body {
 .box {
   display: flex;
   flex-flow: column;
-  position: relative;
-  min-height: calc(100vh - 170px);
-  z-index: 1;
+  min-height: calc(100vh - 120px);
 }
 
 .participant-active{
@@ -62,7 +60,9 @@ body {
 }
 
 .content {
-  margin-bottom: 70px;
+  top: 70px;
+  bottom: 50px;
+  margin-bottom: 50px;
 }
 
 /* Flex rows and column stuff */
@@ -167,8 +167,8 @@ button.inactive, input[type="submit"].inactive {
 button:not(.inactive):hover, input[type="submit"]:not(.inactive):hover {
   cursor: pointer;
   -moz-box-shadow: 0 0 10px #ccc;
-	-webkit-box-shadow: 0 0 10px #ccc;
-	box-shadow: 0 0 10px #ccc;
+  -webkit-box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 0 10px #ccc;
 }
 
 input[type='text'], input[type="password"], input {
@@ -198,10 +198,10 @@ label {
 }
 
 .custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
 }
 
 .font-stretch-big {
@@ -236,8 +236,8 @@ input:-webkit-autofill {
 
 .signup-button:not(.inactive):hover{
   -moz-box-shadow: 0 0 10px #CC0000;
-	-webkit-box-shadow: 0 0 10px #CC0000;
-	box-shadow: 0 0 10px #CC0000;
+  -webkit-box-shadow: 0 0 10px #CC0000;
+  box-shadow: 0 0 10px #CC0000;
 }
 
 .snapcode-image {
