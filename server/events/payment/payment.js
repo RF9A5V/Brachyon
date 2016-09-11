@@ -1,15 +1,15 @@
 Meteor.methods({
-  "events.updatePayment"(eventID, amount, comment) {
+  "events.updatePayment"(eventID, price, comment) {
     var event = Events.findOne(eventID);
     var index = -1;
-    for(var i = 0; i < event.revenue.tierRewards.length; i ++) {
-      if(event.revenue.tierRewards[i].amount > amount) {
+    for(var i = 0; i < event.revenue.tiers.length; i ++) {
+      if(event.revenue.tiers[i].price > price) {
         index = i - 1;
         break;
       }
     }
-    if(index == -1 && amount >= event.revenue.tierRewards[event.revenue.tierRewards.length - 1].amount){
-      index = event.revenue.tierRewards.length - 1;
+    if(index == -1 && price >= event.revenue.tiers[event.revenue.tiers.length - 1].price){
+      index = event.revenue.tiers.length - 1;
     }
 
     var sponsIndex = null;
@@ -21,36 +21,34 @@ Meteor.methods({
       }
     }
 
-    console.log(amount);
-
     if(sponsIndex === null) {
       Events.update(eventID, {
         $inc: {
-          ["revenue.tierRewards." + (index >= 0 ? index : 0) + ".limit"]: index >= 0 ? -1 : 0,
-          "revenue.crowdfunding.current": parseInt(amount),
+          ["revenue.tiers." + (index >= 0 ? index : 0) + ".limit"]: index >= 0 ? -1 : 0,
+          "revenue.current": parseInt(price),
         },
         $push: {
-          "revenue.crowdfunding.sponsors": {
+          "revenue.sponsors": {
             id: Meteor.userId(),
-            amount: parseInt(amount),
+            price: parseInt(price),
             comment: comment
           }
         }
       }, {
         $sort: {
-          "revenue.crowdfunding.sponsors.amount": 1
+          "revenue.sponsors.price": 1
         }
       })
     }
     else {
       Events.update(eventID, {
         $inc: {
-          ["revenue.tierRewards." + (index >= 0 ? index : 0) + ".limit"]: index >= 0 ? -1 : 0,
-          "revenue.crowdfunding.current": parseInt(amount),
-          [`revenue.crowdfunding.sponsors.${sponsIndex}.amount`]: parseInt(amount)
+          ["revenue.tiers." + (index >= 0 ? index : 0) + ".limit"]: index >= 0 ? -1 : 0,
+          "revenue.current": parseInt(price),
+          [`revenue.sponsors.${sponsIndex}.price`]: parseInt(price)
         },
         $set: {
-          [`revenue.crowdfunding.sponsors.${sponsIndex}.comment`]: comment
+          [`revenue.sponsors.${sponsIndex}.comment`]: comment
         }
       });
     }

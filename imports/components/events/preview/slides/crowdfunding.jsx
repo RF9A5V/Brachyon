@@ -29,22 +29,22 @@ export default class CrowdfundingPage extends Component {
             <div className="row x-center">
               <div className=" col col-3 cf-progress">
                 <span className="cf-progress-amount">
-                  ${(revenue.crowdfunding.current || 0) / 100} out of ${revenue.crowdfunding.amount / 100}
+                  ${(revenue.current || 0) / 100} out of ${revenue.amount / 100}
                 </span>
                 <div className="cf-progress-container">
-                  <div className="cf-progress-display" style={{width: `${(revenue.crowdfunding.current || 0) / revenue.crowdfunding.amount * 100}%`}}></div>
+                  <div className="cf-progress-display" style={{width: `${Math.min((revenue.current || 0) / revenue.amount * 100, 100)}%`}}></div>
                 </div>
               </div>
               <div className="cf-leaderboard col-2">
                 {
-                  revenue.crowdfunding.sponsors ? (
-                    revenue.crowdfunding.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
+                  revenue.sponsors ? (
+                    revenue.sponsors.sort((a, b) => { return b.price - a.price; }).slice(0, 3).map((sponsor) => {
                       var user = Meteor.users.findOne(sponsor.id);
                       return (
                         <div className="sponsor-item col center">
                           <div className="row x-center">
                             <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
-                            <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
+                            <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.price / 100}</span>
                           </div>
                           <p>
                             { sponsor.comment }
@@ -63,13 +63,13 @@ export default class CrowdfundingPage extends Component {
           </div>
           <div className="col-1 col cf-tiers">
             {
-              revenue.tierRewards ? (
-                revenue.tierRewards.map((tier) => {
+              revenue.tiers ? (
+                revenue.tiers.map((tier) => {
                   return (
                     <div className="cf-tier col" onClick={this.openPaymentForm.bind(this)}>
                       <div className="row flex-pad x-center">
                         <span className="cf-amount">
-                          ${tier.amount / 100}
+                          ${tier.price.toFixed(2)}
                         </span>
                         <span className="cf-limit">
                           {tier.limit} Remaining
