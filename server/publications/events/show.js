@@ -15,7 +15,7 @@ Meteor.publish('event', (_id) => {
   var iconIDs = [];
   if(event.brackets) {
     event.brackets.forEach((bracket) => {
-      gameIds.push(bracket.gameId);
+      gameIds.push(bracket.game);
     })
   }
   var games = Games.find({_id: { $in: gameIds }});
