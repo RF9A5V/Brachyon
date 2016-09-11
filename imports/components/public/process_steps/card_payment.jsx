@@ -51,7 +51,8 @@ export default class CardPaymentProcess extends Component {
       this.props.cb({
         addCard: false,
         token: this.state.cardID,
-        amount: this.calcStripeFee()
+        amount: this.calcStripeFee(),
+        baseAmount: this.props.amount
       })
     }
   }

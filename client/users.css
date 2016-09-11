@@ -80,6 +80,7 @@
 .event-block-container .event-block {
   box-sizing: border-box;
   cursor: pointer;
+  border: solid 2px #666;
 }
 
 .event-block:nth-child(3n) {
@@ -89,8 +90,10 @@
 .event-block img, .bracket-block img {
   width: 100%;
   height: auto;
-  border: solid 2px #666;
   box-sizing: border-box;
+  border: solid 2px #666;
+  border-left: none;
+  border-right: none;
 }
 
 .bracket-block span {
@@ -100,28 +103,20 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.event-block-details {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  box-sizing: border-box;
-  transition: all 0.5s;
-  padding: 0 20px;
-}
-
 .event-block-title {
-  background: none;
+  background-color: #222;
   color: white;
   text-align: left;
+  margin: 0;
+  padding: 20px;
+  border-bottom: none;
 }
 
 .event-block-content {
   padding: 20px;
-  border: solid 2px #666;
   border-top: none;
   position: relative;
-  top: -4px;
+  background-color: #222;
 }
 
 .event-block-content > * {

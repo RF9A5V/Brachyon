@@ -19,6 +19,7 @@ Meteor.startup(() => {
   overlay.display = "flex";
   overlay.justifyContent = "center";
   overlay.alignItems = "center";
+  overlay.zIndex = "3";
 
   var content = Modal.defaultStyles.content;
 
