@@ -7,6 +7,8 @@ import TicketCollection from "./ticket_collection.jsx";
 import StretchGoals from "./stretch.jsx";
 import PrizePools from "./prize_pool.jsx";
 
+import MoneyInput from "/imports/components/public/money_input.jsx";
+
 export default class RevenuePanel extends Component {
 
   revenue() {
@@ -26,14 +28,32 @@ export default class RevenuePanel extends Component {
     })
   }
 
+  saveCFDetails() {
+    Meteor.call("events.saveCFDetails", Events.findOne()._id, this.refs.dueDate.value(), this.refs.amountRequested.value(), (err) => {
+      if(err){
+        return toastr.error("Couldn't update CF information.", "Error!");
+      }
+      else {
+        toastr.success("Successfully updated CF information.", "Success!");
+      }
+    });
+  }
+
   render() {
     var revenue = this.revenue();
     return (
       <div className="col x-center">
         <div className="side-tab-panel col">
-          <h3>Due Date</h3>
-          <div>
-            <DateInput init={revenue.dueDate} />
+          <div className="row" style={{justifyContent: "flex-end"}}>
+            <button onClick={this.saveCFDetails.bind(this)}>Save</button>
+          </div>
+          <h3 style={{marginBottom: 10}}>Due Date</h3>
+          <div style={{marginBottom: 10}}>
+            <DateInput init={revenue.crowdfunding.dueDate} ref="dueDate" />
+          </div>
+          <h3 style={{marginBottom: 10}}>Requested Amount</h3>
+          <div style={{marginBottom: 10}}>
+            <MoneyInput ref="amountRequested" defaultValue={revenue.crowdfunding.amount}/>
           </div>
         </div>
         <div className="side-tab-panel col">
@@ -44,18 +64,7 @@ export default class RevenuePanel extends Component {
           <PrizePools ref="prizePools" />
         </div>
         {
-          revenue.crowdfunding !== false && revenue.crowdfunding != null ? (
-            <div className="side-tab-panel col">
-              <h3>Crowdfunding</h3>
-              <h3>Requested Amount</h3>
-              <input type="text" ref="amountRequested" placeholder="Minimum threshold for you to run your event." style={{margin: "0 0 10px"}} />
-            </div>
-          ) : (
-            ""
-          )
-        }
-        {
-          revenue.tierRewards !== false && revenue.tierRewards != null ? (
+          revenue.tierRewards != null ? (
             <div className="side-tab-panel col">
               <h3>Tier Rewards</h3>
               <TierRewardCollection tiers={revenue.tierRewards} />
@@ -65,7 +74,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.stretchGoals !== false && revenue.stretchGoals != null ? (
+          revenue.stretchGoals != null ? (
             <div className="side-tab-panel col">
               <h3>Stretch Goals</h3>
               <StretchGoals goals={revenue.stretchGoals}/>
@@ -75,7 +84,7 @@ export default class RevenuePanel extends Component {
           )
         }
         {
-          revenue.ticketing !== false && revenue.ticketing != null ? (
+          revenue.ticketing != null ? (
             <div className="side-tab-panel col">
               <h3>Tickets</h3>
               <TicketCollection tickets={revenue.ticketing} />

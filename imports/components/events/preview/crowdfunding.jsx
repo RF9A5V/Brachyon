@@ -32,26 +32,24 @@ export default class CrowdfundingPanel extends Component {
   render() {
     var event = Events.findOne();
     var percent = 0;
-    if(this.state.goal) {
-      percent = Math.min((this.state.goal.current || 0) / this.state.goal.amount * 100, 100);
+    if(event.revenue.crowdfunding.amount) {
+      percent = Math.min((event.revenue.crowdfunding.current || 0) / event.revenue.crowdfunding.amount * 100, 100);
     }
     return (
       <div className="row">
         <div className="col-2" style={{padding: 20}}>
-          <div className="row center">
-          <h3 style={{marginBottom: 20}}>Stretch Goals</h3>
-          </div>
-          <Goals goals={Events.findOne().revenue.stretchGoals} onGoalSelect={this.setGoal.bind(this)} />
-        </div>
-        <div className="col-1" style={{padding: 20}}>
-          <h3>{ this.state.goal ? this.state.goal.name : "" }</h3>
           {
-            this.state.goal ? (
-              <span>{ this.state.goal.current || 0 } / { this.state.goal.amount }</span>
+            event.revenue.stretchGoals != null && event.revenue.stretchGoals.length > 0 ? (
+              <div className="col x-center">
+                <h3 style={{marginBottom: 20}}>Stretch Goals</h3>
+                <Goals goals={event.revenue.stretchGoals} onGoalSelect={this.setGoal.bind(this)} />
+              </div>
             ) : (
               ""
             )
           }
+        </div>
+        <div className="col-1" style={{padding: 20}}>
 
           <div className="row" style={{width: "100%", backgroundColor: "#111", border: "solid 2px white", boxSizing: "border-box", marginBottom: 10}}>
             <div style={{backgroundColor: "#0C0", width: percent + "%", height: 30}}></div>

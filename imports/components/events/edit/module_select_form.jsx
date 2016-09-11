@@ -43,19 +43,23 @@ export default class ModuleSelectForm extends Component {
       return {
         stretchGoals: {
           exists: this.state.revenue.stretchGoals,
-          name: "Stretch Goals"
+          name: "Stretch Goals",
+          value: []
         },
         crowdfunding: {
           exists: this.state.revenue.crowdfunding,
-          name: "Crowdfunding"
+          name: "Crowdfunding",
+          value: {}
         },
         ticketing: {
           exists: this.state.revenue.ticketing,
-          name: "Ticketing / RSVP"
+          name: "Ticketing / RSVP",
+          value: []
         },
         tierRewards: {
           exists: this.state.revenue.tierRewards,
-          name: "Tier Rewards"
+          name: "Tier Rewards",
+          value: []
         }
       }
     }
@@ -63,11 +67,13 @@ export default class ModuleSelectForm extends Component {
       return {
         bigNames: {
           exists: this.state.promotion.bigNames,
-          name: "Big Names"
+          name: "Big Names",
+          value: []
         },
         frontPageBid: {
           exists: this.state.promotion.frontPageBid,
-          name: "Front Page Bid"
+          name: "Front Page Bid",
+          value: 0
         }
       }
     }
