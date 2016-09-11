@@ -8,12 +8,12 @@
   z-index: 1;
   bottom: 0;
   width: 100%;
-  height: 70px;
+  height: 50px;
   position: fixed;
 }
 
 .footer-hub-pad {
-  padding: calc((70px - 15px) / 2) 5px;
+  padding: calc((50px - 15px) / 2) 5px;
   cursor: pointer;
   font-size: 12px;
 }
@@ -91,7 +91,7 @@
 /*social plugins*/
 .social-icon-bg {
   width: 40px;
-  height: 70px;
+  height: 50px;
 }
 
 .social-icon-bg:hover {
