@@ -2,7 +2,7 @@ import Games from '/imports/api/games/games.js';
 
 Meteor.publish("event_participants", (id) => {
   var event = Events.findOne(id);
-  if(event.organize) {
+  if(event.organize && event.organize[0]) {
     var users = Meteor.users.find({
       _id: {
         $in: event.organize[0].participants || []

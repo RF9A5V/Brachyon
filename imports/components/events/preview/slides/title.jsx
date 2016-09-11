@@ -53,14 +53,14 @@ export default class EventTitlePage extends Component {
             </div>
             <div>
               {
-                revenue && revenue.crowdfunding && revenue.crowdfunding.sponsors ? (
-                  revenue.crowdfunding.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
+                revenue && revenue.sponsors ? (
+                  revenue.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
                       <div className="sponsor-item col center">
                         <div className="row x-center">
                           <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
-                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
+                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.price / 100}</span>
                         </div>
                         <p>
                           { sponsor.comment }
@@ -80,9 +80,9 @@ export default class EventTitlePage extends Component {
             <div className="col center x-center col-2">
               <h3 className="sponsor-event-header">{ this.props.event.details.name }</h3>
               {
-                revenue && revenue.crowdfunding ? (
+                revenue ? (
                   <span className="cf-progress-amount">
-                    ${(this.props.event.revenue.crowdfunding.current || 0) / 100} raised!
+                    ${(this.props.event.revenue.current || 0) / 100} raised!
                   </span>
                 ) : (
                   ""
@@ -140,8 +140,8 @@ export default class EventTitlePage extends Component {
           </div>
           <div className="col x-center col-1 slide-bracket-list">
             {
-              this.props.event.organize ? (
-                this.props.event.organize.map((bracket, i) => {
+              this.props.event.brackets ? (
+                this.props.event.brackets.map((bracket, i) => {
                   return (
                     <div className="slide-bracket" onClick={() => { browserHistory.push(`/events/${this.props.event._id}/brackets/${i}`) }}>
                       <img src={Games.findOne(bracket.game).bannerUrl} />
