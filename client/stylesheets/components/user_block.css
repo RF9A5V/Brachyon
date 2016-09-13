@@ -1,0 +1,15 @@
+.participant-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.participant-row {
+  padding: 20px;
+  background-color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.participant-row:nth-child(2n) {
+  background-color: #444;
+}
