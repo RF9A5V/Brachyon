@@ -5,7 +5,7 @@ import { browserHistory } from "react-router";
 import AccordionContainer from "/imports/components/public/accordion_container.jsx";
 import DetailsPanel from "./create/details.jsx";
 import RevenuePanel from "./create/module_dropdowns/revenue.jsx";
-import OrganizePanel from "./create/module_dropdowns/organize.jsx";
+import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
 import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
 import ModuleBlock from "./create/module_block.jsx";
@@ -24,7 +24,7 @@ export default class EventCreateScreen extends Component {
 
   panels() {
     return {
-      organization: (<OrganizePanel ref="organize" />),
+      brackets: (<BracketsPanel ref="brackets" />),
       // bot: (<BotPanel ref="bot" />),
       promotion: (<PromotionPanel ref="promotion" />),
       revenue: (<RevenuePanel ref="revenue" />)
@@ -33,7 +33,7 @@ export default class EventCreateScreen extends Component {
 
   availableModules() {
     return {
-      nonReview: ["organization"],
+      nonReview: ["brackets"],
       review: ["revenue", "promotion"]
     }
   }
@@ -160,7 +160,7 @@ export default class EventCreateScreen extends Component {
             })
           }
           <div>
-            <h3>Add Modules</h3>
+            <h5>Add Modules</h5>
           </div>
           {
             this.modulePanels()

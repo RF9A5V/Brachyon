@@ -3,12 +3,25 @@ import Images from "/imports/api/event/images.js";
 
 export default class EventBlock extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.event = Events.findOne();
+  }
+
   imgOrDefault() {
-    if(this.props.image == null){
+    var url = this.event.bannerUrl;
+    if(url == null){
+      var games = this.event.games.fetch();
+      for(var i in games){
+        console.log(games[i]);
+        if(games[i].bannerUrl != null){
+          return games[i].bannerUrl;
+        }
+      }
       return "/images/bg.jpg";
     }
     else {
-      return this.props.image;
+      return url;
     }
   }
 

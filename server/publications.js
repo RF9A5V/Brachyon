@@ -1,41 +1,11 @@
 import Games from '/imports/api/games/games.js';
-import Sponsorships from '/imports/api/event/sponsorship.js';
-import Ticketing from '/imports/api/ticketing/ticketing.js';
-
-Meteor.publish('event', (_id) => {
-  var event = Events.findOne(_id);
-  var users = Meteor.users.find({_id: { $in: event.participants || [] }});
-  var profileImages = ProfileImages.find({_id: { $in: (users.fetch().map( (user) => { return user.profile.image } )) }});
-  var games = [];
-  var banners = [event.details.banner];
-  if(event.organize != null) {
-    games = event.organize.map((bracket) => { return bracket.game });
-    var gameBanners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
-    banners = banners.concat(gameBanners);
-  }
-  return [
-    Events.find({_id}),
-    Images.find({
-      _id: {
-        $in: banners
-      }
-    }),
-    users,
-    profileImages,
-    Games.find({
-      _id: {
-        $in: games
-      }
-    })
-  ];
-});
 
 Meteor.publish("event_participants", (id) => {
   var event = Events.findOne(id);
-  if(event.organize) {
+  if(event.brackets && event.brackets[0]) {
     var users = Meteor.users.find({
       _id: {
-        $in: event.organize[0].participants || []
+        $in: event.brackets[0].participants || []
       }
     });
     var imgIDs = users.fetch().map((user) => { return user.profile.image });
@@ -58,11 +28,11 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   if(!event) {
     throw new Meteor.error(404, "Event not found.");
   }
-  if(!event.organize || !event.organize[bracketIndex]) {
+  if(!event.brackets || !event.brackets[bracketIndex]) {
     throw new Meteor.error(404, "Bracket not found for event.");
   }
-  var game = Games.findOne(event.organize[bracketIndex].game);
-  var participantIDs = (event.organize[bracketIndex].participants || []).map((participant) => {
+  var game = Games.findOne(event.brackets[bracketIndex].game);
+  var participantIDs = (event.brackets[bracketIndex].participants || []).map((participant) => {
     if(participant.isUser){
       return participant.user;
     }
@@ -76,7 +46,7 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   })
   return [
     Events.find({_id: eventID}),
-    Games.find({_id: event.organize[bracketIndex].game}),
+    Games.find({_id: event.brackets[bracketIndex].game}),
     Images.find({_id: game.banner}),
     users,
     ProfileImages.find({
@@ -108,14 +78,33 @@ Meteor.publish('events', function(){
 
 Meteor.publish('userEvents', (id) => {
   var user = Meteor.users.findOne(id);
-  var event_banners = Events.find({owner: id}).fetch().map(function(value){ return value.details.banner });
-  var games = (user.profile || {}).games || [];
-  var game_banners = Games.find({_id: { $in: games }}).fetch().map((game) => { return game.banner });
+  var events = Events.find({owner: id});
+  var gameSet = new Set();
+  var imgIds = [];
+  events.forEach((e) => {
+    if(e.details.banner != null){
+      imgIds.push(e.details.banner);
+    }
+  });
+  var games = Games.find({
+    _id: {
+      $in: Array.from(gameSet)
+    }
+  });
+  games.forEach((game) => {
+    imgIds.push(game.banner);
+  })
+  var images = Images.find({
+    _id: {
+      $in: imgIds
+    }
+  })
+  console.log(gameSet);
   return [
     Events.find({owner: id}),
-    Images.find({_id: { $in: event_banners.concat(game_banners) } }),
-    Games.find({_id: { $in: games }}),
-    ProfileImages.find({_id: user.profile.image})
+    games,
+    ProfileImages.find({_id: user.profile.image}),
+    images
   ];
 })
 
@@ -124,43 +113,27 @@ Meteor.publish("profileImage", (id) => {
 });
 
 Meteor.publish("discoverEvents", function(){
-  var eventOwnerIds = Events.find({published: true}).fetch().map(function(event){
+  var events = Events.find({published: true});
+  var eventOwnerIds = events.map(function(event){
     return event.owner;
   });
-  var imageIDs = Events.find({published: true}).fetch().map((e)=>{return e.details.banner});
+  var imageIDs = events.map((e)=>{return e.details.banner});
+  var gameSet = new Set();
+  events.forEach((e) => {
+    if(e.brackets != null){
+      e.brackets.forEach((bracket) => {
+        gameSet.add(bracket.game);
+      })
+    }
+  });
+  var games = Games.find({_id: { $in: Array.from(gameSet) }});
+  imageIDs = imageIDs.concat(games.map((game) => { return game.banner }));
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}}),
-    Images.find({_id: { $in: imageIDs }})
+    Images.find({_id: { $in: imageIDs }}),
+    games
   ]
-})
-
-Meteor.publish('event_search', function(params){
-  if(params == null){
-    return Events.find();
-  }
-  var query = {}
-  if(params.search){
-    query['details.name'] = new RegExp(params.search.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i');
-  }
-  if(params.location){
-    query['details.location.coords'] = {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [ params.location.lng, params.location.lat ]
-        }
-      }
-    }
-  }
-  var events = Events.find(query);
-  var userIDs = events.fetch().map((e) => { return e.owner });
-  var imageIDs = events.fetch().map((e)=>{return e.details.banner});
-  return [
-    events,
-    Meteor.users.find({_id: { $in: userIDs }}, { fields: { username: 1 } }),
-    Images.find({_id: { $in: imageIDs }})
-  ];
 })
 
 Meteor.publish("userSearch", function(usernameSubstring) {

@@ -4,7 +4,6 @@ import GoogleMapsLoader from "google-maps";
 export default class LocationSelect extends Component {
 
   componentWillMount() {
-    console.log(this.props);
     this.setState({
       online: this.props.online === true,
       coords: [],
@@ -37,14 +36,29 @@ export default class LocationSelect extends Component {
         var lat = geo.lat();
         var lng = geo.lng();
 
+        var streetAddress, city, state, zip;
+        streetAddress = "";
+
+        for(var i in comps) {
+          if(comps[i].types.indexOf("street_number") >= 0) {
+            streetAddress += comps[i].short_name;
+          }
+          else if(comps[i].types.indexOf("route") >= 0) {
+            streetAddress += " " + comps[i].long_name
+          }
+          else if(comps[i].types.indexOf("locality") >= 0) {
+            city = comps[i].long_name;
+          }
+          else if(comps[i].types.indexOf("administrative_area_level_1") >= 0) {
+            state = comps[i].short_name;
+          }
+          else if(comps[i].types.indexOf("postal_code") >= 0){
+            zip = comps[i].short_name;
+          }
+        }
+
         // Longitude and Latitude are intentionally set backwards because MongoDB is dumb. DO NOT SWITCH
-        var [ streetAddress, city, state, zip, coords ] = [
-          comps[0].long_name + " " + comps[1].long_name,
-          comps[3].long_name,
-          comps[5].short_name,
-          comps[7].long_name,
-          [ lng, lat ]
-        ];
+        var coords = [lng, lat]
 
         self.setState({
           streetAddress,
@@ -84,7 +98,7 @@ export default class LocationSelect extends Component {
       city: this.refs.city,
       state: this.refs.state,
       zip: this.refs.zip
-    })
+    });
   }
 
   onLocChange(e) {
@@ -113,15 +127,15 @@ export default class LocationSelect extends Component {
           <div className="row" style={{marginTop: 10}}>
             <div className="col" style={{width: "50%"}}>
               <label>City</label>
-              <input  type="text" ref="city" defaultValue={this.state.city} />
+              <input  type="text" ref="city" value={this.state.city} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <label>State</label>
-              <input  type="text" ref="state" defaultValue={this.state.state} />
+              <input  type="text" ref="state" value={this.state.state} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <label>Zip</label>
-              <input  type="text" ref="zip" defaultValue={this.state.zip} />
+              <input  type="text" ref="zip" value={this.state.zip} />
             </div>
           </div>
         </div>

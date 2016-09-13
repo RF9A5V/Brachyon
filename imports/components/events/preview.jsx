@@ -2,11 +2,12 @@ import React, { Component } from "react"
 import TrackerReact from "meteor/ultimatejs:tracker-react"
 import GoogleMapsLoader from "google-maps";
 
-import SideTabs from "../public/side_tabs.jsx";
-import DetailsPanel from "./preview/details.jsx";
-import BracketsPanel from "./preview/brackets.jsx";
-import CrowdfundingPanel from "./preview/crowdfunding.jsx";
-import TicketsPanel from "./preview/tickets.jsx";
+import SlideMain from "./preview/slides/slide_main.jsx";
+
+import TitlePage from "./preview/slides/title.jsx";
+import CFPage from "./preview/slides/crowdfunding.jsx";
+
+import TicketPurchaseWrapper from "./preview/ticket_purchase_wrapper.jsx";
 
 import moment from "moment";
 
@@ -29,49 +30,21 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return Events.find().fetch()[0];
   }
 
-  imgOrDefault() {
+  slides() {
     var event = this.event();
-    if(event.banner == null){
-      return "/images/bg.jpg";
-    }
-    else {
-      return event.banner;
-    }
-  }
-
-  items() {
-    var event = this.event();
-    var items = ["Details"];
-
-    if(event.revenue) {
-      items.push("Crowdfunding");
-      items.push("Tickets");
-    }
-    if(event.organize) {
-      items = items.concat(["Brackets"]);
-    }
-    if(event.owner == Meteor.userId()) {
-      items.push("Options");
-    }
-    return items;
-  }
-
-  content() {
-    var event = this.event();
-    var panels = [
-      (<DetailsPanel {...event.details} ref="details"/>)
+    var pages = [
+      {
+        name: "Details",
+        component: <TitlePage event={event} />
+      }
     ];
     if(event.revenue) {
-      panels.push(<CrowdfundingPanel tiers={event.revenue.tiers} goals={event.revenue.goals} id={event._id} contributors={event.sponsors} ref="cf" />);
-      panels.push(<TicketsPanel tickets={event.revenue.tickets} owner={event.owner} ref="tickets" />)
+      pages.push({
+        name: "Crowdfunding",
+        component: <CFPage event={event} />
+      });
     }
-    if(event.organize[0]) {
-      panels.push(<BracketsPanel brackets={event.organize} />);
-    }
-    if(event.owner == Meteor.userId()) {
-      panels.push(<div></div>);
-    }
-    return panels;
+    return pages
   }
 
   render() {
@@ -81,32 +54,12 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
       )
     }
     var event = this.event();
-    console.log(event);
-    // Note: Check out the BracketsPanel thing Alex put up.
     return (
-      <div className="box col" style={{flexFlow: "row"}}>
-        <SideTabs items={this.items()} panels={this.content()} />
-        <div style={{width: "20%"}}>
-          <div className="col location-container">
-            <img src={this.imgOrDefault()} style={{width: "100%", height: "auto", marginBottom: 20}} />
-            <span className="event-title">{ event.details.name || "Set Event Name" }</span>
-            <div className="col" style={{marginBottom: 20}}>
-            {
-              event.details.location.online ? (
-                "Online"
-              ) : (
-                <div>
-                  {event.details.location.locationName ? (
-                    <span>{event.details.location.locationName}</span>
-                  ) : ( "" )}
-                  <span>{event.details.location.streetAddress}</span>
-                  <span>{event.details.location.city} {event.details.location.state}</span>
-                </div>
-              )
-            }
-            </div>
-            <b style={{textAlign: "center", marginBottom: 10}}>{moment(event.details.datetime).format("MMMM Do YYYY")}</b>
-          </div>
+      <div className="box col" style={{flexFlow: "row", position: "relative"}}>
+        <SlideMain slides={this.slides()} event={event} />
+        <div className="ticket-modal">
+          <button onClick={() => { this.refs.tickets.openModal() }}>Register</button>
+          <TicketPurchaseWrapper ref="tickets" event={event} />
         </div>
       </div>
     )

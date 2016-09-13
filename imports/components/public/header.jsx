@@ -51,9 +51,9 @@ export default class Header extends TrackerReact(Component) {
     if(Meteor.userId()){
       userCred = (
         <div style={{position: "relative"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
-          <a href="#" onClick={ (e) => { e.preventDefault(); browserHistory.push("/dashboard") } }>
-            <img style={{width: 75, height: 75, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
-          </a>
+          <Link to="/dashboard">
+            <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
+          </Link>
           <div className="col">
             <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
             <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
@@ -78,10 +78,10 @@ export default class Header extends TrackerReact(Component) {
       )
     }
     return (
-      <Headroom>
+      <Headroom id="header" disableInlineStyles={true}>
         <header className="row x-center header">
-          <div className = "head-align row">
-            <Link to="/">
+          <div className="row x-center">
+            <Link to="/" >
               <img src="/images/b_logo_trans.png"></img>
             </Link>
             <div style={{marginLeft: 10, marginRight: 10}}>
