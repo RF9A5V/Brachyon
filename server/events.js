@@ -116,7 +116,7 @@ Meteor.methods({
     var organize = Events.findOne(eventID).brackets[0];
     var format = Events.findOne(eventID).brackets[0].format.baseFormat;
     if (format == "single_elim")
-      var rounds = OrganizeSuite.singleElim(brackets.participants.map(function(participant) {
+      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
       }));
     else
@@ -134,11 +134,11 @@ Meteor.methods({
 
   "events.advance_match"(eventID, bracketNumber, roundNumber, matchNumber, placement) {
     var event = Events.findOne(eventID);
-    var loser;
     if(!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
     event = event.brackets[0];
+    var loser;
     var match = event.rounds[bracketNumber][roundNumber][matchNumber];
     if (match.winner != null || match.playerOne == null || match.playerTwo == null)
       return false;
@@ -207,8 +207,7 @@ Meteor.methods({
       }
       else
       {
-        if (advMatch.playerTwo == null) advMatch.playerTwo = match.winner;
-        else advMatch.playerOne = match.winner;
+        advMatch.playerTwo = match.winner;
       }
       Events.update(eventID, {
         $set: {
@@ -217,6 +216,99 @@ Meteor.methods({
         }
       })
     }
+  },
+
+  "events.undo_match"(eventID, bracketNumber, roundNumber, matchNumber) {
+    var event = Events.findOne(eventID);
+    if (!event){
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    event = event.brackets[0];
+    match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
+    var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
+    if (fr >= event.rounds[bracketNumber].length)
+      var [fb, fr, fm] = bracketNumber == 2 ? [2, 1, 0]:[2, 0, 0];
+    if ((bracketNumber == 2 && roundNumber == 1) || (event.rounds.length < 2 && roundNumber >= event.rounds[0].length-1))
+    {
+      match.winner = null;
+      Events.update(eventID, {
+        $set: {
+          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${0}`]: match
+        }
+      });
+      return;
+    }
+    var advMatch = event.rounds[fb][fr][fm];
+
+    //Call the function recursively on the ahead losers and update the matches
+    if (advMatch.winner)
+    {
+      Meteor.call("events.undo_match", eventID, fb, fr, fm);
+      event = Events.findOne(eventID).brackets[0];
+      advMatch = event.rounds[fb][fr][fm];
+      match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    }
+
+    //This is the function to undo loser bracket placement
+    if (event.rounds.length > 1 && bracketNumber == 0)
+    {
+      loser = match.winner == match.playerOne ? (match.playerTwo):(match.playerOne);
+      loserround = event.rounds[1][match.losr][match.losm];
+      if (loserround.winner != null)
+      {
+        Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
+        event = Events.findOne(eventID).brackets[0];
+        advMatch = event.rounds[fb][fr][fm];
+        match = event.rounds[bracketNumber][roundNumber][matchNumber];
+        loserround = event.rounds[1][match.losr][match.losm];
+      }
+      if (loserround.playerOne == loser) loserround.playerOne = null;
+      else loserround.playerTwo = null;
+      Events.update(eventID, {
+        $set: {
+          [`brackets.0.rounds.${1}.${match.losr}.${match.losm}`]: loserround
+        }
+      });
+    }
+    match.winner = null;
+
+    //Depending on the bracket is how the winner will be sent.
+    if (roundNumber >= event.rounds[bracketNumber].length-1)
+    {
+      if (bracketNumber == 0)
+        advMatch.playerOne = null;
+      else
+        advMatch.playerTwo = null;
+    }
+    else if (bracketNumber == 0 || roundNumber%2 == 1)
+    {
+      if(matchNumber % 2 == 0){
+        advMatch.playerOne = null;
+      }
+      else {
+        advMatch.playerTwo = null;
+      }
+    }
+    else if (bracketNumber == 2)
+    {
+      advMatch.playerOne = null;
+      advMatch.playerTwo = null;
+    }
+    else
+    {
+      advMatch.playerTwo = null;
+    }
+
+    //Update the round
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${fb}.${fr}.${fm}`]: advMatch,
+        [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
+      }
+    })
+    //Return for recursion
+    return;
   }
 
 })
