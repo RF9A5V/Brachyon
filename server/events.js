@@ -116,7 +116,7 @@ Meteor.methods({
     var organize = Events.findOne(eventID).brackets[0];
     var format = Events.findOne(eventID).brackets[0].format.baseFormat;
     if (format == "single_elim")
-      var rounds = OrganizeSuite.singleElim(brackets.participants.map(function(participant) {
+      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
       }));
     else
@@ -162,7 +162,7 @@ Meteor.methods({
           [`brackets.0.rounds.${1}.${losr}.${losm}`]: losMatch
         }
       })
-
+    }
 
     if((roundNumber + 1 >= event.rounds[bracketNumber].length && event.rounds.length == 1) || (bracketNumber == 2 && (match.playerOne == match.winner || (roundNumber == 1)))){
       if (event.rounds.length == 1 || bracketNumber == 2)
