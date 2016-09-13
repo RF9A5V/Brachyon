@@ -29,7 +29,7 @@ export default class MoneyInput extends Component {
     return (
       <div className="currency-input-container">
         { this.currencySymbol() }
-        <input type="text" ref="amount" onChange={this.verifyValidAmount.bind(this)} defaultValue="0.00" onBlur={this.formatAmount.bind(this)} defaultValue={this.props.defaultValue} />
+        <input type="text" ref="amount" onChange={this.verifyValidAmount.bind(this)} defaultValue="0.00" onBlur={this.formatAmount.bind(this)} defaultValue={(this.props.defaultValue / 100 || 0).toFixed(2)} />
       </div>
     )
   }

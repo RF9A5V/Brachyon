@@ -11,7 +11,8 @@ export default class CrowdfundingAmount extends Component {
 
   value() {
     return {
-      amount: this.state.amount
+      amount: this.state.amount,
+      comment: this.refs.comment.value
     };
   }
 
@@ -108,6 +109,7 @@ export default class CrowdfundingAmount extends Component {
     return (
       <div className="col">
         <input type="number" ref="amount" onChange={this.updateAmount.bind(this)} />
+        <textarea ref="comment" placeholder="Enter a comment (optional)."></textarea>
         {
           this.nextAvailableReward()
         }

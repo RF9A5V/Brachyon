@@ -106,24 +106,6 @@ Meteor.methods({
       $set: obj
     });
   },
-
-  "events.submit"(id) {
-    var event = Events.findOne(id);
-    if(event.revenue.active) {
-      Events.update(id, {
-        $set: {
-          underReview: true
-        }
-      })
-    }
-    else {
-      Events.update(id, {
-        $set: {
-          published: true
-        }
-      })
-    }
-  },
   "events.create_tournament"(id, obj) {
     event = Events.findOne(id);
     api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
@@ -271,7 +253,7 @@ Meteor.methods({
       destination: Meteor.users.findOne(payableTo).services.stripe.id
     }, function(err, response){
       if(err){
-        //throw new Meteor.error(500, "stripe-error", err.message);
+        //throw new Meteor.Error(500, "stripe-error", err.message);
       }
       else{
         return response;

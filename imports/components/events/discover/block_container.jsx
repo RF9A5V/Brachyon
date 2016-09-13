@@ -33,7 +33,7 @@ export default class BlockContainer extends Component {
   }
 
   participantCount(event) {
-    
+
   }
 
   render() {
@@ -45,14 +45,14 @@ export default class BlockContainer extends Component {
           {
             this.props.events.map(function(event, i){
               return (
-                <div className="event-block" onClick={self.selectEvent(event).bind(self)} key={i}>
+                <div className="event-block col" onClick={self.selectEvent(event).bind(self)} key={i}>
+                  <h2 className="event-block-title">{ event.details.name }</h2>
                   <img src={self.imgOrDefault(event)} />
-                  <div className="event-block-details">
-                    <h2 className="event-block-title">{ event.details.name }</h2>
-                  </div>
                   <div className="event-block-content">
                     <div style={{textAlign: "left"}}>
                       {/*Crowdfunding check goes here */}
+                    </div>
+                    <div className="row flex-pad">
                       {
                         event.details.location.online ? (
                           <div><FontAwesome name="signal" /> Online Event</div>
@@ -62,9 +62,6 @@ export default class BlockContainer extends Component {
                           </div>
                         )
                       }
-                    </div>
-                    <div className="row flex-pad">
-                      <span><FontAwesome name="user" /> {Meteor.users.findOne(event.owner).username}</span>
                       <span><FontAwesome name="calendar" /> {moment(event.details.datetime).format("MMM Do, YYYY")}</span>
                     </div>
                   </div>
