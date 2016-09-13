@@ -95,10 +95,7 @@ export default class SliderContainer extends Component {
                 </span>
               </div>
               <div className="slider-container">
-                <div className="slider-bar row flex-pad" id="bar" ref="bar" onDrag={this.onSliderBarDrag(index).bind(this)} style={{left: value }}>
-                  <div className="slider-decoration"></div>
-                  <div className="slider-decoration"></div>
-                  <div className="slider-decoration"></div>
+                <div className="slider-bar row flex-pad" id="bar" ref="bar" onDrag={this.onSliderBarDrag(index).bind(this)} style={{left: value, backgroundImage: "url(/images/bg.jpg)", backgroundSize: "cover" }}>
                 </div>
                 <div className="slider-track" id="track" ref="track">
                 </div>

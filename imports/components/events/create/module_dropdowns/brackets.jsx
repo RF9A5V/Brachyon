@@ -5,7 +5,7 @@ import BracketForm from "../../brackets/form.jsx";
 
 import Games from "/imports/api/games/games.js";
 
-export default class OrganizePanel extends Component {
+export default class BracketsPanel extends Component {
 
   constructor(props) {
     super(props);

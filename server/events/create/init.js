@@ -1,6 +1,6 @@
 var safeParams = (object, fields) => {
   if(object == null){
-    throw new Meteor.error(403, "Object can't be undefined.");
+    throw new Meteor.Error(403, "Object can't be undefined.");
   }
   fields = fields.sort((a, b) => {
     return a < b;
@@ -33,7 +33,7 @@ var safeParams = (object, fields) => {
 Meteor.methods({
   "events.create"(obj) {
     if(obj.details == null){
-      throw new Meteor.error(403, "Needs details for this object");
+      throw new Meteor.Error(403, "Needs details for this object");
     }
 
     console.log(obj);
@@ -47,7 +47,7 @@ Meteor.methods({
     };
 
     var details = Meteor.call("events.updateDetails", obj.details);
-    var nonReview = ["organize", "bot"];
+    var nonReview = ["brackets", "bot"];
     var review = ["revenue", "promotion"];
     var requiresReview = false;
 
