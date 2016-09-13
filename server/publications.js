@@ -26,10 +26,10 @@ Meteor.publish("event_participants", (id) => {
 Meteor.publish("bracket", (eventID, bracketIndex) => {
   var event = Events.findOne(eventID);
   if(!event) {
-    throw new Meteor.error(404, "Event not found.");
+    throw new Meteor.Error(404, "Event not found.");
   }
   if(!event.brackets || !event.brackets[bracketIndex]) {
-    throw new Meteor.error(404, "Bracket not found for event.");
+    throw new Meteor.Error(404, "Bracket not found for event.");
   }
   var game = Games.findOne(event.brackets[bracketIndex].game);
   var participantIDs = (event.brackets[bracketIndex].participants || []).map((participant) => {
