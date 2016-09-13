@@ -21,6 +21,9 @@ export default class PrizePoolBreakdown extends Component {
         ]
       })
     }
+
+    selectvalues=[];
+
     this.state = {
       labels
     }
@@ -74,6 +77,30 @@ export default class PrizePoolBreakdown extends Component {
     }
   }
 
+  checkSelects(num, val) {
+    var narr = this.state.selarr;
+    var nmarr = this.state.valarr;
+    if (val > narr[num])
+    {
+      var extra = val - nmarr[num];
+      while (extra)
+      {
+        if (narr[narr.length-1] <= extra)
+        {
+          extra -= narr[narr.length-1];
+          narr.pop();
+        }
+        else
+        {
+          narr[narr.length-1] -= extra;
+          extra = 0;
+        }
+      }
+    }
+    var sum = narr.reduce(function(a, b){return a + b}, 0);
+
+  }
+
   render() {
     var event = Events.findOne();
     if(!event.organize || event.organize.length == 0) {
@@ -89,20 +116,10 @@ export default class PrizePoolBreakdown extends Component {
           event.organize.map((bracket, i) => {
             return (
               <div className="col" style={{marginBottom: 20}} key={i}>
-                <h4>{ bracket.name }</h4>
+                <h3>{ bracket.name }</h3>
                 <div className="col">
-                  <label>Need vocab</label>
-                  <input type="text" ref={"field" + i} style={{margin: 0}} />
-                  <label>Placement</label>
-                  <div className="row">
-                    <input style={{margin: 0, marginRight: 10}} ref={"start" + i} />
-                    <input ref={"end" + i} style={{margin: 0}} />
-                  </div>
-                  <div>
-                    <button onClick={this.onLabelCreate(i).bind(this)}>Add a Label</button>
-                  </div>
+                  <SelectContainer />
                 </div>
-                <SliderBars labels={this.state.labels[i]} onRemove={this.deleteLabel(i).bind(this)} ref={i} />
               </div>
             )
           })
