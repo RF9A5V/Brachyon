@@ -102,9 +102,9 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             { //Loser's bracket block
               Array(this.props.rounds[1].length).fill("").map((_, i) => {
-                  if (i > 0 || this.props.rounds[1][0][1].truebye)
+                  if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
                   {
-                    i = this.props.rounds[1][0][1].truebye ? i:i-1;
+                    i = (this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye) ? i:i-1;
                     return (
                       <div style={{width: 150, textAlign: "center"}}>
                         Round { i + 1 }
@@ -117,7 +117,7 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             {
               this.props.rounds[1].map((round, i) => {
-                if (i > 0 || this.props.rounds[1][0][1].truebye)
+                if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
                 {
                     return (
                     <div className="col" style={{justifyContent: "space-around"}}>
