@@ -13,3 +13,45 @@
 .participant-row:nth-child(2n) {
   background-color: #444;
 }
+
+.user-block {
+  width: 15%;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: solid 2px #666;
+  position: relative;
+}
+
+.user-block img {
+  width: 100%;
+  height: auto;
+}
+
+.user-block div {
+  padding: 20px;
+}
+
+.user-block .user-block-decorator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 100%;
+  width: 5px;
+  height: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+}
+
+.first {
+  background-color: gold;
+}
+
+.second {
+  background-color: silver;
+}
+
+.third {
+  background-color: #CD7F32;
+}
