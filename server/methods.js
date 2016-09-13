@@ -106,24 +106,6 @@ Meteor.methods({
       $set: obj
     });
   },
-
-  "events.submit"(id) {
-    var event = Events.findOne(id);
-    if(event.revenue.active) {
-      Events.update(id, {
-        $set: {
-          underReview: true
-        }
-      })
-    }
-    else {
-      Events.update(id, {
-        $set: {
-          published: true
-        }
-      })
-    }
-  },
   "events.create_tournament"(id, obj) {
     event = Events.findOne(id);
     api_key = "LxUg2LSuH52eHxxtuPuX3nNiEjSDXxKBit3G3376";
@@ -213,6 +195,17 @@ Meteor.methods({
       }
     })
   },
+  "user.getStripeCustomerData": function() {
+    if(Meteor.user().stripeCustomer == null) {
+      return {};
+    }
+    var cards = Async.runSync(function(done) {
+      stripe.customers.listCards(Meteor.user().stripeCustomer, function(err, response) {
+        done(err, response);
+      });
+    });
+    return cards;
+  },
   "addCard": function(cardToken){
     if(Meteor.user().stripeCustomer == null){
       var customerCreate = Async.runSync(function(done){
@@ -232,7 +225,7 @@ Meteor.methods({
     }
     else{
       var customerUpdate = Async.runSync(function(done){
-        stripe.customers.update(Meteor.user().stripeCustomer,{
+        stripe.customers.createSource(Meteor.user().stripeCustomer,{
           source: cardToken
         }, function(err, response){
           done(err, response);
@@ -251,11 +244,12 @@ Meteor.methods({
       "hasCard": false
     }
   },
-  "chargeCard": function(payableTo, chargeAmount){
+  "chargeCard": function(payableTo, chargeAmount, cardID){
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
       customer: Meteor.user().stripeCustomer,
+      card: cardID,
       destination: Meteor.users.findOne(payableTo).services.stripe.id
     }, function(err, response){
       if(err){

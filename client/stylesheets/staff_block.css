@@ -1,0 +1,15 @@
+.staff-block {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #666;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.staff-block img {
+  width: 75px;
+  height: auto;
+  margin-right: 20px;
+}

@@ -47,7 +47,7 @@ Meteor.methods({
     };
 
     var details = Meteor.call("events.updateDetails", obj.details);
-    var nonReview = ["organize", "bot"];
+    var nonReview = ["brackets", "bot"];
     var review = ["revenue", "promotion"];
     var requiresReview = false;
 
@@ -78,8 +78,7 @@ Meteor.methods({
       "name",
       "location",
       "description",
-      "startDate",
-      "startTime"
+      "datetime"
     ].sort((a, b) => {
       return a < b;
     });

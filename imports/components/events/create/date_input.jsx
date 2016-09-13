@@ -51,9 +51,6 @@ export default class DateInput extends Component {
 
             var pass = yearPass && dayPass;
 
-            console.log(yearPass);
-            console.log(dayPass);
-
             return (
               <div className={`calendar-days-entry ${pass ? "active" : ""}`} onClick={self.setValue.bind(self)}>
                 {value + 1}
@@ -70,9 +67,10 @@ export default class DateInput extends Component {
       return;
     }
     this.refs.value.value = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML).format("MM/DD/YYYY");
-    this.setState({
-      time: moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML)
-    })
+    this.state.time = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML);
+    if(this.props.onChange){
+      this.props.onChange();
+    }
     this.closeCalendar();
   }
 
@@ -133,7 +131,7 @@ export default class DateInput extends Component {
   render() {
     return (
       <div className="calendar-container">
-        <input type="text" ref="value" defaultValue={this.state.time.format("MM/DD/YYYY")} onClick={this.openCalendar.bind(this)} onFocus={(e) => e.target.blur()} />
+        <input type="text" ref="value" defaultValue={this.state.time.format("MM/DD/YYYY")} onClick={this.openCalendar.bind(this)} onFocus={(e) => e.target.blur()} style={{margin: 0}} />
         {
           this.state.open ? (
             this.calendar()

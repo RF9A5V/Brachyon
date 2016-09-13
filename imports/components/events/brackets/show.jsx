@@ -17,7 +17,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
   }
 
   bracket() {
-    return Events.find().fetch()[0].organize[this.props.params.bracketIndex];
+    return Events.find().fetch()[0].brackets[this.props.params.bracketIndex];
   }
 
   items() {
