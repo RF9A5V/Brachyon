@@ -109,12 +109,12 @@ Meteor.methods({
     })
   },
 
-  "events.start_event"(eventID) {
+  "events.start_event"(eventID, index) {
     if(Events.findOne(eventID) == null) {
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
-    var organize = Events.findOne(eventID).brackets[0];
-    var format = Events.findOne(eventID).brackets[0].format.baseFormat;
+    var organize = Events.findOne(eventID).brackets[index];
+    var format = Events.findOne(eventID).brackets[index].format.baseFormat;
     if (format == "single_elim")
       var rounds = OrganizeSuite.singleElim(brackets.participants.map(function(participant) {
         return participant.alias;
@@ -126,8 +126,8 @@ Meteor.methods({
 
     Events.update(eventID, {
       $set: {
-        active: true,
-        "brackets.0.rounds": rounds
+        [`brackets.${index}.inProgress`]: true,
+        [`brackets.${index}.rounds`]: rounds
       }
     })
   },
