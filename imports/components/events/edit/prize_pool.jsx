@@ -168,7 +168,7 @@ export default class PrizePoolBreakdown extends Component {
             return (
               <div className="col" style={{marginBottom: 20}} key={i}>
                 <h3>{ bracket.name }</h3>
-                <h4>"Choose Prize Pool Places:"</h4>
+                <h4>Choose Prize Pool Places:</h4>
                 <div className="col">
                 {
                   this.state.brarr[i].selarr.map((val, j) => {
