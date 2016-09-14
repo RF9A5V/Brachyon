@@ -1,31 +1,42 @@
 import React, { Component } from "react";
 
 import SliderBars from "/imports/components/public/sliders.jsx";
+import SelectContainer from "/imports/components/public/selectprize.jsx"
 
 export default class PrizePoolBreakdown extends Component {
 
   constructor(props) {
     super(props);
     var event = Events.findOne();
-    var labels = [];
-    if(event.revenue.prizePool != null) {
-      labels = event.revenue.prizePool;
-    }
-    else {
-      labels = (event.organize || []).map(function() {
-        return [
-          {
-            name: "First Place",
-            start: 0
-          }
-        ]
-      })
-    }
-
-    selectvalues=[];
+    // var labels = [];
+    // if(event.revenue.prizePool != null) {
+    //   labels = event.revenue.prizePool;
+    // }
+    // else {
+    //   labels = (event.brackets || []).map(function() {
+    //     return [
+    //       {
+    //         name: "First Place",
+    //         start: 0
+    //       }
+    //     ]
+    //   })
+    // }
+    var brarray = (event.brackets || []).map(function() {
+      var selectvalues=[];
+      var maxvalues=[];
+      selectvalues.push(20);
+      maxvalues.push(20);
+      return (
+        {
+          selarr: selectvalues,
+          maxarr: maxvalues
+        }
+      )
+    })
 
     this.state = {
-      labels
+      brarr: brarray
     }
   }
 
@@ -77,12 +88,13 @@ export default class PrizePoolBreakdown extends Component {
     }
   }
 
-  checkSelects(num, val) {
-    var narr = this.state.selarr;
-    var nmarr = this.state.valarr;
+  checkSelects(num, br, val) {
+    val = parseInt(val);
+    var narr = this.state.brarr[br].selarr;
     if (val > narr[num])
     {
-      var extra = val - nmarr[num];
+      var extra = val - narr[num];
+      narr[num] = val;
       while (extra)
       {
         if (narr[narr.length-1] <= extra)
@@ -97,28 +109,71 @@ export default class PrizePoolBreakdown extends Component {
         }
       }
     }
+    else if (val < narr[num])
+    {
+      var extra = narr[num] - val;
+      narr[num] = val;
+      for (var x = num+1; x < narr.length; x++)
+      {
+        if (narr[x] > val)
+        {
+          extra += (narr[x] - val);
+        }
+      }
+      var newval = narr[narr.length-1];
+      while (newval < extra)
+      {
+        narr.push(newval);
+        extra -= newval;
+      }
+      if (extra > 0)
+        narr.push(extra);
+    }
     var sum = narr.reduce(function(a, b){return a + b}, 0);
-
+    if (sum != 20)
+    {
+      Meteor.Error(404, "Incorrect placement percent");
+      console.log(narr);
+    }
+    sum = 0;
+    nmarr = [];
+    for (var x = 0; x < narr.length; x++)
+    {
+      nmarr.push(20-sum);
+      sum += narr[x];
+    }
+    var nbrarr = this.state.brarr;
+    nbrarr[br].selarr = narr;
+    nbrarr[br].maxarr = nmarr;
+    this.setState({
+      brarr: nbrarr
+    });
   }
 
   render() {
     var event = Events.findOne();
-    if(!event.organize || event.organize.length == 0) {
+    if(!event.brackets || event.brackets.length == 0) {
       return (
         <div>
-          <h3>To access prize pool functionality, you need to have at least one <b>bracket</b> in the <b>Organize</b> module.</h3>
+          <h3>To access prize pool functionality, you need to have at least one <b>bracket</b> in the <b>Brackets</b> module.</h3>
         </div>
       )
     }
+    console.log(this.state.brarr);
     return (
       <div>
         {
-          event.organize.map((bracket, i) => {
+          event.brackets.map((bracket, i) => {
             return (
               <div className="col" style={{marginBottom: 20}} key={i}>
                 <h3>{ bracket.name }</h3>
+                <h4>"Choose Prize Pool Places:"</h4>
                 <div className="col">
-                  <SelectContainer />
+                {
+                  this.state.brarr[i].selarr.map((val, j) => {
+                    return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} br = {i} changePercent={this.checkSelects.bind(this)}/>)
+                  })
+                }
                 </div>
               </div>
             )
