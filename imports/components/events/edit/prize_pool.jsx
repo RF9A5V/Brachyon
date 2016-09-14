@@ -118,6 +118,7 @@ export default class PrizePoolBreakdown extends Component {
         if (narr[x] > val)
         {
           extra += (narr[x] - val);
+          narr[x] = val;
         }
       }
       var newval = narr[narr.length-1];
