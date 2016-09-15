@@ -19,7 +19,6 @@ export default class SelectContainer extends Component {
 
   render()
   {
-    console.log(this.props.max);
     var percentarray = [];
     for (var x = this.props.max-1; x >= 0; x--)
     {

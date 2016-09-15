@@ -22,21 +22,27 @@ export default class PrizePoolBreakdown extends Component {
     //     ]
     //   })
     // }
-    var brarray = (event.brackets || []).map(function() {
-      var selectvalues=[];
-      var maxvalues=[];
-      selectvalues.push(20);
-      maxvalues.push(20);
-      return (
-        {
-          selarr: selectvalues,
-          maxarr: maxvalues
-        }
-      )
-    })
+    var brarray = [];
+    if (event.revenue.prizesplit != null)
+      brarray = event.revenue.prizesplit;
+
+    for (x = brarray.length; x < event.brackets.length; x++)
+    {
+      var selectvalues=[20];
+      var maxvalues=[20];
+      var newobj = {
+            selarr: selectvalues,
+            maxarr: maxvalues
+          }
+      brarray.push(newobj);
+    }
+    while (brarray.length > event.brackets.length)
+      brarray.pop();
+
 
     this.state = {
-      brarr: brarray
+      brarr: brarray,
+      id: event._id
     }
   }
 
@@ -68,6 +74,17 @@ export default class PrizePoolBreakdown extends Component {
       toastr.success("Added label to prize pools.", "Success!");
       this.forceUpdate();
     }
+  }
+
+  onPrizeSplitSave(){
+    Meteor.call("events.revenue.saveDetails", this.state.id, this.state.brarr, (err) => {
+      if(err){
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully updated prize pool.", "Success!");
+      }
+    })
   }
 
   value() {
@@ -137,13 +154,14 @@ export default class PrizePoolBreakdown extends Component {
       console.log(narr);
     }
     sum = 0;
-    nmarr = [];
-    for (var x = 0; x < narr.length; x++)
+    nmarr = [20];
+    for (var x = 1; x < narr.length; x++)
     {
-      nmarr.push(20-sum);
       sum += narr[x];
+      nmarr.push( (20-sum) < (narr[x]) ? (20-sum):(narr[x]) );
     }
     var nbrarr = this.state.brarr;
+    console.log(nmarr);
     nbrarr[br].selarr = narr;
     nbrarr[br].maxarr = nmarr;
     this.setState({
