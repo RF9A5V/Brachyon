@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
 import PaymentContainer from "../../crowdfunding/payment_container.jsx";
+import SkillTree from "../stretch.jsx";
 
 export default class CrowdfundingPage extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    console.log(this.props.event.bannerUrl);
     if(this.props.event && this.props.event.bannerUrl) {
       imgUrl = this.props.event.bannerUrl;
     }
@@ -59,6 +59,13 @@ export default class CrowdfundingPage extends Component {
               </div>
             </div>
             <div className="cf-strategy">
+              {
+                revenue.strategy && revenue.strategy.name == "skill_tree" ? (
+                  <SkillTree goals={revenue.strategy.goals} onGoalSelect={() => {}} />
+                ) : (
+                  revenue.strategy.name
+                )
+              }
             </div>
           </div>
           <div className="col-1 col cf-tiers">
