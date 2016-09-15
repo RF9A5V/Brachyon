@@ -1,0 +1,31 @@
+.strategy-block {
+  width: 15%;
+  border: solid 2px #666;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding-top: 20px;
+}
+
+.strategy-block:hover {
+  cursor: pointer;
+}
+
+.strategy-block h4 {
+  margin: 0;
+  padding: 0;
+  background: none;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.strategy-block .fa {
+  font-size: 5em;
+}
+
+.strategy-block div {
+  padding: 20px;
+}
+
+.strategy-block p {
+  font-size: 12px;
+}
