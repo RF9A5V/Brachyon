@@ -21,6 +21,7 @@ import ImagePage from "./modules/details/image.jsx";
 import RevenueDetailsPage from "./modules/revenue/details.jsx";
 import TicketsPage from "./modules/revenue/tickets.jsx";
 import TierPage from "./modules/revenue/tiers.jsx";
+import StrategyPage from "./modules/revenue/strategies.jsx";
 
 import SubmitPage from "./modules/submit.jsx";
 
@@ -135,6 +136,10 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           {
             component: TierPage,
             text: "Tiers"
+          },
+          {
+            component: StrategyPage,
+            text: "Strategies"
           }
         ]
       },
