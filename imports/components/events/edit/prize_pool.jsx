@@ -77,7 +77,7 @@ export default class PrizePoolBreakdown extends Component {
   }
 
   onPrizeSplitSave(){
-    Meteor.call("events.revenue.saveDetails", this.state.id, this.state.brarr, (err) => {
+    Meteor.call("events.revenue.savePrize", this.state.id, this.state.brarr, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -161,7 +161,6 @@ export default class PrizePoolBreakdown extends Component {
       nmarr.push( (20-sum) < (narr[x]) ? (20-sum):(narr[x]) );
     }
     var nbrarr = this.state.brarr;
-    console.log(nmarr);
     nbrarr[br].selarr = narr;
     nbrarr[br].maxarr = nmarr;
     this.setState({
@@ -181,23 +180,29 @@ export default class PrizePoolBreakdown extends Component {
     console.log(this.state.brarr);
     return (
       <div>
-        {
-          event.brackets.map((bracket, i) => {
-            return (
-              <div className="col" style={{marginBottom: 20}} key={i}>
-                <h3>{ bracket.name }</h3>
-                <h4>Choose Prize Pool Places:</h4>
-                <div className="col">
-                {
-                  this.state.brarr[i].selarr.map((val, j) => {
-                    return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} br = {i} changePercent={this.checkSelects.bind(this)}/>)
-                  })
-                }
+        <div className="row flex-pad x-center">
+          <span>Prize Pool Details</span>
+          <button onClick={this.onPrizeSplitSave.bind(this)}>Save</button>
+        </div>
+        <div>
+          {
+            event.brackets.map((bracket, i) => {
+              return (
+                <div className="col" style={{marginBottom: 20}} key={i}>
+                  <h3>{ bracket.name }</h3>
+                  <h4>Choose Prize Pool Places:</h4>
+                  <div className="col">
+                  {
+                    this.state.brarr[i].selarr.map((val, j) => {
+                      return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} br = {i} changePercent={this.checkSelects.bind(this)}/>)
+                    })
+                  }
+                  </div>
                 </div>
-              </div>
-            )
-          })
-        }
+              )
+            })
+          }
+        </div>
       </div>
     )
   }
