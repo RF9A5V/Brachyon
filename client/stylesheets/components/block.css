@@ -16,10 +16,10 @@
   height: auto;
 }
 
-.reward {
+.reward.block {
   width: 20%;
 }
 
-.reward div {
+.reward.block div {
   padding: 20px;
 }

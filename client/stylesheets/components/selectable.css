@@ -1,0 +1,14 @@
+.selectable {
+  width: 20%;
+  max-width: 100px;
+  margin: 10px 20px 0 0;
+}
+
+.selectable img {
+  width: 100%;
+  height: auto;
+}
+
+.selectable.active img {
+  border: solid 5px #383;
+}
