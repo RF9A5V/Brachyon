@@ -1,5 +1,5 @@
 Meteor.methods({
-  "events.revenue.createTier"(id, name, price, limit, description) {
+  "events.revenue.createTier"(id, name, price, limit, description, rewards) {
     var event = Events.findOne(id);
     if(!event){
       throw new Meteor.Error(404, "Event not found.");
@@ -10,12 +10,13 @@ Meteor.methods({
           name,
           price,
           limit,
-          description
+          description,
+          rewards
         }
       }
     })
   },
-  "events.revenue.updateTier"(id, index, name, price, limit, description) {
+  "events.revenue.updateTier"(id, index, name, price, limit, description, rewards) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
@@ -26,7 +27,8 @@ Meteor.methods({
           name,
           price,
           limit,
-          description
+          description,
+          rewards
         }
       }
     })
