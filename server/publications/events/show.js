@@ -4,7 +4,7 @@ Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
   var sponsors = [];
   if(event.revenue && event.revenue.crowdfunding.sponsors){
-    sponsors = event.revenue.crowdfunding.sponsors.map((sponsor) => {
+    sponsors = event.revenue.sponsors.map((sponsor) => {
       return sponsor.id;
     })
   }
@@ -20,7 +20,7 @@ Meteor.publish('event', (_id) => {
   }
   sponsors.forEach((spons) => {
     participants.add(spons);
-  })
+  });
   var users = Meteor.users.find({_id: { $in: Array.from(participants) }})
   var profileImages = ProfileImages.find({_id: { $in: (users.map( (user) => { return user.profile.image } )) }});
   var gameIds = [];

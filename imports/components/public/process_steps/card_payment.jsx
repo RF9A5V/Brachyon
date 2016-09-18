@@ -116,7 +116,7 @@ export default class CardPaymentProcess extends Component {
     var finalAmount = this.calcStripeFee();
     var self = this;
     return (
-      <div>
+      <div className="col">
         <div className="col x-center">
           {
             this.state.cards.map((card) => {
