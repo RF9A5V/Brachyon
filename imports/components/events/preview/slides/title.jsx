@@ -61,13 +61,14 @@ export default class EventTitlePage extends Component {
             <div>
               {
                 revenue && revenue.sponsors ? (
-                  revenue.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
+                  revenue.sponsors.slice(0, 3).map((sponsor) => {
+                    console.log(sponsor);
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
                       <div className="sponsor-item col center">
                         <div className="row x-center">
                           <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
-                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.price / 100}</span>
+                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
                         </div>
                         <p>
                           { sponsor.comment }

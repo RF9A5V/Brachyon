@@ -75,41 +75,45 @@ export default class ProcessModal extends Component {
     this.props.onComplete(this.state.dataStore);
   }
 
+  addFieldsToDataStore(obj){
+    for(var key in obj) {
+      this.state.dataStore[key] = obj[key];
+    }
+  }
+
   complete() {
     this.refs[this.state.step].value();
   }
 
   render() {
     return (
-      <div>
-        <Modal isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-          {
-            this.state.steps.map((process, index) => {
-              return (
-                <div className="col" style={{display: this.state.step == index ? "inherit" : "none"}}>
-                  <process.component ref={index} {...process.args} {...this.state.dataStore} cb={this.updateAfterCB.bind(this)}/>
-                  <div className="row center">
-                    {
-                      index > 0 ? (
-                        <button onClick={this.backStep.bind(this)} style={{margin: "0 10px"}}>Back</button>
-                      ) : (
-                        ""
-                      )
-                    }
-                    {
-                      index < this.state.steps.length - 1 ? (
-                        <button onClick={this.advanceStep(process).bind(this)} style={{margin: "0 10px"}}>Next Step</button>
-                      ) : (
-                        <button onClick={this.complete.bind(this)} style={{margin: "0 10px"}}>Submit</button>
-                      )
-                    }
-                  </div>
+      <Modal isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
+        {
+          this.state.steps.map((process, index) => {
+            return (
+              <div className="col" style={{display: this.state.step == index ? "inherit" : "none", minHeight: "100%"}}>
+                <process.component ref={index} {...process.args} {...this.state.dataStore} cb={this.updateAfterCB.bind(this)} hack={this.addFieldsToDataStore.bind(this)} />
+                <div className="row center">
+                  {
+                    index > 0 ? (
+                      <button onClick={this.backStep.bind(this)} style={{margin: "0 10px"}}>Back</button>
+                    ) : (
+                      ""
+                    )
+                  }
+                  {
+                    index < this.state.steps.length - 1 ? (
+                      <button onClick={this.advanceStep(process).bind(this)} style={{margin: "0 10px"}}>Next Step</button>
+                    ) : (
+                      <button onClick={this.complete.bind(this)} style={{margin: "0 10px"}}>Submit</button>
+                    )
+                  }
                 </div>
-              )
-            })
-          }
-        </Modal>
-      </div>
+              </div>
+            )
+          })
+        }
+      </Modal>
     )
   }
 }

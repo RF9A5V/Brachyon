@@ -5,7 +5,10 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import Main from "./modules/main.jsx";
 
 import OverviewMain from "./admin/modules/overview/main.jsx";
+
 import CrowdfundingMain from "./admin/modules/crowdfunding/main.jsx";
+import TierBreakdown from "./admin/modules/crowdfunding/tiers.jsx";
+
 import BracketsMain from "./admin/modules/brackets/main.jsx";
 
 import PromotionMain from "./admin/modules/promotion/main.jsx";
@@ -37,7 +40,14 @@ export default class EventAdminPage extends TrackerReact(Component) {
         icon: "money",
         subitems: [
           {
-            component: CrowdfundingMain
+            component: Main,
+            args: {
+              name: "Crowdfunding"
+            }
+          },
+          {
+            component: TierBreakdown,
+            text: "Tiers"
           }
         ]
       },
