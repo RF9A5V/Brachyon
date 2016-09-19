@@ -3,7 +3,7 @@ import Games from '/imports/api/games/games.js';
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
   var sponsors = [];
-  if(event.revenue && event.revenue.crowdfunding.sponsors){
+  if(event.revenue && event.revenue.sponsors){
     sponsors = event.revenue.sponsors.map((sponsor) => {
       return sponsor.id;
     })

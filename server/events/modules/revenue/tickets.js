@@ -14,35 +14,47 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.updateTicketCost"(id, index, name, amount, description) {
+  "events.revenue.updateTicketCost"(id, indexId, amount, description) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $set: {
-        [`revenue.tickets.${index}`]: {
-          name,
-          amount,
+        [`revenue.tickets.${indexId}`]: {
+          price: amount,
           description
         }
       }
     })
   },
-  "events.revenue.deleteTicketCost"(id, index) {
-    var event = Events.findOne(id);
+  "events.revenue.tickets.grantPrivileges"(id, ticketIds){
+    var event = Events.findOne();
     if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
+      throw new Meteor.Error(404, "Event not found!");
     }
-    Events.update(id, {
-      $unset: {
-        [`revenue.tickets.${index}`]: 1
+    var user = Meteor.user();
+    if(!user) {
+      throw new Meteor.Error(403, "Need to be logged in!");
+    }
+    var bracketIndices = [];
+    ticketIds.forEach((ticket) => {
+      var check = ticket.match(/[0-9]+/);
+      if(check && check.length > 0){
+        bracketIndices.push(parseInt(check[0]));
       }
     });
-    Events.update(id, {
-      $pull: {
-        "revenue.tickets": null
-      }
+    console.log(bracketIndices);
+    bracketIndices.forEach((index) => {
+      Events.update(id, {
+        $push: {
+          [`brackets.${index}.participants`]: {
+            alias: user.username,
+            id: user._id,
+            email: user.emails[0].address
+          }
+        }
+      })
     })
   }
 })
