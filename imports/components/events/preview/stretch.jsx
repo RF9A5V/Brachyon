@@ -27,7 +27,7 @@ export default class StretchGoals extends Component {
     });
     while(renderable) {
       rez.push(
-        <div className="row center x-center">
+        <div className="row center x-center" style={{position: "relative", top: 20}}>
           {
             children.map((child, i) => {
               return (
@@ -49,7 +49,7 @@ export default class StretchGoals extends Component {
                 )
               }
               return (
-                <div className="circle indirect" style={{backgroundImage: this.props.goals[child].icon ? `url(${Icons.findOne(this.props.goals[child].icon).url()})` : "initial"}} key={i} onClick={this.props.onGoalSelect(this.props.goals[child])}>
+                <div className="circle indirect" style={{backgroundImage: this.props.goals[child].icon ? `url(${Icons.findOne(this.props.goals[child].icon).url()})` : "initial"}} key={i} onClick={this.props.onGoalSelect(this.props.goals[child])} style={{position: "relative", top: 20}}>
                 </div>
               )
             })
@@ -82,7 +82,7 @@ export default class StretchGoals extends Component {
             this.renderGrandchildren()
           }
         </div>
-        <div className="row x-center center">
+        <div className="row x-center center" style={{position: "relative", top: 20}}>
         {
           this.renderDirectChildren()
         }

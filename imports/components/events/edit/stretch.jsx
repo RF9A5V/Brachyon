@@ -251,7 +251,7 @@ export default class StretchGoals extends Component {
         </div>
 
         <div className="row" style={{marginTop: 10}}>
-          <input ref="threshold" type="number" style={{margin: 0}} defaultValue={(Events.findOne().revenue.stretchGoalThreshold / 100).toFixed(2)}/>
+          <input ref="threshold" type="number" style={{margin: 0}} defaultValue={(Events.findOne().revenue.strategy.pointThreshold / 100).toFixed(2)}/>
           <button style={{marginLeft: 15}} onClick={this.setThreshold.bind(this)}>Set Threshold</button>
         </div>
 

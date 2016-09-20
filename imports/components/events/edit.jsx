@@ -21,6 +21,8 @@ import ImagePage from "./modules/details/image.jsx";
 import RevenueDetailsPage from "./modules/revenue/details.jsx";
 import TicketsPage from "./modules/revenue/tickets.jsx";
 import TierPage from "./modules/revenue/tiers.jsx";
+import StrategyPage from "./modules/revenue/strategies.jsx";
+import RewardsPage from "./modules/revenue/rewards.jsx";
 
 import SubmitPage from "./modules/submit.jsx";
 import PrizePoolBreakdown from "./edit/prize_pool.jsx";
@@ -140,6 +142,14 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           {
             component: PrizePoolBreakdown,
             text: "Prize Pool"
+          },
+          {
+            component: StrategyPage,
+            text: "Strategies"
+          },
+          {
+            component: RewardsPage,
+            text: "Rewards"
           }
         ]
       },

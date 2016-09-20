@@ -134,31 +134,21 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    if(!event.revenue || !event.revenue.stretchGoals) {
+    if(!event.revenue || !event.revenue.strategy.goals) {
       throw new Meteor.Error(403, "Stretch goals for this event have not been set up.");
     }
     goalObj.children = [];
-    if(typeof(event.revenue.stretchGoals) == "boolean" || Object.keys(event.revenue.stretchGoals).length == 0) {
-      Events.update(eventID, {
-        $set: {
-          "revenue.stretchGoals": [goalObj]
-        }
-      })
-    }
-    else {
-      if(!event.revenue.stretchGoals[parentIndex]){
-        throw new Meteor.Error(404, "Parent goal not found.");
+    var goalObj = validateFields(goalObj);
+    var objCount = event.revenue.strategy.goals.length;
+    Events.update(eventID, {
+      $push: {
+        [`revenue.strategy.goals`]: goalObj
       }
-      var goalObj = validateFields(goalObj);
-      var objCount = event.revenue.stretchGoals.length;
+    });
+    if(objCount != 0) {
       Events.update(eventID, {
         $push: {
-          [`revenue.stretchGoals`]: goalObj
-        }
-      });
-      Events.update(eventID, {
-        $push: {
-          [`revenue.stretchGoals.${parentIndex}.children`]: objCount
+          [`revenue.strategy.goals.${parentIndex}.children`]: objCount
         }
       });
     }
@@ -169,17 +159,17 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    if(!event.revenue || !event.revenue.stretchGoals) {
+    if(!event.revenue || !event.revenue.strategy.goals) {
       throw new Meteor.Error(403, "Stretch goals are not enabled for this event.");
     }
-    if(!event.revenue.stretchGoals[goalIndex]){
+    if(!event.revenue.strategy.goals[goalIndex]){
       throw new Meteor.Error(404, "Goal for event was not found.");
     }
-    var children = event.revenue.stretchGoals[goalIndex].children;
+    var children = event.revenue.strategy.goals[goalIndex].children;
     goalObj.children = children;
     Events.update(eventID, {
       $set: {
-        [`revenue.stretchGoals.${goalIndex}`]: goalObj
+        [`revenue.strategy.goals.${goalIndex}`]: goalObj
       }
     });
   },
@@ -189,16 +179,16 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    if(!event.revenue || !event.revenue.stretchGoals) {
+    if(!event.revenue || !event.revenue.strategy.goals) {
       throw new Meteor.Error(403, "Stretch goals are not enabled for this event.");
     }
-    if(!event.revenue.stretchGoals[goalIndex]){
+    if(!event.revenue.strategy.goals[goalIndex]){
       throw new Meteor.Error(404, "Goal for event was not found.");
     }
     if(goalIndex == 0) {
       throw new Meteor.Error(403, "Can't remove your base goal.");
     }
-    var goals = event.revenue.stretchGoals;
+    var goals = event.revenue.strategy.goals;
     var child = goals[goalIndex].children[0];
     var parent = null;
     var index = -1;
@@ -222,10 +212,10 @@ Meteor.methods({
 
     Events.update(eventID, {
       $set: {
-        [`revenue.stretchGoals.${index}`]: parent
+        [`revenue.strategy.goals.${index}`]: parent
       },
       $unset: {
-        [`revenue.stretchGoals.${goalIndex}`]: 1
+        [`revenue.strategy.goals.${goalIndex}`]: 1
       }
     });
   },
@@ -241,7 +231,7 @@ Meteor.methods({
   "events.setSkillPointThreshold"(eventID, amount) {
     Events.update(eventID, {
       $set: {
-        "revenue.stretchGoalThreshold": amount
+        "revenue.strategy.pointThreshold": amount
       }
     })
   },

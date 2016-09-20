@@ -5,12 +5,13 @@ export default class TierPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: Events.findOne()._id
+      id: Events.findOne()._id,
+      rewards: []
     }
   }
 
   onTierCreate() {
-    Meteor.call("events.revenue.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, (err) => {
+    Meteor.call("events.revenue.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -25,7 +26,14 @@ export default class TierPage extends Component {
   }
 
   onTierUpdate(index) {
-    Meteor.call("events.revenue.updateTier", this.state.id, index, this.refs[`name${index}`].value, this.refs[`price${index}`].value * 1, this.refs[`limit${index}`].value * 1, this.refs[`description${index}`].value, (err) => {
+    var rewards = this.refs[`rewards${index}`];
+    var indices = [];
+    rewards.childNodes.forEach((icon, index) => {
+      if(icon.classList.contains("active")) {
+        indices.push(index);
+      }
+    });
+    Meteor.call("events.revenue.updateTier", this.state.id, index, this.refs[`name${index}`].value, this.refs[`price${index}`].value * 1, this.refs[`limit${index}`].value * 1, this.refs[`description${index}`].value, indices, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -54,9 +62,27 @@ export default class TierPage extends Component {
     })
   }
 
+  toggleReward(index) {
+    var rewardIndex = this.state.rewards.indexOf(index);
+    if(rewardIndex < 0){
+      this.state.rewards.push(index);
+    }
+    else {
+      this.state.rewards.splice(rewardIndex, 1);
+    }
+    this.forceUpdate();
+  }
+
+  toggleRewardForExisting(tierIndex, rewardIndex){
+    var rewardList = this.refs[`rewards${tierIndex}`];
+    var target = rewardList.childNodes[rewardIndex];
+    target.classList.toggle("active");
+  }
+
   render() {
     var event = Events.findOne();
     var tiers = event.revenue.tiers || [];
+    var rewards = event.revenue.rewards || [];
     return (
       <div className="col">
         {
@@ -78,6 +104,18 @@ export default class TierPage extends Component {
                 <input type="number" ref={"limit"+i} defaultValue={tier.limit} />
                 <span>Tier Description</span>
                 <textarea ref={"description"+i} defaultValue={tier.description}></textarea>
+                <span>Tier Rewards</span>
+                <div className="row x-center" ref={"rewards"+i}>
+                  {
+                    rewards.map((reward, index) => {
+                      return (
+                        <div className={`selectable reward ${ tier.rewards.indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleRewardForExisting(i, index) }}>
+                          <img src={ reward.imgUrl } />
+                        </div>
+                      )
+                    })
+                  }
+                </div>
               </div>
             )
           })
@@ -95,6 +133,18 @@ export default class TierPage extends Component {
           <input type="number" ref="limit" />
           <span>Tier Description</span>
           <textarea ref="description"></textarea>
+          <span>Tier Rewards</span>
+          <div className="row x-center" ref="rewards">
+          {
+            rewards.map((reward, index) => {
+              return (
+                <div className={`selectable reward ${ this.state.rewards.indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
+                  <img src={ reward.imgUrl } />
+                </div>
+              )
+            })
+          }
+          </div>
         </div>
       </div>
     )

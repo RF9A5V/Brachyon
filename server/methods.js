@@ -253,7 +253,7 @@ Meteor.methods({
       destination: Meteor.users.findOne(payableTo).services.stripe.id
     }, function(err, response){
       if(err){
-        //throw new Meteor.Error(500, "stripe-error", err.message);
+        throw new Meteor.Error(500, "stripe-error", err.message);
       }
       else{
         return response;
