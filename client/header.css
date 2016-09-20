@@ -56,7 +56,7 @@ header {
   -moz-transition: border-bottom 0.5s ease-out;
   -o-transition: border-bottom 0.5s ease-out;
   transition: border-bottom 0.5s ease-out;
-  border-bottom: rgba(204,0,0,0.5) 2px solid;
+  border-bottom: rgba(204,0,0,0.7) 2px solid;
 }
 
 .hub.active{
