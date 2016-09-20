@@ -22,7 +22,7 @@ export default class TierBreakdown extends Component {
   }
 
   render() {
-    var tiers = Events.findOne().revenue.tiers;
+    var tiers = Events.findOne().revenue.tiers || [];
     var rewards = Events.findOne().revenue.rewards;
     return (
       <div>

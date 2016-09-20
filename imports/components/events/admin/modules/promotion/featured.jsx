@@ -7,7 +7,7 @@ export default class FeaturedList extends Component {
     var event = Events.findOne();
     var participants = new Set();
     event.brackets.forEach((bracket) => {
-      var players = bracket.participants;
+      var players = bracket.participants || [];
       players.forEach((player) => {
         if(player.id){
           participants.add(player.id);
