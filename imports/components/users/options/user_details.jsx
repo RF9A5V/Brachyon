@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
 import ImageForm from "../../public/img_form.jsx";
-import { ProfileImages } from "/imports/api/users/profile_images.js"
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 export default class UserDetailsPanel extends Component {
 
@@ -35,12 +36,6 @@ export default class UserDetailsPanel extends Component {
   saveBannerImage(e) {
     e.preventDefault();
     var imageID = this.refs.profileBanner.value();
-    if(Meteor.user() && Meteor.user().profile.image != imageID) {
-      Meteor.call("users.update_profile_banner", imageID, this.genericError("banner image").bind(this));
-    }
-    else {
-      toastr.warning("No changes to be made.", "Warning!");
-    }
   }
 
   saveAlias(e) {

@@ -4,10 +4,9 @@ import Grid from "gridfs-stream";
 import { MongoInternals } from "meteor/mongo";
 import fs from "fs";
 
-import gfs from "../gridfs.js";
-
+let gfs;
 if(Meteor.isServer) {
-  let gfs = Grid(
+  gfs = Grid(
     MongoInternals.defaultRemoteCollectionDriver().mongo.db,
     MongoInternals.NpmModule
   );
@@ -31,7 +30,8 @@ export const Images = new FilesCollection({
         filename: image.name,
         metadata
       });
-      fs.createReadStream(image.versions[versionName].path).pipe(writeStream);
+      var dims = image.meta;
+      gm(fs.createReadStream(image.versions[versionName].path), image.name).crop(dims.width, dims.height, dims.left, dims.top).resize("1280", "720").stream().pipe(writeStream);
       writeStream.on("close", Meteor.bindEnvironment(file => {
         const property = `versions.${versionName}.meta.gridFsFileId`;
         this.collection.update(image._id, {

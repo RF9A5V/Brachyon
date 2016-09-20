@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import Games from "../games/games.js";
+import { Images } from "/imports/api/event/images.js";
 
 export default Events = new Mongo.Collection('events', {
   transform: (doc) => {
@@ -7,7 +8,7 @@ export default Events = new Mongo.Collection('events', {
     if(doc.details.banner){
       var img = Images.findOne(doc.details.banner);
       if(img != null) {
-        doc.bannerUrl = img.url();
+        doc.bannerUrl = img.link();
       }
     }
     doc.games = Games.find({_id: {$in: games}});
