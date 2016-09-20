@@ -4,6 +4,7 @@ import FontAwesome from "react-fontawesome";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameResultTemplate from "/imports/components/public/search_results/game_template.jsx";
 
+import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
 
 export default class BracketForm extends Component {
@@ -19,7 +20,7 @@ export default class BracketForm extends Component {
       this.state.game = {
         id: game._id,
         name: game.name,
-        banner: Images.findOne(game.banner).url()
+        banner: Images.findOne(game.banner).link()
       }
     }
     if(props.format) {
@@ -45,7 +46,7 @@ export default class BracketForm extends Component {
       game: {
         id: game._id,
         name: game.name,
-        banner: Images.findOne(game.banner).url()
+        banner: Images.findOne(game.banner).link()
       },
 
     });

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Modal from "react-modal";
 import Dropzone from "react-dropzone";
 
+import { Images } from "/imports/api/event/images.js";
+
 import ImageForm from "/imports/components/public/img_form.jsx";
 
 export default class CreateGameModal extends Component {
@@ -20,15 +22,17 @@ export default class CreateGameModal extends Component {
 
   submit(e){
     e.preventDefault();
-    var self = this;
-    Meteor.call("games.create", self.refs.name.value, self.refs.image.value(), function(err){
+    this.refs.image.value();
+  }
+
+  onImageUploaded(img) {
+    Meteor.call("games.create", this.refs.name.value, img._id, (err) => {
       if(err){
-        toastr.error(err.reason);
+        toastr.error(err.reason, "Error!")
       }
       else {
-        toastr.success("Submitted game for review.");
+        toastr.success("Successfully sent game for review.", "Success!");
       }
-      self.setState({open: false})
     })
   }
 
@@ -45,7 +49,7 @@ export default class CreateGameModal extends Component {
                 <h3>Game Name</h3>
               </label>
               <input type="text" ref="name" placeholder="Game Name" />
-              <ImageForm ref="image" aspectRatio={16/9} collection={Images} />
+              <ImageForm ref="image" aspectRatio={16/9} collection={Images} callback={this.onImageUploaded.bind(this)} />
               <div>
                 <button onClick={this.submit.bind(this)}>Submit</button>
               </div>
