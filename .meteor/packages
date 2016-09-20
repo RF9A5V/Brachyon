@@ -23,10 +23,8 @@ meteortoys:allthings
 ultimatejs:tracker-react
 velocityjs:velocityjs
 chrismbeckett:toastr
-cfs:standard-packages
 lookback:logger
 u2622:persistent-session
-cfs:gridfs
 mrgalaxy:stripe
 meteorhacks:async
 secretninjaman:meteor-accounts-stripe-connect
