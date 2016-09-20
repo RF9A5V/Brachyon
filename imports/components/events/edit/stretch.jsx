@@ -5,7 +5,7 @@ import FontAwesome from "react-fontawesome";
 import MoneyInput from "/imports/components/public/money_input.jsx";
 import ImageForm from "/imports/components/public/img_form.jsx";
 
-import Icons from "/imports/api/sponsorship/icon.js";
+import { Icons } from "/imports/api/sponsorship/icon.js";
 
 export default class StretchGoals extends Component {
 
@@ -24,7 +24,7 @@ export default class StretchGoals extends Component {
     for(var i in nodeChildren){
       var index = nodeChildren[i];
       rez.push(
-        <div className="circle" style={{backgroundImage: this.props.goals[index].icon == null ? "initial" : `url(${Icons.findOne(this.props.goals[index].icon).url()})`}} onClick={this.onGoalEdit(index, this.props.goals[index])} key={"a"+index}>
+        <div className="circle" style={{backgroundImage: this.props.goals[index].icon == null ? "initial" : `url(${Icons.findOne(this.props.goals[index].icon).link()})`}} onClick={this.onGoalEdit(index, this.props.goals[index])} key={"a"+index}>
         </div>
       )
       rez.push(
@@ -105,7 +105,7 @@ export default class StretchGoals extends Component {
               else {
                 var goal = this.props.goals[index];
                 return (
-                  <div className={`circle indirect`} onClick={this.onGoalEdit(index, goal)} style={{backgroundImage: goal.icon ? `url(${Icons.findOne(goal.icon).url()})` : ""}} key={i}></div>
+                  <div className={`circle indirect`} onClick={this.onGoalEdit(index, goal)} style={{backgroundImage: goal.icon ? `url(${Icons.findOne(goal.icon).link()})` : ""}} key={i}></div>
                 )
               }
             })
@@ -150,14 +150,12 @@ export default class StretchGoals extends Component {
     }
   }
 
-  onGoalSubmit(e) {
-    e.preventDefault();
-
+  onImageUploaded(data) {
     var goals = {
       name: this.refs.name.value,
       amount: parseInt(this.refs.amount.value),
       description: this.refs.description.value,
-      icon: this.refs.icon.value()
+      icon: data._id
     }
 
     if(this.state.create) {
@@ -186,6 +184,11 @@ export default class StretchGoals extends Component {
         }
       })
     }
+  }
+
+  onGoalSubmit(e) {
+    e.preventDefault();
+    this.refs.icon.value();
   }
 
   onGoalDelete(e) {
@@ -244,7 +247,7 @@ export default class StretchGoals extends Component {
                 <FontAwesome name="plus" />
               </div>
             ) : (
-              <div className="circle" style={{backgroundImage: initial.icon ? `url(${Icons.findOne(initial.icon).url()})` : "inherit"}} onClick={this.onGoalEdit(0, initial).bind(this)}>
+              <div className="circle" style={{backgroundImage: initial.icon ? `url(${Icons.findOne(initial.icon).link()})` : "inherit"}} onClick={this.onGoalEdit(0, initial).bind(this)}>
               </div>
             )
           }
@@ -264,7 +267,7 @@ export default class StretchGoals extends Component {
             <label>Description</label>
             <textarea ref="description" style={{margin: 0, marginBottom: 10}} defaultValue={this.state.goal.description}></textarea>
             <label>Icon (Optional)</label>
-            <ImageForm aspectRatio={1} ref="icon" collection={Icons} id={this.state.goal.icon} />
+            <ImageForm aspectRatio={1} ref="icon" collection={Icons} id={this.state.goal.icon} callback={this.onImageUploaded.bind(this)} />
             <div>
               <button onClick={this.onGoalSubmit.bind(this)}>Submit</button>
               {
