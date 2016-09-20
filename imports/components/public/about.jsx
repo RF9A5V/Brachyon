@@ -87,7 +87,7 @@ export default class AboutScreen extends TrackerReact(Component) {
     }
     return(
       <div className="row center">
-        <div className="col side-tab-panel">
+        <div className="col side-tab-panel" style={{minWidth: 1200}}>
           <h2 style={{margin: 0}}>What is Brachyon?</h2>
           <div className="about-what">
             Welcome to Brachyon - a website which allows you to find,

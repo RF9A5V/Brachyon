@@ -12,7 +12,7 @@ export default class Footer extends React.Component {
         <div className="row col-2 footer x-center center">
           <div className="col-1 row x-center justify-start" style={{margin: '0 0 0 10px'}}>
             <a href="https://www.twitch.tv/brachyon" target="_blank">
-            <div className="social-icon-bg col x-center center">
+            <div className="social-icon-bg col x-center center" onHover>
               <FontAwesome name="twitch" className="twitch" />
             </div></a>
             <div className="footer-plugin-pad"></div>
@@ -26,9 +26,10 @@ export default class Footer extends React.Component {
               <FontAwesome name="reddit-alien" className="reddit social-icon" />
             </div></a>
             <div className="footer-plugin-pad"></div>
+            <a href="https://www.facebook.com/BrachyonInc/" target="_blank">
             <div className="social-icon-bg col x-center center">
               <FontAwesome name="facebook " className="facebook social-icon" />
-            </div>
+            </div></a>
             <div className="footer-plugin-pad"></div>
             <SnapModal />
             <div className="footer-plugin-pad"></div>
