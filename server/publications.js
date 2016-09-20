@@ -18,7 +18,7 @@ Meteor.publish("event_participants", (id) => {
         _id: {
           $in: imgIDs
         }
-      })
+      }).cursor
     ]
   }
   else {
@@ -139,7 +139,7 @@ Meteor.publish("discoverEvents", function(){
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}}),
-    Images.find({_id: { $in: imageIDs }}),
+    Images.find({_id: { $in: imageIDs }}).cursor,
     games
   ]
 })
