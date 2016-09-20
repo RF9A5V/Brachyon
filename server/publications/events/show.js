@@ -3,12 +3,25 @@ import Games from '/imports/api/games/games.js';
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
   var sponsors = [];
-  if(event.revenue && event.revenue.crowdfunding && event.revenue.crowdfunding.sponsors){
-    sponsors = event.revenue.crowdfunding.sponsors.map((sponsor) => {
+  if(event.revenue && event.revenue.sponsors){
+    sponsors = event.revenue.sponsors.map((sponsor) => {
       return sponsor.id;
     })
   }
-  var users = Meteor.users.find({_id: {$in: sponsors}}); // later join with participants.
+  var participants = new Set();
+  if(event.brackets) {
+    event.brackets.forEach((bracket) => {
+      (bracket.participants || []).forEach((player) => {
+        if(player.id){
+          participants.add(player.id);
+        }
+      })
+    })
+  }
+  sponsors.forEach((spons) => {
+    participants.add(spons);
+  });
+  var users = Meteor.users.find({_id: { $in: Array.from(participants) }})
   var profileImages = ProfileImages.find({_id: { $in: (users.map( (user) => { return user.profile.image } )) }});
   var gameIds = [];
   var banners = [event.details.banner];

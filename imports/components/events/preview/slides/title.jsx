@@ -31,8 +31,14 @@ export default class EventTitlePage extends Component {
     })
   }
 
+  imgOrDefault(imgId) {
+    var img = ProfileImages.findOne(imgId);
+    return img == null ? "/images/profile.png" : img.url();
+  }
+
   render() {
     var revenue = this.props.event.revenue;
+    var promotion = this.props.event.promotion || {};
     return (
       <div className="slide-page-container">
         <div className="slide-page row" style={{display: this.state.pageIndex == 0 ? "flex" : "none", backgroundImage: this.backgroundImage(false)}}>
@@ -40,11 +46,12 @@ export default class EventTitlePage extends Component {
             <div className="col">
               <div className="row" style={{justifyContent: "space-around", marginTop: 20}}>
                 {
-                  [0, 1, 2].map(() => {
+                  (promotion.featured || []).map((id) => {
+                    var user = Meteor.users.findOne(id);
                     return (
                       <div className="col x-center">
-                        <img src="/images/profile.png" className="big-name-img" />
-                        <span>Profile</span>
+                        <img src={ this.imgOrDefault(user.profile.image) } className="big-name-img" />
+                        <span>{ user.username }</span>
                       </div>
                     )
                   })
@@ -54,13 +61,14 @@ export default class EventTitlePage extends Component {
             <div>
               {
                 revenue && revenue.sponsors ? (
-                  revenue.sponsors.sort((a, b) => { return b.amount - a.amount; }).slice(0, 3).map((sponsor) => {
+                  revenue.sponsors.slice(0, 3).map((sponsor) => {
+                    console.log(sponsor);
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
                       <div className="sponsor-item col center">
                         <div className="row x-center">
                           <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
-                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.price / 100}</span>
+                          <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
                         </div>
                         <p>
                           { sponsor.comment }
