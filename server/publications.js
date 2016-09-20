@@ -1,5 +1,6 @@
 import Games from '/imports/api/games/games.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { Images } from "/imports/api/event/images.js";
 
 Meteor.publish("event_participants", (id) => {
@@ -66,11 +67,17 @@ Meteor.publish("user", (_id) => {
   }
   var games = Games.find({_id: {$in: user.profile.games}});
   var imgs = ProfileImages.find({_id: user.profile.image});
+  var gameBanners = Images.find({
+    _id: {
+      $in: games.map((g) => { return g.banner })
+    }
+  })
   return [
     Meteor.users.find({_id}),
-    ProfileBanners.find({_id: user.profile.banner}),
+    ProfileBanners.find({_id: user.profile.banner}).cursor,
     imgs.cursor,
-    games
+    games,
+    gameBanners.cursor
   ];
 })
 
@@ -166,7 +173,7 @@ Meteor.publish('unapproved_games', function() {
   var games = Games.find({approved: false}).fetch().map(function(game) { return game.banner });
   return [
     Games.find({ approved: false }),
-    Images.find({_id: { $in: games }})
+    Images.find({_id: { $in: games }}).cursor
   ];
 })
 
@@ -174,11 +181,12 @@ Meteor.publish('games', function(){
   var games = Games.find({approved: true}).fetch().map(function(game) { return game.banner });
   return [
     Games.find({approved: true}),
-    Images.find({_id: { $in: games }})
+    Images.find({_id: { $in: games }}).cursor
   ]
 })
 
 Meteor.publish('game_search', function(query) {
+  console.log(query);
   if(query == ""){
     return [];
   }
@@ -186,9 +194,9 @@ Meteor.publish('game_search', function(query) {
     name: new RegExp(query.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i'),
     approved: true
   });
-  var banners = games.fetch().map(function(game) { return game.banner });
+  var banners = games.map(function(game) { return game.banner });
   return [
     games,
-    Images.find({_id: { $in: banners }})
+    Images.find({_id: { $in: banners }}).cursor
   ]
 })

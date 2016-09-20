@@ -1,4 +1,6 @@
 import Games from '/imports/api/games/games.js';
+import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
@@ -47,9 +49,9 @@ Meteor.publish('event', (_id) => {
       _id: {
         $in: banners
       }
-    }),
+    }).cursor,
     users,
-    profileImages,
+    profileImages.cursor,
     games,
     Icons.find({
       _id: {

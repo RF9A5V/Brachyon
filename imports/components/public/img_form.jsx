@@ -33,8 +33,12 @@ export default class ImageForm extends Component {
       onStart: () => {
         toastr.warning("Now uploading image.", "Warning")
       },
-      onUploaded: () => {
-        toastr.success("Holy shit that was easy.", "Wow")
+      onUploaded: (err, data) => {
+        console.log(err);
+        console.log(data);
+        if(this.props.callback){
+          this.props.callback(data);
+        }
       },
       onError: (err) => {
         toastr.error("Well that was expected.", "GG");
