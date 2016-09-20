@@ -81,9 +81,7 @@ export default class Header extends TrackerReact(Component) {
       <Headroom id="header" disableInlineStyles={true}>
         <header className="row x-center header">
           <div className="row x-center">
-            <Link to="/" >
-              <img src="/images/b_logo_trans.png"></img>
-            </Link>
+            <img src="/images/b_logo_trans.png" style={{width: "60px", height: "auto", cursor: "pointer"}} onClick={() => {browserHistory.push("/")}}></img>
             <div style={{marginLeft: 10, marginRight: 10}}>
               <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
                 DISCOVER
