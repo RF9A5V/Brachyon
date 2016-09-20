@@ -36,13 +36,13 @@ export default class EventAdminPage extends TrackerReact(Component) {
         ]
       },
       {
-        text: "Crowdfunding",
+        text: "Revenue",
         icon: "money",
         subitems: [
           {
             component: Main,
             args: {
-              name: "Crowdfunding"
+              name: "Revenue"
             }
           },
           {

@@ -25,6 +25,19 @@
 
 .tab-header, .tab-subtext {
   padding: 20px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.tab-header span {
+  display: inline-block;
+}
+
+.tab-header .fa, .tab-subtext .fa {
+  width: 50px;
+  text-align: center;
+  margin-right: 10px;
 }
 
 .tab-text {
@@ -33,12 +46,29 @@
   text-align: left;
 }
 
-.tab-menu-item:hover .tab-header, .tab-menu-item.active .tab-header, .tab-menu-item:hover .tab-icon, .tab-menu-item.active .tab-icon {
-  background-color: #666;
+.tab-subtext {
+  font-size: 12px;
 }
 
-.tab-menu-item .tab-subtext:hover, .tab-subtext.active {
+.tab-menu-item:hover .tab-header, .tab-menu-item:hover .tab-icon {
   background-color: #666;
+  cursor: pointer;
+}
+
+.tab-menu-item.active .tab-header,  .tab-menu-item.active .tab-icon {
+  background-color: #C00;
+}
+
+.tab-subtext:hover {
+  cursor: pointer;
+}
+
+.tab-menu-item .tab-subtext:not(.active):hover span {
+  color: #AAA;
+}
+
+.tab-subtext.active span {
+  color: #C00;
 }
 
 .tab-menu .tab-text, .tab-menu.active .tab-icon {

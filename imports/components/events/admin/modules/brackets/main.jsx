@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { browserHistory } from "react-router";
 
 import Games from "/imports/api/games/games.js";
+import { Images } from "/imports/api/event/images.js";
 
 export default class Main extends Component {
 
@@ -13,7 +14,7 @@ export default class Main extends Component {
   }
 
   gameBanner(gameID){
-    return Games.findOne(gameID).bannerUrl;
+    return Images.findOne(Games.findOne(gameID).banner).link();
   }
 
   redirectToBracketPage(index) {
@@ -38,7 +39,6 @@ export default class Main extends Component {
             )
           })
         }
-        Bracket Stuff
       </div>
     )
   }
