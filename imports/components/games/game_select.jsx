@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import Games from '/imports/api/games/games.js';
+import { Images } from "/imports/api/event/images.js";
 
 import GameBlock from './game_block.jsx';
 import GameCreateModal from './create.jsx';
@@ -69,7 +70,7 @@ export default class GameSelectScreen extends TrackerReact(Component) {
   }
 
   imageURL(id) {
-    return Images.findOne(id).url();
+    return Images.findOne(id).link();
   }
 
   render() {

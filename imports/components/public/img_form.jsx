@@ -6,6 +6,7 @@ export default class ImageForm extends Component {
   componentWillMount() {
     this.setState({
       id: this.props.id,
+      uploader: null
     });
   }
 
@@ -24,14 +25,26 @@ export default class ImageForm extends Component {
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
 
-    var file = new FS.File({dimensions: boxData});
-    file.attachData(this.state.url, { type: this.state.type });
-    var value = this.props.collection.insert(file, function(err, obj){
-      if(err){
-        toastr.error(err.reason);
+    this.props.collection.insert({
+      file: this.state.url,
+      isBase64: true,
+      fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
+      meta: boxData,
+      onStart: () => {
+        toastr.warning("Now uploading image.", "Warning")
+      },
+      onUploaded: (err, data) => {
+        console.log(err);
+        console.log(data);
+        if(this.props.callback){
+          this.props.callback(data);
+        }
+      },
+      onError: (err) => {
+        toastr.error("Well that was expected.", "GG");
+        console.log(err);
       }
     });
-    return value._id;
   }
 
   updateImage(e){
@@ -55,12 +68,7 @@ export default class ImageForm extends Component {
   }
 
   image() {
-    var img = this.props.collection.findOne(this.props.id);
-    if(!img.isUploaded() || !img.hasStored(this.props.store)){
-      // Sorta hacky. Should change this sometime.
-      setTimeout(() => { this.forceUpdate() }, 500);
-    }
-    return img;
+    return this.props.collection.findOne(this.props.id);
   }
 
   render() {
@@ -74,7 +82,7 @@ export default class ImageForm extends Component {
       />);
     }
     else if(this.props.id != null){
-      value = (<img src={this.image().url({ uploading: "/images/balls.svg", storing: "/images/balls.svg" })} style={{width: "100%", height: "auto"}} />);
+      value = (<img src={this.image().link()} style={{width: "100%", height: "auto"}} />);
     }
     else {
       value = (
