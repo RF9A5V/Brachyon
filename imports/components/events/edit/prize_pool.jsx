@@ -30,15 +30,16 @@ export default class PrizePoolBreakdown extends Component {
     {
       var selectvalues=[20];
       var maxvalues=[20];
+      var min = 4;
       var newobj = {
             selarr: selectvalues,
-            maxarr: maxvalues
+            maxarr: maxvalues,
+            min: min
           }
       brarray.push(newobj);
     }
     while (brarray.length > event.brackets.length)
       brarray.pop();
-
 
     this.state = {
       brarr: brarray,
@@ -154,7 +155,7 @@ export default class PrizePoolBreakdown extends Component {
       console.log(narr);
     }
     sum = narr[0];
-    nmarr = [20];
+    var nmarr = [20];
     for (var x = 1; x < narr.length; x++)
     {
       nmarr.push( (20-sum) < (narr[x-1]) ? (20-sum):(narr[x-1]) );
@@ -168,8 +169,32 @@ export default class PrizePoolBreakdown extends Component {
     });
   }
 
+  changeMin(e, i) {
+    e.preventDefault();
+    var newarr = this.state.brarr;
+    newarr[i].min = parseInt(e.target.value);
+    //newarr[i].selarr.splice(e.target.value, newarr[i].selarr.length - e.target.value)
+    for (var x = this.state.brarr[i].selarr.length; x > newarr[i].min; x--)
+      newarr[i].selarr[0] += newarr[i].selarr.pop();
+    var sum = newarr[i].selarr[0];
+    var nmarr = [20];
+    for (var x = 1; x < newarr[i].selarr.length; x++)
+    {
+      nmarr.push( (20-sum) < (newarr[i].selarr[x-1]) ? (20-sum):(newarr[i].selarr[x-1]) );
+      sum += newarr[i].selarr[x];
+    }
+    console.log(nmarr);
+    newarr[i].maxarr = nmarr;
+    this.setState({
+      brarr: newarr
+    })
+  }
+
   render() {
     var event = Events.findOne();
+    minarr = [];
+    for (var x = 1; x < 21; x++)
+        minarr.push(x);
     if(!event.brackets || event.brackets.length == 0) {
       return (
         <div>
@@ -177,7 +202,6 @@ export default class PrizePoolBreakdown extends Component {
         </div>
       )
     }
-    console.log(this.state.brarr);
     return (
       <div>
         <div className="row flex-pad x-center">
@@ -190,11 +214,23 @@ export default class PrizePoolBreakdown extends Component {
               return (
                 <div className="col" style={{marginBottom: 20}} key={i}>
                   <h3>{ bracket.name }</h3>
-                  <h4>Choose Prize Pool Places:</h4>
+                  <div className="col">
+                    <h4>Choose Prize Pool Places:</h4>
+                    <div className="row justify-end">
+                      <h3>Choose Prize Pool Limit:</h3>
+                      <select onChange={(evt) => this.changeMin(evt, i).bind(this)} value={this.state.brarr[i].min}>
+                      {
+                        minarr.map((num, i) => {
+                          return(<option value={num}>{num + " "}</option>)
+                        })
+                      }
+                      </select>
+                    </div>
+                  </div>
                   <div className="col">
                   {
                     this.state.brarr[i].selarr.map((val, j) => {
-                      return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} br = {i} changePercent={this.checkSelects.bind(this)}/>)
+                      return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} min = {this.state.brarr[i].min} br = {i} changePercent={this.checkSelects.bind(this)}/>)
                     })
                   }
                   </div>
