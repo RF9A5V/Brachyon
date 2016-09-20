@@ -109,6 +109,7 @@ export default class PrizePoolBreakdown extends Component {
   checkSelects(num, br, val) {
     val = parseInt(val);
     var narr = this.state.brarr[br].selarr;
+    var mini = this.state.brarr[br].min;
     if (val > narr[num])
     {
       var extra = val - narr[num];
@@ -140,13 +141,34 @@ export default class PrizePoolBreakdown extends Component {
         }
       }
       var newval = narr[narr.length-1];
-      while (newval < extra)
+      while (newval < extra && narr.length < mini)
       {
         narr.push(newval);
         extra -= newval;
       }
-      if (extra > 0)
-        narr.push(extra);
+      var iter = 1;
+      while (extra > 0)
+      {
+        if (narr.length < mini)
+        {
+          narr.push(extra);
+          extra = 0;
+        }
+        else if (narr[num+iter] < narr[num+iter-1])
+        {
+          if (extra > (narr[num+iter-1] - narr[num+iter]))
+          {
+            extra -= (narr[num+iter-1] - narr[num+iter]);            
+            narr[num+iter] = narr[num+iter-1];
+          }
+          else
+          {
+            narr[num+iter] += extra;
+            extra = 0;
+          }
+        }
+        iter++;
+      }
     }
     var sum = narr.reduce(function(a, b){return a + b}, 0);
     if (sum != 20)
