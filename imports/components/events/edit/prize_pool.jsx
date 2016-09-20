@@ -183,7 +183,6 @@ export default class PrizePoolBreakdown extends Component {
       nmarr.push( (20-sum) < (newarr[i].selarr[x-1]) ? (20-sum):(newarr[i].selarr[x-1]) );
       sum += newarr[i].selarr[x];
     }
-    console.log(nmarr);
     newarr[i].maxarr = nmarr;
     this.setState({
       brarr: newarr
