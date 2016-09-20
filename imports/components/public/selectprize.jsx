@@ -6,7 +6,6 @@ export default class SelectContainer extends Component {
 
   changeVal(e)
   {
-    console.log(e.target.value);
     e.preventDefault();
     this.props.changePercent(this.props.num, this.props.br, e.target.value);
   }
@@ -20,9 +19,14 @@ export default class SelectContainer extends Component {
   render()
   {
     var percentarray = [];
-    for (var x = this.props.max-1; x >= 0; x--)
+    var minimum = Math.ceil(20 / this.props.min);
+    if (this.props.max < minimum)
+      minimum = this.props.max;
+    if (this.props.val < minimum)
+        minimum = this.props.val;
+    for (var x = this.props.max; x >= minimum; x--)
     {
-      var z = (x+1)*5;
+      var z = (x)*5;
       var y = z + "%";
       percentarray.push(y);
     }
