@@ -43,7 +43,8 @@ export default class PrizePoolBreakdown extends Component {
 
     this.state = {
       brarr: brarray,
-      id: event._id
+      id: event._id,
+      ranges: true
     }
   }
 
@@ -158,7 +159,7 @@ export default class PrizePoolBreakdown extends Component {
         {
           if (extra > (narr[num+iter-1] - narr[num+iter]))
           {
-            extra -= (narr[num+iter-1] - narr[num+iter]);            
+            extra -= (narr[num+iter-1] - narr[num+iter]);
             narr[num+iter] = narr[num+iter-1];
           }
           else
@@ -208,14 +209,52 @@ export default class PrizePoolBreakdown extends Component {
     newarr[i].maxarr = nmarr;
     this.setState({
       brarr: newarr
-    })
+    });
+  }
+
+  processarray(arrn, maxn){
+    arr = [];
+    max = [];
+    for (var x = 0; x < arrn.length; x++)
+    {
+      console.log(x);
+      arr[x] = arrn[x];
+      max[x] = maxn[x];
+    }
+    var limit = Math.min(8, arr.length);
+    var newin = 0;
+    for (var x = 4; x < limit; x++)
+    {
+      newin += arr[x];
+    }
+    var newin2 = 0;
+    var limit = Math.min(16, arr.length);
+    for (var x = 8; x < limit; x++)
+    {
+      newin2 += arr[x];
+    }
+    if (newin)
+      arr.splice(4, 4, newin);
+    if (newin2)
+      arr.splice(5, 8, newin2);
+    var sum = arr[0];
+    var nmarr = [20];
+    for (var x = 1; x < arr.length; x++)
+    {
+      if (x < 4)
+        nmarr.push( (20-sum) < (arr[x-1]) ? (20-sum):(arr[x-1]) );
+      else
+      {
+        nmarr.push( (20-sum) < (arr[x-1] * Math.pow(2, x-2)) ? (20-sum):(arr[x-1])* Math.pow(2, x-2));
+      }
+      sum += arr[x];
+    }
+    return [arr, nmarr];
   }
 
   render() {
     var event = Events.findOne();
-    minarr = [];
-    for (var x = 1; x < 21; x++)
-        minarr.push(x);
+    var minarr = [1, 2, 3, 4, 8, 16];
     if(!event.brackets || event.brackets.length == 0) {
       return (
         <div>
@@ -232,6 +271,10 @@ export default class PrizePoolBreakdown extends Component {
         <div>
           {
             event.brackets.map((bracket, i) => {
+              if (this.state.ranges == true)
+                [newarr, newmax] = this.processarray(this.state.brarr[i].selarr, this.state.brarr[i].maxarr);
+              else
+                [newarr, newmax] = [this.state.brarr[i].selarr, this.state.brarr[i].maxarr];
               return (
                 <div className="col" style={{marginBottom: 20}} key={i}>
                   <h3>{ bracket.name }</h3>
@@ -250,8 +293,8 @@ export default class PrizePoolBreakdown extends Component {
                   </div>
                   <div className="col">
                   {
-                    this.state.brarr[i].selarr.map((val, j) => {
-                      return (<SelectContainer val = {val} num = {j} max = {this.state.brarr[i].maxarr[j]} min = {this.state.brarr[i].min} br = {i} changePercent={this.checkSelects.bind(this)}/>)
+                    newarr.map((val, j) => {
+                      return (<SelectContainer val = {val} num = {j} max = {newmax[j]} min = {this.state.brarr[i].min} br = {i} changePercent={this.checkSelects.bind(this)}/>)
                     })
                   }
                   </div>
