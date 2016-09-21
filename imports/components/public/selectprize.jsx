@@ -7,7 +7,18 @@ export default class SelectContainer extends Component {
   changeVal(e)
   {
     e.preventDefault();
-    this.props.changePercent(this.props.num, this.props.br, e.target.value);
+    var val = e.target.value;
+    var num = this.props.num;
+    if (this.props.num == 4)
+    {
+      val /= 4;
+    }
+    if (this.props.num == 5)
+    {
+      val /= 8;
+      num = 8;
+    }
+    this.props.changePercent(num, this.props.br, val);
   }
 
   getOrdinal(n) {
@@ -19,7 +30,8 @@ export default class SelectContainer extends Component {
   render()
   {
     var percentarray = [];
-    var minimum = Math.ceil(20 / this.props.min);
+    var min = this.props.num>3 ? (this.props.min/Math.pow(2, this.props.num-3)):(this.props.min);
+    var minimum = Math.ceil(20 / min);
     if (this.props.max < minimum)
       minimum = this.props.max;
     if (this.props.val < minimum)
@@ -30,7 +42,13 @@ export default class SelectContainer extends Component {
       var y = z + "%";
       percentarray.push(y);
     }
-    var string = this.getOrdinal(this.props.num+1) + " Place Split: ";
+    if (this.props.num < 4)
+      var string = this.getOrdinal(this.props.num+1) + " Place Split: ";
+    else
+    {
+      var n = (this.props.num == 4) ? (4):(8);
+      var string = this.getOrdinal(n+1) + " to " + this.getOrdinal(n*2) + " range: ";
+    }
     return(
       <div className="row">
         <span style={{paddingTop: "3px"}}>{string}</span>
