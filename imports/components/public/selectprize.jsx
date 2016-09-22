@@ -7,18 +7,30 @@ export default class SelectContainer extends Component {
   changeVal(e)
   {
     e.preventDefault();
-    var val = e.target.value;
-    var num = this.props.num;
-    if (this.props.num == 4)
-    {
-      val /= 4;
+    val = e.target.value;
+    vcount = e.target.value%4;
+    if (this.props.num == 4) {
+      for (var x = 4; x < 8; x++)
+      {
+        if (vcount > 0)
+          this.props.changePercent(x, this.props.br, Math.ceil(val/4));
+        else
+          this.props.changePercent(x, this.props.br, Math.floor(val/4));
+        vcount--;
+      }
     }
-    if (this.props.num == 5)
+    else if (this.props.num == 5)
     {
-      val /= 8;
-      num = 8;
+      for (var x = 8; x < 15; x++)
+      {
+        this.props.changePercent(x, this.props.br, Math.ceil(val/8));
+      }
+      this.props.changePercent(7, this.props.br, Math.floor(val/8));
     }
-    this.props.changePercent(num, this.props.br, val);
+    else
+    {
+      this.props.changePercent(this.props.num, this.props.br, val);
+    }
   }
 
   getOrdinal(n) {
@@ -30,12 +42,12 @@ export default class SelectContainer extends Component {
   render()
   {
     var percentarray = [];
-    var min = this.props.num>3 ? (this.props.min/Math.pow(2, this.props.num-3)):(this.props.min);
+    var min = this.props.min;
     var minimum = Math.ceil(20 / min);
     if (this.props.max < minimum)
       minimum = this.props.max;
     if (this.props.val < minimum)
-        minimum = this.props.val;
+      minimum = this.props.val;
     for (var x = this.props.max; x >= minimum; x--)
     {
       var z = (x)*5;
