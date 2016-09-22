@@ -25,6 +25,7 @@ import StrategyPage from "./modules/revenue/strategies.jsx";
 import RewardsPage from "./modules/revenue/rewards.jsx";
 
 import SubmitPage from "./modules/submit.jsx";
+import PrizePoolBreakdown from "./edit/prize_pool.jsx";
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
@@ -137,6 +138,10 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           {
             component: TierPage,
             text: "Tiers"
+          },
+          {
+            component: PrizePoolBreakdown,
+            text: "Prize Pool"
           },
           {
             component: StrategyPage,
