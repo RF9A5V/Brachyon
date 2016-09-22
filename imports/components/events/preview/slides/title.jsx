@@ -3,6 +3,7 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 import { browserHistory } from "react-router"
 
+import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
 
 export default class EventTitlePage extends Component {
@@ -17,7 +18,7 @@ export default class EventTitlePage extends Component {
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
     if(this.props.event && this.props.event.bannerUrl) {
-      imgUrl = this.props.event.bannerUrl;
+      imgUrl = Images.findOne(this.props.event.details.banner).link();
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
@@ -33,7 +34,7 @@ export default class EventTitlePage extends Component {
 
   imgOrDefault(imgId) {
     var img = ProfileImages.findOne(imgId);
-    return img == null ? "/images/profile.png" : img.url();
+    return img == null ? "/images/profile.png" : img.link();
   }
 
   render() {
@@ -67,7 +68,7 @@ export default class EventTitlePage extends Component {
                     return (
                       <div className="sponsor-item col center">
                         <div className="row x-center">
-                          <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
+                          <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).link() : "/images/profile.png"} />
                           <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
                         </div>
                         <p>
@@ -152,7 +153,7 @@ export default class EventTitlePage extends Component {
                 this.props.event.brackets.map((bracket, i) => {
                   return (
                     <div className="slide-bracket" onClick={() => { browserHistory.push(`/events/${this.props.event._id}/brackets/${i}`) }}>
-                      <img src={Games.findOne(bracket.game).bannerUrl} />
+                      <img src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
                       <span>{ bracket.name }</span>
                     </div>
                   )

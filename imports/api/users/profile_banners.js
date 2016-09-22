@@ -1,13 +1,74 @@
-export default ProfileBanners = new FS.Collection("profile_banners", {
-  stores: [new FS.Store.GridFS("profile_banners", {
-    transformWrite: function(fileObj, read, write) {
-      var dims = fileObj.dimensions;
-      gm(read, fileObj.name()).crop(dims.width, dims.height, dims.left, dims.top).resize("1280", "360").stream().pipe(write);
+import { FilesCollection } from "meteor/ostrio:files";
+
+import Grid from "gridfs-stream";
+import { MongoInternals } from "meteor/mongo";
+import fs from "fs";
+
+let gfs;
+if(Meteor.isServer){
+  gfs = Grid(
+    MongoInternals.defaultRemoteCollectionDriver().mongo.db,
+    MongoInternals.NpmModule
+  );
+}
+
+export const ProfileBanners = new FilesCollection({
+  debug: true,
+  collectionName: "profile_banners",
+  allowClientCode: false,
+  onBeforeUpload(file) {
+    return true;
+  },
+  onAfterUpload(image) {
+    Object.keys(image.versions).forEach(versionName => {
+      const metadata = {
+        versionName,
+        imageId: image._id,
+        storedAt: new Date()
+      };
+      const writeStream = gfs.createWriteStream({
+        filename: image.name,
+        metadata
+      });
+      var dims = image.meta;
+      gm(fs.createReadStream(image.versions[versionName].path), image.name).crop(dims.width, dims.height, dims.left, dims.top).resize("1280", "320").stream().pipe(writeStream);
+      writeStream.on("close", Meteor.bindEnvironment(file => {
+        const property = `versions.${versionName}.meta.gridFsFileId`;
+        this.collection.update(image._id, {
+          $set: {
+            [property]: file._id.toString()
+          }
+        });
+        Meteor.users.update(image.userId, {
+          $set: {
+            "profile.banner": image._id
+          }
+        })
+        this.unlink(this.collection.findOne(image._id), versionName);
+      }))
+    });
+  },
+  interceptDownload(http, image, versionName) {
+    const _id = (image.versions[versionName].meta || {}).gridFsFileId;
+    if(_id) {
+      const readStream = gfs.createReadStream({ _id });
+      readStream.on("error", err => { throw err; });
+      readStream.pipe(http.response);
     }
-  })],
-  filter: {
-    allow: {
-      contentTypes: ['image/*']
-    }
+    return Boolean(_id);
+  },
+  onAfterRemove(images) {
+    images.forEach(image => {
+      Object.keys(image.versions).forEach(versionName => {
+        const _id = (image.versions[versionName].meta || {}).gridFsFileId;
+        if(_id) {
+          gfs.remove({_id}, err => {
+            if(err) {
+              throw err;
+            }
+          })
+        }
+      })
+    })
   }
 })

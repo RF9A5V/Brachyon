@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import ImageForm from "/imports/components/public/img_form.jsx";
+import { Images } from "/imports/api/event/images.js";
 
 export default class ImagePage extends Component {
 
@@ -13,7 +14,11 @@ export default class ImagePage extends Component {
 
   onImageSave() {
     var bannerId = this.refs.img.value();
-    Meteor.call("events.details.imageSave", this.state.id, bannerId, (err) => {
+
+  }
+
+  onUploadComplete(data) {
+    Meteor.call("events.details.imageSave", this.state.id, data._id, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
@@ -33,8 +38,8 @@ export default class ImagePage extends Component {
           <span>Image</span>
           <button onClick={this.onImageSave.bind(this)}>Save</button>
         </div>
-        <img src={img ? img.url() : ""} />
-        <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Images} />
+        <img src={img ? img.link() : ""} />
+        <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Images} callback={ this.onUploadComplete.bind(this) } />
       </div>
     )
   }

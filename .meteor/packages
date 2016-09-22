@@ -23,10 +23,8 @@ meteortoys:allthings
 ultimatejs:tracker-react
 velocityjs:velocityjs
 chrismbeckett:toastr
-cfs:standard-packages
 lookback:logger
 u2622:persistent-session
-cfs:gridfs
 mrgalaxy:stripe
 meteorhacks:async
 secretninjaman:meteor-accounts-stripe-connect
@@ -38,3 +36,4 @@ accounts-twitter@1.1.11
 accounts-google@1.0.10
 alexbeauchemin:accounts-twitch
 shell-server
+ostrio:files
