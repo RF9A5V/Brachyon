@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { Link } from 'react-router';
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
@@ -28,7 +30,7 @@ export default class Header extends TrackerReact(Component) {
   imgOrDefault() {
     var profile = ProfileImages.findOne(Meteor.user().profile.image);
     if(profile) {
-      return profile.url();
+      return profile.link();
     }
     return "/images/profile.png";
   }

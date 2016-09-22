@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Icons } from "/imports/api/sponsorship/icon.js";
 
 export default class StretchGoals extends Component {
 
@@ -7,7 +8,7 @@ export default class StretchGoals extends Component {
     var rez = [];
     for(var i = 0; i < children.length; i ++){
       rez.push(
-        <div className="circle" style={{backgroundImage: this.props.goals[children[i]].icon ? `url(${Icons.findOne(this.props.goals[children[i]].icon).url()})` : "initial"}} key={"a"+i} onClick={this.props.onGoalSelect(this.props.goals[children[i]])}></div>
+        <div className="circle" style={{backgroundImage: this.props.goals[children[i]].icon ? `url(${Icons.findOne(this.props.goals[children[i]].icon).link()})` : "initial"}} key={"a"+i} onClick={this.props.onGoalSelect(this.props.goals[children[i]])}></div>
       );
       rez.push(
         <div className="line-horiz" key={"b"+i}></div>
@@ -49,7 +50,7 @@ export default class StretchGoals extends Component {
                 )
               }
               return (
-                <div className="circle indirect" style={{backgroundImage: this.props.goals[child].icon ? `url(${Icons.findOne(this.props.goals[child].icon).url()})` : "initial"}} key={i} onClick={this.props.onGoalSelect(this.props.goals[child])} style={{position: "relative", top: 20}}>
+                <div className="circle indirect" style={{backgroundImage: this.props.goals[child].icon ? `url(${Icons.findOne(this.props.goals[child].icon).link()})` : "initial"}} key={i} onClick={this.props.onGoalSelect(this.props.goals[child])} style={{position: "relative", top: 20}}>
                 </div>
               )
             })
@@ -90,7 +91,7 @@ export default class StretchGoals extends Component {
         <div className="row center">
           <div className="line-vert"></div>
         </div>
-        <div className="circle" style={{backgroundImage: this.props.goals[0].icon ? `url(${Icons.findOne(this.props.goals[0].icon).url()})` : "initial"}} onClick={this.props.onGoalSelect(this.props.goals[0])}></div>
+        <div className="circle" style={{backgroundImage: this.props.goals[0].icon ? `url(${Icons.findOne(this.props.goals[0].icon).link()})` : "initial"}} onClick={this.props.onGoalSelect(this.props.goals[0])}></div>
       </div>
     );
   }

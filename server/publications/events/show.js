@@ -1,4 +1,7 @@
 import Games from '/imports/api/games/games.js';
+import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { Icons } from "/imports/api/sponsorship/icon.js";
 
 Meteor.publish('event', (_id) => {
   var event = Events.findOne(_id);
@@ -33,8 +36,8 @@ Meteor.publish('event', (_id) => {
   }
   var games = Games.find({_id: { $in: gameIds }});
   banners = banners.concat(games.map((game) => { return game.banner }));
-  if(event.revenue != null && event.revenue.stretchGoals != null) {
-    iconIDs = event.revenue.stretchGoals.map((key) => {
+  if(event.revenue != null && event.revenue.strategy != null) {
+    iconIDs = event.revenue.strategy.goals.map((key) => {
       if(key == null) {
         return null;
       }
@@ -47,14 +50,14 @@ Meteor.publish('event', (_id) => {
       _id: {
         $in: banners
       }
-    }),
+    }).cursor,
     users,
-    profileImages,
+    profileImages.cursor,
     games,
     Icons.find({
       _id: {
         $in: iconIDs
       }
-    })
+    }).cursor
   ];
 });
