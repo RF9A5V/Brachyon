@@ -147,28 +147,43 @@ export default class PrizePoolBreakdown extends Component {
         narr.push(newval);
         extra -= newval;
       }
-      var iter = 1;
+      var iter = 1, iter2 = 0;
       while (extra > 0)
       {
-        if (narr.length < mini)
-        {
-          narr.push(extra);
-          extra = 0;
-        }
-        else if (narr[num+iter] < narr[num+iter-1])
-        {
-          if (extra > (narr[num+iter-1] - narr[num+iter]))
+        if (iter <= mini) {
+          if (narr.length < mini)
           {
-            extra -= (narr[num+iter-1] - narr[num+iter]);
-            narr[num+iter] = narr[num+iter-1];
+            narr.push(extra);
+            extra = 0;
+          }
+          else if (narr[num+iter] < narr[num+iter-1])
+          {
+            if (extra > (narr[num+iter-1] - narr[num+iter]))
+            {
+              extra -= (narr[num+iter-1] - narr[num+iter]);
+              narr[num+iter] = narr[num+iter-1];
+            }
+            else
+            {
+              narr[num+iter] += extra;
+              extra = 0;
+            }
+          }
+          iter++;
+        }
+        else {
+          if (extra > 20-narr[iter2])
+          {
+            extra -= (20-narr[iter2])
+            narr[iter2] = 20;
           }
           else
           {
-            narr[num+iter] += extra;
+            narr[iter2] += extra;
             extra = 0;
           }
+          iter2++;
         }
-        iter++;
       }
     }
     var sum = narr.reduce(function(a, b){return a + b}, 0);
@@ -181,6 +196,11 @@ export default class PrizePoolBreakdown extends Component {
     var nmarr = [20];
     for (var x = 1; x < narr.length; x++)
     {
+      if (narr[x] == 0)
+      {
+        narr.splice(x, narr.length-x);
+        break;
+      }
       nmarr.push( (20-sum) < (narr[x-1]) ? (20-sum):(narr[x-1]) );
       sum += narr[x];
     }
@@ -190,6 +210,7 @@ export default class PrizePoolBreakdown extends Component {
     this.setState({
       brarr: nbrarr
     });
+    console.log(narr);
   }
 
   changeMin(e, i) {
@@ -217,7 +238,6 @@ export default class PrizePoolBreakdown extends Component {
     max = [];
     for (var x = 0; x < arrn.length; x++)
     {
-      console.log(x);
       arr[x] = arrn[x];
       max[x] = maxn[x];
     }
