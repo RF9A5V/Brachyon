@@ -135,13 +135,29 @@ export default class PrizePoolBreakdown extends Component {
       narr[num] = val;
       for (var x = num+1; x < narr.length; x++)
       {
-        if (narr[x] > val)
+        if ( (!this.state.ranges && narr[x] > val) || (this.state.ranges && x < 4 && narr[x] > val ) )
         {
           extra += (narr[x] - val);
           narr[x] = val;
         }
       }
       var newval = narr[narr.length-1];
+      if (num == 4 && mini > 8)
+      {
+        while (narr.length < 8)
+          narr.push(0);
+        var q = 8;
+        while (extra)
+        {
+          if (narr[q] != 1)
+          {
+            narr[q] = 1;
+            extra--;
+          }
+          q++;
+        }
+        newval = 0;
+      }
       while (newval < extra && narr.length < mini)
       {
         narr.push(newval);
@@ -196,11 +212,6 @@ export default class PrizePoolBreakdown extends Component {
     var nmarr = [20];
     for (var x = 1; x < narr.length; x++)
     {
-      if (narr[x] == 0)
-      {
-        narr.splice(x, narr.length-x);
-        break;
-      }
       nmarr.push( (20-sum) < (narr[x-1]) ? (20-sum):(narr[x-1]) );
       sum += narr[x];
     }
@@ -210,7 +221,6 @@ export default class PrizePoolBreakdown extends Component {
     this.setState({
       brarr: nbrarr
     });
-    console.log(narr);
   }
 
   changeMin(e, i) {
