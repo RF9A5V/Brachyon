@@ -7,9 +7,10 @@ export default class SelectContainer extends Component {
   changeVal(e)
   {
     e.preventDefault();
-    val = e.target.value;
-    vcount = e.target.value%4;
+    var val = e.target.value;
+    var vcount;
     if (this.props.num == 4) {
+      vcount = e.target.value%4;
       for (var x = 4; x < 8; x++)
       {
         if (vcount > 0)
@@ -21,11 +22,15 @@ export default class SelectContainer extends Component {
     }
     else if (this.props.num == 5)
     {
+      vcount = e.target.value%8;
       for (var x = 8; x < 15; x++)
       {
-        this.props.changePercent(x, this.props.br, Math.ceil(val/8));
+        if (vcount > 0)
+          this.props.changePercent(x, this.props.br, Math.ceil(val/8));
+        else
+          this.props.changePercent(x, this.props.br, Math.floor(val/8));
+        vcount--;
       }
-      this.props.changePercent(7, this.props.br, Math.floor(val/8));
     }
     else
     {
@@ -48,6 +53,8 @@ export default class SelectContainer extends Component {
       minimum = this.props.max;
     if (this.props.val < minimum)
       minimum = this.props.val;
+    if (this.props.num > 3)
+      minimum = 1;
     for (var x = this.props.max; x >= minimum; x--)
     {
       var z = (x)*5;
