@@ -1,4 +1,5 @@
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 Meteor.methods({
   "users.update_profile_image"(id) {
@@ -9,9 +10,11 @@ Meteor.methods({
     if(user.profile.image){
       ProfileImages.remove(user.profile.image);
     }
+    var img = ProfileImages.findOne(id);
     Meteor.users.update(Meteor.userId(), {
       $set: {
-        "profile.image": id
+        "profile.image": id,
+        "profile.imageUrl": img.link()
       }
     })
   },

@@ -49,17 +49,17 @@
 }
 
 .side-tab-menu-item:hover {
-  border: 2px #CC0000 solid;
+  border: 2px #FF6000 solid;
   cursor: pointer;
 }
 
 .side-tab-menu-item.active:hover {
-  background-color: #CC0000;
+  background-color: #FF6000;
 }
 
 .side-tab-menu-item.active {
-  background-color: #CC0000;
-  border: 2px #CC0000 solid;
+  background-color: #FF6000;
+  border: 2px #FF6000 solid;
 }
 
 .side-tab-content {
@@ -81,6 +81,7 @@
 .side-tab-panel {
   padding: 40px;
   width: 75%;
+  max-width: 960px;
   background-color: #666;
   min-width: 300px;
   margin: 30px;

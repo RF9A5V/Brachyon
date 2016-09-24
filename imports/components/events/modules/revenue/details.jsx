@@ -27,14 +27,20 @@ export default class RevenueDetailsPage extends Component {
     var event = Events.findOne();
     return (
       <div className="col">
-        <div className="row flex-pad x-center">
-          <span>Revenue Details</span>
+        <div className="button-row">
           <button onClick={this.onDetailsSave.bind(this)}>Save</button>
         </div>
-        <span>Crowdfunding Request</span>
-        <input ref="amount" type="number" defaultValue={event.revenue.amount} />
-        <span>Crowdfunding Due Date</span>
-        <DateInput init={event.revenue.dueDate} ref="date" />
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Crowdfunding</h3>
+          </div>
+          <h5>Crowdfunding Request</h5>
+          <input ref="amount" type="number" defaultValue={(event.revenue || {}).amount} />
+          <h5 style={{marginBottom: 20}}>Crowdfunding Due Date</h5>
+          <div>
+            <DateInput init={(event.revenue || {}).dueDate} ref="date" />
+          </div>
+        </div>
       </div>
     )
   }

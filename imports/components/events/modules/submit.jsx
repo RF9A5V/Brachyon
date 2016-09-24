@@ -25,8 +25,12 @@ export default class SubmitPage extends Component {
   render() {
     return (
       <div>
-        <span>Submit your event for publishing.</span>
-        <button onClick={this.onEventSubmit.bind(this)}>Submit</button>
+        <div className="submodule-bg" style={{marginTop: 10}}>
+          <div className="col x-center">
+            <h3 style={{marginBottom: 20}}>Submit your event for review.</h3>
+            <button onClick={this.onEventSubmit.bind(this)}>Submit</button>
+          </div>
+        </div>
       </div>
     )
   }

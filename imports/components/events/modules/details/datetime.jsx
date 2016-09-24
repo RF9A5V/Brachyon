@@ -30,12 +30,16 @@ export default class DatetimePage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>Date and Time</span>
+        <div className="button-row">
           <button onClick={this.onDatetimeSave.bind(this)}>Save</button>
         </div>
-        <DateSelect ref="date" init={event.details.datetime} />
-        <TimeSelect ref="time" init={event.details.datetime} />
+        <div className="submodule-bg">
+          <div className="col x-center">
+            <h3 style={{marginBottom: 20}}>Date and Time</h3>
+            <DateSelect ref="date" init={event.details.datetime} />
+            <TimeSelect ref="time" init={event.details.datetime} />
+          </div>
+        </div>
       </div>
     )
   }

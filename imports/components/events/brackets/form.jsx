@@ -73,7 +73,7 @@ export default class BracketForm extends Component {
           <span style={{marginBottom: 10}}>
             All participants will go straight into this bracket!
           </span>
-          <label>Bracket Organization</label>
+          <h5>Bracket Organization</h5>
           <select ref="format" defaultValue={this.state.baseFormat}>
             <option value="single_elim">
               Single Elimination
@@ -97,7 +97,7 @@ export default class BracketForm extends Component {
           <span style={{marginBottom: 10}}>
             Participants will be divided into groups, then winners of the group will play each other at the end!
           </span>
-          <label>Group Breakdown</label>
+          <h5>Group Breakdown</h5>
           <select style={{marginBottom: 10}} ref="groupFormat">
             <option value="swiss" selected={this.state.groupFormat == "swiss"}>
               Swiss
@@ -106,7 +106,7 @@ export default class BracketForm extends Component {
               Round Robin
             </option>
           </select>
-          <label>Finals Breakdown</label>
+          <h5>Finals Breakdown</h5>
           <select ref="finalFormat">
             <option value="single_elim" selected={this.state.finalFormat == "single_elim"}>
               Single Elimination
@@ -124,7 +124,7 @@ export default class BracketForm extends Component {
           <span style={{marginBottom: 10}}>
             Participants will be divided up into brackets, then winners of each bracket will play each other at the end!
           </span>
-          <label>Pool Breakdown</label>
+          <h5>Pool Breakdown</h5>
           <select style={{marginBottom: 10}} ref="poolFormat">
             <option value="single_elim" selected={this.state.poolFormat == "single_elim"}>
               Single Elimination
@@ -133,7 +133,7 @@ export default class BracketForm extends Component {
               Double Elimination
             </option>
           </select>
-          <label>Finals Breakdown</label>
+          <h5>Finals Breakdown</h5>
           <select ref="finalFormat">
             <option value="single_elim" selected={this.state.finalFormat == "single_elim"}>
               Single Elimination
@@ -200,9 +200,9 @@ export default class BracketForm extends Component {
           )
         }
 
-        <label>Bracket Name</label>
+        <h5>Bracket Name:</h5>
         <input type="text" ref="bracketName" style={{margin: 0, marginBottom: 10}} defaultValue={this.props.name || ""} />
-        <label>Game Select</label>
+        <h5>Game:</h5>
         {
           this.state.game === null ? (
             <AutocompleteForm ref="game" publications={[
@@ -224,7 +224,7 @@ export default class BracketForm extends Component {
             </div>
           )
         }
-        <label>Format Select</label>
+        <h5>Format Select</h5>
         <div className="row" style={{justifyContent: "space-around", marginBottom: 20}}>
           <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>GROUP</span>
           <span>/</span>

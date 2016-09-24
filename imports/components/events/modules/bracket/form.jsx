@@ -4,6 +4,8 @@ import Games from "/imports/api/games/games.js";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
 
+import { Images } from "/imports/api/event/images.js";
+
 export default class BracketForm extends Component {
 
   constructor(props) {
@@ -36,10 +38,12 @@ export default class BracketForm extends Component {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
-          <span style={{marginBottom: 10}}>
-            All participants will go straight into this bracket!
-          </span>
-          <label>Bracket Organization</label>
+          <div className="row center">
+            <span style={{marginBottom: 10}}>
+              All participants will go straight into this bracket!
+            </span>
+          </div>
+          <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
           <select ref="format" defaultValue={this.state.baseFormat}>
             <option value="single_elim">
               Single Elimination
@@ -60,10 +64,12 @@ export default class BracketForm extends Component {
     else if(this.state.format == "GROUP") {
       return (
         <div className="col">
-          <span style={{marginBottom: 10}}>
-            Participants will be divided into groups, then winners of the group will play each other at the end!
-          </span>
-          <label>Group Breakdown</label>
+          <div className="row center">
+            <span style={{marginBottom: 10}}>
+              Participants will be divided into groups, then winners of the group will play each other at the end!
+            </span>
+          </div>
+          <h5 style={{marginBottom: 20}}>Group Breakdown</h5>
           <select style={{marginBottom: 10}} ref="groupFormat">
             <option value="swiss" selected={this.state.groupFormat == "swiss"}>
               Swiss
@@ -72,7 +78,7 @@ export default class BracketForm extends Component {
               Round Robin
             </option>
           </select>
-          <label>Finals Breakdown</label>
+          <h5 style={{marginBottom: 20}}>Finals Breakdown</h5>
           <select ref="finalFormat">
             <option value="single_elim" selected={this.state.finalFormat == "single_elim"}>
               Single Elimination
@@ -87,10 +93,12 @@ export default class BracketForm extends Component {
     else if(this.state.format == "POOL") {
       return (
         <div className="col">
-          <span style={{marginBottom: 10}}>
-            Participants will be divided up into brackets, then winners of each bracket will play each other at the end!
-          </span>
-          <label>Pool Breakdown</label>
+          <div className="row center">
+            <span style={{marginBottom: 10}}>
+              Participants will be divided up into brackets, then winners of each bracket will play each other at the end!
+            </span>
+          </div>
+          <h5 style={{marginBottom: 20}}>Pool Breakdown</h5>
           <select style={{marginBottom: 10}} ref="poolFormat">
             <option value="single_elim" selected={this.state.poolFormat == "single_elim"}>
               Single Elimination
@@ -99,7 +107,7 @@ export default class BracketForm extends Component {
               Double Elimination
             </option>
           </select>
-          <label>Finals Breakdown</label>
+          <h5 style={{marginBottom: 20}}>Finals Breakdown</h5>
           <select ref="finalFormat">
             <option value="single_elim" selected={this.state.finalFormat == "single_elim"}>
               Single Elimination
@@ -150,36 +158,40 @@ export default class BracketForm extends Component {
   render() {
     return (
       <div className="col">
-        <span>Bracket Name</span>
+        <h5>Bracket Name</h5>
         <input ref="name" defaultValue={this.props.name} />
-        <span>Game</span>
-        <div>
-          {
-            this.state.game ? (
-              <img src={this.state.game.bannerUrl} />
-            ) : (
-              ""
-            )
-          }
-        </div>
+        <h5>Game</h5>
+        {
+          this.state.game ? (
+            <div style={{textAlign: "center"}}>
+              <img style={{width: "50%", height: "auto"}} src={Images.findOne(this.state.game.banner).link()} />
+            </div>
+          ) : (
+            ""
+          )
+        }
         <AutocompleteForm ref="game" publications={["game_search"]} types={[
           {
             type: Games,
             template: GameTemplate,
             name: "Game"
           }
-        ]} onChange={this.onGameSelect.bind(this)} id={this.props.game} />
-        <span>Format Select</span>
-        <div className="row" style={{justifyContent: "space-around", marginBottom: 20}}>
-          <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
-          <span>/</span>
-          <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
-          <span>/</span>
-          <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
+        ]} onChange={this.onGameSelect.bind(this)} value={(this.state.game || {}).name} />
+        <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
+          <div className="row center">
+            <h5 style={{position: "absolute", top: -12.5, backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
+          </div>
+          <div className="row center x-center" style={{margin: "20px 0"}}>
+            <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
+            <span style={{margin: "0 40px"}}>|</span>
+            <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
+            <span style={{margin: "0 40px"}}>|</span>
+            <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
+          </div>
+          {
+            this.formatForm()
+          }
         </div>
-        {
-          this.formatForm()
-        }
       </div>
     )
   }

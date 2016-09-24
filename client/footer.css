@@ -16,12 +16,13 @@
   padding: calc((50px - 15px) / 2) 5px;
   cursor: pointer;
   font-size: 12px;
+  color: white;
 }
 
 .footer-hub-pad:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #CC0000;
+  background-color: black;
   cursor: pointer;
+  color: #00BDFF;
 }
 
 #footer.headroom {
@@ -67,19 +68,19 @@
   cursor: pointer;
 }
 
-.snapchat.active {
+.social-icon-bg:hover .snapchat {
   color: #FFFC00;
 }
 
-.instagram.active {
+.social-icon-bg:hover .instagram {
   color: #517FA4;
 }
 
-.reddit.active {
+.social-icon-bg:hover .reddit {
   color: #CEE3F8;
 }
 
-.facebook.active {
+.social-icon-bg:hover .facebook {
   color: #3B5998;
 }
 
@@ -88,14 +89,14 @@
   margin: 0 2px;
 }
 
-.twitch.active {
+.social-icon-bg:hover .twitch {
   color: #6441A5;
 }
 
-.twitter.active {
+.social-icon-bg:hover .twitter {
   color: #55ACEE;
 }
 
-.youtube.active {
+.social-icon-bg:hover .youtube {
   color: #CD201F;
 }

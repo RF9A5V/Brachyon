@@ -19,17 +19,6 @@ export default class SideTabMenu extends Component {
   render() {
     return (
       <div className="tab-menu active" ref="menu">
-        <div className="tab-menu-item" onClick={ this.onActiveSelect.bind(this) }>
-          <div className="tab-text">
-
-            <div className="tab-header center">
-              <FontAwesome name="arrow-left" size="3x" style={{margin: 0}} />
-            </div>
-          </div>
-          <div className="tab-icon">
-            <FontAwesome name="bars" size="3x" />
-          </div>
-        </div>
         {
           this.props.items.map((item, i) => {
             return (

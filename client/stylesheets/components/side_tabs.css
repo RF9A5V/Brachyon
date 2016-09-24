@@ -16,6 +16,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
+  height: calc(100vh - 120px);
+  position: fixed;
 }
 
 .tab-menu-item {
@@ -56,7 +59,7 @@
 }
 
 .tab-menu-item.active .tab-header,  .tab-menu-item.active .tab-icon {
-  background-color: #C00;
+  background-color: #FF6000;
 }
 
 .tab-subtext:hover {
@@ -68,7 +71,7 @@
 }
 
 .tab-subtext.active span {
-  color: #C00;
+  color: #FF6000;
 }
 
 .tab-menu .tab-text, .tab-menu.active .tab-icon {
@@ -86,4 +89,15 @@
   margin-right: 10px;
   margin-bottom: 10px;
   display: inline-block;
+  width: 104px;
+  height: 104px;
+}
+
+.subitem-nav:hover {
+  cursor: pointer;
+  color: #FF6000;
+}
+
+.subitem-nav:last-child {
+  margin-right: 0;
 }
