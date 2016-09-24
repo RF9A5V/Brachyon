@@ -83,8 +83,8 @@
   border: solid 2px #666;
 }
 
-.event-block:nth-child(3n) {
-  margin-right: 0px;
+.event-block:nth-child(3n - 2) {
+  margin-left: 0px;
 }
 
 .event-block img, .bracket-block img {

@@ -4,12 +4,19 @@ import Modal from "react-modal";
 
 import ImageForm from "/imports/components/public/img_form.jsx";
 
-import ProfileImages from "/imports/api/users/profile_images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 class RewardForm extends Component {
 
-  onRewardSave() {
-    Meteor.call("events.revenue.rewards.createReward", this.props.id, this.refs.name.value, this.refs.img.value(), this.refs.description.value, (err) => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: false
+    }
+  }
+
+  onRewardSave(data) {
+    Meteor.call("events.revenue.rewards.createReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -20,8 +27,8 @@ class RewardForm extends Component {
     })
   }
 
-  onRewardEdit() {
-    Meteor.call("events.revenue.rewards.editReward", this.props.id, this.refs.name.value,this.refs.img.value(), this.refs.description.value, this.props.index, (err) => {
+  onRewardEdit(data) {
+    Meteor.call("events.revenue.rewards.editReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, this.props.index, (err) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
@@ -49,23 +56,38 @@ class RewardForm extends Component {
     if(reward) {
       return (
         <div className="col">
+          <h5>Reward Name</h5>
           <input type="text" placeholder="Name" ref="name" defaultValue={ reward.name } />
-          <ImageForm aspectRatio={1} collection={ProfileImages} ref="img" />
+          <div className="col x-center" style={{textAlign: "center"}}>
+            {
+              this.state.selected ? (
+                ""
+              ) : (
+                <img src={reward.imgUrl} style={{width: "25%"}} />
+              )
+            }
+            <ImageForm aspectRatio={1} collection={ProfileImages} ref="img" callback={ this.onRewardEdit.bind(this) } onSelect={() => { this.setState({selected: true}) }} />
+          </div>
+          <h5>Reward Description</h5>
           <textarea placeholder="Description" ref="description" defaultValue={ reward.description }></textarea>
-          <div>
+          <div className="row center">
+            <button onClick={ () => { this.refs.img.value() } } style={{marginRight: 10}}>Save</button>
             <button onClick={ this.onRewardDelete.bind(this) }>Delete</button>
-            <button onClick={ this.onRewardEdit.bind(this) }>Submit</button>
           </div>
         </div>
       )
     }
     return (
       <div className="col">
+        <h5>Reward Name</h5>
         <input type="text" placeholder="Name" ref="name" />
-        <ImageForm aspectRatio={1} collection={ProfileImages} ref="img" />
+        <div className="col x-center" style={{textAlign: "center"}}>
+          <ImageForm aspectRatio={1} collection={ProfileImages} ref="img" callback={ this.onRewardSave.bind(this) } />
+        </div>
+        <h5>Reward Description</h5>
         <textarea placeholder="Description" ref="description"></textarea>
-        <div>
-          <button onClick={ this.onRewardSave.bind(this) }>Submit</button>
+        <div className="row center">
+          <button onClick={ () => { this.refs.img.value() } }>Submit</button>
         </div>
       </div>
     )
@@ -87,7 +109,7 @@ export default class RewardsPage extends Component {
     this.setState({
       reward: null,
       open: !this.state.open
-    })
+    });
   }
 
   setRewardForEdit(reward, index) {
@@ -99,27 +121,38 @@ export default class RewardsPage extends Component {
   }
 
   render() {
-    var rewards = Events.findOne().revenue.rewards || [];
+    var rewards = (Events.findOne().revenue || {}).rewards || [];
     return (
-      <div className="block-container">
-        {
-          rewards.map((reward, i) => {
-            return (
-              <div className="block reward" onClick={() => {this.setRewardForEdit(reward, i)}}>
-                <img src={ reward.imgUrl } />
-                <div>
-                  <span>{ reward.name }</span>
-                </div>
-              </div>
-            )
-          })
-        }
-        <div className="block reward" onClick={this.toggleModal.bind(this)}>
-          <span>Add a reward</span>
+      <div>
+        <div className="button-row">
+          <button>Save</button>
         </div>
-        <Modal isOpen={this.state.open} onRequestClose={ this.toggleModal.bind(this) }>
-          <RewardForm id={this.state.id} reward={this.state.reward} index={this.state.index} onComplete={this.toggleModal.bind(this)} />
-        </Modal>
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Rewards</h3>
+          </div>
+          <div className="block-container">
+            {
+              rewards.map((reward, i) => {
+                return (
+                  <div className="block reward" onClick={() => {this.setRewardForEdit(reward, i)}}>
+                    <img src={ reward.imgUrl } />
+                    <div>
+                      <span>{ reward.name }</span>
+                    </div>
+                  </div>
+                )
+              })
+            }
+
+            <Modal isOpen={this.state.open} onRequestClose={ this.toggleModal.bind(this) }>
+              <RewardForm id={this.state.id} reward={this.state.reward} index={this.state.index} onComplete={this.toggleModal.bind(this)} ref="form" />
+            </Modal>
+          </div>
+          <div className="row center">
+            <button onClick={this.toggleModal.bind(this)}>Add A Reward</button>
+          </div>
+        </div>
       </div>
     )
   }

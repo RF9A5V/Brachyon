@@ -28,9 +28,9 @@ export default class Header extends TrackerReact(Component) {
   }
 
   imgOrDefault() {
-    var profile = ProfileImages.findOne(Meteor.user().profile.image);
-    if(profile) {
-      return profile.link();
+    var profile = Meteor.user().profile;
+    if(profile && profile.imageUrl) {
+      return profile.imageUrl;
     }
     return "/images/profile.png";
   }
@@ -56,17 +56,14 @@ export default class Header extends TrackerReact(Component) {
           <Link to="/dashboard">
             <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
           </Link>
-          <div className="col">
-            <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
-            <a href="#" className="row x-center" style={{margin: 0}} onClick={(e) => { e.preventDefault(); browserHistory.push("/buy_currency") }}>
-              <span style={{fontWeight: "bold"}}>
-                ${((Meteor.user().profile.amount || 0) / 100).toFixed(2)}
-              </span>
+          <div className="no-select row x-center">
+            <div className="col">
+              <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            </div>
+            <a href="#" className="row x-center" style={{lineHeight: "32px"}}>
+              <FontAwesome style={{position: "relative", bottom: 7}} name="sort-desc" size="2x" />
             </a>
           </div>
-          <a href="#" className="row x-center" style={{lineHeight: "32px"}}>
-            <FontAwesome style={{position: "relative"}} name="sort-desc" size="2x" />
-          </a>
           <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} />
         </div>
       );

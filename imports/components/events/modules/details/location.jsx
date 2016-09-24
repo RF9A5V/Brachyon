@@ -26,11 +26,15 @@ export default class LocationPage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="row x-center flex-pad">
-          <span>Location</span>
+        <div className="button-row">
           <button onClick={this.onLocationSave.bind(this)}>Save</button>
         </div>
-        <LocationSelect ref="location" {...(event.details.location || {})} />
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Location</h3>
+          </div>
+          <LocationSelect ref="location" {...(event.details.location || {})} />
+        </div>
       </div>
     )
   }

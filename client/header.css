@@ -56,11 +56,11 @@ header {
   -moz-transition: border-bottom 0.5s ease-out;
   -o-transition: border-bottom 0.5s ease-out;
   transition: border-bottom 0.5s ease-out;
-  border-bottom: rgba(204,0,0,0.7) 2px solid;
+  border-bottom: rgba(255,96,0,0.5) 2px solid;
 }
 
 .hub.active{
-  border-bottom: #CC0000 2px solid;
+  border-bottom: #FF6000 2px solid;
 }
 
 .hub {
@@ -68,4 +68,5 @@ header {
   margin: 0 10px;
   padding: 4px 0 2px 0;
   border-bottom: transparent 2px solid;
+  color: white;
 }

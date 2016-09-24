@@ -27,11 +27,15 @@ export default class AddBracket extends Component {
   render() {
     return (
       <div className="col">
-        <div className="row flex-pad">
-          <span>Add Bracket</span>
+        <div className="button-row">
           <button onClick={() => { this.onBracketSave() }}>Save</button>
         </div>
-        <BracketForm ref="form" />
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Add Bracket</h3>
+          </div>
+          <BracketForm ref="form" />
+        </div>
       </div>
     )
   }

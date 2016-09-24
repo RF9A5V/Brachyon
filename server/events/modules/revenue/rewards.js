@@ -1,3 +1,5 @@
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 Meteor.methods({
   "events.revenue.rewards.createReward"(id, name, img, description) {
     var event = Events.findOne(id);
@@ -13,7 +15,7 @@ Meteor.methods({
         "revenue.rewards": {
           name,
           img,
-          imgUrl: profileImage.url({ brokenIsFine: true }),
+          imgUrl: profileImage.link(),
           description
         }
       }
@@ -33,7 +35,7 @@ Meteor.methods({
         [`revenue.rewards.${index}`]: {
           name,
           img,
-          imgUrl: profileImage.url({ brokenIsFine: true }),
+          imgUrl: profileImage.link(),
           description
         }
       }
@@ -44,6 +46,7 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
+    ProfileImages.remove(event.revenue.rewards[index].img);
     Events.update(id, {
       $unset: {
         [`revenue.rewards.${index}`]: 1

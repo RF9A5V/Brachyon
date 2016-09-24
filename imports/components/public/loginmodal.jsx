@@ -32,7 +32,7 @@ export default class LogInModal extends React.Component {
             <div className="row justify-end">
               <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
             </div>
-            <h1 style={{textAlign: 'center'}}>Log In</h1>
+            <h1 style={{textAlign: 'center', marginBottom: 0}}>Log In</h1>
             <LogInScreen />
           </Modal>
         </div>

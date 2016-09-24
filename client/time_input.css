@@ -8,3 +8,7 @@
 .time-input input:first-child{
   margin-left: 0;
 }
+
+.time-input select {
+  padding: 10px;
+}

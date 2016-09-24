@@ -20,7 +20,7 @@
   width: 40px;
   height: 40px;
   border-radius: 100%;
-  background-color: #C00;
+  background-color: #FF6000;
   background-size: 100% 100%;
 }
 
@@ -60,4 +60,26 @@
 .goal-row {
   position: relative;
   top: 20px;
+}
+
+.button-row {
+  width: calc(60% + 40px);
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  top: -60px;
+}
+
+.submodule-bg {
+  background-color: #666;
+  padding: 20px;
+  width: 60%;
+  min-width: 300px;
+  margin: -40px auto 40px;
+}
+
+.submodule-overflow {
+  max-height: 600px;
+  overflow-y: auto;
 }

@@ -59,8 +59,36 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         ]
       },
       {
+        text: "Details",
+        icon: "file-text",
+        subitems: [
+          {
+            component: Main,
+            args: {
+              name: "Details"
+            }
+          },
+          {
+            component: DescriptionPage,
+            text: "Description"
+          },
+          {
+            component: LocationPage,
+            text: "Location"
+          },
+          {
+            component: DatetimePage,
+            text: "Date and Time"
+          },
+          {
+            component: ImagePage,
+            text: "Event Image"
+          }
+        ]
+      },
+      {
         text: "Brackets",
-        icon: "gamepad",
+        icon: "sitemap",
         subitems: [
           {
             component: Main,
@@ -89,36 +117,8 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         ])
       },
       {
-        text: "Details",
-        icon: "file-text",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Details"
-            }
-          },
-          {
-            component: DescriptionPage,
-            text: "Description"
-          },
-          {
-            component: LocationPage,
-            text: "Location"
-          },
-          {
-            component: DatetimePage,
-            text: "Date and Time"
-          },
-          {
-            component: ImagePage,
-            text: "Banner"
-          }
-        ]
-      },
-      {
         text: "Revenue",
-        icon: "money",
+        icon: "usd",
         subitems: [
           {
             component: Main,
@@ -128,11 +128,11 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           },
           {
             component: RevenueDetailsPage,
-            text: "Details"
+            text: "Crowdfunding"
           },
           {
-            component: TicketsPage,
-            text: "Tickets"
+            component: RewardsPage,
+            text: "Rewards"
           },
           {
             component: TierPage,
@@ -143,8 +143,8 @@ export default class EditEventScreen extends TrackerReact(React.Component){
             text: "Strategies"
           },
           {
-            component: RewardsPage,
-            text: "Rewards"
+            component: TicketsPage,
+            text: "Tickets"
           }
         ]
       },

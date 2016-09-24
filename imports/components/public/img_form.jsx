@@ -52,11 +52,14 @@ export default class ImageForm extends Component {
     var self = this;
     var reader = new FileReader();
     var type = e.target.files[0].type;
+    if(this.props.onSelect){
+      this.props.onSelect();
+    }
     reader.onload = function() {
       self.setState({
         url: reader.result,
         type
-      })
+      });
     }
     reader.readAsDataURL(e.target.files[0]);
   }
@@ -83,6 +86,9 @@ export default class ImageForm extends Component {
     }
     else if(this.props.id != null){
       value = (<img src={this.image().link()} style={{width: "100%", height: "auto"}} />);
+    }
+    else if(this.props.url != null) {
+      value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
     }
     else {
       value = (

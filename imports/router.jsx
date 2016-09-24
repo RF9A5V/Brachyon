@@ -58,7 +58,6 @@ export const renderRoutes = () => (
       <Route path="games/approval" component={GameApprovalScreen} />
       <Route path="tournaments/single" component={TournamentSingleScreen} />
       <Route path="tournaments/double" component={TournamentDoubleScreen} />
-      <Route path="buy_currency" component={CurrencyPurchaseScreen} />
       <Route path="events/:eventId/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:eventId/admin" component={EventAdminScreen} />

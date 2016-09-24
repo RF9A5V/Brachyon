@@ -1,9 +1,10 @@
 .strategy-block {
-  width: 15%;
+  width: 25%;
   border: solid 2px #666;
   margin-right: 20px;
   margin-bottom: 20px;
   padding-top: 20px;
+  background-color: #333;
 }
 
 .strategy-block:hover {

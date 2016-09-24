@@ -161,7 +161,7 @@ Meteor.publish("userSearch", function(usernameSubstring) {
   });
   return [
     users,
-    profileImages
+    profileImages.cursor
   ];
 })
 

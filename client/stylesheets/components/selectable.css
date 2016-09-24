@@ -4,11 +4,23 @@
   margin: 10px 20px 0 0;
 }
 
+.selectable:hover {
+  cursor: pointer;
+}
+
 .selectable img {
   width: 100%;
   height: auto;
 }
 
+.selectable.active {
+  border-color: #FF6000;
+}
+
 .selectable.active img {
-  border: solid 5px #383;
+  border-color: #FF6000;
+}
+
+.selectable.active div {
+  color: #FF6000;
 }

@@ -23,57 +23,62 @@ export default class TicketPage extends Component {
 
   render() {
     var event = Events.findOne();
-    var brackets = event.brackets;
-    var tickets = event.revenue.tickets || {};
+    var brackets = event.brackets || [];
+    var tickets = (event.revenue || {}).tickets || {};
     var venue = tickets.venue || {};
     var spec = tickets.spec || {};
     return (
-      <div className="ticket-container">
-        <div className="ticket-form col">
-          <div className="row flex-pad">
-            <span>Venue Fee</span>
-            <div>
-              <button onClick={() => { this.onTicketCostSave("venue") }}>Save</button>
-            </div>
-          </div>
-          <span>Price</span>
-          <input type="number" ref={"amountvenue"} defaultValue={venue.price}/>
-          <span>Description</span>
-          <textarea ref={"descriptionvenue"} defaultValue={venue.description}></textarea>
+      <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: 0, paddingTop: 10}}>
+        <div className="row center">
+          <h3>Tickets</h3>
         </div>
-        <div className="ticket-form col">
-          <div className="row flex-pad">
-            <span>Spectator Fee</span>
-            <div>
-              <button onClick={() => { this.onTicketCostSave("spectator") }}>Save</button>
-            </div>
-          </div>
-          <span>Price</span>
-          <input type="number" ref={"amountspectator"} defaultValue={spec.price}/>
-          <span>Description</span>
-          <textarea ref={"descriptionspectator"} defaultValue={spec.description}></textarea>
-        </div>
-        {
-          brackets.map((bracket, i) => {
-            var ticket = tickets["bracket"+i] || {};
-            var id = "bracket"+i;
-            return (
-              <div className="ticket-form col">
-                <div className="row flex-pad">
-                  <span>Entry to { bracket.name }</span>
-                  <div>
-                    <button onClick={() => { this.onTicketCostSave(id) }}>Save</button>
-                  </div>
-                </div>
-                <span>Price</span>
-                <input type="number" ref={"amount" + id} defaultValue={ticket.amount}/>
-                <span>Description</span>
-                <textarea ref={"description" + id} defaultValue={ticket.description}></textarea>
+        <div className="ticket-container">
+          <div className="ticket-form col">
+            <div className="row flex-pad">
+              <h5>Venue Fee</h5>
+              <div>
+                <button onClick={() => { this.onTicketCostSave("venue") }}>Save</button>
               </div>
-            )
-          })
-        }
+            </div>
+            <h5>Price</h5>
+            <input type="number" ref={"amountvenue"} defaultValue={venue.price}/>
+            <h5>Description</h5>
+            <textarea ref={"descriptionvenue"} defaultValue={venue.description}></textarea>
+          </div>
+          <div className="ticket-form col">
+            <div className="row flex-pad">
+              <h5>Spectator Fee</h5>
+              <div>
+                <button onClick={() => { this.onTicketCostSave("spectator") }}>Save</button>
+              </div>
+            </div>
+            <h5>Price</h5>
+            <input type="number" ref={"amountspectator"} defaultValue={spec.price}/>
+            <h5>Description</h5>
+            <textarea ref={"descriptionspectator"} defaultValue={spec.description}></textarea>
+          </div>
+          {
+            brackets.map((bracket, i) => {
+              var ticket = tickets["bracket"+i] || {};
+              var id = "bracket"+i;
+              return (
+                <div className="ticket-form col">
+                  <div className="row flex-pad">
+                    <h5>Entry to { bracket.name }</h5>
+                    <div>
+                      <button onClick={() => { this.onTicketCostSave(id) }}>Save</button>
+                    </div>
+                  </div>
+                  <h5>Price</h5>
+                  <input type="number" ref={"amount" + id} defaultValue={ticket.amount}/>
+                  <h5>Description</h5>
+                  <textarea ref={"description" + id} defaultValue={ticket.description}></textarea>
+                </div>
+              )
+            })
+          }
 
+        </div>
       </div>
     )
   }
