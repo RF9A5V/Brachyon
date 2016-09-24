@@ -142,7 +142,7 @@ export default class PrizePoolBreakdown extends Component {
         }
       }
       var newval = narr[narr.length-1];
-      if (num == 4 && mini > 8)
+      if (num > 4 && num < 8 && mini > 8)
       {
         while (narr.length < 8)
           narr.push(0);
@@ -244,8 +244,8 @@ export default class PrizePoolBreakdown extends Component {
   }
 
   processarray(arrn, maxn){
-    arr = [];
-    max = [];
+    var arr = [];
+    var max = [];
     for (var x = 0; x < arrn.length; x++)
     {
       arr[x] = arrn[x];
