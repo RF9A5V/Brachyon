@@ -271,6 +271,11 @@ export default class PrizePoolBreakdown extends Component {
     var nmarr = [20];
     for (var x = 1; x < arr.length; x++)
     {
+      if (arr[x] == 0)
+      {
+        arr.split(x, arr.length-x);
+        break;
+      }
       if (x < 4)
         nmarr.push( (20-sum) < (arr[x-1]) ? (20-sum):(arr[x-1]) );
       else
