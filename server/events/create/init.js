@@ -1,87 +1,57 @@
-var safeParams = (object, fields) => {
-  if(object == null){
-    throw new Meteor.Error(403, "Object can't be undefined.");
-  }
-  fields = fields.sort((a, b) => {
-    return a < b;
-  });
-  var params = Object.keys(object).sort((a, b) => {
-    return a < b;
-  })
-  var intersect = [];
-  while(fields.length > 0 && params.length > 0) {
-    var [i, j] = [fields.length - 1, params.length - 1];
-    if(fields[i] == params[j]) {
-      intersect.push(fields[i]);
-      fields.pop();
-      params.pop();
-    }
-    else if(fields[i] < params[j]) {
-      fields.pop();
-    }
-    else {
-      params.pop();
-    }
-  }
-  var safeOutput = {};
-  for(var i in intersect) {
-    safeOutput[intersect[i]] = object[intersect[i]];
-  }
-  return safeOutput;
-}
-
 Meteor.methods({
-  "events.create"(obj) {
-    if(obj.details == null){
-      throw new Meteor.Error(403, "Needs details for this object");
+
+  "events.validate_details"(obj) {
+    if(!obj.name || obj.name.length < 3) {
+      throw new Meteor.Error(403, "Event name must be longer than three characters.");
     }
-
-    console.log(obj);
-
-    var main = {
-      published: true,
-      underReview: false,
-      active: false,
-      complete: false,
-      owner: Meteor.userId()
-    };
-
-    var details = Meteor.call("events.updateDetails", obj.details);
-    var nonReview = ["brackets", "bot"];
-    var review = ["revenue", "promotion"];
-    var requiresReview = false;
-
-    main["details"] = details;
-    var attrKeys = Object.keys(obj);
-
-    for(var i in attrKeys) {
-      var key = attrKeys[i];
-      if(nonReview.indexOf(key) >= 0) {
-        main[key] = obj[key];
-      }
-      else if(review.indexOf(key) >= 0) {
-        requiresReview = true;
-        main[key] = obj[key];
-      }
+    if(!obj.description) {
+      throw new Meteor.Error(403, "This event needs a description.");
     }
-    if(requiresReview){
-      main.published = false;
-      main.underReview = false;
+    if(!obj.location) {
+      throw new Meteor.Error(403, "This event needs a location.");
     }
-    return Events.insert(main);
+    if(!obj.datetime) {
+      throw new Meteor.Error(403, "This event needs a start date.");
+    }
+    return obj;
   },
-  "events.updateDetails"(detailsObject) {
-    if(detailsObject == null){
-      throw new Meteor.Error(403, "Details are required.");
+
+  "events.validate_brackets"(ary) {
+    ary.forEach((bracket, i) => {
+      if(!bracket.name || bracket.name.length < 3) {
+        throw new Meteor.Error(403, "Bracket at " + i + " has to have a name longer than three characters.");
+      }
+      if(!bracket.game) {
+        throw new Meteor.Error(403, "Bracket has to have an associated game!");
+      }
+    })
+    return ary;
+  },
+
+  "events.validate_crowdfunding"(obj) {
+    return {
+      details: {
+        amount: 0,
+        dueDate: new Date(),
+        current: 0
+      },
+      tiers: [],
+      rewards: []
     }
-    var predefinedKeys = [
-      "name",
-      "location",
-      "description",
-      "datetime"
-    ].sort((a, b) => {
-      return a < b;
+  },
+
+  "events.create"(obj) {
+    var endObj = {};
+    var acceptedModules = ["details", "brackets", "organize", "crowdfunding"];
+    var requiresReview = false;
+    acceptedModules.forEach(mod => {
+      if(obj[mod]) {
+        requiresReview = true;
+        var value = Meteor.call("events.validate_" + mod, obj[mod]);
+        endObj[mod] = value;
+      }
     });
-    return safeParams(detailsObject, predefinedKeys);
+    endObj.published = !requiresReview;
+    return Events.insert(endObj);
   }
 })

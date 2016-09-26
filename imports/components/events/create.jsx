@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 
 import AccordionContainer from "/imports/components/public/accordion_container.jsx";
 import DetailsPanel from "./create/details.jsx";
-import RevenuePanel from "./create/module_dropdowns/revenue.jsx";
+import CrowdfundingPanel from "./create/module_dropdowns/crowdfunding.jsx";
 import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
 import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
@@ -23,14 +23,10 @@ export default class EventCreateScreen extends Component {
     window.addEventListener("resize", this.forceUpdate.bind(this));
   }
 
-
-
   panels() {
     return {
       brackets: (<BracketsPanel ref="brackets" />),
-      // bot: (<BotPanel ref="bot" />),
-      promotion: (<PromotionPanel ref="promotion" />),
-      revenue: (<RevenuePanel ref="revenue" />)
+      crowdfunding: (<CrowdfundingPanel ref="crowdfunding" />)
     }
   }
 
@@ -44,13 +40,9 @@ export default class EventCreateScreen extends Component {
       ],
       review: [
         {
-          name: "revenue",
+          name: "crowdfunding",
           icon: "usd"
         }
-        // ,{
-        //   name: "promotion",
-        //   icon: "arrow-up"
-        // }
       ]
     }
   }
@@ -97,7 +89,6 @@ export default class EventCreateScreen extends Component {
   submit(e) {
     e.preventDefault();
     var refKeys = Object.keys(this.refs);
-    console.log(refKeys);
     var args = {};
     for(var i in refKeys) {
       var key = refKeys[i];
@@ -106,11 +97,10 @@ export default class EventCreateScreen extends Component {
     console.log(args);
     Meteor.call("events.create", args, function(err, event){
       if(err){
-        console.log(err.reason);
+        toastr.error(err.reason, "Error!");
       }
       else {
-        console.log(event);
-        browserHistory.push("/dashboard");
+        browserHistory.push("/events/" + event + "/edit");
       }
     });
   }
@@ -164,8 +154,8 @@ export default class EventCreateScreen extends Component {
       <div className='box'>
         <div className='col x-center'>
           <h2>Create an Event</h2>
-          <div className="row-to-col" style={{width: window.innerWidth < 1000 ? "95%" : "75%", alignItems: window.innerWidth < 1000 ? "stretch" : "flex-start", minWidth: 200 }}>
-            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1000 ? "initial" : "17.5%" }}>
+          <div className="row-to-col" style={{width: window.innerWidth < 1000 ? "95%" : "85%", alignItems: window.innerWidth < 1000 ? "stretch" : "flex-start", minWidth: 200 }}>
+            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1000 ? "initial" : "22.5%" }}>
               <div className="row center x-center">
                 <h5 style={{position: "relative", top: -32, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Add Modules</h5>
               </div>
@@ -192,7 +182,7 @@ export default class EventCreateScreen extends Component {
                 })
               }
             </div>
-            <div style={{padding: 22, margin: 20, width: "17.5%", minWidth: 200}}>
+            <div style={{padding: 22, margin: 20, width: "22.5%", minWidth: 200}}>
             </div>
           </div>
           {

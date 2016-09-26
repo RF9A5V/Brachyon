@@ -38,12 +38,17 @@
   line-height: 48px;
   letter-spacing: 0.3em;
   margin-right: -0.3em;
+  text-shadow: 0 0 10px black;
+}
+
+.main-content h1:hover, .main-content h3:hover {
+  cursor: default;
 }
 
 .main-content h3 {
   background-color: #00BDFF;
   color: white;
-  text-shadow: 1px 1px black;
+  text-shadow: 0px 0px 2px black;
   margin: 0 4px;
 }
 

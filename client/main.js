@@ -25,7 +25,7 @@ Meteor.startup(() => {
 
   content.border = "none";
   content.borderRadius = 0;
-  content.backgroundColor = "#666";
+  content.backgroundColor = "#000";
   content.height = "60%";
   content.width = "50%";
   content.position = "relative";
