@@ -61,3 +61,43 @@
 .edit-modules:after {
   content: auto
 }
+
+.info-title-container {
+  padding: 20px;
+  background-color: #333;
+  margin-right: 20px;
+}
+
+.info-title {
+  padding: 20px;
+  background-color: #222;
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.info-title:hover {
+  cursor: pointer;
+}
+
+.info-title:last-child {
+  margin-bottom: 0;
+}
+
+.info-title.active {
+  background-color: #FF6000;
+}
+
+.info-description {
+  padding: 20px;
+  background-color: #333;
+}
+
+.info-description p {
+  line-height: 1.5;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+}
+
+.info-description p:last-child {
+  margin-bottom: 0;
+}

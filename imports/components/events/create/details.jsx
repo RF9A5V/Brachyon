@@ -9,22 +9,28 @@ export default class DetailsPanel extends Component {
 
   value() {
     if(this.refs.name.value == "") {
+      toastr.error("Details name needs definition.");
       throw new Error("Details name needs definition.");
     }
-    if(this.refs.location.value() == null) {
+    else if(this.refs.location.value() == null) {
+      toastr.error("Details location needs definition.");
       throw new Error("Details location needs definition.");
     }
-    if(this.refs.description.value == "") {
+    else if(this.refs.description.value == "") {
+      toastr.error("Details description needs definition.");
       throw new Error("Details description needs definition.");
     }
-    if(this.refs.date.value() == null || this.refs.time.value() == null) {
+    else if(this.refs.date.value() == null || this.refs.time.value() == null) {
+      toastr.error("Details datetime needs definition.");
       throw new Error("Details datetime needs definition.");
     }
-    return {
-      name: this.refs.name.value,
-      location: this.refs.location.value(),
-      description: this.refs.description.value,
-      datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
+    else {
+      return {
+        name: this.refs.name.value,
+        location: this.refs.location.value(),
+        description: this.refs.description.value,
+        datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
+      }
     }
   }
 
