@@ -9,6 +9,8 @@
 .tab-content {
   flex: 1 1;
   padding: 20px;
+  height: calc(100vh - 160px);
+  overflow-y: auto;
 }
 
 .tab-menu {
@@ -18,7 +20,6 @@
   align-items: center;
   overflow-y: auto;
   height: calc(100vh - 120px);
-  position: fixed;
 }
 
 .tab-menu-item {

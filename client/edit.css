@@ -63,8 +63,6 @@
 }
 
 .button-row {
-  width: calc(60% + 40px);
-  margin: 0 auto;
   display: flex;
   justify-content: flex-end;
   position: relative;
@@ -74,12 +72,46 @@
 .submodule-bg {
   background-color: #666;
   padding: 20px;
-  width: 60%;
   min-width: 300px;
-  margin: -40px auto 40px;
+  width: calc(100% - 40px);
+  margin: 0 auto;
 }
 
-.submodule-overflow {
-  max-height: 600px;
-  overflow-y: auto;
+.module-title, .submodule-title {
+  padding: 20px;
+  background-color: #333;
+  width: 200px;
+}
+
+.module-title, .section-header {
+  margin-bottom: 20px;
+}
+
+.module-title.active {
+  background-color: #FF6000;
+}
+
+.module-container {
+  background-color: #444;
+  padding: 20px;
+  margin-right: 20px;
+}
+
+.section-header {
+  text-align: center;
+}
+
+.section-header.clickable {
+  margin-bottom: 0;
+  width: 196px;
+  border: solid 2px #666;
+  padding: 20px;
+}
+
+.section-header.active {
+  background-color: #FF6000;
+}
+
+.section-header:hover, .module-title:hover {
+  cursor: pointer;
 }

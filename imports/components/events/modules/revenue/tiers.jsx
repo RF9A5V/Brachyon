@@ -13,7 +13,7 @@ export default class TierPage extends Component {
   }
 
   onTierCreate() {
-    Meteor.call("events.revenue.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
+    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -39,7 +39,7 @@ export default class TierPage extends Component {
         indices.push(index);
       }
     });
-    Meteor.call("events.revenue.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 1, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
+    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 1, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -50,7 +50,7 @@ export default class TierPage extends Component {
   }
 
   onTierDelete() {
-    Meteor.call("events.revenue.deleteTier", this.state.id, this.state.index, (err) => {
+    Meteor.call("events.crowdfunding.deleteTier", this.state.id, this.state.index, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -79,62 +79,18 @@ export default class TierPage extends Component {
   }
 
   render() {
-    var revenue = Events.findOne().revenue || {};
-    var tiers = revenue.tiers || [];
-    var rewards = revenue.rewards || [];
+    var crowdfunding = Events.findOne().crowdfunding || {};
+    var tiers = crowdfunding.tiers || [];
+    var rewards = crowdfunding.rewards || [];
     var tier = this.state.index > -1 ? tiers[this.state.index] : {};
     return (
       <div>
-        <div className="submodule-bg submodule-overflow" style={{marginTop: 10}}>
-          <div className="row center">
+        <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: "0 10px 20px"}}>
+          <div className="row center" style={{padding: "20px 0"}}>
             <h3>Tiers</h3>
           </div>
           <div className="row">
-            <div className="col col-1">
-              <h5>Name</h5>
-              <input type="text" ref={"name"} defaultValue={tier.name} />
-              <h5>Price</h5>
-              <div className="row x-center">
-                <input type="number" ref={"price"} defaultValue={tier.price} />
-              </div>
-              <h5>Limit</h5>
-              <span>How many backers can buy this tier?</span>
-              <div className="row x-center">
-                <input type="number" ref={"limit"} defaultValue={tier.limit} />
-              </div>
-              <h5>Description</h5>
-              <textarea ref={"description"} defaultValue={tier.description}></textarea>
-              <h5>Rewards</h5>
-              <span>Which rewards do you want on this tier?</span>
-              <div className="row x-center" ref={"rewards"}>
-                {
-                  rewards.map((reward, index) => {
-                    return (
-                      <div className={`selectable reward block ${ (this.state.rewards).indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
-                        <img src={ reward.imgUrl } style={{width: 100, height: "auto"}} />
-                        <div style={{fontSize: "0.7em"}}>
-                          { reward.name }
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              {
-                this.state.index > -1 ? (
-                  <div className="row center">
-                    <button style={{marginRight: 10}} onClick={this.onTierUpdate.bind(this)}>Save</button>
-                    <button onClick={this.onTierDelete.bind(this)}>Delete</button>
-                  </div>
-
-                ) : (
-                  <div className="row center">
-                    <button onClick={this.onTierCreate.bind(this)}>Create</button>
-                  </div>
-                )
-              }
-            </div>
-            <div className="col tier-preview-container" style={{width: "20%", minWidth: 200}}>
+            <div className="col tier-preview-container" style={{width: "20%", minWidth: 200, backgroundColor: "#444", padding: 20, marginRight: 10}}>
               {
                 tiers.map((tier, index) => {
                   return (
@@ -162,6 +118,54 @@ export default class TierPage extends Component {
                 Add Tier
               </div>
             </div>
+            <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
+              <h5>Name</h5>
+              <input type="text" ref={"name"} defaultValue={tier.name} />
+              <h5>Price</h5>
+              <div className="row x-center">
+                <input type="number" ref={"price"} defaultValue={tier.price} />
+              </div>
+              <h5>Limit</h5>
+              <span>How many backers can buy this tier?</span>
+              <div className="row x-center">
+                <input type="number" ref={"limit"} defaultValue={tier.limit} />
+              </div>
+              <h5>Description</h5>
+              <textarea ref={"description"} defaultValue={tier.description}></textarea>
+            </div>
+            <div className="col col-1 x-center" style={{backgroundColor: "#444", padding: 20}}>
+              <h5>Rewards</h5>
+              <span>Which rewards do you want on this tier?</span>
+              <div className="row x-center center" ref={"rewards"}>
+                {
+                  rewards.map((reward, index) => {
+                    return (
+                      <div className={`selectable reward block ${ (this.state.rewards).indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
+                        <img src={ reward.imgUrl } style={{width: 100, height: "auto"}} />
+                        <div style={{fontSize: "0.7em"}}>
+                          { reward.name }
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          </div>
+          <div className="row center" style={{marginTop: 20}}>
+            {
+              this.state.index > -1 ? (
+                <div className="row center">
+                  <button style={{marginRight: 10}} onClick={this.onTierUpdate.bind(this)}>Save</button>
+                  <button onClick={this.onTierDelete.bind(this)}>Delete</button>
+                </div>
+
+              ) : (
+                <div className="row center">
+                  <button onClick={this.onTierCreate.bind(this)}>Create</button>
+                </div>
+              )
+            }
           </div>
         </div>
       </div>

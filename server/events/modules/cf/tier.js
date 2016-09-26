@@ -1,12 +1,12 @@
 Meteor.methods({
-  "events.revenue.createTier"(id, name, price, limit, description, rewards) {
+  "events.crowdfunding.createTier"(id, name, price, limit, description, rewards) {
     var event = Events.findOne(id);
     if(!event){
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $push: {
-        "revenue.tiers": {
+        "crowdfunding.tiers": {
           name,
           price,
           limit,
@@ -16,14 +16,14 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.updateTier"(id, index, name, price, limit, description, rewards) {
+  "events.crowdfunding.updateTier"(id, index, name, price, limit, description, rewards) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $set: {
-        [`revenue.tiers.${index}`]: {
+        [`crowdfunding.tiers.${index}`]: {
           name,
           price,
           limit,
@@ -33,23 +33,23 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.deleteTier"(id, index) {
+  "events.crowdfunding.deleteTier"(id, index) {
     var event = Events.findOne(id);
     if(!event){
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $unset: {
-        [`revenue.tiers.${index}`]: 1
+        [`crowdfunding.tiers.${index}`]: 1
       }
     });
     Events.update(id, {
       $pull: {
-        "revenue.tiers": null
+        "crowdfunding.tiers": null
       }
     });
   },
-  "events.revenue.tiers.updateSponsor"(id, tierIndex, obj) {
+  "events.crowdfunding.tiers.updateSponsor"(id, tierIndex, obj) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
@@ -57,7 +57,7 @@ Meteor.methods({
     if(!Meteor.user()){
       throw new Meteor.Error(403, "Not logged in!");
     }
-    var tierSponsors = event.revenue.tiers[tierIndex].sponsors || [];
+    var tierSponsors = event.crowdfunding.tiers[tierIndex].sponsors || [];
     var userId = Meteor.userId();
     var index = -1;
     for(var i = 0; i < tierSponsors.length; i ++){
@@ -71,7 +71,7 @@ Meteor.methods({
     }
     var cmd = {
       $push: {
-        [`revenue.tiers.${tierIndex}.sponsors`]: {
+        [`crowdfunding.tiers.${tierIndex}.sponsors`]: {
           id: userId,
           name: obj.name,
           address: obj.address,
@@ -82,14 +82,14 @@ Meteor.methods({
       }
     }
     cmd["$pull"] = {};
-    for(var i = 0; i < event.revenue.tiers.length; i ++){
+    for(var i = 0; i < event.crowdfunding.tiers.length; i ++){
       if(i != tierIndex){
-        cmd["$pull"]["revenue.tiers."+i+".sponsors"] = {
+        cmd["$pull"]["crowdfunding.tiers."+i+".sponsors"] = {
           id: userId
         }
       }
     }
-    var sponsors = event.revenue.sponsors;
+    var sponsors = event.crowdfunding.sponsors;
     index = -1;
     for(var i = 0; i < sponsors.length; i ++){
       if(sponsors[i].id == userId){
@@ -99,12 +99,12 @@ Meteor.methods({
     }
     if(index >= 0){
       cmd["$inc"] = {
-        [`revenue.sponsors.${index}.amount`]: obj.baseAmount
+        [`crowdfunding.sponsors.${index}.amount`]: obj.baseAmount
       }
     }
     else {
       cmd["$push"] = {
-        "revenue.sponsors": {
+        "crowdfunding.sponsors": {
           amount: obj.baseAmount,
           id: userId
         }
@@ -112,15 +112,15 @@ Meteor.methods({
     }
     Events.update(id, cmd);
   },
-  "events.revenue.tiers.setShippedForSponsor"(id, index, sponsId) {
+  "events.crowdfunding.tiers.setShippedForSponsor"(id, index, sponsId) {
     var event = Events.findOne(id);
     if(!event){
       throw new Meteor.Error(404, "Event not found!");
     }
     var sponsIndex = -1;
-    console.log(event.revenue.tiers[index].sponsors);
-    for(var i = 0; i < event.revenue.tiers[index].sponsors.length; i ++){
-      if(event.revenue.tiers[index].sponsors[i].id == sponsId){
+    console.log(event.crowdfunding.tiers[index].sponsors);
+    for(var i = 0; i < event.crowdfunding.tiers[index].sponsors.length; i ++){
+      if(event.crowdfunding.tiers[index].sponsors[i].id == sponsId){
         sponsIndex = i;
         break;
       }
@@ -130,7 +130,7 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        [`revenue.tiers.${index}.sponsors.${sponsIndex}.shipped`]: true
+        [`crowdfunding.tiers.${index}.sponsors.${sponsIndex}.shipped`]: true
       }
     })
   }
