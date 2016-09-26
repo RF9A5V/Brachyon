@@ -118,30 +118,13 @@ export default class EventTitlePage extends Component {
             </div>
           </div>
           <div className="col col-3">
-          <div className="slide-description">
-            {
-              this.props.event.details.description.split("\n").map((p) => {
-                return (
-                  <p>
-                    {p}
-                  </p>
-                )
-              })
-            }
-          </div>
-            <div className="slide-schedule">
-              <div className="schedule-item">
-                <h3>Schedule</h3>
-              </div>
+            <div className="slide-description">
               {
-                [0, 1, 2, 3, 4, 5].map((i) => {
+                this.props.event.details.description.split("\n").map((p) => {
                   return (
-                    <div className="schedule-item">
-                      <span>{ moment().hour(i).format("h:mm") }</span>
-                      <p>
-                        Bacon ipsum dolor amet meatball corned beef strip steak spare ribs venison frankfurter turducken salami porchetta pork chop bacon boudin shank. Cow prosciutto venison, tenderloin fatback swine pork belly jerky alcatra tongue. Drumstick filet mignon fatback, picanha bresaola pancetta pastrami short ribs tongue strip steak turducken meatloaf brisket jowl. Salami jowl pastrami, ham hock biltong turducken doner tri-tip short ribs capicola pork loin alcatra pork belly cupim drumstick.
-                      </p>
-                    </div>
+                    <p>
+                      {p}
+                    </p>
                   )
                 })
               }

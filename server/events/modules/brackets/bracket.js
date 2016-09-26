@@ -38,21 +38,5 @@ Meteor.methods({
         [`brackets.${index}.format`]: format
       }
     })
-  },
-  "events.brackets.delete"(id, index) {
-    var event = Events.findOne(id);
-    if(!event) {
-      throw new Meteor.Error(404, "Couldn't find event.");
-    }
-    Events.update(id, {
-      $unset: {
-        [`brackets.${index}`]: 1
-      }
-    });
-    Events.update(id, {
-      $pull: {
-        "brackets": null
-      }
-    })
   }
 })

@@ -47,7 +47,7 @@ export default class ImagePage extends Component {
               ""
             ) : (
               <div style={{textAlign: "center"}}>
-                <img src={img ? img.link() : ""} style={{width: "75%", margin: "20px 0", height: "auto"}} />
+                <img src={img ? img.link() : ""} style={{width: "50%", margin: "20px 0", height: "auto"}} />
               </div>
             )
           }

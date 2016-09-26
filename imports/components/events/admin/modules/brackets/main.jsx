@@ -26,7 +26,7 @@ export default class Main extends Component {
     var event = Events.findOne();
     var brackets = event.brackets || [];
     return (
-      <div>
+      <div className="submodule-bg" style={{marginTop: 10}}>
         {
           brackets.map((bracket, i) => {
             return (

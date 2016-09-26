@@ -10,13 +10,15 @@ export default class SideTabMain extends Component {
   render() {
     var subItem = this.props.items[this.props.activeItem].subitems[this.props.activeSub];
     return (
-      <div className="tab-content">
-        <div className="row center">
-          <h2>{this.props.items[this.props.activeItem].text}</h2>
+      <div className="tab-content col">
+        <div style={{textAlign: "center"}}>
+          <h2 style={{display: "inline-block"}}>{this.props.items[this.props.activeItem].text}</h2>
         </div>
-        {
-          <subItem.component item={this.props.items[this.props.activeItem]} onItemSelect={this.props.onItemSelect} activeItem={this.props.activeItem} { ...(subItem.args || {}) } />
-        }
+        <div className="col-1">
+          {
+            <subItem.component item={this.props.items[this.props.activeItem]} onItemSelect={this.props.onItemSelect} activeItem={this.props.activeItem} { ...(subItem.args || {}) } />
+          }
+        </div>
       </div>
     )
   }

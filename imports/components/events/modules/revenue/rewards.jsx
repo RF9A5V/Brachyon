@@ -16,7 +16,7 @@ class RewardForm extends Component {
   }
 
   onRewardSave(data) {
-    Meteor.call("events.revenue.rewards.createReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, (err) => {
+    Meteor.call("events.crowdfunding.rewards.createReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -28,7 +28,7 @@ class RewardForm extends Component {
   }
 
   onRewardEdit(data) {
-    Meteor.call("events.revenue.rewards.editReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, this.props.index, (err) => {
+    Meteor.call("events.crowdfunding.rewards.editReward", this.props.id, this.refs.name.value, data._id, this.refs.description.value, this.props.index, (err) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
@@ -40,7 +40,7 @@ class RewardForm extends Component {
   }
 
   onRewardDelete() {
-    Meteor.call("events.revenue.rewards.deleteReward", this.props.id, this.props.index, (err) => {
+    Meteor.call("events.crowdfunding.rewards.deleteReward", this.props.id, this.props.index, (err) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
@@ -121,7 +121,7 @@ export default class RewardsPage extends Component {
   }
 
   render() {
-    var rewards = (Events.findOne().revenue || {}).rewards || [];
+    var rewards = (Events.findOne().crowdfunding || {}).rewards || [];
     return (
       <div>
         <div className="button-row">

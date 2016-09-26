@@ -1,12 +1,12 @@
 Meteor.methods({
-  "events.revenue.createTicketCost"(id, name, amount, description) {
+  "events.tickets.createTicketCost"(id, name, amount, description) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $push: {
-        "revenue.tickets": {
+        "tickets.tickets": {
           name,
           amount,
           description
@@ -14,21 +14,21 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.updateTicketCost"(id, indexId, amount, description) {
+  "events.tickets.updateTicketCost"(id, indexId, amount, description) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Events.update(id, {
       $set: {
-        [`revenue.tickets.${indexId}`]: {
+        [`tickets.tickets.${indexId}`]: {
           price: amount,
           description
         }
       }
     })
   },
-  "events.revenue.tickets.grantPrivileges"(id, ticketIds){
+  "events.tickets.tickets.grantPrivileges"(id, ticketIds){
     var event = Events.findOne();
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");

@@ -7,8 +7,6 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 
 import Main from "./modules/main.jsx";
 
-import StaffPage from "./modules/organize/staff.jsx";
-
 import BracketMain from "./modules/bracket/edit.jsx";
 import AddBracket from "./modules/bracket/add.jsx";
 import EditBracket from "./modules/bracket/edit.jsx";
@@ -24,7 +22,12 @@ import TierPage from "./modules/revenue/tiers.jsx";
 import StrategyPage from "./modules/revenue/strategies.jsx";
 import RewardsPage from "./modules/revenue/rewards.jsx";
 
+import StaffPage from "./modules/organize/staff.jsx";
+import SchedulePage from "./modules/organize/schedule.jsx";
+
 import SubmitPage from "./modules/submit.jsx";
+
+import EditModulePage from "./modules/edit_modules.jsx";
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
@@ -39,125 +42,177 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     this.state.event.stop();
   }
 
+  detailItems() {
+    return {
+      text: "Details",
+      icon: "file-text",
+      subitems: [
+        {
+          component: Main,
+          args: {
+            name: "Details"
+          }
+        },
+        {
+          component: DescriptionPage,
+          text: "Description"
+        },
+        {
+          component: LocationPage,
+          text: "Location"
+        },
+        {
+          component: DatetimePage,
+          text: "Date and Time"
+        },
+        {
+          component: ImagePage,
+          text: "Event Image"
+        }
+      ]
+    }
+  }
+
+  bracketItems(event) {
+    return {
+      text: "Brackets",
+      icon: "sitemap",
+      subitems: [
+        {
+          component: Main,
+          args: {
+            name: "Brackets"
+          }
+        }
+      ].concat((event.brackets ? (
+        event.brackets.map((bracket, index) => {
+          return {
+            component: EditBracket,
+            text: bracket.name,
+            args: {
+              index,
+              bracket
+            }
+          }
+        })
+      ) : (
+        []
+      ))).concat([
+        {
+          component: AddBracket,
+          text: "Add Bracket"
+        }
+      ])
+    };
+  }
+
+  crowdfundingItems() {
+    return {
+      text: "Crowdfunding",
+      icon: "usd",
+      subitems: [
+        {
+          component: Main,
+          args: {
+            name: "Crowdfunding"
+          }
+        },
+        {
+          component: RevenueDetailsPage,
+          text: "Details"
+        },
+        {
+          component: RewardsPage,
+          text: "Rewards"
+        },
+        {
+          component: TierPage,
+          text: "Tiers"
+        }
+      ]
+    };
+  }
+
+  ticketItems() {
+    return {
+      text: "Tickets",
+      icon: "ticket",
+      subitems: [
+        {
+          component: TicketsPage
+        }
+      ]
+    };
+  }
+
+  organizeItems() {
+    return {
+      text: "Organize",
+      icon: "bullhorn",
+      subitems: [
+        {
+          component: Main,
+          args: {
+            name: "Organize"
+          }
+        },
+        {
+          text: "Staff",
+          component: StaffPage
+        },
+        {
+          text: "Schedule",
+          component: SchedulePage
+        }
+      ]
+    };
+  }
+
+  submitItem() {
+    return {
+      text: "Submit",
+      icon: "check",
+      subitems: [
+        {
+          component: SubmitPage
+        }
+      ]
+    };
+  }
+
+  editItem() {
+    return {
+      text: "Edit",
+      icon: "pencil",
+      subitems: [
+        {
+          component: EditModulePage
+        }
+      ]
+    };
+  }
+
   items() {
     var event = Events.findOne();
-    return [
-      {
-        text: "Organize",
-        icon: "bullhorn",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Organize"
-            }
-          },
-          {
-            text: "Staff",
-            component: StaffPage
-          }
-        ]
-      },
-      {
-        text: "Details",
-        icon: "file-text",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Details"
-            }
-          },
-          {
-            component: DescriptionPage,
-            text: "Description"
-          },
-          {
-            component: LocationPage,
-            text: "Location"
-          },
-          {
-            component: DatetimePage,
-            text: "Date and Time"
-          },
-          {
-            component: ImagePage,
-            text: "Event Image"
-          }
-        ]
-      },
-      {
-        text: "Brackets",
-        icon: "sitemap",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Brackets"
-            }
-          }
-        ].concat((event.brackets ? (
-          event.brackets.map((bracket, index) => {
-            return {
-              component: EditBracket,
-              text: bracket.name,
-              args: {
-                index,
-                bracket
-              }
-            }
-          })
-        ) : (
-          []
-        ))).concat([
-          {
-            component: AddBracket,
-            text: "Add Bracket"
-          }
-        ])
-      },
-      {
-        text: "Revenue",
-        icon: "usd",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Revenue"
-            }
-          },
-          {
-            component: RevenueDetailsPage,
-            text: "Crowdfunding"
-          },
-          {
-            component: RewardsPage,
-            text: "Rewards"
-          },
-          {
-            component: TierPage,
-            text: "Tiers"
-          },
-          {
-            component: StrategyPage,
-            text: "Strategies"
-          },
-          {
-            component: TicketsPage,
-            text: "Tickets"
-          }
-        ]
-      },
-      {
-        text: "Submit",
-        icon: "check",
-        subitems: [
-          {
-            component: SubmitPage
-          }
-        ]
-      }
-    ]
+    // Rearrange order rendered in side tabs by changing the item index in the item array.
+    var items = [
+      this.detailItems()
+    ];
+    if(event.brackets) {
+      items.push(this.bracketItems(event));
+    }
+    if(event.crowdfunding) {
+      items.push(this.crowdfundingItems());
+    }
+    if(event.tickets) {
+      items.push(this.ticketItems());
+    }
+    if(event.organize) {
+      items.push(this.organizeItems());
+    }
+    items.push(this.submitItem());
+    items.push(this.editItem());
+    return items;
   }
 
   render() {

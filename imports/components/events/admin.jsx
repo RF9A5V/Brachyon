@@ -37,7 +37,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
       },
       {
         text: "Revenue",
-        icon: "money",
+        icon: "usd",
         subitems: [
           {
             component: Main,
@@ -62,7 +62,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
       },
       {
         text: "Promotion",
-        icon: "exclamation",
+        icon: "arrow-up",
         subitems: [
           {
             component: Main,

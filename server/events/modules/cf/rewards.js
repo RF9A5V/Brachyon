@@ -1,7 +1,7 @@
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 Meteor.methods({
-  "events.revenue.rewards.createReward"(id, name, img, description) {
+  "events.crowdfunding.rewards.createReward"(id, name, img, description) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
@@ -12,7 +12,7 @@ Meteor.methods({
     }
     Events.update(id, {
       $push: {
-        "revenue.rewards": {
+        "crowdfunding.rewards": {
           name,
           img,
           imgUrl: profileImage.link(),
@@ -21,7 +21,7 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.rewards.editReward"(id, name, img, description, index) {
+  "events.crowdfunding.rewards.editReward"(id, name, img, description, index) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
@@ -32,7 +32,7 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        [`revenue.rewards.${index}`]: {
+        [`crowdfunding.rewards.${index}`]: {
           name,
           img,
           imgUrl: profileImage.link(),
@@ -41,20 +41,20 @@ Meteor.methods({
       }
     })
   },
-  "events.revenue.rewards.deleteReward"(id, index) {
+  "events.crowdfunding.rewards.deleteReward"(id, index) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    ProfileImages.remove(event.revenue.rewards[index].img);
+    ProfileImages.remove(event.crowdfunding.rewards[index].img);
     Events.update(id, {
       $unset: {
-        [`revenue.rewards.${index}`]: 1
+        [`crowdfunding.rewards.${index}`]: 1
       }
     });
     Events.update(id, {
       $pull: {
-        "revenue.rewards": null
+        "crowdfunding.rewards": null
       }
     })
   }
