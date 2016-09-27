@@ -43,7 +43,7 @@ export const Images = new FilesCollection({
           "profile.image": image._id
         }, {
           $set: {
-            "profile.imageUrl": image.link()
+            "profile.imageUrl": (image ? image.link() : "/images/bg.jpg")
           }
         })
         this.unlink(this.collection.findOne(image._id), versionName);

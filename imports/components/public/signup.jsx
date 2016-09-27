@@ -8,8 +8,7 @@ export default class SignUpScreen extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     self = this;
-    [name, email, username, password] = Object.keys(this.refs).map((value) => {return this.refs[value].value});
-    Meteor.call("users.create", name, email, username, password, function(err, rez) {
+    Meteor.call("users.create", this.refs.name.value, this.refs.email.value, this.refs.username.value, this.refs.password.value, function(err, rez) {
       if(err){
         toastr.error(err.reason, "Error!");
       }

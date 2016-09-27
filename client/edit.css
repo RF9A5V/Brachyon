@@ -77,6 +77,24 @@
   margin: 0 auto;
 }
 
+.submodule-bg h3 {
+  margin-bottom: 20px;
+}
+
+.submodule-section {
+  margin-right: 20px;
+  background-color: #444;
+  padding: 20px;
+}
+
+.submodule-section:last-child {
+  margin-right: 0;
+}
+
+.submodule-section span.section {
+  font-size: 2em;
+}
+
 .module-title, .submodule-title {
   padding: 20px;
   background-color: #333;

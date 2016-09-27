@@ -49,24 +49,24 @@ export default class DetailsPanel extends Component {
           <i style={{lineHeight: 1.5}}>This part's required. All the admin stuff having to do with where and when your event is happening goes here.</i>
         </div>
         <div className="col">
-          <label>Event Name</label>
+          <h5>Event Name</h5>
           <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />
         </div>
         <div className="col">
           <LocationSelect ref="location" onChange={this.onChange.bind(this)} />
         </div>
         <div className="col">
-          <label>Description</label>
+          <h5>Description</h5>
           <textarea ref="description" onChange={this.onChange.bind(this)}></textarea>
         </div>
         <div className="col">
-          <label>Date</label>
+          <h5>Date</h5>
           <div>
             <DateInput ref="date" />
           </div>
         </div>
         <div className="col">
-          <label style={{marginBottom: 10}}>Time</label>
+          <h5 style={{marginBottom: 10}}>Time</h5>
           <TimeInput ref="time" />
         </div>
       </div>

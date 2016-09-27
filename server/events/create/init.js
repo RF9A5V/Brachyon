@@ -46,12 +46,16 @@ Meteor.methods({
     var requiresReview = false;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {
-        requiresReview = true;
+        if(mod == "crowdfunding") {
+          requiresReview = true;
+        }
         var value = Meteor.call("events.validate_" + mod, obj[mod]);
         endObj[mod] = value;
       }
     });
     endObj.published = !requiresReview;
-    return Events.insert(endObj);
+    endObj.underReview = false;
+    endObj.owner = Meteor.userId();
+    Events.insert(endObj);
   }
 })

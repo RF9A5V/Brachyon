@@ -85,6 +85,9 @@ export default class LocationSelect extends Component {
 
   updateValue(e){
     this.state.online = (e.target.value == 0);
+    if(this.props.onChange){
+      this.props.onChange();
+    }
     this.forceUpdate();
   }
 

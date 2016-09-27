@@ -11,8 +11,6 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 
 import TicketPurchaseWrapper from "./preview/ticket_purchase_wrapper.jsx";
 
-
-
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
   componentWillMount(){
@@ -66,10 +64,16 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return (
       <div className="box col" style={{flexFlow: "row", position: "relative"}}>
         <SlideMain slides={this.slides()} event={event} />
-        <div className="ticket-modal">
-          <button onClick={() => { this.refs.tickets.openModal() }}>Register</button>
-          <TicketPurchaseWrapper ref="tickets" event={event} />
-        </div>
+        {
+          event.tickets ? (
+            <div className="ticket-modal">
+              <button onClick={() => { this.refs.tickets.openModal() }}>Register</button>
+              <TicketPurchaseWrapper ref="tickets" event={event} />
+            </div>
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }

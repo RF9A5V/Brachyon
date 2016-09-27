@@ -13,7 +13,7 @@ export default class TierBreakdown extends Component {
   }
 
   setShippingStatus() {
-    Meteor.call("events.revenue.tiers.setShippedForSponsor", Events.findOne()._id, this.state.index, this.state.sponsor.id, (err) => {
+    Meteor.call("events.crowdfunding.tiers.setShippedForSponsor", Events.findOne()._id, this.state.index, this.state.sponsor.id, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -22,8 +22,8 @@ export default class TierBreakdown extends Component {
   }
 
   render() {
-    var tiers = Events.findOne().revenue.tiers || [];
-    var rewards = Events.findOne().revenue.rewards;
+    var tiers = Events.findOne().crowdfunding.tiers || [];
+    var rewards = Events.findOne().crowdfunding.rewards;
     return (
       <div className="submodule-bg" style={{marginTop: 10}}>
         <div>
