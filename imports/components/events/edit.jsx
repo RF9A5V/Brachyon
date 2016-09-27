@@ -180,13 +180,16 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     };
   }
 
-  editItem() {
+  editItem(itemCount) {
     return {
       text: "Edit",
       icon: "pencil",
       subitems: [
         {
-          component: EditModulePage
+          component: EditModulePage,
+          args: {
+            count: itemCount
+          }
         }
       ]
     };
@@ -211,7 +214,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       items.push(this.organizeItems());
     }
     items.push(this.submitItem());
-    items.push(this.editItem());
+    items.push(this.editItem(items.length + 1));
     return items;
   }
 

@@ -24,8 +24,13 @@ export default class EventAdminPage extends TrackerReact(Component) {
     }
   }
 
+  componentWillUnmount() {
+    this.state.event.stop();
+  }
+
   items() {
-    return [
+    var event = Events.findOne();
+    var items = [
       {
         text: "Overview",
         icon: "globe",
@@ -34,15 +39,17 @@ export default class EventAdminPage extends TrackerReact(Component) {
             component: OverviewMain
           }
         ]
-      },
-      {
-        text: "Revenue",
+      }
+    ];
+    if(event.crowdfunding) {
+      items.push({
+        text: "Crowdfunding",
         icon: "usd",
         subitems: [
           {
             component: Main,
             args: {
-              name: "Revenue"
+              name: "Crowdfunding"
             }
           },
           {
@@ -50,8 +57,10 @@ export default class EventAdminPage extends TrackerReact(Component) {
             text: "Tiers"
           }
         ]
-      },
-      {
+      });
+    }
+    if(event.brackets) {
+      items.push({
         text: "Brackets",
         icon: "sitemap",
         subitems: [
@@ -59,8 +68,10 @@ export default class EventAdminPage extends TrackerReact(Component) {
             component: BracketsMain
           }
         ]
-      },
-      {
+      });
+    }
+    if(event.promotion){
+      items.push({
         text: "Promotion",
         icon: "arrow-up",
         subitems: [
@@ -79,8 +90,9 @@ export default class EventAdminPage extends TrackerReact(Component) {
             component: SocialMedia
           }
         ]
-      }
-    ]
+      });
+    }
+    return items;
   }
 
   render() {

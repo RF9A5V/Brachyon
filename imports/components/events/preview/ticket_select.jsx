@@ -56,7 +56,7 @@ export default class TicketSelect extends Component {
 
   render() {
     var event = Events.findOne();
-    var tickets = event.revenue.tickets;
+    var tickets = event.tickets;
     var brackets = event.brackets;
     return (
       <div className="col">

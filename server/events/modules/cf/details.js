@@ -6,8 +6,8 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        "crowdfunding.amount": amount,
-        "crowdfunding.dueDate": dueDate
+        "crowdfunding.details.amount": amount,
+        "crowdfunding.details.dueDate": dueDate
       }
     })
   }

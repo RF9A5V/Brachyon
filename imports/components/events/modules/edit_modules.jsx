@@ -125,6 +125,7 @@ export default class EditModuleList extends Component {
       }
       else {
         toastr.success("Successfully updated module.", "Success!");
+        this.props.onItemSelect(this.props.count);
         this.forceUpdate();
       }
     })
