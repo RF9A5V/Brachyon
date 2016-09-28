@@ -7,10 +7,17 @@ Meteor.methods({
     })
   },
   "events.brackets.delete"(id, subName) {
-    Events.update(id, {
+    var event = Events.findOne(id);
+    var cmd = {
       $unset: {
         brackets: ""
       }
-    })
+    };
+    if(event.tickets) {
+      for(var i = 0; i < event.brackets.length; i ++){
+        cmd["$unset"]["tickets." + i + "f"] = 1;
+      }
+    }
+    Events.update(id, cmd);
   }
 })

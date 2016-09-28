@@ -16,8 +16,8 @@ Meteor.methods({
       }
     };
     if(event.brackets) {
-      event.brackets.forEach((bracket) => {
-        cmd["$set"]["tickets"][bracket.id] = {
+      event.brackets.forEach((bracket, index) => {
+        cmd["$set"]["tickets"][index + "f"] = {
           price: 0,
           description: ""
         }
