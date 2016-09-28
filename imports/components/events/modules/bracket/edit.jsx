@@ -25,7 +25,7 @@ export default class EditBracket extends Component {
   }
 
   onBracketDelete() {
-    Meteor.call("events.brackets.delete", this.state.id, this.props.index, (err) => {
+    Meteor.call("events.brackets.remove", this.state.id, this.props.index, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }

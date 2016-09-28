@@ -186,7 +186,6 @@ Meteor.publish('games', function(){
 })
 
 Meteor.publish('game_search', function(query) {
-  console.log(query);
   if(query == ""){
     return [];
   }

@@ -21,14 +21,14 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        [`tickets.tickets.${indexId}`]: {
+        [`tickets.${indexId}f`]: {
           price: amount,
           description
         }
       }
     })
   },
-  "events.tickets.tickets.grantPrivileges"(id, ticketIds){
+  "events.tickets.grantPrivileges"(id, ticketIds){
     var event = Events.findOne();
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");

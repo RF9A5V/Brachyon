@@ -24,9 +24,9 @@ export default class TicketPage extends Component {
   render() {
     var event = Events.findOne();
     var brackets = event.brackets || [];
-    var tickets = (event.tickets || {}).tickets || {};
-    var venue = tickets.venue || {};
-    var spec = tickets.spec || {};
+    var tickets = event.tickets;
+    var venue = tickets.venue;
+    var spec = tickets.spectator;
     return (
       <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: 0, paddingTop: 10}}>
         <div className="ticket-container">
@@ -55,21 +55,25 @@ export default class TicketPage extends Component {
             <textarea ref={"descriptionspectator"} defaultValue={spec.description}></textarea>
           </div>
           {
-            brackets.map((bracket, i) => {
-              var ticket = tickets["bracket"+i] || {};
-              var id = "bracket"+i;
+            Object.keys(tickets).map((key) => {
+              var i = parseInt(key);
+              if(isNaN(i)){
+                return "";
+              }
+              var ticket = tickets[key];
+              var bracket = brackets[i];
               return (
                 <div className="ticket-form col">
                   <div className="row" style={{justifyContent: "flex-end"}}>
-                    <button onClick={() => { this.onTicketCostSave(id) }}>Save</button>
+                    <button onClick={() => { this.onTicketCostSave(i) }}>Save</button>
                   </div>
                   <div className="row center">
                     <h5>Entry to { bracket.name }</h5>
                   </div>
                   <h5>Price</h5>
-                  <input type="number" ref={"amount" + id} defaultValue={ticket.amount}/>
+                  <input type="number" ref={"amount" + i} defaultValue={ticket.price}/>
                   <h5>Description</h5>
-                  <textarea ref={"description" + id} defaultValue={ticket.description}></textarea>
+                  <textarea ref={"description" + i} defaultValue={ticket.description}></textarea>
                 </div>
               )
             })
