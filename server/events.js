@@ -119,8 +119,12 @@ Meteor.methods({
       var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
       }));
-    else
+    else if (format == "double_elim")
       var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
+    else if (format == "swiss")
+      var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
         return participant.alias;
       }));
 
@@ -309,6 +313,37 @@ Meteor.methods({
     })
     //Return for recursion
     return;
+  },
+
+  "events.update_round"(eventID, bracketNumber, roundNumber, matchNumber) { //For swiss specifically
+    var event = Events.findOne(eventID);
+    event = event.brackets[0];
+    var players = event.players;
+    var key = 'score';
+    players.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+    event.players = players; //Should do it automatically but check just in case of deep copy
+    var temp = [];
+    for (var i = 0; i < players.length; i++)
+    {
+      var matchObj = {
+        playerOne: participants[x],
+        playerTwo: participants[x+participants.length/2],
+        winner: null
+      }
+      temp.push(matchObj);
+    }
+
+
+      Events.update(eventID, {
+        $set: {
+          [`brackets.0.rounds.${fb}`]: event;
+        }
+      })
+    }
+
   }
 
 })

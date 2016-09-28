@@ -279,7 +279,57 @@ var OrganizeSuite = {
     }
     frounds.push(finalround);
     return frounds;
+  },
+
+  swiss: function(participants) {
+    var frounds = [];
+    var exbye = false;
+    var length = particpants.length;
+    if (participants.length%2 == 1)
+    {
+      exbye = true;
+      length--;
+    }
+
+    var temp = [];
+    for (var x = 0; x < length/2; x++)
+    {
+      var matchObj = {
+        playerOne: participants[x],
+        playerTwo: participants[x+participants.length/2],
+        winner: null
+      };
+      temp.push(matchObj);
+    }
+    tempa = [];
+    tempa.push(temp);
+    tempb = [];
+    for (var x = 0; x < participants.length; x++)
+    {
+      var playerObj = {
+        score: 0,
+        bnum: 0,
+        wins: 0,
+        losses: 0,
+        bye: false
+      }
+      if (exbye && x == participants.length)
+      {
+        playerObj.score = 3;
+        playerObj.bye = true;
+        playerObj.wins = 1;
+      }
+      tempb.push(playerObj);
+    }
+    frounds = {
+      matches: tempa,
+      players: tempb
+    }
+
+    return frounds;
   }
 }
+
+
 
 export default OrganizeSuite;
