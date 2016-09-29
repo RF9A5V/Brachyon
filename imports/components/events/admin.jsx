@@ -15,6 +15,11 @@ import PromotionMain from "./admin/modules/promotion/main.jsx";
 import FeaturedList from "./admin/modules/promotion/featured.jsx";
 import SocialMedia from "./admin/modules/promotion/social_media.jsx";
 
+import Staff from "./modules/organize/staff.jsx";
+import Schedule from "./modules/organize/schedule.jsx";
+
+import EditModules from "./admin/modules/edit_modules.jsx";
+
 export default class EventAdminPage extends TrackerReact(Component) {
 
   constructor(props) {
@@ -92,6 +97,33 @@ export default class EventAdminPage extends TrackerReact(Component) {
         ]
       });
     }
+    if(event.organize){
+      items.push({
+        text: "Organize",
+        icon: "bullhorn",
+        subitems: [
+          {
+            component: Main,
+            args: {
+              name: "Organize"
+            }
+          },
+          {
+            text: "Schedule",
+            component: Schedule
+          }
+        ]
+      })
+    }
+    items.push({
+      text: "Edit",
+      icon: "pencil",
+      subitems: [
+        {
+          component: EditModules
+        }
+      ]
+    })
     return items;
   }
 
