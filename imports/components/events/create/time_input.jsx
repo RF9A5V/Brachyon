@@ -25,15 +25,11 @@ export default class TimeInput extends Component {
 
   value() {
     var hour = parseInt(this.refs.hours.value);
-    if(this.refs.half.value == "am" && hour == 12) {
-      hour = 0;
+    var minutes = parseInt(this.refs.minutes.value);
+    if(minutes < 10) {
+      minutes = "0" + minutes;
     }
-    if(this.refs.half.value == "pm") {
-      if(hour != 12){
-        hour = (hour + 12);
-      }
-    }
-    return this.refs.hours.value + ":" + this.refs.minutes.value;
+    return hour + ":" + minutes + this.refs.half.value.toUpperCase();
   }
 
   render() {
