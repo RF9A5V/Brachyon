@@ -306,12 +306,20 @@ var OrganizeSuite = {
     tempb = [];
     for (var x = 0; x < participants.length; x++)
     {
+      var playarr = [];
+      for (var y = 0; y < participants.length; y++)
+      {
+        playarr[participants[y]] = false;
+        if (x == y) playarr[participants[y]] = true;
+      }
       var playerObj = {
+        name: participants[x],
         score: 0,
         bnum: 0,
         wins: 0,
         losses: 0,
-        bye: false
+        bye: false,
+        playedagainst: playarr
       }
       if (exbye && x == participants.length)
       {
@@ -323,7 +331,7 @@ var OrganizeSuite = {
     }
     frounds = {
       matches: tempa,
-      players: tempb
+      players: tempb,
     }
 
     return frounds;

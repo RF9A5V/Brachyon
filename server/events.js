@@ -320,30 +320,62 @@ Meteor.methods({
     event = event.brackets[0];
     var players = event.players;
     var key = 'score';
-    players.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
+    scores = [];
+    var max = 0;
     event.players = players; //Should do it automatically but check just in case of deep copy
-    var temp = [];
-    for (var i = 0; i < players.length; i++)
+
+    for (var x = 0; x < players.length; x++)
     {
-      var matchObj = {
-        playerOne: participants[x],
-        playerTwo: participants[x+participants.length/2],
-        winner: null
+      scores[players[x].score].push(players[x]);
+      if (players[x].score > max)
+        max = players[x].score;
+    }
+    var extraplayer = -1;
+    var values = [];
+    for (var x = max; x >= 0; x--) //Form them into subarrays
+    {
+      if (typeof scores[x] !== 'undefined') {
+        if (extraplayer != -1)
+        {
+          scores[x].unshift(extraplayer);
+          extraplayer = -1;
+        }
+        if (scores[x].length%2 == 1)
+          extraplayer = scores[x].pop;
+        values.push(x);
       }
-      temp.push(matchObj);
+    }
+    if (extraplayer != -1) //We obviously can't do this either since it may place someone who had a bool again, this is a temporary system. Idea: Don't shift out people with byes, still flawed.
+    {
+      extraplayer.wins++;
+      extraplayer.bool = true;
+    }
+    var temp = [];
+    for (var x = 0; x < values.length; x++) //TODO: Check if two players who played against each other might end up doing so again.
+    {
+      var y = values[x]; //Our actual index value. Since the value is sorted backwards this goes top down.
+      for (var z = 0; z = scores[y].length/2; z++)
+      {
+        var opponent = scores[y][z].name;
+        if (scores[y][z].playerarr[opponent] = true)
+        {
+          console.log("PANIC"); //Figure out a better system for this. Idea: Create matches backwards, if cannot resolve, append into greater bracket. Conflict: What if top 2 players played against each other.
+        }
+        var matchObj = {
+          playerOne: scores[y][z].name,
+          playerTwo: scores[y][z+scores[y].length/2].name,
+          winner: null
+        }
+        temp.push(matchObj);
+      }
     }
 
 
       Events.update(eventID, {
         $set: {
-          [`brackets.0.rounds.${fb}`]: event;
+          [`brackets.0.rounds.${fb}`]: event
         }
       })
     }
-
-  }
 
 })
