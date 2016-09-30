@@ -64,16 +64,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return (
       <div className="box col" style={{flexFlow: "row", position: "relative"}}>
         <SlideMain slides={this.slides()} event={event} />
-        {
-          event.tickets ? (
-            <div className="ticket-modal">
-              <button onClick={() => { this.refs.tickets.openModal() }}>Register</button>
-              <TicketPurchaseWrapper ref="tickets" event={event} />
-            </div>
-          ) : (
-            ""
-          )
-        }
       </div>
     )
   }

@@ -3,6 +3,8 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 import { browserHistory } from "react-router"
 
+import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
+
 import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
 
@@ -40,6 +42,7 @@ export default class EventTitlePage extends Component {
   render() {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
+    var event = this.props.event;
     return (
       <div className="slide-page-container">
         <div className="slide-page row" style={{display: this.state.pageIndex == 0 ? "flex" : "none", backgroundImage: this.backgroundImage(false)}}>
@@ -99,7 +102,16 @@ export default class EventTitlePage extends Component {
               }
 
               <div className="row">
-                <button style={{marginRight: 10}}>Play</button>
+                {
+                  event.tickets || event.brackets ? (
+                    <div>
+                      <button style={{marginRight: 10}} onClick={() => { this.refs.tickets.openModal() }}>Play</button>
+                      <TicketPurchaseWrapper ref="tickets" />
+                    </div>
+                  ) : (
+                    ""
+                  )
+                }
                 <button>Watch</button>
               </div>
             </div>

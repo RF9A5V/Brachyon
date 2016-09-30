@@ -7,10 +7,10 @@ Meteor.methods({
             current: 0,
             amount: 0,
             dueDate: new Date()
-          }
-        },
-        rewards: [],
-        tiers: []
+          },
+          rewards: [],
+          tiers: []
+        }
       }
     })
   },

@@ -40,7 +40,9 @@ export default class EditBracket extends Component {
     return (
       <div>
         <div className="button-row">
-          <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
+          {
+            // <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
+          }
           <button onClick={this.onBracketSave.bind(this)}>Save</button>
         </div>
         <div className="submodule-bg submodule-overflow">
