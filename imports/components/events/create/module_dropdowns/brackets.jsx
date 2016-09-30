@@ -50,11 +50,11 @@ export default class BracketsPanel extends Component {
           })
         }
         {
-          this.state.bracketCount < 15 ? (
-            <button onClick={(e) => { e.preventDefault(); this.state.bracketCount++; this.state.brackets.push(1); this.forceUpdate() }}>Add A Bracket</button>
-          ) : (
-            ""
-          )
+          // this.state.bracketCount < 15 ? (
+          //   <button onClick={(e) => { e.preventDefault(); this.state.bracketCount++; this.state.brackets.push(1); this.forceUpdate() }}>Add A Bracket</button>
+          // ) : (
+          //   ""
+          // )
         }
       </div>
     )
