@@ -44,8 +44,8 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         name: "Details",
         component: <TitlePage event={event} />
       }
-    ];
-    if(event.revenue) {
+  ];
+    if(event.crowdfunding) {
       pages.push({
         name: "Crowdfunding",
         component: <CFPage event={event} />
