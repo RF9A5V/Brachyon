@@ -216,6 +216,7 @@ Meteor.methods({
         })
       })
       if(customerCreate.error){
+        console.log(customerUpdate.error.message);
         throw new Meteor.Error(500, "stripe-error-create", customerCreate.error.message);
       }
       else{
@@ -232,6 +233,7 @@ Meteor.methods({
         })
       })
       if(customerUpdate.error){
+        console.log(customerUpdate.error.message);
         throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.message);
       }
       else{

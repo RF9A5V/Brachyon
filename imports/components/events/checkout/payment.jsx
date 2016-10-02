@@ -9,6 +9,14 @@ export default class PaymentCheckout extends Component {
     this.state = {};
   }
 
+  isValid() {
+    return this.refs.card.isValid();
+  }
+
+  value(cb) {
+    this.refs.card.value(cb);
+  }
+
   setItems(obj) {
     for(var i in obj) {
       this.state[i] = obj[i];
@@ -37,7 +45,7 @@ export default class PaymentCheckout extends Component {
           <div className="col-1">
           </div>
           <div className="submodule-section">
-            <CardPayment amount={this.props.price * 100} payableTo={event.owner} cb={() => {}}/>
+            <CardPayment amount={this.props.price * 100} payableTo={event.owner} cb={() => {}} ref="card"/>
           </div>
           <div className="submodule-section col-2">
             <div>
