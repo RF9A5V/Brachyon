@@ -13,10 +13,10 @@ export default class TierCheckout extends Component {
     return true;
   }
 
-  value() {
-    return {
+  value(cb) {
+    cb({
       tierIndex: this.state.tierIndex
-    }
+    });
   }
 
   onTierSelect(index) {

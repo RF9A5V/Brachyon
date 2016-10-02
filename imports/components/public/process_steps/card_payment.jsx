@@ -21,34 +21,33 @@ export default class CardPaymentProcess extends Component {
     };
   }
 
-  valid() {
+  isValid() {
     // Skipping this bit for now, gotta test the actual payment stuff first.
     return true;
   }
 
-  value() {
+  value(cb) {
     if(this.state.cardID == null) {
       var cardNumber = [0, 1, 2, 3].map((val) => {
         return this.refs[`card_seg_${val}`].value
       }).join('');
-
       var cardDetails = {
         "number": cardNumber,
         "cvc": this.refs.cvc.value,
         "exp_month": this.refs.expMonth.value,
         "exp_year": this.refs.expYear.value
       }
-      console.log(this.calcStripeFee());
       Stripe.createToken(cardDetails, (err, rez) => {
-        this.props.cb({
+        cb({
           addCard: true,
           token: rez.id,
-          amount: this.calcStripeFee()
+          amount: this.calcStripeFee(),
+          baseAmount: this.props.amount
         })
       });
     }
     else {
-      this.props.cb({
+      cb({
         addCard: false,
         token: this.state.cardID,
         amount: this.calcStripeFee(),

@@ -15,10 +15,10 @@ export default class TicketCheckout extends Component {
     return true;
   }
 
-  value() {
-    return {
+  value(cb) {
+    cb({
       tickets: this.state.ticketList
-    }
+    });
   }
 
   ticketName(ticket) {
@@ -51,10 +51,32 @@ export default class TicketCheckout extends Component {
   }
 
   ticketStatusColor(ticket) {
+    var event = Events.findOne();
+    if(event.ticketAccess) {
+      var access = event.ticketAccess[Meteor.userId()];
+      if(access && access.indexOf(ticket) > -1) {
+        return "#0D0";
+      }
+    }
     if(this.state.ticketList.indexOf(ticket) >= 0){
       return "#DD0"
     }
     return "#D00";
+  }
+
+  ticketButton() {
+    var event = Events.findOne();
+    if(event.ticketAccess) {
+      var access = event.ticketAccess[Meteor.userId()];
+      if(access && access.indexOf(this.state.activeTicket) > -1) {
+        return "";
+      }
+    }
+    return (
+      <button onClick={this.toggleTicket.bind(this)}>
+        { this.state.ticketList.indexOf(this.state.activeTicket) >= 0 ? ("Remove") : ("Add") }
+      </button>
+    );
   }
 
   render() {
@@ -99,11 +121,9 @@ export default class TicketCheckout extends Component {
                     }
                   </p>
                   <div className="row center">
-                    <button onClick={this.toggleTicket.bind(this)}>
-                      {
-                        this.state.ticketList.indexOf(this.state.activeTicket) >= 0 ? ("Remove") : ("Add")
-                      }
-                    </button>
+                    {
+                      this.ticketButton()
+                    }
                   </div>
                 </div>
               ) : (
