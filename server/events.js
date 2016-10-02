@@ -315,7 +315,77 @@ Meteor.methods({
     return;
   },
 
-  "events.update_round"(eventID, bracketNumber, roundNumber, matchNumber) { //For swiss specifically
+  "events.update_match"(eventID, bracketNumber, roundNumber, score, placement)
+  {
+    var event = Events.findOne(eventID);
+    event = event.brackets[0];
+    if (placement == 0)
+      event.matches[roundNumber].winner = event.matches[roundNumber].playerOne;
+    else
+      event.matches[roundNumber].winner = event.matches[roundNumber].playerTwo;
+    var p1 = event.matches[roundNumber].playerOne;
+    var p2 = event.matches[roundNumber].playerTwo;
+    for (var x = 0; x < event.players.length; x++)
+    {
+      if (event.players[x].name == p1)
+      {
+        event.players[x].score += score;
+        event.players[x].wins++;
+      }
+      if (event.players[x].name == p2)
+        event.players[x].losses++;
+    }
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${fb}`]: event
+      }
+    })
+  },
+
+  "events.tiebreaker"(eventID, bracketNumber, roundNumber, score)
+  {
+    var event = Events.findOne(eventID);
+    event = event.brackets[0];
+    var p1 = event.matches[roundNumber].playerOne;
+    var p2 = event.matches[roundNumber].playerTwo;
+    var bnum1 = 0;
+    var bnum2 = 0;
+    for (var x = 0; x < event.players.length; x++)
+    {
+      if (event.players[x].name == p1)
+      {
+        for (var y = 0; y < event.players[x].length; y++)
+        {
+          var name = event.players[y].name;
+          if (event.players[x].playarr[name] = true)
+            bnum1 += event.players[y].score;
+        }
+      }
+      if (event.players[x].name == p2)
+      {
+        for (var y = 0; y < event.players[x].length; y++)
+        {
+          var name = event.players[y].name;
+          if (event.players[x].playarr[name] = true)
+            bnum2 += event.players[y].score;
+        }
+      }
+      if (bnum1 > bnum2)
+      {
+        //Insert p1 is winner
+      }
+      else if (bnum2 > bnum1)
+      {
+        //Insert p2 is winner
+      }
+      else
+      {
+        //I don't fucking know is this even possible make them play again ffs
+      }
+    }
+  },
+
+  "events.update_round"(eventID, bracketNumber, roundNumber) { //For swiss specifically
     var event = Events.findOne(eventID);
     event = event.brackets[0];
     var players = event.players;
@@ -351,16 +421,60 @@ Meteor.methods({
       extraplayer.bool = true;
     }
     var temp = [];
+
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    for (var x = 0; x < values.length; x++)
+    {
+      var y = values[x];
+      for (var z = 0; z = scores[y].length/2; z++)
+      {
+        var opponent = scores[y][z+scores[y].length/2].name;
+        if (scores[y][z].playerarr[opponent] = true)
+        {
+          if (scores[y].length > 2)
+          {
+            scores[y] = shuffle(scores[y]);
+            z--;
+          }
+          else if (x == values.length-1) {
+            scores[values[x-1]].concat(scores.pop());
+            x--;
+            break;
+          }
+          else
+          {
+            scores[values[x]].concat(scores[values[x+1]]);
+            scores.splice(values[x+1], 1);
+            z = -1;
+          }
+        }
+      }
+    }
+
     for (var x = 0; x < values.length; x++) //TODO: Check if two players who played against each other might end up doing so again.
     {
       var y = values[x]; //Our actual index value. Since the value is sorted backwards this goes top down.
       for (var z = 0; z = scores[y].length/2; z++)
       {
         var opponent = scores[y][z].name;
-        if (scores[y][z].playerarr[opponent] = true)
-        {
-          console.log("PANIC"); //Figure out a better system for this. Idea: Create matches backwards, if cannot resolve, append into greater bracket. Conflict: What if top 2 players played against each other.
-        }
         var matchObj = {
           playerOne: scores[y][z].name,
           playerTwo: scores[y][z+scores[y].length/2].name,
@@ -368,9 +482,8 @@ Meteor.methods({
         }
         temp.push(matchObj);
       }
+      event.matches.push(temp);
     }
-
-
       Events.update(eventID, {
         $set: {
           [`brackets.0.rounds.${fb}`]: event
