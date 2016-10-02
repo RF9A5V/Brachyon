@@ -310,7 +310,6 @@ var OrganizeSuite = {
       for (var y = 0; y < participants.length; y++)
       {
         playarr[participants[y]] = false;
-        if (x == y) playarr[participants[y]] = true;
       }
       var playerObj = {
         name: participants[x],
