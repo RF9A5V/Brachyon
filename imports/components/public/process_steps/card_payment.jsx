@@ -177,7 +177,7 @@ export default class CardPaymentProcess extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="row center">
+                <div className="row center" style={{marginBottom: 20}}>
                   <div className="col">
                     <label>Exp. Mo.</label>
                     <select style={{width: 100, padding: 10}} ref="expMonth">
@@ -213,15 +213,15 @@ export default class CardPaymentProcess extends Component {
           <div className="col x-center">
             <div className="row flex-pad" style={{width: 300}}>
               <label>Base Amount</label>
-              <span>{ (this.props.amount / 100).toFixed(2) }</span>
+              <label>{ (this.props.amount / 100).toFixed(2) }</label>
             </div>
             <div className="row flex-pad" style={{width: 300}}>
               <label>Processing Fee<sup>?</sup></label>
-              <span>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</span>
+              <label>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</label>
             </div>
             <div className="row flex-pad" style={{width: 300}}>
               <label>Total</label>
-              <span>{(finalAmount / 100).toFixed(2)}</span>
+              <label>{(finalAmount / 100).toFixed(2)}</label>
             </div>
           </div>
         </form>

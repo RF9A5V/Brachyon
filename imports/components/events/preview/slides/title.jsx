@@ -105,8 +105,7 @@ export default class EventTitlePage extends Component {
                 {
                   event.tickets || event.brackets ? (
                     <div>
-                      <button style={{marginRight: 10}} onClick={() => { this.refs.tickets.openModal() }}>Play</button>
-                      <TicketPurchaseWrapper ref="tickets" />
+                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event._id+"/checkout") }}>Play</button>
                     </div>
                   ) : (
                     ""

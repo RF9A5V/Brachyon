@@ -41,10 +41,10 @@ export default class EditModuleList extends Component {
             name: "main",
             info: "Bacon ipsum dolor amet spare ribs leberkas ball tip, short ribs shank venison t-bone jerky tongue frankfurter shoulder pastrami short loin picanha. Prosciutto tenderloin alcatra pig rump burgdoggen venison beef frankfurter pork belly. Jowl porchetta landjaeger, tenderloin cupim swine ham tail capicola."
           },
-          {
-            name: "staff",
-            info: "Bacon ipsum dolor amet spare ribs leberkas ball tip, short ribs shank venison t-bone jerky tongue frankfurter shoulder pastrami short loin picanha. Prosciutto tenderloin alcatra pig rump burgdoggen venison beef frankfurter pork belly. Jowl porchetta landjaeger, tenderloin cupim swine ham tail capicola."
-          },
+          // {
+          //   name: "staff",
+          //   info: "Bacon ipsum dolor amet spare ribs leberkas ball tip, short ribs shank venison t-bone jerky tongue frankfurter shoulder pastrami short loin picanha. Prosciutto tenderloin alcatra pig rump burgdoggen venison beef frankfurter pork belly. Jowl porchetta landjaeger, tenderloin cupim swine ham tail capicola."
+          // },
           {
             name: "schedule",
             info: "Bacon ipsum dolor amet spare ribs leberkas ball tip, short ribs shank venison t-bone jerky tongue frankfurter shoulder pastrami short loin picanha. Prosciutto tenderloin alcatra pig rump burgdoggen venison beef frankfurter pork belly. Jowl porchetta landjaeger, tenderloin cupim swine ham tail capicola."
