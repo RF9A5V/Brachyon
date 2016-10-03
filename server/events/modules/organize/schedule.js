@@ -41,12 +41,15 @@ Meteor.methods({
       if(hour < 12 && half == "PM") {
         hour += 12;
       }
-      return [hour, minutes, half];
+      return [hour, minutes];
     }
-    var [hour, minutes, half] = timeToComp(time);
-    var pos = days.length;
-    for(var i = 0; i < days[index].length; i ++){
-      var [testHour, testMinutes, testHalf] = timeToComp(days[index][i].time);
+    var [hour, minutes] = timeToComp(time);
+    var pos = days[index].length;
+    for(var i = 0; i < pos; i ++){
+      if(time == days[index][i].time) {
+        throw new Meteor.Error(403, "Time already exists.");
+      }
+      var [testHour, testMinutes] = timeToComp(days[index][i].time);
       if(hour < testHour || (hour == testHour && minutes < testMinutes)) {
         pos = i;
         break;
