@@ -26,6 +26,20 @@ Meteor.publish("event_participants", (id) => {
   }
 })
 
+Meteor.publish("event_sponsors", (id) => {
+  var event = Events.findOne(id);
+  if(event.crowdfunding && event.crowdfunding.sponsors) {
+    var userIds = event.crowdfunding.sponsors.map(obj => {
+      return obj.id;
+    });
+    return Meteor.users.find({
+      _id: {
+        $in: userIds
+      }
+    });
+  }
+})
+
 Meteor.publish("bracket", (eventID, bracketIndex) => {
   var event = Events.findOne(eventID);
   if(!event) {
