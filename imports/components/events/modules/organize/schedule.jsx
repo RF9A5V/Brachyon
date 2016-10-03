@@ -59,8 +59,8 @@ export default class SchedulePage extends Component {
     var day = Events.findOne().organize.schedule[this.state.day];
     this.state.timeIndex = this.state.timeIndex == index ? -1 : index;
     if(this.state.timeIndex >= 0 && this.refs.title) {
-      this.refs.title.value = day[this.state.timeIndex].title;
-      this.refs.description.value = day[this.state.timeIndex].description;
+      this.refs.title.value = day[this.state.timeIndex].title || "";
+      this.refs.description.value = day[this.state.timeIndex].description || "";
     }
     this.forceUpdate();
   }
@@ -149,9 +149,9 @@ export default class SchedulePage extends Component {
               this.state.timeIndex >= 0 && this.state.day >= 0 ? (
                 <div className="submodule-section col-1 col">
                   <h5>Title (Optional)</h5>
-                  <input type="text" ref="title" defaultValue={days[this.state.day][this.state.timeIndex].title} />
+                  <input type="text" ref="title" defaultValue={days[this.state.day][this.state.timeIndex].title || ""} />
                   <h5>Description</h5>
-                  <textarea ref="description" defaultValue={days[this.state.day][this.state.timeIndex].description}>
+                  <textarea ref="description" defaultValue={days[this.state.day][this.state.timeIndex].description || ""}>
                   </textarea>
                   <div className="row center">
                     <button onClick={this.deleteTime.bind(this)} style={{marginRight: 10}}>Delete</button>
