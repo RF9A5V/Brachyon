@@ -12,7 +12,7 @@ export default class Footer extends React.Component {
         <div className="row col-2 footer x-center center">
           <div className="col-1 row x-center justify-start" style={{margin: '0 0 0 10px'}}>
             <a href="https://www.twitch.tv/brachyon" target="_blank">
-            <div className="social-icon-bg col x-center center">
+            <div className="social-icon-bg col x-center center" onHover>
               <FontAwesome name="twitch" className="twitch" />
             </div></a>
             <div className="footer-plugin-pad"></div>
@@ -26,9 +26,10 @@ export default class Footer extends React.Component {
               <FontAwesome name="reddit-alien" className="reddit social-icon" />
             </div></a>
             <div className="footer-plugin-pad"></div>
+            <a href="https://www.facebook.com/BrachyonInc/" target="_blank">
             <div className="social-icon-bg col x-center center">
               <FontAwesome name="facebook " className="facebook social-icon" />
-            </div>
+            </div></a>
             <div className="footer-plugin-pad"></div>
             <SnapModal />
             <div className="footer-plugin-pad"></div>
@@ -46,8 +47,8 @@ export default class Footer extends React.Component {
             <div className="row justify-end" style={{margin: '0 10px 0 0'}}>
                 <Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>
                 <Link to="/terms" className="footer-hub-pad col x-center">Terms</Link>
-                <div className="footer-hub-pad col x-center">Privacy</div>
-                <div className="footer-hub-pad col x-center">&copy; Brachyon 2016</div>
+                <a href="#" className="footer-hub-pad col x-center">Privacy</a>
+                <a href="#" className="footer-hub-pad col x-center">&copy; Brachyon 2016</a>
             </div>
           </div>
         </div>

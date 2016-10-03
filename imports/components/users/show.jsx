@@ -1,8 +1,8 @@
 import React from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
-import { browserHistory } from "react-router"
+import { browserHistory, Link } from "react-router"
+import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
@@ -14,6 +14,7 @@ import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
 import BlockContainer from "/imports/components/events/discover/block_container.jsx";
+import ImageForm from "/imports/components/public/img_form.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -21,7 +22,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     self = this;
     this.setState({
       events: Meteor.subscribe('userEvents', Meteor.userId()),
-      currentEvent: null
+      currentEvent: null,
+      open: false
     });
   }
 
@@ -101,11 +103,30 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   profileImage() {
-    var image = ProfileImages.findOne(Meteor.user().profile.image);
-    if(image) {
-      return image.link();
+    var user = Meteor.user();
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
+  }
+
+  updateProfileImage(e) {
+    e.preventDefault();
+    this.refs.img.value();
+  }
+
+  onImageUploaded(data) {
+    Meteor.call("users.update_profile_image", data._id, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        this.setState({
+          open: false
+        })
+        toastr.success("Updated profile image.", "Success!");
+      }
+    })
   }
 
   render() {
@@ -138,7 +159,17 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                 })
               }
             </div>
-            <div className="user-profile-image" style={{backgroundImage: `url(${this.profileImage()})`}}>
+            <div className="user-profile-image" onClick={() => { this.setState({ open: true }) }}>
+              <img src={this.profileImage()} style={{width: "100%", height: "100%", borderRadius: "100%"}} />
+              <div className="user-profile-overlay">
+                Add Image
+              </div>
+              <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+                <div className="col center x-center" style={{width: "100%", height: "100%"}}>
+                  <ImageForm ref="img" collection={ProfileImages} callback={this.onImageUploaded.bind(this)} />
+                  <button onClick={this.updateProfileImage.bind(this)}>Submit</button>
+                </div>
+              </Modal>
             </div>
           </div>
         </div>

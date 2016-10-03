@@ -30,31 +30,39 @@ export default class StrategySelect extends Component {
   render() {
     if(this.state.strategy) {
       return (
-        <div className="col">
-          <div className="row" style={{justifyContent: "flex-end"}}>
+        <div>
+          <div className="button-row">
             <button onClick={() => { this.setState({ strategy: null }) }}>Back</button>
           </div>
-          <this.state.strategy.component />
+          <div className="submodule-bg">
+            <div className="col x-center">
+              <this.state.strategy.component />
+            </div>
+          </div>
         </div>
       )
     }
     return (
-      <div className="row">
-        {
-          this.strategies().map((strat) => {
-            return (
-              <div className="strategy-block col x-center" onClick={() => { if(strat.name != "Skill Tree") { return toastr.error("Unimplemented.") } this.setState({ strategy: strat }) }}>
-                <h4>{ strat.name }</h4>
-                <FontAwesome name={strat.icon} />
-                <div>
-                  <p>
-                    Bacon ipsum dolor amet brisket venison fatback, bresaola ground round meatloaf ball tip. Beef ribs jerky meatloaf, shoulder cupim turducken prosciutto ground round short ribs andouille pig chicken sirloin.
-                  </p>
-                </div>
-              </div>
-            )
-          })
-        }
+      <div>
+        <div className="submodule-bg" style={{marginTop: 10}}>
+          <div className="row">
+            {
+              this.strategies().map((strat) => {
+                return (
+                  <div className="strategy-block col x-center" onClick={() => { if(strat.name != "Skill Tree") { return toastr.error("Unimplemented.") } this.setState({ strategy: strat }) }}>
+                    <h4>{ strat.name }</h4>
+                    <FontAwesome name={strat.icon} />
+                    <div>
+                      <p>
+                        Bacon ipsum dolor amet brisket venison fatback, bresaola ground round meatloaf ball tip. Beef ribs jerky meatloaf, shoulder cupim turducken prosciutto ground round short ribs andouille pig chicken sirloin.
+                      </p>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
       </div>
     )
   }

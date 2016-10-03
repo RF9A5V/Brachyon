@@ -4,10 +4,11 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    if(event.revenue) {
+    if(event.crowdfunding) {
       Events.update(id, {
         $set: {
-          underReview: true
+          underReview: true,
+          published: false
         }
       })
     }

@@ -26,17 +26,11 @@ export default class SnapModal extends React.Component {
         </div>
 		  	<Modal
 	        className = "snap-modal"
-	        overlayClassName = "credential-overlay"
 	        isOpen={this.state.open}
           onRequestClose={this.closeModal.bind(this)}
         >
-	        <div className="row justify-end">
-            <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
-	        </div>
-	        <div className="col center x-center">
-	        	<h1 style={{textAlign: 'center'}}>Snapchat:</h1>
-		        <img src="/images/snapcode.svg" className="snapcode-image" />
-		        <span style={{textAlign: 'center'}}>brachyon</span>
+	        <div className="col center x-center" style={{width: "100%", height: "100%"}}>
+		        <img src="/images/snapcode.png" className="snapcode-image" />
 		      </div>
 	      </Modal>
 	    </div>

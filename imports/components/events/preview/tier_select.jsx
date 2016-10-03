@@ -17,7 +17,7 @@ export default class TierSelect extends Component {
     if(this.state.index >= 0){
       return {
         tierIndex: this.state.index,
-        amount: this.props.amount + (Events.findOne().revenue.tiers[this.state.index].price * 100)
+        amount: this.props.amount + (Events.findOne().crowdfunding.tiers[this.state.index].price * 100)
       }
     }
     return {
@@ -47,7 +47,7 @@ export default class TierSelect extends Component {
   }
 
   render() {
-    var tiers = Events.findOne().revenue.tiers;
+    var tiers = Events.findOne().crowdfunding.tiers;
     return (
       <div className="tier-select-container">
         <h3>But Wait, There's More!</h3>

@@ -1,7 +1,10 @@
 .selectable {
-  width: 20%;
   max-width: 100px;
   margin: 10px 20px 0 0;
+}
+
+.selectable:hover {
+  cursor: pointer;
 }
 
 .selectable img {
@@ -9,6 +12,28 @@
   height: auto;
 }
 
+.selectable.active {
+  border-color: #FF6000;
+}
+
 .selectable.active img {
-  border: solid 5px #383;
+  border-color: #FF6000;
+}
+
+.selectable.active div {
+  color: #FF6000;
+}
+
+.sub-section-select {
+  background-color: #333;
+  padding: 20px;
+  margin: 10px;
+}
+
+.sub-section-select:hover {
+  cursor: pointer;
+}
+
+.sub-section-select.active {
+  background-color: #FF6000;
 }

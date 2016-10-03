@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 
 import AccordionContainer from "/imports/components/public/accordion_container.jsx";
 import DetailsPanel from "./create/details.jsx";
-import RevenuePanel from "./create/module_dropdowns/revenue.jsx";
+import CrowdfundingPanel from "./create/module_dropdowns/crowdfunding.jsx";
 import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
 import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
@@ -20,21 +20,30 @@ export default class EventCreateScreen extends Component {
         review: Array(modules.review.length).fill(0)
       }
     });
+    window.addEventListener("resize", this.forceUpdate.bind(this));
   }
 
   panels() {
     return {
       brackets: (<BracketsPanel ref="brackets" />),
-      // bot: (<BotPanel ref="bot" />),
-      promotion: (<PromotionPanel ref="promotion" />),
-      revenue: (<RevenuePanel ref="revenue" />)
+      crowdfunding: (<CrowdfundingPanel ref="crowdfunding" />)
     }
   }
 
   availableModules() {
     return {
-      nonReview: ["brackets"],
-      review: ["revenue", "promotion"]
+      nonReview: [
+        {
+          name: "brackets",
+          icon: "sitemap"
+        }
+      ],
+      review: [
+        {
+          name: "crowdfunding",
+          icon: "usd"
+        }
+      ]
     }
   }
 
@@ -61,13 +70,14 @@ export default class EventCreateScreen extends Component {
     var modules = this.availableModules();
     var keys = Object.keys(modules);
     var panels = this.panels();
-    for(var i = 0; i < keys.length; i++){
-      for(var j = 0; j < modules[keys[i]].length; j ++){
-        if(this.state.moduleBits[keys[i]][j] == 1){
+    for(var i in modules){
+      console.log(i);
+      for(var j in modules[i]){
+        if(this.state.moduleBits[i][j] == 1){
           moduleItems.push({
-            title: modules[keys[i]][j][0].toUpperCase() + modules[keys[i]][j].slice(1),
+            title: modules[i][j].name[0].toUpperCase() + modules[i][j].name.slice(1),
             content: (
-              panels[modules[keys[i]][j]]
+              panels[modules[i][j].name]
             )
           })
         }
@@ -79,20 +89,17 @@ export default class EventCreateScreen extends Component {
   submit(e) {
     e.preventDefault();
     var refKeys = Object.keys(this.refs);
-    console.log(refKeys);
     var args = {};
     for(var i in refKeys) {
       var key = refKeys[i];
       args[key] = this.refs[key].value();
     }
-    console.log(args);
     Meteor.call("events.create", args, function(err, event){
       if(err){
-        console.log(err.reason);
+        toastr.error(err.reason, "Error!");
       }
       else {
-        console.log(event);
-        browserHistory.push("/dashboard");
+        browserHistory.push("/");
       }
     });
   }
@@ -120,13 +127,14 @@ export default class EventCreateScreen extends Component {
     return keys.map((key, index) => {
       return (
         <div>
-          <h3 className="module-block-label">{key == "nonReview" ? ("No Review Required") : ("Review Required")}</h3>
+          <h5 className="module-block-label">{key == "nonReview" ? ("No Review Required") : ("Review Required")}</h5>
           {
             modules[key].map((value, index) => {
               return (
                 <ModuleBlock
                   category={key}
-                  modName={value}
+                  modName={value.name}
+                  icon={value.icon}
                   index={index}
                   isActive={this.state.moduleBits[key][index] == 1}
                   callback={this.toggleModuleState.bind(this)}
@@ -145,26 +153,37 @@ export default class EventCreateScreen extends Component {
       <div className='box'>
         <div className='col x-center'>
           <h2>Create an Event</h2>
-          {
-            this.accordionItems().map(function(item, index){
-              return (
-                <AccordionContainer title={item.title} open={self.state.active === index}
-                handler={ () =>
-                  {
-                    self.setState({ active: (index !== self.state.active ? index : -1) })
-                  } }
-                >
-                  { item.content }
-                </AccordionContainer>
-              )
-            })
-          }
-          <div>
-            <h5>Add Modules</h5>
+          <div className="row-to-col" style={{width: window.innerWidth < 1000 ? "95%" : "85%", alignItems: window.innerWidth < 1000 ? "stretch" : "flex-start", minWidth: 200 }}>
+            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1000 ? "initial" : "22.5%" }}>
+              <div className="row center x-center">
+                <h5 style={{position: "relative", top: -32, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Add Modules</h5>
+              </div>
+              {
+                this.modulePanels()
+              }
+            </div>
+            <div className="col x-center edit-modules" style={{ margin: 20, padding: "30px 20px", border: "solid 2px white", width: window.innerWidth < 1000 ? "initial" : "65%" }}>
+              <div className="row center x-center">
+                <h5 style={{position: "relative", top: -42, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Edit Modules</h5>
+              </div>
+              {
+                this.accordionItems().map(function(item, index){
+                  return (
+                    <AccordionContainer title={item.title} open={self.state.active === index}
+                    handler={ () =>
+                      {
+                        self.setState({ active: (index !== self.state.active ? index : -1) })
+                      } }
+                    >
+                      { item.content }
+                    </AccordionContainer>
+                  )
+                })
+              }
+            </div>
+            <div style={{padding: 22, margin: 20, width: "22.5%", minWidth: 200}}>
+            </div>
           </div>
-          {
-            this.modulePanels()
-          }
           {
             this.buttons()
           }

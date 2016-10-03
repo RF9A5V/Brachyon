@@ -7,7 +7,7 @@ export default class FeaturedList extends Component {
     var event = Events.findOne();
     var participants = new Set();
     event.brackets.forEach((bracket) => {
-      var players = bracket.participants;
+      var players = bracket.participants || [];
       players.forEach((player) => {
         if(player.id){
           participants.add(player.id);
@@ -84,38 +84,38 @@ export default class FeaturedList extends Component {
 
   render() {
     return (
-      <div className="col">
-        <div className="row x-center">
-          <div className="col-1">
-          </div>
-          <span>Featured</span>
-          <div className="row col-1" style={{justifyContent: "flex-end"}}>
-            <button onClick={this.onTopSave.bind(this)}>Save</button>
-          </div>
+      <div>
+        <div className="button-row">
+          <button onClick={this.onTopSave.bind(this)}>Save</button>
         </div>
-        <div className="row">
-        {
-          this.state.participants.map((participant) => {
-            var user = Meteor.users.findOne(participant);
-            return (
-              <div className="user-block" ref={participant} key={participant} onClick={() => { this.onFeatureToggle(participant) }}>
-                <img src={ this.imgOrDefault(user) }/>
-                <div>
-                  <span>{ user.username }</span>
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Featured</h3>
+          </div>
+          <div className="row">
+          {
+            this.state.participants.map((participant) => {
+              var user = Meteor.users.findOne(participant);
+              return (
+                <div className="user-block" ref={participant} key={participant} onClick={() => { this.onFeatureToggle(participant) }}>
+                  <img src={ this.imgOrDefault(user) }/>
+                  <div>
+                    <span>{ user.username }</span>
+                  </div>
+                  {
+                    this.state.topThree.indexOf(participant) >= 0 ? (
+                      <div className={`user-block-decorator ${this.intToClass(this.state.topThree.indexOf(participant))}`}>
+                        { this.state.topThree.indexOf(participant) + 1 }
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  }
                 </div>
-                {
-                  this.state.topThree.indexOf(participant) >= 0 ? (
-                    <div className={`user-block-decorator ${this.intToClass(this.state.topThree.indexOf(participant))}`}>
-                      { this.state.topThree.indexOf(participant) + 1 }
-                    </div>
-                  ) : (
-                    ""
-                  )
-                }
-              </div>
-            )
-          })
-        }
+              )
+            })
+          }
+          </div>
         </div>
       </div>
     )

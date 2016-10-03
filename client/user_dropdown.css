@@ -26,9 +26,9 @@
 }
 
 .user-dropdown-option:hover {
-  border: 2px #CC0000 solid;
+  border: 2px #FF6000 solid;
 }
 
 .user-dropdown-option:active {
-  background-color: #CC0000;
+  background-color: #FF6000;
 }

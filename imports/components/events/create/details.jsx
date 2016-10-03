@@ -9,22 +9,28 @@ export default class DetailsPanel extends Component {
 
   value() {
     if(this.refs.name.value == "") {
+      toastr.error("Details name needs definition.");
       throw new Error("Details name needs definition.");
     }
-    if(this.refs.location.value() == null) {
+    else if(this.refs.location.value() == null) {
+      toastr.error("Details location needs definition.");
       throw new Error("Details location needs definition.");
     }
-    if(this.refs.description.value == "") {
+    else if(this.refs.description.value == "") {
+      toastr.error("Details description needs definition.");
       throw new Error("Details description needs definition.");
     }
-    if(this.refs.date.value() == null || this.refs.time.value() == null) {
+    else if(this.refs.date.value() == null || this.refs.time.value() == null) {
+      toastr.error("Details datetime needs definition.");
       throw new Error("Details datetime needs definition.");
     }
-    return {
-      name: this.refs.name.value,
-      location: this.refs.location.value(),
-      description: this.refs.description.value,
-      datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
+    else {
+      return {
+        name: this.refs.name.value,
+        location: this.refs.location.value(),
+        description: this.refs.description.value,
+        datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
+      }
     }
   }
 
@@ -43,24 +49,24 @@ export default class DetailsPanel extends Component {
           <i style={{lineHeight: 1.5}}>This part's required. All the admin stuff having to do with where and when your event is happening goes here.</i>
         </div>
         <div className="col">
-          <label>Event Name</label>
+          <h5>Event Name</h5>
           <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />
         </div>
         <div className="col">
           <LocationSelect ref="location" onChange={this.onChange.bind(this)} />
         </div>
         <div className="col">
-          <label>Description</label>
+          <h5>Description</h5>
           <textarea ref="description" onChange={this.onChange.bind(this)}></textarea>
         </div>
         <div className="col">
-          <label>Date</label>
+          <h5>Date</h5>
           <div>
             <DateInput ref="date" />
           </div>
         </div>
         <div className="col">
-          <label style={{marginBottom: 10}}>Time</label>
+          <h5 style={{marginBottom: 10}}>Time</h5>
           <TimeInput ref="time" />
         </div>
       </div>
