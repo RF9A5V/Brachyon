@@ -26,6 +26,7 @@ import StaffPage from "./modules/organize/staff.jsx";
 import SchedulePage from "./modules/organize/schedule.jsx";
 
 import SubmitPage from "./modules/submit.jsx";
+import PrizePoolBreakdown from "./edit/prize_pool.jsx";
 
 import EditModulePage from "./modules/edit_modules.jsx";
 
@@ -124,6 +125,10 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         {
           component: RewardsPage,
           text: "Rewards"
+        },
+        {
+          component: PrizePoolBreakdown,
+          text: "Prize Pool"
         },
         {
           component: TierPage,
