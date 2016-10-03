@@ -1,7 +1,6 @@
 Meteor.methods({
   "events.updateDetailsName"(id, name) {
     // Validation
-    console.log(name);
     Events.update(id, {
       $set: {
         "details.name": name

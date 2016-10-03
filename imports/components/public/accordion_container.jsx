@@ -12,9 +12,9 @@ export default class AccordionContainer extends Component {
     return (
       <div className="accordion-container">
         <div className="accordion-header" onClick={this.onClick.bind(this)}>
-          <h3>
+          <h5>
             { this.props.title }
-          </h3>
+          </h5>
           {
             this.props.open ? (
               <FontAwesome name="caret-up" size="2x" />

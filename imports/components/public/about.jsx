@@ -16,7 +16,26 @@ export default class AboutScreen extends TrackerReact(Component) {
       user: Meteor.subscribe("user", Meteor.userId()),
       events: Meteor.subscribe('discoverEvents'),
       clicked: false
+    });
+  }
+
+  handleResize(e) {
+    document.querySelectorAll(".about-blocks").forEach((block) => {
+      var style = window.getComputedStyle(block);
+      block.style.height = style.width;
     })
+  }
+
+  componentDidUpdate() {
+    this.handleResize();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
   }
 
   onClick(e) {
@@ -39,6 +58,7 @@ export default class AboutScreen extends TrackerReact(Component) {
   }
 
   render() {
+    this.handleResize();
     if(!this.state.user.ready()){
       return (
         <div>
@@ -48,7 +68,7 @@ export default class AboutScreen extends TrackerReact(Component) {
     var createEvent = "";
     if(Meteor.userId()) {
       createEvent = (
-        <div className="col">
+        <div className="col-to-row x-center col-1">
           <Link to="/events/create" className="col center x-center about-blocks">
             <FontAwesome name="plus" size="5x" className="about-icons" />
           </Link>
@@ -61,7 +81,7 @@ export default class AboutScreen extends TrackerReact(Component) {
     else {
       if(this.state.clicked){
         createEvent = (
-          <div className="col">
+          <div className="col-to-row x-center col-1">
             <div id="about-block-cred" className="col center x-center">
               <LogInModal />
               <SignUpModal />
@@ -74,7 +94,7 @@ export default class AboutScreen extends TrackerReact(Component) {
       }
       else {
         createEvent = (
-          <div className="col">
+          <div className="col-to-row x-center col-1">
             <div onClick={this.toggleCreate.bind(this)} className="col center x-center about-blocks">
               <FontAwesome name="plus" size="5x" className="about-icons" />
             </div>
@@ -99,8 +119,8 @@ export default class AboutScreen extends TrackerReact(Component) {
           </div>
           <h4>Brachyon Lets You...</h4>
           <div className="col" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
-            <div className="row center">
-              <Link to="/events/discover" className="col">
+            <div className="row-to-col center x-center">
+              <Link to="/events/discover" className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="search" size="5x" className="about-icons" />
                 </div>
@@ -109,7 +129,7 @@ export default class AboutScreen extends TrackerReact(Component) {
                 </div>
               </Link>
               {createEvent}
-              <Link to="/advertise" className="col">
+              <Link to="/advertise" className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="arrow-up" size="5x" className="about-icons" />
                 </div>
@@ -117,7 +137,7 @@ export default class AboutScreen extends TrackerReact(Component) {
                   <h3 style={{marginTop: 10}}>Promote</h3><div style={{marginTop: 10}}>Share and publicize your events.</div>
                 </div>
               </Link>
-              <div className="col">
+              <div className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="usd" size="5x" className="about-icons" />
                 </div>

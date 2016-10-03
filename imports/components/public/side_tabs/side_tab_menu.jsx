@@ -18,21 +18,18 @@ export default class SideTabMenu extends Component {
 
   render() {
     return (
-      <div className="tab-menu" ref="menu">
-        <div className="tab-menu-item" onClick={ this.onActiveSelect.bind(this) }>
-          <div className="tab-text">
-            <div className="tab-header">Collapse</div>
-          </div>
-          <div className="tab-icon">
-            <FontAwesome name="bars" size="3x" />
-          </div>
-        </div>
+      <div className="tab-menu active" ref="menu">
         {
           this.props.items.map((item, i) => {
             return (
               <div className={`tab-menu-item ${this.props.activeItem == i ? "active" : ""}`} ref={i}>
                 <div className="tab-text">
-                  <div className="tab-header" onClick={() => { this.onContentTabSelect(i) }}>{ item.text }</div>
+                  <div className="tab-header" onClick={() => { this.onContentTabSelect(i) }}>
+                    <FontAwesome name={item.icon} size="2x" />
+                    <span>
+                      { item.text }
+                    </span>
+                  </div>
                   {
                     item.subitems.map((subItem, j) => {
                       if(j == 0){
@@ -40,14 +37,17 @@ export default class SideTabMenu extends Component {
                       }
                       return (
                         <div className={`tab-subtext ${this.props.activeItem == i && this.props.activeSub == j ? "active" : ""}`} onClick={() => { this.onSubTabSelect(i, j) }}>
-                          { subItem.text }
+                          <FontAwesome name={this.props.activeItem == i && this.props.activeSub == j ? "arrow-right" : "minus"} />
+                          <span>
+                            { subItem.text }
+                          </span>
                         </div>
                       )
                     })
                   }
                 </div>
                 <div className="tab-icon" onClick={() => { this.onContentTabSelect(i) }}>
-                  <FontAwesome name={item.icon} size="3x" />
+                  <FontAwesome name={item.icon} size="2x" />
                 </div>
               </div>
             )

@@ -9,8 +9,8 @@ export default class PrizePoolBreakdown extends Component {
     super(props);
     var event = Events.findOne();
     // var labels = [];
-    // if(event.revenue.prizePool != null) {
-    //   labels = event.revenue.prizePool;
+    // if(event.crowdfunding.prizePool != null) {
+    //   labels = event.crowdfunding.prizePool;
     // }
     // else {
     //   labels = (event.brackets || []).map(function() {
@@ -23,8 +23,8 @@ export default class PrizePoolBreakdown extends Component {
     //   })
     // }
     var brarray = [];
-    if (event.revenue.prizesplit != null)
-      brarray = event.revenue.prizesplit;
+    if (event.crowdfunding.prizesplit != null)
+      brarray = event.crowdfunding.prizesplit;
 
     for (x = brarray.length; x < event.brackets.length; x++)
     {
@@ -79,7 +79,7 @@ export default class PrizePoolBreakdown extends Component {
   }
 
   onPrizeSplitSave(){
-    Meteor.call("events.revenue.savePrize", this.state.id, this.state.brarr, (err) => {
+    Meteor.call("events.crowdfunding.savePrize", this.state.id, this.state.brarr, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }

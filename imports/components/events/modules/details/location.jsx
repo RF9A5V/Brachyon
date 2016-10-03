@@ -6,7 +6,8 @@ export default class LocationPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: Events.findOne()._id
+      id: Events.findOne()._id,
+      showLoc: true
     }
   }
 
@@ -16,7 +17,6 @@ export default class LocationPage extends Component {
         return toastr.error(err.reason, "Error!");
       }
       else {
-        this.props.onItemSelect(this.props.activeItem, 0);
         return toastr.success("Successfully updated location.", "Success!");
       }
     })
@@ -26,11 +26,40 @@ export default class LocationPage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="row x-center flex-pad">
-          <span>Location</span>
+        <div className="button-row">
           <button onClick={this.onLocationSave.bind(this)}>Save</button>
         </div>
-        <LocationSelect ref="location" {...(event.details.location || {})} />
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Location</h3>
+          </div>
+          <div className="row">
+            <div className="submodule-section" style={{width: "30%", minWidth: 200}}>
+              <LocationSelect ref="location" {...(event.details.location || {})} onChange={() => { this.setState({ showLoc: false }) }} />
+            </div>
+            <div className="submodule-section col-1 row center x-center">
+              {
+                this.state.showLoc ? (
+                  event.details.location.online ? (
+                    <span className="section">
+                      Online
+                    </span>
+                  ) : (
+                    <div className="col center x-center">
+                      <div className="col" style={{textAlign: "left", display: "inline-flex"}}>
+                        <span className="section">{ event.details.location.locationName }</span>
+                        <span className="section">{ event.details.location.streetAddress }</span>
+                        <span className="section">{ event.details.location.city + " " + event.details.location.state + ", " + event.details.location.zip }</span>
+                      </div>
+                    </div>
+                  )
+                ) : (
+                  ""
+                )
+              }
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

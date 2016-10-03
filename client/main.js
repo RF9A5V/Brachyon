@@ -15,7 +15,7 @@ Meteor.startup(() => {
 
   var overlay = Modal.defaultStyles.overlay;
 
-  overlay.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  overlay.backgroundColor = "rgba(0, 0, 0, 0.3)";
   overlay.display = "flex";
   overlay.justifyContent = "center";
   overlay.alignItems = "center";
@@ -25,7 +25,7 @@ Meteor.startup(() => {
 
   content.border = "none";
   content.borderRadius = 0;
-  content.backgroundColor = "#666";
+  content.backgroundColor = "#000";
   content.height = "60%";
   content.width = "50%";
   content.position = "relative";

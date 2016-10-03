@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class UserTemplate extends Component {
 
@@ -12,7 +13,7 @@ export default class UserTemplate extends Component {
     if(img == null) {
       return "/images/profile.png";
     }
-    return img.url();
+    return img.link();
   }
 
   render() {

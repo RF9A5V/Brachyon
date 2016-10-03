@@ -13,7 +13,7 @@ if(Meteor.isServer) {
 }
 
 export const Images = new FilesCollection({
-  debug: true,
+  debug: false,
   collectionName: "images",
   allowClientCode: false,
   onBeforeUpload(file) {
@@ -39,6 +39,13 @@ export const Images = new FilesCollection({
             [property]: file._id.toString()
           }
         });
+        Events.find({
+          "profile.image": image._id
+        }, {
+          $set: {
+            "profile.imageUrl": (image ? image.link() : "/images/bg.jpg")
+          }
+        })
         this.unlink(this.collection.findOne(image._id), versionName);
       }))
     });

@@ -12,7 +12,7 @@ export default class NameSearch extends Component {
 
   render() {
     return (
-      <div style={{margin: "0 5px"}} className="col">
+      <div className="col">
         <label>Name</label>
         <input type="text" ref="name" placeholder="Search by Name" style={{margin: 0}} onChange={this.onTextChange.bind(this)} />
       </div>

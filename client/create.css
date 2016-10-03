@@ -1,17 +1,28 @@
 .module-block {
-  width: 400px;
-  background-color: #555;
+  background-color: #666;
   margin-bottom: 20px;
   padding: 10px;
   position: relative;
 }
 
+.module-block:hover {
+  cursor: pointer;
+}
+
+.module-block-label {
+  margin-bottom: 10px;
+}
+
 .module-block.active {
-  background-color: #1FCB2A;
+  background-color: #222;
+}
+
+.module-block.active .fa:not(.fa-minus) {
+  color: #FF6000;
 }
 
 .module-block-header {
-  font-size: 20px;
+  font-size: 1.2em;
   margin-left: 20px;
 }
 
@@ -44,4 +55,49 @@
 
 .format-select.active {
   font-weight: bold;
+  color: #00BDFF;
+}
+
+.edit-modules:after {
+  content: auto
+}
+
+.info-title-container {
+  padding: 20px;
+  background-color: #333;
+  margin-right: 20px;
+}
+
+.info-title {
+  padding: 20px;
+  background-color: #222;
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.info-title:hover {
+  cursor: pointer;
+}
+
+.info-title:last-child {
+  margin-bottom: 0;
+}
+
+.info-title.active {
+  background-color: #FF6000;
+}
+
+.info-description {
+  padding: 20px;
+  background-color: #333;
+}
+
+.info-description p {
+  line-height: 1.5;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+}
+
+.info-description p:last-child {
+  margin-bottom: 0;
 }

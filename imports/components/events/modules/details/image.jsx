@@ -8,7 +8,8 @@ export default class ImagePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: Events.findOne()._id
+      id: Events.findOne()._id,
+      imgSelected: false
     }
   }
 
@@ -34,12 +35,26 @@ export default class ImagePage extends Component {
     var img = Images.findOne(event.details.banner);
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>Image</span>
+        <div className="button-row">
           <button onClick={this.onImageSave.bind(this)}>Save</button>
         </div>
-        <img src={img ? img.link() : ""} />
-        <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Images} callback={ this.onUploadComplete.bind(this) } />
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3 style={{marginBottom: 20}}>Event Image</h3>
+          </div>
+          {
+            this.state.imgSelected ? (
+              ""
+            ) : (
+              <div style={{textAlign: "center"}}>
+                <img src={img ? img.link() : ""} style={{width: "50%", margin: "20px 0", height: "auto"}} />
+              </div>
+            )
+          }
+          <div className="row center">
+            <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Images} callback={ this.onUploadComplete.bind(this) } onSelect={() => { this.setState({imgSelected: true}) }} />
+          </div>
+        </div>
       </div>
     )
   }

@@ -50,13 +50,13 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   return [
     Events.find({_id: eventID}),
     Games.find({_id: event.brackets[bracketIndex].game}),
-    Images.find({_id: game.banner}),
+    Images.find({_id: game.banner}).cursor,
     users,
     ProfileImages.find({
       _id: {
         $in: profileImageIDs
       }
-    })
+    }).cursor
   ]
 })
 
@@ -161,7 +161,7 @@ Meteor.publish("userSearch", function(usernameSubstring) {
   });
   return [
     users,
-    profileImages
+    profileImages.cursor
   ];
 })
 
@@ -186,7 +186,6 @@ Meteor.publish('games', function(){
 })
 
 Meteor.publish('game_search', function(query) {
-  console.log(query);
   if(query == ""){
     return [];
   }
