@@ -4,6 +4,8 @@ import PaymentContainer from "../../crowdfunding/payment_container.jsx";
 import SkillTree from "../stretch.jsx";
 import TierPaymentContainer from "../tier_payment_container.jsx";
 
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 export default class CrowdfundingPage extends Component {
 
   constructor(props) {
@@ -24,6 +26,14 @@ export default class CrowdfundingPage extends Component {
 
   openPaymentForm(i) {
     this.refs[`payment${i}`].openModal();
+  }
+
+  profileImage(id) {
+    var user = Meteor.users.findOne(id);
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
+    }
+    return "/images/profile.png";
   }
 
   render() {
@@ -51,7 +61,7 @@ export default class CrowdfundingPage extends Component {
                       return (
                         <div className="sponsor-item col center">
                           <div className="row x-center">
-                            <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
+                            <img src={ this.profileImage(user._id)} />
                             <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
                           </div>
                           <p>
