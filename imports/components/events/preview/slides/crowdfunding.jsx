@@ -100,7 +100,7 @@ export default class CrowdfundingPage extends Component {
                     <div className="cf-tier col" onClick={() => {this.setState({open: true})}}>
                       <div className="row flex-pad x-center">
                         <span className="cf-amount">
-                          ${tier.price.toFixed(2)}
+                          ${(tier.price / 100).toFixed(2)}
                         </span>
                         <span className="cf-limit">
                           {tier.limit - (tier.sponsors || []).length} Remaining
@@ -119,7 +119,13 @@ export default class CrowdfundingPage extends Component {
             }
           </div>
         </div>
-        <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+        {
+          this.state.open ? (
+            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }
