@@ -24,7 +24,8 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
           }
         }
       }),
-      users: Meteor.subscribe("event_participants", this.props.params.eventId)
+      users: Meteor.subscribe("event_participants", this.props.params.eventId),
+      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId)
     })
   }
 
@@ -55,7 +56,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.users.ready()){
+    if(!this.state.event.ready() || !this.state.users.ready() || !this.state.sponsors.ready()){
       return (
         <div>Loading...</div>
       )

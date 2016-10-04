@@ -140,6 +140,35 @@ export default class EventTitlePage extends Component {
                 })
               }
             </div>
+            {
+              this.props.event.organize ? (
+                this.props.event.organize.schedule.map((day, index) => {
+                  return (
+                    <div className="slide-schedule">
+                      <div className="row center">
+                        <h3 style={{marginBottom: 10}}>Day {index + 1}</h3>
+                      </div>
+                      {
+                        day.map(value => {
+                          return (
+                            <div className="schedule-item col">
+                              <span>{ value.time }{
+                                value.title ? (
+                                  " - " + value.title
+                                ) : ("")
+                              }</span>
+                              <p>{ value.description }</p>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  )
+                })
+              ) : (
+                ""
+              )
+            }
           </div>
           <div className="col x-center col-1 slide-bracket-list">
             {
