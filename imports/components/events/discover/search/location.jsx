@@ -60,14 +60,14 @@ export default class LocationSearch extends Component {
     return (
       <div className="row">
         <div className="col">
-          <label>Location</label>
+          <span>Location</span>
           <input type="text" id="locationInput" placeholder="Search by Location" ref="location" onChange={this.onLocationChange.bind(this)} />
         </div>
         {
           this.state.hasLocation ? (
             <div className="col" style={{marginLeft: 10}}>
-              <label>Distance</label>
-              <input type="number" style={{width: 100, margin: 0}} placeholder="Distance" ref="distance" onChange={this.onDistanceChange.bind(this)}></input>
+              <span>Distance</span>
+              <input type="number" style={{width: 100}} placeholder="Distance" ref="distance" onChange={this.onDistanceChange.bind(this)}></input>
             </div>
           ) : (
             ""

@@ -37,10 +37,10 @@ export default class DiscoverSearch extends Component {
           <NameSearch onChange={this.setSearchParams("name")} />
           <LocationSearch onChange={this.setSearchParams("location")} />
           <GameSearch onChange={this.setSearchParams("game")} />
-          <button style={{margin: 2.5}} onClick={this.getSearchResults.bind(this)}>
+          <button style={{marginBottom: 22}} onClick={this.getSearchResults.bind(this)}>
             <FontAwesome name="search"/>
           </button>
-          <button style={{margin: 2.5}} onClick={() => { this.setState({ moreOptions: !this.state.moreOptions }) }}>
+          <button style={{marginLeft: 10, marginBottom: 22}} onClick={() => { this.setState({ moreOptions: !this.state.moreOptions }) }}>
             {
               this.state.moreOptions ? "Less" : "More"
             }
