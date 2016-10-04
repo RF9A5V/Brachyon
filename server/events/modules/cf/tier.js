@@ -7,11 +7,18 @@ Meteor.methods({
     Events.update(id, {
       $push: {
         "crowdfunding.tiers": {
-          name,
-          price,
-          limit,
-          description,
-          rewards
+          $each: [
+            {
+              name,
+              price,
+              limit,
+              description,
+              rewards
+            }
+          ],
+          $sort: {
+            price: 1
+          }
         }
       }
     })

@@ -13,7 +13,7 @@ export default class TierPage extends Component {
   }
 
   onTierCreate() {
-    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
+    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -39,7 +39,7 @@ export default class TierPage extends Component {
         indices.push(index);
       }
     });
-    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 1, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
+    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 100, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -123,7 +123,7 @@ export default class TierPage extends Component {
               <input type="text" ref={"name"} defaultValue={tier.name} />
               <h5>Price</h5>
               <div className="row x-center">
-                <input type="number" ref={"price"} defaultValue={tier.price} />
+                <input type="number" ref={"price"} defaultValue={((tier.price || 0) / 100).toFixed(2)} />
               </div>
               <h5>Limit</h5>
               <span>How many backers can buy this tier?</span>
