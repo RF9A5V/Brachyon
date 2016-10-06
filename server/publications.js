@@ -38,6 +38,9 @@ Meteor.publish("event_sponsors", (id) => {
       }
     });
   }
+  else {
+    return Meteor.users.find({ _id: null })
+  }
 })
 
 Meteor.publish("bracket", (eventID, bracketIndex) => {
