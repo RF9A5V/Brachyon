@@ -22,7 +22,7 @@ module.exports = {
       ROOT_URL: 'http://alpha.brachyon.com',
       MONGO_URL: 'mongodb://localhost/meteor'
     },
-    dockerImage: 'abernix/meteord:base',
+    dockerImage: 'oleurud/meteor-graphicsmagick',
     deployCheckWaitTime: 60
   },
 
