@@ -1,3 +1,5 @@
+import { Images } from "/imports/api/event/images.js";
+
 Meteor.methods({
 
   "events.validate_details"(obj) {
