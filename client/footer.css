@@ -19,6 +19,21 @@
   color: white;
 }
 
+@media only screen
+  and (max-device-width: 768px) {
+    .footer {
+      height: 100px;
+    }
+    .footer .fa {
+      font-size: 3em !important;
+      margin-right: 10px !important;
+    }
+
+    .footer-hub-pad {
+      font-size: 1.5em;
+    }
+  }
+
 .footer-hub-pad:hover {
   background-color: black;
   cursor: pointer;
@@ -48,10 +63,14 @@
 }
 
 /*social plugins*/
-.social-icon-bg {
-  width: 40px;
-  height: 50px;
-}
+@media only screen
+  and (min-device-width: 768px) {
+    .social-icon-bg {
+      width: 40px;
+      height: 50px;
+    }
+  }
+
 
 .social-icon-bg:hover {
   background-color: rgba(0, 0, 0, 0.5);

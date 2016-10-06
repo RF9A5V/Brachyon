@@ -59,7 +59,7 @@ export default class AboutScreen extends TrackerReact(Component) {
 
   render() {
     this.handleResize();
-    if(!this.state.user.ready()){
+    if(!this.state.user.ready() || !this.state.events.ready()){
       return (
         <div>
         </div>
@@ -110,11 +110,9 @@ export default class AboutScreen extends TrackerReact(Component) {
         <div className="col side-tab-panel">
           <h2 style={{margin: 0}}>What is Brachyon?</h2>
           <div className="about-what">
-            Welcome to Brachyon - a website which allows you to find,
-            create, promote, and fund competitive gaming events.
-            Brachyon makes it easy to build passionate communities
-            around competitive games.
-            Brachyon's mission is to empower competitive gaming communities from the
+            Welcome to Brachyon - the eSports integrated experience where
+            tournament organizers run, fund, and promote events for competitive gamers.
+            Brachyon makes it easy to build successful events, empowering competitive communities from the
             ground up.
           </div>
           <h4>Brachyon Lets You...</h4>
@@ -155,9 +153,9 @@ export default class AboutScreen extends TrackerReact(Component) {
           </div>
           <h4>Why?</h4>
           <div className="about-what">
-            We love competitive gaming. Nothing catered to our needs
-            as competitors, so we built it ourselves. Brachyon formed out
-            of our pure love for the game.
+            <p>We love competitive gaming. Nothing catered to our needs
+            as competitors, so we built it ourselves.</p>
+            <p>Brachyon formed out of our pure love for the game.</p>
           </div>
         </div>
       </div>

@@ -38,6 +38,9 @@ Meteor.publish("event_sponsors", (id) => {
       }
     });
   }
+  else {
+    return Meteor.users.find({ _id: null })
+  }
 })
 
 Meteor.publish("bracket", (eventID, bracketIndex) => {
@@ -150,11 +153,13 @@ Meteor.publish("discoverEvents", function(){
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
   imageIDs = imageIDs.concat(games.map((game) => { return game.banner }));
+  var ownerImages = Meteor.users.find({_id:{$in: eventOwnerIds}}).map((user) => { return user.profile.image});
   return [
     Events.find({published: true}),
-    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1}}),
+    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
     Images.find({_id: { $in: imageIDs }}).cursor,
-    games
+    games,
+    ProfileImages.find({_id: { $in: ownerImages }}).cursor
   ]
 })
 
