@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
 
+//
 export default class BracketPanel extends Component {
 
   startEventHandler(e) {
@@ -21,9 +22,14 @@ export default class BracketPanel extends Component {
           <SingleDisplay rounds={this.props.rounds} id={this.props.id} />
         )
       }
-      else {
+      else if (this.props.format == "double_elim"){
         return (
           <DoubleDisplay rounds={this.props.rounds} id={this.props.id} />
+        )
+      }
+      else {
+        return (
+          <SwissDisplay rounds={this.props.rounds} players={this.props.players} id={this.props.id} />
         )
       }
     }
