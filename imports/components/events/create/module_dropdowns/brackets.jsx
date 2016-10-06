@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
-import BracketForm from "../../brackets/form.jsx";
+import BracketForm from "/imports/components/events/modules/bracket/form.jsx";
 
 import Games from "/imports/api/games/games.js";
 
@@ -18,7 +18,7 @@ export default class BracketsPanel extends Component {
   value() {
     return Object.keys(this.refs).map((key, index) => {
       try {
-        return this.refs[key].values();
+        return this.refs[key].value();
       }
       catch(error) {
         toastr.error("All fields in the Game Bracket form have to be complete!", "Error!");
