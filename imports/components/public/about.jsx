@@ -59,7 +59,7 @@ export default class AboutScreen extends TrackerReact(Component) {
 
   render() {
     this.handleResize();
-    if(!this.state.user.ready()){
+    if(!this.state.user.ready() || !this.state.events.ready()){
       return (
         <div>
         </div>

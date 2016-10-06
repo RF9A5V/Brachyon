@@ -111,14 +111,10 @@
 }
 
 .event-block-content {
-  padding: 20px;
+  padding: 10px 20px;
   border-top: none;
   position: relative;
   background-color: #222;
-}
-
-.event-block-content > * {
-  margin-bottom: 10px;
 }
 
 .event-display {

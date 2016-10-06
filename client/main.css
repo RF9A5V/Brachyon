@@ -33,6 +33,14 @@ body {
   padding: 10px 5px;
 }
 
+.match-participant span {
+  border: solid 2px white;
+  padding: 5px;
+  font-size: 12px;
+  width: calc(100% - 30px);
+  display: inline-block;
+}
+
 .match-active{
   cursor: pointer;
 }
