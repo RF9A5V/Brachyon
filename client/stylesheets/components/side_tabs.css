@@ -38,6 +38,10 @@
   cursor: pointer;
 }
 
+.tab-header:last-child {
+  padding-right: 0;
+}
+
 .tab-header span {
   display: inline-block;
 }
