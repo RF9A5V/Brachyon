@@ -37,7 +37,7 @@ export default class UserSections extends Component {
   render() {
     return (
       <div className="col center x-center" style={{padding: 30}}>
-        <div className="row">
+        <div className="row center">
           {
             this.state.sections.map((section, i) => {
               return (
