@@ -69,7 +69,7 @@ export default class UserEvents extends Component {
   sections() {
 
     var overall = {
-      title: "Overall",
+      title: "",
       sections: [
         "All Events"
       ]

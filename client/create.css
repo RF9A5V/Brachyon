@@ -22,8 +22,7 @@
 }
 
 .module-block-header {
-  font-size: 1.2em;
-  margin-left: 20px;
+  margin-left: 16px;
 }
 
 .module-block-overlay {
@@ -90,6 +89,7 @@
 .info-description {
   padding: 20px;
   background-color: #333;
+  min-height: 200px;
 }
 
 .info-description p {

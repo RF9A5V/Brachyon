@@ -18,7 +18,7 @@ export default class Footer extends React.Component {
             <div className="footer-plugin-pad"></div>
             <a href="https://www.youtube.com/channel/UCUrPEefFomt33g048J3nmcg" target="_blank">
             <div className="social-icon-bg col x-center center">
-              <FontAwesome name="youtube" className="youtube social-icon" />
+              <FontAwesome name="youtube-play" className="youtube social-icon" />
             </div></a>
             <div className="footer-plugin-pad"></div>
             <a href="https://www.reddit.com/r/brachyon" target="_blank">

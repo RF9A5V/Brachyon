@@ -37,13 +37,13 @@ export default class UserSections extends Component {
   render() {
     return (
       <div className="col center x-center" style={{padding: 30}}>
-        <div className="row">
+        <div className="row center">
           {
             this.state.sections.map((section, i) => {
               return (
                 <div className={`tab-header col`} onClick={() => { this.setState({section: i}) }}>
                   <h5>{ section.name }</h5>
-                  <hr className="user-divider" style={{ width: "100%", borderWidth: this.state.section == i ? 2 : 1 }}></hr>
+                  <hr className="user-divider" style={{ width: "100%", borderColor: this.state.section == i ? "#FF6000" : "inherit" }}></hr>
                 </div>
               )
             })
