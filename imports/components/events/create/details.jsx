@@ -57,17 +57,19 @@ export default class DetailsPanel extends Component {
         </div>
         <div className="col">
           <h5>Description</h5>
-          <textarea ref="description" onChange={this.onChange.bind(this)}></textarea>
+          <textarea ref="description" placeholder="Any additional details about the event (parking, rules, etc)..." onChange={this.onChange.bind(this)}></textarea>
         </div>
-        <div className="col">
-          <h5>Date</h5>
-          <div>
-            <DateInput ref="date" />
+        <div className="row col-2">
+          <div className="col-1 x-center center">
+            <h5 style={{marginBottom: 10}}>Date</h5>
+            <div>
+              <DateInput ref="date" />
+            </div>
           </div>
-        </div>
-        <div className="col">
-          <h5 style={{marginBottom: 10}}>Time</h5>
-          <TimeInput ref="time" />
+          <div className="col-1 x-center center">
+            <h5 style={{marginBottom: 10}}>Time</h5>
+            <TimeInput ref="time" />
+          </div>
         </div>
       </div>
     )

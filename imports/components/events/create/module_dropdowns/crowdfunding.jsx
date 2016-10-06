@@ -6,7 +6,18 @@ export default class RevenuePanel extends Component {
     super(props);
     this.state = {
       name: "Rewards",
-      desc: "Bacon ipsum dolor amet pastrami porchetta filet mignon, andouille flank ham hock jerky ribeye short ribs venison ham pig biltong beef t-bone.\n Corned beef cupim jowl kielbasa. Pastrami jowl capicola turkey ham hock chuck. Biltong meatloaf shankle strip steak capicola cow shank doner t-bone landjaeger kevin ball tip beef ribs jowl. Flank shank corned beef, chuck andouille ham hock spare ribs cupim cow rump."
+      desc: (
+        <div>
+          <p>Allow us to reward you with a description of this section.
+          Rewards act as incentives for your supporters to fund your event.
+          One or more rewards can be applied to each tier. The same reward(s)
+          can be applied to multiple tiers depending on how you wish to
+          incentivize backers. We recommend rewards which pertain directly
+          to the event.</p>
+
+          <p>Check out our <a>FAQ</a> to learn more about rewards.</p>
+        </div>
+      )
     }
   }
 
@@ -22,15 +33,43 @@ export default class RevenuePanel extends Component {
       var desc = [
         {
           name: "Rewards",
-          desc: "Bacon ipsum dolor amet pastrami porchetta filet mignon, andouille flank ham hock jerky ribeye short ribs venison ham pig biltong beef t-bone.\n Corned beef cupim jowl kielbasa. Pastrami jowl capicola turkey ham hock chuck. Biltong meatloaf shankle strip steak capicola cow shank doner t-bone landjaeger kevin ball tip beef ribs jowl. Flank shank corned beef, chuck andouille ham hock spare ribs cupim cow rump."
+          desc: (
+            <div>
+              <p>Allow us to reward you with a description of this section.
+              Rewards act as incentives for your supporters to fund your event.
+              One or more rewards can be applied to each tier. The same reward(s)
+              can be applied to multiple tiers depending on how you wish to
+              incentivize backers. We recommend rewards which pertain directly
+              to the event.</p>
+
+              <p>Check out our <a>FAQ</a> to learn more about rewards.</p>
+            </div>
+          )
         },
         {
           name: "Tiers",
-          desc: "Bacon ipsum dolor amet pastrami porchetta filet mignon, andouille flank ham hock jerky ribeye short ribs venison ham pig biltong beef t-bone. Corned beef cupim jowl kielbasa.\n Pastrami jowl capicola turkey ham hock chuck. Biltong meatloaf shankle strip steak capicola cow shank doner t-bone landjaeger kevin ball tip beef ribs jowl. Flank shank corned beef, chuck andouille ham hock spare ribs cupim cow rump."
+          desc: (
+            <div>
+              <p>Tiers are delicious! They are funding levels, grouping together
+              one or more rewards. We recommend you apply rewards increasingly
+              by value or amount.</p>
+
+              <p>For some examples of successful tiers, click <a>here</a>.</p>
+            </div>
+          )
         },
         {
           name: "Prize Pool",
-          desc: "Bacon ipsum dolor amet pastrami porchetta filet mignon, andouille flank ham hock jerky ribeye short ribs venison ham pig biltong beef t-bone. Corned beef cupim jowl kielbasa. Pastrami jowl capicola turkey ham hock chuck.\n Biltong meatloaf shankle strip steak capicola cow shank doner t-bone landjaeger kevin ball tip beef ribs jowl. Flank shank corned beef, chuck andouille ham hock spare ribs cupim cow rump."
+          desc: (
+            <div>
+              <p>By default 20% of all crowdfunding revenue goes to the Prize
+              Pool. We recommend giving as much as possible to the Prize Pool -
+              it attracts more players and increases hype!</p>
+
+              <p>See some successful events in our <a>FAQ</a> to learn about
+              crowdfunding your Prize Pool.</p>
+            </div>
+          )
         }
       ];
       this.setState(desc[value]);
@@ -54,13 +93,9 @@ export default class RevenuePanel extends Component {
           </div>
         </div>
         <div className="col col-1 info-description">
-          <h3>{ this.state.name }</h3>
+          <h3 className="row center">{ this.state.name }</h3>
           {
-            this.state.desc.split("\n").map(str => {
-              return (
-                <p>{ str }</p>
-              )
-            })
+            this.state.desc
           }
         </div>
       </div>
