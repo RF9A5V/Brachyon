@@ -41,6 +41,10 @@ header img:hover {
   cursor: pointer;
 }
 
+.event-block:hover h2 {
+  color: #FF6000;
+}
+
 #header.headroom {
   top: 0;
   left: 0;
