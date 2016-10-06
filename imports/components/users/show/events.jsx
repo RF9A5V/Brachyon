@@ -1,11 +1,43 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
-export default class BlockContainer extends Component {
+export default class UserEvents extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      index: 0,
+      category: 0
+    }
+  }
+
+  events() {
+    if(this.state.category == 0) {
+      switch(this.state.index) {
+        case 0:
+          return Events.find({}).fetch();
+        default:
+          return Events.find({}).fetch();
+      }
+    }
+    else if(this.state.category == 1) {
+      switch(this.state.index) {
+        case 0:
+          return Events.find({ owner: Meteor.userId(), published: false, underReview: false });
+        case 1:
+          return Events.find({ owner: Meteor.userId(), published: false, underReview: true });
+        case 2:
+          return Events.find({ owner: Meteor.userId(), published: true });
+        default:
+          return [];
+      }
+    }
+    return [];
+  }
 
   selectEvent(event) {
     return(
@@ -34,6 +66,67 @@ export default class BlockContainer extends Component {
     return "/images/bg.jpg";
   }
 
+  sections() {
+
+    var overall = {
+      title: "",
+      sections: [
+        "All Events"
+      ]
+    }
+
+    var organizer = {
+      title: "Organizer",
+      sections: [
+        "Unpublished",
+        "Awaiting Approval",
+        "Published",
+        "Past Events"
+      ]
+    }
+
+    var player = {
+      title: "Player",
+      sections: [
+        "Upcoming",
+        "Ongoing",
+        "Past"
+      ]
+    }
+
+    var sponsor = {
+      title: "Sponsor",
+      sections: [
+        "Upcoming",
+        "Ongoing",
+        "Past"
+      ]
+    }
+
+    var spectator = {
+      title: "Spectator",
+      sections: [
+        "Upcoming",
+        "Ongoing",
+        "Past"
+      ]
+    }
+
+    var cats = [overall, organizer, player, sponsor, spectator];
+    var rez = [];
+    cats.forEach((cat, i) => {
+      rez.push(<div className="row" style={{paddingLeft: 10}}><h3>{cat.title}</h3></div>);
+      cat.sections.forEach((section, j) => {
+        rez.push(
+          <div className={`sub-section-select ${this.state.category == i && this.state.index == j ? "active" : ""}`} onClick={() => { this.setState({ category: i, index: j }) }}>
+            { section }
+          </div>
+        );
+      });
+    });
+    return rez;
+  }
+
   profileImageOrDefault(id) {
     var img = ProfileImages.findOne(id);
     if(!img) {
@@ -43,17 +136,20 @@ export default class BlockContainer extends Component {
   }
 
   render() {
-    var self = this;
     return (
-      <div className="col">
-        <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
-        <div className='event-block-container'>
+      <div className="row" style={{alignItems: "flex-start", width: "100%"}}>
+        <div className="col" style={{marginRight: 20}}>
+          <div className="submodule-section">
+            { this.sections() }
+          </div>
+        </div>
+        <div className="col-1 submodule-section row" style={{flexWrap: "wrap"}}>
           {
-            this.props.events.map((event, i) => {
+            this.events().map((event, i) => {
               return (
-                <div className="event-block col" onClick={self.selectEvent(event).bind(self)} key={i}>
+                <div className="event-block col" onClick={this.selectEvent(event).bind(self)} key={i}>
                   <h2 className="event-block-title">{ event.details.name }</h2>
-                  <img src={self.imgOrDefault(event)} />
+                  <img src={this.imgOrDefault(event)} />
                   <div className="event-block-content">
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
@@ -97,6 +193,6 @@ export default class BlockContainer extends Component {
           }
         </div>
       </div>
-    );
+    )
   }
 }

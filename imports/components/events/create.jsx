@@ -10,6 +10,8 @@ import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
 import ModuleBlock from "./create/module_block.jsx";
 
+import { Images } from "/imports/api/event/images.js";
+
 export default class EventCreateScreen extends Component {
 
   componentWillMount() {
@@ -94,14 +96,34 @@ export default class EventCreateScreen extends Component {
       var key = refKeys[i];
       args[key] = this.refs[key].value();
     }
-    Meteor.call("events.create", args, function(err, event){
-      if(err){
-        toastr.error(err.reason, "Error!");
+    if(args["details"]["image"]) {
+      var img = args["details"]["image"];
+      if(img.base64) {
+        Images.insert({
+          file: img.base64,
+          isBase64: true,
+          fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
+          meta: img.boxData,
+          onStart: () => {
+            toastr.warning("Processing event...", "Warning")
+          },
+          onUploaded: (err, data) => {
+            args["details"]["banner"] = data._id;
+            delete args["details"]["image"];
+            debugger;
+            Meteor.call("events.create", args, function(err){
+              if(err){
+                toastr.error(err.reason, "Error!");
+              }
+              else {
+                browserHistory.push("/");
+              }
+            });
+          }
+        })
       }
-      else {
-        browserHistory.push("/");
-      }
-    });
+    }
+
   }
 
   buttons() {

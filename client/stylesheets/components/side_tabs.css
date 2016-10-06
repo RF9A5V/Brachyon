@@ -31,7 +31,15 @@
   padding: 20px;
   display: flex;
   align-items: center;
-  padding-left: 10px;
+  padding-left: 0;
+}
+
+.tab-header:hover {
+  cursor: pointer;
+}
+
+.tab-header:last-child {
+  padding-right: 0;
 }
 
 .tab-header span {

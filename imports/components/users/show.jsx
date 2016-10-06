@@ -13,8 +13,8 @@ import EventBlock from '../events/block.jsx';
 import EventDisplay from '../events/display.jsx';
 import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
-import BlockContainer from "/imports/components/events/discover/block_container.jsx";
 import ImageForm from "/imports/components/public/img_form.jsx";
+import UserSections from "./show/sections.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -29,35 +29,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillUnmount(){
     this.state.events.stop();
-  }
-
-  events(){
-    return [
-      {
-        title: "Unpublished",
-        events: this.unpublishedEvents()
-      },
-      {
-        title: "Under Review",
-        events: this.underReviewEvents()
-      },
-      {
-        title: "Published",
-        events: this.publishedEvents()
-      }
-    ];
-  }
-
-  unpublishedEvents() {
-    return Events.find({published: false, underReview: false}, {sort: { "details.name": 1 }}).fetch();
-  }
-
-  underReviewEvents() {
-    return Events.find({published: false, underReview: true}, {sort: { "details.name": 1 }}).fetch();
-  }
-
-  publishedEvents() {
-    return Events.find({published: true}, {sort: { "details.name": 1 }}).fetch();
   }
 
   image(id) {
@@ -140,8 +111,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
       )
     }
 
-    var events = this.events();
-
     return (
       <div>
         <div className="user-banner" style={{backgroundImage: `url(${this.profileBannerURL()})`}}>
@@ -177,19 +146,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
           <button onClick={() => { browserHistory.push("/events/create") }} style={{marginTop: 100}}>Create an Event</button>
         </div>
         <div className="row col-1"><hr className="user-divider"></hr></div>
-        <div className="user-events-container">
-          {
-            events.map((eventSet, i) => {
-              if(eventSet.events.length === 0) {
-                return (
-                  <div key={i}></div>
-                );
-              }
-              return (
-                <BlockContainer title={eventSet.title} events={eventSet.events} key={i}/>
-              )
-            })
-          }
+        <div className="col">
+          <UserSections />
         </div>
       </div>
     )

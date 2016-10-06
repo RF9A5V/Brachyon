@@ -33,6 +33,14 @@ body {
   padding: 10px 5px;
 }
 
+.match-participant span {
+  border: solid 2px white;
+  padding: 5px;
+  font-size: 12px;
+  width: calc(100% - 30px);
+  display: inline-block;
+}
+
 .match-active{
   cursor: pointer;
 }
@@ -64,6 +72,21 @@ body {
   bottom: 50px;
   margin-bottom: 50px;
 }
+
+@media only screen
+  and (max-device-width: 768px) {
+
+    .content {
+      top: 140px;
+      bottom: 100px;
+      margin-bottom: 100px;
+    }
+
+    .box {
+      min-height: calc(100vh - 240px);
+    }
+
+  }
 
 /* Flex rows and column stuff */
 
