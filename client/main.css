@@ -65,6 +65,21 @@ body {
   margin-bottom: 50px;
 }
 
+@media only screen
+  and (max-device-width: 768px) {
+
+    .content {
+      top: 140px;
+      bottom: 100px;
+      margin-bottom: 100px;
+    }
+
+    .box {
+      min-height: calc(100vh - 240px);
+    }
+
+  }
+
 /* Flex rows and column stuff */
 
 .row, .col, .col-to-row, .row-to-col {

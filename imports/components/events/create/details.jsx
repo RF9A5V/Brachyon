@@ -4,6 +4,9 @@ import moment from "moment";
 import LocationSelect from './location_select.jsx';
 import DateInput from './date_input.jsx';
 import TimeInput from './time_input.jsx';
+import ImageForm from "../../public/img_form.jsx";
+
+import { Images } from "/imports/api/event/images.js";
 
 export default class DetailsPanel extends Component {
 
@@ -29,7 +32,8 @@ export default class DetailsPanel extends Component {
         name: this.refs.name.value,
         location: this.refs.location.value(),
         description: this.refs.description.value,
-        datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate()
+        datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate(),
+        image: this.refs.image.value(true)
       }
     }
   }
@@ -46,11 +50,17 @@ export default class DetailsPanel extends Component {
     return (
       <div>
         <div style={{marginBottom: 10}}>
-          <i style={{lineHeight: 1.5}}>This part's required. All the admin stuff having to do with where and when your event is happening goes here.</i>
+          <i style={{lineHeight: 1.5}}>
+            This part's required. All the admin stuff having to do with where and when your event is happening goes here.
+          </i>
         </div>
         <div className="col">
           <h5>Event Name</h5>
           <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />
+        </div>
+        <div>
+          <h5>Event Image (Optional)</h5>
+          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9}/>
         </div>
         <div className="col">
           <LocationSelect ref="location" onChange={this.onChange.bind(this)} />

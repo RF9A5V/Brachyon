@@ -6,6 +6,15 @@
   align-items: center;
 }
 
+@media only screen
+  and (max-device-width: 768px) {
+
+    .landing-screen {
+      min-height: calc(100vh - 240px);
+    }
+
+  }
+
 .img-background {
   position: fixed;
   width: 100%;
