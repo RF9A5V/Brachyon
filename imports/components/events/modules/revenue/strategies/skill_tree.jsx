@@ -17,7 +17,7 @@ export default class SkillTree extends Component {
   }
 
   render() {
-    var strat = Events.findOne().revenue.strategy || {};
+    var strat = (Events.findOne().revenue || {}).strategy || {};
     if(strat.name == "skill_tree"){
       return (
         <StretchGoalsOld goals={strat.goals} />

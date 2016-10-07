@@ -13,7 +13,7 @@ if(Meteor.isServer){
 }
 
 export const ProfileImages = new FilesCollection({
-  debug: true,
+  debug: false,
   collectionName: "profile_images",
   allowClientCode: false,
   onBeforeUpload(file) {

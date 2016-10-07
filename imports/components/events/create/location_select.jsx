@@ -85,6 +85,9 @@ export default class LocationSelect extends Component {
 
   updateValue(e){
     this.state.online = (e.target.value == 0);
+    if(this.props.onChange){
+      this.props.onChange();
+    }
     this.forceUpdate();
   }
 
@@ -110,9 +113,9 @@ export default class LocationSelect extends Component {
   render() {
     return (
       <div>
-        <label>
+        <h5>
           Is this event online?
-        </label>
+        </h5>
         <div>
           <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={0} checked={this.state.online} />
           <label>Yes</label>
@@ -120,21 +123,21 @@ export default class LocationSelect extends Component {
           <label>No</label>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
-          <label>Location Name</label>
+          <h5>Location Name</h5>
           <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName}/>
-          <label>Address</label>
-          <input  type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" style={{margin: 0}} defaultValue={this.state.streetAddress} />
-          <div className="row" style={{marginTop: 10}}>
+          <h5>Address</h5>
+          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" defaultValue={this.state.streetAddress} />
+          <div className="row">
             <div className="col" style={{width: "50%"}}>
-              <label>City</label>
+              <h5>City</h5>
               <input  type="text" ref="city" value={this.state.city} />
             </div>
             <div className="col" style={{width: "25%"}}>
-              <label>State</label>
+              <h5>State</h5>
               <input  type="text" ref="state" value={this.state.state} />
             </div>
             <div className="col" style={{width: "25%"}}>
-              <label>Zip</label>
+              <h5>Zip</h5>
               <input  type="text" ref="zip" value={this.state.zip} />
             </div>
           </div>

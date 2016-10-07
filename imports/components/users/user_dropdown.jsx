@@ -42,10 +42,12 @@ export default class UserDropdown extends Component {
             <div className="col-2 row center"><i className="fa fa-user fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Profile</span>
           </a>
-          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessWallet.bind(this)}>
-            <div className="col-2 row center"><i className="fa fa-usd fa-2x" aria-hidden="true"></i></div>
-            <span className="col-3">Wallet</span>
-          </a>
+          {
+            // <a className="user-dropdown-option row x-center" href="#" onClick={this.accessWallet.bind(this)}>
+            //   <div className="col-2 row center"><i className="fa fa-usd fa-2x" aria-hidden="true"></i></div>
+            //   <span className="col-3">Wallet</span>
+            // </a>
+          }
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOptions.bind(this)}>
             <div className="col-2 row center"><i className="fa fa-cog fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Options</span>

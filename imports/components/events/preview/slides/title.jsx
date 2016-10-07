@@ -3,6 +3,8 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 import { browserHistory } from "react-router"
 
+import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
+
 import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
 
@@ -40,6 +42,7 @@ export default class EventTitlePage extends Component {
   render() {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
+    var event = this.props.event;
     return (
       <div className="slide-page-container">
         <div className="slide-page row" style={{display: this.state.pageIndex == 0 ? "flex" : "none", backgroundImage: this.backgroundImage(false)}}>
@@ -99,7 +102,15 @@ export default class EventTitlePage extends Component {
               }
 
               <div className="row">
-                <button style={{marginRight: 10}}>Play</button>
+                {
+                  event.tickets || event.brackets ? (
+                    <div>
+                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event._id+"/checkout") }}>Play</button>
+                    </div>
+                  ) : (
+                    ""
+                  )
+                }
                 <button>Watch</button>
               </div>
             </div>
@@ -118,34 +129,46 @@ export default class EventTitlePage extends Component {
             </div>
           </div>
           <div className="col col-3">
-          <div className="slide-description">
-            {
-              this.props.event.details.description.split("\n").map((p) => {
-                return (
-                  <p>
-                    {p}
-                  </p>
-                )
-              })
-            }
-          </div>
-            <div className="slide-schedule">
-              <div className="schedule-item">
-                <h3>Schedule</h3>
-              </div>
+            <div className="slide-description">
               {
-                [0, 1, 2, 3, 4, 5].map((i) => {
+                this.props.event.details.description.split("\n").map((p) => {
                   return (
-                    <div className="schedule-item">
-                      <span>{ moment().hour(i).format("h:mm") }</span>
-                      <p>
-                        Bacon ipsum dolor amet meatball corned beef strip steak spare ribs venison frankfurter turducken salami porchetta pork chop bacon boudin shank. Cow prosciutto venison, tenderloin fatback swine pork belly jerky alcatra tongue. Drumstick filet mignon fatback, picanha bresaola pancetta pastrami short ribs tongue strip steak turducken meatloaf brisket jowl. Salami jowl pastrami, ham hock biltong turducken doner tri-tip short ribs capicola pork loin alcatra pork belly cupim drumstick.
-                      </p>
-                    </div>
+                    <p>
+                      {p}
+                    </p>
                   )
                 })
               }
             </div>
+            {
+              this.props.event.organize ? (
+                this.props.event.organize.schedule.map((day, index) => {
+                  return (
+                    <div className="slide-schedule">
+                      <div className="row center">
+                        <h3 style={{marginBottom: 10}}>Day {index + 1}</h3>
+                      </div>
+                      {
+                        day.map(value => {
+                          return (
+                            <div className="schedule-item col">
+                              <span>{ value.time }{
+                                value.title ? (
+                                  " - " + value.title
+                                ) : ("")
+                              }</span>
+                              <p>{ value.description }</p>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  )
+                })
+              ) : (
+                ""
+              )
+            }
           </div>
           <div className="col x-center col-1 slide-bracket-list">
             {

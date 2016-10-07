@@ -13,7 +13,7 @@ if(Meteor.isServer) {
 }
 
 export const Icons = new FilesCollection({
-  debug: true,
+  debug: false,
   collectionName: "icons",
   allowClientCode: false,
   onBeforeUpload(file) {

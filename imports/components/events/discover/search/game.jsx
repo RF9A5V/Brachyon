@@ -14,7 +14,7 @@ export default class GameSearchInput extends Component {
   render() {
     return (
       <div className="col" style={{margin: "0 5px"}}>
-        <label>Game</label>
+        <span>Game</span>
         <AutocompleteForm ref="game" publications={[
           "game_search"
         ]} types={[

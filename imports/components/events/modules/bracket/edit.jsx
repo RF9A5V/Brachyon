@@ -25,7 +25,7 @@ export default class EditBracket extends Component {
   }
 
   onBracketDelete() {
-    Meteor.call("events.brackets.delete", this.state.id, this.props.index, (err) => {
+    Meteor.call("events.brackets.remove", this.state.id, this.props.index, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
@@ -39,14 +39,18 @@ export default class EditBracket extends Component {
   render() {
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>{ this.props.bracket.name }</span>
-          <div>
-            <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
-            <button onClick={this.onBracketSave.bind(this)}>Save</button>
-          </div>
+        <div className="button-row">
+          {
+            // <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
+          }
+          <button onClick={this.onBracketSave.bind(this)}>Save</button>
         </div>
-        <BracketForm ref="form" {...(this.props.bracket || {})} />
+        <div className="submodule-bg submodule-overflow">
+          <div className="row center">
+            <h3>{ this.props.bracket.name }</h3>
+          </div>
+          <BracketForm ref="form" {...(this.props.bracket || {})} />
+        </div>
       </div>
     )
   }

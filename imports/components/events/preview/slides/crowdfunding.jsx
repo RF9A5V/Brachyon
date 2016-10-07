@@ -3,12 +3,17 @@ import React, { Component } from "react";
 import PaymentContainer from "../../crowdfunding/payment_container.jsx";
 import SkillTree from "../stretch.jsx";
 import TierPaymentContainer from "../tier_payment_container.jsx";
+import CFModal from "../cf_modal.jsx";
+
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class CrowdfundingPage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      open: false
+    };
   }
 
   backgroundImage(useDarkerOverlay){
@@ -26,64 +31,76 @@ export default class CrowdfundingPage extends Component {
     this.refs[`payment${i}`].openModal();
   }
 
+  profileImage(id) {
+    var user = Meteor.users.findOne(id);
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
+    }
+    return "/images/profile.png";
+  }
+
   render() {
-    var revenue = this.props.event.revenue;
+    var cf = this.props.event.crowdfunding.details;
+    var sponsors = this.props.event.crowdfunding.sponsors || [];
+    var tiers = this.props.event.crowdfunding.tiers;
     return (
       <div className="slide-page-container">
         <div className="slide-page row" style={{backgroundImage: this.backgroundImage(true)}}>
           <div className="col-3 col cf-main">
-            <div className="row x-center">
-              <div className="col col-3 cf-progress">
-                <span className="cf-progress-amount">
-                  ${(revenue.current || 0) / 100} out of ${revenue.amount / 100}
-                </span>
-                <div className="cf-progress-container">
-                  <div className="cf-progress-display" style={{width: `${Math.min((revenue.current || 0) / revenue.amount * 100, 100)}%`}}></div>
-                </div>
-              </div>
-              <div className="cf-leaderboard col-2">
+            <div className="col x-center cf-progress">
+              <span className="cf-progress-amount">
                 {
-                  revenue.sponsors ? (
-                    revenue.sponsors.sort((a, b) => { return b.price - a.price; }).slice(0, 3).map((sponsor) => {
-                      console.log(sponsor);
-                      var user = Meteor.users.findOne(sponsor.id);
-                      return (
-                        <div className="sponsor-item col center">
-                          <div className="row x-center">
-                            <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).url() : "/images/profile.png"} />
-                            <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
-                          </div>
-                          <p>
-                            { sponsor.comment }
-                          </p>
-                        </div>
-                      )
-                    })
+                  cf.amount == 0 ? (
+                    `$${(cf.current / 100) || 0} raised!`
                   ) : (
-                    ""
+                    `$${(cf.current / 100) || 0} out of ${cf.amount / 100} raised!`
                   )
                 }
-              </div>
-            </div>
-            <div className="cf-strategy">
+              </span>
               {
-                revenue.strategy && revenue.strategy.name == "skill_tree" ? (
-                  <SkillTree goals={revenue.strategy.goals} onGoalSelect={() => {}} />
-                ) : (
+                cf.amount == 0 ? (
                   ""
+                ) : (
+                  <div className="cf-progress-container">
+                    <div className="cf-progress-display" style={{width: `${Math.min((cf.current || 0) / cf.amount * 100, 100)}%`}}></div>
+                  </div>
+                )
+              }
+              <button style={{margin: "10px 0"}} onClick={() => { this.setState({ open: true }) }}>Sponsor This Event!</button>
+              {
+                sponsors.length > 0 ? (
+                  <div className="row" style={{justifyContent: "flex-start", flexWrap: "wrap", alignSelf: "stretch"}}>
+                    {
+                      sponsors.map(sponsor => {
+                        return (
+                          <div style={{width: 300, display: "inline-flex", marginRight: 20}}>
+                            <img src={this.profileImage(sponsor.id)} style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} />
+                            <div className="col" style={{width: 250}}>
+                              <h5>{ Meteor.users.findOne(sponsor.id).username + " - $" + (sponsor.cfAmount / 100) }</h5>
+                              <p style={{fontSize: 10, lineHeight: 1.2, textAlign: "justify"}}>
+                                Pasta ipsum dolor sit amet ciriole cellentani cencioni fiorentine cannelloni tripoline calamarata capunti trenette lasagnotte occhi di lupo lasagnotte ricciutelle mezze penne. Sorprese fiori bavettine mafalde orzo gomito.
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                ) : (
+                  <h5>No Sponsors Yet!</h5>
                 )
               }
             </div>
           </div>
           <div className="col-1 col cf-tiers">
             {
-              revenue.tiers ? (
-                revenue.tiers.map((tier, i) => {
+              tiers ? (
+                tiers.map((tier, i) => {
                   return (
-                    <div className="cf-tier col" onClick={() => {this.openPaymentForm(i)}}>
+                    <div className="cf-tier col" onClick={() => {this.setState({open: true})}}>
                       <div className="row flex-pad x-center">
                         <span className="cf-amount">
-                          ${tier.price.toFixed(2)}
+                          ${(tier.price / 100).toFixed(2)}
                         </span>
                         <span className="cf-limit">
                           {tier.limit - (tier.sponsors || []).length} Remaining
@@ -102,6 +119,13 @@ export default class CrowdfundingPage extends Component {
             }
           </div>
         </div>
+        {
+          this.state.open ? (
+            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }

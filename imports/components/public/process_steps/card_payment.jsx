@@ -21,34 +21,33 @@ export default class CardPaymentProcess extends Component {
     };
   }
 
-  valid() {
+  isValid() {
     // Skipping this bit for now, gotta test the actual payment stuff first.
     return true;
   }
 
-  value() {
+  value(cb) {
     if(this.state.cardID == null) {
       var cardNumber = [0, 1, 2, 3].map((val) => {
         return this.refs[`card_seg_${val}`].value
       }).join('');
-
       var cardDetails = {
         "number": cardNumber,
         "cvc": this.refs.cvc.value,
         "exp_month": this.refs.expMonth.value,
         "exp_year": this.refs.expYear.value
       }
-      console.log(this.calcStripeFee());
       Stripe.createToken(cardDetails, (err, rez) => {
-        this.props.cb({
+        cb({
           addCard: true,
           token: rez.id,
-          amount: this.calcStripeFee()
+          amount: this.calcStripeFee(),
+          baseAmount: this.props.amount
         })
       });
     }
     else {
-      this.props.cb({
+      cb({
         addCard: false,
         token: this.state.cardID,
         amount: this.calcStripeFee(),
@@ -177,7 +176,7 @@ export default class CardPaymentProcess extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="row center">
+                <div className="row center" style={{marginBottom: 20}}>
                   <div className="col">
                     <label>Exp. Mo.</label>
                     <select style={{width: 100, padding: 10}} ref="expMonth">
@@ -213,15 +212,15 @@ export default class CardPaymentProcess extends Component {
           <div className="col x-center">
             <div className="row flex-pad" style={{width: 300}}>
               <label>Base Amount</label>
-              <span>{ (this.props.amount / 100).toFixed(2) }</span>
+              <label>{ (this.props.amount / 100).toFixed(2) }</label>
             </div>
             <div className="row flex-pad" style={{width: 300}}>
               <label>Processing Fee<sup>?</sup></label>
-              <span>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</span>
+              <label>{ ((finalAmount - this.props.amount) / 100).toFixed(2) }</label>
             </div>
             <div className="row flex-pad" style={{width: 300}}>
               <label>Total</label>
-              <span>{(finalAmount / 100).toFixed(2)}</span>
+              <label>{(finalAmount / 100).toFixed(2)}</label>
             </div>
           </div>
         </form>

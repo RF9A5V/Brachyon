@@ -14,7 +14,7 @@ export default class LandingScreen extends React.Component {
       <div className="landing-screen">
         <div className="img-background-overlay"><div className="img-background"></div></div>
         <div className="main-content" id="main-content">
-          <h1>B R A C H Y O N</h1>
+          <h1>BRACHYON</h1>
           <h3 className="row center">Beyond The Brackets</h3>
           <div className="row x-center center">
             <LogInModal />

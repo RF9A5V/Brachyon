@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import FontAwesome from "react-fontawesome";
 
 export default class TierPage extends Component {
 
@@ -6,12 +7,13 @@ export default class TierPage extends Component {
     super(props);
     this.state = {
       id: Events.findOne()._id,
-      rewards: []
+      rewards: [],
+      index: -1
     }
   }
 
   onTierCreate() {
-    Meteor.call("events.revenue.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 1, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
+    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -20,20 +22,24 @@ export default class TierPage extends Component {
         this.refs.price.value = "";
         this.refs.limit.value = "";
         this.refs.description.value = "";
+        this.setState({
+          index: -1,
+          rewards: []
+        });
         return toastr.success("Successfully created reward tier.", "Success!");
       }
     })
   }
 
-  onTierUpdate(index) {
-    var rewards = this.refs[`rewards${index}`];
+  onTierUpdate() {
+    var rewards = this.refs[`rewards`];
     var indices = [];
     rewards.childNodes.forEach((icon, index) => {
       if(icon.classList.contains("active")) {
         indices.push(index);
       }
     });
-    Meteor.call("events.revenue.updateTier", this.state.id, index, this.refs[`name${index}`].value, this.refs[`price${index}`].value * 1, this.refs[`limit${index}`].value * 1, this.refs[`description${index}`].value, indices, (err) => {
+    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 100, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -43,20 +49,19 @@ export default class TierPage extends Component {
     })
   }
 
-  onTierDelete(index) {
-    Meteor.call("events.revenue.deleteTier", this.state.id, index, (err) => {
+  onTierDelete() {
+    Meteor.call("events.crowdfunding.deleteTier", this.state.id, this.state.index, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
       else {
-        var event = Events.findOne();
-        var tiers = event.revenue.tiers;
-        tiers.forEach((tier, i) => {
-          var keyList = Object.keys(tier);
-          for(var j in keyList){
-            this.refs[keyList[j] + i].value = tier[keyList[j]];
-          }
-        })
+        this.refs["name"].value = "";
+        this.refs["price"].value = "";
+        this.refs["limit"].value = "";
+        this.refs["description"].value = "";
+        this.setState({
+          index: -1
+        });
         return toastr.success("Successfully deleted tier!", "Success!");
       }
     })
@@ -73,77 +78,94 @@ export default class TierPage extends Component {
     this.forceUpdate();
   }
 
-  toggleRewardForExisting(tierIndex, rewardIndex){
-    var rewardList = this.refs[`rewards${tierIndex}`];
-    var target = rewardList.childNodes[rewardIndex];
-    target.classList.toggle("active");
-  }
-
   render() {
-    var event = Events.findOne();
-    var tiers = event.revenue.tiers || [];
-    var rewards = event.revenue.rewards || [];
+    var crowdfunding = Events.findOne().crowdfunding || {};
+    var tiers = crowdfunding.tiers || [];
+    var rewards = crowdfunding.rewards || [];
+    var tier = this.state.index > -1 ? tiers[this.state.index] : {};
     return (
-      <div className="col">
-        {
-          tiers.map((tier, i) => {
-            return (
-              <div className="ticket-form col">
-                <div className="row flex-pad">
-                  <div></div>
-                  <div>
-                    <button onClick={ () => { this.onTierDelete(i) } } style={{marginRight: 10}}>Delete</button>
-                    <button onClick={() => { this.onTierUpdate(i) }}>Save</button>
-                  </div>
-                </div>
-                <span>Tier Name</span>
-                <input type="text" ref={"name"+i} defaultValue={tier.name} />
-                <span>Tier Price</span>
-                <input type="number" ref={"price"+i} defaultValue={tier.price} />
-                <span>Tier Amount</span>
-                <input type="number" ref={"limit"+i} defaultValue={tier.limit} />
-                <span>Tier Description</span>
-                <textarea ref={"description"+i} defaultValue={tier.description}></textarea>
-                <span>Tier Rewards</span>
-                <div className="row x-center" ref={"rewards"+i}>
-                  {
-                    rewards.map((reward, index) => {
-                      return (
-                        <div className={`selectable reward ${ tier.rewards.indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleRewardForExisting(i, index) }}>
-                          <img src={ reward.imgUrl } />
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            )
-          })
-        }
-        <div className="ticket-form col">
-          <div className="row flex-pad">
-            <div></div>
-            <button onClick={this.onTierCreate.bind(this)}>Save</button>
+      <div>
+        <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: "0 10px 20px"}}>
+          <div className="row center" style={{padding: "20px 0"}}>
+            <h3>Tiers</h3>
           </div>
-          <span>Tier Name</span>
-          <input type="text" ref="name" />
-          <span>Tier Price</span>
-          <input type="number" ref="price" />
-          <span>Tier Amount</span>
-          <input type="number" ref="limit" />
-          <span>Tier Description</span>
-          <textarea ref="description"></textarea>
-          <span>Tier Rewards</span>
-          <div className="row x-center" ref="rewards">
-          {
-            rewards.map((reward, index) => {
-              return (
-                <div className={`selectable reward ${ this.state.rewards.indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
-                  <img src={ reward.imgUrl } />
+          <div className="row">
+            <div className="col tier-preview-container" style={{width: "20%", minWidth: 200, backgroundColor: "#444", padding: 20, marginRight: 10}}>
+              {
+                tiers.map((tier, index) => {
+                  return (
+                    <div className="cf-tier col" onClick={() => {
+                      var tier = tiers[index];
+                      this.refs["name"].value = tier.name;
+                      this.refs["price"].value = tier.price;
+                      this.refs["limit"].value = tier.limit;
+                      this.refs["description"].value = tier.description;
+                      this.setState({ index: index, rewards: tier.rewards });
+                    }} style={{backgroundColor: index == this.state.index ? "#FF6000" : "#333"}}>
+                      { tier.name }
+                    </div>
+                  )
+                })
+              }
+              <div className="cf-tier" onClick={() => {
+                this.refs["name"].value = "";
+                this.refs["price"].value = "";
+                this.refs["limit"].value = "";
+                this.refs["description"].value = "";
+                this.setState({ index: -1, rewards: [] });
+              }} style={{ textAlign: "center", backgroundColor: this.state.index == -1 ? "#FF6000" : "inherit" }}>
+                <FontAwesome name="plus" style={{marginRight: 10}} />
+                Add Tier
+              </div>
+            </div>
+            <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
+              <h5>Name</h5>
+              <input type="text" ref={"name"} defaultValue={tier.name} />
+              <h5>Price</h5>
+              <div className="row x-center">
+                <input type="number" ref={"price"} defaultValue={((tier.price || 0) / 100).toFixed(2)} />
+              </div>
+              <h5>Limit</h5>
+              <span>How many backers can buy this tier?</span>
+              <div className="row x-center">
+                <input type="number" ref={"limit"} defaultValue={tier.limit} />
+              </div>
+              <h5>Description</h5>
+              <textarea ref={"description"} defaultValue={tier.description}></textarea>
+            </div>
+            <div className="col col-1 x-center" style={{backgroundColor: "#444", padding: 20}}>
+              <h5>Rewards</h5>
+              <span>Which rewards do you want on this tier?</span>
+              <div className="row x-center center" ref={"rewards"}>
+                {
+                  rewards.map((reward, index) => {
+                    return (
+                      <div className={`selectable reward block ${ (this.state.rewards).indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
+                        <img src={ reward.imgUrl } style={{width: 100, height: "auto"}} />
+                        <div style={{fontSize: "0.7em"}}>
+                          { reward.name }
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          </div>
+          <div className="row center" style={{marginTop: 20}}>
+            {
+              this.state.index > -1 ? (
+                <div className="row center">
+                  <button style={{marginRight: 10}} onClick={this.onTierUpdate.bind(this)}>Save</button>
+                  <button onClick={this.onTierDelete.bind(this)}>Delete</button>
+                </div>
+
+              ) : (
+                <div className="row center">
+                  <button onClick={this.onTierCreate.bind(this)}>Create</button>
                 </div>
               )
-            })
-          }
+            }
           </div>
         </div>
       </div>
