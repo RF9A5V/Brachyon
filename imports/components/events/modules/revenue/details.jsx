@@ -3,7 +3,7 @@ import moment from "moment";
 
 import DateInput from "/imports/components/events/create/date_input.jsx";
 
-export default class RevenueDetailsPage extends Component {
+export default class crowdfundingDetailsPage extends Component {
 
   constructor(props){
     super(props);
@@ -13,12 +13,12 @@ export default class RevenueDetailsPage extends Component {
   }
 
   onDetailsSave() {
-    Meteor.call("events.revenue.saveDetails", this.state.id, parseInt(this.refs.amount.value), moment(this.refs.date.value()).toDate(), (err) => {
+    Meteor.call("events.crowdfunding.saveDetails", this.state.id, parseInt(this.refs.amount.value), moment(this.refs.date.value()).toDate(), (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
       else {
-        toastr.success("Successfully updated event revenue details.", "Success!");
+        toastr.success("Successfully updated event crowdfunding details.", "Success!");
       }
     })
   }
@@ -27,14 +27,27 @@ export default class RevenueDetailsPage extends Component {
     var event = Events.findOne();
     return (
       <div className="col">
-        <div className="row flex-pad x-center">
-          <span>Revenue Details</span>
+        <div className="button-row">
           <button onClick={this.onDetailsSave.bind(this)}>Save</button>
         </div>
-        <span>Crowdfunding Request</span>
-        <input ref="amount" type="number" defaultValue={event.revenue.amount} />
-        <span>Crowdfunding Due Date</span>
-        <DateInput init={event.revenue.dueDate} ref="date" />
+        <div className="submodule-bg">
+          <div className="row center" style={{marginBottom: 20}}>
+            <h3>Details</h3>
+          </div>
+          <div className="row">
+            <div className="col" style={{padding: 20, backgroundColor: "#444", marginRight: 20}}>
+              <h5>Crowdfunding Request</h5>
+              <input ref="amount" type="number" defaultValue={event.crowdfunding.details.amount} style={{marginRight: 0}} />
+              <h5 style={{marginBottom: 20}}>Crowdfunding Due Date</h5>
+              <div>
+                <DateInput init={event.crowdfunding.details.dueDate} ref="date" />
+              </div>
+            </div>
+            <div className="col-1 row center x-center" style={{padding: 20, backgroundColor: "#444"}}>
+              <span style={{fontSize: "2em"}}>You are requesting ${event.crowdfunding.details.amount} by { moment(event.crowdfunding.details.dueDate).format("MMMM Do") }.</span>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

@@ -190,6 +190,10 @@
   margin: 10px;
 }
 
+.cf-tier:hover {
+  cursor: pointer;
+}
+
 .cf-amount {
   font-size: 32px;
 }

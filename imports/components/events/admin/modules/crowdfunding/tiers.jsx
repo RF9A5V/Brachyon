@@ -13,7 +13,7 @@ export default class TierBreakdown extends Component {
   }
 
   setShippingStatus() {
-    Meteor.call("events.revenue.tiers.setShippedForSponsor", Events.findOne()._id, this.state.index, this.state.sponsor.id, (err) => {
+    Meteor.call("events.crowdfunding.tiers.setShippedForSponsor", Events.findOne()._id, this.state.index, this.state.sponsor.id, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -22,83 +22,85 @@ export default class TierBreakdown extends Component {
   }
 
   render() {
-    var tiers = Events.findOne().revenue.tiers;
-    var rewards = Events.findOne().revenue.rewards;
+    var tiers = Events.findOne().crowdfunding.tiers || [];
+    var rewards = Events.findOne().crowdfunding.rewards;
     return (
-      <div>
-        {
-          tiers.map((tier, index) => {
-            return (
-              <div className="col">
-                <h3>{ tier.name }</h3>
-                <div className="row">
-                  {
-                    (tier.sponsors || []).map((sponsor) => {
-                      var user = Meteor.users.findOne(sponsor.id);
-                      return (
-                        <div className="col" style={{marginRight: 20, padding: 10, marginBottom: 20, backgroundColor: sponsor.shipped ? "#6D6" : "#666"}} onClick={() => { this.setState({
-                          open: true,
-                          tier,
-                          sponsor,
-                          index
-                        }) }}>
-                          <span style={{fontSize: "1.5em"}}>{ sponsor.name }</span>
-                          <span style={{fontSize: "1.2em"}}>{ sponsor.address }</span>
-                          <span style={{fontSize: "1.2em"}}>{ sponsor.city + " " + sponsor.state + ", " + sponsor.zip }</span>
-                        </div>
-                      )
-                    })
-                  }
-                  {
-                    (tier.sponsors || []).length > 0 ? (
-                      ""
-                    ) : (
-                      <span>
-                        No Sponsors for this Tier
-                      </span>
-                    )
-                  }
-                </div>
-              </div>
-            )
-          })
-        }
-        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+      <div className="submodule-bg" style={{marginTop: 10}}>
+        <div>
           {
-            this.state.tier ? (
-              <div className="col">
-                <h3>
-                  { this.state.tier.name }
-                </h3>
-                <span>
-                  Need to deliver these rewards
-                </span>
-                <div className="row">
-                  {
-                    this.state.tier.rewards.map((r) => {
-                      return (
-                        <img src={rewards[r].imgUrl} style={{width: 100, height: 100, marginRight: 10, marginBottom: 10}} />
-                      )
-                    })
-                  }
-                </div>
-                <span>
-                  To this shipping address
-                </span>
+            tiers.map((tier, index) => {
+              return (
                 <div className="col">
-                  <span style={{fontSize: "1.5em"}}>{ this.state.sponsor.name }</span>
-                  <span style={{fontSize: "1.2em"}}>{ this.state.sponsor.address }</span>
-                  <span style={{fontSize: "1.2em"}}>{ this.state.sponsor.city + " " + this.state.sponsor.state + ", " + this.state.sponsor.zip }</span>
+                  <h3>{ tier.name }</h3>
+                  <div className="row">
+                    {
+                      (tier.sponsors || []).map((sponsor) => {
+                        var user = Meteor.users.findOne(sponsor.id);
+                        return (
+                          <div className="col" style={{marginRight: 20, padding: 10, marginBottom: 20, backgroundColor: sponsor.shipped ? "#6D6" : "#666"}} onClick={() => { this.setState({
+                            open: true,
+                            tier,
+                            sponsor,
+                            index
+                          }) }}>
+                            <span style={{fontSize: "1.5em"}}>{ sponsor.name }</span>
+                            <span style={{fontSize: "1.2em"}}>{ sponsor.address }</span>
+                            <span style={{fontSize: "1.2em"}}>{ sponsor.city + " " + sponsor.state + ", " + sponsor.zip }</span>
+                          </div>
+                        )
+                      })
+                    }
+                    {
+                      (tier.sponsors || []).length > 0 ? (
+                        ""
+                      ) : (
+                        <span>
+                          No Sponsors for this Tier
+                        </span>
+                      )
+                    }
+                  </div>
                 </div>
-                <button onClick={this.setShippingStatus.bind(this)}>
-                  Shipped it!
-                </button>
-              </div>
-            ) : (
-              ""
-            )
+              )
+            })
           }
-        </Modal>
+          <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+            {
+              this.state.tier ? (
+                <div className="col">
+                  <h3>
+                    { this.state.tier.name }
+                  </h3>
+                  <span>
+                    Need to deliver these rewards
+                  </span>
+                  <div className="row">
+                    {
+                      this.state.tier.rewards.map((r) => {
+                        return (
+                          <img src={rewards[r].imgUrl} style={{width: 100, height: 100, marginRight: 10, marginBottom: 10}} />
+                        )
+                      })
+                    }
+                  </div>
+                  <span>
+                    To this shipping address
+                  </span>
+                  <div className="col">
+                    <span style={{fontSize: "1.5em"}}>{ this.state.sponsor.name }</span>
+                    <span style={{fontSize: "1.2em"}}>{ this.state.sponsor.address }</span>
+                    <span style={{fontSize: "1.2em"}}>{ this.state.sponsor.city + " " + this.state.sponsor.state + ", " + this.state.sponsor.zip }</span>
+                  </div>
+                  <button onClick={this.setShippingStatus.bind(this)}>
+                    Shipped it!
+                  </button>
+                </div>
+              ) : (
+                ""
+              )
+            }
+          </Modal>
+        </div>
       </div>
     )
   }

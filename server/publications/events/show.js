@@ -14,6 +14,9 @@ Meteor.publish('event', (_id) => {
   var participants = new Set();
   if(event.brackets) {
     event.brackets.forEach((bracket) => {
+      if(!bracket) {
+        return;
+      }
       (bracket.participants || []).forEach((player) => {
         if(player.id){
           participants.add(player.id);
@@ -31,19 +34,14 @@ Meteor.publish('event', (_id) => {
   var iconIDs = [];
   if(event.brackets) {
     event.brackets.forEach((bracket) => {
+      if(!bracket){
+        return;
+      }
       gameIds.push(bracket.game);
     })
   }
   var games = Games.find({_id: { $in: gameIds }});
   banners = banners.concat(games.map((game) => { return game.banner }));
-  if(event.revenue != null && event.revenue.strategy != null) {
-    iconIDs = event.revenue.strategy.goals.map((key) => {
-      if(key == null) {
-        return null;
-      }
-      return key.icon;
-    });
-  }
   return [
     Events.find({_id}),
     Images.find({

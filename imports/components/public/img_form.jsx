@@ -10,8 +10,11 @@ export default class ImageForm extends Component {
     });
   }
 
-  value() {
+  value(getBase64) {
     if(!this.state.url){
+      if(this.props.callback){
+        this.props.callback({_id: this.props.id});
+      }
       return this.props.id;
     }
     var imageData = this.refs.cropper.getImageData();
@@ -25,6 +28,13 @@ export default class ImageForm extends Component {
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
 
+    if(getBase64){
+      return {
+        boxData,
+        base64: this.state.url
+      }
+    }
+
     this.props.collection.insert({
       file: this.state.url,
       isBase64: true,
@@ -34,8 +44,6 @@ export default class ImageForm extends Component {
         toastr.warning("Now uploading image.", "Warning")
       },
       onUploaded: (err, data) => {
-        console.log(err);
-        console.log(data);
         if(this.props.callback){
           this.props.callback(data);
         }
@@ -52,11 +60,14 @@ export default class ImageForm extends Component {
     var self = this;
     var reader = new FileReader();
     var type = e.target.files[0].type;
+    if(this.props.onSelect){
+      this.props.onSelect();
+    }
     reader.onload = function() {
       self.setState({
         url: reader.result,
         type
-      })
+      });
     }
     reader.readAsDataURL(e.target.files[0]);
   }
@@ -83,6 +94,9 @@ export default class ImageForm extends Component {
     }
     else if(this.props.id != null){
       value = (<img src={this.image().link()} style={{width: "100%", height: "auto"}} />);
+    }
+    else if(this.props.url != null) {
+      value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
     }
     else {
       value = (

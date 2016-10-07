@@ -27,7 +27,7 @@ export default class TicketSelect extends Component {
 
   value() {
     var total = 0;
-    var tickets = Events.findOne().revenue.tickets;
+    var tickets = Events.findOne().tickets;
     this.state.typeList.forEach((id) => {
       var ticket = tickets[id];
       total += tickets[id].price;
@@ -56,7 +56,7 @@ export default class TicketSelect extends Component {
 
   render() {
     var event = Events.findOne();
-    var tickets = event.revenue.tickets;
+    var tickets = event.tickets;
     var brackets = event.brackets;
     return (
       <div className="col">
@@ -73,7 +73,7 @@ export default class TicketSelect extends Component {
             return (
               <div className="ticket-select" onClick={this.onTicketSelect("bracket"+index).bind(this)}>
                 <span>Entry to { bracket.name }</span>
-                <span>${ tickets["bracket"+index].price }</span>
+                <span>${ tickets[index+"f"].price }</span>
               </div>
             )
           })

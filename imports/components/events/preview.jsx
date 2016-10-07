@@ -11,8 +11,6 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 
 import TicketPurchaseWrapper from "./preview/ticket_purchase_wrapper.jsx";
 
-
-
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
   componentWillMount(){
@@ -26,7 +24,8 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
           }
         }
       }),
-      users: Meteor.subscribe("event_participants", this.props.params.eventId)
+      users: Meteor.subscribe("event_participants", this.props.params.eventId),
+      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId)
     })
   }
 
@@ -46,8 +45,8 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         name: "Details",
         component: <TitlePage event={event} />
       }
-    ];
-    if(event.revenue) {
+  ];
+    if(event.crowdfunding) {
       pages.push({
         name: "Crowdfunding",
         component: <CFPage event={event} />
@@ -57,7 +56,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.users.ready()){
+    if(!this.state.event.ready() || !this.state.users.ready() || !this.state.sponsors.ready()){
       return (
         <div>Loading...</div>
       )
@@ -66,10 +65,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return (
       <div className="box col" style={{flexFlow: "row", position: "relative"}}>
         <SlideMain slides={this.slides()} event={event} />
-        <div className="ticket-modal">
-          <button onClick={() => { this.refs.tickets.openModal() }}>Register</button>
-          <TicketPurchaseWrapper ref="tickets" event={event} />
-        </div>
       </div>
     )
   }

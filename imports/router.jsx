@@ -24,6 +24,7 @@ import ShowEventScreen from "../imports/components/events/show.jsx";
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
+import CheckoutScreen from "../imports/components/events/checkout.jsx";
 
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
@@ -58,10 +59,10 @@ export const renderRoutes = () => (
       <Route path="games/approval" component={GameApprovalScreen} />
       <Route path="tournaments/single" component={TournamentSingleScreen} />
       <Route path="tournaments/double" component={TournamentDoubleScreen} />
-      <Route path="buy_currency" component={CurrencyPurchaseScreen} />
       <Route path="events/:eventId/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:eventId/admin" component={EventAdminScreen} />
+      <Route path="events/:eventId/checkout" component={CheckoutScreen} />
     </Route>
   </Router>
 )

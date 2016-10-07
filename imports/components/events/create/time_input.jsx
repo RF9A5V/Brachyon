@@ -23,83 +23,55 @@ export default class TimeInput extends Component {
     this.setState(obj);
   }
 
-  hourChange(e) {
-    var val = parseInt(this.state.hour + e.key);
-    if(!isNaN(val)){
-      if(val > 12){
-        if(e.key == '0'){
-          return;
-        }
-        this.state.hour = "0" + e.key;
-      }
-      else {
-        this.state.hour = val + "";
-      }
-    }
-    if(this.props.onChange != null){
-      this.props.onChange();
-    }
-    this.forceUpdate();
-  }
-
-  minuteChange(e){
-    var val = parseInt(this.state.minute + e.key);
-    if(!isNaN(val)){
-      if(val > 59){
-        this.state.minute = "0" + e.key;
-      }
-      else {
-        this.state.minute = (val < 10 ? ("0" + val) : ("" + val));
-      }
-    }
-    if(this.props.onChange != null){
-      this.props.onChange();
-    }
-    this.forceUpdate();
-  }
-
-  halfChange(e) {
-    if(e.key == 'a'){
-      this.state.half = "AM";
-    }
-    else if(e.key == 'p'){
-      this.state.half = "PM";
-    }
-    if(this.props.onChange != null){
-      this.props.onChange();
-    }
-    this.forceUpdate();
-  }
-
   value() {
-
-    var hour = this.state.hour * 1;
-
-    if(hour === 12 && this.state.half == "AM"){
-      if(this.state.half == "AM"){
-        hour = 0;
-      }
-      else {
-        hour = 12;
-      }
+    var hour = parseInt(this.refs.hours.value);
+    var minutes = parseInt(this.refs.minutes.value);
+    if(minutes < 10) {
+      minutes = "0" + minutes;
     }
-    else {
-      hour += ( this.state.half == "AM" ? 0 : 12 );
-    }
-    if(hour < 10){
-      hour = "0" + hour;
-    }
-    return `${hour}:${this.state.minute}`
+    return hour + ":" + minutes + this.refs.half.value.toUpperCase();
   }
 
   render() {
+    var [hours, minutes] = [[], []];
+    for(var i = 1; i <= 12; i ++){
+      hours.push(i);
+    }
+    for(var i = 0; i < 60; i += 5){
+      minutes.push(i);
+    }
     return (
       <div>
         <div className="time-input">
-          <input type="text" ref="hour" onKeyDown={this.hourChange.bind(this)} placeholder="Hour" value={this.state.hour} onChange={() => {}}/>
-          :
-          <input type="text" ref="minute" placeholder="Minute" value={this.state.minute} onKeyDown={this.minuteChange.bind(this)} onChange={() => {}} />
-          <input type="text" ref="half" placeholder="AM/PM" value={this.state.half} onKeyDown={this.halfChange.bind(this)} onChange={() => {}} />
+          <select ref="hours" defaultValue={this.state.hour}>
+            {
+              hours.map((hour) => {
+                return (
+                  <option value={hour}>
+                    { hour }
+                  </option>
+                );
+              })
+            }
+          </select>
+          <span style={{margin: "0 10px"}}>
+            :
+          </span>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute}>
+            {
+              minutes.map((value) => {
+                return (
+                  <option value={value}>
+                    { value < 10 ? "0" + value : value }
+                  </option>
+                )
+              })
+            }
+          </select>
+          <select ref="half">
+            <option value={"am"}>AM</option>
+            <option value={"pm"}>PM</option>
+          </select>
         </div>
       </div>
     )

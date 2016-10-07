@@ -33,6 +33,14 @@ body {
   padding: 10px 5px;
 }
 
+.match-participant span {
+  border: solid 2px white;
+  padding: 5px;
+  font-size: 12px;
+  width: calc(100% - 30px);
+  display: inline-block;
+}
+
 .match-active{
   cursor: pointer;
 }
@@ -65,15 +73,41 @@ body {
   margin-bottom: 50px;
 }
 
+@media only screen
+  and (max-device-width: 768px) {
+
+    .content {
+      top: 140px;
+      bottom: 100px;
+      margin-bottom: 100px;
+    }
+
+    .box {
+      min-height: calc(100vh - 240px);
+    }
+
+  }
+
 /* Flex rows and column stuff */
 
-.row, .col {
+.row, .col, .col-to-row, .row-to-col {
   display: flex;
 }
 
-.col {
+.col, .col-to-row {
   flex-direction: column;
 }
+
+@media (max-width: 1000px) {
+  .col-to-row {
+    flex-direction: row;
+  }
+
+  .row-to-col {
+    flex-direction: column;
+  }
+}
+
 
 .center {
   justify-content: center;
@@ -125,13 +159,13 @@ body {
 }
 
 h2 { /* Titles for pages or for more prominent tabs like About.jsx */
-  color: #FFD700;
+  color: #00BDFF;
   background-color: #222;
   padding: 5px;
 }
 
 h3 { /* For side-tab-panels and any heading where there are other headings on the same page */
-  color: #FFD700;
+  color: #00BDFF;
   margin: 0;
 }
 
@@ -148,6 +182,7 @@ h5 {
   font-size: 18px;
   color: white;
   font-weight: bold;
+  margin: 0;
 }
 
 button, input[type="submit"], .custom-file-upload {
@@ -230,24 +265,25 @@ input:-webkit-autofill {
 }
 
 .signup-button {
-  border-color: #CC0000;
+  border-color: #FF6000;
   width: 146px;
 }
 
 .signup-button:not(.inactive):hover{
-  -moz-box-shadow: 0 0 10px #CC0000;
-  -webkit-box-shadow: 0 0 10px #CC0000;
-  box-shadow: 0 0 10px #CC0000;
+  -moz-box-shadow: 0 0 10px #FF6000;
+  -webkit-box-shadow: 0 0 10px #FF6000;
+  box-shadow: 0 0 10px #FF6000;
 }
 
 .snapcode-image {
-  width: 1in;
-  height: 1in;
+  width: 3in;
+  height: 3in;
 }
 
 a {
   text-decoration: none;
   outline: none;
+  color: #00BDFF;
 }
 
 .loading-screen {
@@ -313,12 +349,16 @@ textarea:focus {
 
 .accordion-container {
   margin-bottom: 20px;
+  width: 100%;
+}
+
+.accordion-container:last-child {
+  margin-bottom: 0;
 }
 
 .accordion-header {
   background-color: #666;
   padding: 10px;
-  width: 400px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -327,8 +367,9 @@ textarea:focus {
 .accordion-content {
   padding: 20px;
   background-color: #444;
-  width: 420px;
   box-sizing: border-box;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 label {
@@ -353,4 +394,8 @@ label {
   border-radius: 0;
   border: none;
   position: relative;
+}
+
+.no-select:hover, .no-select *:hover {
+  cursor: default !important;
 }

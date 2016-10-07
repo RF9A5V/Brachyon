@@ -4,6 +4,8 @@ import FontAwesome from "react-fontawesome";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import UserTemplate from "/imports/components/public/search_results/user_template.jsx";
 
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 export default class StaffPage extends Component {
 
   constructor() {
@@ -64,29 +66,45 @@ export default class StaffPage extends Component {
     }
     return (
       <div>
-        <div className="row flex-pad">
-          <span>User Select</span>
+        <div className="button-row">
           <button onClick={this.onStaffSave.bind(this)}>Save</button>
         </div>
-        <AutocompleteForm publications={["userSearch"]} types={[
+        <div className="submodule-bg">
+          <div className="row center" style={{marginBottom: 20}}>
+            <h3>Staff Select</h3>
+          </div>
+          <AutocompleteForm publications={["userSearch"]} types={[
+            {
+              type: Meteor.users,
+              template: UserTemplate,
+              name: "User"
+            }
+          ]} onChange={this.onStaffSelect.bind(this)} />
+        </div>
+        <div className="row center">
           {
-            type: Meteor.users,
-            template: UserTemplate,
-            name: "User"
-          }
-        ]} onChange={this.onStaffSelect.bind(this)} />
-        <div className="col" style={{alignItems: "flex-start", marginTop: 10}}>
-          {
-            this.state.staff.map((user, i) => {
-              var img = ProfileImages.findOne(user.img);
-              return (
-                <div className="staff-block">
-                  <img src={img ? img.url() : "/images/profile.png"} />
-                  <span>{ user.username }</span>
-                  <FontAwesome name="times" style={{alignSelf: "flex-start"}} onClick={() => { this.onStaffRemove(i) }} />
+            this.state.staff.length > 0 ? (
+              <div style={{border: "solid 2px white", padding: 20, display: "inline-block", margin: "0 auto", minWidth: 300, maxWidth: "60%", overflowY: "auto", maxHeight: 500}}>
+                <div style={{alignItems: "flex-start", marginTop: 10, display: "inline-flex", flexWrap: "wrap"}}>
+                  {
+                    this.state.staff.map((user, i) => {
+                      var img = ProfileImages.findOne(user.img);
+                      return (
+                        <div className="staff-block">
+                          <div className="row" style={{justifyContent: "flex-end", width: "100%"}}>
+                            <FontAwesome name="times" style={{alignSelf: "flex-start"}} onClick={() => { this.onStaffRemove(i) }} />
+                          </div>
+                          <img src={img ? img.link() : "/images/profile.png"} />
+                          <span>{ user.username }</span>
+                        </div>
+                      )
+                    })
+                  }
                 </div>
-              )
-            })
+              </div>
+            ) : (
+              ""
+            )
           }
         </div>
       </div>

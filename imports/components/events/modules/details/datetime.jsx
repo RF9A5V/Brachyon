@@ -20,7 +20,6 @@ export default class DatetimePage extends Component {
         return toastr.error(err.reason, "Error!");
       }
       else {
-        this.props.onItemSelect(this.props.activeItem, 0);
         return toastr.success("Successfully updated datetime for event!", "Success!");
       }
     })
@@ -30,12 +29,21 @@ export default class DatetimePage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>Date and Time</span>
+        <div className="button-row">
           <button onClick={this.onDatetimeSave.bind(this)}>Save</button>
         </div>
-        <DateSelect ref="date" init={event.details.datetime} />
-        <TimeSelect ref="time" init={event.details.datetime} />
+        <div className="submodule-bg">
+          <div className="row">
+            <div className="submodule-section">
+              <h3 style={{marginBottom: 20}}>Date and Time</h3>
+              <DateSelect ref="date" init={event.details.datetime} />
+              <TimeSelect ref="time" init={event.details.datetime} />
+            </div>
+            <div className="submodule-section col-1 row center x-center">
+              <span className="section">This event will start at {moment(event.details.datetime).format("MMMM Do, YYYY HH:mmA")}.</span>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

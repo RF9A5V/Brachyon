@@ -25,14 +25,18 @@ export default class DescriptionPage extends Component {
     var event = Events.findOne();
     return (
       <div className="col">
-        <div className="row flex-pad x-center">
-          <span>Description</span>
+        <div className="button-row">
           <button onClick={this.onDescriptionSave.bind(this)}>Save</button>
         </div>
-        <span>Event Title</span>
-        <input ref="name" defaultValue={event.details.name} />
-        <span>Description</span>
-        <textarea ref="description" defaultValue={event.details.description}></textarea>
+        <div className="submodule-bg">
+          <div className="row center">
+            <h3>Event Details</h3>
+          </div>
+          <h5>Title</h5>
+          <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} />
+          <h5>Description</h5>
+          <textarea ref="description" defaultValue={event.details.description} style={{width: "50%", minWidth: 280}}></textarea>
+        </div>
       </div>
     )
   }

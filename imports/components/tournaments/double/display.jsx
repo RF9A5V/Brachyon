@@ -6,6 +6,9 @@ export default class DoubleDisplay extends Component {
     return (
       <div classname="delim">
         <div className="col">
+          <div className="row center">
+            <h3 style={{marginBottom: 20}}>Winner's Bracket</h3>
+          </div>
           <div className="row">
             { //Winner's bracket block
               Array(this.props.rounds[0].length+2).fill("").map((_, i) => {
@@ -98,7 +101,10 @@ export default class DoubleDisplay extends Component {
           </div>
         </div>
 
-        <div className="col">
+        <div className="col" style={{marginTop: 50}}>
+          <div className="row center">
+            <h3 style={{marginBottom: 20}}>Loser's Bracket</h3>
+          </div>
           <div className="row">
             { //Loser's bracket block
               Array(this.props.rounds[1].length).fill("").map((_, i) => {

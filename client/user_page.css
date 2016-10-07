@@ -3,6 +3,8 @@
   height: 50vh;
   position: relative;
   background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .user-img-line {
@@ -35,6 +37,25 @@
   border-radius: 100%;
   background-size: cover;
   margin-right: 40px;
+  position: relative;
+}
+
+.user-profile-overlay {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: 202px;
+  height: 202px;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+}
+
+.user-profile-image:hover .user-profile-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .user-events-container {

@@ -17,7 +17,14 @@
 }
 
 .reward.block {
-  width: 20%;
+  border: solid 2px white;
+  text-align: center;
+}
+
+.reward.block img {
+  border-bottom: solid 2px white;
+  width: 200px;
+  height: 200px;
 }
 
 .reward.block div {
