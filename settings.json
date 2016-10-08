@@ -16,6 +16,9 @@
     },
     "google": {
       "client_id": "***REMOVED***"
+    },
+    "dropbox": {
+      "key": "97pn9fbf7ilojha"
     }
   },
   "private": {
@@ -34,6 +37,10 @@
     },
     "google": {
       "liveSecretKey": "***REMOVED***"
+    },
+    "dropbox": {
+      "secret": "***REMOVED***",
+      "token": "***REMOVED***"
     }
   }
 

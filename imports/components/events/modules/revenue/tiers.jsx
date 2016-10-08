@@ -97,7 +97,7 @@ export default class TierPage extends Component {
                     <div className="cf-tier col" onClick={() => {
                       var tier = tiers[index];
                       this.refs["name"].value = tier.name;
-                      this.refs["price"].value = tier.price;
+                      this.refs["price"].value = (tier.price / 100).toFixed(2);
                       this.refs["limit"].value = tier.limit;
                       this.refs["description"].value = tier.description;
                       this.setState({ index: index, rewards: tier.rewards });
