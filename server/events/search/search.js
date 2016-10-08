@@ -1,5 +1,7 @@
 import moment from "moment";
 
+import { Images } from "/imports/api/event/images.js";
+
 var generateQuery = {};
 
 generateQuery["name"] = (name) => {
