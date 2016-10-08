@@ -1,4 +1,5 @@
 import Games from '/imports/api/games/games.js';
+import { Images } from "/imports/api/event/images.js";
 
 Meteor.publish("searchEvents", (params) => {
   var query = Meteor.call("events.search", params);
@@ -27,7 +28,7 @@ Meteor.publish("searchEvents", (params) => {
   return [
     events,
     games,
-    imgs,
+    imgs.cursor,
     Meteor.users.find({_id: { $in: Array.from(ownerIDs) }})
   ];
 })
