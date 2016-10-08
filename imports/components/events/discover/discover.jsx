@@ -10,7 +10,9 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   componentWillMount() {
     var self = this;
     this.setState({
-      events: Meteor.subscribe('discoverEvents')
+      events: Meteor.subscribe('discoverEvents'),
+      promotedEvents: Meteor.subscribe("promotedEvents"),
+      query: {}
     })
   }
 
@@ -19,27 +21,34 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   events() {
-    return Events.find({},{sort: {"promotion.bid": -1, "details.datetime": -1}}).fetch();
+    return Events.find(this.state.query, {sort: {"promotion.bid": -1, "details.datetime": -1}}).fetch();;
   }
 
   promotedEvents() {
     return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
   }
 
-  setSubscription(params){
+  setSubscription(params, query){
     this.state.events.stop();
-    console.log(params);
+    console.log(query);
     this.setState({
-      events: Meteor.subscribe('searchEvents', params)
-    })
+      events: Meteor.subscribe('searchEvents', params),
+      query
+    });
   }
 
   render() {
     return (
       <div className="content col-1 x-center">
-        <DisplayDiscover events={this.promotedEvents()} />
+        {
+          this.state.promotedEvents.ready() ? (
+            <DisplayDiscover events={this.promotedEvents()} />
+          ) : (
+            ""
+          )
+        }
         <div className="row col-1"><hr className="discover-divider"></hr></div>
-        <DiscoverSearch handler={this.setSubscription.bind(this)} />
+        <DiscoverSearch handler={this.setSubscription.bind(this)} ref="search" />
         <div style={{padding: "0 5em"}}>
           {
             this.state.events.ready() ? (

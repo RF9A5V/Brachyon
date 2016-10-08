@@ -52,19 +52,21 @@ export default class Header extends TrackerReact(Component) {
     var userCred = "";
     if(Meteor.userId()){
       userCred = (
-        <div style={{position: "relative"}} className="row x-center" onMouseEnter={() => { this.setState({userMenuOpen: true}) }} onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
+        <div style={{position: "relative"}} className="row x-center">
           <Link to="/dashboard">
-            <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
-          </Link>
-          <div className="no-select row x-center">
-            <div className="col">
-              <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+            <div className="row x-center">
+              <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
+              <div className="col">
+                <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
+              </div>
             </div>
-            <a href="#" className="row x-center" style={{lineHeight: "32px"}}>
+          </Link>
+          <div className="row x-center">
+            <a href="#" className="row x-center" style={{lineHeight: "32px", cursor: "pointer"}} onClick={(e) => { e.preventDefault();this.setState({userMenuOpen: true}) }}>
               <FontAwesome style={{position: "relative", bottom: 7}} name="sort-desc" size="2x" />
             </a>
           </div>
-          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} />
+          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: !this.state.userMenuOpen})}} />
         </div>
       );
     }
@@ -78,7 +80,7 @@ export default class Header extends TrackerReact(Component) {
     }
     return (
       <Headroom id="header" disableInlineStyles={true}>
-        <header className="row x-center header">
+        <header className="row x-center header" onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
           <div className="row x-center">
             <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
             <div style={{marginLeft: 10, marginRight: 10}}>

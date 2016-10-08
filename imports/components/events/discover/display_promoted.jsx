@@ -41,8 +41,8 @@ export default class DisplayPromotedEvent extends Component {
     }
 
     return (
-      <div className="row">
-        <div className="promoted-event-block center x-center col-1">
+      <div className="row" style={{width: "85vw"}}>
+        <div className="promoted-event-block col-1">
           <img src={this.imgOrDefault(this.props.event)} />
         </div>
         <div className="discover-details col-1">
