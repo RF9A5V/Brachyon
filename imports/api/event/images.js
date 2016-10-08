@@ -167,6 +167,12 @@ export const Images = new FilesCollection({
       }
       gm(fs.createReadStream(image.versions[versionName].path), image.name).crop(dims.width, dims.height, dims.left, dims.top).resize("1280", "720").stream().pipe(writeStream);
       writeStream.on("close", Meteor.bindEnvironment(file => {
+
+        const readStream = gfs.createReadStream({ _id: file._id.toString() });
+        const overwriteOld = fs.createWriteStream(image.versions[versionName].path);
+
+        readStream.pipe(overwriteOld);
+
         const property = `versions.${versionName}.meta.gridFsFileId`;
         this.collection.update(image._id, {
           $set: {

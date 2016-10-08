@@ -170,6 +170,11 @@ export const ProfileImages = new FilesCollection({
       var stream = gm(fs.createReadStream(image.versions[versionName].path), image.name).crop(dims.width, dims.height, dims.left, dims.top).resize("640", "640").stream();
       stream.pipe(writeStream);
       writeStream.on("close", Meteor.bindEnvironment(file => {
+        const readStream = gfs.createReadStream({ _id: file._id.toString() });
+        const overwriteOld = fs.createWriteStream(image.versions[versionName].path);
+
+        readStream.pipe(overwriteOld);
+
         const property = `versions.${versionName}.meta.gridFsFileId`;
         var id = this.collection.update(image._id, {
           $set: {
@@ -190,12 +195,7 @@ export const ProfileImages = new FilesCollection({
   interceptDownload(http, fileRef, version) {
     var path, ref, ref1, ref2;
     var img = this.collection.findOne(fileRef._id);
-    console.log(img);
     path = (ref = img.versions) != null ? (ref1 = ref[version]) != null ? (ref2 = ref1.meta) != null ? ref2.pipeFrom : void 0 : void 0 : void 0;
-    console.log(path);
-    console.log(ref);
-    console.log(ref1);
-    console.log(ref2);
     if (path) {
       // If file is moved to DropBox
       // We will pipe request to DropBox
@@ -208,7 +208,9 @@ export const ProfileImages = new FilesCollection({
     } else {
       // While file is not yet uploaded to DropBox
       // We will serve file from GridFS
+      console.log(fileRef.versions[version]);
       const _id = (fileRef.versions[version].meta || {}).gridFsFileId;
+      console.log(_id);
       if(_id) {
         const readStream = gfs.createReadStream({ _id });
         readStream.on("error", err => { throw err; });

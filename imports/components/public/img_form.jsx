@@ -34,11 +34,17 @@ export default class ImageForm extends Component {
         base64: this.state.url
       }
     }
-
+    var type = "";
+    if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
+      type = ".jpg";
+    }
+    else if(this.state.type == "image/png") {
+      type = ".png";
+    }
     this.props.collection.insert({
       file: this.state.url,
       isBase64: true,
-      fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
+      fileName: Meteor.userId() + type, // Weird shit until I figure out if we want to save the initial file name
       meta: boxData,
       onStart: () => {
         toastr.warning("Now uploading image.", "Warning")
@@ -60,6 +66,7 @@ export default class ImageForm extends Component {
     var self = this;
     var reader = new FileReader();
     var type = e.target.files[0].type;
+    console.log(e.target.files[0]);
     if(this.props.onSelect){
       this.props.onSelect();
     }
