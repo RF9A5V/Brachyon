@@ -161,6 +161,32 @@ Meteor.publish("discoverEvents", function(){
     games,
     ProfileImages.find({_id: { $in: ownerImages }}).cursor
   ]
+});
+
+Meteor.publish("promotedEvents", function() {
+  var events = Events.find({
+    "promotion.active": true
+  }, {
+    sort: {
+      "promotion.bid": -1,
+      "details.datetime": -1
+    },
+    limit: 5
+  });
+  var userSet = new Set();
+  events.forEach(event => {
+    userSet.add(event.owner);
+  })
+  var users = Meteor.users.find({ _id: { $in: Array.from(userSet) } });
+  var imgIds = users.map(user => {
+    return user.profile.image;
+  })
+  return [
+    events,
+    users,
+    ProfileImages.find({ _id: { $in: imgIds } }).cursor,
+    Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor
+  ]
 })
 
 Meteor.publish("userSearch", function(usernameSubstring) {

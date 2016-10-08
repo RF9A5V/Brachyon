@@ -25,7 +25,7 @@ generateQuery["location"] = (locObj) => {
 
 generateQuery["game"] = (gameId) => {
   return {
-    "organize": {
+    "brackets": {
       $elemMatch: {
         game: gameId
       }
