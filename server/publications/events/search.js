@@ -1,5 +1,4 @@
 import Games from '/imports/api/games/games.js';
-import { Images } from "/imports/api/event/images.js";
 
 import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
