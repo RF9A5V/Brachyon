@@ -180,7 +180,6 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   submitItem() {
     return {
       text: "Submit",
-      icon: "check",
       subitems: [
         {
           component: SubmitPage
@@ -191,8 +190,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   editItem(itemCount) {
     return {
-      text: "Edit",
-      icon: "pencil",
+      text: "Edit Modules",
       subitems: [
         {
           component: EditModulePage,

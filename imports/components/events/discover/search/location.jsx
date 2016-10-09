@@ -84,13 +84,11 @@ export default class LocationSearch extends Component {
     return (
       <div className="row">
         <div className="col">
-          <span>Location</span>
           <input type="text" id="locationInput" placeholder="Search by Location" ref="location" onKeyPress={this.onKeyPress.bind(this)} onSubmit={this.props.onChange.bind(this)} onChange={this.onLocationChange.bind(this)} />
         </div>
         {
           this.state.hasLocation ? (
             <div className="col" style={{marginLeft: 10}}>
-              <span>Distance</span>
               <input type="number" style={{width: 100}} placeholder="Distance" ref="distance" onKeyPress={this.onKeyPress.bind(this)} onSubmit={this.props.onSubmit.bind(this)} onChange={this.onDistanceChange.bind(this)}></input>
             </div>
           ) : (
