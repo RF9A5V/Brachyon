@@ -96,6 +96,24 @@ export default class EventCreateScreen extends Component {
       var key = refKeys[i];
       args[key] = this.refs[key].value();
     }
+    var createEvent = (args) => {
+      Meteor.call("events.create", args, (err, event) => {
+        if(err){
+          toastr.error(err.reason, "Error!");
+        }
+        else {
+          var reviewRequired = this.state.moduleBits.review.some(function(val){
+            return val == 1;
+          });
+          if(reviewRequired) {
+            browserHistory.push(`/events/${event}/edit`)
+          }
+          else {
+            browserHistory.push(`/events/${event}/preview`);
+          }
+        }
+      });
+    }
     if(args["details"]["image"]) {
       var img = args["details"]["image"];
       if(img.base64) {
@@ -110,18 +128,13 @@ export default class EventCreateScreen extends Component {
           onUploaded: (err, data) => {
             args["details"]["banner"] = data._id;
             delete args["details"]["image"];
-            debugger;
-            Meteor.call("events.create", args, function(err){
-              if(err){
-                toastr.error(err.reason, "Error!");
-              }
-              else {
-                browserHistory.push("/");
-              }
-            });
+            createEvent(args);
           }
         })
       }
+    }
+    else {
+      createEvent(args);
     }
 
   }
