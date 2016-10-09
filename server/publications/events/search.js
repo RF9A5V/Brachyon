@@ -1,5 +1,8 @@
 import Games from '/imports/api/games/games.js';
 
+import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 Meteor.publish("searchEvents", (params) => {
   var query = Meteor.call("events.search", params);
   var events = Events.find(query);
@@ -9,8 +12,8 @@ Meteor.publish("searchEvents", (params) => {
   var imgIDs = [];
 
   events.forEach((e) => {
-    if(e.organize != null){
-      e.organize.forEach((brack) => {
+    if(e.brackets != null){
+      e.brackets.forEach((brack) => {
         gameSet.add(brack.game);
       })
     }
@@ -23,11 +26,14 @@ Meteor.publish("searchEvents", (params) => {
   games.forEach((game) => {
     imgIDs.push(game.banner);
   });
+  var usrs = Meteor.users.find({_id: { $in: Array.from(ownerIDs) }});
   var imgs = Images.find({ _id: { $in: imgIDs } });
+  var profImgs = ProfileImages.find({_id: { $in: usrs.map((usr) => { return (usr.profile || {}).image }) }})
   return [
     events,
     games,
-    imgs,
-    Meteor.users.find({_id: { $in: Array.from(ownerIDs) }})
+    imgs.cursor,
+    Meteor.users.find({_id: { $in: Array.from(ownerIDs) }}),
+    profImgs.cursor
   ];
 })

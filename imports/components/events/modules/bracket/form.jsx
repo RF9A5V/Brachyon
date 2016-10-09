@@ -178,8 +178,8 @@ export default class BracketForm extends Component {
           }
         ]} onChange={this.onGameSelect.bind(this)} value={(this.state.game || {}).name} />
         <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
-          <div className="row center">
-            <h5 style={{position: "absolute", top: -12.5, backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
+          <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
+            <h5 style={{backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
           </div>
           <div className="row center x-center" style={{margin: "20px 0"}}>
             <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
