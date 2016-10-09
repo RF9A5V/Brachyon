@@ -11,10 +11,23 @@ export default class GameSearchInput extends Component {
     this.props.onChange(gameObj._id);
   }
 
+  query() {
+    var value = this.refs.game.value();
+    if(!value) {
+      return {};
+    }
+    return {
+      "brackets": {
+        $elemMatch: {
+          game: value
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <div className="col" style={{margin: "0 5px"}}>
-        <span>Game</span>
         <AutocompleteForm ref="game" publications={[
           "game_search"
         ]} types={[
@@ -23,7 +36,7 @@ export default class GameSearchInput extends Component {
             template: GameResultTemplate,
             name: "Game"
           }
-        ]} onChange={this.onGameSelect.bind(this)} placeholder="Search by Game" />
+        ]} onChange={this.onGameSelect.bind(this)} placeholder="Search by Game" onSubmit={this.props.onSubmit} />
       </div>
     )
   }

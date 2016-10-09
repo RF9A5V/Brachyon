@@ -12,22 +12,31 @@ export default class DisplayDiscover extends Component {
   }
 
   componentWillMount(){
-    var reset = () => {
-      this.state.timer = setTimeout(() => {
-        this.setState({loadIn: false});
-        setTimeout(() => {
-          this.state.loadIn = true;
-          this.state.panel = (this.state.panel + 1) % this.props.events.length;
-          this.forceUpdate();
-          reset();
-        }, 1000)
-      }, 4000)
-    }
-    reset();
+    this.reset();
+  }
+
+  reset() {
+    this.state.timer = setTimeout(() => {
+      this.setState({loadIn: false});
+      setTimeout(() => {
+        this.state.loadIn = true;
+        this.state.panel = (this.state.panel + 1) % this.props.events.length;
+        this.forceUpdate();
+        this.reset();
+      }, 1000)
+    }, 4000)
   }
 
   componentWillUnmount(){
     clearTimeout(this.state.timer);
+  }
+
+  onPromotedAreaFocus() {
+    clearTimeout(this.state.timer);
+  }
+
+  onPromotedAreaLeave() {
+    this.reset();
   }
 
   render() {
@@ -36,7 +45,7 @@ export default class DisplayDiscover extends Component {
       arr[i] = i;
     }
     return (
-      <div style={{padding: "0 5em"}}>
+      <div style={{padding: "0 5em"}} onMouseEnter={() => { this.onPromotedAreaFocus() }} onMouseLeave={() => { this.onPromotedAreaLeave() }}>
         <div className="row x-center" style={{margin: "20px"}}>
           <div className="discover-selector col">
             {
