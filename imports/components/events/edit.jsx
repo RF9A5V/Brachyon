@@ -108,33 +108,37 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   }
 
   crowdfundingItems() {
+    var event = Events.findOne();
+    var subitems = [
+      {
+        component: Main,
+        args: {
+          name: "Crowdfunding"
+        }
+      },
+      {
+        component: RevenueDetailsPage,
+        text: "Details"
+      },
+      {
+        component: RewardsPage,
+        text: "Rewards"
+      },
+      {
+        component: TierPage,
+        text: "Tiers"
+      }
+    ];
+    if(event.brackets && event.brackets.length > 0) {
+      subitems.splice(2, 0, {
+        component: PrizePoolBreakdown,
+        text: "Prize Pool"
+      });
+    }
     return {
       text: "Crowdfunding",
       icon: "usd",
-      subitems: [
-        {
-          component: Main,
-          args: {
-            name: "Crowdfunding"
-          }
-        },
-        {
-          component: RevenueDetailsPage,
-          text: "Details"
-        },
-        {
-          component: RewardsPage,
-          text: "Rewards"
-        },
-        {
-          component: PrizePoolBreakdown,
-          text: "Prize Pool"
-        },
-        {
-          component: TierPage,
-          text: "Tiers"
-        }
-      ]
+      subitems
     };
   }
 
@@ -176,7 +180,6 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   submitItem() {
     return {
       text: "Submit",
-      icon: "check",
       subitems: [
         {
           component: SubmitPage
@@ -187,8 +190,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   editItem(itemCount) {
     return {
-      text: "Edit",
-      icon: "pencil",
+      text: "Edit Modules",
       subitems: [
         {
           component: EditModulePage,

@@ -91,10 +91,16 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     this.forceUpdate();
   }
 
+  onKeyPress(e) {
+    if(e.key == "Enter" && this.props.onSubmit) {
+      this.props.onSubmit();
+    }
+  }
+
   render() {
     return (
       <div className="col" style={{position: "relative"}}>
-        <input ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} />
+        <input ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} onKeyPress={ this.onKeyPress.bind(this) } />
         <div className="template-container">
           {
             this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
