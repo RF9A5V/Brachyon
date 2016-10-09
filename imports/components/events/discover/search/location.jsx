@@ -56,18 +56,40 @@ export default class LocationSearch extends Component {
     }
   }
 
+  onKeyPress(e) {
+    if(e.key == "Enter") {
+      this.props.onSubmit();
+    }
+  }
+
+  query() {
+    if(!this.state.coords) {
+      return {};
+    }
+    var currentObj = {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: this.state.coords.reverse() // Necessary, because of how MongoDB does the calculations.
+        },
+        $maxDistance: this.refs.distance.value * 1609 || 16093
+      }
+    };
+    return {
+      "details.location.coords": currentObj
+    }
+  }
+
   render() {
     return (
       <div className="row">
         <div className="col">
-          <span>Location</span>
-          <input type="text" id="locationInput" placeholder="Search by Location" ref="location" onChange={this.onLocationChange.bind(this)} />
+          <input type="text" id="locationInput" placeholder="Search by Location" ref="location" onKeyPress={this.onKeyPress.bind(this)} onSubmit={this.props.onChange.bind(this)} onChange={this.onLocationChange.bind(this)} />
         </div>
         {
           this.state.hasLocation ? (
             <div className="col" style={{marginLeft: 10}}>
-              <span>Distance</span>
-              <input type="number" style={{width: 100}} placeholder="Distance" ref="distance" onChange={this.onDistanceChange.bind(this)}></input>
+              <input type="number" style={{width: 100}} placeholder="Distance" ref="distance" onKeyPress={this.onKeyPress.bind(this)} onSubmit={this.props.onSubmit.bind(this)} onChange={this.onDistanceChange.bind(this)}></input>
             </div>
           ) : (
             ""

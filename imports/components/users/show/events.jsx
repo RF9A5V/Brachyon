@@ -44,7 +44,12 @@ export default class UserEvents extends Component {
       function(e){
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event._id}/preview`);
+          if(event.owner == Meteor.userId()){
+            browserHistory.push(`/events/${event._id}/admin`);
+          }
+          else {
+            browserHistory.push(`/events/${event._id}/preview`);
+          }
         }
         else {
           browserHistory.push(`/events/${event._id}/edit`);
