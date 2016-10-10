@@ -14,11 +14,22 @@ if(Meteor.isServer) {
     MongoInternals.defaultRemoteCollectionDriver().mongo.db,
     MongoInternals.NpmModule
   );
-  client = new Dropbox.Client({
-    key: Meteor.settings.public.dropbox.key,
-    secret: Meteor.settings.private.dropbox.secret,
-    token: Meteor.settings.private.dropbox.token
-  });
+  var init;
+  if(Meteor.isDevelopment){
+    init = {
+      key: Meteor.settings.public.dropbox.key,
+      secret: Meteor.settings.private.dropbox.secret,
+      token: Meteor.settings.private.dropbox.token
+    }
+  }
+  else {
+    init = {
+      key: Meteor.settings.public.dropbox.alphaKey,
+      secret: Meteor.settings.private.dropbox.alphaSecret,
+      token: Meteor.settings.private.dropbox.alphaToken
+    }
+  }
+  client = new Dropbox.Client(init);
   bound = Meteor.bindEnvironment(function(cb) {
     return cb();
   });
