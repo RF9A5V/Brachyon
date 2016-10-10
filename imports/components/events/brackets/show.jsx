@@ -36,7 +36,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     var panelItems = [
       <LeaderboardPanel participants={this.bracket().participants || []} />,
       <ParticipantList participants={this.bracket().participants || []} rounds={this.bracket().rounds} bracketIndex={this.props.params.bracketIndex} isOwner={Meteor.userId() == Events.findOne().owner} />,
-      <BracketPanel id={Events.findOne()._id} rounds={this.bracket().rounds} format={this.bracket().format.baseFormat}/>
+      <BracketPanel id={Events.findOne()._id} rounds={this.bracket().rounds} format={this.bracket().format.baseFormat} players={this.bracket().players}/>
     ];
     if(Meteor.userId() == Events.findOne().owner) {
       panelItems.push(<OptionsPanel bracketIndex={this.props.params.bracketIndex} />);
