@@ -13,6 +13,10 @@ export default class ShowEventScreen extends TrackerReact(Component) {
     }
   }
 
+  componentWillUnmount() {
+    this.state.event.stop();
+  }
+
   items() {
     return ["Leaderboard", "Brackets", "Participant List"];
   }

@@ -18,7 +18,8 @@
       "client_id": "***REMOVED***"
     },
     "dropbox": {
-      "key": "97pn9fbf7ilojha"
+      "key": "97pn9fbf7ilojha",
+      "alphaKey": "ufay143lf5yq8rj"
     }
   },
   "private": {
@@ -40,7 +41,9 @@
     },
     "dropbox": {
       "secret": "***REMOVED***",
-      "token": "***REMOVED***"
+      "token": "***REMOVED***",
+      "alphaSecret": "***REMOVED***",
+      "alphaToken": "***REMOVED***"
     }
   }
 
