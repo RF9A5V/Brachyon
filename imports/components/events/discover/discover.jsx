@@ -18,6 +18,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
 
   componentWillUnmount(){
     this.state.events.stop();
+    this.state.promotedEvents.stop();
   }
 
   events() {
