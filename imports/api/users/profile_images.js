@@ -14,11 +14,22 @@ if(Meteor.isServer){
     MongoInternals.defaultRemoteCollectionDriver().mongo.db,
     MongoInternals.NpmModule
   );
-  client = new Dropbox.Client({
-    key: Meteor.settings.public.dropbox.key,
-    secret: Meteor.settings.private.dropbox.secret,
-    token: Meteor.settings.private.dropbox.token
-  });
+  var init;
+  if(Meteor.isDevelopment){
+    init = {
+      key: Meteor.settings.public.dropbox.key,
+      secret: Meteor.settings.private.dropbox.secret,
+      token: Meteor.settings.private.dropbox.token
+    }
+  }
+  else {
+    init = {
+      key: Meteor.settings.public.dropbox.alphaKey,
+      secret: Meteor.settings.private.dropbox.alphaSecret,
+      token: Meteor.settings.private.dropbox.alphaToken
+    }
+  }
+  client = new Dropbox.Client(init);
   bound = Meteor.bindEnvironment(function(cb) {
     return cb();
   })
@@ -208,9 +219,7 @@ export const ProfileImages = new FilesCollection({
     } else {
       // While file is not yet uploaded to DropBox
       // We will serve file from GridFS
-      console.log(fileRef.versions[version]);
       const _id = (fileRef.versions[version].meta || {}).gridFsFileId;
-      console.log(_id);
       if(_id) {
         const readStream = gfs.createReadStream({ _id });
         readStream.on("error", err => { throw err; });

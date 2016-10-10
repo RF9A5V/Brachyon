@@ -17,6 +17,10 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     }
   }
 
+  componentWillUnmount() {
+    this.state.event.stop();
+  }
+
   items() {
     var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
     var defaultItems = [

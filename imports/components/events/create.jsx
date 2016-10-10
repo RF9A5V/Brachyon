@@ -25,6 +25,10 @@ export default class EventCreateScreen extends Component {
     window.addEventListener("resize", this.forceUpdate.bind(this));
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize");
+  }
+
   panels() {
     return {
       brackets: (<BracketsPanel ref="brackets" />),
