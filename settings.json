@@ -18,7 +18,8 @@
       "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
     },
     "dropbox": {
-      "key": "97pn9fbf7ilojha"
+      "key": "97pn9fbf7ilojha",
+      "alphaKey": "ufay143lf5yq8rj"
     }
   },
   "private": {
@@ -40,7 +41,9 @@
     },
     "dropbox": {
       "secret": "im2f8uf78mq40nv",
-      "token": "87xfieEgGoAAAAAAAAAAExkrBy5X9G_mrP1V6iPTcKHF9AW13XM3VEdq1bd9z9HF"
+      "token": "87xfieEgGoAAAAAAAAAAExkrBy5X9G_mrP1V6iPTcKHF9AW13XM3VEdq1bd9z9HF",
+      "alphaSecret": "8nw6axzjbr35e2v",
+      "alphaToken": "87xfieEgGoAAAAAAAAAASYjmfTlVmn6bAxnundDtRUEMGN7Ca5dAi5wYDxnS5RH5"
     }
   }
 

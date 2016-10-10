@@ -13,6 +13,10 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
     })
   }
 
+  componentWillUnmount() {
+    this.state.games.stop();
+  }
+
   games() {
     return Games.find().fetch();
   }
