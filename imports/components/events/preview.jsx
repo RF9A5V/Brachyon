@@ -32,6 +32,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   componentWillUnmount(){
     this.state.event.stop();
     this.state.users.stop();
+    this.state.sponsors.stop();
   }
 
   event() {

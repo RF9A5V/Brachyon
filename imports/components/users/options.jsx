@@ -16,6 +16,10 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     }
   }
 
+  componentWillUnmount() {
+    this.state.user.stop();
+  }
+
   refresh() {
     this.state.user.stop();
     this.setState({

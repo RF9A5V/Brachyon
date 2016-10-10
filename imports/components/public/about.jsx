@@ -19,6 +19,11 @@ export default class AboutScreen extends TrackerReact(Component) {
     });
   }
 
+  componentWillUnmount() {
+    this.state.user.stop();
+    this.state.events.stop();
+  }
+
   handleResize(e) {
     document.querySelectorAll(".about-blocks").forEach((block) => {
       var style = window.getComputedStyle(block);

@@ -26,6 +26,10 @@ export default class PublishEventScreen extends Component {
     this.findErrors();
   }
 
+  componentWillUnmount() {
+    this.state.event.stop();
+  }
+
   event() {
     return Events.find().fetch()[0];
   }
