@@ -210,7 +210,7 @@ Meteor.publish("userSearch", function(usernameSubstring) {
   ];
 })
 
-Meteor.publish('events_to_review', function(){
+Meteor.publish('eventsUnderReview', function(){
   return Events.find({ underReview: true });
 })
 

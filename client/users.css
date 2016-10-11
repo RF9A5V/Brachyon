@@ -33,19 +33,18 @@
 }
 
 .event-block, .bracket-block {
-  flex-basis: calc(33% - 6.66px);
+  flex-basis: calc(33% - 7px);
   position: relative;
   margin-bottom: 10px;
   margin-left: 10px;
   border: solid 2px #666;
 }
 
-@media only screen
-  and (min-device-width: 1200)
+@media (min-device-width: 1200)
   and (max-device-width: 1600px) {
 
   .event-block, .bracket-block {
-    flex-basis: calc(33% - 6.66px);
+    flex-basis: calc(33% - 7px);
   }
 
   .event-block:nth-child(3n - 2) {
@@ -53,7 +52,7 @@
   }
 }
 
-@media only screen and (min-device-width: 768px)
+@media (min-device-width: 768px)
   and (max-device-width: 1200px) {
     .event-block, .bracket-block {
       flex-basis: calc(50% - 10px);
@@ -64,8 +63,7 @@
     }
 }
 
-@media only screen
-  and (max-device-width: 768px) {
+@media (max-device-width: 768px) {
     .event-block, .bracket-block {
       flex-basis: 100%;
       font-size: 2em;
