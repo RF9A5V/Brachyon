@@ -27,8 +27,13 @@ export default class AdminFunctionMain extends Component {
           }
         }
       }),
-      eventsToApprove: Meteor.subscribe("eventsUnderReview"),
-      isReady: false
+      eventsToApprove: Meteor.subscribe("eventsUnderReview", {
+        onReady: () => {
+          this.setState({ isEventsReady: true })
+        }
+      }),
+      isReady: false,
+      isEventsReady: false
     }
   }
 
@@ -60,7 +65,9 @@ export default class AdminFunctionMain extends Component {
   }
 
   render() {
-    if(!this.state.isReady || !this.state.eventsToApprove.ready()){
+    console.log(this.state.user.ready());
+    console.log(this.state.eventsToApprove.ready())
+    if(!this.state.user.ready() || !this.state.isEventsReady){
       return <LoadingScreen />
     }
     return (

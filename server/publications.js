@@ -211,7 +211,22 @@ Meteor.publish("userSearch", function(usernameSubstring) {
 })
 
 Meteor.publish('eventsUnderReview', function(){
-  return Events.find({ underReview: true });
+  var events = Events.find({ underReview: true });
+  var owners = Meteor.users.find({
+    _id: {
+      $in: events.map((e) => {
+        return e.owner;
+      })
+    }
+  });
+  var eventBanners = Images.find({_id: { $in: events.map(e => { return e.details.banner }) }});
+  var profileImages = ProfileImages.find({_id: { $in: owners.map(o => { return o.profile.image }) }});
+  return [
+    Events.find({ underReview: true }),
+    owners,
+    eventBanners.cursor,
+    profileImages.cursor
+  ];
 })
 
 Meteor.publish('unapproved_games', function() {
