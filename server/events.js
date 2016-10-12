@@ -315,7 +315,7 @@ Meteor.methods({
     return;
   },
 
-  "events.update_match"(eventID, bracketNumber, roundNumber, score, placement)
+  "events.update_match"(eventID, roundNumber, score, placement)
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0];

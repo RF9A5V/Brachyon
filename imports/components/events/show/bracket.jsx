@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
-
+import SwissDisplay from "../../tournaments/swiss/display.jsx";
 //
 export default class BracketPanel extends Component {
 
@@ -29,7 +29,7 @@ export default class BracketPanel extends Component {
       }
       else {
         return (
-          <SwissDisplay rounds={this.props.rounds} players={this.props.players} id={this.props.id} />
+          <SwissDisplay rounds={this.props.rounds} id={this.props.id} />
         )
       }
     }
