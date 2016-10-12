@@ -32,8 +32,14 @@ export default class AdminFunctionMain extends Component {
           this.setState({ isEventsReady: true })
         }
       }),
+      games: Meteor.subscribe("games", {
+        onReady: () => {
+          this.setState({ gamesReady: true })
+        }
+      }),
       isReady: false,
-      isEventsReady: false
+      isEventsReady: false,
+      gamesReady: false
     }
   }
 
@@ -44,7 +50,7 @@ export default class AdminFunctionMain extends Component {
   items() {
     return [
       {
-        text: "Approve Events",
+        text: "Events",
         icon: "check",
         subitems: [
           {
@@ -53,7 +59,7 @@ export default class AdminFunctionMain extends Component {
         ]
       },
       {
-        text: "Submit Game",
+        text: "Games",
         icon: "gamepad",
         subitems: [
           {
@@ -67,7 +73,7 @@ export default class AdminFunctionMain extends Component {
   render() {
     console.log(this.state.user.ready());
     console.log(this.state.eventsToApprove.ready())
-    if(!this.state.user.ready() || !this.state.isEventsReady){
+    if(!this.state.user.ready() || !this.state.isEventsReady || !this.state.gamesReady){
       return <LoadingScreen />
     }
     return (
