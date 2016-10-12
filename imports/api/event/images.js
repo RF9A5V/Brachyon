@@ -48,6 +48,7 @@ export const Images = new FilesCollection({
       if (triesUrl == null) {
         triesUrl = 0;
       }
+      var self = this;
       client.makeUrl(stat.path, {
         long: true,
         downloadHack: true
