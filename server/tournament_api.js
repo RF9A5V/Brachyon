@@ -284,7 +284,7 @@ var OrganizeSuite = {
   swiss: function(participants) {
     var frounds = [];
     var exbye = false;
-    var length = particpants.length;
+    var length = participants.length;
     if (participants.length%2 == 1)
     {
       exbye = true;
@@ -301,9 +301,7 @@ var OrganizeSuite = {
       };
       temp.push(matchObj);
     }
-    tempa = [];
-    tempa.push(temp);
-    tempb = [];
+    var tempb = [];
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
@@ -328,11 +326,12 @@ var OrganizeSuite = {
       }
       tempb.push(playerObj);
     }
-    frounds = {
-      matches: tempa,
+    var frounds = [];
+    var round = {
+      matches: temp,
       players: tempb,
     }
-
+    frounds.push(round);
     return frounds;
   }
 }
