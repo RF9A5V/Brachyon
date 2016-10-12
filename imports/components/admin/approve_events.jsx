@@ -150,7 +150,7 @@ export default class ApproveEventAction extends Component {
         }
         <div className="row x-center" style={{position: "fixed", bottom: 60, right: 20}}>
           <button style={{marginRight: 10}} onClick={() => { this.approveEvent() }}>Approve</button>
-          <button style={{marginRight: 10}} onCLick={() => { this.rejectEvent() }}>Reject</button>
+          <button style={{marginRight: 10}} onClick={() => { this.rejectEvent() }}>Reject</button>
           <button onClick={() => { this.setState({ eventID: null }) }}>Back</button>
         </div>
       </div>
