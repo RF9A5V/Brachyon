@@ -40,11 +40,6 @@ function verifyUser(nextState, replace) {
   }
 }
 
-function isAdmin(nextState, repl) {
-  var user = Meteor.user();
-  console.log(user);
-}
-
 export const renderRoutes = () => (
   <Router history={browserHistory}>
     <Route path="/" component={MainLayout}>
@@ -70,7 +65,7 @@ export const renderRoutes = () => (
       <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:eventId/admin" component={EventAdminScreen} />
       <Route path="events/:eventId/checkout" component={CheckoutScreen} />
-      <Route path="admin" component={AdminFunctionScreen} onEnter={isAdmin} />
+      <Route path="admin" component={AdminFunctionScreen} />
     </Route>
   </Router>
 )
