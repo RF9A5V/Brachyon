@@ -200,6 +200,15 @@ Meteor.methods({
     Events.remove(id);
   },
 
+  "events.unpublish"(id) {
+    Events.update(id, {
+      $set: {
+        published: false,
+        underReview: false
+      }
+    })
+  },
+
   "user.getStripeCustomerData": function() {
     if(Meteor.user().stripeCustomer == null) {
       return {};

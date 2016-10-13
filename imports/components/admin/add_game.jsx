@@ -58,8 +58,8 @@ export default class AddGameAction extends Component {
     var games = Games.find();
     return (
       <div className="col">
-        <div className="row" style={{width: "70%", margin: "0 auto"}}>
-          <div className="col-1 col center x-center" style={{marginRight: 20}}>
+        <div className="row" style={{width: "70%", margin: "20px auto"}}>
+          <div className="col-1 col center x-center">
             <ImageForm ref="image" collection={Images} aspectRatio={16/9} callback={this.onImgUploaded.bind(this)} />
           </div>
           <div className="col col-1">

@@ -81,6 +81,18 @@ export default class RemoveEventAction extends Component {
     })
   }
 
+  unpublishEvent() {
+    Meteor.call("events.unpublish", this.state.eventID, (err) => {
+      if(err) {
+        return toastr.error(err.reason);
+      }
+      else {
+        this.setState({ eventID: null });
+        return toastr.success("Successfully unpublished event!", "Success!");
+      }
+    })
+  }
+
   eventList() {
     return (
       <div>
@@ -132,8 +144,6 @@ export default class RemoveEventAction extends Component {
 
   eventDisplay() {
     var event = Events.findOne(this.state.eventID);
-    var tiers = event.crowdfunding.tiers;
-    var rewards = event.crowdfunding.rewards;
     return (
       <div>
         <h3>{ event.details.name }</h3>
@@ -150,6 +160,7 @@ export default class RemoveEventAction extends Component {
         }
         <div className="row x-center" style={{position: "fixed", bottom: 60, right: 20}}>
           <button style={{marginRight: 10}} onClick={() => { this.setState({ open: true }) }}>Delete</button>
+          <button style={{marginRight: 10}} onClick={() => { this.unpublishEvent() }}>Unpublish</button>
           <button onClick={() => { this.setState({ eventID: null }) }}>Back</button>
         </div>
         <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
