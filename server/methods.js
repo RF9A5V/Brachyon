@@ -195,6 +195,11 @@ Meteor.methods({
       }
     })
   },
+
+  "events.delete"(id) {
+    Events.remove(id);
+  },
+
   "user.getStripeCustomerData": function() {
     if(Meteor.user().stripeCustomer == null) {
       return {};

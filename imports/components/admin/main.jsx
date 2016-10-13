@@ -5,6 +5,7 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 
 import ApproveEventAction from "./approve_events.jsx";
 import AddGameAction from "./add_game.jsx";
+import RemoveEventAction from "./remove_events.jsx";
 
 import LoadingScreen from "../public/loading.jsx";
 
@@ -37,9 +38,15 @@ export default class AdminFunctionMain extends Component {
           this.setState({ gamesReady: true })
         }
       }),
+      eventsPublished: Meteor.subscribe("eventsPublished", {
+        onReady: () => {
+          this.setState({ publishedEvents: true })
+        }
+      }),
       isReady: false,
       isEventsReady: false,
-      gamesReady: false
+      gamesReady: false,
+      publishedEvents: false
     }
   }
 
@@ -50,11 +57,20 @@ export default class AdminFunctionMain extends Component {
   items() {
     return [
       {
-        text: "Events",
+        text: "Unpublished",
         icon: "check",
         subitems: [
           {
             component: ApproveEventAction
+          }
+        ]
+      },
+      {
+        text: "Published",
+        icon: "sitemap",
+        subitems: [
+          {
+            component: RemoveEventAction
           }
         ]
       },

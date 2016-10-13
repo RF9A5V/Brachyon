@@ -259,3 +259,14 @@ Meteor.publish('game_search', function(query) {
     Images.find({_id: { $in: banners }}).cursor
   ]
 })
+
+Meteor.publish("eventsPublished", function(){
+  var events = Events.find({ published: true });
+  var imgs = Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } });
+  var usrs = Meteor.users.find({_id: { $in: events.map(e => { return e.owner }) }});
+  return [
+    events,
+    imgs.cursor,
+    usrs
+  ]
+})

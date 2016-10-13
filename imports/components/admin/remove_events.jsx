@@ -1,22 +1,22 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import moment from "moment";
-
-import LoadingScreen from "/imports/components/public/loading.jsx";
+import Modal from "react-modal";
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
-export default class ApproveEventAction extends Component {
+export default class RemoveEventAction extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      eventID: null
+      eventID: null,
+      open: false
     }
   }
 
   events() {
-    return Events.find({ underReview: true });
+    return Events.find({published: true});
   }
 
   imgOrDefault(event) {
@@ -40,26 +40,14 @@ export default class ApproveEventAction extends Component {
     return img.link();
   }
 
-  approveEvent() {
-    Meteor.call("events.approveEventForPublish", this.state.eventID, (err) => {
+  deleteEvent() {
+    Meteor.call("events.delete", this.state.eventID, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
       else {
-        this.setState({eventID: null});
-        return toastr.success("Successfully approved event for publication!", "Success!");
-      }
-    })
-  }
-
-  rejectEvent() {
-    Meteor.call("events.rejectEventForPublish", this.state.eventID, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.setState({eventID: null});
-        return toastr.success("Successfully rejected event for publication!", "Success!");
+        this.setState({ eventID: null, open: false })
+        return toastr.success("Successfully deleted event!", "Success!");
       }
     })
   }
@@ -123,35 +111,28 @@ export default class ApproveEventAction extends Component {
             )
           })
         }
-        <h3 style={{marginBottom: 20}}>Crowdfunding Details</h3>
-        {
-          tiers.map(tier => {
-            return (
-              <div>
-                <h5>{ tier.name } - ${ (tier.price / 100).toFixed(2) }</h5>
-                <span>Limit of { tier.limit }</span>
-                <p>{ tier.description }</p>
-                <div className="row x-center" style={{marginBottom: 20}}>
-                  {
-                    tier.rewards.map(index => {
-                      return (
-                        <div>
-                          <img src={rewards[index].imgUrl} />
-                          <span>{ rewards[index].name }</span>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            )
-          })
-        }
         <div className="row x-center" style={{position: "fixed", bottom: 60, right: 20}}>
-          <button style={{marginRight: 10}} onClick={() => { this.approveEvent() }}>Approve</button>
-          <button style={{marginRight: 10}} onClick={() => { this.rejectEvent() }}>Reject</button>
+          <button style={{marginRight: 10}} onClick={() => { this.setState({ open: true }) }}>Delete</button>
           <button onClick={() => { this.setState({ eventID: null }) }}>Back</button>
         </div>
+        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+          <div>
+            <div className="row center">
+              <h1>WARNING</h1>
+            </div>
+            <div className="row center">
+              <p>This action will be irreversable! Are you sure you want to continue?</p>
+            </div>
+            <div className="row center">
+              <button style={{marginRight: 10}} onClick={() => { this.deleteEvent() }}>
+                Yes
+              </button>
+              <button onClick={() => { this.setState({ open: false }) }}>
+                No
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     )
   }
