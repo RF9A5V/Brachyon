@@ -44,9 +44,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
           this.props.rounds[this.state.page].matches.map((match, i) => {
             return(
               <div className="col center" style={{paddingLeft: "20px"}}>
-                <div onClick={ match.winner == null ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {}) }>{match.playerOne}</div>
+                <div onClick={ match.winner == null ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
                 <div>VS.</div>
-                <div onClick={ match.winner == null ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {}) }>{match.playerTwo}</div>
+                <div onClick={ match.winner == null ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
               </div>
             );
           })
