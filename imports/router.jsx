@@ -26,6 +26,8 @@ import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout.jsx";
 
+import AdminFunctionScreen from "../imports/components/admin/main.jsx";
+
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
     replace('/dashboard');
@@ -63,6 +65,7 @@ export const renderRoutes = () => (
       <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:eventId/admin" component={EventAdminScreen} />
       <Route path="events/:eventId/checkout" component={CheckoutScreen} />
+      <Route path="admin" component={AdminFunctionScreen} />
     </Route>
   </Router>
 )
