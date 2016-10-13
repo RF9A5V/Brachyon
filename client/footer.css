@@ -88,19 +88,19 @@
 }
 
 .social-icon-bg:hover .snapchat {
-  color: #FFFC00;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .instagram {
-  color: #517FA4;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .reddit {
-  color: #CEE3F8;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .facebook {
-  color: #3B5998;
+  color: #FF6000;
 }
 
 .twitch.fa {
@@ -109,13 +109,13 @@
 }
 
 .social-icon-bg:hover .twitch {
-  color: #6441A5;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .twitter {
-  color: #55ACEE;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .youtube {
-  color: #CD201F;
+  color: #FF6000;
 }
