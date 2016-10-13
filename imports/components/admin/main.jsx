@@ -28,30 +28,20 @@ export default class AdminFunctionMain extends Component {
           }
         }
       }),
-      eventsToApprove: Meteor.subscribe("eventsUnderReview", {
-        onReady: () => {
-          this.setState({ isEventsReady: true })
-        }
-      }),
       games: Meteor.subscribe("games", {
         onReady: () => {
           this.setState({ gamesReady: true })
         }
       }),
-      eventsPublished: Meteor.subscribe("eventsPublished", {
-        onReady: () => {
-          this.setState({ publishedEvents: true })
-        }
-      }),
       isReady: false,
-      isEventsReady: false,
-      gamesReady: false,
-      publishedEvents: false
+      gamesReady: false
     }
   }
 
   componentWillUnmount() {
     this.state.user.stop();
+    this.state.eventsToApprove.stop();
+    this.state.games.stop();
   }
 
   items() {
@@ -87,9 +77,7 @@ export default class AdminFunctionMain extends Component {
   }
 
   render() {
-    console.log(this.state.user.ready());
-    console.log(this.state.eventsToApprove.ready())
-    if(!this.state.user.ready() || !this.state.isEventsReady || !this.state.gamesReady){
+    if(!this.state.user.ready() || !this.state.gamesReady){
       return <LoadingScreen />
     }
     return (

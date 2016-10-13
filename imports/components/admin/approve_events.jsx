@@ -11,8 +11,18 @@ export default class ApproveEventAction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventID: null
+      eventID: null,
+      eventsToApprove: Meteor.subscribe("eventsUnderReview", {
+        onReady: () => {
+          this.setState({ isEventsReady: true })
+        }
+      }),
+      isEventsReady: false
     }
+  }
+
+  componentWillUnmount() {
+    this.state.eventsToApprove.stop();
   }
 
   events() {
@@ -157,6 +167,9 @@ export default class ApproveEventAction extends Component {
   }
 
   render() {
+    if(!this.state.isEventsReady) {
+      return <LoadingScreen />
+    }
     if(this.state.eventID) {
       return this.eventDisplay();
     }
