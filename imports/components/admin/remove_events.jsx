@@ -3,6 +3,8 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 import Modal from "react-modal";
 
+import Loading from "/imports/components/public/loading.jsx";
+
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class RemoveEventAction extends Component {
@@ -11,12 +13,39 @@ export default class RemoveEventAction extends Component {
     super(props);
     this.state = {
       eventID: null,
-      open: false
+      open: false,
+      events: Meteor.subscribe("searchEvents", {}, {
+        onReady: () => {
+          this.setState({
+            eventsReady: true
+          })
+        }
+      }),
+      eventsReady: false
     }
   }
 
+  componentWillUnmount() {
+    this.state.events.stop();
+  }
+
+  onSearchSubmit() {
+    this.state.events.stop();
+    var query = {
+      "name": this.refs.name.value
+    }
+    this.setState({
+      eventsReady: false,
+      events: Meteor.subscribe("searchEvents", query, {
+        onReady: () => {
+          this.setState({eventsReady: true})
+        }
+      })
+    });
+  }
+
   events() {
-    return Events.find({published: true});
+    return Events.find();
   }
 
   imgOrDefault(event) {
@@ -54,41 +83,49 @@ export default class RemoveEventAction extends Component {
 
   eventList() {
     return (
-      <div className="row x-center" style={{flexWrap: "wrap"}}>
-        {
-          this.events().map((event, i) => {
-            return (
-              <div className="event-block col" key={i} onClick={() => { this.setState({ eventID: event._id }) }}>
-                <h2 className="event-block-title">{ event.details.name }</h2>
-                <img src={this.imgOrDefault(event)} />
-                <div className="event-block-content">
-                  <div className="col">
-                    <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-                      <div className="row x-center" style={{fontSize: 12}}>
-                        <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+      <div>
+        <div className="row x-center center">
+          <input type="text" placeholder="Event Name" ref="name"/>
+          <button onClick={() => { this.onSearchSubmit() }}>
+            <FontAwesome name="search" />
+          </button>
+        </div>
+        <div className="row x-center" style={{flexWrap: "wrap"}}>
+          {
+            this.events().map((event, i) => {
+              return (
+                <div className="event-block col" key={i} onClick={() => { this.setState({ eventID: event._id }) }}>
+                  <h2 className="event-block-title">{ event.details.name }</h2>
+                  <img src={this.imgOrDefault(event)} />
+                  <div className="event-block-content">
+                    <div className="col">
+                      <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+                        <div className="row x-center" style={{fontSize: 12}}>
+                          <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                        </div>
                       </div>
-                    </div>
-                    <div className="row flex-pad">
-                      {
-                        event.details.location.online ? (
-                          <div style={{fontSize: 12}}><FontAwesome name="signal" /> Online Event</div>
-                        ) : (
-                          <div style={{fontSize: 12}}>
-                            <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
-                          </div>
-                        )
-                      }
-                      <span style={{fontSize: 12}}>
-                        {moment(event.details.datetime).format("MMM Do, YYYY")}
-                        <FontAwesome name="calendar" style={{marginLeft: 5}} />
-                      </span>
+                      <div className="row flex-pad">
+                        {
+                          event.details.location.online ? (
+                            <div style={{fontSize: 12}}><FontAwesome name="signal" /> Online Event</div>
+                          ) : (
+                            <div style={{fontSize: 12}}>
+                              <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
+                            </div>
+                          )
+                        }
+                        <span style={{fontSize: 12}}>
+                          {moment(event.details.datetime).format("MMM Do, YYYY")}
+                          <FontAwesome name="calendar" style={{marginLeft: 5}} />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
-        }
+              );
+            })
+          }
+        </div>
       </div>
     );
   }
@@ -138,6 +175,9 @@ export default class RemoveEventAction extends Component {
   }
 
   render() {
+    if(!this.state.eventsReady) {
+      return <Loading />
+    }
     if(this.state.eventID) {
       return this.eventDisplay();
     }
