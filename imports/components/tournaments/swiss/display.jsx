@@ -13,9 +13,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
     }
   }
 
-  declareWinner(pos, score)
+  declareWinner(pos, score, matchnumber)
   {
-      Meteor.call("events.update_match", this.props.id, 0, this.props.page, score, pos, function(err) {
+      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, pos, function(err) {
         if(err){
           console.log(err);
           toastr.error("Couldn't advance this match.", "Error!");
@@ -44,9 +44,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
           this.props.rounds[this.state.page].matches.map((match, i) => {
             return(
               <div className="col center" style={{paddingLeft: "20px"}}>
-                <div>{match.playerOne}</div>
+                <div onClick={ match.winner == null ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {}) }>{match.playerOne})</div>
                 <div>VS.</div>
-                <div>{match.playerTwo}</div>
+                <div onClick={ match.winner == null ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {}) }>{match.playerTwo})</div>
               </div>
             );
           })

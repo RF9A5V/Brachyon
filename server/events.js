@@ -315,29 +315,31 @@ Meteor.methods({
     return;
   },
 
-  "events.update_match"(eventID, roundNumber, score, placement)
+  "events.update_match"(eventID, roundNumber, matchNumber, score, placement)
   {
     var event = Events.findOne(eventID);
-    event = event.brackets[0];
+    event = event.brackets[0].rounds[roundNumber];
     if (placement == 0)
-      event.matches[roundNumber].winner = event.matches[roundNumber].playerOne;
+      event.matches[matchNumber].winner = event.matches[matchNumber].playerOne;
     else
-      event.matches[roundNumber].winner = event.matches[roundNumber].playerTwo;
-    var p1 = event.matches[roundNumber].playerOne;
-    var p2 = event.matches[roundNumber].playerTwo;
+      event.matches[matchNumber].winner = event.matches[matchNumber].playerTwo;
+    var p1 = event.matches[matchNumber].playerOne;
+    var p2 = event.matches[matchNumber].playerTwo;
     for (var x = 0; x < event.players.length; x++)
     {
       if (event.players[x].name == p1)
       {
         event.players[x].score += score;
         event.players[x].wins++;
+        event.players[x].playarr[p2] = true;
       }
       if (event.players[x].name == p2)
         event.players[x].losses++;
+        event.players[x].playarr[p1] = true;
     }
     Events.update(eventID, {
       $set: {
-        [`brackets.0.rounds.${fb}`]: event
+        [`brackets.0.rounds.${matchNumber}`]: event
       }
     })
   },
@@ -387,7 +389,7 @@ Meteor.methods({
 
   "events.update_round"(eventID, bracketNumber, roundNumber) { //For swiss specifically
     var event = Events.findOne(eventID);
-    event = event.brackets[0];
+    event = event.brackets[0].rounds[roundNumber];
     var players = event.players;
     var key = 'score';
     scores = [];
