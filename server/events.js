@@ -319,23 +319,31 @@ Meteor.methods({
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
-    if (placement == 0)
-      event.matches[matchNumber].winner = event.matches[matchNumber].playerOne;
-    else
-      event.matches[matchNumber].winner = event.matches[matchNumber].playerTwo;
     var p1 = event.matches[matchNumber].playerOne;
     var p2 = event.matches[matchNumber].playerTwo;
+    if (placement == 0)
+    {
+      p1 = event.matches[matchNumber].playerOne;
+      p2 = event.matches[matchNumber].playerTwo;
+      event.matches[matchNumber].winner = event.matches[matchNumber].playerOne;
+    }
+    else
+    {
+      p2 = event.matches[matchNumber].playerOne;
+      p1 = event.matches[matchNumber].playerTwo;
+      event.matches[matchNumber].winner = event.matches[matchNumber].playerTwo;
+    }
     for (var x = 0; x < event.players.length; x++)
     {
       if (event.players[x].name == p1)
       {
         event.players[x].score += score;
         event.players[x].wins++;
-        event.players[x].playarr[p2] = true;
+        event.players[x].playedagainst[p2] = true;
       }
       if (event.players[x].name == p2)
         event.players[x].losses++;
-        event.players[x].playarr[p1] = true;
+        event.players[x].playedagainst[p1] = true;
     }
     Events.update(eventID, {
       $set: {
@@ -344,12 +352,12 @@ Meteor.methods({
     })
   },
 
-  "events.tiebreaker"(eventID, bracketNumber, roundNumber, score)
+  "events.tiebreaker"(eventID, roundNumber, matchNumber, score)
   {
     var event = Events.findOne(eventID);
-    event = event.brackets[0];
-    var p1 = event.matches[roundNumber].playerOne;
-    var p2 = event.matches[roundNumber].playerTwo;
+    event = event.brackets[0].rounds[roundNumber];
+    var p1 = event.matches[matchNumber].playerOne;
+    var p2 = event.matches[matchNumber].playerTwo;
     var bnum1 = 0;
     var bnum2 = 0;
     for (var x = 0; x < event.players.length; x++)
@@ -359,7 +367,7 @@ Meteor.methods({
         for (var y = 0; y < event.players[x].length; y++)
         {
           var name = event.players[y].name;
-          if (event.players[x].playarr[name] = true)
+          if (event.players[x].playedagainst[name] = true)
             bnum1 += event.players[y].score;
         }
       }
@@ -368,7 +376,7 @@ Meteor.methods({
         for (var y = 0; y < event.players[x].length; y++)
         {
           var name = event.players[y].name;
-          if (event.players[x].playarr[name] = true)
+          if (event.players[x].playedagainst[name] = true)
             bnum2 += event.players[y].score;
         }
       }
@@ -392,9 +400,8 @@ Meteor.methods({
     event = event.brackets[0].rounds[roundNumber];
     var players = event.players;
     var key = 'score';
-    scores = [];
+    var scores = [];
     var max = 0;
-    event.players = players; //Should do it automatically but check just in case of deep copy
 
     for (var x = 0; x < players.length; x++)
     {
