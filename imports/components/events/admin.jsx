@@ -126,14 +126,16 @@ export default class EventAdminPage extends TrackerReact(Component) {
         }
       ]
     });
-    items.push({
-      text: "Unpublish",
-      subitems: [
-        {
-          component: Unpublish
-        }
-      ]
-    })
+    if(event.crowdfunding.sponsors && event.crowdfunding.sponsors.length == 0) {
+      items.push({
+        text: "Unpublish",
+        subitems: [
+          {
+            component: Unpublish
+          }
+        ]
+      });
+    }
     return items;
   }
 
