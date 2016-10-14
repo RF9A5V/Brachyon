@@ -18,6 +18,8 @@ import SocialMedia from "./admin/modules/promotion/social_media.jsx";
 import Staff from "./modules/organize/staff.jsx";
 import Schedule from "./modules/organize/schedule.jsx";
 
+import Unpublish from "./admin/modules/unpublish.jsx";
+
 import EditModules from "./admin/modules/edit_modules.jsx";
 
 export default class EventAdminPage extends TrackerReact(Component) {
@@ -121,6 +123,14 @@ export default class EventAdminPage extends TrackerReact(Component) {
       subitems: [
         {
           component: EditModules
+        }
+      ]
+    });
+    items.push({
+      text: "Unpublish",
+      subitems: [
+        {
+          component: Unpublish
         }
       ]
     })
