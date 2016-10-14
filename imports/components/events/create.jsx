@@ -26,7 +26,7 @@ export default class EventCreateScreen extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize");
+    window.removeEventListener("resize", this.forceUpdate.bind(this));
   }
 
   panels() {
