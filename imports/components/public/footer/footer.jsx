@@ -6,7 +6,21 @@ import { Link } from 'react-router';
 import SnapModal from './snap_modal.jsx';
 
 export default class Footer extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      useDefaultHeader: window.location.pathname.indexOf("preview") >= 0 ? false : true
+    }
+  }
+
   render() {
+    if(!this.state.useDefaultHeader) {
+      return (
+        <div>
+        </div>
+      );
+    }
     return(
       <Headroom id="footer" disableInlineStyles={true} downTolerance={"calc(100vh - 50px)"}>
         <div className="row col-2 footer x-center center">

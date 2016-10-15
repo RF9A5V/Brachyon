@@ -80,7 +80,17 @@ export default class Header extends TrackerReact(Component) {
     }
     return (
       <Headroom id="header" disableInlineStyles={true}>
-        <header className="row x-center header" onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
+        <header className="row x-center header" onMouseLeave={() => {
+          if(this.state.userMenuOpen) {
+            this.state.timeout = setTimeout(() => {
+              this.setState({userMenuOpen: false});
+            }, 2000);
+          }
+        }} onMouseEnter={() => {
+          if(this.state.userMenuOpen) {
+            clearTimeout(this.state.timeout);
+          }
+        }}>
           <div className="row x-center">
             <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
             <div style={{marginLeft: 10, marginRight: 10}}>

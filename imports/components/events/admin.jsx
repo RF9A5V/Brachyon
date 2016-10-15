@@ -119,14 +119,13 @@ export default class EventAdminPage extends TrackerReact(Component) {
     }
     items.push({
       text: "Edit",
-      icon: "pencil",
       subitems: [
         {
           component: EditModules
         }
       ]
     });
-    if(event.crowdfunding.sponsors && event.crowdfunding.sponsors.length == 0) {
+    if(event.crowdfunding && event.crowdfunding.sponsors && event.crowdfunding.sponsors.length == 0) {
       items.push({
         text: "Unpublish",
         subitems: [
