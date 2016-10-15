@@ -4,9 +4,11 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import ParticipantAction from "./admin_comps/participants.jsx";
+import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
+import LogisticsPanel from "./admin_comps/logistics.jsx";
 
 export default class BracketAdminScreen extends TrackerReact(Component) {
 
@@ -23,8 +25,9 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
 
   items() {
     var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
-    var defaultItems = [
-      {
+    var defaultItems = [];
+    if(!bracket.isComplete) {
+      defaultItems.push({
         text: "Participants",
         icon: "users",
         subitems: [
@@ -35,20 +38,22 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             }
           }
         ]
-      },
-      {
-        text: "Start",
-        icon: "sign-in",
+      })
+    }
+    else {
+      defaultItems.push({
+        text: "Leaderboard",
+        icon: "trophy",
         subitems: [
           {
-            component: StartBracketAction,
+            component: LeaderboardAction,
             args: {
               index: this.props.params.bracketIndex
             }
           }
         ]
-      }
-    ];
+      })
+    }
     if(bracket.inProgress) {
       defaultItems = defaultItems.concat([
         {
@@ -61,6 +66,34 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
                 id: this.props.params.eventId,
                 format: bracket.format.baseFormat,
                 rounds: bracket.rounds
+              }
+            }
+          ]
+        },
+        {
+          text: "Logistics",
+          icon: "edit",
+          subitems: [
+            {
+              component: LogisticsPanel,
+              args: {
+                index: this.props.params.bracketIndex
+              }
+            }
+          ]
+        }
+      ])
+    }
+    else if(!bracket.inProgress && !bracket.isComplete) {
+      defaultItems = defaultItems.concat([
+        {
+          text: "Start",
+          icon: "sign-in",
+          subitems: [
+            {
+              component: StartBracketAction,
+              args: {
+                index: this.props.params.bracketIndex
               }
             }
           ]

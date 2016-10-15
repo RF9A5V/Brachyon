@@ -24,6 +24,7 @@ export default class AddGameAction extends Component {
           return toastr.error(err.reason, "Error!");
         }
         else {
+          this.setState({ gameID: null })
           return toastr.success("Successfully created game!", "Success!");
         }
       })

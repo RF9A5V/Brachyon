@@ -32,6 +32,8 @@ export default class UserEvents extends Component {
           return Events.find({ owner: Meteor.userId(), published: false, underReview: true }).fetch();
         case 2:
           return Events.find({ owner: Meteor.userId(), published: true }).fetch();
+        case 3:
+          return Events.find({ owner: Meteor.userId(), isComplete: true }).fetch();
         default:
           return [];
       }
@@ -43,7 +45,7 @@ export default class UserEvents extends Component {
     return(
       function(e){
         e.preventDefault();
-        if(event.published || event.underReview || event.active){
+        if(event.published || event.underReview || event.active || event.isComplete){
           if(event.owner == Meteor.userId()){
             browserHistory.push(`/events/${event._id}/admin`);
           }
