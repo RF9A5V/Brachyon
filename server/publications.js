@@ -269,4 +269,9 @@ Meteor.publish("eventsPublished", function(){
     imgs.cursor,
     usrs
   ]
+});
+
+Meteor.publish("getUserByUsername", function(query) {
+  var user = Meteor.users.find({username: query});
+  return user;
 })
