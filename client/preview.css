@@ -46,3 +46,21 @@
 .ticket-modal:hover {
   opacity: 1;
 }
+
+.preview-nav {
+  background-color: #333;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.preview-nav:last-child {
+  padding-right: 0;
+}
+
+.preview-nav.active {
+  color: #00BDFF;
+}
+
+.preview-nav:hover {
+  cursor: pointer;
+}

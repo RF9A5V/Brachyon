@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
@@ -27,11 +27,11 @@ export default class UserEvents extends Component {
     else if(this.state.category == 1) {
       switch(this.state.index) {
         case 0:
-          return Events.find({ owner: Meteor.userId(), published: false, underReview: false });
+          return Events.find({ owner: Meteor.userId(), published: false, underReview: false }).fetch();
         case 1:
-          return Events.find({ owner: Meteor.userId(), published: false, underReview: true });
+          return Events.find({ owner: Meteor.userId(), published: false, underReview: true }).fetch();
         case 2:
-          return Events.find({ owner: Meteor.userId(), published: true });
+          return Events.find({ owner: Meteor.userId(), published: true }).fetch();
         default:
           return [];
       }
@@ -141,6 +141,8 @@ export default class UserEvents extends Component {
   }
 
   render() {
+    var events = this.events();
+    console.log(events.length);
     return (
       <div className="row" style={{alignItems: "flex-start", width: "100%"}}>
         <div className="col" style={{marginRight: 20}}>
@@ -150,7 +152,7 @@ export default class UserEvents extends Component {
         </div>
         <div className="col-1 submodule-section row" style={{flexWrap: "wrap"}}>
           {
-            this.events().map((event, i) => {
+            events.map((event, i) => {
               return (
                 <div className="event-block col" onClick={this.selectEvent(event).bind(self)} key={i}>
                   <h2 className="event-block-title">{ event.details.name }</h2>
@@ -195,6 +197,15 @@ export default class UserEvents extends Component {
                 </div>
               );
             })
+          }
+          {
+            events.length == 0 ? (
+              <div className="row center col-1" style={{padding: "100px 0"}}>
+                <h5>Looks like you don't have any events. Click <Link to={"/events/create"}>here</Link> to create one!</h5>
+              </div>
+            ) : (
+              ""
+            )
           }
         </div>
       </div>
