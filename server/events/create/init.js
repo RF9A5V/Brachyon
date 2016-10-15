@@ -65,6 +65,7 @@ Meteor.methods({
     });
     endObj.published = !requiresReview;
     endObj.underReview = false;
+    endObj.isComplete = false;
     endObj.owner = Meteor.userId();
     return Events.insert(endObj);
   }

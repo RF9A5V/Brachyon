@@ -9,9 +9,7 @@ export default class StartBracketAction extends Component {
     }
   }
 
-  startEventHandler(e) {
-    e.preventDefault();
-    var bracket = Events.findOne().brackets[this.props.index];
+  startEventHandler() {
     Meteor.call("events.start_event", this.state.id, this.props.index, function(err) {
       if(err){
         return toastr.error(err.reason, "Error!");
