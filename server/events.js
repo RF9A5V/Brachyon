@@ -333,21 +333,28 @@ Meteor.methods({
       p1 = event.matches[matchNumber].playerTwo;
       event.matches[matchNumber].winner = event.matches[matchNumber].playerTwo;
     }
+    var p1num, p2num;
     for (var x = 0; x < event.players.length; x++)
     {
       if (event.players[x].name == p1)
       {
         event.players[x].score += score;
+        console.log("x: " + x + " score " + score)
         event.players[x].wins++;
+        p1num = x;
         event.players[x].playedagainst[p2] = true;
       }
       if (event.players[x].name == p2)
+      {
+        p2num = x;
         event.players[x].losses++;
         event.players[x].playedagainst[p1] = true;
+      }
     }
+    console.log(event.players[p1num] + " " + event.players[p2num]);
     Events.update(eventID, {
       $set: {
-        [`brackets.0.rounds.${matchNumber}`]: event
+        [`brackets.0.rounds.${roundNumber}`]: event
       }
     })
   },
@@ -395,7 +402,7 @@ Meteor.methods({
     }
   },
 
-  "events.update_round"(eventID, bracketNumber, roundNumber) { //For swiss specifically
+  "events.update_round"(eventID, roundNumber) { //For swiss specifically
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
     var players = event.players;
@@ -409,6 +416,7 @@ Meteor.methods({
       if (players[x].score > max)
         max = players[x].score;
     }
+    console.log(scores);
     var extraplayer = -1;
     var values = [];
     for (var x = max; x >= 0; x--) //Form them into subarrays
@@ -424,12 +432,12 @@ Meteor.methods({
         values.push(x);
       }
     }
+    console.log(scores);
     if (extraplayer != -1) //We obviously can't do this either since it may place someone who had a bool again, this is a temporary system. Idea: Don't shift out people with byes, still flawed.
     {
       extraplayer.wins++;
       extraplayer.bool = true;
     }
-    var temp = [];
 
     function shuffle(array) {
       var currentIndex = array.length, temporaryValue, randomIndex;
@@ -478,6 +486,8 @@ Meteor.methods({
       }
     }
 
+    var temp = [];
+    
     for (var x = 0; x < values.length; x++) //TODO: Check if two players who played against each other might end up doing so again.
     {
       var y = values[x]; //Our actual index value. Since the value is sorted backwards this goes top down.
@@ -495,7 +505,7 @@ Meteor.methods({
     }
       Events.update(eventID, {
         $set: {
-          [`brackets.0.rounds.${fb}`]: event
+          [`brackets.0.rounds.${roundNumber+1}`]: event
         }
       })
     }
