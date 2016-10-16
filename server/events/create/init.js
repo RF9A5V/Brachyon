@@ -1,4 +1,5 @@
 import { Images } from "/imports/api/event/images.js";
+import moment from "moment";
 
 Meteor.methods({
 
@@ -14,6 +15,13 @@ Meteor.methods({
     }
     if(!obj.datetime) {
       throw new Meteor.Error(403, "This event needs a start date.");
+    }
+    var currentDate = moment().minute(0).second(0).millisecond(0);
+    var eventStart = moment(obj.datetime).minute(0).second(0).millisecond(0);
+    console.log(currentDate.format());
+    console.log(eventStart.format());
+    if(eventStart.isBefore(currentDate)) {
+      throw new Meteor.Error(403, "Event cannot start before current date.");
     }
     return obj;
   },
@@ -57,6 +65,7 @@ Meteor.methods({
     });
     endObj.published = !requiresReview;
     endObj.underReview = false;
+    endObj.isComplete = false;
     endObj.owner = Meteor.userId();
     return Events.insert(endObj);
   }

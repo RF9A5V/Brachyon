@@ -44,7 +44,7 @@ export const Images = new FilesCollection({
   },
   onAfterUpload(image) {
 
-    var makeUrl = function(stat, imgID, version, triesUrl) {
+    var makeUrl = (stat, imgID, version, triesUrl) => {
       if (triesUrl == null) {
         triesUrl = 0;
       }
