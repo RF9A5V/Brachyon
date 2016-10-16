@@ -31,15 +31,11 @@
   padding: 20px;
   display: flex;
   align-items: center;
-  padding-left: 0;
+  padding-left: 10px;
 }
 
 .tab-header:hover {
   cursor: pointer;
-}
-
-.tab-header:last-child {
-  padding-right: 0;
 }
 
 .tab-header span {

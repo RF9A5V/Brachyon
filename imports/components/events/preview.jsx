@@ -18,14 +18,27 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     this.setState({
       event: Meteor.subscribe("event", this.props.params.eventId, {
         onReady: () => {
-          // var event = Events.findOne();
-          // if(event.owner == Meteor.userId()){
-          //   browserHistory.push("/events/" + this.props.params.eventId + "/admin");
-          // }
+          this.setState({
+            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
+          })
         }
       }),
-      users: Meteor.subscribe("event_participants", this.props.params.eventId),
-      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId)
+      users: Meteor.subscribe("event_participants", this.props.params.eventId, {
+        onReady: () => {
+          this.setState({
+            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
+          })
+        }
+      }),
+      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId, {
+        onReady: () => {
+          this.setState({
+            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
+          })
+        }
+      }),
+      isReady: false,
+      anim: false
     })
   }
 
@@ -43,7 +56,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var event = this.event();
     var pages = [
       {
-        name: "Details",
+        name: "Home",
         component: <TitlePage event={event} />
       }
   ];
@@ -57,7 +70,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.users.ready() || !this.state.sponsors.ready()){
+    if(!this.state.isReady){
       return (
         <div>Loading...</div>
       )

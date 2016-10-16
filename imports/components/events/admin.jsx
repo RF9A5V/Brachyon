@@ -18,7 +18,9 @@ import SocialMedia from "./admin/modules/promotion/social_media.jsx";
 import Staff from "./modules/organize/staff.jsx";
 import Schedule from "./modules/organize/schedule.jsx";
 
+import Unpublish from "./admin/modules/unpublish.jsx";
 import EditModules from "./admin/modules/edit_modules.jsx";
+import Close from "./admin/modules/close_event.jsx";
 
 export default class EventAdminPage extends TrackerReact(Component) {
 
@@ -117,10 +119,27 @@ export default class EventAdminPage extends TrackerReact(Component) {
     }
     items.push({
       text: "Edit",
-      icon: "pencil",
       subitems: [
         {
           component: EditModules
+        }
+      ]
+    });
+    if(!event.crowdfunding || !event.crowdfunding.sponsors || event.crowdfunding.sponsors.length == 0) {
+      items.push({
+        text: "Unpublish",
+        subitems: [
+          {
+            component: Unpublish
+          }
+        ]
+      });
+    }
+    items.push({
+      text: "Close",
+      subitems: [
+        {
+          component: Close
         }
       ]
     })

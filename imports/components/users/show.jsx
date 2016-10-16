@@ -15,6 +15,7 @@ import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
 import ImageForm from "/imports/components/public/img_form.jsx";
 import UserSections from "./show/sections.jsx";
+import Loading from "/imports/components/public/loading.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
@@ -105,8 +106,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
     if(!this.state.events.ready()){
       return (
-        <div>
-          Loading...
+        <div className="row center x-center" style={{width: "100%", height: "100%"}}>
+          <Loading />
         </div>
       )
     }
