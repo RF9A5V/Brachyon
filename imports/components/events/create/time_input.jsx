@@ -16,7 +16,7 @@ export default class TimeInput extends Component {
       obj = {
         hour: current.format("hh"),
         minute: current.format("mm"),
-        half: current.format("A")
+        half: current.format("a")
       }
     }
 
@@ -25,11 +25,21 @@ export default class TimeInput extends Component {
 
   value() {
     var hour = parseInt(this.refs.hours.value);
+    if(hour == 12 && this.refs.half.value == "am") {
+      hour = 0;
+    }
+    else if(hour < 12 && this.refs.half.value == "pm") {
+      hour += 12;
+    }
+    if(hour < 10) {
+      hour = "0" + hour;
+    }
     var minutes = parseInt(this.refs.minutes.value);
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
-    return hour + ":" + minutes + this.refs.half.value.toUpperCase();
+    console.log(hour + ":" + minutes);
+    return hour + "" + minutes;
   }
 
   render() {
@@ -68,7 +78,7 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half">
+          <select ref="half" defaultValue={this.state.half}>
             <option value={"am"}>AM</option>
             <option value={"pm"}>PM</option>
           </select>

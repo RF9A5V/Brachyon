@@ -12,11 +12,11 @@ export default class UserSections extends Component {
         {
           name: "Events",
           component: <UserEvents />
-        },
-        {
-          name: "Stats",
-          component: <UserStats />
         }
+        // {
+        //   name: "Stats",
+        //   component: <UserStats />
+        // }
         // {
         //   name: "Sponsorship",
         //   component: <div>3</div>

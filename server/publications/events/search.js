@@ -5,7 +5,7 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 Meteor.publish("searchEvents", (params) => {
   var query = Meteor.call("events.search", params);
-  var events = Events.find(query);
+  var events = Events.find(query, { limit: 6 });
 
   var gameSet = new Set();
   var ownerIDs = new Set();
@@ -36,4 +36,4 @@ Meteor.publish("searchEvents", (params) => {
     Meteor.users.find({_id: { $in: Array.from(ownerIDs) }}),
     profImgs.cursor
   ];
-})
+});

@@ -62,7 +62,7 @@ generateQuery["date"] = (dateObj) => {
 
 Meteor.methods({
   "events.search"(params) {
-    var query = {};
+    var query = { published: true, underReview: false };
     for(var i in params){
       if(params[i] == "" || params[i] == null){
         continue;
