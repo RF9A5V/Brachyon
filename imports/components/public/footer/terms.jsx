@@ -15,7 +15,6 @@ export default class TermsScreen extends React.Component {
             materials . Using any of our services is conditioned upon your consent and
             compliance of the Terms. Using any of these services bounds you to these terms.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             These terms will be readily accessible at any time regardless if you have an
             account with Brachyon or not, and understanding these terms is your responsibility.
@@ -23,9 +22,7 @@ export default class TermsScreen extends React.Component {
             announcement and alert you of any major changes to the terms and place the
             timestamp of the last revision at the bottom of these terms.
           </div>
-          <br/>
           <h4>Basic Terms</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             By using our services, you are responsible for anything you upload and the
             consequences of doing so. Images uploaded onto your account or public
@@ -35,7 +32,6 @@ export default class TermsScreen extends React.Component {
             information will be private for only the your viewing by default, but whom
             you restrict it to may limit some of the services accessible.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             Copyrighted material uploaded onto Brachyon is prohibited unless you own the
             copyright or have legal access to the material. Any material deemed
@@ -45,9 +41,7 @@ export default class TermsScreen extends React.Component {
             inappropriate, it is encouraged that you alert the administration staff of
             the website.
           </div>
-          <br/>
           <h4>Account</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             You are responsible for the safeguarding of your account information such
             as your password and email. Brachyon is not responsible for any losses or
@@ -56,9 +50,7 @@ export default class TermsScreen extends React.Component {
             third party. You are responsible for any activity on your account. At any
             point of time Brachyon reserves the right to terminate your account.
           </div>
-          <br/>
           <h4>Event Creation Service</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             At any time Brachyon can terminate a created event. Reasons for doing so
             may be (but not limited to) for any of the following: Request by the owner
@@ -67,7 +59,6 @@ export default class TermsScreen extends React.Component {
             of other terms, violation of local or federal law, or repeated failure to
             meet with promised timeline.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             For any crowdfunded event you must agree to a timeline detailing out the
             time limit for which the funding takes place, the time in which the
@@ -78,16 +69,12 @@ export default class TermsScreen extends React.Component {
             tournament can continue given that the goal is met until a week prior to
             the date of the tournament's launch.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             At the end of the goal, 5% of the overall goal will be collected by Brachyon
             during the transfer process to the creator including any further pledges
             past the goal.
           </div>
-          <br/>
-          <br/>
           <h4>Crowdfunding</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             When promising certain amounts of funds to an event, you will be charged
             when funding for the tournament ends given it met its goal. If the event
@@ -97,7 +84,6 @@ export default class TermsScreen extends React.Component {
             be required to answer questions such as mailing address and country to
             receive them.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             After the funding stage of a tournament, refunds are done through Stripe.
             Tournament quality cannot be guaranteed by Brachyon but by the event creator.
@@ -105,9 +91,7 @@ export default class TermsScreen extends React.Component {
             under the same rules of refunding as any cash collected by the end of the
             goal.
           </div>
-          <br/>
           <h4>Tournament Management Software</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             Access to the tournament management software is free to use and does not
             require an account, although guarantee of saving the information of the
@@ -115,7 +99,6 @@ export default class TermsScreen extends React.Component {
             created event and tracked from there. Other viewers along with third party
             websites can receive and track progress of a tournament at any given time.
           </div>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             If set up to do so, you can link your account toward a tournament to record
             your statistics onto your account. This process requires the confirmation of
@@ -124,9 +107,7 @@ export default class TermsScreen extends React.Component {
             tournament page unless you choose to opt out. Some tournaments may require
             you to link your account or may not allow linking.
           </div>
-          <br/>
           <h4>Costs of Service</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             Tournament management, account creation, event participation, and event
             creation without crowdfunding are free to use for any user. 5% of money
@@ -138,9 +119,7 @@ export default class TermsScreen extends React.Component {
             event creators' discretion for whether the creator will pay it or the
             participants will pay it.
           </div>
-          <br/>
           <h4>Indemnification</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             Under any situation where your action leads Brachyon to be sued or break
             the terms of service, you agree through these terms that you are to defend,
@@ -151,9 +130,7 @@ export default class TermsScreen extends React.Component {
             subject to this cause, in which case you must cooperate and help us in this
             defense.
           </div>
-          <br/>
           <h4>Limitation of Liability</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, BRACHYON, ITS EMPLOYEES,
             PARTNERS, DIRECTORS, SUPPLIERS, OR CONTENT PROVIDERS WILL NOT BE LIABLE FOR
@@ -166,9 +143,7 @@ export default class TermsScreen extends React.Component {
             BRACHYON'S LIABLILITY WILL UNDER NO SITUATION FOR DIRECT DAMAGES EXCEED ONE
             HUNDRED U.S. DOLLARS ($100.00).
           </div>
-          <br/>
           <h4>Warranty Disclaimer</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             BRACHYON DISCLAIMS ANY AND ALL WARRANTIES AND CONDITIONS OF MERCHANTABILITY,
             NON-INFRINGEMENT, AND FITNESS FOR ANY PARTICULAR PURPOSE, AND ANY WARRANTIES
@@ -176,9 +151,7 @@ export default class TermsScreen extends React.Component {
             NO ADVICE OR INFORMATION (WRITTEN OR ORAL) GIVEN OR OBTAINED BY YOU FROM
             BRACHYON SHALL CONSTITUTE AS ANY KIND OF WARRANTY.
           </div>
-          <br/>
           <h4>Law and Jurisdiction</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             These terms and any action related to these terms are governed and under the
             jurisdiction of the state of California without regard to or application of
@@ -188,9 +161,7 @@ export default class TermsScreen extends React.Component {
             Agreeing to these terms means you waive any objection to the use of these
             courts for reasons of inconvenience and consent to their jurisdiction.
           </div>
-          <br/>
           <h4>Miscellaneous</h4>
-          <br/>
           <div className="about-what" style={{textAlign: "left"}}>
             These terms supersede or replace any prior agreement, whether written or
             oral, between Brachyon and your use of these services. We may at any time

@@ -29,7 +29,10 @@ export default class SnapModal extends React.Component {
 	        isOpen={this.state.open}
           onRequestClose={this.closeModal.bind(this)}
         >
-	        <div className="col center x-center" style={{width: "100%", height: "100%"}}>
+          <div className="row justify-end">
+            <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
+          </div>
+	        <div className="col center x-center">
 		        <img src="/images/snapcode.png" className="snapcode-image" />
 		      </div>
 	      </Modal>

@@ -13,26 +13,11 @@
 }
 
 .footer-hub-pad {
-  padding: calc((50px - 15px) / 2) 5px;
+  padding: calc((50px - 14px) / 2) 5px;
   cursor: pointer;
   font-size: 12px;
   color: white;
 }
-
-@media only screen
-  and (max-device-width: 768px) {
-    .footer {
-      height: 100px;
-    }
-    .footer .fa {
-      font-size: 3em !important;
-      margin-right: 10px !important;
-    }
-
-    .footer-hub-pad {
-      font-size: 1.5em;
-    }
-  }
 
 .footer-hub-pad:hover {
   background-color: black;
@@ -88,19 +73,19 @@
 }
 
 .social-icon-bg:hover .snapchat {
-  color: #FFFC00;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .instagram {
-  color: #517FA4;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .reddit {
-  color: #CEE3F8;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .facebook {
-  color: #3B5998;
+  color: #FF6000;
 }
 
 .twitch.fa {
@@ -109,13 +94,13 @@
 }
 
 .social-icon-bg:hover .twitch {
-  color: #6441A5;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .twitter {
-  color: #55ACEE;
+  color: #FF6000;
 }
 
 .social-icon-bg:hover .youtube {
-  color: #CD201F;
+  color: #FF6000;
 }
