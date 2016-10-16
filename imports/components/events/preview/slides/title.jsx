@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import moment from "moment";
-import { browserHistory } from "react-router"
+import { browserHistory } from "react-router";
+import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
 
@@ -13,7 +14,8 @@ export default class EventTitlePage extends Component {
   constructor() {
     super();
     this.state = {
-      pageIndex: 0
+      pageIndex: 0,
+      isAnimating: false
     }
   }
 
@@ -29,9 +31,7 @@ export default class EventTitlePage extends Component {
   }
 
   onMoveToDetails() {
-    this.setState({
-      pageIndex: 1
-    })
+    this.onPageRequestChange(1);
   }
 
   imgOrDefault(imgId) {
@@ -39,12 +39,13 @@ export default class EventTitlePage extends Component {
     return img == null ? "/images/profile.png" : img.link();
   }
 
-  render() {
+  pages() {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
     var event = this.props.event;
-    return (
-      <div className="slide-page-container">
+
+    var pages = [
+      (
         <div className="slide-page row" style={{display: this.state.pageIndex == 0 ? "flex" : "none", backgroundImage: this.backgroundImage(false)}}>
           <div className="col flex-pad col-1">
             <div className="col">
@@ -122,9 +123,11 @@ export default class EventTitlePage extends Component {
 
           </div>
         </div>
+      ),
+      (
         <div className="slide-page" style={{display: this.state.pageIndex == 1 ? "flex" : "none", backgroundImage: this.backgroundImage(true)}}>
           <div className="slide-page-up">
-            <div className="slide-control" onClick={() => { this.setState({ pageIndex: 0 }) }}>
+            <div className="slide-control" onClick={() => { this.onPageRequestChange(0) }}>
               <FontAwesome name="chevron-up" size="2x" />
             </div>
           </div>
@@ -187,6 +190,37 @@ export default class EventTitlePage extends Component {
             }
           </div>
         </div>
+      )
+    ];
+    return pages;
+  }
+
+  onPageRequestChange(index) {
+    if(this.state.pageIndex == index) {
+      return;
+    }
+    else {
+      this.setState({ isAnimating: true });
+      setTimeout(() => {
+        this.setState({
+          pageIndex: index,
+          isAnimating: false
+        })
+      }, 500);
+    }
+  }
+
+  render() {
+    var revenue = this.props.event.revenue;
+    var promotion = this.props.event.promotion || {};
+    var event = this.props.event;
+    return (
+      <div className="slide-page-container">
+        <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
+          {
+            this.pages()[this.state.pageIndex]
+          }
+        </VelocityComponent>
       </div>
     )
   }

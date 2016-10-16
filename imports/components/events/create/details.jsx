@@ -49,11 +49,6 @@ export default class DetailsPanel extends Component {
   render() {
     return (
       <div>
-        <div style={{marginBottom: 10}}>
-          <i style={{lineHeight: 1.5}}>
-            This part's required. All the admin stuff having to do with where and when your event is happening goes here.
-          </i>
-        </div>
         <div className="col">
           <h5>Event Name</h5>
           <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />
@@ -62,6 +57,7 @@ export default class DetailsPanel extends Component {
           <h5>Event Image (Optional)</h5>
           <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9}/>
         </div>
+        <br/>
         <div className="col">
           <LocationSelect ref="location" onChange={this.onChange.bind(this)} />
         </div>
