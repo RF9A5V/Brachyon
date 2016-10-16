@@ -30,7 +30,7 @@ export default class SignUpModal extends React.Component {
             onRequestClose={this.closeModal.bind(this)}
           >
             <div className="row justify-end">
-              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
+              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
             </div>
             <h1 style={{textAlign: 'center', marginBottom: 0}}>Sign Up</h1>
             <SignUpScreen onsubmit={this.closeModal.bind(this)} />
