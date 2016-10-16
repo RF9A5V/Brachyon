@@ -22,20 +22,22 @@ export default class SwissDisplay extends TrackerReact(Component) {
 
   declareWinner(pos, score, matchnumber)
   {
-      if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length));
-        toastr.error("Not everyone has played!", "Error!");
       Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, pos, function(err) {
         if(err){
           console.log(err);
           toastr.error("Couldn't advance this match.", "Error!");
         }
         else {
-          toastr.success("Player " + matchnumber + " advanced to next round!", "Success!");
+          var wcount = this.state.wcount+1;
+          toastr.success("Players " + wcount + " advanced to next round!", "Success!");          
+          this.setState({wcount: wcount});
         }
       });
   }
 
   newRound() {
+    if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page].matches.length + "!", "Error!");
     Meteor.call("events.update_round", this.props.id, this.state.page, function(err) {
       if(err){
         console.log(err);
@@ -43,6 +45,8 @@ export default class SwissDisplay extends TrackerReact(Component) {
       }
       else {
         toastr.success("New Round!");
+        var page = this.state.page+1;
+        this.setState({wcount: 0, page: page});
       }
     });
   }
@@ -50,38 +54,56 @@ export default class SwissDisplay extends TrackerReact(Component) {
   render() {
 
     return (
-      <div className="row">
-        <div className="col">
-        {
-            this.props.rounds[this.state.page].players.map((playerObj, i) => {
-              return (
-                <div>{playerObj.name + " S: " + playerObj.score + " W: " + playerObj.wins + " L: " + playerObj.losses}</div>
-              );
-            })
-        }
+      <div className="col">
+        <div className="row flex-pad">
+          <div>
+          {
+            this.state.page > 0 ? (
+              <button onClick={ () => {this.setState({page: this.state.page-1})} }>{"<-- Prev"}</button>
+            ):("")
+          }
+          </div>
+          <div>
+          {
+            this.state.page < this.props.rounds.length-1 ? (
+              <button onClick={ () => {this.setState({page: this.state.page+1})} } >{"Next -->"}</button>
+            ):("")
+          }
+          </div>
         </div>
         <div className="row">
-        {
-          this.props.rounds[this.state.page].matches.map((match, i) => {
-            return(
-              <div className="col center" style={{paddingLeft: "20px"}}>
-                <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
-                <div>VS.</div>
-                <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
-              </div>
-            );
-          })
-        }
-        </div>
-        <div>
-        {
-          (this.state.page == this.props.rounds.length-1 && this.state.wcount == this.props.rounds[this.state.page].matches.length) ? (
-            <button onClick={(this.newRound().bind(this))}>
-            Advance Round
-            </button>
-          ):
-          ( "" )
-        }
+          <div className="col">
+          {
+              this.props.rounds[this.state.page].players.map((playerObj, i) => {
+                return (
+                  <div>{playerObj.name + " S: " + playerObj.score + " W: " + playerObj.wins + " L: " + playerObj.losses}</div>
+                );
+              })
+          }
+          </div>
+          <div className="row">
+          {
+            this.props.rounds[this.state.page].matches.map((match, i) => {
+              return(
+                <div className="col center" style={{paddingLeft: "20px"}}>
+                  <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
+                  <div>VS.</div>
+                  <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
+                </div>
+              );
+            })
+          }
+          </div>
+          <div>
+          {
+            (this.state.page == this.props.rounds.length-1 && this.state.wcount == this.props.rounds[this.state.page].matches.length) ? (
+              <button onClick={ () => {this.newRound().bind(this)} }>
+              Advance Round
+              </button>
+            ):
+            ( "" )
+          }
+          </div>
         </div>
       </div>
     )
