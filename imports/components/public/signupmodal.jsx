@@ -2,17 +2,22 @@ import React from 'react';
 import Modal from 'react-modal';
 import SignUpScreen from './signup.jsx';
 import FontAwesome from 'react-fontawesome';
+import { VelocityComponent } from "velocity-react";
 
 export default class SignUpModal extends React.Component {
     constructor () {
       super();
       this.state = {
         open: false,
+        isAnim: false
       }
     }
 
     openModal(){
-      this.setState({open: true});
+      this.setState({
+        open: true,
+        isAnim: true
+      });
     }
 
     closeModal(){
