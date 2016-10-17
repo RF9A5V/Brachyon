@@ -296,7 +296,7 @@ var OrganizeSuite = {
     {
       var matchObj = {
         playerOne: participants[x],
-        playerTwo: participants[x+participants.length/2],
+        playerTwo: participants[x+length/2],
         winner: null
       };
       temp.push(matchObj);
@@ -318,11 +318,10 @@ var OrganizeSuite = {
         bye: false,
         playedagainst: playarr
       }
-      if (exbye && x == participants.length)
+      if (exbye && x == participants.length-1)
       {
         playerObj.score = 3;
         playerObj.bye = true;
-        playerObj.wins = 1;
       }
       tempb.push(playerObj);
     }

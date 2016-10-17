@@ -29,32 +29,37 @@ export default class SwissDisplay extends TrackerReact(Component) {
         }
         else {
           var wcount = this.state.wcount+1;
-          toastr.success("Players " + wcount + " advanced to next round!", "Success!");          
+          toastr.success("Players " + wcount + " advanced to next round!", "Success!");
           this.setState({wcount: wcount});
         }
       });
+      var wcount = this.state.wcount+1;
+      this.setState({wcount: wcount});
   }
 
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.props.id, this.state.page, function(err) {
+    Meteor.call("events.update_round", this.props.id, this.state.page, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
       }
       else {
         toastr.success("New Round!");
-        var page = this.state.page+1;
-        this.setState({wcount: 0, page: page});
       }
     });
+    var page = this.state.page+1;
+    this.setState({wcount: 0, page: page});
   }
 
   render() {
 
     return (
       <div className="col">
+        <div className="center">
+        <h2>{"Round " + (this.state.page+1)}</h2>
+        </div>
         <div className="row flex-pad">
           <div>
           {
