@@ -400,7 +400,7 @@ Meteor.methods({
     }
   },
 
-  "events.update_round"(eventID, roundNumber) { //For swiss specifically
+  "events.update_round"(eventID, roundNumber, score) { //For swiss specifically
     var event = Events.findOne(eventID);
     rounds = event.brackets[0].rounds;
     event = event.brackets[0].rounds[roundNumber];
@@ -436,57 +436,124 @@ Meteor.methods({
         values.push(x);
       }
     }
-    if (extraplayer != -1) //We obviously can't do this either since it may place someone who had a bool again, this is a temporary system. Idea: Don't shift out people with byes, still flawed.
+
+    if (extraplayer != -1) //Flawed for one minor reason: bye may be answer to matching someone of the same score to avoid concating.
     {
-      extraplayer.wins++;
-      extraplayer.bool = true;
+      if (extraplayer.bye)
+      {
+        var foundbye = false;
+        var y = values.length-1;
+        while (!foundbye)
+        {
+          for (var x = 0; x < scores[values[y]].length; x++)
+          {
+            if (scores[values[y]][x].bye == false)
+            {
+              var swap = extraplayer;
+              extraplayer = scores[values[y]][x];
+              scores[values[y]][x] = swap;
+              foundbye = true;
+              break;
+            }
+          }
+          y--;
+        }
+      }
+      extraplayer.bye = true;
+      extraplayer.score += score;
     }
 
-    function shuffle(array) {
-      var currentIndex = array.length, temporaryValue, randomIndex;
-
-      // While there remain elements to shuffle...
-      while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-      }
-
+    function swap(array, i, j)
+    {
+      var s = array[i];
+      array[i] = array[j];
+      array[j] = s;
       return array;
     }
+
+    //Takes an array of player objects and sees if they can validly play against each other
+    function isplayable(array)
+    {
+      for (var i = 0; i < array.length/2; i++)
+      {
+        var opponent = array[i+array.length/2].name;
+        if (array[i].playedagainst[opponent] == true)
+          return false;
+      }
+      return true;
+    }
+
+    function checkperms(array, i) { //Olength is the original size of the length
+      var j = array.length-1;
+      if (i < array.length-2)
+      {
+        while (i < j)
+        {
+          arr = checkperms(array, i+1);
+          if (arr != false)
+            return arr;
+
+          array = swap(array, i, j);
+          arr = checkperms(array, i+1);
+          if (arr != false)
+            return arr;
+
+          array = swap(array, i, j);
+          j--;
+        }
+      }
+
+      else {
+        if (isplayable(array))
+          return array;
+        array = swap(array, 0, 1);
+        if (isplayable(array))
+          return array;
+        array = swap(array, 0, 1);
+        return false;
+      }
+
+      return false;
+    }
+
+    function getperms(array)
+    {
+      checkperms(array, 0);
+    }
+
 
     for (var x = 0; x < values.length; x++)
     {
       var y = values[x];
-      console.log(y);
+      var check = true;
       for (var z = 0; z < scores[y].length/2; z++)
       {
         var opponent = scores[y][z+scores[y].length/2].name;
         if (scores[y][z].playedagainst[opponent] == true)
         {
-          if (scores[y].length > 2)
+          if (scores[y].length > 2 && check)
           {
-            scores[y] = shuffle(scores[y]);
+            check = checkperms(scores[y]);
+            if (check != false)
+            {
+              scores[y] = check;
+              break;
+            }
             z--;
           }
           else if (x == values.length-1) {
-            scores[values[x-1]] = scores[values[x-1]].concat(scores.pop());
-            values.pop();
+            scores[values[x-1]] = scores[values[x-1]].concat(scores[values[x]]);
+            scores[values[x]] = [];
+            values.splice(x, 1);
             x--;
             break;
           }
           else
           {
-            console.log(scores[values[x]]);
             scores[values[x]] = scores[values[x]].concat(scores[values[x+1]]);
             scores[values[x+1]] = [];
             values.splice(x+1, 1);
+            check = true;
             z = -1;
           }
         }
