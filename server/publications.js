@@ -126,7 +126,7 @@ Meteor.publish('userEvents', (id) => {
     }
   })
   return [
-    Events.find({owner: id}),
+    Events.find({owner: id}, { limit: 6 }),
     games,
     ProfileImages.find({_id: user.profile.image}).cursor,
     images.cursor
@@ -260,18 +260,137 @@ Meteor.publish('game_search', function(query) {
   ]
 })
 
-Meteor.publish("eventsPublished", function(){
-  var events = Events.find({ published: true });
-  var imgs = Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } });
-  var usrs = Meteor.users.find({_id: { $in: events.map(e => { return e.owner }) }});
-  return [
-    events,
-    imgs.cursor,
-    usrs
-  ]
-});
-
 Meteor.publish("getUserByUsername", function(query) {
   var user = Meteor.users.find({username: query});
   return user;
+});
+
+Meteor.publish("organizer.unpublishedEvents", function(id, page) {
+  var events = Events.find({ owner: id, published: false, isComplete: false, underReview: false }, { limit: 6, skip: 6 * page });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
 })
+
+Meteor.publish("organizer.eventsUnderReview", function(id, page) {
+  var events = Events.find({ owner: id, underReview: true }, { limit: 6, skip: 6 * page });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+});
+
+Meteor.publish("organizer.publishedEvents", function(id, page) {
+  var events = Events.find({ owner: id, published: true }, { limit: 6, skip: 6 * page });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+})
+
+Meteor.publish("organizer.completedEvents", function(id, page) {
+  var events = Events.find({ owner: id, isComplete: true }, { limit: 6, skip: 6 * page });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+})
+
+Meteor.publish("player.upcomingEvents", function(id, page) {
+  var events = Events.find({
+    published: true,
+    brackets: {
+      $elemMatch: {
+        participants: {
+          $elemMatch: {
+            id
+          }
+        }
+      }
+    },
+    "details.datetime": {
+      $gt: new Date()
+    }
+  });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+});
+
+Meteor.publish("player.ongoingEvents", function(id, page) {
+  var events = Events.find({
+    published: true,
+    brackets: {
+      $elemMatch: {
+        participants: {
+          $elemMatch: {
+            id
+          }
+        }
+      }
+    },
+    "details.datetime": {
+      $lte: new Date()
+    }
+  });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+})
+
+Meteor.publish("player.pastEvents", function(id, page) {
+  var events = Events.find({
+    isComplete: true,
+    brackets: {
+      $elemMatch: {
+        participants: {
+          $elemMatch: {
+            id
+          }
+        }
+      }
+    }
+  });
+  var imgs = Images.find({
+    _id: {
+      $in: events.map((e) => { return e.details.banner })
+    }
+  });
+  return [
+    events,
+    imgs.cursor
+  ]
+});

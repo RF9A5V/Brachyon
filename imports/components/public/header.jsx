@@ -19,10 +19,17 @@ export default class Header extends TrackerReact(Component) {
     });
   }
 
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {
-      user: Meteor.subscribe("user", Meteor.userId()),
+      user: Meteor.subscribe("user", Meteor.userId(), {
+        onReady: () => {
+          props.onLoad()
+        },
+        onError: () => {
+          props.onLoad()
+        }
+      }),
       userMenuOpen: false
     }
   }
