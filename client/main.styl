@@ -8,7 +8,7 @@
 
 html, body, #react-root, #app
   margin 0
-  background-color dark-grey
+  background-color #333
   overflow-x hidden
 
 
@@ -58,8 +58,6 @@ button:focus
   display flex
   flex-flow column
   min-height calc(100vh - 120px)
-  +below(768px)
-    min-height calc(100vh - 240px)
 
 .participant-active
   color red
@@ -76,26 +74,6 @@ button:focus
   top 70px
   bottom 50px
   margin-bottom 50px
-  +below(768px)
-    top 140px
-    bottom 100px
-    margin-bottom 100px
-
-
-// @media only screen
-//   and (max-device-width 768px){
-//
-//     .content
-//       top 140px
-//       bottom 100px
-//       margin-bottom 100px
-//
-//
-//     .box
-//       min-height calc(100vh - 240px)
-// }
-
-
 
 /* Flex rows and column stuff */
 
@@ -107,14 +85,11 @@ button:focus
   flex-direction column
 
 
-// @media (max-width 1000px){
-//   .col-to-row
-//     flex-direction row
-//
-//
-//   .row-to-col
-//     flex-direction column
-// }
+@media (max-width 1000px)
+  .col-to-row
+    flex-direction row
+  .row-to-col
+    flex-direction column
 
 
 
@@ -168,13 +143,13 @@ button:focus
 
 
 h2  /* Titles for pages or for more prominent tabs like About.jsx */
-  color lb
+  color#00BDFF
   background-color #222
   padding 5px
 
 
 h3  /* For side-tab-panels and any heading where there are other headings on the same page */
-  color lb
+  color#00BDFF
   margin 0
 
 
@@ -295,7 +270,7 @@ input-webkit-autofill
 a
   text-decoration none
   outline none
-  color lb
+  color#00BDFF
 
 
 .loading-screen
