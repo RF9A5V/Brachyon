@@ -136,15 +136,15 @@ export default class UserEvents extends TrackerReact(Component) {
       sections: [
         {
           name: "Upcoming",
-          subscription: "organizer.completedEvents"
+          subscription: "sponsor.upcomingEvents"
         },
         {
           name: "Ongoing",
-          subscription: "organizer.completedEvents"
+          subscription: "sponsor.ongoingEvents"
         },
         {
           name: "Past",
-          subscription: "organizer.completedEvents"
+          subscription: "sponsor.completedEvents"
         }
       ]
     }
@@ -154,15 +154,15 @@ export default class UserEvents extends TrackerReact(Component) {
       sections: [
         {
           name: "Upcoming",
-          subscription: "organizer.completedEvents"
+          subscription: "spectator.upcomingEvents"
         },
         {
           name: "Ongoing",
-          subscription: "organizer.completedEvents"
+          subscription: "spectator.ongoingEvents"
         },
         {
           name: "Past",
-          subscription: "organizer.completedEvents"
+          subscription: "spectator.completedEvents"
         }
       ]
     }

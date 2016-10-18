@@ -38,9 +38,9 @@
   margin-bottom 10px
   margin-left 10px
   border solid 2px #666
-  +between(1200px, 1600px)
-    flex-basis calc(33% - 6.66px)
-  +between(768px, 1200px)
+  +above(1000px)
+    flex-basis calc(33% - 10px)
+  +between(768px, 1000px)
     flex-basis calc(50% - 10px)
     font-size 1.5em
   +below(768px)
@@ -49,51 +49,16 @@
 
 .event-block:nth-child(3n - 2)
   margin-left 0px
-  +between(1200px, 1600px)
+  +between(1000px, 1600px)
     margin-left 0
 
 .event-block:nth-child(2n - 1)
-  +between(768px, 1200px)
+  +between(768px, 1000px)
     margin-left 0
 
 .event-block:nth-child(n)
   +below(768px)
     margin-left 0
-
-// @media only screen
-//   and (min-device-width 1200)
-//   and (max-device-width 1600px){
-//
-//   .event-block, .bracket-block
-//     flex-basis calc(33% - 6.66px)
-//
-//
-//   .event-blocknth-child(3n - 2)
-//     margin-left 0
-//   }
-//
-//
-// @media only screen and (min-device-width 768px)
-//   and (max-device-width 1200px){
-//     .event-block, .bracket-block
-//       flex-basis calc(50% - 10px)
-//       font-size 1.5em
-//
-//     .event-blocknth-child(2n - 1)
-//       margin-left 0
-// }
-//
-//
-// @media only screen
-//   and (max-device-width 768px){
-//     .event-block, .bracket-block
-//       flex-basis 100%
-//       font-size 2em
-//
-//     .event-blocknth-child(n)
-//       margin-left 0
-// }
-
 
 .event-block:hover
   cursor pointer
