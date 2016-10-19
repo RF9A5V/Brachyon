@@ -299,11 +299,11 @@ export default class PrizePoolBreakdown extends Component {
     }
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>Prize Pool Details</span>
+        <div className="button-row">
           <button onClick={this.onPrizeSplitSave.bind(this)}>Save</button>
         </div>
-        <div>
+        <div className="submodule-bg">
+          <h3>Prize Pool</h3>
           {
             event.brackets.map((bracket, i) => {
               if (this.state.ranges == true)
@@ -311,10 +311,9 @@ export default class PrizePoolBreakdown extends Component {
               else
                 [newarr, newmax] = [this.state.brarr[i].selarr, this.state.brarr[i].maxarr];
               return (
-                <div className="col" style={{marginBottom: 20}} key={i}>
+                <div className="col" style={{marginBottom: 10}} key={i}>
                   <h3>{ bracket.name }</h3>
                   <div className="col">
-                    <h4>Choose Prize Pool Places:</h4>
                     <div className="row justify-end">
                       <h3>Choose Prize Pool Limit:</h3>
                       <select onChange={(evt) => this.changeMin(evt, i).bind(this)} value={this.state.brarr[i].min}>

@@ -91,7 +91,7 @@ export default class Header extends TrackerReact(Component) {
           if(this.state.userMenuOpen) {
             this.state.timeout = setTimeout(() => {
               this.setState({userMenuOpen: false});
-            }, 2000);
+            }, 1000);
           }
         }} onMouseEnter={() => {
           if(this.state.userMenuOpen) {
