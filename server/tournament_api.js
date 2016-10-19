@@ -297,7 +297,7 @@ var OrganizeSuite = {
       var matchObj = {
         playerOne: participants[x],
         playerTwo: participants[x+length/2],
-        winner: null
+        played: false
       };
       temp.push(matchObj);
     }
