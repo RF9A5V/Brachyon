@@ -14,8 +14,7 @@ export default class ImagePage extends Component {
   }
 
   onImageSave() {
-    var bannerId = this.refs.img.value();
-
+    this.refs.img.value();
   }
 
   onUploadComplete(data) {
@@ -43,12 +42,12 @@ export default class ImagePage extends Component {
             <h3 style={{marginBottom: 20}}>Event Image</h3>
           </div>
           {
-            this.state.imgSelected ? (
-              ""
-            ) : (
+            img ? (
               <div style={{textAlign: "center"}}>
                 <img src={img ? img.link() : ""} style={{width: "50%", margin: "20px 0", height: "auto"}} />
               </div>
+            ) : (
+              ""
             )
           }
           <div className="row center">

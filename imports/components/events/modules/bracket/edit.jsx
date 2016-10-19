@@ -45,7 +45,7 @@ export default class EditBracket extends Component {
           }
           <button onClick={this.onBracketSave.bind(this)}>Save</button>
         </div>
-        <div className="submodule-bg submodule-overflow">
+        <div className="submodule-bg submodule-overflow" style={{width: "50%"}}>
           <div className="row center">
             <h3>{ this.props.bracket.name }</h3>
           </div>
