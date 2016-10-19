@@ -315,38 +315,27 @@ Meteor.methods({
     return;
   },
 
-  "events.update_match"(eventID, roundNumber, matchNumber, score, placement)
+  "events.update_match"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
     var p1 = event.matches[matchNumber].playerOne;
     var p2 = event.matches[matchNumber].playerTwo;
-    if (placement == 0)
-    {
-      p1 = event.matches[matchNumber].playerOne;
-      p2 = event.matches[matchNumber].playerTwo;
-      event.matches[matchNumber].winner = event.matches[matchNumber].playerOne;
-    }
-    else
-    {
-      p2 = event.matches[matchNumber].playerOne;
-      p1 = event.matches[matchNumber].playerTwo;
-      event.matches[matchNumber].winner = event.matches[matchNumber].playerTwo;
-    }
-    var p1num, p2num;
+    event.matches[matchNumber].played = true;
     for (var x = 0; x < event.players.length; x++)
     {
       if (event.players[x].name == p1)
       {
-        event.players[x].score += score;
-        event.players[x].wins++;
-        p1num = x;
+        event.players[x].score += score*winfirst;
+        event.players[x].wins += winfirst;
+        event.players[x].losses += winsecond;
         event.players[x].playedagainst[p2] = true;
       }
       if (event.players[x].name == p2)
       {
-        p2num = x;
-        event.players[x].losses++;
+        event.players[x].score += score*winsecond;
+        event.players[x].wins += winsecond;
+        event.players[x].losses += winfirst;
         event.players[x].playedagainst[p1] = true;
       }
     }
@@ -395,7 +384,7 @@ Meteor.methods({
       }
       else
       {
-        //I don't fucking know is this even possible make them play again ffs
+        //Next round mathafucka
       }
     }
   },
@@ -571,12 +560,15 @@ Meteor.methods({
         var matchObj = {
           playerOne: scores[y][z].name,
           playerTwo: scores[y][z+scores[y].length/2].name,
-          winner: null
+          played: false
         }
         temp.push(matchObj);
       }
     }
     var newpl = JSON.parse(JSON.stringify(players));
+    newpl.sort(function(a, b) {
+      return b.score - a.score;
+    })
     var newevent = {
       players: newpl,
       matches: temp

@@ -11,7 +11,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     var num = 0;
     for (var x = 0; x < this.props.rounds[page].matches.length; x++)
     {
-      if (this.props.rounds[page].matches[x].winner != null)
+      if (this.props.rounds[page].matches[x].played != false)
         num++;
     }
     this.state = {
@@ -20,9 +20,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
     }
   }
 
-  declareWinner(pos, score, matchnumber)
+  declareWinner(score, win1, win2, ties, matchnumber)
   {
-      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, pos, function(err) {
+      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, win1, win2, function(err) {
         if(err){
           console.log(err);
           toastr.error("Couldn't advance this match.", "Error!");
@@ -51,6 +51,22 @@ export default class SwissDisplay extends TrackerReact(Component) {
     });
     var page = this.state.page+1;
     this.setState({wcount: 0, page: page});
+  }
+
+  validateData(i){
+    if(this.refs.winplayerone.value == null || this.refs.winplayerone.value == "") {
+      throw new Error("Bracket Name can't be null!");
+    }
+    var winp1 = parseInt(this.refs.winplayerone);
+    if(this.refs.winplayertwo.value == null || this.refs.winplayertwo.value == "") {
+      throw new Error("Bracket Name can't be null!");
+    }
+    var winp2 = parseInt(this.refs.winplayertwo);
+    var ties = 0;
+    if(this.refs.ties.value != null || this.refs.ties.value != "") {
+      ties = parseInt(this.refs.ties.value);
+    }
+    this.declareWinner(3, winp1, winp2, ties, i);
   }
 
   render() {
@@ -91,9 +107,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
             this.props.rounds[this.state.page].matches.map((match, i) => {
               return(
                 <div className="col center" style={{paddingLeft: "20px"}}>
-                  <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(0, 3, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
+                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 1, 0, 0, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
                   <div>VS.</div>
-                  <div onClick={ (match.winner == null && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(1, 3, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
+                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 0, 1, 0, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
                 </div>
               );
             })
