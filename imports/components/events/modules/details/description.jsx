@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Editor from "/imports/components/public/editor.jsx";
 
 export default class DescriptionPage extends Component {
 
@@ -50,8 +51,8 @@ export default class DescriptionPage extends Component {
             <span>{ this.state.titleLength } / 50</span>
           </div>
           <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
-          <h5>Description</h5>
-          <textarea ref="description" defaultValue={event.details.description} style={{width: "50%", minWidth: 280}}></textarea>
+          <h5 style={{marginBottom: 20}}>Description</h5>
+          <Editor />
         </div>
       </div>
     )
