@@ -39,6 +39,7 @@ export default class SelectContainer extends Component {
   }
 
   getOrdinal(n) {
+    // Damn son.
      var s=["th","st","nd","rd"],
          v=n%100;
      return n+(s[(v-20)%10]||s[v]||s[0]);
@@ -62,15 +63,15 @@ export default class SelectContainer extends Component {
       percentarray.push(y);
     }
     if (this.props.num < 4)
-      var string = this.getOrdinal(this.props.num+1) + " Place Split: ";
+      var string = this.getOrdinal(this.props.num+1);
     else
     {
       var n = (this.props.num == 4) ? (4):(8);
-      var string = this.getOrdinal(n+1) + " to " + this.getOrdinal(n*2) + " range: ";
+      var string = this.getOrdinal(n+1) + " to " + this.getOrdinal(n*2);
     }
     return(
-      <div className="row">
-        <span style={{paddingTop: "3px"}}>{string}</span>
+      <div className="row x-center flex-pad" style={{marginTop: 10}}>
+        <span>{string}</span>
         <select onChange={this.changeVal.bind(this)} value={this.props.val}>
         {
           percentarray.map((percent, i) => {
