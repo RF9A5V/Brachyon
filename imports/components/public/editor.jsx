@@ -1,13 +1,25 @@
 import React, { Component } from "react";
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, ContentState, convertToRaw, convertFromRaw } from 'draft-js';
 
 export default class BrachyonEditor extends Component {
   constructor(props) {
     super(props);
+    var state;
+    if(props.value) {
+      state = EditorState.createWithContent(convertFromRaw(props.value));
+    }
+    else {
+      state = EditorState.createEmpty()
+    }
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: state,
       isBold: false
     };
+  }
+
+  value() {
+    var content = this.state.editorState.getCurrentContent();
+    return convertToRaw(content);
   }
 
   onChange(editorState) {
@@ -16,13 +28,13 @@ export default class BrachyonEditor extends Component {
     });
   }
 
-  setBold() {
+  toggleBold() {
+    this.state.isBold = !this.state.isBold;
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
   }
 
   setBlockClasses(content) {
     const type = content.getType();
-    console.log(type);
     if(type == "div") {
       return "edit-line"
     }
@@ -32,7 +44,7 @@ export default class BrachyonEditor extends Component {
     return (
       <div>
         <div className="row x-center">
-          <div className="editor-button" onClick={this.setBold.bind(this)}>
+          <div className={`editor-button ${this.state.isBold ? "active" : ""}`} onClick={this.toggleBold.bind(this)}>
             B
           </div>
         </div>
