@@ -1,5 +1,3 @@
-b-color = rgba(0, 0, 0, 0.5)
-
 .about-layout
   display: flex
   width: 100%
@@ -19,21 +17,16 @@ b-color = rgba(0, 0, 0, 0.5)
   max-width: 250px
   margin: 20px 10px 10px 10px
   padding: 5px
-
-@media (max-width: 1000px) {
-  .about-blocks {
-    width: 250px;
-  }
-  .about-desc {
-    width: 250px;
-  }
-}
+  +below(1000px)
+    width: 250px
 
 .about-desc
   height: 125px
   margin: 10px 10px 20px 10px
   padding: 10px
   top: 10px
+  +below(1000px)
+    width: 250px
 
 .about-blocks:hover
   background-color: #FF6000
