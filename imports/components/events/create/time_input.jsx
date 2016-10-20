@@ -3,24 +3,22 @@ import moment from 'moment';
 
 export default class TimeInput extends Component {
 
-  componentWillMount() {
-
+  constructor(props) {
+    super(props);
     var obj = {
       hour: "12",
       minute: "00",
       half: "AM"
     }
-
-    if(this.props.init){
+    if(props.init) {
       var current = moment(this.props.init);
       obj = {
-        hour: current.format("hh"),
-        minute: current.format("mm"),
+        hour: parseInt(current.format("h")),
+        minute: parseInt(current.format("mm")),
         half: current.format("a")
       }
     }
-
-    this.setState(obj);
+    this.state = obj;
   }
 
   value() {

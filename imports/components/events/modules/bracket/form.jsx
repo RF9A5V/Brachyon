@@ -10,18 +10,18 @@ export default class BracketForm extends Component {
 
   constructor(props) {
     super(props);
-    var blah = null;
+    var subFormat = null;
     var format = this.props.format || {};
     if(format.hasOwnProperty("groupFormat")){
-      blah = "GROUP";
+      subFormat = "GROUP";
     }
     else if(format.hasOwnProperty("poolFormat")) {
-      blah = "POOL";
+      subFormat = "POOL";
     }
     this.state = {
-      game: Games.findOne(this.props.game),
-      gameId: this.props.game,
-      format: blah || "NONE"
+      game: Games.findOne(props.game),
+      gameId: props.game,
+      format: subFormat || "NONE"
     }
     for(var i in format){
       this.state[i] = format[i];
@@ -156,6 +156,7 @@ export default class BracketForm extends Component {
   }
 
   render() {
+    console.log(this.state.game);
     return (
       <div className="col">
         <h5>Bracket Name</h5>

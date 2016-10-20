@@ -8,20 +8,6 @@ export default class PrizePoolBreakdown extends Component {
   constructor(props) {
     super(props);
     var event = Events.findOne();
-    // var labels = [];
-    // if(event.crowdfunding.prizePool != null) {
-    //   labels = event.crowdfunding.prizePool;
-    // }
-    // else {
-    //   labels = (event.brackets || []).map(function() {
-    //     return [
-    //       {
-    //         name: "First Place",
-    //         start: 0
-    //       }
-    //     ]
-    //   })
-    // }
     var brarray = [];
     if (event.crowdfunding.prizesplit != null)
       brarray = event.crowdfunding.prizesplit;
@@ -45,36 +31,6 @@ export default class PrizePoolBreakdown extends Component {
       brarr: brarray,
       id: event._id,
       ranges: true
-    }
-  }
-
-  onLabelCreate(index){
-    return (e) => {
-      e.preventDefault();
-
-      if(this.refs["field" + index].value == ""){
-        return toastr.error("Label needs name.", "Error!");
-      }
-      if(this.refs["start" + index].value == ""){
-        return toastr.error("Label needs starting position.", "Error!");
-      }
-      var start = parseInt(this.refs["start" + index].value);
-      var end = this.refs["end" + index].value;
-      if(end == "") {
-        end = undefined;
-      }
-      else {
-        end = parseInt(end);
-      }
-      this.state.labels[index].push({
-        name: this.refs["field" + index].value,
-        start,
-        end,
-        percentage: 0,
-        position: 0
-      });
-      toastr.success("Added label to prize pools.", "Success!");
-      this.forceUpdate();
     }
   }
 
@@ -287,6 +243,55 @@ export default class PrizePoolBreakdown extends Component {
     return [arr, nmarr];
   }
 
+  getOrdinal(n) {
+    // Damn son.
+     var s=["th","st","nd","rd"],
+         v=n%100;
+     return n+(s[(v-20)%10]||s[v]||s[0]);
+  }
+
+  label(value) {
+    if(value < 4) {
+      return this.getOrdinal(value + 1) + " Place Gets";
+    }
+    else {
+      var start = 2 ** (value - 2) + 1;
+      var end = (start - 1) * 2;
+      return `${this.getOrdinal(start)} to ${this.getOrdinal(end)} Place Splits`
+    }
+  }
+
+  labels(index) {
+    if (this.state.ranges == true)
+      [newarr, newmax] = this.processarray(this.state.brarr[index].selarr, this.state.brarr[index].maxarr);
+    else
+      [newarr, newmax] = [this.state.brarr[index].selarr, this.state.brarr[index].maxarr];
+    return (
+      <div>
+        {
+          newarr.map((i, j) => {
+            return (
+              <div className="row center x-center" style={{marginBottom: 10}}>
+                <div style={{width: "25%", textAlign: "left"}}>
+                  <span style={{marginRight: 10}}>
+                    {
+                      this.label(j)
+                    }
+                  </span>
+                </div>
+                <div style={{width: "5%", textAlign: "center"}}>
+                  <h5>
+                    { i * 5 }%
+                  </h5>
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
   render() {
     var event = Events.findOne();
     var minarr = [1, 2, 3, 4, 8, 16];
@@ -299,11 +304,10 @@ export default class PrizePoolBreakdown extends Component {
     }
     return (
       <div>
-        <div className="row flex-pad x-center">
-          <span>Prize Pool Details</span>
+        <div className="button-row">
           <button onClick={this.onPrizeSplitSave.bind(this)}>Save</button>
         </div>
-        <div>
+        <div className="submodule-bg">
           {
             event.brackets.map((bracket, i) => {
               if (this.state.ranges == true)
@@ -311,27 +315,27 @@ export default class PrizePoolBreakdown extends Component {
               else
                 [newarr, newmax] = [this.state.brarr[i].selarr, this.state.brarr[i].maxarr];
               return (
-                <div className="col" style={{marginBottom: 20}} key={i}>
-                  <h3>{ bracket.name }</h3>
-                  <div className="col">
-                    <h4>Choose Prize Pool Places:</h4>
-                    <div className="row justify-end">
-                      <h3>Choose Prize Pool Limit:</h3>
+                <div className="row" style={{marginBottom: 10}} key={i} style={{height: 500}}>
+                  <div className="col" style={{backgroundColor: "#444", marginRight: 10, padding: 20}}>
+                    <div className="row x-center flex-pad">
+                      <span style={{marginRight: 10}}>Max Recipients</span>
                       <select onChange={(evt) => this.changeMin(evt, i).bind(this)} value={this.state.brarr[i].min}>
-                      {
-                        minarr.map((num, i) => {
-                          return(<option value={num}>{num + " "}</option>)
-                        })
-                      }
+                        {
+                          minarr.map((num, i) => {
+                            return(<option value={num}>{num + " "}</option>)
+                          })
+                        }
                       </select>
                     </div>
+                    {
+                      newarr.map((val, j) => {
+                        return (<SelectContainer val = {val} num = {j} max = {newmax[j]} min = {this.state.brarr[i].min} br = {i} changePercent={this.checkSelects.bind(this)} key={`${i}_${j}`} ref={`${i}_${j}`}/>)
+                      })
+                    }
                   </div>
-                  <div className="col">
-                  {
-                    newarr.map((val, j) => {
-                      return (<SelectContainer val = {val} num = {j} max = {newmax[j]} min = {this.state.brarr[i].min} br = {i} changePercent={this.checkSelects.bind(this)}/>)
-                    })
-                  }
+                  <div className="col-1 row center col" style={{backgroundColor: "#444", padding: 20}}>
+                    <h3>{ bracket.name }</h3>
+                    { this.labels(i) }
                   </div>
                 </div>
               )

@@ -80,7 +80,7 @@ export default class RevenuePanel extends Component {
 
   render() {
     return (
-      <div className="row" style={{padding: 20}}>
+      <div className="row panel">
         <div className="info-title-container">
           <div className="info-title active" onClick={this.onInfoClick(0)}>
             Rewards

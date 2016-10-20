@@ -14,9 +14,24 @@ export default class CheckoutPage extends TrackerReact(Component) {
   constructor(props){
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", props.params.eventId),
+      event: Meteor.subscribe("event", props.params.eventId, {
+        onReady: () => {
+          var event = Events.findOne();
+          var keys = [];
+          if(event.tickets) {
+            keys.push("tickets");
+          }
+          if(event.crowdfunding && event.crowdfunding.tiers && event.crowdfunding.tiers.length > 0) {
+            keys.push("tiers");
+          }
+          keys.push("payment");
+          keys.push("complete");
+          this.setState({
+            keys
+          });
+        }
+      }),
       index: 0,
-      keys: ["tickets", "tiers", "payment", "complete"],
       dataStore: {}
     }
   }
@@ -76,6 +91,7 @@ export default class CheckoutPage extends TrackerReact(Component) {
   }
 
   advanceState() {
+    console.log(this.state.keys[this.state.index]);
     var comp = this.refs[this.state.keys[this.state.index]];
     if(comp.isValid()) {
       comp.value((obj) => {
