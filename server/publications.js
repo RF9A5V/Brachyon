@@ -126,7 +126,7 @@ Meteor.publish('userEvents', (id) => {
     }
   })
   return [
-    Events.find({owner: id}),
+    Events.find({owner: id}, { limit: 6 }),
     games,
     ProfileImages.find({_id: user.profile.image}).cursor,
     images.cursor
@@ -260,18 +260,7 @@ Meteor.publish('game_search', function(query) {
   ]
 })
 
-Meteor.publish("eventsPublished", function(){
-  var events = Events.find({ published: true });
-  var imgs = Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } });
-  var usrs = Meteor.users.find({_id: { $in: events.map(e => { return e.owner }) }});
-  return [
-    events,
-    imgs.cursor,
-    usrs
-  ]
-});
-
 Meteor.publish("getUserByUsername", function(query) {
   var user = Meteor.users.find({username: query});
   return user;
-})
+});

@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import LogInScreen from './login.jsx';
 import FontAwesome from 'react-fontawesome';
+import { velocity } from "velocity-react";
 
 export default class LogInModal extends React.Component {
     constructor () {

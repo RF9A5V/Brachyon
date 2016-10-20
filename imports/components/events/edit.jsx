@@ -103,7 +103,14 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           component: AddBracket,
           text: "Add Bracket"
         }
-      ] : [])
+      ] : []).concat(
+        event.brackets && event.brackets.length > 0 ? [
+          {
+            component: PrizePoolBreakdown,
+            text: "Prize Pool"
+          }
+        ] : []
+      )
     };
   }
 
@@ -129,12 +136,6 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         text: "Tiers"
       }
     ];
-    if(event.brackets && event.brackets.length > 0) {
-      subitems.splice(2, 0, {
-        component: PrizePoolBreakdown,
-        text: "Prize Pool"
-      });
-    }
     return {
       text: "Crowdfunding",
       icon: "usd",
