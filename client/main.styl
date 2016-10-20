@@ -249,15 +249,15 @@ label
 
 
 .font-stretch-big
-  font-size calc(2vw + 2vmin)
+  font-size calc(2vw  2vmin)
 
 
 .font-stretch-mid
-  font-size calc(0.5vw + 0.5vmin + 0.1vh)
+  font-size calc(0.5vw  0.5vmin  0.1vh)
 
 
 .font-stretch-small
-  font-size calc(0.5vw + 0.5vmin)
+  font-size calc(0.5vw  0.5vmin)
 
 
 .bold
@@ -412,3 +412,17 @@ label
 
 .no-select:hover, .no-select *hover
   cursor default !important
+
+/* Toastr Overrides */
+
+.toast-success
+  background-color: #00BDFF
+
+.toast-error
+  background-color: #FF1951;
+
+.toastr-warning
+  background-color: #CCC114;
+
+#toast-container > div
+  border-radius: 0;
