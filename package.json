@@ -8,6 +8,7 @@
     "bcrypt": "^0.8.7",
     "bson-ext": "^0.1.13",
     "draft-js": "^0.9.1",
+    "draft-js-export-html": "^0.5.0",
     "dropbox": "=0.10.3",
     "faker": "^3.1.0",
     "file-system": "^2.2.1",

@@ -113,7 +113,7 @@ export default class BrachyonEditor extends Component {
       if(entity.type == "LINK") {
         return {
           component: LinkBlock,
-          editable: true,
+          editable: !this.props.isEditable === false,
           props: {
             text: contentBlock.getText(),
             href: entity.href
@@ -123,7 +123,7 @@ export default class BrachyonEditor extends Component {
       if(entity.type == "IMAGE") {
         return {
           component: ImageBlock,
-          editable: true,
+          editable: !this.props.isEditable === false,
           props: {
             src: entity.src
           }
@@ -132,7 +132,7 @@ export default class BrachyonEditor extends Component {
       if(entity.type == "VIDEO") {
         return {
           component: VideoBlock,
-          editable: true,
+          editable: !this.props.isEditable === false,
           props: {
             iframe: entity.iframe
           }
@@ -144,12 +144,19 @@ export default class BrachyonEditor extends Component {
   }
 
   render() {
+    if(this.props.isEditable === false) {
+      return (
+        <div>
+          <Editor editorState={this.state.editorState} blockRendererFn={this.blockRenderer.bind(this)} readOnly={true} />
+        </div>
+      )
+    }
     return (
       <div>
         {
           this.editorButtons()
         }
-        <Editor editorState={this.state.editorState} onChange={this.onChange.bind(this)} blockRendererFn={this.blockRenderer} />
+        <Editor editorState={this.state.editorState} onChange={this.onChange.bind(this)} blockRendererFn={this.blockRenderer.bind(this)} />
         {
           this.state.isLinkOpen ? (
             <LinkEntity editorRef={this} />
