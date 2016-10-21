@@ -5,6 +5,7 @@ import { browserHistory } from "react-router";
 import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
+import BrachyonEditor from "/imports/components/public/editor.jsx";
 
 import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
@@ -133,15 +134,7 @@ export default class EventTitlePage extends Component {
           </div>
           <div className="col col-3">
             <div className="slide-description">
-              {
-                this.props.event.details.description.split("\n").map((p) => {
-                  return (
-                    <p>
-                      {p}
-                    </p>
-                  )
-                })
-              }
+              <BrachyonEditor value={this.props.event.details.description} isEditable={false} />
             </div>
             {
               this.props.event.organize ? (
