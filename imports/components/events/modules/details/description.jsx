@@ -13,7 +13,7 @@ export default class DescriptionPage extends Component {
   }
 
   onDescriptionSave() {
-    Meteor.call("events.details.saveDescription", this.state.id, this.refs.name.value, this.refs.description.value, (err) => {
+    Meteor.call("events.details.saveDescription", this.state.id, this.refs.name.value, this.refs.description.value(), (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
@@ -52,7 +52,7 @@ export default class DescriptionPage extends Component {
           </div>
           <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
           <h5 style={{marginBottom: 20}}>Description</h5>
-          <Editor />
+          <Editor value={event.details.description} ref="description" />
         </div>
       </div>
     )
