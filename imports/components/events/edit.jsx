@@ -191,7 +191,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   editItem(itemCount) {
     return {
-      text: "Edit Modules",
+      text: "+/- Modules",
       subitems: [
         {
           component: EditModulePage,

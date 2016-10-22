@@ -3,6 +3,7 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 
 import LoadingScreen from "/imports/components/public/loading.jsx";
+import Editor from "/imports/components/public/editor.jsx";
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
@@ -124,15 +125,7 @@ export default class ApproveEventAction extends Component {
         <h3>{ event.details.name }</h3>
         <img src={this.imgOrDefault(event)} style={{width: 400, height: "auto", margin: "20px 0"}} />
         <h5>Description</h5>
-        {
-          event.details.description.split("\n").map(para => {
-            return (
-              <p>
-                { para }
-              </p>
-            )
-          })
-        }
+        <Editor value={event.details.description} isEditable={false} />
         <h3 style={{marginBottom: 20}}>Crowdfunding Details</h3>
         {
           tiers.map(tier => {
