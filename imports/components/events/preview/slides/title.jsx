@@ -16,7 +16,8 @@ export default class EventTitlePage extends Component {
     super();
     this.state = {
       pageIndex: 0,
-      isAnimating: false
+      isAnimating: false,
+      scrollAmount: 0
     }
   }
 
@@ -133,9 +134,16 @@ export default class EventTitlePage extends Component {
             </div>
           </div>
           <div className="col col-3">
-            <div className="slide-description">
-              <BrachyonEditor value={this.props.event.details.description} isEditable={false} />
-            </div>
+            {
+              this.props.event.details.description ? (
+                <div className="slide-description">
+                  <BrachyonEditor value={this.props.event.details.description} isEditable={false} />
+                </div>
+              ) : (
+                ""
+              )
+            }
+
             {
               this.props.event.organize ? (
                 this.props.event.organize.schedule.map((day, index) => {
@@ -203,12 +211,30 @@ export default class EventTitlePage extends Component {
     }
   }
 
+  onScroll(e) {
+    if(Math.abs(this.state.pageIndex) < 530) {
+      this.state.scrollAmount += e.deltaY;
+    }
+    if(this.state.pageIndex == 0) {
+      if(this.state.scrollAmount >= 530) {
+        this.onPageRequestChange(1);
+        this.state.scrollAmount = 0;
+      }
+    }
+    else {
+      if(this.state.scrollAmount <= -530) {
+        this.onPageRequestChange(0);
+        this.state.scrollAmount = 0;
+      }
+    }
+  }
+
   render() {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
     var event = this.props.event;
     return (
-      <div className="slide-page-container">
+      <div className="slide-page-container" onWheel={this.onScroll.bind(this)}>
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           {
             this.pages()[this.state.pageIndex]
