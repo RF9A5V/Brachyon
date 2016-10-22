@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+
 export default class ParticipantListPanel extends Component {
 
   constructor(props) {
     super(props);
   }
 
-  imgOrDefault(imgID) {
-    if(imgID){
-      var img = ProfileImages.findOne(imgID);
-      if(img){
-        return img.url();
-      }
+  imgOrDefault(userID) {
+    var user = Meteor.users.findOne(userID);
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
@@ -140,7 +140,7 @@ export default class ParticipantListPanel extends Component {
                   </div>
                   {
                     participant != null ? (
-                      <img src={this.imgOrDefault(participant.profile.image)} />
+                      <img src={this.imgOrDefault(participant._id)} />
                     ) : (
                       <img src={this.imgOrDefault(null)} />
                     )

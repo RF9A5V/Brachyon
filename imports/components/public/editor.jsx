@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Editor, EditorState, RichUtils, ContentState, convertToRaw, convertFromRaw, Modifier, Entity } from 'draft-js';
 import Immutable from "immutable";
+import FontAwesome from "react-fontawesome";
 
 import LinkEntity from "./editor/link.jsx";
 import LinkBlock from "./editor/link_block.jsx";
@@ -16,7 +17,12 @@ export default class BrachyonEditor extends Component {
     super(props);
     var state;
     if(props.value) {
-      state = EditorState.createWithContent(convertFromRaw(props.value));
+      if(typeof(props.value) == "object") {
+        state = EditorState.createWithContent(convertFromRaw(props.value));
+      }
+      else {
+        state = EditorState.createWithContent(ContentState.createFromText(props.value));
+      }
     }
     else {
       state = EditorState.createEmpty()
@@ -68,34 +74,24 @@ export default class BrachyonEditor extends Component {
     return (
       <div className="row x-center">
         <div className={`editor-button ${this.state.isBold ? "active" : ""}`} style={{fontWeight: "bold"}} onClick={this.toggleBold.bind(this)}>
-          Bold
+          <FontAwesome name="bold" />
         </div>
         <div className={`editor-button ${this.state.isItalic ? "active" : ""}`} style={{fontStyle: "italic"}} onClick={this.toggleItalic.bind(this)}>
-          Italic
+          <FontAwesome name="italic" />
         </div>
         <div className={`editor-button ${this.state.isStrike ? "active" : ""}`} style={{textDecoration: "line-through"}} onClick={this.toggleStrike.bind(this)}>
-          Strike
+          <FontAwesome name="strikethrough" />
         </div>
         <div style={{width: 2.5, height: 45, backgroundColor: "white", marginRight: 10}}>
         </div>
         <div className="editor-button" onClick={() => { this.setState({isLinkOpen: true}) }}>
-          Link
+          <FontAwesome name="link" />
         </div>
         <div className="editor-button" onClick={() => { this.setState({ isImgOpen: true }) }}>
-          Image
+          <FontAwesome name="picture-o" />
         </div>
         <div className="editor-button" onClick={() => { this.setState({ isVidOpen: true }) }}>
-          Video
-        </div>
-        <div style={{width: 2.5, height: 45, backgroundColor: "white", marginRight: 10}}>
-        </div>
-        <div className="editor-button" onClick={ () => {
-          var blocks = convertToRaw(this.state.editorState.getCurrentContent());
-          blocks.blocks.forEach((bloc) => {
-            console.log(bloc);
-          })
-        } }>
-          Log State
+          <FontAwesome name="video-camera" />
         </div>
       </div>
     )
@@ -143,20 +139,29 @@ export default class BrachyonEditor extends Component {
     return null;
   }
 
+  focus() {
+    this.refs.editor.focus();
+  }
+
   render() {
     if(this.props.isEditable === false) {
       return (
         <div>
-          <Editor editorState={this.state.editorState} blockRendererFn={this.blockRenderer.bind(this)} readOnly={true} />
+          <Editor editorState={this.state.editorState} blockRendererFn={this.blockRenderer.bind(this)} readOnly={true} ref="editor" />
         </div>
       )
     }
     return (
-      <div>
+      <div onClick={this.focus.bind(this)}>
         {
           this.editorButtons()
         }
-        <Editor editorState={this.state.editorState} onChange={this.onChange.bind(this)} blockRendererFn={this.blockRenderer.bind(this)} />
+        <Editor
+          editorState={this.state.editorState}
+          onChange={this.onChange.bind(this)}
+          blockRendererFn={this.blockRenderer.bind(this)}
+          ref="editor"
+        />
         {
           this.state.isLinkOpen ? (
             <LinkEntity editorRef={this} />

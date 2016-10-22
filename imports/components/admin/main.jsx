@@ -40,7 +40,6 @@ export default class AdminFunctionMain extends Component {
 
   componentWillUnmount() {
     this.state.user.stop();
-    this.state.eventsToApprove.stop();
     this.state.games.stop();
   }
 
