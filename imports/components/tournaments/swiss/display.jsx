@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
 //Called by: imports\components\events\show\bracket.jsx
 export default class SwissDisplay extends TrackerReact(Component) {
@@ -16,8 +18,21 @@ export default class SwissDisplay extends TrackerReact(Component) {
     }
     this.state = {
       page: page,
-      wcount: num
+      wcount: num,
+      open: false
     }
+  }
+
+  openModal() {
+    this.setState({
+      open: true,
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      open: false,
+    });
   }
 
   declareWinner(score, win1, win2, ties, matchnumber)
@@ -106,11 +121,42 @@ export default class SwissDisplay extends TrackerReact(Component) {
           {
             this.props.rounds[this.state.page].matches.map((match, i) => {
               return(
+              <div>
                 <div className="col center" style={{paddingLeft: "20px"}}>
                   <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 1, 0, 0, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
                   <div>VS.</div>
                   <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 0, 1, 0, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
                 </div>
+
+                <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
+                  {
+                    match.played == false ?
+                    (
+                      <div className="col" style={{height: "100%"}}>
+                        <div className="self-end">
+                          <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                        </div>
+                        <h3 className="col-1 center">Set the Winner</h3>
+                        <div className="row flex-padaround col-1">
+                          <div className="col">
+                            <div className="participant-active">{match.playerOne}</div>
+                            <input type="number" ref="winplayerone" />
+                          </div>
+                          <div className="col">
+                            <div className="participant-active">{match.playerTwo}</div>
+                            <input type="number" ref="winplayertwo" />
+                          </div>
+                        </div>
+                        <div className="col">
+                          <span>Ties</span>
+                          <input type="number" ref="ties" />
+                        </div>
+                        <button onClick={this.state.chosen < 2 ? (this.validateData(i).bind(this)) : (() => {})}>Update Match</button>
+                      </div>
+                    ):( "" )
+                  }
+                </Modal>
+              </div>
               );
             })
           }
