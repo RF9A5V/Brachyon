@@ -10,6 +10,7 @@ export default class BlockContainer extends Component {
   selectEvent(event) {
     return(
       function(e){
+        var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
           browserHistory.push(`/events/${event._id}/preview`);
@@ -51,8 +52,18 @@ export default class BlockContainer extends Component {
           {
             this.props.events.map((event, i) => {
               return (
-                <div className="event-block col" onClick={self.selectEvent(event).bind(self)} key={i}>
+                <div className="event-block col" style={{position: "relative"}} onClick={self.selectEvent(event).bind(self)} key={i}>
                   <h2 className="event-block-title">{ event.details.name }</h2>
+                  {
+                    Meteor.userId() == event.owner ? (
+                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}}>
+                        <FontAwesome name="pencil" onClick={() => { alert("hello") }} />
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  }
+
                   <img src={self.imgOrDefault(event)} />
                   <div className="event-block-content">
                     <div className="col">
