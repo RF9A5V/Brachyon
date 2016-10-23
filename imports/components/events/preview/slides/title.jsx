@@ -36,6 +36,10 @@ export default class EventTitlePage extends Component {
     this.onPageRequestChange(1);
   }
 
+  onMoveToWatch() {
+    this.onPageRequestChange(2);
+  }
+
   imgOrDefault(imgId) {
     var img = ProfileImages.findOne(imgId);
     return img == null ? "/images/profile.png" : img.link();
@@ -114,7 +118,7 @@ export default class EventTitlePage extends Component {
                     ""
                   )
                 }
-                <button>Watch</button>
+                <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>
