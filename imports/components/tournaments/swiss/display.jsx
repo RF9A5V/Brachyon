@@ -19,19 +19,28 @@ export default class SwissDisplay extends TrackerReact(Component) {
     this.state = {
       page: page,
       wcount: num,
-      open: false
+      open: false,
+      playerone: 0,
+      playertwo: 0,
+      ties: 0
     }
   }
 
   openModal() {
     this.setState({
       open: true,
+      playerone: 0,
+      playertwo: 0,
+      ties: 0
     });
   }
 
   closeModal() {
     this.setState({
       open: false,
+      playerone: 0,
+      playertwo: 0,
+      ties: 0
     });
   }
 
@@ -68,20 +77,31 @@ export default class SwissDisplay extends TrackerReact(Component) {
     this.setState({wcount: 0, page: page});
   }
 
+  getValue(e, k)
+  {
+    var val = parseInt(e);
+    if (k == 0)
+      this.setState({playerOne: val});
+    else if (k == 1)
+      this.setState({playerTwo: val});
+    else
+      this.setState({ties: val});
+  }
+
   validateData(i){
-    if(this.refs.winplayerone.value == null || this.refs.winplayerone.value == "") {
+    console.log("Testing here");
+    if(this.state.playerOne == null || this.state.playerOne == "") {
       throw new Error("Bracket Name can't be null!");
     }
-    var winp1 = parseInt(this.refs.winplayerone);
-    if(this.refs.winplayertwo.value == null || this.refs.winplayertwo.value == "") {
+    if(this.state.playerTwo == null || this.state.playerTwo == "") {
       throw new Error("Bracket Name can't be null!");
     }
-    var winp2 = parseInt(this.refs.winplayertwo);
-    var ties = 0;
-    if(this.refs.ties.value != null || this.refs.ties.value != "") {
-      ties = parseInt(this.refs.ties.value);
+    if(this.state.ties == null || this.state.ties == "") {
+      this.setState({ties: 0});
     }
-    this.declareWinner(3, winp1, winp2, ties, i);
+    console.log("Does this even happen?");
+    this.declareWinner(3, this.state.playerone, this.state.playertwo, this.state.ties, i);
+    this.closeModal();
   }
 
   render() {
@@ -123,38 +143,33 @@ export default class SwissDisplay extends TrackerReact(Component) {
               return(
               <div>
                 <div className="col center" style={{paddingLeft: "20px"}}>
-                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 1, 0, 0, i).bind(this) }):( () => {} ) }>{match.playerOne}</div>
+                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.setState({open: true}) }):( () => {} ) }>{match.playerOne}</div>
                   <div>VS.</div>
-                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.declareWinner(3, 0, 1, 0, i).bind(this) }):( () => {} ) }>{match.playerTwo}</div>
+                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.setState({open: true}) }):( () => {} ) }>{match.playerTwo}</div>
                 </div>
 
                 <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-                  {
-                    match.played == false ?
-                    (
-                      <div className="col" style={{height: "100%"}}>
-                        <div className="self-end">
-                          <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
-                        </div>
-                        <h3 className="col-1 center">Set the Winner</h3>
-                        <div className="row flex-padaround col-1">
-                          <div className="col">
-                            <div className="participant-active">{match.playerOne}</div>
-                            <input type="number" ref="winplayerone" />
-                          </div>
-                          <div className="col">
-                            <div className="participant-active">{match.playerTwo}</div>
-                            <input type="number" ref="winplayertwo" />
-                          </div>
-                        </div>
-                        <div className="col">
-                          <span>Ties</span>
-                          <input type="number" ref="ties" />
-                        </div>
-                        <button onClick={this.state.chosen < 2 ? (this.validateData(i).bind(this)) : (() => {})}>Update Match</button>
+                  <div className="col" style={{height: "100%"}}>
+                    <div className="self-end">
+                      <FontAwesome name="times" onClick={() => { this.setState({open: false, playerone: 0, playertwo: 0, ties: 0}) }} />
+                    </div>
+                    <h3 className="col-1 center">Set the Winner</h3>
+                    <div className="row flex-padaround col-1">
+                      <div className="col">
+                        <div className="participant-active">{match.playerOne}</div>
+                        <input type="number" onChange={(evt) => this.getValue(evt, 0).bind(this)}/>
                       </div>
-                    ):( "" )
-                  }
+                      <div className="col">
+                        <div className="participant-active">{match.playerTwo}</div>
+                        <input type="number" onChange={(evt) => this.getValue(evt, 1).bind(this)}/>
+                      </div>
+                    </div>
+                    <div className="col">
+                      <span>Ties</span>
+                      <input type="number" onChange={(evt) => this.getValue(evt, 2).bind(this)}/>
+                    </div>
+                    <button onClick={() => {this.validateData(i).bind(this)}}>Update Match</button>
+                  </div>
                 </Modal>
               </div>
               );
