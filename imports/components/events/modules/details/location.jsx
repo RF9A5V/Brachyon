@@ -34,27 +34,23 @@ export default class LocationPage extends Component {
             <h3>Location</h3>
           </div>
           <div className="row">
-            <div className="submodule-section" style={{width: "30%", minWidth: 200}}>
-              <LocationSelect ref="location" {...(event.details.location || {})} onChange={() => { this.setState({ showLoc: false }) }} />
+            <div className="submodule-section" style={{width: "30%", minWidth: 200, height: 500}}>
+              <LocationSelect ref="location" {...(event.details.location.online ? {} : event.details.location)} />
             </div>
-            <div className="submodule-section col-1 row center x-center">
+            <div className="submodule-section col-1 row center x-center" style={{height: 500}}>
               {
-                this.state.showLoc ? (
-                  event.details.location.online ? (
-                    <span className="section">
-                      Online
-                    </span>
-                  ) : (
-                    <div className="col center x-center">
-                      <div className="col" style={{textAlign: "left", display: "inline-flex"}}>
-                        <span className="section">{ event.details.location.locationName }</span>
-                        <span className="section">{ event.details.location.streetAddress }</span>
-                        <span className="section">{ event.details.location.city + " " + event.details.location.state + ", " + event.details.location.zip }</span>
-                      </div>
-                    </div>
-                  )
+                event.details.location.online ? (
+                  <span className="section">
+                    Online
+                  </span>
                 ) : (
-                  ""
+                  <div className="col center x-center">
+                    <div className="col" style={{textAlign: "left", display: "inline-flex"}}>
+                      <span className="section">{ event.details.location.locationName }</span>
+                      <span className="section">{ event.details.location.streetAddress }</span>
+                      <span className="section">{ event.details.location.city + " " + event.details.location.state + ", " + event.details.location.zip }</span>
+                    </div>
+                  </div>
                 )
               }
             </div>

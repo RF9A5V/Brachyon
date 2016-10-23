@@ -1,20 +1,10 @@
 import React, { Component } from "react";
+import { VelocityComponent } from "velocity-react";
 
 export default class SideTabMain extends Component {
 
   constructor(props){
     super(props);
-  }
-
-  persistentButtons() {
-    return this.props.items.filter(item => {
-      return item.icon == null;
-    }).reverse();
-  }
-
-  onPersistentButtonClick(item) {
-    var index = this.props.items.indexOf(item);
-    this.props.onItemSelect(index, 0);
   }
 
   render() {
@@ -28,15 +18,6 @@ export default class SideTabMain extends Component {
           {
             <subItem.component item={this.props.items[this.props.activeItem]} onItemSelect={this.props.onItemSelect} activeItem={this.props.activeItem} { ...(subItem.args || {}) } />
           }
-          <div className="row x-center" style={{position: "fixed", right: 10, bottom: 60}}>
-            {
-              this.persistentButtons().map((item, i) => {
-                return (
-                  <button className={`${i == 1 ? "signup-button" : "login-button"}`} style={{ marginRight: 10 }} onClick={() => { this.onPersistentButtonClick(item) }}>{ item.text }</button>
-                )
-              })
-            }
-          </div>
         </div>
       </div>
     )

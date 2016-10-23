@@ -48,7 +48,7 @@ export default class DetailsPanel extends Component {
 
   render() {
     return (
-      <div>
+      <div className="panel">
         <div className="col">
           <h5>Event Name</h5>
           <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />

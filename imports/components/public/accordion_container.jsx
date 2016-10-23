@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { VelocityComponent } from "velocity-react";
 
 export default class AccordionContainer extends Component {
 
@@ -24,13 +25,15 @@ export default class AccordionContainer extends Component {
           }
 
         </div>
+        <VelocityComponent animation={this.props.open ? { height: 500, padding: "0 20px" } : { height: 0, padding: 0 }}>
         {
           <div className="accordion-content" style={{
-            display: this.props.open ? "inherit" : "none"
+            height: 0, padding: 0
           }}>
             { this.props.children }
           </div>
         }
+        </VelocityComponent>
       </div>
     )
   }

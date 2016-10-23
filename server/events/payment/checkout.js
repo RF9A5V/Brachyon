@@ -10,13 +10,16 @@ Meteor.methods({
       $set: {},
       $push: {}
     };
+    console.log(id);
+    console.log(obj);
     if(obj.tickets) {
-      var tickets = new Set(event.ticketAccess[Meteor.userId()] || []);
+      var ticketAccess = event.tickets.ticketAccess || {};
+      var tickets = new Set(ticketAccess[Meteor.userId()] || []);
       obj.tickets.forEach(tick => {
         ticketValues += event.tickets[tick].price * 100;
         tickets.add(tick);
       });
-      cmd["$set"]["ticketAccess"] = {
+      cmd["$set"]["tickets.ticketAccess"] = {
         [`${Meteor.userId()}`]: Array.from(tickets)
       }
     }
@@ -29,7 +32,7 @@ Meteor.methods({
     if(price + ticketValues != obj.baseAmount) {
       throw new Meteor.Error(403, "Invalid amount found for base price.");
     }
-    if(price > 0){
+    if(obj.baseAmount > 0){
       Meteor.call("addCard", obj.token, (err) => {
         if(err) {
           throw err;
