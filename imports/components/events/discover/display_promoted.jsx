@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
+import Editor from "/imports/components/public/editor.jsx";
+
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
@@ -16,21 +19,27 @@ export default class DisplayPromotedEvent extends Component {
     return "/images/bg.jpg";
   }
 
-  description() {
-    if(this.props.event.details.description == null){
-      return "There's no description for this event.";
-    }
-    parsed = this.props.event.details.description.replace(/<img .*>/g, "").replace(/<\/?[A-z]+>/, "");
-    if(parsed.length == 0){
-      return "There's no description for this event.";
-    }
-    else {
-      sizeMax = 200;
-      if(parsed.length > sizeMax){
-        return parsed.substring(0, sizeMax-3) + '...';
+  selectEvent(event) {
+    return(
+      function(e){
+        var id = Meteor.userId();
+        e.preventDefault();
+        if(event.published || event.underReview || event.active){
+          browserHistory.push(`/events/${event._id}/preview`);
+        }
+        else {
+          browserHistory.push(`/events/${event._id}/edit`);
+        }
       }
-      return parsed;
+    )
+  }
+
+  profileImageOrDefault(id) {
+    var img = ProfileImages.findOne(id);
+    if(!img) {
+      return "/images/profile.png";
     }
+    return img.link();
   }
 
   render(){
@@ -40,53 +49,52 @@ export default class DisplayPromotedEvent extends Component {
       )
     }
 
+    var event = this.props.event;
+
     return (
-      <div className="row" style={{width: "85vw"}}>
-        <div className="promoted-event-block col-1">
-          <img src={this.imgOrDefault(this.props.event)} />
-        </div>
-        <div className="discover-details col-1">
-          <h1 style={{fontSize: "calc(2vw + 2vmin)"}}>{this.props.event.details.name}</h1>
-          <div className="row" style={{fontSize: "13px"}} style={{fontSize: "calc(0.5vw + 0.5vmin)"}}>
-            <div style={{marginRight: '10px'}}>
-              {/*Crowdfunding check goes here */}
-              {
-                this.props.event.details.location.online ? (
-                  <div><FontAwesome name="signal" /> Online</div>
-                ) : (
-                  <div>
-                    <FontAwesome name="map-marker" /> {this.props.event.details.location.city}, {this.props.event.details.location.state}
+      <div className="row center col-1">
+        <div className="promoted-event-block">
+          <div className="event-block col" style={{position: "relative", width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
+            <h2 className="event-block-title">{ event.details.name }</h2>
+            <img src={this.imgOrDefault(event)} />
+            <div className="event-block-content">
+              <div className="col">
+                <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+                  <div className="row x-center" style={{fontSize: 12}}>
+                    <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                   </div>
-                )
-              }
+                  <span style={{fontSize: 12}}>{
+                    (() => {
+                      var count = 0;
+                      if(event.brackets) {
+                        event.brackets.forEach(bracket => {
+                          if(bracket.participants) {
+                            count += bracket.participants.length;
+                          }
+                        });
+                      }
+                      return count;
+                    })()
+                  }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
+                </div>
+                <div className="row flex-pad">
+                  {
+                    event.details.location.online ? (
+                      <div style={{fontSize: 12}}><FontAwesome name="signal" /> Online Event</div>
+                    ) : (
+                      <div style={{fontSize: 12}}>
+                        <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
+                      </div>
+                    )
+                  }
+                  <span style={{fontSize: 12}}>
+                    {moment(event.details.datetime).format("MMM Do, YYYY")}
+                    <FontAwesome name="calendar" style={{marginLeft: 5}} />
+                  </span>
+                </div>
+              </div>
             </div>
-            <span>|</span>
-            <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="calendar" /> {moment(this.props.event.details.datetime).format("MMM Do")}</div>
-            <span>|</span>
-            <div style={{marginRight: '10px', marginLeft: '10px'}}><FontAwesome name="user" /> {Meteor.users.findOne(this.props.event.owner).username}</div>
           </div>
-          <div dangerouslySetInnerHTML={{__html: this.description()}} style={{fontSize: "calc(0.5vw + 0.5vmin)", margin: '10px 0'}}>
-          </div>
-          {/*<div>
-            <span>
-              Amount
-            </span>
-          </div>
-          <div>
-            <span>
-              Time Remaining
-            </span>
-          </div>
-          <div>
-            <span>
-              Players
-            </span>
-          </div>
-          <div>
-            <span>
-              Followers
-            </span>
-          </div>*/}
         </div>
       </div>
     )

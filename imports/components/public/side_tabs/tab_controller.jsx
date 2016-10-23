@@ -40,19 +40,20 @@ export default class TabController extends Component {
   }
 
   render() {
+    var buttons = this.persistentButtons();
     return (
       <div className="tab-container row">
         <SideTabMenu items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} />
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           <SideTabContent items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} />
         </VelocityComponent>
-        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", zIndex: 4, paddingLeft: 10}}>
+        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", zIndex: 4, paddingRight: 10, justifyContent: "flex-end"}}>
           {
-            this.persistentButtons().map((item, i) => {
+            buttons.map((item, i) => {
               return (
-                <span style={{margin: 10}} onClick={() => { this.onPersistentButtonClick(item) }}>
+                <button className={i == buttons.length - 1 ? "signup-button" : "login-button" } style={{margin: 10}} onClick={() => { this.onPersistentButtonClick(item) }}>
                   { item.text }
-                </span>
+                </button>
               )
             })
           }

@@ -5,6 +5,7 @@ import { browserHistory } from "react-router";
 import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
+import BrachyonEditor from "/imports/components/public/editor.jsx";
 
 import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
@@ -15,7 +16,8 @@ export default class EventTitlePage extends Component {
     super();
     this.state = {
       pageIndex: 0,
-      isAnimating: false
+      isAnimating: false,
+      scrollAmount: 0
     }
   }
 
@@ -32,6 +34,10 @@ export default class EventTitlePage extends Component {
 
   onMoveToDetails() {
     this.onPageRequestChange(1);
+  }
+
+  onMoveToWatch() {
+    this.onPageRequestChange(2);
   }
 
   imgOrDefault(imgId) {
@@ -112,7 +118,7 @@ export default class EventTitlePage extends Component {
                     ""
                   )
                 }
-                <button>Watch</button>
+                <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>
@@ -132,17 +138,16 @@ export default class EventTitlePage extends Component {
             </div>
           </div>
           <div className="col col-3">
-            <div className="slide-description">
-              {
-                this.props.event.details.description.split("\n").map((p) => {
-                  return (
-                    <p>
-                      {p}
-                    </p>
-                  )
-                })
-              }
-            </div>
+            {
+              this.props.event.details.description ? (
+                <div className="slide-description">
+                  <BrachyonEditor value={this.props.event.details.description} isEditable={false} />
+                </div>
+              ) : (
+                ""
+              )
+            }
+
             {
               this.props.event.organize ? (
                 this.props.event.organize.schedule.map((day, index) => {
@@ -210,12 +215,30 @@ export default class EventTitlePage extends Component {
     }
   }
 
+  onScroll(e) {
+    if(Math.abs(this.state.pageIndex) < 530) {
+      this.state.scrollAmount += e.deltaY;
+    }
+    if(this.state.pageIndex == 0) {
+      if(this.state.scrollAmount >= 530) {
+        this.onPageRequestChange(1);
+        this.state.scrollAmount = 0;
+      }
+    }
+    else {
+      if(this.state.scrollAmount <= -530) {
+        this.onPageRequestChange(0);
+        this.state.scrollAmount = 0;
+      }
+    }
+  }
+
   render() {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
     var event = this.props.event;
     return (
-      <div className="slide-page-container">
+      <div className="slide-page-container" onWheel={this.onScroll.bind(this)}>
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           {
             this.pages()[this.state.pageIndex]

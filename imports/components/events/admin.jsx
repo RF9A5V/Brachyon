@@ -38,15 +38,15 @@ export default class EventAdminPage extends TrackerReact(Component) {
   items() {
     var event = Events.findOne();
     var items = [
-      {
-        text: "Overview",
-        icon: "globe",
-        subitems: [
-          {
-            component: OverviewMain
-          }
-        ]
-      }
+      // {
+      //   text: "Overview",
+      //   icon: "globe",
+      //   subitems: [
+      //     {
+      //       component: OverviewMain
+      //     }
+      //   ]
+      // }
     ];
     if(event.crowdfunding) {
       items.push({
@@ -118,13 +118,13 @@ export default class EventAdminPage extends TrackerReact(Component) {
       })
     }
     items.push({
-      text: "Edit",
+      text: "Close",
       subitems: [
         {
-          component: EditModules
+          component: Close
         }
       ]
-    });
+    })
     if(!event.crowdfunding || !event.crowdfunding.sponsors || event.crowdfunding.sponsors.length == 0) {
       items.push({
         text: "Unpublish",
@@ -135,14 +135,15 @@ export default class EventAdminPage extends TrackerReact(Component) {
         ]
       });
     }
+
     items.push({
-      text: "Close",
+      text: "+/- Modules",
       subitems: [
         {
-          component: Close
+          component: EditModules
         }
       ]
-    })
+    });
     return items;
   }
 

@@ -5,10 +5,18 @@ import LocationSelect from './location_select.jsx';
 import DateInput from './date_input.jsx';
 import TimeInput from './time_input.jsx';
 import ImageForm from "../../public/img_form.jsx";
+import Editor from "../../public/editor.jsx";
 
 import { Images } from "/imports/api/event/images.js";
 
 export default class DetailsPanel extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      charCount: 0
+    }
+  }
 
   value() {
     if(this.refs.name.value == "") {
@@ -19,10 +27,6 @@ export default class DetailsPanel extends Component {
       toastr.error("Details location needs definition.");
       throw new Error("Details location needs definition.");
     }
-    else if(this.refs.description.value == "") {
-      toastr.error("Details description needs definition.");
-      throw new Error("Details description needs definition.");
-    }
     else if(this.refs.date.value() == null || this.refs.time.value() == null) {
       toastr.error("Details datetime needs definition.");
       throw new Error("Details datetime needs definition.");
@@ -31,7 +35,7 @@ export default class DetailsPanel extends Component {
       return {
         name: this.refs.name.value,
         location: this.refs.location.value(),
-        description: this.refs.description.value,
+        description: this.refs.description.value(),
         datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate(),
         image: this.refs.image.value(true)
       }
@@ -46,35 +50,51 @@ export default class DetailsPanel extends Component {
     // );
   }
 
+  onTitleChange() {
+    var text = this.refs.name.value;
+    if(text.length > 50) {
+      this.refs.name.value = text.substring(0, 50);
+    }
+    this.setState({
+      charCount: this.refs.name.value.length
+    })
+  }
+
   render() {
     return (
       <div className="panel">
         <div className="col">
-          <h5>Event Name</h5>
-          <input type="text" placeholder="Event Name" ref="name" onChange={this.onChange.bind(this)} />
+          <div className="row x-center">
+            <h5 style={{marginRight: 10}}>Event Name</h5>
+            <span style={{fontSize: 12}}>{this.state.charCount || 0} / 50</span>
+          </div>
+          <input type="text" placeholder="Something Catchy..." ref="name" onChange={this.onTitleChange.bind(this)} />
         </div>
-        <div>
-          <h5>Event Image (Optional)</h5>
-          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9}/>
-        </div>
-        <br/>
         <div className="col">
           <LocationSelect ref="location" onChange={this.onChange.bind(this)} />
         </div>
-        <div className="col">
+        <div className="col" style={{marginBottom: 20}}>
           <h5>Description</h5>
-          <textarea ref="description" placeholder="Any additional details about the event (parking, rules, etc)..." onChange={this.onChange.bind(this)}></textarea>
+          <Editor ref="description" />
         </div>
-        <div className="row col-2">
+        <div className="row col-2" style={{marginBottom: 20}}>
           <div className="col-1 x-center center">
             <h5 style={{marginBottom: 10}}>Date</h5>
             <div>
               <DateInput ref="date" />
             </div>
           </div>
-          <div className="col-1 x-center center">
+          <div className="col-1 col x-center">
             <h5 style={{marginBottom: 10}}>Time</h5>
-            <TimeInput ref="time" />
+            <div className="row center x-center col-1">
+              <TimeInput ref="time" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <h5>Event Image (Optional)</h5>
+          <div className="row center">
+          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9}/>
           </div>
         </div>
       </div>

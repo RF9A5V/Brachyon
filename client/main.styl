@@ -19,6 +19,8 @@ body
 button:focus
   outline 0
 
+figure
+  margin: 0
 
 .bracket-line-v
   width 5px
@@ -90,6 +92,11 @@ button:focus
 
 .row-to-col
   +below(1000px)
+    flex-direction: column
+
+.create-row
+  display flex
+  +below(1450px)
     flex-direction: column
 
 .center

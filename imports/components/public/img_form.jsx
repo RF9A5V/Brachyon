@@ -97,6 +97,8 @@ export default class ImageForm extends Component {
         src={this.state.url}
         style={{width: "100%", maxWidth: 500, height: 300}}
         ref="cropper"
+        zoomable={false}
+        zoomOnWheel={false}
       />);
     }
     else if(this.props.id != null){

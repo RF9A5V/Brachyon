@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DisplayPromotedEvent from './display_promoted.jsx';
+import { VelocityComponent } from "velocity-react";
 
 export default class DisplayDiscover extends Component {
 
@@ -23,7 +24,7 @@ export default class DisplayDiscover extends Component {
         this.state.panel = (this.state.panel + 1) % this.props.events.length;
         this.forceUpdate();
         this.reset();
-      }, 1000)
+      }, 500)
     }, 4000)
   }
 
@@ -40,39 +41,36 @@ export default class DisplayDiscover extends Component {
   }
 
   render() {
-    var arr = [];
-    for (var i = 0; i < this.props.events.length; i++) {
-      arr[i] = i;
-    }
     return (
       <div style={{padding: "0 5em"}} onMouseEnter={() => { this.onPromotedAreaFocus() }} onMouseLeave={() => { this.onPromotedAreaLeave() }}>
-        <div className="row x-center" style={{margin: "20px"}}>
-          <div className="discover-selector col">
+        <div className="col x-center" style={{margin: "20px"}}>
+          <VelocityComponent animation={ this.state.loadIn ? { opacity: 1 } : { opacity: 0 }} duration={500}>
+            <DisplayPromotedEvent event={this.props.events[this.state.panel]} active={true} />
+          </VelocityComponent>
+          <div className="discover-selector row">
             {
-              arr.map((val) => {
+              this.props.events.map((val, i) => {
                 return (
                   <div
-                    className={`discover-selector-square ${val === this.state.panel ? "active" : ""}`}
-                    ref={`panel_${val}`}
+                    className={`discover-selector-square ${i === this.state.panel ? "active" : ""}`}
+                    ref={`panel_${i}`}
                     onClick={
                       (e) => {
-                        this.setState({panel: val})
-                        clearTimeout(this.state.timer);
+                        this.onPromotedAreaFocus();
+                        this.setState({loadIn: false});
+                        setTimeout(() => {
+                          this.setState({
+                            loadIn: true,
+                            panel: i
+                          })
+                        }, 500)
                       }
-                    }></div>
+                    }>
+                  </div>
                 )
               })
             }
           </div>
-          {
-            arr.map((val) => {
-              return (
-                <div className={`promotion-animation ${val === this.state.panel && this.state.loadIn ? "in" : "out"}`}>
-                  <DisplayPromotedEvent event={this.props.events[val]} active={val === this.state.panel} />
-                </div>
-              )
-            })
-          }
         </div>
       </div>
     );
