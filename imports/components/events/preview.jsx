@@ -7,10 +7,9 @@ import { browserHistory } from "react-router";
 import SlideMain from "./preview/slides/slide_main.jsx";
 
 import TitlePage from "./preview/slides/title.jsx";
+import BracketPage from "./preview/slides/brackets.jsx";
 import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
-
-import TicketPurchaseWrapper from "./preview/ticket_purchase_wrapper.jsx";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -60,7 +59,13 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         name: "Home",
         component: <TitlePage event={event} />
       }
-  ];
+    ];
+    if(event.brackets) {
+      pages.push({
+        name: "Brackets",
+        component: <BracketPage event={event} />
+      })
+    }
     if(event.crowdfunding) {
       pages.push({
         name: "Crowdfunding",

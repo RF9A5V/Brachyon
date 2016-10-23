@@ -317,6 +317,9 @@ export default class PrizePoolBreakdown extends Component {
               return (
                 <div className="row" style={{marginBottom: 10}} key={i} style={{height: 500}}>
                   <div className="col" style={{backgroundColor: "#444", marginRight: 10, padding: 20}}>
+                    <div className="row center">
+                      <h3>Breakdown</h3>
+                    </div>
                     <div className="row x-center flex-pad">
                       <span style={{marginRight: 10}}>Max Recipients</span>
                       <select onChange={(evt) => this.changeMin(evt, i).bind(this)} value={this.state.brarr[i].min}>
