@@ -59,7 +59,7 @@ export default class MatchBlock extends Component {
       })
       this.closeModal();
     }
-  }  
+  }
 
   getUsername(id) {
     // return Meteor.users.findOne(id).username;
@@ -81,7 +81,7 @@ export default class MatchBlock extends Component {
               return (
                 <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
                   match.playerOne != null && match.playerTwo != null ? (
-                    () => {this.setState({open: true}); }
+                    () => {if(Meteor.user()){this.setState({open: true});} }
                   ) : (
                     () => {}
                   )
