@@ -8,6 +8,7 @@ import SlideMain from "./preview/slides/slide_main.jsx";
 
 import TitlePage from "./preview/slides/title.jsx";
 import CFPage from "./preview/slides/crowdfunding.jsx";
+import StreamPage from "./preview/slides/stream.jsx";
 
 import TicketPurchaseWrapper from "./preview/ticket_purchase_wrapper.jsx";
 
@@ -65,6 +66,12 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         name: "Crowdfunding",
         component: <CFPage event={event} />
       });
+    }
+    if(event.twitchStream){
+      pages.push({
+        name: "Streams",
+        component: <StreamPage event={event} />
+      })
     }
     return pages
   }
