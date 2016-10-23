@@ -79,7 +79,7 @@ export default class SlideMain extends Component {
             ""
           )
         }
-        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#333", height: 50, paddingLeft: 10}}>
+        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, paddingLeft: 10, zIndex: 4}}>
           {
             this.navElements()
           }

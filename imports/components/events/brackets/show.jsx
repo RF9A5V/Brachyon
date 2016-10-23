@@ -5,61 +5,87 @@ import LeaderboardPanel from "../show/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
-import SideTabs from "../../public/side_tabs.jsx";
+
+import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 export default class BracketShowScreen extends TrackerReact(Component) {
 
   constructor(props) {
     super(props);
     this.state = {
-      bracket: Meteor.subscribe("bracket", props.params.eventId, props.params.bracketIndex)
+      event: Meteor.subscribe("event", this.props.params.eventId)
     }
   }
 
   componentWillUnmount() {
-    this.state.bracket.stop();
-  }
-
-  bracket() {
-    return Events.find().fetch()[0].brackets[this.props.params.bracketIndex];
+    this.state.event.stop();
   }
 
   items() {
-    var menuItems = [
-      "Leaderboard",
-      "Participant List",
-      "Bracket Display"
-    ];
-    if(Meteor.userId() == Events.findOne().owner) {
-      menuItems.push("Options");
+    console.log(Events.findOne())
+    var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
+    var defaultItems = [];
+    if(!bracket.isComplete) {
+      defaultItems.push({
+        text: "Participants",
+        icon: "users",
+        subitems: [
+          {
+            component: ParticipantList,
+            args: {
+              participants: bracket.participants || [],
+              rounds: bracket.rounds,
+              bracketIndex: this.props.params.bracketIndex
+            }
+          }
+        ]
+      })
     }
-    return menuItems;
-  }
-
-  content() {
-    var panelItems = [
-      <LeaderboardPanel participants={this.bracket().participants || []} />,
-      <ParticipantList participants={this.bracket().participants || []} rounds={this.bracket().rounds} bracketIndex={this.props.params.bracketIndex} isOwner={Meteor.userId() == Events.findOne().owner} />,
-      <BracketPanel id={Events.findOne()._id} rounds={this.bracket().rounds} format={this.bracket().format.baseFormat}/>
-    ];
-    if(Meteor.userId() == Events.findOne().owner) {
-      panelItems.push(<OptionsPanel bracketIndex={this.props.params.bracketIndex} />);
+    else {
+      defaultItems.push({
+        text: "Leaderboard",
+        icon: "trophy",
+        subitems: [
+          {
+            component: LeaderboardPanel,
+            args: {
+              participants: this.props.params.bracketIndex
+            }
+          }
+        ]
+      })
     }
-    return panelItems;
+    if(bracket.inProgress) {
+      defaultItems = defaultItems.concat([
+        {
+          text: bracket.name,
+          icon: "sitemap",
+          subitems: [
+            {
+              component: BracketPanel,
+              args: {
+                id: this.props.params.eventId,
+                format: bracket.format.baseFormat,
+                rounds: bracket.rounds
+              }
+            }
+          ]
+        }
+      ])
+    }
+    return defaultItems;
   }
 
   render() {
-    if(!this.state.bracket.ready()) {
+    if(!this.state.event.ready()) {
       return (
         <div>
           Loading...
         </div>
-      );
+      )
     }
     return (
-      <div>
-        <SideTabs items={this.items()} panels={this.content()} />
-      </div>
-    );
+      <TabController items={this.items()} />
+    )
   }
 }

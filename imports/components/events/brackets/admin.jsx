@@ -111,6 +111,13 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         </div>
       )
     }
+    else if(Meteor.userId() != Events.findOne().owner) {
+      return (
+        <div>
+          Sorry you can't access this page 
+        </div>
+      )
+    }
     return (
       <TabController items={this.items()} />
     )

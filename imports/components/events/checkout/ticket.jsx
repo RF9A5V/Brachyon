@@ -52,8 +52,8 @@ export default class TicketCheckout extends Component {
 
   ticketStatusColor(ticket) {
     var event = Events.findOne();
-    if(event.ticketAccess) {
-      var access = event.ticketAccess[Meteor.userId()];
+    if(event.tickets.ticketAccess) {
+      var access = event.tickets.ticketAccess[Meteor.userId()];
       if(access && access.indexOf(ticket) > -1) {
         return "#0D0";
       }
@@ -66,7 +66,7 @@ export default class TicketCheckout extends Component {
 
   ticketButton() {
     var event = Events.findOne();
-    if(event.ticketAccess) {
+    if(event.tickets.ticketAccess) {
       var access = event.ticketAccess[Meteor.userId()];
       if(access && access.indexOf(this.state.activeTicket) > -1) {
         return "";
@@ -90,6 +90,9 @@ export default class TicketCheckout extends Component {
           <div className="submodule-section col-1">
             {
               Object.keys(event.tickets || {}).map((ticket, i) => {
+                if(ticket == "ticketAccess") {
+                  return "";
+                }
                 return (
                   <div className={`sub-section-select row flex-pad x-center ${ticket == this.state.activeTicket ? "active" : ""}`} onClick={() => { this.setState({activeTicket: ticket}) }}>
                     <span>
@@ -113,7 +116,7 @@ export default class TicketCheckout extends Component {
                         this.ticketName(this.state.activeTicket)
                       }
                     </h3>
-                    <h5>{event.tickets[this.state.activeTicket].price == 0 ? "Free!" : "$" + event.tickets[this.state.activeTicket.price]}</h5>
+                    <h5>{event.tickets[this.state.activeTicket].price == 0 ? "Free!" : "$" + event.tickets[this.state.activeTicket].price}</h5>
                   </div>
                   <p className="col-1">
                     {

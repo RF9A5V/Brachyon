@@ -4,13 +4,18 @@ import FontAwesome from 'react-fontawesome';
 
 export default class DateInput extends Component {
 
-  componentWillMount() {
-    this.setState({
+  constructor(props) {
+    super(props);
+    var initTime = moment();
+    if(props.init) {
+      initTime = moment(props.init);
+    }
+    this.state = {
       open: false,
-      time: this.props.init == null ? moment() : moment(this.props.init),
-      month: moment().month(),
-      year: moment().year()
-    });
+      time: initTime,
+      month: initTime.month(),
+      year: initTime.year()
+    }
   }
 
   value() {
