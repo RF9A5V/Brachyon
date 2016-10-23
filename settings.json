@@ -16,6 +16,9 @@
     },
     "google": {
       "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
+    },
+    "reddit": {
+      "client_id": "wUuUpNV5yua7UA"
     }
   },
   "private": {
@@ -27,13 +30,17 @@
       "testAppSecret": "65357189ff78915a8d752da87b4a30e9"
     },
     "twitch": {
-      "liveSecretKey": "s78zcg4hatsuvwbzybah43bmm6ujuz8"
+      "liveSecretKey": "s78zcg4hatsuvwbzybah43bmm6ujuz8",
+      "bot_pass": "oauth:loeo8a8ih2nhb538fi9sx19ftpm08p"
     },
     "twitter": {
       "liveSecretKey": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8"
     },
     "google": {
       "liveSecretKey": "XUgerKtBpHS6Qu8rrBuD2KjM"
+    },
+    "reddit": {
+      "liveSecretKey": "WBDvnUo6GD7Pcyx1F-jkrO3DeOA"
     }
   }
 

@@ -6,6 +6,7 @@ import FacebookConnect from "../../oauth/connect/facebook.jsx";
 import TwitchConnect from "../../oauth/connect/twitch.jsx";
 import TwitterConnect from "../../oauth/connect/twitter.jsx";
 import GoogleConnect from "../../oauth/connect/google.jsx";
+import RedditConnect from "../../oauth/connect/reddit.jsx";
 
 export default class OAuthOptionsPanel extends Component {
   render() {
@@ -47,6 +48,12 @@ export default class OAuthOptionsPanel extends Component {
           <h3>Twitter</h3>
           <div>
             <TwitterConnect />
+          </div>
+        </div>
+        <div className="side-tab-panel">
+          <h3 onClick={ () => {Meteor.call("twitch_bot.join", "Brachyon", function(err){});}}>Reddit</h3>
+          <div>
+
           </div>
         </div>
       </div>

@@ -38,3 +38,4 @@ accounts-twitter@1.1.11
 accounts-google@1.0.10
 alexbeauchemin:accounts-twitch
 shell-server
+meson:electron

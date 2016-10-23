@@ -62,6 +62,16 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+ServiceConfiguration.configurations.upsert(
+  {service: "reddit"},
+  {
+    $set: {
+      clientId: Meteor.settings.public.reddit.client_id,
+      secret: Meteor.settings.private.reddit.liveSecretKey
+    }
+  }
+)
+
 Meteor.startup(() => {
 
   Logger.info('Meteor started!')

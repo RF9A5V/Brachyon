@@ -23,6 +23,8 @@ import TicketsPage from "./modules/revenue/tickets.jsx";
 import TierPage from "./modules/revenue/tiers.jsx";
 import StrategyPage from "./modules/revenue/strategies.jsx";
 
+import AddStream from "./modules/stream/add.jsx";
+
 import SubmitPage from "./modules/submit.jsx";
 
 export default class EditEventScreen extends TrackerReact(React.Component){
@@ -140,6 +142,16 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           {
             component: StrategyPage,
             text: "Strategies"
+          }
+        ]
+      },
+      {
+        text: "Streams",
+        icon: "television",
+        subitems: [
+          {
+            component: AddStream,
+            text: "Stream"
           }
         ]
       },

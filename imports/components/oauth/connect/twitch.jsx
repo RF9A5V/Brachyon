@@ -6,7 +6,7 @@ export default class FacebookConnect extends Component {
   onClick(e) {
     e.preventDefault();
     Meteor.linkWithTwitch({
-      requestPermissions: ["user_read", "user_blocks_read", "user_subscriptions"]
+      requestPermissions: ["user_read", "user_blocks_read", "user_subscriptions", "channel_read"]
     }, function(err){
       if(err){
         console.log(err);
@@ -14,6 +14,14 @@ export default class FacebookConnect extends Component {
       }
       else {
         toastr.success("Integrated with Twitch!", "Success!");
+        Meteor.call("twitch_bot.join", Meteor.user().services.twitch.display_name, function(err){
+          if(err){
+            toastr.error(err.reason, "Failed to join channel!");
+          }
+          else {
+            toastr.success("BrachyonBot joined your channel!");
+          }
+        });
       }
     })
   }

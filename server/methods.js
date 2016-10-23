@@ -299,7 +299,9 @@ Meteor.methods({
     if(user){
       var token = Accounts._generateStampedLoginToken();
       Accounts._insertLoginToken(user, token);
-      return token;
+      console.log('user: ' + user);
+      console.log('token:' + token.token);
+      return {user, token};
     }
     else {
       return null;
