@@ -110,7 +110,7 @@ export default class EventTitlePage extends Component {
 
               <div className="row">
                 {
-                  event.tickets || event.brackets ? (
+                  event.tickets ? (
                     <div>
                       <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event._id+"/checkout") }}>Play</button>
                     </div>
@@ -118,7 +118,18 @@ export default class EventTitlePage extends Component {
                     ""
                   )
                 }
-                <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
+                {
+                  event.brackets && !event.tickets ? (
+                    <button style={{marginRight: 10}} onClick={() => { this.props.nav(1) }}>
+                      Register
+                    </button>
+                  ) : (
+                    ""
+                  )
+                }
+                {
+                  // <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
+                }
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>

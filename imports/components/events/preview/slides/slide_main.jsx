@@ -51,11 +51,20 @@ export default class SlideMain extends Component {
     return elems;
   }
 
+  currentComponent() {
+    var slide = this.props.slides[this.state.activeSlide];
+    return (
+      <slide.component event={this.props.event} nav={this.onSlideChange.bind(this)} />
+    )
+  }
+
   render() {
     return (
       <div className="col-1 col" style={{position: "relative"}}>
         <VelocityComponent animation={{opacity: this.state.isAnim ? 0 : 1}} duration={500}>
-          { this.props.slides[this.state.activeSlide].component }
+          {
+            this.currentComponent()
+          }
         </VelocityComponent>
         {
           this.state.activeSlide > 0 ? (

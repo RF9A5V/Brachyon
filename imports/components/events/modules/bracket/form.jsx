@@ -163,7 +163,7 @@ export default class BracketForm extends Component {
         <input ref="name" defaultValue={this.props.name} />
         <h5>Game</h5>
         {
-          this.state.game ? (
+          this.state.game && this.state.game.banner ? (
             <div style={{textAlign: "center"}}>
               <img style={{width: "50%", height: "auto"}} src={Images.findOne(this.state.game.banner).link()} />
             </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 import Editor from "/imports/components/public/editor.jsx";
+import { browserHistory } from "react-router";
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
