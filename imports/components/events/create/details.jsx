@@ -60,6 +60,12 @@ export default class DetailsPanel extends Component {
     })
   }
 
+  setImage(base64) {
+    this.setState({
+      image: base64
+    })
+  }
+
   render() {
     return (
       <div className="panel">
@@ -94,7 +100,7 @@ export default class DetailsPanel extends Component {
         <div>
           <h5>Event Image (Optional)</h5>
           <div className="row center">
-          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9}/>
+          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
           </div>
         </div>
       </div>

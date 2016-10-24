@@ -11,7 +11,7 @@ export default class ImageForm extends Component {
   }
 
   value(getBase64) {
-    if(!this.state.url){
+    if(!this.state.url && !this.props.defaultImage){
       if(this.props.callback){
         this.props.callback({_id: this.props.id});
       }
@@ -31,7 +31,7 @@ export default class ImageForm extends Component {
     if(getBase64){
       return {
         boxData,
-        base64: this.state.url
+        base64: this.state.url || this.props.defaultImage
       }
     }
     var type = "";
@@ -66,11 +66,13 @@ export default class ImageForm extends Component {
     var self = this;
     var reader = new FileReader();
     var type = e.target.files[0].type;
-    console.log(e.target.files[0]);
     if(this.props.onSelect){
       this.props.onSelect();
     }
     reader.onload = function() {
+      if(self.props.onImgSelected) {
+        self.props.onImgSelected(reader.result);
+      }
       self.setState({
         url: reader.result,
         type
@@ -91,10 +93,10 @@ export default class ImageForm extends Component {
 
   render() {
     var value = "";
-    if(this.state.url){
+    if(this.state.url || this.props.defaultImage){
       value = (<Cropper
         aspectRatio={this.props.aspectRatio || 1}
-        src={this.state.url}
+        src={this.state.url || this.props.defaultImage}
         style={{width: "100%", maxWidth: 500, height: 300}}
         ref="cropper"
         zoomable={false}
