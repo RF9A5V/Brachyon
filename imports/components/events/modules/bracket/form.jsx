@@ -39,11 +39,15 @@ export default class BracketForm extends Component {
       return (
         <div className="col">
           <div className="row center">
-            <span style={{marginBottom: 10}}>
-              All participants will go straight into this bracket!
-            </span>
+            {
+              // <span style={{marginBottom: 10}}>
+              //   All participants will go straight into this bracket!
+              // </span>
+            }
           </div>
-          <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
+          {
+            // <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
+          }
           <select ref="format" defaultValue={this.state.baseFormat}>
             <option value="single_elim">
               Single Elimination
@@ -51,12 +55,14 @@ export default class BracketForm extends Component {
             <option value="double_elim">
               Double Elimination
             </option>
-            <option value="swiss">
-              Swiss
-            </option>
-            <option value="round_robin">
-              Round Robin
-            </option>
+            {
+              // <option value="swiss">
+              //   Swiss
+              // </option>
+              // <option value="round_robin">
+              //   Round Robin
+              // </option>
+            }
           </select>
         </div>
       )
@@ -65,9 +71,12 @@ export default class BracketForm extends Component {
       return (
         <div className="col">
           <div className="row center">
-            <span style={{marginBottom: 10}}>
-              Participants will be divided into groups, then winners of the group will play each other at the end!
-            </span>
+
+          {
+            // <span style={{marginBottom: 10}}>
+            //   Participants will be divided into groups, then winners of the group will play each other at the end!
+            // </span>
+          }
           </div>
           <h5 style={{marginBottom: 20}}>Group Breakdown</h5>
           <select style={{marginBottom: 10}} ref="groupFormat">
@@ -94,9 +103,11 @@ export default class BracketForm extends Component {
       return (
         <div className="col">
           <div className="row center">
-            <span style={{marginBottom: 10}}>
-              Participants will be divided up into brackets, then winners of each bracket will play each other at the end!
-            </span>
+            {
+              // <span style={{marginBottom: 10}}>
+              //   Participants will be divided up into brackets, then winners of each bracket will play each other at the end!
+              // </span>
+            }
           </div>
           <h5 style={{marginBottom: 20}}>Pool Breakdown</h5>
           <select style={{marginBottom: 10}} ref="poolFormat">
@@ -182,13 +193,16 @@ export default class BracketForm extends Component {
           <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
             <h5 style={{backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
           </div>
-          <div className="row center x-center" style={{margin: "20px 0"}}>
-            <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
-            <span style={{margin: "0 40px"}}>|</span>
-            <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
-            <span style={{margin: "0 40px"}}>|</span>
-            <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
-          </div>
+          {
+
+            // <div className="row center x-center" style={{margin: "20px 0"}}>
+            //   <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
+            //   <span style={{margin: "0 40px"}}>|</span>
+            //   <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
+            //   <span style={{margin: "0 40px"}}>|</span>
+            //   <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
+            // </div>
+          }
           {
             this.formatForm()
           }

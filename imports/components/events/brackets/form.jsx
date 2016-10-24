@@ -224,14 +224,16 @@ export default class BracketForm extends Component {
             </div>
           )
         }
-        <h5 style={{marginBottom: 20}}>Format Select</h5>
-        <div className="row center x-center" style={{marginBottom: 20}}>
-          <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>GROUP</span>
-          <span style={{margin: "0 40px"}}>|</span>
-          <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>POOL</span>
-          <span style={{margin: "0 40px"}}>|</span>
-          <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>NONE</span>
-        </div>
+        {
+          // <h5 style={{marginBottom: 20}}>Format Select</h5>
+          // <div className="row center x-center" style={{marginBottom: 20}}>
+          //   <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>GROUP</span>
+          //   <span style={{margin: "0 40px"}}>|</span>
+          //   <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>POOL</span>
+          //   <span style={{margin: "0 40px"}}>|</span>
+          //   <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={this.onFormatSelect.bind(this)}>NONE</span>
+          // </div>
+        }
         {
           this.formatForm()
         }
