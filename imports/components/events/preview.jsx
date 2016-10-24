@@ -57,25 +57,25 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var pages = [
       {
         name: "Home",
-        component: <TitlePage event={event} />
+        component: TitlePage
       }
     ];
     if(event.brackets) {
       pages.push({
         name: "Brackets",
-        component: <BracketPage event={event} />
+        component: BracketPage
       })
     }
     if(event.crowdfunding) {
       pages.push({
         name: "Crowdfunding",
-        component: <CFPage event={event} />
+        component: CFPage
       });
     }
     if(event.twitchStream){
       pages.push({
         name: "Streams",
-        component: <StreamPage event={event} />
+        component: StreamPage
       })
     }
     return pages
