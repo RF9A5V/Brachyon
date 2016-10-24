@@ -80,13 +80,18 @@ export default class BracketSlide extends Component {
           {
             this.props.event.brackets.map((bracket, i) => {
               return (
-                <div className="row center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
+                <div className="col center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
                   browserHistory.push(`/events/${this.state.id}/brackets/${i}`)
                 }}>
                   <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
-                  <h4 className="bracket-title">
-                    { bracket.name }
-                  </h4>
+                  <div className="col x-center bracket-title">
+                    <h1 style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 10}}>
+                      { bracket.name }
+                    </h1>
+                    <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 10}}>
+                      Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
+                    </span>
+                  </div>
                   <div className="bracket-button">
                     {
                       this.bracketButton(bracket, i)

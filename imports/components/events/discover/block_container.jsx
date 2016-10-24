@@ -43,6 +43,17 @@ export default class BlockContainer extends Component {
     return img.link();
   }
 
+  onPencilClick(event) {
+    var url = "";
+    if(event.published) {
+      url = `/events/${event._id}/admin`;
+    }
+    else {
+      url = `/events/${event._id}/edit`;
+    }
+    browserHistory.push(url);
+  }
+
   render() {
     var self = this;
     return (
@@ -56,8 +67,12 @@ export default class BlockContainer extends Component {
                   <h2 className="event-block-title">{ event.details.name }</h2>
                   {
                     Meteor.userId() == event.owner ? (
-                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}}>
-                        <FontAwesome name="pencil" onClick={() => { alert("hello") }} />
+                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}} onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.onPencilClick(event);
+                      }}>
+                        <FontAwesome name="pencil" />
                       </div>
                     ) : (
                       ""

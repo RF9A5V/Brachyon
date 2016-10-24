@@ -250,7 +250,7 @@ Meteor.publish('game_search', function(query) {
     return [];
   }
   var games = Games.find({
-    name: new RegExp(query.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i'),
+    name: new RegExp(`^${query}[.]*`, "i"),
     approved: true
   });
   var banners = games.map(function(game) { return game.banner });
