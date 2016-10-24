@@ -81,7 +81,12 @@ export default class BracketSlide extends Component {
             this.props.event.brackets.map((bracket, i) => {
               return (
                 <div className="col center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
-                  browserHistory.push(`/events/${this.state.id}/brackets/${i}`)
+                  if(this.props.event.owner == Meteor.userId()) {
+                    browserHistory.push(`/events/${this.state.id}/brackets/${i}/admin`)
+                  }
+                  else {
+                    browserHistory.push(`/events/${this.state.id}/brackets/${i}`);
+                  }
                 }}>
                   <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
                   <div className="col x-center bracket-title">

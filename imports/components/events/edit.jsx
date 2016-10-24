@@ -105,7 +105,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           text: "Add Bracket"
         }
       ] : []).concat(
-        event.brackets && event.brackets.length > 0 ? [
+        event.brackets && event.brackets.length && false > 0 ? [ // Disabling this for alpha
           {
             component: PrizePoolBreakdown,
             text: "Prize Pool"
