@@ -78,5 +78,6 @@ Meteor.startup(() => {
   // })
 
   SyncedCron.start();
+  Migrations.migrateTo(1);
 
 });

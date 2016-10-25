@@ -19,7 +19,7 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://alpha.brachyon.com',
+      ROOT_URL: 'http://brachyon.com',
       MONGO_URL: 'mongodb://localhost/meteor'
     },
     dockerImage: 'oleurud/meteor-graphicsmagick',
