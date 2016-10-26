@@ -161,17 +161,17 @@ export default class BracketForm extends Component {
     }
     return {
       game: this.state.game._id,
-      name: this.refs.name.value,
       format
     }
   }
 
   render() {
-    console.log(this.state.game);
     return (
       <div className="col">
-        <h5>Bracket Name</h5>
-        <input ref="name" defaultValue={this.props.name} />
+        {
+        // <h5>Bracket Name</h5>
+        // <input ref="name" defaultValue={this.props.name} />
+        }
         <h5>Game</h5>
         {
           this.state.game && this.state.game.banner ? (
