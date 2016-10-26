@@ -21,7 +21,6 @@ import GameSelectScreen from '../imports/components/games/game_select.jsx';
 import GameApprovalScreen from '../imports/components/games/approval.jsx';
 import UserOptionsScreen from "../imports/components/users/options.jsx";
 import CurrencyPurchaseScreen from "../imports/components/public/currency_purchase.jsx";
-import ShowEventScreen from "../imports/components/events/show.jsx";
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
@@ -51,21 +50,20 @@ export const renderRoutes = () => (
       <Route path="advertise" component={AdvertiseScreen} />
       <Route path="terms" component={TermsScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="events/:eventId/edit" component={EditEventScreen} />
-      <Route path="events/:eventId/view" component={OrganizeEventScreen} />
-      <Route path="events/:eventId/preview" component={PreviewEventScreen}/>
-      <Route path="events/:eventId/publish" component={PublishEventScreen} />
-      <Route path="events/:eventId/show" component={ShowEventScreen} />
+      <Route path="events/:slug/edit" component={EditEventScreen} />
+      <Route path="events/:slug/view" component={OrganizeEventScreen} />
+      <Route path="events/:slug/publish" component={PublishEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="tournaments/single" component={TournamentSingleScreen} />
       <Route path="tournaments/double" component={TournamentDoubleScreen} />
-      <Route path="events/:eventId/brackets/:bracketIndex" component={BracketShowScreen} />
-      <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
-      <Route path="events/:eventId/admin" component={EventAdminScreen} />
-      <Route path="events/:eventId/checkout" component={CheckoutScreen} />
+      <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
+      <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="events/:slug/admin" component={EventAdminScreen} />
+      <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
+      <Route path="events/:slug/show" component={PreviewEventScreen}/>
     </Route>
   </Router>
 )
