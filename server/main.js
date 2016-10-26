@@ -78,6 +78,7 @@ Meteor.startup(() => {
   // })
 
   SyncedCron.start();
+  Migrations.migrateTo(0);
   Migrations.migrateTo(1);
 
   docs = Events.find({slug: {$exists: false}});
