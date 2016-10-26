@@ -111,7 +111,7 @@ export default class EventCreateScreen extends Component {
             browserHistory.push(`/events/${event}/edit`)
           }
           else {
-            browserHistory.push(`/events/${event}/preview`);
+            browserHistory.push(`/events/${event}/show`);
           }
         }
       });

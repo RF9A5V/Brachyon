@@ -16,21 +16,21 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   componentWillMount(){
     var self = this;
     this.setState({
-      event: Meteor.subscribe("event", this.props.params.eventId, {
+      event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
           })
         }
       }),
-      users: Meteor.subscribe("event_participants", this.props.params.eventId, {
+      users: Meteor.subscribe("event_participants", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
           })
         }
       }),
-      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId, {
+      sponsors: Meteor.subscribe("event_sponsors", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()

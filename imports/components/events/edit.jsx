@@ -36,7 +36,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.eventId)
+      event: Meteor.subscribe("event", this.props.params.slug)
     }
   }
 
@@ -181,6 +181,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   streamItem() {
     return {
+      icon: "video-camera",
       text: "Stream",
       subitems: [
         {

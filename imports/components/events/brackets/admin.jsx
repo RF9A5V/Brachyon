@@ -16,7 +16,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.eventId, {
+      event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
           if(Events.findOne().owner != Meteor.userId()) {
             toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");

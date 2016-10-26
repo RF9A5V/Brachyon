@@ -38,6 +38,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillUnmount(){
     this.state.events.stop();
+    this.state.user.stop();
   }
 
   createEvent(event) {

@@ -13,7 +13,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.eventId)
+      event: Meteor.subscribe("event", this.props.params.slug)
     }
   }
 
