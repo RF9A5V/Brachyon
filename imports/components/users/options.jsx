@@ -31,7 +31,6 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     return (
       [
         "User Details",
-        "Event Options",
         "Games Played",
         "Connected Accounts"
       ]
@@ -42,7 +41,6 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     return (
       [
         (<UserDetailsPanel refresh={this.refresh.bind(this)} />),
-        (<EventOptionsPanel />),
         (<GameOptionsPanel />),
         (<OAuthOptionsPanel />)
       ]
