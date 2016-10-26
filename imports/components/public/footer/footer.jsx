@@ -15,7 +15,6 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    console.log(this.state.useDefaultHeader);
     if(!this.state.useDefaultHeader) {
       return (
         <div>

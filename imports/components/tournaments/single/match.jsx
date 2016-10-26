@@ -26,7 +26,7 @@ export default class MatchBlock extends Component {
   }
 
   onMatchUserClick(index) {
-    return function(e) {
+    return (e) => {
       e.preventDefault();
       if (index != 2)
       {
@@ -59,6 +59,14 @@ export default class MatchBlock extends Component {
       })
       this.closeModal();
     }
+  }
+
+  onMatchUpdateScore(isPlayerOne, value) {
+    Meteor.call("events.brackets.updateMatchScore", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, isPlayerOne, value, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+    })
   }
 
   getUsername(id) {
@@ -117,22 +125,45 @@ export default class MatchBlock extends Component {
             (
               <div className="col" style={{height: "100%"}}>
                 <div className="self-end">
-                  <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                  <FontAwesome name="times" size="2x" onClick={() => { this.setState({open: false, chosen: 2}) }} />
                 </div>
-                <h3 className="col-1 center">Choose the Winner</h3>
-                <div className="row flex-padaround col-1">
-                  <div className={ this.state.chosen == 0 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 0}) }}>
-                  {
-                    (this.getUsername(match.playerOne))
-                  }
+                <div className="row col-1">
+                  <div className="col x-center col-1">
+                    <h5>{ this.getUsername(match.playerOne) }</h5>
+                    <div className="col center x-center col-1">
+                      <FontAwesome size="3x" name="plus" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
+                      <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
+                        { match.scoreOne }
+                      </div>
+                      <FontAwesome size="3x" name="minus" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
+                    </div>
+                    {
+                      match.scoreOne > match.scoreTwo ? (
+                        <button onClick={this.onMatchUserClick(0)}>Declare Winner</button>
+                      ) : (
+                        <button style={{opacity: 0.3}}>Declare Winner</button>
+                      )
+                    }
+
                   </div>
-                  <div className={ this.state.chosen == 1 ? ("participant-active"):("participant-inactive")} onClick={() => { this.setState({chosen: 1}) }}>
-                  {
-                    (this.getUsername(match.playerTwo))
-                  }
+                  <div className="col x-center col-1">
+                    <h5>{ this.getUsername(match.playerTwo) }</h5>
+                    <div className="col center x-center col-1">
+                      <FontAwesome size="3x" name="plus" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
+                      <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
+                        { match.scoreTwo }
+                      </div>
+                      <FontAwesome size="3x" name="minus" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
+                    </div>
+                    {
+                      match.scoreTwo > match.scoreOne ? (
+                        <button onClick={this.onMatchUserClick(1)}>Declare Winner</button>
+                      ) : (
+                        <button style={{opacity: 0.3}}>Declare Winner</button>
+                      )
+                    }
                   </div>
                 </div>
-                <button onClick={this.state.chosen < 2 ? (this.onMatchUserClick(this.state.chosen).bind(this)) : (() => {})}>Send Winner</button>
               </div>
             ):(
               <div className="col" style={{height: "100%"}}>

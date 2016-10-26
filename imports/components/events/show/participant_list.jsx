@@ -11,7 +11,7 @@ export default class ParticipantListPanel extends Component {
 
   imgOrDefault(userID) {
     var user = Meteor.users.findOne(userID);
-    if(user.profile.imageUrl) {
+    if(user && user.profile.imageUrl) {
       return user.profile.imageUrl;
     }
     return "/images/profile.png";
