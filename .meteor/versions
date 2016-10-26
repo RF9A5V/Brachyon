@@ -51,6 +51,7 @@ livedata@1.0.18
 localstorage@1.0.11
 logging@1.1.15_1
 lookback:logger@1.2.0
+matb33:collection-hooks@0.7.15
 meteor@1.2.17_1
 meteor-base@1.0.4
 meteorhacks:async@1.0.0
@@ -116,6 +117,7 @@ stolinski:stylus-multi@1.4.3
 templating@1.2.14
 templating-tools@1.0.4
 tmeasday:check-npm-versions@0.3.1
+todda00:friendly-slugs@0.6.0
 tracker@1.1.0
 twitter@1.1.12
 u2622:persistent-session@0.4.4

@@ -33,7 +33,7 @@ export default class BracketSlide extends Component {
           e.preventDefault();
           e.stopPropagation();
           if(this.props.event.tickets) {
-            browserHistory.push(`/events/${this.state.id}/checkout`)
+            browserHistory.push(`/events/${this.props.event.slug}/checkout`)
           }
           else {
             Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
@@ -55,7 +55,7 @@ export default class BracketSlide extends Component {
         e.preventDefault();
         e.stopPropagation();
         if(this.props.event.tickets) {
-          browserHistory.push(`/events/${this.state.id}/checkout`)
+          browserHistory.push(`/events/${this.props.event.slug}/checkout`)
         }
         else {
           Meteor.call("events.registerUser", this.state.id, i, (err) => {
@@ -82,10 +82,10 @@ export default class BracketSlide extends Component {
               return (
                 <div className="col center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
                   if(this.props.event.owner == Meteor.userId()) {
-                    browserHistory.push(`/events/${this.state.id}/brackets/${i}/admin`)
+                    browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
                   }
                   else {
-                    browserHistory.push(`/events/${this.state.id}/brackets/${i}`);
+                    browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
                   }
                 }}>
                   <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />

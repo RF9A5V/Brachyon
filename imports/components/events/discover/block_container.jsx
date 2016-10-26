@@ -13,10 +13,10 @@ export default class BlockContainer extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event._id}/preview`);
+          browserHistory.push(`/events/${event.slug}/show`);
         }
         else {
-          browserHistory.push(`/events/${event._id}/edit`);
+          browserHistory.push(`/events/${event.slug}/edit`);
         }
       }
     )
@@ -46,10 +46,10 @@ export default class BlockContainer extends Component {
   onPencilClick(event) {
     var url = "";
     if(event.published) {
-      url = `/events/${event._id}/admin`;
+      url = `/events/${event.slug}/admin`;
     }
     else {
-      url = `/events/${event._id}/edit`;
+      url = `/events/${event.slug}/edit`;
     }
     browserHistory.push(url);
   }

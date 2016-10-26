@@ -3,8 +3,9 @@ import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Icons } from "/imports/api/sponsorship/icon.js";
 
-Meteor.publish('event', (_id) => {
-  var event = Events.findOne(_id);
+Meteor.publish('event', (slug) => {
+  var event = Events.findOne({slug: slug});
+  var _id = event._id;
   var sponsors = [];
   if(event.revenue && event.revenue.sponsors){
     sponsors = event.revenue.sponsors.map((sponsor) => {
