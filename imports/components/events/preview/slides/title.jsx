@@ -23,7 +23,7 @@ export default class EventTitlePage extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.bannerUrl) {
+    if(this.props.event && this.props.event.details.banner) {
       imgUrl = Images.findOne(this.props.event.details.banner).link();
     }
     if(useDarkerOverlay){
