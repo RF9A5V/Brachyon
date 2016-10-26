@@ -16,10 +16,15 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://brachyon.com',
+      ROOT_URL: 'https://brachyon.com',
       MONGO_URL: 'mongodb://localhost/meteor'
     },
     dockerImage: 'oleurud/meteor-graphicsmagick',
+    ssl: {
+      crt: "./ssl/fullchain.pem",
+      key: "./ssl/privkey.pem",
+      port: 443
+    },
     deployCheckWaitTime: 60
   },
 
@@ -29,12 +34,5 @@ module.exports = {
     servers: {
       one: {},
     },
-  },
-
-  ssl: {
-    crt: "./ssl/cert.pem",
-    key: "./ssl/privkey.pem",
-    port: 443
   }
-
 };
