@@ -13,8 +13,10 @@ export default class LandingScreen extends React.Component {
     return (
       <div className="landing-screen">
         <div className="img-background"></div>
-        <div className="logo-background"></div>
         <div className="main-content" id="main-content">
+          <div className="row center">
+            <img src="/images/logo.png" style={{width: 125, height: 125}} />
+          </div>
           <h1>BRACHYON</h1>
           <h3 className="row center">Beyond The Brackets</h3>
           <div className="row x-center center">
