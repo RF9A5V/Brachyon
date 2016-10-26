@@ -28,9 +28,9 @@ Meteor.methods({
 
   "events.validate_brackets"(ary) {
     ary.forEach((bracket, i) => {
-      if(!bracket.name || bracket.name.length < 3) {
-        throw new Meteor.Error(403, "Bracket at " + i + " has to have a name longer than three characters.");
-      }
+      // if(!bracket.name || bracket.name.length < 3) {
+      //   throw new Meteor.Error(403, "Bracket at " + i + " has to have a name longer than three characters.");
+      // }
       if(!bracket.game) {
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }

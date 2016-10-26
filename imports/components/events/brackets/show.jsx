@@ -58,7 +58,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     if(bracket.inProgress) {
       defaultItems = defaultItems.concat([
         {
-          text: bracket.name,
+          text: "Bracket",
           icon: "sitemap",
           subitems: [
             {

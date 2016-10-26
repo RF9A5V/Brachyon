@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
+import { browserHistory } from "react-router";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
@@ -15,7 +16,14 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.eventId)
+      event: Meteor.subscribe("event", this.props.params.eventId, {
+        onReady: () => {
+          if(Events.findOne().owner != Meteor.userId()) {
+            toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
+            browserHistory.pop();
+          }
+        }
+      })
     }
   }
 
@@ -57,7 +65,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     if(bracket.inProgress) {
       defaultItems = defaultItems.concat([
         {
-          text: bracket.name,
+          text: "Bracket",
           icon: "sitemap",
           subitems: [
             {
@@ -108,13 +116,6 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
       return (
         <div>
           Loading...
-        </div>
-      )
-    }
-    else if(Meteor.userId() != Events.findOne().owner) {
-      return (
-        <div>
-          Sorry you can't access this page 
         </div>
       )
     }
