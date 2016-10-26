@@ -80,8 +80,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   profileImage() {
     var user = Meteor.user();
-    if(user.profile.imageUrl) {
-      return user.profile.imageUrl;
+    if(user.profile.image) {
+      return ProfileImages.findOne(user.profile.image).link();
     }
     return "/images/profile.png";
   }

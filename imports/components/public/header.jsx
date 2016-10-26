@@ -34,9 +34,9 @@ export default class Header extends TrackerReact(Component) {
   }
 
   imgOrDefault() {
-    var profile = Meteor.user().profile;
-    if(profile && profile.imageUrl) {
-      return profile.imageUrl;
+    var user = Meteor.user();
+    if(user.profile.image) {
+      return ProfileImages.findOne(user.profile.image).link();
     }
     return "/images/profile.png";
   }
