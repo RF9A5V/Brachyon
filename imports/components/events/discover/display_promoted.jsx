@@ -54,12 +54,12 @@ export default class DisplayPromotedEvent extends Component {
     var event = this.props.event;
 
     return (
-      <div className="row center col-1">
+      <div className="row center col-1" style={{width: "100vw", padding: 10}}>
         <div className="promoted-event-block">
-          <div className="event-block col" style={{position: "relative", width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
+          <div className="event-block" style={{width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
             <h2 className="event-block-title">{ event.details.name }</h2>
             <img src={this.imgOrDefault(event)} />
-            <div className="event-block-content">
+            <div className="event-block-content" style={{position: "relative"}}>
               <div className="col">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                   <div className="row x-center" style={{fontSize: 12}}>
