@@ -3,9 +3,6 @@ module.exports = {
     one: {
       host: '45.55.22.178',
       username: 'root'
-      // pem:
-      // password:
-      // or leave blank for authenticate from ssh-agent
     }
   },
 
@@ -33,4 +30,11 @@ module.exports = {
       one: {},
     },
   },
+
+  ssl: {
+    crt: "./ssl/cert.pem",
+    key: "./ssl/privkey.pem",
+    port: 443
+  }
+
 };
