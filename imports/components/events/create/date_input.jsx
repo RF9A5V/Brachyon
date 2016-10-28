@@ -4,13 +4,18 @@ import FontAwesome from 'react-fontawesome';
 
 export default class DateInput extends Component {
 
-  componentWillMount() {
-    this.setState({
+  constructor(props) {
+    super(props);
+    var initTime = moment();
+    if(props.init) {
+      initTime = moment(props.init);
+    }
+    this.state = {
       open: false,
-      time: this.props.init == null ? moment() : moment(this.props.init),
-      month: moment().month(),
-      year: moment().year()
-    });
+      time: initTime,
+      month: initTime.month(),
+      year: initTime.year()
+    }
   }
 
   value() {
@@ -46,12 +51,12 @@ export default class DateInput extends Component {
         {
           vals.map((value) => {
 
-            var yearPass = this.state.year >= moment().year()
-            var dayPass = this.state.month > moment().month() || (this.state.month == moment().month() && value + 1 >= moment().date());
-
+            // var yearPass = this.state.year >= moment().year()
+            // var dayPass = this.state.month > moment().month() || (this.state.month == moment().month() && value + 1 >= moment().date());
+            //
             var isSelected = this.state.time.year() == this.state.year && this.state.time.month() == this.state.month && this.state.time.date() == value + 1;
-
-            var pass = yearPass && dayPass;
+            var targetTime = moment().year(this.state.year).month(this.state.month).date(value + 1).endOf("day");
+            var pass = moment().isBefore(targetTime) || moment().isSame(targetTime);
 
             return (
               <div className={`calendar-days-entry ${pass ? "active" : ""} ${isSelected ? "selected" : ""}`} onClick={pass ? self.setValue.bind(self) : () => {}}>
@@ -73,7 +78,6 @@ export default class DateInput extends Component {
     if(this.props.onChange){
       this.props.onChange();
     }
-    console.log(this.state.time);
     this.forceUpdate();
     //this.closeCalendar();
   }

@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import LogInScreen from './login.jsx';
 import FontAwesome from 'react-fontawesome';
+import { velocity } from "velocity-react";
 
 export default class LogInModal extends React.Component {
     constructor () {
@@ -30,7 +31,7 @@ export default class LogInModal extends React.Component {
             onRequestClose={this.closeModal.bind(this)}
           >
             <div className="row justify-end">
-              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
+              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
             </div>
             <h1 style={{textAlign: 'center', marginBottom: 0}}>Log In</h1>
             <LogInScreen />

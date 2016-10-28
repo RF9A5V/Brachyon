@@ -1,23 +1,12 @@
 import React, { Component } from "react";
+import { browserHistory } from "react-router";
 
 export default class RevenuePanel extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      name: "Rewards",
-      desc: (
-        <div>
-          <p>Allow us to reward you with a description of this section.
-          Rewards act as incentives for your supporters to fund your event.
-          One or more rewards can be applied to each tier. The same reward(s)
-          can be applied to multiple tiers depending on how you wish to
-          incentivize backers. We recommend rewards which pertain directly
-          to the event.</p>
-
-          <p>Check out our <a>FAQ</a> to learn more about rewards.</p>
-        </div>
-      )
+      name: "Rewards"
     }
   }
 
@@ -42,7 +31,7 @@ export default class RevenuePanel extends Component {
               incentivize backers. We recommend rewards which pertain directly
               to the event.</p>
 
-              <p>Check out our <a>FAQ</a> to learn more about rewards.</p>
+              <p>Check out our <a target="_blank" href="/faq">FAQ</a> to learn more about rewards.</p>
             </div>
           )
         },
@@ -66,7 +55,7 @@ export default class RevenuePanel extends Component {
               Pool. We recommend giving as much as possible to the Prize Pool -
               it attracts more players and increases hype!</p>
 
-              <p>See some successful events in our <a>FAQ</a> to learn about
+              <p>See some successful events in our <a target="_blank" href="/faq">FAQ</a> to learn about
               crowdfunding your Prize Pool.</p>
             </div>
           )
@@ -80,7 +69,7 @@ export default class RevenuePanel extends Component {
 
   render() {
     return (
-      <div className="row" style={{padding: 20}}>
+      <div className="row panel">
         <div className="info-title-container">
           <div className="info-title active" onClick={this.onInfoClick(0)}>
             Rewards
@@ -95,7 +84,18 @@ export default class RevenuePanel extends Component {
         <div className="col col-1 info-description">
           <h3 className="row center">{ this.state.name }</h3>
           {
-            this.state.desc
+            this.state.desc || (
+              <div>
+                <p>Allow us to reward you with a description of this section.
+                Rewards act as incentives for your supporters to fund your event.
+                One or more rewards can be applied to each tier. The same reward(s)
+                can be applied to multiple tiers depending on how you wish to
+                incentivize backers. We recommend rewards which pertain directly
+                to the event.</p>
+
+                <p>Check out our <a target="_blank" href="/faq">FAQ</a> to learn more about rewards.</p>
+              </div>
+            )
           }
         </div>
       </div>

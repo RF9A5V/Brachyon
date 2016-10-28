@@ -1,9 +1,9 @@
-import Images from "/imports/api/event/images.js";
+import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
 import Sponsorships from "/imports/api/event/sponsorship.js";
 import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
-import ProfileImages from "/imports/api/users/profile_images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -195,6 +195,20 @@ Meteor.methods({
       }
     })
   },
+
+  "events.delete"(id) {
+    Events.remove(id);
+  },
+
+  "events.unpublish"(id) {
+    Events.update(id, {
+      $set: {
+        published: false,
+        underReview: false
+      }
+    })
+  },
+
   "user.getStripeCustomerData": function() {
     if(Meteor.user().stripeCustomer == null) {
       return {};
@@ -265,12 +279,39 @@ Meteor.methods({
   "isStripeConnected": function(connected){
     Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
   },
-  'games.create'(name, imgID) {
+  'games.create'(name, description, imgID) {
+    var img = Images.findOne(imgID);
     Games.insert({
-      name: name,
+      name,
+      description,
       banner: imgID,
-      approved: false
+      bannerUrl: img.link(),
+      approved: true
     })
+  },
+
+  "games.edit"(id, name, description, imgID) {
+    var game = Games.findOne(id);
+    var img = Images.findOne(imgID);
+    if(!game) {
+      throw new Meteor.Error(404, "Game not found!");
+    }
+    Games.update(id, {
+      $set: {
+        name,
+        description,
+        banner: imgID,
+        bannerUrl: img.link()
+      }
+    });
+  },
+
+  "games.delete"(id) {
+    var game = Games.findOne(id);
+    if(!game) {
+      throw new Meteor.Error(404, "Game not found!");
+    }
+    Games.remove(id);
   },
 
   "games.approve"(id) {

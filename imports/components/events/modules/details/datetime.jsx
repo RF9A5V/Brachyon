@@ -40,7 +40,7 @@ export default class DatetimePage extends Component {
               <TimeSelect ref="time" init={event.details.datetime} />
             </div>
             <div className="submodule-section col-1 row center x-center">
-              <span className="section">This event will start at {moment(event.details.datetime).format("MMMM Do, YYYY HH:mmA")}.</span>
+              <span className="section">This event will start at {moment(event.details.datetime).format("MMMM Do, YYYY h:mmA")}.</span>
             </div>
           </div>
         </div>

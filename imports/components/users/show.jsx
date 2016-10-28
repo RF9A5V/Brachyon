@@ -15,24 +15,29 @@ import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
 import ImageForm from "/imports/components/public/img_form.jsx";
 import UserSections from "./show/sections.jsx";
+import Loading from "/imports/components/public/loading.jsx";
 
 export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillMount() {
     self = this;
     this.setState({
-      events: Meteor.subscribe('userEvents', Meteor.userId()),
+      user: Meteor.subscribe("user", Meteor.userId()),
+      events: Meteor.subscribe("userEvents", Meteor.userId(), {
+        onReady: () => {
+          this.setState({
+            eventsInitiallyLoaded: true
+          })
+        }
+      }),
       currentEvent: null,
-      open: false
+      open: false,
+      eventsInitiallyLoaded: false
     });
   }
 
   componentWillUnmount(){
     this.state.events.stop();
-  }
-
-  image(id) {
-    return Images.find({ _id: id }).fetch()[0];
   }
 
   createEvent(event) {
@@ -100,13 +105,23 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     })
   }
 
+  setEventSubscription(subName, page) {
+    console.log(subName);
+    this.state.events.stop();
+    this.setState({
+      events: Meteor.subscribe(subName, Meteor.userId(), page, {
+        onReady: () => { console.log("done"); this.forceUpdate() }
+      })
+    })
+  }
+
   render() {
     var self = this;
 
-    if(!this.state.events.ready()){
+    if(!this.state.user.ready() || !this.state.eventsInitiallyLoaded){
       return (
-        <div>
-          Loading...
+        <div className="row center x-center" style={{width: "100%", height: "100%"}}>
+          <Loading />
         </div>
       )
     }
@@ -147,7 +162,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
         </div>
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="col">
-          <UserSections />
+          <UserSections setEventSubscription={this.setEventSubscription.bind(this)} isReady={this.state.events.ready()}/>
         </div>
       </div>
     )

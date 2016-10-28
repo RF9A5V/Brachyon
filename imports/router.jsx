@@ -6,6 +6,7 @@ import LandingScreen from '../imports/components/public/index.jsx';
 import AboutScreen from '../imports/components/public/about.jsx';
 import AdvertiseScreen from '../imports/components/public/footer/advertise.jsx';
 import TermsScreen from '../imports/components/public/footer/terms.jsx'
+import FaqScreen from "../imports/components/public/faq.jsx";
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
 import OrganizeEventScreen from '../imports/components/events/organize.jsx';
@@ -23,6 +24,8 @@ import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout.jsx";
+
+import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
@@ -45,13 +48,13 @@ export const renderRoutes = () => (
       <Route path="about" component={AboutScreen} />
       <Route path="advertise" component={AdvertiseScreen} />
       <Route path="terms" component={TermsScreen} />
+      <Route path="faq" component={FaqScreen} />
       <Route path="events/:eventId/edit" component={EditEventScreen} />
       <Route path="events/:eventId/view" component={OrganizeEventScreen} />
       <Route path="events/:eventId/preview" component={PreviewEventScreen}/>
       <Route path="events/:eventId/publish" component={PublishEventScreen} />
       <Route path="events/:eventId/show" component={ShowEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
-      <Route path="events/approval" component={ApprovalScreen} />
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="games/approval" component={GameApprovalScreen} />
@@ -59,6 +62,7 @@ export const renderRoutes = () => (
       <Route path="events/:eventId/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:eventId/admin" component={EventAdminScreen} />
       <Route path="events/:eventId/checkout" component={CheckoutScreen} />
+      <Route path="admin" component={AdminFunctionScreen} />
     </Route>
   </Router>
 )

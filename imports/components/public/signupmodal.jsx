@@ -2,17 +2,22 @@ import React from 'react';
 import Modal from 'react-modal';
 import SignUpScreen from './signup.jsx';
 import FontAwesome from 'react-fontawesome';
+import { VelocityComponent } from "velocity-react";
 
 export default class SignUpModal extends React.Component {
     constructor () {
       super();
       this.state = {
         open: false,
+        isAnim: false
       }
     }
 
     openModal(){
-      this.setState({open: true});
+      this.setState({
+        open: true,
+        isAnim: true
+      });
     }
 
     closeModal(){
@@ -30,7 +35,7 @@ export default class SignUpModal extends React.Component {
             onRequestClose={this.closeModal.bind(this)}
           >
             <div className="row justify-end">
-              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="3x" className="close-modal"/>
+              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
             </div>
             <h1 style={{textAlign: 'center', marginBottom: 0}}>Sign Up</h1>
             <SignUpScreen onsubmit={this.closeModal.bind(this)} />

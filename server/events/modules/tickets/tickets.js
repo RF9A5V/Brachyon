@@ -21,8 +21,8 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        [`tickets.${indexId}f`]: {
-          price: amount,
+        [`tickets.${indexId}`]: {
+          price: amount * 100,
           description
         }
       }
