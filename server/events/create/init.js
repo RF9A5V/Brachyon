@@ -50,9 +50,18 @@ Meteor.methods({
     }
   },
 
+  "events.validate_stream"(obj) {
+    return {
+      twitchStream: {
+        name: null,
+        chat: null
+      }
+    }
+  },
+
   "events.create"(obj) {
     var endObj = {};
-    var acceptedModules = ["details", "brackets", "organize", "crowdfunding"];
+    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {
