@@ -23,13 +23,14 @@ export default class SwissDisplay extends TrackerReact(Component) {
     this.state = {
       page: page + 1,
       wcount: num,
-      recrounds: rec
+      recrounds: rec,
+      id: Events.findOne()._id
     }
   }
 
   declareWinner(score, win1, win2, ties, matchnumber)
   {
-      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, win1, win2, ties, function(err) {
+      Meteor.call("events.update_match", this.state.id, this.state.page - 1, matchnumber, score, win1, win2, ties, function(err) {
         if(err){
           toastr.error("Couldn't advance this match.", "Error!");
         }
