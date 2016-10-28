@@ -71,6 +71,10 @@ export default class EventCreateScreen extends Component {
     var modules = this.availableModules();
     var keys = Object.keys(modules);
     var panels = this.panels();
+    moduleItems.push({
+      title: "Details",
+      content: (<DetailsPanel ref="details" />)
+    });
     for(var i in modules){
       for(var j in modules[i]){
         if(this.state.moduleBits[i][j] == 1){
@@ -83,10 +87,6 @@ export default class EventCreateScreen extends Component {
         }
       }
     }
-    moduleItems.push({
-      title: "Details",
-      content: (<DetailsPanel ref="details" />)
-    });
     return moduleItems;
   }
 
@@ -111,7 +111,7 @@ export default class EventCreateScreen extends Component {
             browserHistory.push(`/events/${event}/edit`)
           }
           else {
-            browserHistory.push(`/events/${event}/preview`);
+            browserHistory.push(`/events/${event}/show`);
           }
         }
       });

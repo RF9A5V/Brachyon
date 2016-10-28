@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
+import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class BlockContainer extends Component {
@@ -13,23 +14,23 @@ export default class BlockContainer extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event._id}/preview`);
+          browserHistory.push(`/events/${event.slug}/show`);
         }
         else {
-          browserHistory.push(`/events/${event._id}/edit`);
+          browserHistory.push(`/events/${event.slug}/edit`);
         }
       }
     )
   }
 
   imgOrDefault(event) {
-    if(event.bannerUrl != null){
-      return event.bannerUrl;
+    if(event.details.banner) {
+      return Images.findOne(event.details.banner).link();
     }
     var games = event.games.fetch();
     for(var i in games) {
-      if(games[i].bannerUrl != null){
-        return games[i].bannerUrl;
+      if(games[i].banner != null){
+        return Images.findOne(games[i].banner).link();
       }
     }
     return "/images/bg.jpg";
@@ -41,6 +42,17 @@ export default class BlockContainer extends Component {
       return "/images/profile.png";
     }
     return img.link();
+  }
+
+  onPencilClick(event) {
+    var url = "";
+    if(event.published) {
+      url = `/events/${event.slug}/admin`;
+    }
+    else {
+      url = `/events/${event.slug}/edit`;
+    }
+    browserHistory.push(url);
   }
 
   render() {
@@ -56,8 +68,12 @@ export default class BlockContainer extends Component {
                   <h2 className="event-block-title">{ event.details.name }</h2>
                   {
                     Meteor.userId() == event.owner ? (
-                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}}>
-                        <FontAwesome name="pencil" onClick={() => { alert("hello") }} />
+                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}} onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.onPencilClick(event);
+                      }}>
+                        <FontAwesome name="pencil" />
                       </div>
                     ) : (
                       ""

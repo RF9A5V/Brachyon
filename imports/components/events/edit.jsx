@@ -21,6 +21,7 @@ import TicketsPage from "./modules/revenue/tickets.jsx";
 import TierPage from "./modules/revenue/tiers.jsx";
 import StrategyPage from "./modules/revenue/strategies.jsx";
 import RewardsPage from "./modules/revenue/rewards.jsx";
+import AddStream from "./modules/stream/add.jsx";
 
 import StaffPage from "./modules/organize/staff.jsx";
 import SchedulePage from "./modules/organize/schedule.jsx";
@@ -35,7 +36,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.eventId)
+      event: Meteor.subscribe("event", this.props.params.slug)
     }
   }
 
@@ -104,7 +105,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
           text: "Add Bracket"
         }
       ] : []).concat(
-        event.brackets && event.brackets.length > 0 ? [
+        event.brackets && event.brackets.length && false > 0 ? [ // Disabling this for alpha
           {
             component: PrizePoolBreakdown,
             text: "Prize Pool"
@@ -178,6 +179,18 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     };
   }
 
+  streamItem() {
+    return {
+      icon: "video-camera",
+      text: "Stream",
+      subitems: [
+        {
+          component: AddStream
+        }
+      ]
+    };
+  }
+
   submitItem() {
     return {
       text: "Submit",
@@ -223,6 +236,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     items.push(this.submitItem());
     items.push(this.editItem(items.length + 1));
+    items.push(this.streamItem());
     return items;
   }
 

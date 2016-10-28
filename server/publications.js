@@ -3,8 +3,8 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { Images } from "/imports/api/event/images.js";
 
-Meteor.publish("event_participants", (id) => {
-  var event = Events.findOne(id);
+Meteor.publish("event_participants", (slug) => {
+  var event = Events.findOne({slug: slug});
   if(event.brackets && event.brackets[0]) {
     var users = Meteor.users.find({
       _id: {
@@ -26,8 +26,8 @@ Meteor.publish("event_participants", (id) => {
   }
 })
 
-Meteor.publish("event_sponsors", (id) => {
-  var event = Events.findOne(id);
+Meteor.publish("event_sponsors", (slug) => {
+  var event = Events.findOne({slug: slug});
   if(event.crowdfunding && event.crowdfunding.sponsors) {
     var userIds = event.crowdfunding.sponsors.map(obj => {
       return obj.id;
@@ -250,7 +250,7 @@ Meteor.publish('game_search', function(query) {
     return [];
   }
   var games = Games.find({
-    name: new RegExp(query.split(' ').map(function(value){ return `(?=.*${value})`; }).join(''), 'i'),
+    name: new RegExp(`^${query}[.]*`, "i"),
     approved: true
   });
   var banners = games.map(function(game) { return game.banner });

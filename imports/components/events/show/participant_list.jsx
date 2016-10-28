@@ -11,7 +11,7 @@ export default class ParticipantListPanel extends Component {
 
   imgOrDefault(userID) {
     var user = Meteor.users.findOne(userID);
-    if(user.profile.imageUrl) {
+    if(user && user.profile.imageUrl) {
       return user.profile.imageUrl;
     }
     return "/images/profile.png";
@@ -60,7 +60,6 @@ export default class ParticipantListPanel extends Component {
     return false;
     var matchID = null;
     var currentRound = 0;
-    console.log(this.props);
     if(this.props.rounds == null) {
       return false;
     }
@@ -157,18 +156,18 @@ export default class ParticipantListPanel extends Component {
           })
         }
         {
-          this.props.participants.some((obj) => { return obj.id == Meteor.userId() || Meteor.userId() == null }) ? (
-            ""
-          ) : (
-            <div className="participant-panel" onClick={this.registerUser.bind(this)}>
-              <div className="participant-panel-image">
-                <FontAwesome name="plus" size="5x" />
-              </div>
-              <div className="participant-panel-desc">
-                Register
-              </div>
-            </div>
-          )
+          // this.props.participants.some((obj) => { return obj.id == Meteor.userId() || Meteor.userId() == null }) ? (
+          //   ""
+          // ) : (
+          //   <div className="participant-panel" onClick={/*this.registerUser.bind(this)*/}>
+          //     <div className="participant-panel-image">
+          //       <FontAwesome name="plus" size="5x" />
+          //     </div>
+          //     <div className="participant-panel-desc">
+          //       Register
+          //     </div>
+          //   </div>
+          // )
         }
       </div>
     )

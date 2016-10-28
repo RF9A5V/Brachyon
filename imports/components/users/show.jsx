@@ -38,6 +38,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   componentWillUnmount(){
     this.state.events.stop();
+    this.state.user.stop();
   }
 
   createEvent(event) {
@@ -80,8 +81,8 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
 
   profileImage() {
     var user = Meteor.user();
-    if(user.profile.imageUrl) {
-      return user.profile.imageUrl;
+    if(user.profile.image) {
+      return ProfileImages.findOne(user.profile.image).link();
     }
     return "/images/profile.png";
   }

@@ -2,18 +2,20 @@ import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 import Editor from "/imports/components/public/editor.jsx";
+import { browserHistory } from "react-router";
 
+import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
-    if(event.bannerUrl != null){
-      return event.bannerUrl;
+    if(event.details.banner) {
+      return Images.findOne(event.details.banner).link();
     }
     var games = event.games.fetch();
     for(var i in games) {
-      if(games[i].bannerUrl != null){
-        return games[i].bannerUrl;
+      if(games[i].banner != null){
+        return Images.findOne(games[i].banner).link();
       }
     }
     return "/images/bg.jpg";
@@ -25,10 +27,10 @@ export default class DisplayPromotedEvent extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event._id}/preview`);
+          browserHistory.push(`/events/${event.slug}/show`);
         }
         else {
-          browserHistory.push(`/events/${event._id}/edit`);
+          browserHistory.push(`/events/${event.slug}/edit`);
         }
       }
     )
@@ -52,12 +54,12 @@ export default class DisplayPromotedEvent extends Component {
     var event = this.props.event;
 
     return (
-      <div className="row center col-1">
+      <div className="row center col-1" style={{width: "100vw", padding: 10}}>
         <div className="promoted-event-block">
-          <div className="event-block col" style={{position: "relative", width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
+          <div className="event-block" style={{width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
             <h2 className="event-block-title">{ event.details.name }</h2>
             <img src={this.imgOrDefault(event)} />
-            <div className="event-block-content">
+            <div className="event-block-content" style={{position: "relative"}}>
               <div className="col">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                   <div className="row x-center" style={{fontSize: 12}}>

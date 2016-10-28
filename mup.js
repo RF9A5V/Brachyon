@@ -3,9 +3,6 @@ module.exports = {
     one: {
       host: '45.55.22.178',
       username: 'root'
-      // pem:
-      // password:
-      // or leave blank for authenticate from ssh-agent
     }
   },
 
@@ -19,10 +16,15 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://alpha.brachyon.com',
+      ROOT_URL: 'https://brachyon.com',
       MONGO_URL: 'mongodb://localhost/meteor'
     },
     dockerImage: 'oleurud/meteor-graphicsmagick',
+    ssl: {
+      crt: "./ssl/fullchain.pem",
+      key: "./ssl/privkey.pem",
+      port: 443
+    },
     deployCheckWaitTime: 60
   },
 
@@ -32,5 +34,5 @@ module.exports = {
     servers: {
       one: {},
     },
-  },
+  }
 };

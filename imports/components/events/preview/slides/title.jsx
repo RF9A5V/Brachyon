@@ -23,7 +23,7 @@ export default class EventTitlePage extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.bannerUrl) {
+    if(this.props.event && this.props.event.details.banner) {
       imgUrl = Images.findOne(this.props.event.details.banner).link();
     }
     if(useDarkerOverlay){
@@ -34,6 +34,10 @@ export default class EventTitlePage extends Component {
 
   onMoveToDetails() {
     this.onPageRequestChange(1);
+  }
+
+  onMoveToWatch() {
+    this.onPageRequestChange(2);
   }
 
   imgOrDefault(imgId) {
@@ -106,7 +110,7 @@ export default class EventTitlePage extends Component {
 
               <div className="row">
                 {
-                  event.tickets || event.brackets ? (
+                  event.tickets ? (
                     <div>
                       <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event._id+"/checkout") }}>Play</button>
                     </div>
@@ -114,7 +118,18 @@ export default class EventTitlePage extends Component {
                     ""
                   )
                 }
-                <button>Watch</button>
+                {
+                  event.brackets && !event.tickets ? (
+                    <button style={{marginRight: 10}} onClick={() => { this.props.nav(1) }}>
+                      Register
+                    </button>
+                  ) : (
+                    ""
+                  )
+                }
+                {
+                  // <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
+                }
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>

@@ -16,8 +16,8 @@ export default class BracketSlide extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.bannerUrl) {
-      imgUrl = this.props.event.bannerUrl;
+    if(this.props.event && this.props.event.details.banner) {
+      imgUrl = Images.findOne(this.props.event.details.banner).link();
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
@@ -33,7 +33,7 @@ export default class BracketSlide extends Component {
           e.preventDefault();
           e.stopPropagation();
           if(this.props.event.tickets) {
-            browserHistory.push(`/events/${this.state.id}/checkout`)
+            browserHistory.push(`/events/${this.props.event.slug}/checkout`)
           }
           else {
             Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
@@ -55,7 +55,7 @@ export default class BracketSlide extends Component {
         e.preventDefault();
         e.stopPropagation();
         if(this.props.event.tickets) {
-          browserHistory.push(`/events/${this.state.id}/checkout`)
+          browserHistory.push(`/events/${this.props.event.slug}/checkout`)
         }
         else {
           Meteor.call("events.registerUser", this.state.id, i, (err) => {
@@ -80,13 +80,20 @@ export default class BracketSlide extends Component {
           {
             this.props.event.brackets.map((bracket, i) => {
               return (
-                <div className="row center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
-                  browserHistory.push(`/events/${this.state.id}/brackets/${i}`)
+                <div className="col center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
+                  if(this.props.event.owner == Meteor.userId()) {
+                    browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
+                  }
+                  else {
+                    browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
+                  }
                 }}>
                   <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
-                  <h4 className="bracket-title">
-                    { bracket.name }
-                  </h4>
+                  <div className="col x-center bracket-title">
+                    <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 10}}>
+                      Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
+                    </span>
+                  </div>
                   <div className="bracket-button">
                     {
                       this.bracketButton(bracket, i)

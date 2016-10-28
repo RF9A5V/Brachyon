@@ -9,27 +9,28 @@ import SlideMain from "./preview/slides/slide_main.jsx";
 import TitlePage from "./preview/slides/title.jsx";
 import BracketPage from "./preview/slides/brackets.jsx";
 import CFPage from "./preview/slides/crowdfunding.jsx";
+import StreamPage from "./preview/slides/stream.jsx";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
   componentWillMount(){
     var self = this;
     this.setState({
-      event: Meteor.subscribe("event", this.props.params.eventId, {
+      event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
           })
         }
       }),
-      users: Meteor.subscribe("event_participants", this.props.params.eventId, {
+      users: Meteor.subscribe("event_participants", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
           })
         }
       }),
-      sponsors: Meteor.subscribe("event_sponsors", this.props.params.eventId, {
+      sponsors: Meteor.subscribe("event_sponsors", this.props.params.slug, {
         onReady: () => {
           this.setState({
             isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
@@ -56,20 +57,26 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var pages = [
       {
         name: "Home",
-        component: <TitlePage event={event} />
+        component: TitlePage
       }
     ];
     if(event.brackets) {
       pages.push({
         name: "Brackets",
-        component: <BracketPage event={event} />
+        component: BracketPage
       })
     }
     if(event.crowdfunding) {
       pages.push({
         name: "Crowdfunding",
-        component: <CFPage event={event} />
+        component: CFPage
       });
+    }
+    if(event.twitchStream){
+      pages.push({
+        name: "Streams",
+        component: StreamPage
+      })
     }
     return pages
   }

@@ -38,3 +38,6 @@ alexbeauchemin:accounts-twitch
 shell-server@0.2.1
 ostrio:files
 stolinski:stylus-multi
+percolate:migrations
+force-ssl
+todda00:friendly-slugs
