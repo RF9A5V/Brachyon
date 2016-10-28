@@ -25,7 +25,11 @@ export default class AboutScreen extends TrackerReact(Component) {
   }
 
   handleResize(e) {
-    document.querySelectorAll(".about-blocks").forEach((block) => {
+    var blocks = Array.from(document.querySelectorAll(".about-blocks"));
+    if(blocks.length == 0) {
+      return;
+    }
+    blocks.forEach((block) => {
       var style = window.getComputedStyle(block);
       block.style.height = style.width;
     })
