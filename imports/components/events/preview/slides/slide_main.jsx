@@ -14,6 +14,7 @@ export default class SlideMain extends Component {
   }
 
   onSlideChange(index) {
+    console.log(index);
     if(this.state.activeSlide == index) {
       return;
     }
@@ -51,10 +52,18 @@ export default class SlideMain extends Component {
     return elems;
   }
 
+  pageIndexObj() {
+    var obj = {};
+    this.props.slides.forEach((slide, i) => {
+      obj[slide.name] = i;
+    });
+    return obj;
+  }
+
   currentComponent() {
     var slide = this.props.slides[this.state.activeSlide];
     return (
-      <slide.component event={this.props.event} nav={this.onSlideChange.bind(this)} />
+      <slide.component event={this.props.event} nav={this.onSlideChange.bind(this)} slides={this.pageIndexObj()} />
     )
   }
 
