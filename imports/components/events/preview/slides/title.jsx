@@ -32,14 +32,6 @@ export default class EventTitlePage extends Component {
     return `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
   }
 
-  onMoveToDetails() {
-    this.onPageRequestChange(1);
-  }
-
-  onMoveToWatch() {
-    this.onPageRequestChange(2);
-  }
-
   imgOrDefault(imgId) {
     var img = ProfileImages.findOne(imgId);
     return img == null ? "/images/profile.png" : img.link();
@@ -111,7 +103,7 @@ export default class EventTitlePage extends Component {
                 {
                   event.tickets ? (
                     <div>
-                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event.slug+"/checkout") }}>Register</button>
+                      <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push("/events/"+event.slug+"/checkout") }}>Register</button>
                     </div>
                   ) : (
                     ""
@@ -120,15 +112,15 @@ export default class EventTitlePage extends Component {
                 {
                   event.brackets && !event.tickets ? (
                     event.brackets.some((bracket) => {
-                      return bracket.participants.some((player) => {
+                      return (bracket.participants || []).some((player) => {
                         return player.id == Meteor.userId()
                       })
                     }) ? (
-                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push(`/events/${event.slug}/brackets/0`) }}>
+                      <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/events/${event.slug}/brackets/0`) }}>
                         View Bracket
                       </button>
                     ) : (
-                      <button style={{marginRight: 10}} onClick={() => { this.props.nav(1) }}>
+                      <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { this.props.nav(this.props.slides["Brackets"]) }}>
                         Register
                       </button>
                     )
@@ -137,12 +129,16 @@ export default class EventTitlePage extends Component {
                   )
                 }
                 {
-                  // <button onClick={() => {this.onPageRequestChange(2)}}>Watch</button>
+                  event.twitchStream ? (
+                    <button style={{width: 140}} onClick={() => { this.props.nav(this.props.slides["Streams"]) }}>Watch</button>
+                  ) : (
+                    ""
+                  )
                 }
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>
-              <FontAwesome name="chevron-down" size="2x" onClick={this.onMoveToDetails.bind(this)} />
+              <FontAwesome name="chevron-down" size="2x" onClick={() => { this.onPageRequestChange(1)}} />
             </div>
           </div>
           <div className="col col-1">
