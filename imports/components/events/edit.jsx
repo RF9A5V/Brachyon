@@ -31,6 +31,8 @@ import PrizePoolBreakdown from "./edit/prize_pool.jsx";
 
 import EditModulePage from "./modules/edit_modules.jsx";
 
+import Games from "/imports/api/games/games.js";
+
 export default class EditEventScreen extends TrackerReact(React.Component){
 
   constructor(props) {
@@ -90,7 +92,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         event.brackets.map((bracket, index) => {
           return {
             component: EditBracket,
-            text: bracket.name,
+            text: Games.findOne(bracket.game).name,
             args: {
               index,
               bracket
