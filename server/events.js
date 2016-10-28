@@ -222,6 +222,10 @@ Meteor.methods({
     }
   },
 
+  "events.place_winner"(eventID, bracketNumber, roundNumber, matchNumber){
+    return;
+  },
+
   "events.undo_match"(eventID, bracketNumber, roundNumber, matchNumber) {
     var event = Events.findOne(eventID);
     if (!event){
@@ -422,7 +426,8 @@ Meteor.methods({
         {
           extraplayer = scores[x].pop();
         }
-        values.push(x);
+        if (scores[x].length > 0)
+          values.push(x);
       }
     }
 
@@ -466,8 +471,15 @@ Meteor.methods({
       for (var i = 0; i < array.length/2; i++)
       {
         var opponent = array[i+array.length/2].name;
+        var str = "";
         if (array[i].playedagainst[opponent] == true)
+        {
+          for (q = 0; q < array.length; q++)
+          {
+            str += array[q].name + " ";
+          }
           return false;
+        }
       }
       return true;
     }
@@ -480,8 +492,9 @@ Meteor.methods({
         {
           arr = checkperms(array, i+1);
           if (arr != false)
+          {
             return arr;
-
+          }
           array = swap(array, i, j);
           arr = checkperms(array, i+1);
           if (arr != false)
@@ -495,10 +508,10 @@ Meteor.methods({
       else {
         if (isplayable(array))
           return array;
-        array = swap(array, 0, 1);
+        array = swap(array, i, j);
         if (isplayable(array))
           return array;
-        array = swap(array, 0, 1);
+        array = swap(array, i, j);
         return false;
       }
 
@@ -507,7 +520,7 @@ Meteor.methods({
 
     function getperms(array)
     {
-      checkperms(array, 0);
+      return checkperms(array, 0);
     }
 
 
@@ -522,7 +535,7 @@ Meteor.methods({
         {
           if (scores[y].length > 2 && check)
           {
-            check = checkperms(scores[y]);
+            check = getperms(scores[y]);
             if (check != false)
             {
               scores[y] = check;
@@ -533,6 +546,7 @@ Meteor.methods({
           else if (x == values.length-1) {
             scores[values[x-1]] = scores[values[x-1]].concat(scores[values[x]]);
             scores[values[x]] = [];
+            check = true;
             values.splice(x, 1);
             x--;
             break;
