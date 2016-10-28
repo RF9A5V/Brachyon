@@ -113,8 +113,12 @@ Meteor.methods({
       var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
       }));
-    else
+    else if (format == "double_elim")
       var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
+        return participant.alias;
+      }));
+    else if (format == "swiss")
+      var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
         return participant.alias;
       }));
 
@@ -212,6 +216,10 @@ Meteor.methods({
     }
   },
 
+  "events.place_winner"(eventID, bracketNumber, roundNumber, matchNumber){
+    return;
+  },
+
   "events.undo_match"(eventID, bracketNumber, roundNumber, matchNumber) {
     var event = Events.findOne(eventID);
     if (!event){
@@ -303,6 +311,282 @@ Meteor.methods({
     })
     //Return for recursion
     return;
-  }
+  },
+
+  "events.update_match"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  {
+    var event = Events.findOne(eventID);
+    event = event.brackets[0].rounds[roundNumber];
+    var p1 = event.matches[matchNumber].playerOne;
+    var p2 = event.matches[matchNumber].playerTwo;
+    event.matches[matchNumber].played = true;
+    for (var x = 0; x < event.players.length; x++)
+    {
+      if (event.players[x].name == p1)
+      {
+        event.players[x].score += score*winfirst;
+        event.players[x].wins += winfirst;
+        event.players[x].losses += winsecond;
+        event.players[x].playedagainst[p2] = true;
+      }
+      if (event.players[x].name == p2)
+      {
+        event.players[x].score += score*winsecond;
+        event.players[x].wins += winsecond;
+        event.players[x].losses += winfirst;
+        event.players[x].playedagainst[p1] = true;
+      }
+    }
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${roundNumber}`]: event
+      }
+    })
+  },
+
+  "events.tiebreaker"(eventID, roundNumber, matchNumber, score)
+  {
+    var event = Events.findOne(eventID);
+    event = event.brackets[0].rounds[roundNumber];
+    var p1 = event.matches[matchNumber].playerOne;
+    var p2 = event.matches[matchNumber].playerTwo;
+    var bnum1 = 0;
+    var bnum2 = 0;
+    for (var x = 0; x < event.players.length; x++)
+    {
+      if (event.players[x].name == p1)
+      {
+        for (var y = 0; y < event.players[x].length; y++)
+        {
+          var name = event.players[y].name;
+          if (event.players[x].playedagainst[name] = true)
+            bnum1 += event.players[y].score;
+        }
+      }
+      if (event.players[x].name == p2)
+      {
+        for (var y = 0; y < event.players[x].length; y++)
+        {
+          var name = event.players[y].name;
+          if (event.players[x].playedagainst[name] = true)
+            bnum2 += event.players[y].score;
+        }
+      }
+      if (bnum1 > bnum2)
+      {
+        //Insert p1 is winner
+      }
+      else if (bnum2 > bnum1)
+      {
+        //Insert p2 is winner
+      }
+      else
+      {
+        //Next round mathafucka
+      }
+    }
+  },
+
+  "events.update_round"(eventID, roundNumber, score) { //For swiss specifically
+    var event = Events.findOne(eventID);
+    rounds = event.brackets[0].rounds;
+    event = event.brackets[0].rounds[roundNumber];
+    var players = event.players;
+    var key = 'score';
+    var scores = [];
+    var max = 0;
+
+    for (var x = 0; x < players.length; x++)
+    {
+      if (typeof scores[players[x].score] == 'undefined')
+      {
+        scores[players[x].score] = [];
+      }
+      scores[players[x].score].push(players[x]);
+      if (players[x].score > max)
+        max = players[x].score;
+    }
+    var extraplayer = -1;
+    var values = [];
+    for (var x = max; x >= 0; x--) //Form them into subarrays
+    {
+      if (typeof scores[x] !== 'undefined') {
+        if (extraplayer != -1)
+        {
+          scores[x].unshift(extraplayer);
+          extraplayer = -1;
+        }
+        if (scores[x].length%2 == 1)
+        {
+          extraplayer = scores[x].pop();
+        }
+        if (scores[x].length > 0)
+          values.push(x);
+      }
+    }
+
+    if (extraplayer != -1) //Flawed for one minor reason: bye may be answer to matching someone of the same score to avoid concating.
+    {
+      if (extraplayer.bye)
+      {
+        var foundbye = false;
+        var y = values.length-1;
+        while (!foundbye)
+        {
+          for (var x = 0; x < scores[values[y]].length; x++)
+          {
+            if (scores[values[y]][x].bye == false)
+            {
+              var swap = extraplayer;
+              extraplayer = scores[values[y]][x];
+              scores[values[y]][x] = swap;
+              foundbye = true;
+              break;
+            }
+          }
+          y--;
+        }
+      }
+      extraplayer.bye = true;
+      extraplayer.score += score;
+    }
+
+    function swap(array, i, j)
+    {
+      var s = array[i];
+      array[i] = array[j];
+      array[j] = s;
+      return array;
+    }
+
+    //Takes an array of player objects and sees if they can validly play against each other
+    function isplayable(array)
+    {
+      for (var i = 0; i < array.length/2; i++)
+      {
+        var opponent = array[i+array.length/2].name;
+        var str = "";
+        if (array[i].playedagainst[opponent] == true)
+        {
+          for (q = 0; q < array.length; q++)
+          {
+            str += array[q].name + " ";
+          }
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function checkperms(array, i) { //Olength is the original size of the length
+      var j = array.length-1;
+      if (i < array.length-2)
+      {
+        while (i < j)
+        {
+          arr = checkperms(array, i+1);
+          if (arr != false)
+          {
+            return arr;
+          }
+          array = swap(array, i, j);
+          arr = checkperms(array, i+1);
+          if (arr != false)
+            return arr;
+
+          array = swap(array, i, j);
+          j--;
+        }
+      }
+
+      else {
+        if (isplayable(array))
+          return array;
+        array = swap(array, i, j);
+        if (isplayable(array))
+          return array;
+        array = swap(array, i, j);
+        return false;
+      }
+
+      return false;
+    }
+
+    function getperms(array)
+    {
+      return checkperms(array, 0);
+    }
+
+
+    for (var x = 0; x < values.length; x++)
+    {
+      var y = values[x];
+      var check = true;
+      for (var z = 0; z < scores[y].length/2; z++)
+      {
+        var opponent = scores[y][z+scores[y].length/2].name;
+        if (scores[y][z].playedagainst[opponent] == true)
+        {
+          if (scores[y].length > 2 && check)
+          {
+            check = getperms(scores[y]);
+            if (check != false)
+            {
+              scores[y] = check;
+              break;
+            }
+            z--;
+          }
+          else if (x == values.length-1) {
+            scores[values[x-1]] = scores[values[x-1]].concat(scores[values[x]]);
+            scores[values[x]] = [];
+            check = true;
+            values.splice(x, 1);
+            x--;
+            break;
+          }
+          else
+          {
+            scores[values[x]] = scores[values[x]].concat(scores[values[x+1]]);
+            scores[values[x+1]] = [];
+            values.splice(x+1, 1);
+            check = true;
+            z = -1;
+          }
+        }
+      }
+    }
+
+    var temp = [];
+
+    for (var x = 0; x < values.length; x++) //TODO: Check if two players who played against each other might end up doing so again.
+    {
+      var y = values[x]; //Our actual index value. Since the value is sorted backwards this goes top down.
+      for (var z = 0; z < scores[y].length/2; z++)
+      {
+        var opponent = scores[y][z].name;
+        var matchObj = {
+          playerOne: scores[y][z].name,
+          playerTwo: scores[y][z+scores[y].length/2].name,
+          played: false
+        }
+        temp.push(matchObj);
+      }
+    }
+    var newpl = JSON.parse(JSON.stringify(players));
+    newpl.sort(function(a, b) {
+      return b.score - a.score;
+    })
+    var newevent = {
+      players: newpl,
+      matches: temp
+    }
+    rounds.push(newevent);
+      Events.update(eventID, {
+        $set: {
+          [`brackets.0.rounds`]: rounds
+        }
+      })
+    }
 
 })
