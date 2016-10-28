@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import SwissMatchBlock from "./match.jsx"
 
 //Called by: imports\components\events\show\bracket.jsx
 export default class SwissDisplay extends TrackerReact(Component) {
@@ -16,37 +17,20 @@ export default class SwissDisplay extends TrackerReact(Component) {
       if (this.props.rounds[page].matches[x].played != false)
         num++;
     }
+    rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
+    console.log(rec);
     this.state = {
       page: page,
       wcount: num,
-      open: false,
-      playerone: 0,
-      playertwo: 0,
-      ties: 0
+      recrounds: rec
     }
-  }
-
-  openModal() {
-    this.setState({
-      open: true,
-      playerone: 0,
-      playertwo: 0,
-      ties: 0
-    });
-  }
-
-  closeModal() {
-    this.setState({
-      open: false,
-      playerone: 0,
-      playertwo: 0,
-      ties: 0
-    });
   }
 
   declareWinner(score, win1, win2, ties, matchnumber)
   {
-      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, win1, win2, function(err) {
+      console.log(win1);
+      console.log(this.state.playerone)
+      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, win1, win2, ties, function(err) {
         if(err){
           console.log(err);
           toastr.error("Couldn't advance this match.", "Error!");
@@ -54,7 +38,6 @@ export default class SwissDisplay extends TrackerReact(Component) {
         else {
           var wcount = this.state.wcount+1;
           toastr.success("Players " + wcount + " advanced to next round!", "Success!");
-          this.setState({wcount: wcount});
         }
       });
       var wcount = this.state.wcount+1;
@@ -77,35 +60,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
     this.setState({wcount: 0, page: page});
   }
 
-  getValue(e, k)
-  {
-    var val = parseInt(e);
-    if (k == 0)
-      this.setState({playerOne: val});
-    else if (k == 1)
-      this.setState({playerTwo: val});
-    else
-      this.setState({ties: val});
-  }
-
-  validateData(i){
-    console.log("Testing here");
-    if(this.state.playerOne == null || this.state.playerOne == "") {
-      throw new Error("Bracket Name can't be null!");
-    }
-    if(this.state.playerTwo == null || this.state.playerTwo == "") {
-      throw new Error("Bracket Name can't be null!");
-    }
-    if(this.state.ties == null || this.state.ties == "") {
-      this.setState({ties: 0});
-    }
-    console.log("Does this even happen?");
-    this.declareWinner(3, this.state.playerone, this.state.playertwo, this.state.ties, i);
-    this.closeModal();
+  endTourn(){
+    return;
   }
 
   render() {
-
     return (
       <div className="col">
         <div className="center">
@@ -137,47 +96,22 @@ export default class SwissDisplay extends TrackerReact(Component) {
               })
           }
           </div>
-          <div className="row">
+          <div className="row" id="RoundDiv">
           {
             this.props.rounds[this.state.page].matches.map((match, i) => {
               return(
-              <div>
-                <div className="col center" style={{paddingLeft: "20px"}}>
-                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.setState({open: true}) }):( () => {} ) }>{match.playerOne}</div>
-                  <div>VS.</div>
-                  <div onClick={ (match.played == false && this.state.page == this.props.rounds.length-1) ? (() => { this.setState({open: true}) }):( () => {} ) }>{match.playerTwo}</div>
-                </div>
-
-                <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-                  <div className="col" style={{height: "100%"}}>
-                    <div className="self-end">
-                      <FontAwesome name="times" onClick={() => { this.setState({open: false, playerone: 0, playertwo: 0, ties: 0}) }} />
-                    </div>
-                    <h3 className="col-1 center">Set the Winner</h3>
-                    <div className="row flex-padaround col-1">
-                      <div className="col">
-                        <div className="participant-active">{match.playerOne}</div>
-                        <input type="number" onChange={(evt) => this.getValue(evt, 0).bind(this)}/>
-                      </div>
-                      <div className="col">
-                        <div className="participant-active">{match.playerTwo}</div>
-                        <input type="number" onChange={(evt) => this.getValue(evt, 1).bind(this)}/>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <span>Ties</span>
-                      <input type="number" onChange={(evt) => this.getValue(evt, 2).bind(this)}/>
-                    </div>
-                    <button onClick={() => {this.validateData(i).bind(this)}}>Update Match</button>
-                  </div>
-                </Modal>
-              </div>
+                <SwissMatchBlock page={this.state.page} declareWinner={this.declareWinner.bind(this)} i={i} match={match} rounds={this.props.rounds} />
               );
             })
           }
           </div>
           <div>
           {
+            (this.state.page >= (this.state.recrounds - 1) ) ? (
+              <button onClick={ () => {this.endTourn().bind(this)} }>
+              Finish Tournament
+              </button>
+            ):
             (this.state.page == this.props.rounds.length-1 && this.state.wcount == this.props.rounds[this.state.page].matches.length) ? (
               <button onClick={ () => {this.newRound().bind(this)} }>
               Advance Round
