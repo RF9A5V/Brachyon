@@ -1,0 +1,73 @@
+.tab-controller
+  padding 20px
+  padding-top 0
+
+.tab
+  padding 10px
+
+.tab:first-child
+  padding-left 0
+
+.tab:last-child
+  padding-right 0
+
+.tab:hover
+  cursor pointer
+
+.side-tab-container
+  position relative
+  flex 1 1
+
+.side-tab-menu
+  position fixed
+  left 0
+  top 0
+  padding-top 100px
+  padding-bottom 70px
+  height 100%
+  background-color #111
+  width 20vw
+  min-width 200px
+  box-sizing border-box
+  min-height calc(100vh - 170px)
+
+.side-tab-menu-item
+  display flex
+  justify-content flex-start
+  align-items center
+  padding 28px 0 28px 30px
+  box-sizing border-box
+  font-size 18px
+  border solid 2px transparent
+
+.side-tab-menu-item:hover
+  border 2px #FF6000 solid
+  cursor pointer
+
+.side-tab-menu-item.active:hover
+  background-color #FF6000
+
+.side-tab-menu-item.active
+  background-color #FF6000
+  border 2px #FF6000 solid
+
+.side-tab-content
+  width 100%
+  height 100%
+  padding-left 20vw
+  box-sizing border-box
+
+.side-tab-content-item
+  padding 20px
+  display none
+
+.side-tab-content-item.active
+  display block
+
+.side-tab-panel
+  padding 40px
+  width 75%
+  max-width 960px
+  background-color #666
+  min-width 300px
+  margin 30px

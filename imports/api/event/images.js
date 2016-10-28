@@ -44,10 +44,11 @@ export const Images = new FilesCollection({
   },
   onAfterUpload(image) {
 
-    var makeUrl = function(stat, imgID, version, triesUrl) {
+    var makeUrl = (stat, imgID, version, triesUrl) => {
       if (triesUrl == null) {
         triesUrl = 0;
       }
+      var self = this;
       client.makeUrl(stat.path, {
         long: true,
         downloadHack: true

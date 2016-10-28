@@ -26,7 +26,7 @@ export default class EventCreateScreen extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize");
+    window.removeEventListener("resize", this.forceUpdate.bind(this));
   }
 
   panels() {
@@ -67,17 +67,11 @@ export default class EventCreateScreen extends Component {
   }
 
   accordionItems() {
-    var moduleItems = [
-      {
-        title: "Details",
-        content: (<DetailsPanel ref="details" />)
-      }
-    ];
+    var moduleItems = [];
     var modules = this.availableModules();
     var keys = Object.keys(modules);
     var panels = this.panels();
     for(var i in modules){
-      console.log(i);
       for(var j in modules[i]){
         if(this.state.moduleBits[i][j] == 1){
           moduleItems.push({
@@ -89,6 +83,10 @@ export default class EventCreateScreen extends Component {
         }
       }
     }
+    moduleItems.push({
+      title: "Details",
+      content: (<DetailsPanel ref="details" />)
+    });
     return moduleItems;
   }
 
@@ -192,8 +190,8 @@ export default class EventCreateScreen extends Component {
       <div className='box'>
         <div className='col x-center'>
           <h2>Create an Event</h2>
-          <div className="row-to-col" style={{width: window.innerWidth < 1000 ? "95%" : "85%", alignItems: window.innerWidth < 1000 ? "stretch" : "flex-start", minWidth: 200 }}>
-            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1000 ? "initial" : "22.5%" }}>
+          <div className="create-row" style={{width: window.innerWidth < 1450 ? "95%" : "85%", alignItems: window.innerWidth < 1450 ? "stretch" : "flex-start", minWidth: 200 }}>
+            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1450 ? "initial" : "22.5%" }}>
               <div className="row center x-center">
                 <h5 style={{position: "relative", top: -32, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Add Modules</h5>
               </div>
@@ -201,7 +199,7 @@ export default class EventCreateScreen extends Component {
                 this.modulePanels()
               }
             </div>
-            <div className="col x-center edit-modules" style={{ margin: 20, padding: "30px 20px", border: "solid 2px white", width: window.innerWidth < 1000 ? "initial" : "65%" }}>
+            <div className="col x-center edit-modules" style={{ margin: 20, padding: "30px 20px", border: "solid 2px white", width: window.innerWidth < 1450 ? "initial" : "65%" }}>
               <div className="row center x-center">
                 <h5 style={{position: "relative", top: -42, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Edit Modules</h5>
               </div>

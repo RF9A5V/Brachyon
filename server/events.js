@@ -52,7 +52,7 @@ Meteor.methods({
     })
   },
 
-  "events.removeParticipant"(eventID, bracketIndex, participantIndex) {
+  "events.removeParticipant"(eventID, bracketIndex, userId) {
     var event = Events.findOne(eventID);
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
@@ -61,17 +61,11 @@ Meteor.methods({
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    if(bracket.participants == null || bracket.participants.length <= participantIndex) {
-      throw new Meteor.Error(404, "Participant not found.");
-    }
-    Events.update(eventID, {
-      $unset: {
-        [`brackets.${bracketIndex}.participants.${participantIndex}`]: 1
-      }
-    });
     Events.update(eventID, {
       $pull: {
-        [`brackets.${bracketIndex}.participants`]: null
+        [`brackets.${bracketIndex}.participants`]: {
+          id: userId
+        }
       }
     })
   },

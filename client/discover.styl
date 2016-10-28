@@ -1,0 +1,65 @@
+.discover-selector
+  margin-top 20px
+
+.discover-selector-square
+  width 14px
+  height 14px
+  border 2px solid white
+  margin-right 20px
+
+.discover-selector-square:last-child
+  margin-right 0
+
+.discover-selector-square:hover
+  cursor pointer
+  background-color #666
+
+
+.discover-selector-square.active
+  background-color white
+  border-color white
+
+
+.discover-details
+  padding-left 20px
+
+.discover-divider
+  width 75%
+  border 0
+  height 0
+  border-top 1px solid rgba(0, 0, 0, 0.1)
+  border-bottom 1px solid rgba(255, 255, 255, 0.3)
+
+
+@keyframes slidein
+    from opacity0 -ms-transform translateX(-5px) -webkit-transform translateX(-5px) transform translateX(-5px)
+    to opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+
+@-moz-keyframes slidein
+    from opacity0 -ms-transform translateX(-5px) -webkit-transform translateX(-5px) transform translateX(-5px)
+    to opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+
+@-webkit-keyframes slidein
+    from opacity0 -ms-transform translateX(-5px) -webkit-transform translateX(-5px) transform translateX(-5px)
+    to opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+
+@-o-keyframes slidein
+    from opacity0 -ms-transform translateX(-5px) -webkit-transform translateX(-5px) transform translateX(-5px)
+    to opacity 1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+
+
+@keyframes slideout
+    from opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+    to opacity0 -ms-transform translateX(-5px) -webkit-transform translateX(-5px) transform translateX(-5px)
+
+@-moz-keyframes slideout
+    from opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+    to opacity0 -ms-transform translateX(5px) -webkit-transform translateX(5px) transform translateX(5px)
+
+@-webkit-keyframes slideout
+    from opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+    to opacity0 -ms-transform translateX(5px) -webkit-transform translateX(5px) transform translateX(5px)
+
+@-o-keyframes slideout
+    from opacity1 -ms-transform translateX(0) -webkit-transform translateX(0) transform translateX(0)
+    to opacity0 -ms-transform translateX(5px) -webkit-transform translateX(5px) transform translateX(5px)

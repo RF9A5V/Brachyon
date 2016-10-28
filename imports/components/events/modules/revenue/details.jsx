@@ -13,7 +13,7 @@ export default class crowdfundingDetailsPage extends Component {
   }
 
   onDetailsSave() {
-    Meteor.call("events.crowdfunding.saveDetails", this.state.id, parseInt(this.refs.amount.value), moment(this.refs.date.value()).toDate(), (err) => {
+    Meteor.call("events.crowdfunding.saveDetails", this.state.id, parseInt(this.refs.amount.value) * 100, moment(this.refs.date.value()).toDate(), (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -37,14 +37,14 @@ export default class crowdfundingDetailsPage extends Component {
           <div className="row">
             <div className="col" style={{padding: 20, backgroundColor: "#444", marginRight: 20}}>
               <h5>Crowdfunding Request</h5>
-              <input ref="amount" type="number" defaultValue={event.crowdfunding.details.amount} style={{marginRight: 0}} />
+              <input ref="amount" type="number" defaultValue={event.crowdfunding.details.amount / 100} style={{marginRight: 0}} />
               <h5 style={{marginBottom: 20}}>Crowdfunding Due Date</h5>
               <div>
                 <DateInput init={event.crowdfunding.details.dueDate} ref="date" />
               </div>
             </div>
             <div className="col-1 row center x-center" style={{padding: 20, backgroundColor: "#444"}}>
-              <span style={{fontSize: "2em"}}>You are requesting ${event.crowdfunding.details.amount} by { moment(event.crowdfunding.details.dueDate).format("MMMM Do") }.</span>
+              <span style={{fontSize: "2em"}}>You are requesting ${(event.crowdfunding.details.amount / 100).toFixed(2)} by { moment(event.crowdfunding.details.dueDate).format("MMMM Do") }.</span>
             </div>
           </div>
         </div>

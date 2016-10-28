@@ -3,33 +3,41 @@ import moment from 'moment';
 
 export default class TimeInput extends Component {
 
-  componentWillMount() {
-
+  constructor(props) {
+    super(props);
     var obj = {
       hour: "12",
       minute: "00",
       half: "AM"
     }
-
-    if(this.props.init){
+    if(props.init) {
       var current = moment(this.props.init);
       obj = {
-        hour: current.format("hh"),
-        minute: current.format("mm"),
-        half: current.format("A")
+        hour: parseInt(current.format("h")),
+        minute: parseInt(current.format("mm")),
+        half: current.format("a")
       }
     }
-
-    this.setState(obj);
+    this.state = obj;
   }
 
   value() {
     var hour = parseInt(this.refs.hours.value);
+    if(hour == 12 && this.refs.half.value == "am") {
+      hour = 0;
+    }
+    else if(hour < 12 && this.refs.half.value == "pm") {
+      hour += 12;
+    }
+    if(hour < 10) {
+      hour = "0" + hour;
+    }
     var minutes = parseInt(this.refs.minutes.value);
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
-    return hour + ":" + minutes + this.refs.half.value.toUpperCase();
+    console.log(hour + ":" + minutes);
+    return hour + "" + minutes;
   }
 
   render() {
@@ -68,7 +76,7 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half">
+          <select ref="half" defaultValue={this.state.half}>
             <option value={"am"}>AM</option>
             <option value={"pm"}>PM</option>
           </select>

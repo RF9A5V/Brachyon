@@ -29,7 +29,7 @@ export default class BracketsPanel extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div className="col panel">
         {
           this.state.brackets.map((bracket, key) => {
             if(bracket == null){
@@ -48,13 +48,6 @@ export default class BracketsPanel extends Component {
               </div>
             );
           })
-        }
-        {
-          // this.state.bracketCount < 15 ? (
-          //   <button onClick={(e) => { e.preventDefault(); this.state.bracketCount++; this.state.brackets.push(1); this.forceUpdate() }}>Add A Bracket</button>
-          // ) : (
-          //   ""
-          // )
         }
       </div>
     )

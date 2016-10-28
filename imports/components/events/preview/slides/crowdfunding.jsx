@@ -53,7 +53,7 @@ export default class CrowdfundingPage extends Component {
                   cf.amount == 0 ? (
                     `$${(cf.current / 100) || 0} raised!`
                   ) : (
-                    `$${(cf.current / 100) || 0} out of ${cf.amount / 100} raised!`
+                    `$${(cf.current / 100) || 0} out of ${cf.amount} raised!`
                   )
                 }
               </span>

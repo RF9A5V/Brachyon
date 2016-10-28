@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
 import FontAwesome from 'react-fontawesome';
-import { browserHistory } from 'react-router';
 import UserDropdown from "../users/user_dropdown.jsx";
 
 export default class Header extends TrackerReact(Component) {
@@ -19,10 +18,17 @@ export default class Header extends TrackerReact(Component) {
     });
   }
 
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {
-      user: Meteor.subscribe("user", Meteor.userId()),
+      user: Meteor.subscribe("user", Meteor.userId(), {
+        onReady: () => {
+          props.onLoad()
+        },
+        onError: () => {
+          props.onLoad()
+        }
+      }),
       userMenuOpen: false
     }
   }
@@ -80,16 +86,40 @@ export default class Header extends TrackerReact(Component) {
     }
     return (
       <Headroom id="header" disableInlineStyles={true}>
-        <header className="row x-center header" onMouseLeave={() => { this.setState({userMenuOpen: false}) }}>
+        <header className="row x-center header" onMouseLeave={() => {
+          if(this.state.userMenuOpen) {
+            this.state.timeout = setTimeout(() => {
+              this.setState({userMenuOpen: false});
+            }, 1000);
+          }
+        }} onMouseEnter={() => {
+          if(this.state.userMenuOpen) {
+            clearTimeout(this.state.timeout);
+          }
+        }}>
           <div className="row x-center">
             <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
             <div style={{marginLeft: 10, marginRight: 10}}>
               <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
                 DISCOVER
               </Link>
-              {/*<Link className="hub" to="/events/discover">
-                CREATE
-              </Link>
+              {
+                Meteor.userId() ? (
+                  <Link className={`hub ${window.location.pathname == "/events/create" ? "active" : ""}`} to="/events/create">
+                    CREATE
+                  </Link>
+                ) : (
+                  <a href="#" className={`hub ${window.location.pathname == "/events/create" ? "active" : ""}`} onClick={ (e) => {
+                    e.preventDefault();
+                    toastr.warning("Please log in or sign up before creating an event!", "Warning!");
+                    browserHistory.push("/")
+                  } }>
+                    CREATE
+                  </a>
+                )
+              }
+
+              {/*
               <Link className="hub" to="/events/discover">
                 MARKET
               </Link>*/}

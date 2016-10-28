@@ -126,7 +126,7 @@ Meteor.publish('userEvents', (id) => {
     }
   })
   return [
-    Events.find({owner: id}),
+    Events.find({owner: id}, { limit: 6 }),
     games,
     ProfileImages.find({_id: user.profile.image}).cursor,
     images.cursor
@@ -210,8 +210,23 @@ Meteor.publish("userSearch", function(usernameSubstring) {
   ];
 })
 
-Meteor.publish('events_to_review', function(){
-  return Events.find({ underReview: true });
+Meteor.publish('eventsUnderReview', function(){
+  var events = Events.find({ underReview: true });
+  var owners = Meteor.users.find({
+    _id: {
+      $in: events.map((e) => {
+        return e.owner;
+      })
+    }
+  });
+  var eventBanners = Images.find({_id: { $in: events.map(e => { return e.details.banner }) }});
+  var profileImages = ProfileImages.find({_id: { $in: owners.map(o => { return o.profile.image }) }});
+  return [
+    Events.find({ underReview: true }),
+    owners,
+    eventBanners.cursor,
+    profileImages.cursor
+  ];
 })
 
 Meteor.publish('unapproved_games', function() {
@@ -244,3 +259,8 @@ Meteor.publish('game_search', function(query) {
     Images.find({_id: { $in: banners }}).cursor
   ]
 })
+
+Meteor.publish("getUserByUsername", function(query) {
+  var user = Meteor.users.find({username: query});
+  return user;
+});

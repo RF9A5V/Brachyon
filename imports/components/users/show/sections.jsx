@@ -8,15 +8,26 @@ export default class UserSections extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      section: 0,
+      sections: []
+    }
+  }
+
+  onEventSubscriptionChange(subName, page) {
+    this.props.setEventSubscription(subName, page);
+  }
+
+  componentWillMount() {
+    this.setState({
       sections: [
         {
           name: "Events",
-          component: <UserEvents />
-        },
-        {
-          name: "Stats",
-          component: <UserStats />
+          component: <UserEvents onAction={this.onEventSubscriptionChange.bind(this)} isReady={this.props.isReady} />
         }
+        // {
+        //   name: "Stats",
+        //   component: <UserStats />
+        // }
         // {
         //   name: "Sponsorship",
         //   component: <div>3</div>
@@ -30,8 +41,7 @@ export default class UserSections extends Component {
         //   component: <div>5</div>
         // }
       ],
-      section: 0
-    }
+    })
   }
 
   render() {
