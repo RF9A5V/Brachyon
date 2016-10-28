@@ -11,6 +11,73 @@
   width 100%
   height auto
 
-
 .bracket-block div
   padding 20px
+
+.swiss-tabs
+  margin-bottom 20px
+
+.swiss-tab-header
+  margin-right 20px
+  padding-bottom 5px
+  border-bottom solid 2px white
+  font-size 18px
+
+.swiss-tab-header.active
+  border-color #FF6000
+
+.swiss-tab-header:last-child
+  margin-right 0
+
+.swiss-tab-header:hover
+  cursor pointer
+
+.swiss-row
+  background-color #666
+  padding 20px
+
+.swiss-row:nth-child(2n)
+  background-color #222
+
+.swiss-header
+  font-weight bold
+  font-size 20px
+  flex 1
+  text-align center
+
+.swiss-entry
+  flex 1
+  text-align center
+
+.swiss-match
+  padding 20px
+  background-color #666
+  margin-right 20px
+  margin-bottom 20px
+  box-sizing border-box
+  +above(1200px)
+    width calc(25% - 15px)
+  +between(800px, 1200px)
+    width calc(50% - 20px)
+  +below(800px)
+    width 100%
+    margin-right 0
+
++above(1200px)
+  .swiss-match:nth-child(4n)
+    margin-right 0
++between(800px, 1200px)
+  .swiss-match:nth-child(2n)
+    margin-right 0
+
+.swiss-match:hover
+  cursor pointer
+
+.swiss-match.complete
+  opacity: 0.3
+
+.swiss-player:first-child
+  margin-right 20px
+
+.swiss-player:last-child
+  margin-left 20px
