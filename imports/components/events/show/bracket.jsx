@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
 import SwissDisplay from "../../tournaments/swiss/display.jsx";
-//
+
 export default class BracketPanel extends Component {
 
   startEventHandler(e) {
