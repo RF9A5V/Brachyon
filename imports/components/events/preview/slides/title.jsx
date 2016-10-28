@@ -73,7 +73,6 @@ export default class EventTitlePage extends Component {
               {
                 revenue && revenue.sponsors ? (
                   revenue.sponsors.slice(0, 3).map((sponsor) => {
-                    console.log(sponsor);
                     var user = Meteor.users.findOne(sponsor.id);
                     return (
                       <div className="sponsor-item col center">
@@ -112,7 +111,7 @@ export default class EventTitlePage extends Component {
                 {
                   event.tickets ? (
                     <div>
-                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event._id+"/checkout") }}>Play</button>
+                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push("/events/"+event.slug+"/checkout") }}>Register</button>
                     </div>
                   ) : (
                     ""
@@ -120,9 +119,19 @@ export default class EventTitlePage extends Component {
                 }
                 {
                   event.brackets && !event.tickets ? (
-                    <button style={{marginRight: 10}} onClick={() => { this.props.nav(1) }}>
-                      Register
-                    </button>
+                    event.brackets.some((bracket) => {
+                      return bracket.participants.some((player) => {
+                        return player.id == Meteor.userId()
+                      })
+                    }) ? (
+                      <button style={{marginRight: 10}} onClick={() => { browserHistory.push(`/events/${event.slug}/brackets/0`) }}>
+                        View Bracket
+                      </button>
+                    ) : (
+                      <button style={{marginRight: 10}} onClick={() => { this.props.nav(1) }}>
+                        Register
+                      </button>
+                    )
                   ) : (
                     ""
                   )
