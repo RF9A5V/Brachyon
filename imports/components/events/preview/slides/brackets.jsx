@@ -80,7 +80,7 @@ export default class BracketSlide extends Component {
           {
             this.props.event.brackets.map((bracket, i) => {
               return (
-                <div className="col center x-center bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
+                <div className="bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
                   if(this.props.event.owner == Meteor.userId()) {
                     browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
                   }
@@ -89,15 +89,17 @@ export default class BracketSlide extends Component {
                   }
                 }}>
                   <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
-                  <div className="col x-center bracket-title">
-                    <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 10}}>
-                      Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
-                    </span>
-                  </div>
-                  <div className="bracket-button">
-                    {
-                      this.bracketButton(bracket, i)
-                    }
+                  <div className="col center x-center" style={{position: "absolute", width: "100%", height: "100%", top: 0}}>
+                    <div className="col-1 col center x-center">
+                      <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 55}}>
+                        Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
+                      </span>
+                    </div>
+                    <div className="bracket-button">
+                      {
+                        this.bracketButton(bracket, i)
+                      }
+                    </div>
                   </div>
                 </div>
               );
