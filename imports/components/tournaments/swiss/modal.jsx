@@ -22,11 +22,16 @@ export default class SwissModal extends Component {
       ties = 0;
     }
     this.props.declareWinner(3, p1, p2, ties, this.props.i);
-    this.closeModal();
   }
 
   closeModal() {
     this.props.onRequestClose();
+  }
+
+  endMatch() {
+    this.validateData();
+    this.props.finalizeMatch(this.props.i);
+    this.closeModal();
   }
 
   render() {
@@ -56,6 +61,7 @@ export default class SwissModal extends Component {
                 <input type="number" ref="ties"/>
               </div>
               <button onClick={() => { this.validateData() }}>Update Match</button>
+              <button onClick={() => { this.endMatch() }}>End Match</button>
             </div>
           )
         }

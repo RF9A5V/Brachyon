@@ -316,16 +316,16 @@ Meteor.methods({
   "events.update_match"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
     var event = Events.findOne(eventID);
-    event = event.brackets[0].rounds[roundNumber];
-    if (roundNumber < 1)
+    if (roundNumber > 0)
       var prevround = event.brackets[0].rounds[roundNumber-1];
+    event = event.brackets[0].rounds[roundNumber];
     event.matches[matchNumber].p1score = winfirst;
     event.matches[matchNumber].p2score = winsecond;
     event.matches[matchNumber].ties = ties;
     var p1 = event.matches[matchNumber].playerOne;
     var p2 = event.matches[matchNumber].playerTwo;
     var prevmatch1, prevmatch2;
-    if (matchNumber < 1)
+    if (roundNumber < 1)
     {
       prevmatch1 = {score: 0, wins: 0, losses: 0};
       prevmatch2 = {score: 0, wins: 0, losses: 0};
@@ -367,7 +367,8 @@ Meteor.methods({
   "events.complete_match"(eventID, roundNumber, matchNumber)
   {
     var event = Events.findOne(eventID);
-    event.brackets[0].rounds[roundNumber].matches[matchNumber].played = true;
+    event = event.brackets[0].rounds[roundNumber];
+    event.matches[matchNumber].played = true;
     Events.update(eventID, {
       $set: {
         [`brackets.0.rounds.${roundNumber}`]: event
@@ -599,7 +600,10 @@ Meteor.methods({
         var matchObj = {
           playerOne: scores[y][z].name,
           playerTwo: scores[y][z+scores[y].length/2].name,
-          played: false
+          played: false,
+          p1score: 0,
+          p2score: 0,
+          ties: 0
         }
         temp.push(matchObj);
       }
