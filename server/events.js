@@ -364,7 +364,7 @@ Meteor.methods({
     })
   },
 
-  "events.complete_match"(eventID, roundNumber, matchNumber)
+  "events.complete_match"(eventID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
@@ -617,11 +617,83 @@ Meteor.methods({
       matches: temp
     }
     rounds.push(newevent);
-      Events.update(eventID, {
-        $set: {
-          [`brackets.0.rounds`]: rounds
-        }
-      })
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds`]: rounds
+      }
+    })
+  },
+
+  "events.update_roundmatch"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  {
+    var event = Events.findOne(eventID);
+    var prevround;
+    if (roundNumber > 0)
+      prevround = event.brackets[0].rounds[roundNumber-1];
+    event = event.brackets[0].rounds[roundNumber];
+    event.matches[matchNumber].p1score = winfirst;
+    event.matches[matchNumber].p2score = winsecond;
+    event.matches[matchNumber].ties = ties;
+    var prevmatch1, prevmatch2;
+    if (roundNumber < 1)
+    {
+      prevmatch1 = {score: 0, wins: 0, losses: 0};
+      prevmatch2 = {score: 0, wins: 0, losses: 0};
     }
+    else
+    {
+      var length = prevround.players.length;
+      prevmatch1 = prevround.players[(matchNumber-1)%length];
+      prevmatch2 = prevround.players[(matchNumber-1)%length + Math.floor(length/2)];
+    }
+    event.players[matchNumber].score = prevmatch1.score + score*winfirst;
+    event.players[matchNumber].wins = prevmatch1.wins + winfirst;
+    event.players[matchNumber].losses = prevmatch1.losses + winsecond;
+    event.players[matchNumber+Math.floor(length/2)].score = prevmatch2.score + score*winsecond;
+    event.players[matchNumber+Math.floor(length/2)].wins = prevmatch2.wins + winsecond;
+    event.players[matchNumber+Math.floor(length/2)].losses = prevmatch2.losses + winfirst;
+
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${roundNumber}`]: event
+      }
+    })
+  },
+
+  "events.update_roundrobin"(eventID, roundNumber, score) { //For swiss specifically
+    var event = Events.findOne(eventID);
+    rounds = event.brackets[0].rounds;
+    event = event.brackets[0].rounds[roundNumber];
+    var participants = event.players.map(function(x) { return x.name });
+    participants.shift(participants.pop());
+    var temp = [];
+    for (var x = 0; x < Math.floor(participants.length/2); x++)
+    {
+      var matchObj = {
+        playerOne: participants[x],
+        playerTwo: participants[x+length/2],
+        played: false,
+        p1score: 0,
+        p2score: 0,
+        ties: 0
+      };
+      temp.push(matchObj);
+    }
+    var tempb = JSON.parse(JSON.stringify(event.players));
+    tempb.sort(function(a, b) {
+      return b.score - a.score;
+    })
+    var roundObj = {
+      matches: temp,
+      players: tempb,
+      score: score
+    };
+    rounds.push(roundObj);
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds`]: rounds
+      }
+    });
+  }
 
 })
