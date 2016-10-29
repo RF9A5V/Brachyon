@@ -305,6 +305,7 @@ var OrganizeSuite = {
       temp.push(matchObj);
     }
     var tempb = [];
+    var tempc = [];
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
@@ -312,6 +313,7 @@ var OrganizeSuite = {
       {
         playarr[participants[y]] = false;
       }
+      tempc[participants[x].name] = x;
       var playerObj = {
         name: participants[x],
         score: 0,
@@ -332,8 +334,48 @@ var OrganizeSuite = {
     var round = {
       matches: temp,
       players: tempb,
+      pdic: tempc
     }
     frounds.push(round);
+    return frounds;
+  },
+  roundRobin: function(participants) {
+    var frounds = [];
+    var score = 3;
+    var temp = [];
+    var length = participants.length;
+    for (var x = 0; x < Math.floor(length/2); x++)
+    {
+      var matchObj = {
+        playerOne: participants[x],
+        playerTwo: participants[x+length/2],
+        played: false,
+        p1score: 0,
+        p2score: 0,
+        ties: 0
+      };
+      temp.push(matchObj);
+    }
+    var tempb = [];
+    for (var x = 0; x < participants.length; x++)
+    {
+      var playarr = [];
+      var playerObj = {
+        name: participants[x],
+        score: 0,
+        wins: 0,
+        losses: 0,
+        ties: 0
+      };
+      tempb.push(playerObj);
+    }
+    var roundObj = {
+      matches: temp,
+      players: tempb,
+      score: score
+    }
+    frounds.push(roundObj);
+
     return frounds;
   }
 }
