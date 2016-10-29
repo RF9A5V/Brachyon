@@ -30,23 +30,36 @@ export default class SwissDisplay extends TrackerReact(Component) {
 
   declareWinner(score, win1, win2, ties, matchnumber)
   {
+      console.log("Huh");
       Meteor.call("events.update_match", this.state.id, this.state.page - 1, matchnumber, score, win1, win2, ties, function(err) {
         if(err){
           toastr.error("Couldn't advance this match.", "Error!");
+          return err;
         }
         else {
-          var wcount = this.state.wcount+1;
           toastr.success("Players " + wcount + " advanced to next round!", "Success!");
         }
       });
-      var wcount = this.state.wcount+1;
-      this.setState({wcount: wcount});
+  }
+
+  finalizeMatch(matchnumber)
+  {
+    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, function(err) {
+      if(err){
+        toastr.error("Couldn't complete the match.", "Error!");
+      }
+      else {
+        toastr.success("Match finalized!", "Success!");
+      }
+    });
+    var wcount = this.state.wcount+1;
+    this.setState({wcount: wcount});
   }
 
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.props.id, this.state.page, 3, function(err) {
+    Meteor.call("events.update_round", this.state.id, this.state.page, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
@@ -128,7 +141,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.state.page].players.map((playerObj, i) => {
+                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
                       return (
                         <div className="row swiss-row">
                           <div className="swiss-entry">
@@ -181,7 +194,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
           }
           </div>
         </div>
-        <SwissModal onRequestClose={this.closeModal.bind(this)} declareWinner={this.declareWinner.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} />
+        <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch = {this.finalizeMatch.bind(this)} declareWinner={this.declareWinner.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} />
       </div>
     )
   }
