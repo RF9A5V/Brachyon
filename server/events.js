@@ -317,26 +317,57 @@ Meteor.methods({
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
+    if (roundNumber < 1)
+      var prevround = event.brackets[0].rounds[roundNumber-1];
+    event.matches[matchNumber].p1score = winfirst;
+    event.matches[matchNumber].p2score = winsecond;
+    event.matches[matchNumber].ties = ties;
     var p1 = event.matches[matchNumber].playerOne;
     var p2 = event.matches[matchNumber].playerTwo;
-    event.matches[matchNumber].played = true;
+    var prevmatch1, prevmatch2;
+    if (matchNumber < 1)
+    {
+      prevmatch1 = {score: 0, wins: 0, losses: 0};
+      prevmatch2 = {score: 0, wins: 0, losses: 0};
+    }
+    else
+    {
+      for (var x = 0; x < event.players.length; x++) //TODO: Make the name a key to the player array so we don't have to do 2N worth of searches every update.
+      {
+        if (prevround.players[x].name == p1)
+          prevmatch1 = prevround.players[x];
+        if (prevround.players[x].name == p2)
+          prevmatch2 = prevround.players[x];
+      }
+    }
     for (var x = 0; x < event.players.length; x++)
     {
       if (event.players[x].name == p1)
       {
-        event.players[x].score += score*winfirst;
-        event.players[x].wins += winfirst;
-        event.players[x].losses += winsecond;
+        event.players[x].score = prevmatch1.score + score*winfirst;
+        event.players[x].wins = prevmatch1.wins + winfirst;
+        event.players[x].losses = prevmatch1.losses + winsecond;
         event.players[x].playedagainst[p2] = true;
       }
       if (event.players[x].name == p2)
       {
-        event.players[x].score += score*winsecond;
-        event.players[x].wins += winsecond;
-        event.players[x].losses += winfirst;
+        event.players[x].score = prevmatch2.score + score*winsecond;
+        event.players[x].wins = prevmatch2.wins + winsecond;
+        event.players[x].losses = prevmatch2.losses + winfirst;
         event.players[x].playedagainst[p1] = true;
       }
     }
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${roundNumber}`]: event
+      }
+    })
+  },
+
+  "events.complete_match"(eventID, roundNumber, matchNumber)
+  {
+    var event = Events.findOne(eventID);
+    event.brackets[0].rounds[roundNumber].matches[matchNumber].played = true;
     Events.update(eventID, {
       $set: {
         [`brackets.0.rounds.${roundNumber}`]: event
