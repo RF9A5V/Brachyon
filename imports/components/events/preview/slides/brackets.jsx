@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { browserHistory } from "react-router";
 
 import Games from "/imports/api/games/games.js";
+import Notifications from "/imports/api/users/notifications.js";
 import { Images } from "/imports/api/event/images.js";
 
 export default class BracketSlide extends Component {
@@ -25,8 +26,45 @@ export default class BracketSlide extends Component {
     return `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
   }
 
+  onInviteAccept(note) {
+    Meteor.call("users.notifications.acceptInvitation", note._id, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully joined event!", "Success");
+      }
+    })
+  }
+
+  onInviteReject(note) {
+    Meteor.call("users.notifications.rejectInvitation", note._id, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.warning("Rejected invitation to event.", "Success");
+      }
+    })
+  }
+
   bracketButton(bracket, i) {
     var isRegistered = bracket.participants && bracket.participants.some((obj, j) => { return obj.id == Meteor.userId() });
+    var note = Notifications.findOne({ eventSlug: this.props.event.slug, recipient: Meteor.userId(), type: "eventInvite" });
+    if(note) {
+      return [
+        (
+          <button className="signup-button" style={{marginRight: 20}} onClick={() => { this.onInviteAccept(note) }}>
+            Accept
+          </button>
+        ),
+        (
+          <button className="login-button" onClick={() => { this.onInviteReject(note) }}>
+            Reject
+          </button>
+        )
+      ]
+    }
     if(isRegistered) {
       return (
         <button onClick={(e) => {
@@ -55,7 +93,7 @@ export default class BracketSlide extends Component {
         e.preventDefault();
         e.stopPropagation();
         if(this.props.event.tickets) {
-          browserHistory.push(`/events/${this.props.event.slug}/checkout`)
+          browserHistory.push(`/events/${this.props.event.slug}/checkout`);
         }
         else {
           Meteor.call("events.registerUser", this.state.id, i, (err) => {
