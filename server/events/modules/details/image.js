@@ -6,7 +6,8 @@ Meteor.methods({
     }
     Events.update(id, {
       $set: {
-        "details.banner": bannerId
+        "details.banner": bannerId,
+        "details.bannerUrl": Images.findOne(bannerId).link()
       }
     })
   }

@@ -5,7 +5,7 @@ import Modal from "react-modal";
 
 import Events from '/imports/api/event/events.js';
 import Games from '/imports/api/games/games.js';
-import ProfileBanners from "/imports/api/users/profile_banners.js";
+import Notifications from "/imports/api/users/notifications.js";
 
 Meteor.startup(() => {
   // code to run on server at startup
