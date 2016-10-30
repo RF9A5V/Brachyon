@@ -77,27 +77,6 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   ]
 })
 
-Meteor.publish("user", (_id) => {
-  var user = Meteor.users.findOne({_id});
-  if(!user){
-    return Meteor.users.find({_id});
-  }
-  var games = Games.find({_id: {$in: user.profile.games}});
-  var imgs = ProfileImages.find({_id: user.profile.image});
-  var gameBanners = Images.find({
-    _id: {
-      $in: games.map((g) => { return g.banner })
-    }
-  })
-  return [
-    Meteor.users.find({_id}),
-    ProfileBanners.find({_id: user.profile.banner}).cursor,
-    imgs.cursor,
-    games,
-    gameBanners.cursor
-  ];
-})
-
 Meteor.publish('events', function(){
   return Events.find();
 });
