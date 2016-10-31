@@ -18,10 +18,11 @@ Meteor.methods({
     }
     var currentDate = moment().minute(0).second(0).millisecond(0);
     var eventStart = moment(obj.datetime).minute(0).second(0).millisecond(0);
-    console.log(currentDate.format());
-    console.log(eventStart.format());
     if(eventStart.isBefore(currentDate)) {
       throw new Meteor.Error(403, "Event cannot start before current date.");
+    }
+    if(obj.banner) {
+      obj.bannerUrl = Images.findOne(image).link();
     }
     return obj;
   },

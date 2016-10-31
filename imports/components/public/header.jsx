@@ -8,6 +8,7 @@ import LogInModal from './loginmodal.jsx';
 import Headroom from 'react-headroom';
 import FontAwesome from 'react-fontawesome';
 import UserDropdown from "../users/user_dropdown.jsx";
+import NotyDropdown from "../users/noty_dropdown.jsx";
 
 export default class Header extends TrackerReact(Component) {
 
@@ -29,7 +30,8 @@ export default class Header extends TrackerReact(Component) {
           props.onLoad()
         }
       }),
-      userMenuOpen: false
+      userMenuOpen: false,
+      notificationsMenuOpen: false
     }
   }
 
@@ -61,18 +63,23 @@ export default class Header extends TrackerReact(Component) {
         <div style={{position: "relative"}} className="row x-center">
           <Link to="/dashboard">
             <div className="row x-center">
-              <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
+              <div style={{position: "relative"}}>
+                <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
+                <div style={{position: "absolute", bottom: 0, right: 10}} onClick={(e) => { e.preventDefault(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
+                  <NotyDropdown open={this.state.notificationsMenuOpen} />
+                </div>
+              </div>
               <div className="col">
                 <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
               </div>
             </div>
           </Link>
           <div className="row x-center">
-            <a href="#" className="row x-center" style={{lineHeight: "32px", cursor: "pointer"}} onClick={(e) => { e.preventDefault();this.setState({userMenuOpen: true}) }}>
+            <a href="#" className="row x-center" style={{lineHeight: "32px", cursor: "pointer"}} onClick={(e) => { e.preventDefault();this.setState({userMenuOpen: !this.state.userMenuOpen}) }}>
               <FontAwesome style={{position: "relative", bottom: 7}} name="sort-desc" size="2x" />
             </a>
           </div>
-          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: !this.state.userMenuOpen})}} />
+          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => { this.setState({ userMenuOpen: false, notificationsMenuOpen: true }) }} />
         </div>
       );
     }
@@ -87,13 +94,13 @@ export default class Header extends TrackerReact(Component) {
     return (
       <Headroom id="header" disableInlineStyles={true}>
         <header className="row x-center header" onMouseLeave={() => {
-          if(this.state.userMenuOpen) {
+          if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             this.state.timeout = setTimeout(() => {
-              this.setState({userMenuOpen: false});
+              this.setState({userMenuOpen: false, notificationsMenuOpen: false});
             }, 1000);
           }
         }} onMouseEnter={() => {
-          if(this.state.userMenuOpen) {
+          if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             clearTimeout(this.state.timeout);
           }
         }}>

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
+import Notifications from "/imports/api/users/notifications.js";
+
 export default class UserDropdown extends Component {
 
   accessOptions(e) {
@@ -20,6 +22,11 @@ export default class UserDropdown extends Component {
     e.preventDefault();
     browserHistory.push("/buy_currency");
     this.props.clear();
+  }
+
+  accessNotifications(e) {
+    e.preventDefault();
+    this.props.onAccessNotes();
   }
 
   logout(e){
@@ -51,6 +58,17 @@ export default class UserDropdown extends Component {
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOptions.bind(this)}>
             <div className="col-2 row center"><i className="fa fa-cog fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Options</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessNotifications.bind(this)}>
+            <div className="col-2 row center" style={{position: "relative"}}>
+              <i className="fa fa-envelope fa-2x" aria-hidden="true"></i>
+              <span style={{fontSize: 16, position: "absolute", right: 2.5, bottom: -10, fontWeight: "bold", color: "#FF6000"}}>
+                {
+                  Notifications.find().fetch().length
+                }
+              </span>
+            </div>
+            <span className="col-3">Notifications</span>
           </a>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
             <div className="col-2 row center"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
