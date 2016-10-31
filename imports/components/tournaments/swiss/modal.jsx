@@ -100,7 +100,7 @@ export default class SwissModal extends Component {
                 <div className="row center" style={{marginBottom: 20}}>
                   <h3>Ties</h3>
                 </div>
-                <div className="row center x-center">
+                <div className="row center x-center" style={{marginBottom: 20}}>
                   <FontAwesome name="minus" onClick={() => {this.updateMatch("ties", false)}} />
                   <div style={{margin: "0 20px", fontSize: 20, fontWeight: "bold"}}>
                     { match.ties }
