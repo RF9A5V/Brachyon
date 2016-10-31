@@ -23,30 +23,31 @@ export default class BracketOptionsPanel extends Component {
 
   onParticipantAdd(e) {
     e.preventDefault();
-    Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, this.refs.userSearch.value(), this.state.aliasName, this.state.userEmail, (err) => {
+    var id = this.refs.userSearch.value();
+    Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, id, this.state.aliasName, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
       else {
-        toastr.success(`Successfully added ${this.state.aliasName} to this bracket!`);
-        this.props.onComplete({
-          alias: this.state.aliasName,
-          id: this.refs.userSearch.value(),
-          email: this.state.userEmail
-        })
+        if(id) {
+          toastr.success(`Sent request to ${this.state.aliasName} to join!`);
+        }
+        else {
+          toastr.success(`Successfully added ${this.state.aliasName} to this bracket!`);
+          this.props.onComplete({
+            alias: this.state.aliasName,
+            id: this.refs.userSearch.value()
+          })
+        }
         this.refs.aliasName.value = "";
-        this.refs.userEmail.value = "";
-        this.setState({
-          aliasName: "",
-          userEmail: ""
-        });
         this.refs.userSearch.reset();
+        this.forceUpdate();
       }
     })
   }
 
   onUserSelect(user) {
-    this.refs.aliasName.value = (user.profile || {}).alias || "";
+    this.refs.aliasName.value = (user.profile || {}).alias || user.username;
     this.setState({
       aliasName: this.refs.aliasName.value
     });
@@ -68,8 +69,6 @@ export default class BracketOptionsPanel extends Component {
         ]} onChange={this.onUserSelect.bind(this)} placeholder="Find a user by username." />
         <label>Alias</label>
         <input type="text" ref="aliasName" placeholder="Player's name in the bracket." style={{margin: "0 0 20px"}} onChange={this.onParticipantDetailsChange.bind(this)}/>
-        <label>E-Mail</label>
-        <input type="email" ref="userEmail" placeholder="Contact Email (Required if already have an account)" style={{margin: "0 0 20px"}} onChange={this.onParticipantDetailsChange.bind(this)} />
         {
           this.state.aliasName.length > 0 ? (
             <div>

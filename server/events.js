@@ -1,8 +1,9 @@
 import OrganizeSuite from "./tournament_api.js";
+import Notifications from "/imports/api/users/notifications.js";
 
 Meteor.methods({
 
-  "events.addParticipant"(eventID, bracketIndex, userID, alias, email) {
+  "events.addParticipant"(eventID, bracketIndex, userID, alias) {
     var event = Events.findOne(eventID);
 
     if(alias == "" || alias == null) {
@@ -35,21 +36,34 @@ Meteor.methods({
       if(bracketContainsUser) {
         throw new Meteor.Error(403, "User is already registered for this bracket.");
       }
-      var emailMatch = user.emails.some((emailObj) => {
-        return emailObj.address == email;
-      })
-      if(!emailMatch) {
-        throw new Meteor.Error(403, "Invalid email for verification.");
+      var note = Notifications.findOne({ type: "eventInvite", event: event._id, recipient: userID });
+      if(note) {
+        throw new Meteor.Error(403, "Notification already sent!");
+      }
+      else {
+        var owner = Meteor.users.findOne(event.owner);
+        Notifications.insert({
+          type: "eventInvite",
+          owner: owner.username,
+          image: owner.profile.imageUrl,
+          event: event.details.name,
+          eventSlug: event.slug,
+          alias,
+          recipient: userID,
+          seen: false
+        });
       }
     }
-    Events.update(eventID, {
-      $push: {
-        [`brackets.${bracketIndex}.participants`]: {
-          id: userID,
-          alias
+    else {
+      Events.update(eventID, {
+        $push: {
+          [`brackets.${bracketIndex}.participants`]: {
+            id: null,
+            alias
+          }
         }
-      }
-    })
+      })
+    }
   },
 
   "events.removeParticipant"(eventID, bracketIndex, userId) {
@@ -93,14 +107,27 @@ Meteor.methods({
     if(bracketContainsAlias) {
       throw new Meteor.Error(403, "Someone is already using this alias. Choose another one or talk to your friendly neighborhood tournament organizer.");
     }
-    Events.update(eventID, {
-      $push: {
-        [`brackets.${bracketIndex}.participants`]: {
-          id: user._id,
-          alias
-        }
-      }
-    })
+    if(Notifications.findOne({ recipient: event.owner, eventSlug: event.slug, userId: user._id })) {
+      throw new Meteor.Error(403, "You've already requested entry to this event.");
+    }
+    Notifications.insert({
+      type: "eventRegistrationRequest",
+      recipient: event.owner,
+      image: user.profile.imageUrl,
+      user: user.profile.alias || user.profile.username,
+      userId: user._id,
+      eventSlug: event.slug,
+      event: event.details.name,
+      read: false
+    });
+    // Events.update(eventID, {
+    //   $push: {
+    //     [`brackets.${bracketIndex}.participants`]: {
+    //       id: user._id,
+    //       alias
+    //     }
+    //   }
+    // })
   },
 
   "events.start_event"(eventID, index) {

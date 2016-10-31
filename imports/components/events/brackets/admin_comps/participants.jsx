@@ -49,9 +49,6 @@ export default class AddPartipantAction extends Component {
             <div className="col-1">
               Username
             </div>
-            <div className="col-1">
-              Email
-            </div>
             <div className="col-1 row" style={{justifyContent: "flex-end"}}>
               Delete
             </div>
@@ -66,9 +63,6 @@ export default class AddPartipantAction extends Component {
                   </div>
                   <div className="col-1">
                     { user ? user.username : "" }
-                  </div>
-                  <div className="col-1">
-                    { participant.email || "" }
                   </div>
                   <div className="col-1 row" style={{justifyContent: "flex-end"}}>
                     <FontAwesome name="times" size="2x" onClick={() => { this.onUserDelete(participant.alias, index) }} />
