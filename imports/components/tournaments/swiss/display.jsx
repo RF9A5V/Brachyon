@@ -20,46 +20,41 @@ export default class SwissDisplay extends TrackerReact(Component) {
         num++;
     }
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
+
+    var event = Events.findOne();
+
+    var aliasMap = {};
+    event.brackets[0].participants.forEach((player) => {
+      aliasMap[player.alias] = player.id;
+    })
+
     this.state = {
       page: page + 1,
       wcount: num,
       recrounds: rec,
-      id: Events.findOne()._id
+      id: event._id,
+      aliasMap
     }
-  }
-
-  declareWinner(score, win1, win2, ties, matchnumber)
-  {
-      console.log("Huh");
-      Meteor.call("events.update_match", this.state.id, this.state.page - 1, matchnumber, score, win1, win2, ties, function(err) {
-        if(err){
-          toastr.error("Couldn't advance this match.", "Error!");
-          return err;
-        }
-        else {
-          toastr.success("Players " + wcount + " advanced to next round!", "Success!");
-        }
-      });
   }
 
   finalizeMatch(matchnumber)
   {
-    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, function(err) {
+    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, (err) => {
       if(err){
         toastr.error("Couldn't complete the match.", "Error!");
       }
       else {
         toastr.success("Match finalized!", "Success!");
+        this.setState({wcount: this.state.wcount + 1});
       }
     });
-    var wcount = this.state.wcount+1;
-    this.setState({wcount: wcount});
+
   }
 
   newRound() {
-    if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length))
-      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.state.id, this.state.page, 3, function(err) {
+    if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
+    Meteor.call("events.update_round", this.state.id, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
@@ -68,8 +63,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
         toastr.success("New Round!");
       }
     });
-    var page = this.state.page+1;
-    this.setState({wcount: 0, page: page});
+    this.setState({wcount: 0, page: this.state.page + 1});
   }
 
   endTourn(){
@@ -180,21 +174,28 @@ export default class SwissDisplay extends TrackerReact(Component) {
           </div>
           <div>
           {
-            (this.state.page >= (this.state.recrounds - 1) ) ? (
+            this.state.page >= (this.state.recrounds - 1) ? (
               <button onClick={ () => {this.endTourn().bind(this)} }>
-              Finish Tournament
+                Finish Tournament
               </button>
-            ):
-            (this.state.page == this.props.rounds.length-1 && this.state.wcount == this.props.rounds[this.state.page].matches.length) ? (
-              <button onClick={ () => {this.newRound().bind(this)} }>
-              Advance Round
-              </button>
-            ):
-            ( "" )
+            ) : (
+              this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) ? (
+                <button onClick={ () => {this.newRound().bind(this)} }>
+                  Advance Round
+                </button>
+              ) : (
+                ""
+              )
           }
           </div>
         </div>
-        <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch = {this.finalizeMatch.bind(this)} declareWinner={this.declareWinner.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} />
+        {
+          this.state.open ? (
+            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }
