@@ -3,14 +3,16 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 import SwissMatchBlock from "./match.jsx"
+import SwissModal from "./modal.jsx";
 
 //Called by: imports\components\events\show\bracket.jsx
 export default class SwissDisplay extends TrackerReact(Component) {
-
+  // Page = 0 Will access the leaderboard
+  // Page > 0 Will access rounds[page - 1]
   constructor(props)
   {
     super(props);
-    var page = this.props.rounds.length-1;
+    var page = this.props.rounds.length - 1;
     var num = 0;
     for (var x = 0; x < this.props.rounds[page].matches.length; x++)
     {
@@ -18,36 +20,41 @@ export default class SwissDisplay extends TrackerReact(Component) {
         num++;
     }
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
-    console.log(rec);
+
+    var event = Events.findOne();
+
+    var aliasMap = {};
+    event.brackets[0].participants.forEach((player) => {
+      aliasMap[player.alias] = player.id;
+    })
+
     this.state = {
-      page: page,
+      page: page + 1,
       wcount: num,
-      recrounds: rec
+      recrounds: rec,
+      id: event._id,
+      aliasMap
     }
   }
 
-  declareWinner(score, win1, win2, ties, matchnumber)
+  finalizeMatch(matchnumber)
   {
-      console.log(win1);
-      console.log(this.state.playerone)
-      Meteor.call("events.update_match", this.props.id, this.state.page, matchnumber, score, win1, win2, ties, function(err) {
-        if(err){
-          console.log(err);
-          toastr.error("Couldn't advance this match.", "Error!");
-        }
-        else {
-          var wcount = this.state.wcount+1;
-          toastr.success("Players " + wcount + " advanced to next round!", "Success!");
-        }
-      });
-      var wcount = this.state.wcount+1;
-      this.setState({wcount: wcount});
+    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, (err) => {
+      if(err){
+        toastr.error("Couldn't complete the match.", "Error!");
+      }
+      else {
+        toastr.success("Match finalized!", "Success!");
+        this.setState({wcount: this.state.wcount + 1});
+      }
+    });
+
   }
 
   newRound() {
-    if (!(this.state.wcount == this.props.rounds[this.state.page].matches.length))
-      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.props.id, this.state.page, 3, function(err) {
+    if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
+    Meteor.call("events.update_round", this.state.id, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
@@ -56,71 +63,139 @@ export default class SwissDisplay extends TrackerReact(Component) {
         toastr.success("New Round!");
       }
     });
-    var page = this.state.page+1;
-    this.setState({wcount: 0, page: page});
+    this.setState({wcount: 0, page: this.state.page + 1});
   }
 
   endTourn(){
     return;
   }
 
+  openModal(args) {
+    this.setState({
+      open: true,
+      match: args.match,
+      i: args.i
+    })
+  }
+
+  closeModal() {
+    this.setState({
+      open: false,
+      match: null,
+      i: null
+    })
+  }
+
+  onMatchClick(match, i) {
+    if(!match.played && this.state.page == this.props.rounds.length) {
+      this.setState({
+        open: true,
+        match,
+        i
+      })
+    }
+  }
+
   render() {
     return (
       <div className="col">
-        <div className="center">
-        <h2>{"Round " + (this.state.page+1)}</h2>
+        <div className="row center x-center">
+          <h2>{this.state.page == 0 ? "Leaderboard" : "Round " + (this.state.page)}</h2>
         </div>
-        <div className="row flex-pad">
-          <div>
-          {
-            this.state.page > 0 ? (
-              <button onClick={ () => {this.setState({page: this.state.page-1})} }>{"<-- Prev"}</button>
-            ):("")
-          }
+        <div className="row swiss-tabs">
+          <div className={`swiss-tab-header ${this.state.page == 0 ? "active" : ""}`} onClick={() => { this.setState({ page: 0 }) }}>
+            Leaderboard
           </div>
-          <div>
           {
-            this.state.page < this.props.rounds.length-1 ? (
-              <button onClick={ () => {this.setState({page: this.state.page+1})} } >{"Next -->"}</button>
-            ):("")
-          }
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-          {
-              this.props.rounds[this.state.page].players.map((playerObj, i) => {
-                return (
-                  <div>{playerObj.name + " S: " + playerObj.score + " W: " + playerObj.wins + " L: " + playerObj.losses}</div>
-                );
-              })
-          }
-          </div>
-          <div className="row" id="RoundDiv">
-          {
-            this.props.rounds[this.state.page].matches.map((match, i) => {
-              return(
-                <SwissMatchBlock page={this.state.page} declareWinner={this.declareWinner.bind(this)} i={i} match={match} rounds={this.props.rounds} />
-              );
+            _.range(1, this.props.rounds.length + 1).map((val) => {
+              return (
+                <div className={`swiss-tab-header ${this.state.page == val ? "active" : ""}`} onClick={() => { this.setState({ page: val }) }}>
+                  Round {val}
+                </div>
+              )
             })
           }
+        </div>
+        <div className="col">
+            {
+              this.state.page == 0 ? (
+                <div className="col">
+                  <div className="row swiss-row">
+                    <div className="swiss-header">
+                      Player
+                    </div>
+                    <div className="swiss-header">
+                      Score
+                    </div>
+                    <div className="swiss-header">
+                      Wins
+                    </div>
+                    <div className="swiss-header">
+                      Losses
+                    </div>
+                  </div>
+                  {
+                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
+                      return (
+                        <div className="row swiss-row">
+                          <div className="swiss-entry">
+                            { playerObj.name }
+                          </div>
+                          <div className="swiss-entry">
+                            { playerObj.score }
+                          </div>
+                          <div className="swiss-entry">
+                            { playerObj.wins }
+                          </div>
+                          <div className="swiss-entry">
+                            { playerObj.losses }
+                          </div>
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              ) : (
+                ""
+              )
+            }
+          <div className="row" style={{flexWrap: "wrap"}} id="RoundDiv">
+          {
+            this.state.page > 0 ? (
+              this.props.rounds[this.state.page - 1].matches.map((match, i) => {
+                return (
+                  <SwissMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
+                );
+              })
+            ) : (
+              ""
+            )
+          }
           </div>
           <div>
           {
-            (this.state.page >= (this.state.recrounds - 1) ) ? (
+            this.state.page >= (this.state.recrounds - 1) ? (
               <button onClick={ () => {this.endTourn().bind(this)} }>
-              Finish Tournament
+                Finish Tournament
               </button>
-            ):
-            (this.state.page == this.props.rounds.length-1 && this.state.wcount == this.props.rounds[this.state.page].matches.length) ? (
-              <button onClick={ () => {this.newRound().bind(this)} }>
-              Advance Round
-              </button>
-            ):
-            ( "" )
+            ) : (
+              this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) ? (
+                <button onClick={ () => {this.newRound().bind(this)} }>
+                  Advance Round
+                </button>
+              ) : (
+                ""
+              )
           }
           </div>
         </div>
+        {
+          this.state.open ? (
+            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }
