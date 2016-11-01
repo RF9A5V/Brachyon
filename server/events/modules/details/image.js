@@ -1,3 +1,5 @@
+import { Images } from "/imports/api/event/images.js";
+
 Meteor.methods({
   "events.details.imageSave"(id, bannerId){
     var event = Events.findOne(id);
