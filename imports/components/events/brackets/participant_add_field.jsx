@@ -13,13 +13,18 @@ export default class ParticipantAddField extends Component {
       ready: false,
       loading: false,
       user: null,
-      value: ""
+      value: "",
+      index: -1,
+      length: 0
     };
   }
 
   userTemplate(user, index) {
     return (
-      <div className="row x-center" style={{padding: 20, backgroundColor: "#222", cursor: "pointer", width: 400}} onClick={() => { this.setState({user: user._id, ready: false}); this.refs.username.value = user.username; }}>
+      <div className="row x-center" style={{padding: 20, cursor: "pointer", width: 400, backgroundColor: this.state.index == index ? "#666" : "#222", maxWidth: "100%"}} onClick={() => {
+        this.setState({user: user._id, ready: false});
+        this.refs.username.value = user.username;
+      }}>
         <img style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
         { user.username }
       </div>
@@ -36,9 +41,12 @@ export default class ParticipantAddField extends Component {
     this.state.timer = setTimeout(() => {
       this.setState({
         users: Meteor.subscribe("userSearch", this.refs.username.value, {
-          onReady: () => { this.setState({ ready: true, loading: false }) }
+          onReady: () => { this.setState({ ready: true, loading: false, length: Meteor.users.find({
+            username: new RegExp(this.state.value, "i")
+          }).fetch().length }) }
         }),
-        value: this.refs.username.value
+        value: this.refs.username.value,
+        index: -1
       })
     }, 500)
   }
@@ -90,13 +98,53 @@ export default class ParticipantAddField extends Component {
     }
   }
 
+  onKeyPress(e) {
+    if(this.state.ready) {
+      if(e.key == "ArrowDown") {
+        if(this.state.index < this.state.length - 1) {
+          this.setState({
+            index: this.state.index + 1
+          })
+        }
+      }
+      if(e.key == "ArrowUp") {
+        if(this.state.index > 0) {
+          this.setState({
+            index: this.state.index - 1
+          })
+        }
+      }
+      if(e.key == "Enter") {
+        if(this.state.index == -1) {
+          this.onParticipantAdd(e);
+        }
+        else {
+          var user = Meteor.users.find({
+            username: new RegExp(this.state.value, "i")
+          }).fetch()[this.state.index];
+          this.setState({
+            user: user._id,
+            ready: false,
+            loading: false
+          });
+          this.refs.username.value = user.username;
+        }
+      }
+    }
+    else {
+      if(e.key == "Enter") {
+        this.onParticipantAdd(e);
+      }
+    }
+  }
+
   render() {
     return (
       <div className="row center">
         <div className="col x-center" style={{border: "solid 2px white", position: "relative", padding: 20, marginBottom: 20, width: "50vw"}}>
           <h5 style={{position: "absolute", top: -17.5, backgroundColor: "#333", padding: 5}}>Add Player</h5>
           <div className="row center x-center" style={{justifyContent: "flex-start"}}>
-            <input type="text" placeholder="Add User or Alias" ref="username" onChange={this.onInputChange.bind(this)} style={{marginRight: 10}} />
+            <input type="text" placeholder="Add User or Alias" ref="username" onChange={this.onInputChange.bind(this)} style={{marginRight: 10}} onKeyDown={this.onKeyPress.bind(this)} />
             <div>
               <button onClick={this.onParticipantAdd.bind(this)}>Submit</button>
             </div>
@@ -105,8 +153,8 @@ export default class ParticipantAddField extends Component {
             this.state.ready && this.state.value != "" && this.state.user == null ? (
               Meteor.users.find({
                 username: new RegExp(this.state.value, "i")
-              }).map((user) => {
-                return this.userTemplate(user);
+              }).map((user, i) => {
+                return this.userTemplate(user, i);
               })
             ) : (
               ""
