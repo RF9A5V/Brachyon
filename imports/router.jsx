@@ -23,6 +23,7 @@ import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout.jsx";
+import GamesIndexScreen from "../imports/components/games/index.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -60,6 +61,7 @@ export const renderRoutes = () => (
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
+      <Route path="games/index" component={GamesIndexScreen} />
     </Route>
   </Router>
 )
