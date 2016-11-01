@@ -170,7 +170,7 @@ Meteor.publish("promotedEvents", function() {
 
 Meteor.publish("userSearch", function(usernameSubstring) {
   if(usernameSubstring == null || usernameSubstring.length == 0) {
-    return Events.find({ _id: null });
+    return Meteor.users.find({ _id: null });
   }
   var users = Meteor.users.find({
     username: new RegExp(usernameSubstring, "i")
