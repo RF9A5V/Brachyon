@@ -22,8 +22,10 @@ export default class ParticipantAddField extends Component {
   userTemplate(user, index) {
     return (
       <div className="row x-center" style={{padding: 20, cursor: "pointer", width: 400, backgroundColor: this.state.index == index ? "#666" : "#222", maxWidth: "100%"}} onClick={() => {
-        this.setState({user: user._id, ready: false});
+        this.setState({ready: false});
         this.refs.username.value = user.username;
+        this.state.user = user._id;
+        this.onParticipantAdd();
       }}>
         <img style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
         { user.username }
@@ -51,8 +53,7 @@ export default class ParticipantAddField extends Component {
     }, 500)
   }
 
-  onParticipantAdd(e) {
-    e.preventDefault();
+  onParticipantAdd() {
     if(this.state.user != null) {
       Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, this.state.user, null, (err) => {
         if(err){
