@@ -58,11 +58,9 @@ export default class BracketForm extends Component {
             <option value="swiss">
               Swiss
             </option>
-            {
-              // <option value="round_robin">
-              //   Round Robin
-              // </option>
-            }
+            <option value="round_robin">
+              Round Robin
+            </option>
           </select>
         </div>
       )

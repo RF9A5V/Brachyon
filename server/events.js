@@ -148,6 +148,10 @@ Meteor.methods({
       var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
         return participant.alias;
       }));
+    else
+    var rounds = OrganizeSuite.roundRobin(organize.participants.map(function(participant) {
+      return participant.alias;
+    }));
 
     Events.update(eventID, {
       $set: {
