@@ -91,6 +91,12 @@ export default class ImageForm extends Component {
     return this.props.collection.findOne(this.props.id);
   }
 
+  reset() {
+    this.setState({
+      url: null
+    })
+  }
+
   render() {
     var value = "";
     if(this.state.url || this.props.defaultImage){
