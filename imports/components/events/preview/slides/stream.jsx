@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Images } from "/imports/api/event/images.js";
 
 export default class StreamPage extends Component {
 

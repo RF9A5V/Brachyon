@@ -22,7 +22,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Event cannot start before current date.");
     }
     if(obj.banner) {
-      obj.bannerUrl = Images.findOne(image).link();
+      obj.bannerUrl = Images.findOne(obj.banner).link();
     }
     return obj;
   },

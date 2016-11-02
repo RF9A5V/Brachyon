@@ -314,18 +314,6 @@ Meteor.methods({
     Games.remove(id);
   },
 
-  "games.approve"(id) {
-    Games.update(id, {
-      $set: {
-        approved: true
-      }
-    })
-  },
-
-  "games.reject"(id) {
-    Games.remove(id);
-  },
-
   "users.create"(name, email, username, password) {
     var user = Accounts.createUser({
       email,
