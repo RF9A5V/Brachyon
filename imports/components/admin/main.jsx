@@ -7,6 +7,7 @@ import ApproveEventAction from "./approve_events.jsx";
 import AddGameAction from "./add_game.jsx";
 import RemoveEventAction from "./remove_events.jsx";
 import TagAction from "./tags.jsx";
+import ApproveGameAction from "./approve_game.jsx";
 
 import LoadingScreen from "../public/loading.jsx";
 
@@ -65,11 +66,20 @@ export default class AdminFunctionMain extends Component {
         ]
       },
       {
-        text: "Games",
+        text: "All Games",
         icon: "gamepad",
         subitems: [
           {
             component: AddGameAction
+          }
+        ]
+      },
+      {
+        text: "Unapproved",
+        icon: "gamepad",
+        subitems: [
+          {
+            component: ApproveGameAction
           }
         ]
       },
