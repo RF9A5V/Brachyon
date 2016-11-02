@@ -50,6 +50,12 @@ export default class Header extends TrackerReact(Component) {
     });
   }
 
+  removeNotifications() {
+    this.setState({
+      notificationsMenuOpen: false
+    })
+  }
+
   render() {
     if(!this.state.user.ready()){
       return (
@@ -65,7 +71,7 @@ export default class Header extends TrackerReact(Component) {
             <div className="row x-center">
               <div style={{position: "relative"}}>
                 <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
-                <div style={{position: "absolute", bottom: 0, right: 10}} onClick={(e) => { e.preventDefault(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
+                <div style={{position: "absolute", bottom: -5, right: 5}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
                   <NotyDropdown open={this.state.notificationsMenuOpen} />
                 </div>
               </div>
@@ -96,14 +102,14 @@ export default class Header extends TrackerReact(Component) {
         <header className="row x-center header" onMouseLeave={() => {
           if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             this.state.timeout = setTimeout(() => {
-              this.setState({userMenuOpen: false, notificationsMenuOpen: false});
+              this.setState({userMenuOpen: false});
             }, 1000);
           }
         }} onMouseEnter={() => {
           if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             clearTimeout(this.state.timeout);
           }
-        }}>
+        }} onClick={this.removeNotifications.bind(this)}>
           <div className="row x-center">
             <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
             <div style={{marginLeft: 10, marginRight: 10}}>
@@ -125,14 +131,13 @@ export default class Header extends TrackerReact(Component) {
                   </a>
                 )
               }
-
+              <Link className={`hub ${window.location.pathname == "/games/index" ? "active" : ""}`} to="/games/index">
+                GAMES
+              </Link>
               {/*
               <Link className="hub" to="/events/discover">
                 MARKET
               </Link>*/}
-              <Link to="/games/index" className={`hub ${window.location.pathname == "/about" ? "active" : ""}`}>
-                GAMES
-              </Link>
             </div>
           </div>
           <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">

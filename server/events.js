@@ -6,6 +6,10 @@ Meteor.methods({
   "events.addParticipant"(eventID, bracketIndex, userID, alias) {
     var event = Events.findOne(eventID);
 
+    if(userID) {
+      alias = Meteor.users.findOne(userID).username;
+    }
+    console.log(alias);
     if(alias == "" || alias == null) {
       throw new Meteor.Error(403, "Alias for a participant has to exist.");
     }
@@ -54,16 +58,14 @@ Meteor.methods({
         });
       }
     }
-    else {
-      Events.update(eventID, {
-        $push: {
-          [`brackets.${bracketIndex}.participants`]: {
-            id: null,
-            alias
-          }
+    Events.update(eventID, {
+      $push: {
+        [`brackets.${bracketIndex}.participants`]: {
+          id: userID,
+          alias: alias
         }
-      })
-    }
+      }
+    })
   },
 
   "events.removeParticipant"(eventID, bracketIndex, userId) {
