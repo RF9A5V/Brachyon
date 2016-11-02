@@ -130,8 +130,8 @@ export default class Header extends TrackerReact(Component) {
               <Link className="hub" to="/events/discover">
                 MARKET
               </Link>*/}
-              <Link to="/about" className={`hub ${window.location.pathname == "/about" ? "active" : ""}`}>
-                ABOUT
+              <Link to="/games/index" className={`hub ${window.location.pathname == "/about" ? "active" : ""}`}>
+                GAMES
               </Link>
             </div>
           </div>

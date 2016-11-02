@@ -106,6 +106,11 @@ export default class AddGameAction extends Component {
             </div>
           </div>
         </div>
+        <div className="col">
+          <input type="text" />
+          <div>
+          </div>
+        </div>
         <div style={{position: "fixed", bottom: 60, right: 20}}>
           <button style={{marginRight: 10}} onClick={() => { this.setState({ gameID: null }) }}>Back</button>
           <button onClick={ () => { this.deleteGame() } }>Delete</button>
