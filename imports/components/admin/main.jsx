@@ -6,6 +6,8 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import ApproveEventAction from "./approve_events.jsx";
 import AddGameAction from "./add_game.jsx";
 import RemoveEventAction from "./remove_events.jsx";
+import TagAction from "./tags.jsx";
+import ApproveGameAction from "./approve_game.jsx";
 
 import LoadingScreen from "../public/loading.jsx";
 
@@ -64,11 +66,29 @@ export default class AdminFunctionMain extends Component {
         ]
       },
       {
-        text: "Games",
+        text: "All Games",
         icon: "gamepad",
         subitems: [
           {
             component: AddGameAction
+          }
+        ]
+      },
+      {
+        text: "Unapproved",
+        icon: "gamepad",
+        subitems: [
+          {
+            component: ApproveGameAction
+          }
+        ]
+      },
+      {
+        text: "Tags",
+        icon: "tags",
+        subitems: [
+          {
+            component: TagAction
           }
         ]
       }
@@ -76,7 +96,7 @@ export default class AdminFunctionMain extends Component {
   }
 
   render() {
-    if(!this.state.user.ready() || !this.state.gamesReady){
+    if(!this.state.isReady || !this.state.gamesReady){
       return <LoadingScreen />
     }
     return (

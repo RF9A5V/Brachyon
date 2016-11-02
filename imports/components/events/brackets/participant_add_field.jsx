@@ -19,6 +19,10 @@ export default class ParticipantAddField extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.state.users.stop();
+  }
+
   userTemplate(user, index) {
     return (
       <div className="row x-center" style={{padding: 20, cursor: "pointer", width: 400, backgroundColor: this.state.index == index ? "#666" : "#222", maxWidth: "100%"}} onClick={() => {
@@ -39,6 +43,7 @@ export default class ParticipantAddField extends Component {
       loading: true,
       user: null
     });
+    this.state.users.stop();
     clearTimeout(this.state.timer);
     this.state.timer = setTimeout(() => {
       this.setState({
