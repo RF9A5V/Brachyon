@@ -47,5 +47,15 @@ Meteor.methods({
         games: gameID
       }
     });
+  },
+  "games.approve"(gameID) {
+    Games.update(gameID, {
+      $set: {
+        approved: true
+      }
+    })
+  },
+  "games.reject"(gameID) {
+    Games.remove(gameID);
   }
 })
