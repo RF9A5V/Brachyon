@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 
 import ImageForm from "/imports/components/public/img_form.jsx";
+import TagAuto from "./tag_autocomplete.jsx";
 
 import Games from "/imports/api/games/games.js";
 import { Images } from "/imports/api/event/images.js";
+import Tags from "/imports/api/meta/tags.js";
 
 export default class AddGameAction extends Component {
 
@@ -53,6 +55,22 @@ export default class AddGameAction extends Component {
         return toastr.success("Successfully deleted game!", "Success!")
       }
     });
+  }
+
+  onTagSelect(tag) {
+    Meteor.call("games.addTag", this.state.gameID, tag._id, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+    })
+  }
+
+  onTagRemove(tag) {
+    Meteor.call("games.removeTag", this.state.gameID, tag._id, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+    })
   }
 
   gameUnselectedView() {
@@ -106,11 +124,7 @@ export default class AddGameAction extends Component {
             </div>
           </div>
         </div>
-        <div className="col">
-          <input type="text" />
-          <div>
-          </div>
-        </div>
+        <TagAuto tags={game.tags || []} onTagSelect={this.onTagSelect.bind(this)} onTagRemove={this.onTagRemove.bind(this)} />
         <div style={{position: "fixed", bottom: 60, right: 20}}>
           <button style={{marginRight: 10}} onClick={() => { this.setState({ gameID: null }) }}>Back</button>
           <button onClick={ () => { this.deleteGame() } }>Delete</button>

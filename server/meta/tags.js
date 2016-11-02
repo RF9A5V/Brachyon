@@ -13,4 +13,4 @@ Meteor.methods({
   "tags.delete"(id) {
     Tags.remove(id);
   }
-})
+});

@@ -118,7 +118,9 @@ export default class NotyDropdown extends Component {
   render() {
     return (
       <div>
-        <FontAwesome name="envelope" style={{color: this.hasUnreadNotifications() ? "#FF6000" : "white"}} />
+        <div className="row center x-center" style={{borderRadius: "100%", backgroundColor: "rgba(48, 48, 48, 0.7)", padding: 5, width: 20, height: 20}}>
+          <FontAwesome name="envelope" style={{color: this.hasUnreadNotifications() ? "#FF6000" : "white"}} />
+        </div>
         {
           this.props.open ? (
             <div className="col" style={{position: "absolute"}}>
