@@ -3,7 +3,7 @@ import { browserHistory } from "react-router";
 import FontAwesome from "react-fontawesome";
 
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class Main extends Component {
 
@@ -17,7 +17,7 @@ export default class Main extends Component {
   }
 
   gameBanner(gameID){
-    return Images.findOne(Games.findOne(gameID).banner).link();
+    return GameBanners.findOne(Games.findOne(gameID).banner).link();
   }
 
   redirectToBracketPage(index) {
@@ -34,9 +34,10 @@ export default class Main extends Component {
           <div className="submodule-section col">
             {
               brackets.map((bracket, i) => {
+                var game = Games.findOne(bracket.game);
                 return (
                   <div className={`sub-section-select ${this.state.index == i ? "active" : ""}`} onClick={() => { this.setState({index: i}) }}>
-                    { bracket.name }
+                    { game.name }
                   </div>
                 )
               })
@@ -47,7 +48,7 @@ export default class Main extends Component {
               ""
             ) : (
               <div className="submodule-section col-1 col center x-center">
-                <img src={ this.gameBanner(this.state.bracket.game) } style={{width: "50%", marginBottom: 20}} />
+                <img src={ this.gameBanner(this.state.bracket.game) } style={{width: "25%", marginBottom: 20}} />
                 <h5>{ this.state.bracket.name }</h5>
               </div>
             )

@@ -4,7 +4,7 @@ import Games from "/imports/api/games/games.js";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class BracketForm extends Component {
 
@@ -18,10 +18,19 @@ export default class BracketForm extends Component {
     else if(format.hasOwnProperty("poolFormat")) {
       subFormat = "POOL";
     }
-    this.state = {
-      game: Games.findOne(props.game),
-      gameId: props.game,
-      format: subFormat || "NONE"
+    var game = Games.findOne(props.game);
+    if(game) {
+      this.state = {
+        id: game._id,
+        name: game.name,
+        banner: game.banner,
+        format: subFormat || "NONE"
+      }
+    }
+    else {
+      this.state = {
+        format: "NONE"
+      };
     }
     for(var i in format){
       this.state[i] = format[i];
@@ -30,7 +39,9 @@ export default class BracketForm extends Component {
 
   onGameSelect(game) {
     this.setState({
-      game
+      id: game._id,
+      name: game.name,
+      banner: game.banner
     })
   }
 
@@ -160,7 +171,7 @@ export default class BracketForm extends Component {
       }
     }
     return {
-      game: this.state.game._id,
+      game: this.state.id,
       format
     }
   }
@@ -174,9 +185,9 @@ export default class BracketForm extends Component {
         }
         <h5>Game</h5>
         {
-          this.state.game && this.state.game.banner ? (
+          this.state.banner ? (
             <div style={{textAlign: "center"}}>
-              <img style={{width: "50%", height: "auto"}} src={Images.findOne(this.state.game.banner).link()} />
+              <img style={{width: "25%", height: "auto"}} src={GameBanners.findOne(this.state.banner).link()} />
             </div>
           ) : (
             ""

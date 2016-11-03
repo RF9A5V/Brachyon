@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import Events from '/imports/api/event/events.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
 
@@ -9,6 +10,10 @@ Events._ensureIndex({
   'details.location.coords': '2dsphere',
   slug: 1
 });
+
+Games._ensureIndex({
+  slug: 1
+})
 
 Notifications._ensureIndex({
   "recipient": 1
@@ -82,12 +87,10 @@ Meteor.startup(() => {
   // })
 
   SyncedCron.start();
-  Migrations.migrateTo(0);
-  Migrations.migrateTo(1);
 
-  docs = Events.find({slug: {$exists: false}});
+  docs = Games.find({slug: {$exists: false}});
   docs.forEach((doc) => {
-    Events.update(doc._id, {
+    Games.update(doc._id, {
       $set: {
         blah: ""
       }
