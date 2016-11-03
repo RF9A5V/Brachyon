@@ -27,7 +27,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   promotedEvents() {
-    return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
+    return Events.find({"promotion.active": true}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
   }
 
   setSubscription(params, query){
