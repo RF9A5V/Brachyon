@@ -199,7 +199,13 @@ export default class UserEvents extends TrackerReact(Component) {
     return (
       <div className="col-1 col submodule-section">
         <div className="col-1 row" style={{flexWrap: "wrap"}}>
-          <BlockContainer events={events} />
+          {
+            events.length > 0 ? (
+              <BlockContainer events={events} />
+            ) : (
+              ""
+            )
+          }
           {
             events.length == 0 ? (
               this.state.category == 1 ? (
