@@ -19,10 +19,11 @@ export default class RoundDisplay extends TrackerReact(Component) {
       if (this.props.rounds[page].matches[x].played != false)
         num++;
     }
-    rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
+    rec = this.props.rounds[0].players.length;
+    if (this.props.rounds[0].players.length%2 == 1)
+      rec--;
 
     var event = Events.findOne();
-
     var aliasMap = {};
     event.brackets[0].participants.forEach((player) => {
       aliasMap[player.alias] = player.id;
@@ -97,6 +98,10 @@ export default class RoundDisplay extends TrackerReact(Component) {
   }
 
   render() {
+    var sortedplayers = this.props.rounds[this.props.rounds.length-1].players;
+    sortedplayers.sort(function(a, b) {
+      return b.score - a.score;
+    })
     return (
       <div className="col">
         <div className="row center x-center">
@@ -135,23 +140,26 @@ export default class RoundDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
-                      return (
-                        <div className="row swiss-row">
-                          <div className="swiss-entry">
-                            { playerObj.name }
+                    sortedplayers.map((playerObj, i) => {
+                      if (playerObj.name != "")
+                      {
+                        return (
+                          <div className="row swiss-row">
+                            <div className="swiss-entry">
+                              { playerObj.name }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.score }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.wins }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.losses }
+                            </div>
                           </div>
-                          <div className="swiss-entry">
-                            { playerObj.score }
-                          </div>
-                          <div className="swiss-entry">
-                            { playerObj.wins }
-                          </div>
-                          <div className="swiss-entry">
-                            { playerObj.losses }
-                          </div>
-                        </div>
-                      );
+                        );
+                      }
                     })
                   }
                 </div>
@@ -174,7 +182,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
           </div>
           <div>
           {
-            this.state.page >= (this.state.recrounds - 1) ? (
+            this.state.page >= (this.state.recrounds-1) ? (
               <button onClick={ () => {this.endTourn().bind(this)} }>
                 Finish Tournament
               </button>

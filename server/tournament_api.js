@@ -341,25 +341,35 @@ var OrganizeSuite = {
   },
   roundRobin: function(participants) {
     var frounds = [];
-    var score = 3;
+    var score = 3, bye = false;
     var temp = [];
     var length = participants.length;
+    if (length%2 == 1)
+    {
+      participants.push("");
+      length++;
+    }
     for (var x = 0; x < Math.floor(length/2); x++)
     {
-      var matchObj = {
-        playerOne: participants[x],
-        playerTwo: participants[x+length/2],
-        played: false,
-        p1score: 0,
-        p2score: 0,
-        ties: 0
-      };
-      temp.push(matchObj);
+      if (participants[length-1-x] != "")
+      {
+        var matchObj = {
+          playerOne: participants[x],
+          playerTwo: participants[length-1-x],
+          played: false,
+          p1score: 0,
+          p2score: 0,
+          ties: 0
+        };
+        temp.push(matchObj);
+      }
     }
     var tempb = [];
+    var tempc = [];
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
+      tempc[participants[x]] = x;
       var playerObj = {
         name: participants[x],
         score: 0,
@@ -372,6 +382,7 @@ var OrganizeSuite = {
     var roundObj = {
       matches: temp,
       players: tempb,
+      pdic: tempc,
       score: score
     }
     frounds.push(roundObj);

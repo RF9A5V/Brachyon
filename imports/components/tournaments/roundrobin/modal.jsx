@@ -26,7 +26,7 @@ export default class RoundModal extends Component {
     var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
-    Meteor.call("events.update_match", Events.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
+  Meteor.call("events.update_roundmatch", Events.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
       this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
