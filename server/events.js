@@ -9,7 +9,7 @@ Meteor.methods({
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
     }
-    console.log(alias);
+    //console.log(alias);
     if(alias == "" || alias == null) {
       throw new Meteor.Error(403, "Alias for a participant has to exist.");
     }
@@ -150,6 +150,10 @@ Meteor.methods({
       var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
         return participant.alias;
       }));
+    else
+    var rounds = OrganizeSuite.roundRobin(organize.participants.map(function(participant) {
+      return participant.alias;
+    }));
 
     Events.update(eventID, {
       $set: {
@@ -393,7 +397,7 @@ Meteor.methods({
     })
   },
 
-  "events.complete_match"(eventID, roundNumber, matchNumber)
+  "events.complete_match"(eventID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
     var event = Events.findOne(eventID);
     event = event.brackets[0].rounds[roundNumber];
@@ -646,11 +650,92 @@ Meteor.methods({
       matches: temp
     }
     rounds.push(newevent);
-      Events.update(eventID, {
-        $set: {
-          [`brackets.0.rounds`]: rounds
-        }
-      })
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds`]: rounds
+      }
+    })
+  },
+
+  "events.update_roundmatch"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  {
+    var event = Events.findOne(eventID);
+    var prevround;
+    if (roundNumber > 0)
+      prevround = event.brackets[0].rounds[roundNumber-1];
+    event = event.brackets[0].rounds[roundNumber];
+    event.matches[matchNumber].p1score = winfirst;
+    event.matches[matchNumber].p2score = winsecond;
+    event.matches[matchNumber].ties = ties;
+    var prevmatch1, prevmatch2;
+    if (roundNumber < 1)
+    {
+      prevmatch1 = {score: 0, wins: 0, losses: 0};
+      prevmatch2 = {score: 0, wins: 0, losses: 0};
     }
+    else
+    {
+      var prep1 = prevround.pdic[ event.matches[matchNumber].playerOne ];
+      var prep2 = prevround.pdic[ event.matches[matchNumber].playerTwo ];
+      prevmatch1 = prevround.players[prep1];
+      prevmatch2 = prevround.players[prep2];
+    }
+    var p1 = event.pdic[event.matches[matchNumber].playerOne];
+    var p2 = event.pdic[event.matches[matchNumber].playerTwo];
+    event.players[p1].score = prevmatch1.score + score*winfirst;
+    event.players[p1].wins = prevmatch1.wins + winfirst;
+    event.players[p1].losses = prevmatch1.losses + winsecond;
+    event.players[p2].score = prevmatch2.score + score*winsecond;
+    event.players[p2].wins = prevmatch2.wins + winsecond;
+    event.players[p2].losses = prevmatch2.losses + winfirst;
+
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds.${roundNumber}`]: event
+      }
+    })
+  },
+
+  "events.update_roundrobin"(eventID, roundNumber, score) { //For swiss specifically
+    var event = Events.findOne(eventID);
+    rounds = event.brackets[0].rounds;
+    var playerarr = event.brackets[0].rounds[0].players;
+    event = event.brackets[0].rounds[roundNumber];
+    var lastp = playerarr.pop();
+    playerarr.splice(1, 0, lastp);
+    var participants = playerarr.map(function(x) { return x.name })
+    var temp = [];
+    for (var x = 0; x < Math.floor(participants.length/2); x++)
+    {
+      if (participants[participants.length - x - 1] != "" && participants[x] != "")
+      {
+        var matchObj = {
+          playerOne: participants[x],
+          playerTwo: participants[participants.length - x - 1],
+          played: false,
+          p1score: 0,
+          p2score: 0,
+          ties: 0
+        };
+        temp.push(matchObj);
+      }
+    }
+    var tempb = JSON.parse(JSON.stringify(playerarr));
+    var pdic = [];
+    for (var x = 0; x < tempb.length; x++)
+      pdic[tempb[x].name] = x;
+    var roundObj = {
+      matches: temp,
+      players: tempb,
+      score: score,
+      pdic: pdic
+    };
+    rounds.push(roundObj);
+    Events.update(eventID, {
+      $set: {
+        [`brackets.0.rounds`]: rounds
+      }
+    });
+  }
 
 })

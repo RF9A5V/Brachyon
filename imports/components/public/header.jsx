@@ -102,7 +102,7 @@ export default class Header extends TrackerReact(Component) {
         <header className="row x-center header" onMouseLeave={() => {
           if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             this.state.timeout = setTimeout(() => {
-              this.setState({userMenuOpen: false});
+              this.setState({userMenuOpen: false, notificationsMenuOpen: false});
             }, 1000);
           }
         }} onMouseEnter={() => {

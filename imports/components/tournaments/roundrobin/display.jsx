@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
-import SwissMatchBlock from "./match.jsx"
-import SwissModal from "./modal.jsx";
+import RoundMatchBlock from "./match.jsx"
+import RoundModal from "./modal.jsx";
 
 //Called by: imports\components\events\show\bracket.jsx
-export default class SwissDisplay extends TrackerReact(Component) {
+export default class RoundDisplay extends TrackerReact(Component) {
   // Page = 0 Will access the leaderboard
   // Page > 0 Will access rounds[page - 1]
   constructor(props)
@@ -19,10 +19,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
       if (this.props.rounds[page].matches[x].played != false)
         num++;
     }
-    rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
+    rec = this.props.rounds[0].players.length;
+    if (this.props.rounds[0].players.length%2 == 1)
+      rec--;
 
     var event = Events.findOne();
-
     var aliasMap = {};
     event.brackets[0].participants.forEach((player) => {
       aliasMap[player.alias] = player.id;
@@ -54,7 +55,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.state.id, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_roundrobin", this.state.id, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
@@ -97,6 +98,10 @@ export default class SwissDisplay extends TrackerReact(Component) {
   }
 
   render() {
+    var sortedplayers = this.props.rounds[this.props.rounds.length-1].players;
+    sortedplayers.sort(function(a, b) {
+      return b.score - a.score;
+    })
     return (
       <div className="col">
         <div className="row center x-center">
@@ -135,23 +140,26 @@ export default class SwissDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
-                      return (
-                        <div className="row swiss-row">
-                          <div className="swiss-entry">
-                            { playerObj.name }
+                    sortedplayers.map((playerObj, i) => {
+                      if (playerObj.name != "")
+                      {
+                        return (
+                          <div className="row swiss-row">
+                            <div className="swiss-entry">
+                              { playerObj.name }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.score }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.wins }
+                            </div>
+                            <div className="swiss-entry">
+                              { playerObj.losses }
+                            </div>
                           </div>
-                          <div className="swiss-entry">
-                            { playerObj.score }
-                          </div>
-                          <div className="swiss-entry">
-                            { playerObj.wins }
-                          </div>
-                          <div className="swiss-entry">
-                            { playerObj.losses }
-                          </div>
-                        </div>
-                      );
+                        );
+                      }
                     })
                   }
                 </div>
@@ -164,7 +172,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
             this.state.page > 0 ? (
               this.props.rounds[this.state.page - 1].matches.map((match, i) => {
                 return (
-                  <SwissMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
+                  <RoundMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
                 );
               })
             ) : (
@@ -191,7 +199,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
         </div>
         {
           this.state.open ? (
-            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
+            <RoundModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
           ) : (
             ""
           )
