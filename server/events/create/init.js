@@ -1,4 +1,5 @@
 import { Images } from "/imports/api/event/images.js";
+import Games from "/imports/api/games/games.js";
 import moment from "moment";
 
 Meteor.methods({
@@ -78,6 +79,19 @@ Meteor.methods({
     endObj.isComplete = false;
     endObj.owner = Meteor.userId();
     var event = Events.insert(endObj);
+    if(endObj.brackets) {
+      endObj.brackets.forEach((bracket) => {
+        Games.update(bracket.game, {
+          $inc: {
+            eventCount: 1
+          },
+          $push: {
+            events: event
+          }
+        })
+      })
+
+    }
     return Events.findOne(event).slug;
   }
 })

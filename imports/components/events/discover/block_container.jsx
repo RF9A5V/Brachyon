@@ -59,7 +59,6 @@ export default class BlockContainer extends Component {
     var self = this;
     return (
       <div className="col">
-        <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
             this.props.events.map((event, i) => {

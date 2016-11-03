@@ -52,6 +52,9 @@ export default class DisplayPromotedEvent extends Component {
     }
 
     var event = this.props.event;
+    if(!event) {
+      return null;
+    }
 
     return (
       <div className="row center col-1" style={{width: "80vw", padding: 10}}>
