@@ -58,29 +58,31 @@ export default class BlockContainer extends Component {
   render() {
     var self = this;
     return (
-      <div className="col">
+      <div className="col col-1">
         <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
             this.props.events.map((event, i) => {
               return (
-                <div className="event-block col" style={{position: "relative"}} onClick={self.selectEvent(event).bind(self)} key={i}>
-                  <h2 className="event-block-title">{ event.details.name }</h2>
-                  {
-                    Meteor.userId() == event.owner ? (
-                      <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}} onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.onPencilClick(event);
-                      }}>
-                        <FontAwesome name="pencil" />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  }
-
-                  <img src={self.imgOrDefault(event)} />
+                <div className="event-block col" onClick={self.selectEvent(event).bind(self)} key={i}>
+                  <div style={{border: "solid 2px #666", position: "relative"}}>
+                    <h2 className="event-block-title">{ event.details.name }</h2>
+                    {
+                      Meteor.userId() == event.owner ? (
+                        <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}} onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          this.onPencilClick(event);
+                        }}>
+                          <FontAwesome name="pencil" />
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    }
+                  </div>
+                  <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(event)})`}}>
+                  </div>
                   <div className="event-block-content">
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
