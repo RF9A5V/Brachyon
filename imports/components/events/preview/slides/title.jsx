@@ -138,7 +138,9 @@ export default class EventTitlePage extends Component {
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>
-              <FontAwesome name="chevron-down" size="2x" onClick={() => { this.onPageRequestChange(1)}} />
+              <div className="slide-control">
+                <FontAwesome name="chevron-down" size="2x" onClick={() => { this.onPageRequestChange(1)}} />
+              </div>
             </div>
           </div>
           <div className="col col-1">
@@ -186,22 +188,6 @@ export default class EventTitlePage extends Component {
                           )
                         })
                       }
-                    </div>
-                  )
-                })
-              ) : (
-                ""
-              )
-            }
-          </div>
-          <div className="col x-center col-1 slide-bracket-list">
-            {
-              this.props.event.brackets ? (
-                this.props.event.brackets.map((bracket, i) => {
-                  return (
-                    <div className="slide-bracket" onClick={() => { browserHistory.push(`/events/${this.props.event._id}/brackets/${i}`) }}>
-                      <img src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
-                      <span>{ bracket.name }</span>
                     </div>
                   )
                 })
