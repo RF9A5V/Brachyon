@@ -9,7 +9,7 @@ Meteor.methods({
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
     }
-    console.log(alias);
+    //console.log(alias);
     if(alias == "" || alias == null) {
       throw new Meteor.Error(403, "Alias for a participant has to exist.");
     }
@@ -64,8 +64,8 @@ Meteor.methods({
           id: userID,
           alias: alias
         }
-      })
-    }
+      }
+    })
   },
 
   "events.removeParticipant"(eventID, bracketIndex, userId) {
@@ -675,16 +675,19 @@ Meteor.methods({
     }
     else
     {
-      var length = prevround.players.length;
-      prevmatch1 = prevround.players[(matchNumber-1)%length];
-      prevmatch2 = prevround.players[(matchNumber-1)%length + Math.floor(length/2)];
+      var prep1 = prevround.pdic[ event.matches[matchNumber].playerOne ];
+      var prep2 = prevround.pdic[ event.matches[matchNumber].playerTwo ];
+      prevmatch1 = prevround.players[prep1];
+      prevmatch2 = prevround.players[prep2];
     }
-    event.players[matchNumber].score = prevmatch1.score + score*winfirst;
-    event.players[matchNumber].wins = prevmatch1.wins + winfirst;
-    event.players[matchNumber].losses = prevmatch1.losses + winsecond;
-    event.players[matchNumber+Math.floor(length/2)].score = prevmatch2.score + score*winsecond;
-    event.players[matchNumber+Math.floor(length/2)].wins = prevmatch2.wins + winsecond;
-    event.players[matchNumber+Math.floor(length/2)].losses = prevmatch2.losses + winfirst;
+    var p1 = event.pdic[event.matches[matchNumber].playerOne];
+    var p2 = event.pdic[event.matches[matchNumber].playerTwo];
+    event.players[p1].score = prevmatch1.score + score*winfirst;
+    event.players[p1].wins = prevmatch1.wins + winfirst;
+    event.players[p1].losses = prevmatch1.losses + winsecond;
+    event.players[p2].score = prevmatch2.score + score*winsecond;
+    event.players[p2].wins = prevmatch2.wins + winsecond;
+    event.players[p2].losses = prevmatch2.losses + winfirst;
 
     Events.update(eventID, {
       $set: {
@@ -696,30 +699,36 @@ Meteor.methods({
   "events.update_roundrobin"(eventID, roundNumber, score) { //For swiss specifically
     var event = Events.findOne(eventID);
     rounds = event.brackets[0].rounds;
+    var playerarr = event.brackets[0].rounds[0].players;
     event = event.brackets[0].rounds[roundNumber];
-    var participants = event.players.map(function(x) { return x.name });
-    participants.shift(participants.pop());
+    var lastp = playerarr.pop();
+    playerarr.splice(1, 0, lastp);
+    var participants = playerarr.map(function(x) { return x.name })
     var temp = [];
     for (var x = 0; x < Math.floor(participants.length/2); x++)
     {
-      var matchObj = {
-        playerOne: participants[x],
-        playerTwo: participants[x+length/2],
-        played: false,
-        p1score: 0,
-        p2score: 0,
-        ties: 0
-      };
-      temp.push(matchObj);
+      if (participants[participants.length - x - 1] != "" && participants[x] != "")
+      {
+        var matchObj = {
+          playerOne: participants[x],
+          playerTwo: participants[participants.length - x - 1],
+          played: false,
+          p1score: 0,
+          p2score: 0,
+          ties: 0
+        };
+        temp.push(matchObj);
+      }
     }
-    var tempb = JSON.parse(JSON.stringify(event.players));
-    tempb.sort(function(a, b) {
-      return b.score - a.score;
-    })
+    var tempb = JSON.parse(JSON.stringify(playerarr));
+    var pdic = [];
+    for (var x = 0; x < tempb.length; x++)
+      pdic[tempb[x].name] = x;
     var roundObj = {
       matches: temp,
       players: tempb,
-      score: score
+      score: score,
+      pdic: pdic
     };
     rounds.push(roundObj);
     Events.update(eventID, {
