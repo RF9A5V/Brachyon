@@ -96,12 +96,21 @@ Meteor.methods({
       throw new Meteor.Error(404, "Event not found!");
     }
     var prevInstance = Instances.findOne(event.instances.pop());
-    delete(prevInstance._id);
-    prevInstance.brackets.forEach((_, i) => {
-      delete(prevInstance.brackets[i].rounds);
-      delete(prevInstance.brackets[i].participants);
-    });
-    var instance = Instances.insert(prevInstance);
+    var obj = {
+      brackets: []
+    };
+    if(prevInstance.brackets) {
+      prevInstance.brackets.forEach(bracket => {
+        var bracketObj = {};
+        bracketObj.game = bracket.game;
+        bracketObj.format = bracket.format;
+        obj.brackets.push(bracketObj);
+      })
+    }
+    if(prevInstance.tickets) {
+      obj.tickets = prevInstance.tickets;
+    }
+    var instance = Instances.insert(obj);
     Events.update(id, {
       $push: {
         instances: instance

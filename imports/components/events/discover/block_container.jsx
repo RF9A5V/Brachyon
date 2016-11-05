@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import Instances from "/imports/api/event/instance.js";
 
 export default class BlockContainer extends Component {
 
@@ -67,15 +68,15 @@ export default class BlockContainer extends Component {
   }
 
   render() {
-    var self = this;
     return (
       <div className="col col-1">
         <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
             this.props.events.map((event, i) => {
+              var instance = Instances.findOne(event.instances[event.instances.length - 1]);
               return (
-                <div className="event-block col" onClick={self.selectEvent(event).bind(self)} key={i}>
+                <div className="event-block col" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
@@ -114,8 +115,8 @@ export default class BlockContainer extends Component {
                         <span style={{fontSize: 12}}>{
                           (() => {
                             var count = 0;
-                            if(event.brackets) {
-                              event.brackets.forEach(bracket => {
+                            if(instance.brackets) {
+                              instance.brackets.forEach(bracket => {
                                 if(bracket.participants) {
                                   count += bracket.participants.length;
                                 }
