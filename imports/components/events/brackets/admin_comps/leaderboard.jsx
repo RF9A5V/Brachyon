@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 
+import Instances from "/imports/api/event/instance.js";
+
 export default class LeaderboardPanel extends Component {
 
   constructor(props) {
     super(props);
-    var participants = Events.findOne().brackets[props.index].participants;
+    var instance = Instances.findOne();
+    var participants = instance.brackets[props.index].participants;
     participants.sort((a, b) => {
       return a.placement - b.placement;
     });

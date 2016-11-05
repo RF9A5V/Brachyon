@@ -1,4 +1,5 @@
 import { Images } from "/imports/api/event/images.js";
+import Instances from "/imports/api/event/instance.js";
 import moment from "moment";
 
 Meteor.methods({
@@ -77,7 +78,38 @@ Meteor.methods({
     endObj.underReview = false;
     endObj.isComplete = false;
     endObj.owner = Meteor.userId();
+    var instance = Instances.insert({
+      brackets: endObj.brackets,
+      tickets: endObj.tickets,
+      startedAt: endObj.details.datetime
+    });
+    delete(endObj.brackets);
+    delete(endObj.tickets);
+    endObj.instances = [instance];
     var event = Events.insert(endObj);
     return Events.findOne(event).slug;
+  },
+
+  "events.reinstantiate"(id) {
+    var event = Events.findOne(id);
+    if(!event) {
+      throw new Meteor.Error(404, "Event not found!");
+    }
+    var prevInstance = Instances.findOne(event.instances.pop());
+    delete(prevInstance._id);
+    prevInstance.brackets.forEach((_, i) => {
+      delete(prevInstance.brackets[i].rounds);
+      delete(prevInstance.brackets[i].participants);
+    });
+    var instance = Instances.insert(prevInstance);
+    Events.update(id, {
+      $push: {
+        instances: instance
+      },
+      $set: {
+        isComplete: false,
+        published: true
+      }
+    })
   }
 })

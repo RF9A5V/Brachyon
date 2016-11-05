@@ -3,6 +3,8 @@ import { browserHistory } from "react-router";
 
 import Games from "/imports/api/games/games.js";
 import Notifications from "/imports/api/users/notifications.js";
+
+import Instances from "/imports/api/event/instance.js";
 import { Images } from "/imports/api/event/images.js";
 
 export default class BracketSlide extends Component {
@@ -112,11 +114,12 @@ export default class BracketSlide extends Component {
   }
 
   render() {
+    var instance = Instances.findOne(this.props.event.instances[this.props.event.instances.length - 1]);
     return (
       <div className="slide-page-container">
         <div className="slide-page col x-center center" style={{backgroundImage: this.backgroundImage(true)}}>
           {
-            this.props.event.brackets.map((bracket, i) => {
+            instance.brackets.map((bracket, i) => {
               return (
                 <div className="bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
                   if(this.props.event.owner == Meteor.userId()) {

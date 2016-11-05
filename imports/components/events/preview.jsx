@@ -11,6 +11,8 @@ import BracketPage from "./preview/slides/brackets.jsx";
 import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
+import Instances from "/imports/api/event/instance.js";
+
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
   componentWillMount(){
@@ -54,13 +56,14 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   slides() {
     var event = this.event();
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     var pages = [
       {
         name: "Home",
         component: TitlePage
       }
     ];
-    if(event.brackets) {
+    if(instance.brackets) {
       pages.push({
         name: "Brackets",
         component: BracketPage
@@ -78,7 +81,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         component: StreamPage
       })
     }
-    return pages
+    return pages;
   }
 
   render() {
