@@ -55,6 +55,17 @@ export default class BlockContainer extends Component {
     browserHistory.push(url);
   }
 
+  onRefreshClick(event) {
+    Meteor.call("events.reinstantiate", event._id, (err) => {
+      if(err) {
+        return toastr.error(err.reason, "Error!");
+      }
+      else {
+        return toastr.success("Event is now set up to rerun!", "Success!");
+      }
+    })
+  }
+
   render() {
     var self = this;
     return (
@@ -69,12 +80,23 @@ export default class BlockContainer extends Component {
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
                       Meteor.userId() == event.owner ? (
-                        <div className="event-block-edit" style={{position: "absolute", top: 5, right: 5}} onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          this.onPencilClick(event);
-                        }}>
-                          <FontAwesome name="pencil" />
+                        <div className="event-block-edit" >
+                          {
+                            event.isComplete ? (
+                              <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.onRefreshClick(event);
+                              }} />
+                            ) : (
+                              ""
+                            )
+                          }
+                          <FontAwesome name="pencil" onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.onPencilClick(event);
+                          }} />
                         </div>
                       ) : (
                         ""
