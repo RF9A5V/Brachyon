@@ -51,6 +51,7 @@ export default class BracketSlide extends Component {
   }
 
   bracketButton(bracket, i) {
+    var instance = Instances.findOne();
     var isRegistered = bracket.participants && bracket.participants.some((obj, j) => { return obj.id == Meteor.userId() });
     var note = Notifications.findOne({ eventSlug: this.props.event.slug, recipient: Meteor.userId(), type: "eventInvite" });
     if(note) {
@@ -72,7 +73,7 @@ export default class BracketSlide extends Component {
         <button onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          if(this.props.event.tickets) {
+          if(instance.tickets) {
             browserHistory.push(`/events/${this.props.event.slug}/checkout`)
           }
           else {
@@ -94,7 +95,7 @@ export default class BracketSlide extends Component {
       <button onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        if(this.props.event.tickets) {
+        if(instance.tickets) {
           browserHistory.push(`/events/${this.props.event.slug}/checkout`);
         }
         else {

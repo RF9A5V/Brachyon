@@ -264,13 +264,14 @@ Meteor.methods({
     if (!event){
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
-    event = event.brackets[0];
-    match = event.rounds[bracketNumber][roundNumber][matchNumber];
+    var instance = Instances.findOne(event.instances.pop());
+    var bracket = instance.brackets[0];
+    match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
     var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
-    if (fr >= event.rounds[bracketNumber].length)
+    if (fr >= bracket.rounds[bracketNumber].length)
       var [fb, fr, fm] = bracketNumber == 2 ? [2, 1, 0]:[2, 0, 0];
-    if ((bracketNumber == 2 && roundNumber == 1) || (event.rounds.length < 2 && roundNumber >= event.rounds[0].length-1))
+    if ((bracketNumber == 2 && roundNumber == 1) || (bracket.rounds.length < 2 && roundNumber >= bracket.rounds[0].length-1))
     {
       match.winner = null;
       Events.update(eventID, {
@@ -280,29 +281,29 @@ Meteor.methods({
       });
       return;
     }
-    var advMatch = event.rounds[fb][fr][fm];
+    var advMatch = bracket.rounds[fb][fr][fm];
 
     //Call the function recursively on the ahead losers and update the matches
     if (advMatch.winner)
     {
       Meteor.call("events.undo_match", eventID, fb, fr, fm);
-      event = Events.findOne(eventID).brackets[0];
-      advMatch = event.rounds[fb][fr][fm];
-      match = event.rounds[bracketNumber][roundNumber][matchNumber];
+      bracket = instance.brackets[0];
+      advMatch = bracket.rounds[fb][fr][fm];
+      match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     }
 
     //This is the function to undo loser bracket placement
-    if (event.rounds.length > 1 && bracketNumber == 0)
+    if (bracket.rounds.length > 1 && bracketNumber == 0)
     {
       loser = match.winner == match.playerOne ? (match.playerTwo):(match.playerOne);
-      loserround = event.rounds[1][match.losr][match.losm];
+      loserround = bracket.rounds[1][match.losr][match.losm];
       if (loserround.winner != null)
       {
         Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
-        event = Events.findOne(eventID).brackets[0];
-        advMatch = event.rounds[fb][fr][fm];
-        match = event.rounds[bracketNumber][roundNumber][matchNumber];
-        loserround = event.rounds[1][match.losr][match.losm];
+        bracket = Events.findOne(eventID).brackets[0];
+        advMatch = bracket.rounds[fb][fr][fm];
+        match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
+        loserround = bracket.rounds[1][match.losr][match.losm];
       }
       if (loserround.playerOne == loser) loserround.playerOne = null;
       else loserround.playerTwo = null;
@@ -315,7 +316,7 @@ Meteor.methods({
     match.winner = null;
 
     //Depending on the bracket is how the winner will be sent.
-    if (roundNumber >= event.rounds[bracketNumber].length-1)
+    if (roundNumber >= bracket.rounds[bracketNumber].length-1)
     {
       if (bracketNumber == 0)
         advMatch.playerOne = null;
@@ -342,7 +343,7 @@ Meteor.methods({
     }
 
     //Update the round
-    Events.update(eventID, {
+    Instances.update(instance._id, {
       $set: {
         [`brackets.0.rounds.${fb}.${fr}.${fm}`]: advMatch,
         [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
