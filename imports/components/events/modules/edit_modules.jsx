@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import Instances from "/imports/api/event/instance.js";
+
 export default class EditModuleList extends Component {
 
   constructor(props) {
@@ -145,8 +147,9 @@ export default class EditModuleList extends Component {
 
   buttonSelect() {
     var event = Events.findOne();
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     if(this.state.item.name == "main") {
-      if(event[this.state.name] != null) {
+      if(event[this.state.name] != null || instance[this.state.name] != null) {
         return (
           <button onClick={ this.deleteModule.bind(this) }>Delete</button>
         )
