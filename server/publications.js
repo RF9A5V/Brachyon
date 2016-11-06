@@ -2,6 +2,7 @@ import Games from '/imports/api/games/games.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { Images } from "/imports/api/event/images.js";
+import Instances from "/imports/api/event/instance.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -104,11 +105,15 @@ Meteor.publish('userEvents', (id) => {
       $in: imgIds
     }
   })
+  var instances = events.map((event) => {
+    return event.instances[event.instances.length - 1];
+  })
   return [
     Events.find({owner: id}, { limit: 6 }),
     games,
     ProfileImages.find({_id: user.profile.image}).cursor,
-    images.cursor
+    images.cursor,
+    Instances.find({ _id: { $in: instances } })
   ];
 })
 

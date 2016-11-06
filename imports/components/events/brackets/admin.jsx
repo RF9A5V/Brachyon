@@ -11,6 +11,8 @@ import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 import LogisticsPanel from "./admin_comps/logistics.jsx";
 
+import Instances from "/imports/api/event/instance.js";
+
 export default class BracketAdminScreen extends TrackerReact(Component) {
 
   constructor(props) {
@@ -32,9 +34,11 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   items() {
-    var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
+    var event = Events.findOne();
+    var instance = Instances.findOne();
+    var bracket = instance.brackets[this.props.params.bracketIndex];
     var defaultItems = [];
-    if(!bracket.isComplete) {
+    if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
         icon: "users",
@@ -62,7 +66,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket.inProgress) {
+    if(bracket.inProgress || bracket.isComplete) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
@@ -77,7 +81,11 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
               }
             }
           ]
-        },
+        }
+      ])
+    }
+    if(bracket.inProgress) {
+      defaultItems = defaultItems.concat([
         {
           text: "Logistics",
           icon: "edit",
