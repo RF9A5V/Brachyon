@@ -1,5 +1,6 @@
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 Meteor.methods({
   "users.update_profile_image"(id) {
@@ -26,9 +27,11 @@ Meteor.methods({
     if(user.profile.banner){
       ProfileBanners.remove(user.profile.banner);
     }
+    var imgBanner = ProfileBanners.findOne(id);
     Meteor.users.update(Meteor.userId(), {
       $set: {
-        "profile.banner": id
+        "profile.banner": id,
+        "profile.bannerUrl": imgBanner.link()
       }
     })
   },

@@ -80,13 +80,6 @@ Meteor.startup(() => {
   SyncedCron.start();
   Migrations.migrateTo(0);
   Migrations.migrateTo(1);
+  Migrations.migrateTo(2);
 
-  docs = Events.find({slug: {$exists: false}});
-  docs.forEach((doc) => {
-    Events.update(doc._id, {
-      $set: {
-        blah: ""
-      }
-    })
-  })
 });
