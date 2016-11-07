@@ -10,6 +10,7 @@ export default class StartBracketAction extends Component {
   }
 
   startEventHandler() {
+    console.log(this.state.id);
     Meteor.call("events.start_event", this.state.id, this.props.index, function(err) {
       if(err){
         return toastr.error(err.reason, "Error!");

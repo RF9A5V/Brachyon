@@ -22,6 +22,8 @@ import Unpublish from "./admin/modules/unpublish.jsx";
 import EditModules from "./admin/modules/edit_modules.jsx";
 import Close from "./admin/modules/close_event.jsx";
 
+import Brackets from "/imports/api/brackets/brackets.js"
+
 export default class EventAdminPage extends TrackerReact(Component) {
 
   constructor(props) {
