@@ -76,7 +76,7 @@ export default class BlockContainer extends Component {
             this.props.events.map((event, i) => {
               var instance = Instances.findOne(event.instances[event.instances.length - 1]);
               return (
-                <div className="event-block" onClick={self.selectEvent(event).bind(self)} key={i}>
+                <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {

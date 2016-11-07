@@ -8,7 +8,7 @@ Meteor.methods({
     }
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     var brackets = instance.brackets;
-    var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return !bracket.isComplete });
+    var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return bracket.endedAt == null });
     if(hasBracketsOutstanding) {
       throw new Meteor.Error(403, "Cannot close event with brackets outstanding!");
     }

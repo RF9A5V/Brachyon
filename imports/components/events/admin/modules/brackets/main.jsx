@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { browserHistory } from "react-router";
 import FontAwesome from "react-fontawesome";
 
+import Instances from "/imports/api/event/instance.js";
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class Main extends Component {
 
@@ -11,13 +12,13 @@ export default class Main extends Component {
     super(props);
     this.state = {
       id: Events.findOne()._id,
-      bracket: Events.findOne().brackets[0],
+      bracket: Instances.findOne().brackets[0],
       index: 0
     }
   }
 
   gameBanner(gameID){
-    return Images.findOne(Games.findOne(gameID).banner).link();
+    return GameBanners.findOne(Games.findOne(gameID).banner).link();
   }
 
   redirectToBracketPage(index) {
@@ -27,16 +28,17 @@ export default class Main extends Component {
 
   render() {
     var event = Events.findOne();
-    var brackets = event.brackets || [];
+    var brackets = Instances.findOne().brackets || [];
     return (
       <div className="submodule-bg" style={{marginTop: 10}}>
         <div className="row">
           <div className="submodule-section col">
             {
               brackets.map((bracket, i) => {
+                var game = Games.findOne(bracket.game);
                 return (
                   <div className={`sub-section-select ${this.state.index == i ? "active" : ""}`} onClick={() => { this.setState({index: i}) }}>
-                    { bracket.name }
+                    { game.name }
                   </div>
                 )
               })
@@ -47,7 +49,7 @@ export default class Main extends Component {
               ""
             ) : (
               <div className="submodule-section col-1 col center x-center">
-                <img src={ this.gameBanner(this.state.bracket.game) } style={{width: "50%", marginBottom: 20}} />
+                <img src={ this.gameBanner(this.state.bracket.game) } style={{width: "25%", marginBottom: 20}} />
                 <h5>{ this.state.bracket.name }</h5>
               </div>
             )

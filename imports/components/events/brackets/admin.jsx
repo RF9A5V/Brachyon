@@ -38,7 +38,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     var instance = Instances.findOne();
     var bracket = instance.brackets[this.props.params.bracketIndex];
     var defaultItems = [];
-    if(!bracket.endedAt) {
+    if(bracket.endedAt == null) {
       defaultItems.push({
         text: "Participants",
         icon: "users",
@@ -84,7 +84,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
-    if(bracket.inProgress) {
+    if(bracket.endedAt == null && bracket.startedAt != null) {
       defaultItems = defaultItems.concat([
         {
           text: "Logistics",
@@ -100,7 +100,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
-    else if(!bracket.inProgress && !bracket.isComplete) {
+    else if(bracket.endedAt == null && bracket.startedAt == null) {
       defaultItems = defaultItems.concat([
         {
           text: "Start",

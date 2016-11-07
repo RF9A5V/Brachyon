@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class ApproveGameAction extends Component {
 
@@ -46,7 +46,7 @@ export default class ApproveGameAction extends Component {
     var game = Games.findOne(this.state.game);
     return (
       <div className="col center x-center">
-        <img src={Images.findOne(game.banner).link()} style={{width: 300, height: "auto"}} />
+        <img src={GameBanners.findOne(game.banner).link()} style={{width: 300, height: "auto"}} />
         <span>{ game.name }</span>
         <p>{ game.description }</p>
         <div className="row center x-center">
@@ -75,7 +75,7 @@ export default class ApproveGameAction extends Component {
           Games.find({ approved: false }).map((game) => {
             return (
               <div className="game" onClick={() => { this.setState({ game: game._id }) }}>
-                <img src={Images.findOne(game.banner).link()} />
+                <img src={GameBanners.findOne(game.banner).link()} />
                 <div>
                   { game.name }
                 </div>

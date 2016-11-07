@@ -5,8 +5,9 @@ import { browserHistory, Link } from "react-router"
 import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
-import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 import EventBlock from '../events/block.jsx';
@@ -76,7 +77,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
   }
 
   gameBannerURL(id) {
-    return Images.findOne(id).link();
+    return gameBannerURLs.findOne(id).link();
   }
 
   profileImage() {
@@ -137,7 +138,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                   var g = Games.findOne(game);
                   console.log(g);
                   return (
-                    <div className="user-game-icon" style={{backgroundImage: `url(${Images.findOne(g.banner).link()})`}} key={i}>
+                    <div className="user-game-icon" style={{backgroundImage: `url(${GameBanners.findOne(g.banner).link()})`}} key={i}>
 
                     </div>
                   );

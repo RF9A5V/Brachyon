@@ -6,6 +6,7 @@ import Notifications from "/imports/api/users/notifications.js";
 
 import Instances from "/imports/api/event/instance.js";
 import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class BracketSlide extends Component {
 
@@ -122,7 +123,7 @@ export default class BracketSlide extends Component {
           {
             instance.brackets.map((bracket, i) => {
               return (
-                <div className="bracket" style={{margin: 20, width: "60%", position: "relative"}} onClick={() => {
+                <div className="bracket" style={{margin: 20, width: "25%", position: "relative"}} onClick={() => {
                   if(this.props.event.owner == Meteor.userId()) {
                     browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
                   }
@@ -130,7 +131,7 @@ export default class BracketSlide extends Component {
                     browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
                   }
                 }}>
-                  <img style={{width: "100%", height: "auto"}} src={Images.findOne(Games.findOne(bracket.game).banner).link()} />
+                  <img style={{width: "100%", height: "auto"}} src={GameBanners.findOne(Games.findOne(bracket.game).banner).link()} />
                   <div className="col center x-center" style={{position: "absolute", width: "100%", height: "100%", top: 0}}>
                     <div className="col-1 col center x-center">
                       <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 55}}>

@@ -3,14 +3,15 @@ import Instances from "/imports/api/event/instance.js";
 import { Images } from "/imports/api/event/images.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Icons } from "/imports/api/sponsorship/icon.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 Meteor.publish('event', (slug) => {
   var event = Events.findOne({slug: slug});
   var _id = event._id;
-  var banners = [event.details.banner];
   var instanceIndex = event.instances.length - 1;
   var instance = Instances.findOne(event.instances[instanceIndex]);
   var gameIDs = [];
+  var banners = [];
   if(instance.brackets) {
     gameIDs = instance.brackets.map(bracket => {
       return bracket.game;
@@ -22,11 +23,10 @@ Meteor.publish('event', (slug) => {
   return [
     Events.find({_id}),
     Images.find({
-      _id: {
-        $in: banners
-      }
+      _id: event.details.banner
     }).cursor,
     Instances.find({ _id: event.instances[instanceIndex] }),
-    Games.find({_id: { $in: gameIDs }})
+    Games.find({_id: { $in: gameIDs }}),
+    GameBanners.find({ _id: { $in: banners } }).cursor
   ];
 });

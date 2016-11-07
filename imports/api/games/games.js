@@ -1,3 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 
-export default Events = new Mongo.Collection('games', {});
+var Games = new Mongo.Collection('games', {});
+
+Games.friendlySlugs("name");
+
+export default Games;
