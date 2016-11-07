@@ -75,11 +75,12 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.brackets[bracketIndex];
+    var instance = Instances.findOne(event.instances.pop());
+    var bracket = instance.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    Events.update(eventID, {
+    Instances.update(instance._id, {
       $pull: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userId
@@ -93,7 +94,8 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.brackets[bracketIndex];
+    var instance = Instances.findOne(event.instances.pop());
+    var bracket = instance.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
@@ -111,27 +113,27 @@ Meteor.methods({
     if(bracketContainsAlias) {
       throw new Meteor.Error(403, "Someone is already using this alias. Choose another one or talk to your friendly neighborhood tournament organizer.");
     }
-    if(Notifications.findOne({ recipient: event.owner, eventSlug: event.slug, userId: user._id })) {
-      throw new Meteor.Error(403, "You've already requested entry to this event.");
-    }
-    Notifications.insert({
-      type: "eventRegistrationRequest",
-      recipient: event.owner,
-      image: user.profile.imageUrl,
-      user: user.profile.alias || user.profile.username,
-      userId: user._id,
-      eventSlug: event.slug,
-      event: event.details.name,
-      read: false
-    });
-    // Events.update(eventID, {
-    //   $push: {
-    //     [`brackets.${bracketIndex}.participants`]: {
-    //       id: user._id,
-    //       alias
-    //     }
-    //   }
-    // })
+    // if(Notifications.findOne({ recipient: event.owner, eventSlug: event.slug, userId: user._id })) {
+    //   throw new Meteor.Error(403, "You've already requested entry to this event.");
+    // }
+    // Notifications.insert({
+    //   type: "eventRegistrationRequest",
+    //   recipient: event.owner,
+    //   image: user.profile.imageUrl,
+    //   user: user.profile.alias || user.profile.username,
+    //   userId: user._id,
+    //   eventSlug: event.slug,
+    //   event: event.details.name,
+    //   read: false
+    // });
+    Instances.update(instance._id, {
+      $push: {
+        [`brackets.${bracketIndex}.participants`]: {
+          id: user._id,
+          alias
+        }
+      }
+    })
   },
 
   "events.start_event"(eventID, index) {
@@ -274,7 +276,7 @@ Meteor.methods({
     if ((bracketNumber == 2 && roundNumber == 1) || (bracket.rounds.length < 2 && roundNumber >= bracket.rounds[0].length-1))
     {
       match.winner = null;
-      Events.update(eventID, {
+      Instances.update(instance._id, {
         $set: {
           [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${0}`]: match
         }
@@ -300,14 +302,15 @@ Meteor.methods({
       if (loserround.winner != null)
       {
         Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
-        bracket = Events.findOne(eventID).brackets[0];
+        var instanceID = Events.findOne(eventID).instances.pop();
+        bracket = Instances.findOne(instanceID).brackets[0];
         advMatch = bracket.rounds[fb][fr][fm];
         match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
         loserround = bracket.rounds[1][match.losr][match.losm];
       }
       if (loserround.playerOne == loser) loserround.playerOne = null;
       else loserround.playerTwo = null;
-      Events.update(eventID, {
+      Instances.update(instance._id, {
         $set: {
           [`brackets.0.rounds.${1}.${match.losr}.${match.losm}`]: loserround
         }
@@ -408,9 +411,9 @@ Meteor.methods({
   "events.complete_match"(eventID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
     var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance = Instances.findOne(event.instances.pop());
     var bracket = instance.brackets[0].rounds[roundNumber];
-    instance.matches[matchNumber].played = true;
+    bracket.matches[matchNumber].played = true;
     Instances.update(instance._id, {
       $set: {
         [`brackets.0.rounds.${roundNumber}`]: bracket
@@ -463,7 +466,8 @@ Meteor.methods({
   },
 
   "events.update_round"(eventID, roundNumber, score) { //For swiss specifically
-    var event = Events.findOne(eventID);
+    var instanceID = Events.findOne(eventID).instances.pop();
+    var event = Instances.findOne(instanceID);
     rounds = event.brackets[0].rounds;
     event = event.brackets[0].rounds[roundNumber];
     var players = event.players;
@@ -660,7 +664,7 @@ Meteor.methods({
       matches: temp
     }
     rounds.push(newevent);
-    Events.update(eventID, {
+    Instances.update(instanceID, {
       $set: {
         [`brackets.0.rounds`]: rounds
       }
@@ -669,7 +673,8 @@ Meteor.methods({
 
   "events.update_roundmatch"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
-    var event = Events.findOne(eventID);
+    var instanceID = Events.findOne(eventID).instances.pop()
+    var event = Instances.findOne(instanceID);
     var prevround;
     if (roundNumber > 0)
       prevround = event.brackets[0].rounds[roundNumber-1];
@@ -699,15 +704,16 @@ Meteor.methods({
     event.players[p2].wins = prevmatch2.wins + winsecond;
     event.players[p2].losses = prevmatch2.losses + winfirst;
 
-    Events.update(eventID, {
+    Instances.update(instanceID, {
       $set: {
         [`brackets.0.rounds.${roundNumber}`]: event
       }
     })
   },
 
-  "events.update_roundrobin"(eventID, roundNumber, score) { //For swiss specifically
-    var event = Events.findOne(eventID);
+  "events.update_roundrobin"(eventID, roundNumber, score) { //For RR specifically
+    var instanceID = Events.findOne(eventID).instances.pop();
+    var event = Instances.findOne(instanceID);
     rounds = event.brackets[0].rounds;
     var playerarr = event.brackets[0].rounds[0].players;
     event = event.brackets[0].rounds[roundNumber];
@@ -741,11 +747,21 @@ Meteor.methods({
       pdic: pdic
     };
     rounds.push(roundObj);
-    Events.update(eventID, {
+    Instances.update(instanceID, {
       $set: {
         [`brackets.0.rounds`]: rounds
       }
     });
+  },
+
+  "events.endGroup"(eventID, bracketIndex) {
+    var event = Events.findOne(eventID);
+    var instance = Instances.findOne(event.instances.pop());
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${bracketIndex}.endedAt`]: new Date()
+      }
+    })
   }
 
 })
