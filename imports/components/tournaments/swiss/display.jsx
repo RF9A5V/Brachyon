@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 import SwissMatchBlock from "./match.jsx"
 import SwissModal from "./modal.jsx";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 //Called by: imports\components\events\show\bracket.jsx
 export default class SwissDisplay extends TrackerReact(Component) {
@@ -22,6 +23,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
 
     var event = Events.findOne();
+    var bracket = Brackets.findOne();
 
     var aliasMap = {};
     event.brackets[0].participants.forEach((player) => {
@@ -33,13 +35,14 @@ export default class SwissDisplay extends TrackerReact(Component) {
       wcount: num,
       recrounds: rec,
       id: event._id,
+      brid: bracket._id,
       aliasMap
     }
   }
 
   finalizeMatch(matchnumber)
   {
-    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, (err) => {
+    Meteor.call("events.complete_match", this.state.brid, this.state.page - 1, matchnumber, (err) => {
       if(err){
         toastr.error("Couldn't complete the match.", "Error!");
       }
@@ -54,7 +57,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.state.id, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");

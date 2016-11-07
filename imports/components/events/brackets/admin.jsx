@@ -10,6 +10,7 @@ import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 import LogisticsPanel from "./admin_comps/logistics.jsx";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 export default class BracketAdminScreen extends TrackerReact(Component) {
 
@@ -33,6 +34,8 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
 
   items() {
     var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
+    var rounds = Brackets.findOne(bracket.id);
+    console.log(rounds);
     var defaultItems = [];
     if(!bracket.isComplete) {
       defaultItems.push({
@@ -71,9 +74,10 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             {
               component: BracketAction,
               args: {
-                id: this.props.params.eventId,
+                id: bracket.id,
+                eid: this.props.params.eventId,
                 format: bracket.format.baseFormat,
-                rounds: bracket.rounds
+                rounds: rounds
               }
             }
           ]

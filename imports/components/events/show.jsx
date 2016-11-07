@@ -23,10 +23,11 @@ export default class ShowEventScreen extends TrackerReact(Component) {
 
   content() {
     var event = Events.findOne();
+    var bracket = Brackets.findOne(event.brackets[0].id);
     return [
       (<LeaderboardPanel isDone={event.complete} participants={event.participants} />),
-      (<BracketPanel rounds={event.rounds} id={event._id} />),
-      (<ParticipantList participants={event.participants} isOwner={event.owner == Meteor.userId()} id={event._id} rounds={event.rounds} />)
+      (<BracketPanel rounds={bracket.rounds} id={bracket._id} eid = {event._id} />),
+      (<ParticipantList participants={event.participants} isOwner={event.owner == Meteor.userId()} id={event._id} rounds={bracket.rounds} />)
     ]
   }
 
