@@ -2,6 +2,14 @@ import React, { Component } from 'react'
 import MatchBlock from './match.jsx';
 
 export default class DoubleDisplay extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: Events.findOne()._id
+    }
+  }
+
   render() {
     return (
       <div classname="delim">
@@ -54,7 +62,7 @@ export default class DoubleDisplay extends Component {
                           }
                         }
                         return (
-                          <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                          <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.state.id} isFutureLoser={isFutureLoser} />
                         );
                       })
                     }
@@ -88,7 +96,7 @@ export default class DoubleDisplay extends Component {
                             }
                           }
                           return (
-                            <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                            <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.state.id} isFutureLoser={isFutureLoser} />
                           );
                         }
                       })
@@ -144,7 +152,7 @@ export default class DoubleDisplay extends Component {
                             }
                           }
                           return (
-                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.state.id} isFutureLoser={isFutureLoser} />
                           );
                         })
                       }
