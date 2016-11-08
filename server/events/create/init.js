@@ -64,7 +64,7 @@ Meteor.methods({
 
   "events.create"(obj) {
     var endObj = {};
-    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
+    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
     var requiresReview = false;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {

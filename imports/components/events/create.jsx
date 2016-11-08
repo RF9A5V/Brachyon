@@ -9,6 +9,7 @@ import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
 import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
 import StreamPanel from "./create/module_dropdowns/stream.jsx";
+import TicketsPanel from "./create/module_dropdowns/tickets.jsx";
 import ModuleBlock from "./create/module_block.jsx";
 
 import { Images } from "/imports/api/event/images.js";
@@ -34,7 +35,8 @@ export default class EventCreateScreen extends Component {
     return {
       brackets: (<BracketsPanel ref="brackets" />),
       crowdfunding: (<CrowdfundingPanel ref="crowdfunding" />),
-      stream: (<StreamPanel ref="stream" />)
+      stream: (<StreamPanel ref="stream" />),
+      tickets: (<TicketsPanel ref="tickets" brackets={() => { if(this.refs.brackets) { return this.refs.brackets.getBrackets() } else { return [] } }} />)
     }
   }
 
@@ -48,6 +50,10 @@ export default class EventCreateScreen extends Component {
         {
           name: "stream",
           icon: "video-camera"
+        },
+        {
+          name: "tickets",
+          icon: "ticket"
         }
       ],
       review: [

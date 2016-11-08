@@ -10,7 +10,9 @@ export default class StreamPanel extends Component {
   }
 
   value() {
-    return {};
+    return {
+      value: streamID
+    };
   }
 
   itemTabs() {
@@ -49,18 +51,10 @@ export default class StreamPanel extends Component {
   render() {
     var tabs = ["Chat", "Video"];
     return (
-      <div className="row panel">
-        {
-          this.itemTabs()
-        }
-        <div className="col col-1 info-description">
-          <div className="row center">
-          <h3>{ tabs[this.state.item] }</h3>
-          </div>
-          {
-            this.itemDescriptions()
-          }
-        </div>
+      <div className="col panel">
+        <h3>Add A Stream</h3>
+        <input type="text" ref="streamID" />
+        <a style={{fontSize: 12}} href="#">What do I put here?</a>
       </div>
     )
   }

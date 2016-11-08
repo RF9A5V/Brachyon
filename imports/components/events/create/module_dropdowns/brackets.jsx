@@ -15,6 +15,12 @@ export default class BracketsPanel extends Component {
     };
   }
 
+  getBrackets() {
+    return Object.keys(this.refs).map((key, index) => {
+      return this.refs[key].value();
+    })
+  }
+
   value() {
     return Object.keys(this.refs).map((key, index) => {
       try {
