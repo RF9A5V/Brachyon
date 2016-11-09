@@ -8,21 +8,20 @@ import CheckoutCompletion from "./checkout/completion.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
 import { Images } from "/imports/api/event/images.js";
+import Instance from "/imports/api/event/instance.js";
 
 export default class CheckoutPage extends TrackerReact(Component) {
 
   constructor(props){
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", props.params.eventId, {
+      event: Meteor.subscribe("event", props.params.slug, {
         onReady: () => {
           var event = Events.findOne();
+          var instance = Instances.findOne();
           var keys = [];
-          if(event.tickets) {
+          if(instance.tickets) {
             keys.push("tickets");
-          }
-          if(event.crowdfunding && event.crowdfunding.tiers && event.crowdfunding.tiers.length > 0) {
-            keys.push("tiers");
           }
           keys.push("payment");
           keys.push("complete");
@@ -52,15 +51,11 @@ export default class CheckoutPage extends TrackerReact(Component) {
   items() {
     var event = Events.findOne();
     var items = [];
-    if(event.tickets) {
+    var instance = Instances.findOne();
+    if(instance.tickets) {
       items.push(
         <TicketCheckout ref="tickets"/>
       );
-    }
-    if(event.crowdfunding.tiers && event.crowdfunding.tiers.length > 0) {
-      items.push(
-        <TierCheckout ref="tiers" />
-      )
     }
     var price = this.calculatePrice();
     if(price > 0) {
@@ -70,28 +65,23 @@ export default class CheckoutPage extends TrackerReact(Component) {
       }
       items.push(<PaymentCheckout ref="payment" price={price} {...comps} />);
     }
-    items.push(<CheckoutCompletion ref="complete" id={this.props.params.eventId} />)
+    items.push(<CheckoutCompletion ref="complete" slug={this.props.params.slug} />)
     return items;
   }
 
   calculatePrice() {
     var total = 0;
-    var event = Events.findOne();
+    var instance = Instances.findOne();
     if(this.state.dataStore.tickets) {
       this.state.dataStore.tickets.forEach((key) => {
-        var ticket = event.tickets[key];
-        total += ticket.price;
+        var ticket = instance.tickets[key];
+        total += ticket;
       });
-    }
-    if(this.state.dataStore.tierIndex != null && this.state.dataStore.tierIndex >= 0) {
-      var tier = event.crowdfunding.tiers[this.state.dataStore.tierIndex];
-      total += tier.price;
     }
     return total;
   }
 
   advanceState() {
-    console.log(this.state.keys[this.state.index]);
     var comp = this.refs[this.state.keys[this.state.index]];
     if(comp.isValid()) {
       comp.value((obj) => {
@@ -99,7 +89,7 @@ export default class CheckoutPage extends TrackerReact(Component) {
           this.state.dataStore[i] = obj[i];
         }
         if(this.state.keys[this.state.index] == "payment") {
-          Meteor.call("events.checkout", this.props.params.eventId, this.state.dataStore, (e) => {
+          Meteor.call("events.checkout", this.props.params.slug, this.state.dataStore, (e) => {
             if(e) {
               toastr.error(e.reason, "Error!");
             }

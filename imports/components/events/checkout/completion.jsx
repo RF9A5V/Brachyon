@@ -12,7 +12,7 @@ export default class CheckoutCompletion extends Component {
           <div className="col-1"></div>
           <div className="col-1 submodule-section col x-center">
             <h5>Success!</h5>
-            <button onClick={() => { browserHistory.push("/events/" + this.props.id + "/preview") }}>Back To Event</button>
+            <button onClick={() => { browserHistory.push("/events/" + this.props.slug + "/show") }}>Back To Event</button>
           </div>
           <div className="col-1"></div>
         </div>

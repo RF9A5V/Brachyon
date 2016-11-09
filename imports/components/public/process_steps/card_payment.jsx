@@ -9,12 +9,14 @@ export default class CardPaymentProcess extends Component {
   constructor(props) {
     super(props);
     var self = this;
-    var useHistory = false;
     var customer = Meteor.call("user.getStripeCustomerData", (a, b) => {
-      this.state.cards = b.result.data;
+      console.log(a);
+      console.log(b);
+      this.setState({
+        cards: b.result.data || []
+      });
     });
     this.state = {
-      customerLoaded: useHistory,
       cards: [],
       usePrevious: false,
       cardID: null

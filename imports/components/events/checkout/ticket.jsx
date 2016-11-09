@@ -22,11 +22,12 @@ export default class TicketCheckout extends Component {
   }
 
   ticketName(ticket) {
-    var event = Events.findOne();
-    if(isNaN(parseInt(ticket))) {
-      return ticket[0].toUpperCase() + ticket.slice(1);
+    var instance = Instances.findOne();
+    var matches = ticket.match(/[0-9]+/);
+    if(matches) {
+      return "Entry to Bracket " + matches[0];
     }
-    return "Entry to " + event.brackets[parseInt(ticket)].name
+    return ticket[0].toUpperCase() + ticket.slice(1);
   }
 
   setActiveTicket(ticket) {
@@ -51,9 +52,9 @@ export default class TicketCheckout extends Component {
   }
 
   ticketStatusColor(ticket) {
-    var event = Events.findOne();
-    if(event.tickets.ticketAccess) {
-      var access = event.tickets.ticketAccess[Meteor.userId()];
+    var instance = Instances.findOne();
+    if(instance.access) {
+      var access = instance.access[Meteor.userId()];
       if(access && access.indexOf(ticket) > -1) {
         return "#0D0";
       }
@@ -65,9 +66,9 @@ export default class TicketCheckout extends Component {
   }
 
   ticketButton() {
-    var event = Events.findOne();
-    if(event.tickets.ticketAccess) {
-      var access = event.ticketAccess[Meteor.userId()];
+    var instance = Instances.findOne();
+    if(instance.tickets.ticketAccess) {
+      var access = instance.ticketAccess[Meteor.userId()];
       if(access && access.indexOf(this.state.activeTicket) > -1) {
         return "";
       }
@@ -80,7 +81,7 @@ export default class TicketCheckout extends Component {
   }
 
   render() {
-    var event = Events.findOne();
+    var instance = Instances.findOne();
     return (
       <div className="col" style={{padding: 20, marginBottom: 20}}>
         <div className="row center" style={{marginBottom: 20}}>
@@ -89,10 +90,7 @@ export default class TicketCheckout extends Component {
         <div className="row">
           <div className="submodule-section col-1">
             {
-              Object.keys(event.tickets || {}).map((ticket, i) => {
-                if(ticket == "ticketAccess") {
-                  return "";
-                }
+              Object.keys(instance.tickets || {}).map((ticket, i) => {
                 return (
                   <div className={`sub-section-select row flex-pad x-center ${ticket == this.state.activeTicket ? "active" : ""}`} onClick={() => { this.setState({activeTicket: ticket}) }}>
                     <span>
@@ -116,12 +114,9 @@ export default class TicketCheckout extends Component {
                         this.ticketName(this.state.activeTicket)
                       }
                     </h3>
-                    <h5>{event.tickets[this.state.activeTicket].price == 0 ? "Free!" : "$" + event.tickets[this.state.activeTicket].price}</h5>
+                    <h5>{instance.tickets[this.state.activeTicket] == 0 ? "Free!" : "$" + (instance.tickets[this.state.activeTicket] / 100).toFixed(2)}</h5>
                   </div>
                   <p className="col-1">
-                    {
-                      event.tickets[this.state.activeTicket].description
-                    }
                   </p>
                   <div className="row center">
                     {
@@ -138,11 +133,11 @@ export default class TicketCheckout extends Component {
             <div className="col">
               {
                 this.state.ticketList.map((key, index) => {
-                  var ticket = event.tickets[key];
+                  var ticket = instance.tickets[key];
                   return (
                     <div className="row flex-pad x-center" style={{paddingBottom: 20, borderBottom: (index == this.state.ticketList.length - 1 ? "solid 2px white" : "none"), marginBottom: (index == this.state.ticketList.length - 1 ? 20 : 0)}}>
                       <h5>{ this.ticketName(key) }</h5>
-                      <h5>{ ticket.price == 0 ? "Free!" : "$" + ticket.price }</h5>
+                      <h5>{ ticket == 0 ? "Free!" : "$" + (ticket / 100).toFixed(2) }</h5>
                     </div>
                   )
                 })
@@ -157,9 +152,9 @@ export default class TicketCheckout extends Component {
                           var total = 0;
                           for(var i = 0; i < this.state.ticketList.length; i ++){
                             var ticket = this.state.ticketList[i];
-                            total += event.tickets[ticket].price;
+                            total += instance.tickets[ticket];
                           }
-                          return total == 0 ? "Free!" : "$" + total;
+                          return total == 0 ? "Free!" : "$" + (total / 100).toFixed(2);
                         })()
                       }
                     </h5>

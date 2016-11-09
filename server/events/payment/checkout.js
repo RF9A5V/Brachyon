@@ -1,32 +1,26 @@
+import Instance from "/imports/api/event/instance.js";
+
 Meteor.methods({
-  "events.checkout"(id, obj) {
-    var event = Events.findOne(id);
+  "events.checkout"(slug, obj) {
+    var event = Events.findOne({ slug });
+    var instance = Instances.findOne(event.instances.pop());
     if(!event){
       throw new Meteor.Error(404, "Event not found.");
     }
     var ticketValues = 0;
     var price = 0;
     var cmd = {
-      $set: {},
-      $push: {}
+      $set: {}
     };
-    console.log(id);
-    console.log(obj);
     if(obj.tickets) {
-      var ticketAccess = event.tickets.ticketAccess || {};
+      var ticketAccess = instance.access || {};
       var tickets = new Set(ticketAccess[Meteor.userId()] || []);
       obj.tickets.forEach(tick => {
-        ticketValues += event.tickets[tick].price * 100;
+        ticketValues += instance.tickets[tick];
         tickets.add(tick);
       });
-      cmd["$set"]["tickets.ticketAccess"] = {
+      cmd["$set"]["access"] = {
         [`${Meteor.userId()}`]: Array.from(tickets)
-      }
-    }
-    if(obj.tierIndex >= 0) {
-      price += event.crowdfunding.tiers[obj.tierIndex].price * 100;
-      cmd["$push"] = {
-        [`crowdfunding.tiers.${obj.tierIndex}.sponsors`]: Meteor.userId()
       }
     }
     if(price + ticketValues != obj.baseAmount) {
@@ -37,29 +31,20 @@ Meteor.methods({
         if(err) {
           throw err;
         }
-        var index = -1;
-        for(var i in (event.crowdfunding.sponsors || [])) {
-          if(event.crowdfunding.sponsors[i].user == Meteor.userId()) {
-            index = i;
-            break;
-          }
+        if(price == 0 && ticketValues > 0) {
+          Meteor.call("chargeCard", event.owner, obj.amount, obj.token, (err) => {
+            if(err) {
+              throw new Meteor.Error(500, err.reason);
+            }
+            else {
+              Instances.update(instance._id, cmd);
+            }
+          })
         }
-        if(index > -1) {
-          cmd["$inc"] = {};
-          cmd["$inc"][`crowdfunding.sponsors.${index}.amount`] = price;
-        }
-        else {
-          cmd["$push"]["crowdfunding.sponsors"] = {
-            id: Meteor.userId(),
-            cfAmount: price,
-            ticketAmount: ticketValues
-          }
-        }
-        Events.update(id, cmd);
       });
     }
     else if(Object.keys(cmd).length){
-      Events.update(id, cmd);
+      Instances.update(instance._id, cmd);
     }
   }
 })

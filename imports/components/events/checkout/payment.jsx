@@ -25,17 +25,18 @@ export default class PaymentCheckout extends Component {
   }
 
   ticketName(ticket) {
-    var event = Events.findOne();
-    if(isNaN(parseInt(ticket))) {
-      return ticket[0].toUpperCase() + ticket.slice(1);
+    var instance = Instances.findOne();
+    var matches = ticket.match(/[0-9]+/);
+    if(matches) {
+      return "Entry to Bracket " + matches[0];
     }
-    return "Entry to " + event.brackets[parseInt(ticket)].name
+    return ticket[0].toUpperCase() + ticket.slice(1);
   }
 
   render() {
     var event = Events.findOne();
-    var tickets = event.tickets;
-    var tiers = event.crowdfunding.tiers;
+    var instance = Instances.findOne();
+    var tickets = instance.tickets;
     return (
       <div className="col" style={{padding: 20}}>
         <div className="row center" style={{marginBottom: 20}}>
@@ -45,7 +46,7 @@ export default class PaymentCheckout extends Component {
           <div className="col-1">
           </div>
           <div className="submodule-section">
-            <CardPayment amount={this.props.price * 100} payableTo={event.owner} cb={() => {}} ref="card"/>
+            <CardPayment amount={this.props.price} payableTo={event.owner} cb={() => {}} ref="card"/>
           </div>
           <div className="submodule-section col-2">
             <div>
@@ -61,7 +62,7 @@ export default class PaymentCheckout extends Component {
                         return (
                           <div className="row flex-pad x-center" style={{paddingBottom: 20}}>
                             <h5>{ this.ticketName(key) }</h5>
-                            <h5>${ ticket.price }</h5>
+                            <h5>${ (ticket / 100).toFixed(2) }</h5>
                           </div>
                         )
                       })

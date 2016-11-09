@@ -10,42 +10,13 @@ export default class StreamPanel extends Component {
   }
 
   value() {
+    if(this.refs.streamID.value == "") {
+      toastr.error("Need input for stream.");
+      throw new Error("StreamID can't be empty.");
+    }
     return {
-      value: streamID
+      streamName: this.refs.streamID.value
     };
-  }
-
-  itemTabs() {
-    var values = ["Chat", "Video"];
-    return (
-      <div className="info-title-container">
-        {
-          values.map((value, i) => {
-            return (
-              <div className={`info-title ${this.state.item == i ? "active" : ""}`} onClick={() => { this.setState({ item: i }) }}>
-                { value }
-              </div>
-            )
-          })
-        }
-      </div>
-    )
-  }
-
-  itemDescriptions() {
-    var descriptions = [
-      "Intuition is fucking important. The details are not the details. They make the fucking design. Why are you fucking reading all of this? Get back to work. Design is all about fucking relationships—the relationship of form and content, the relationship of elements, the relationship of designer and user.",
-      "Intuition is fucking important. The details are not the details. They make the fucking design. Why are you fucking reading all of this? Get back to work. Design is all about fucking relationships—the relationship of form and content, the relationship of elements, the relationship of designer and user."
-    ];
-    return descriptions[this.state.item].split("\n").map(item => {
-      return (
-        <p>
-          {
-            item
-          }
-        </p>
-      )
-    });
   }
 
   render() {

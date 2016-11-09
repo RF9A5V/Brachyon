@@ -54,12 +54,32 @@ Meteor.methods({
   },
 
   "events.validate_stream"(obj) {
+    if(obj.streamName == null || obj.streamName == "") {
+      throw new Meteor.Error(403, "Stream must be specified.");
+    }
     return {
       twitchStream: {
-        name: null,
+        name: obj.streamName,
         chat: null
       }
     }
+  },
+
+  "events.validate_tickets"(obj, fullObj) {
+    if(isNaN(obj.venue)) {
+      throw new Meteor.Error(403, "Venue fee has to be a number.");
+    }
+    if(isNaN(obj.spectator)) {
+      throw new Meteor.Error(403, "Spectator fee has to be a number.");
+    }
+    if(fullObj.brackets) {
+      fullObj.brackets.forEach((_, i) => {
+        if(isNaN(obj[`bracketEntry${i}`])) {
+          throw new Meteor.Error(403, "Entry fee for bracket #" + i + " has to be a number.");
+        }
+      })
+    }
+    return obj;
   },
 
   "events.create"(obj) {
@@ -71,7 +91,7 @@ Meteor.methods({
         if(mod == "crowdfunding") {
           requiresReview = true;
         }
-        var value = Meteor.call("events.validate_" + mod, obj[mod]);
+        var value = Meteor.call("events.validate_" + mod, obj[mod], obj);
         endObj[mod] = value;
       }
     });
@@ -81,8 +101,7 @@ Meteor.methods({
     endObj.owner = Meteor.userId();
     var instance = Instances.insert({
       brackets: endObj.brackets,
-      tickets: endObj.tickets,
-      startedAt: endObj.details.datetime
+      tickets: endObj.tickets
     });
     delete(endObj.brackets);
     delete(endObj.tickets);
