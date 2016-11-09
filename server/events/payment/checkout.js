@@ -37,6 +37,21 @@ Meteor.methods({
               throw new Meteor.Error(500, err.reason);
             }
             else {
+              var bracketCmd = {};
+              var hasBrackets = false;
+              var user = Meteor.users.findOne(Meteor.userId());
+              tickets.forEach(tick => {
+                var match = tick.match(/[0-9]+/);
+                if(match) {
+                  bracketCmd[`brackets.${match}.participants`] = {
+                    id: Meteor.userId(),
+                    alias: user.username
+                  };
+                }
+              })
+              if(Object.keys(bracketCmd).length > 0) {
+                cmd["$push"] = bracketCmd;
+              }
               Instances.update(instance._id, cmd);
             }
           })
@@ -46,5 +61,26 @@ Meteor.methods({
     else if(Object.keys(cmd).length){
       Instances.update(instance._id, cmd);
     }
+  },
+  "events.issueTickets"(instanceID, tickets) {
+    var instance = Instances.findOne(instanceID);
+    var ticketList = new Set(((instance.access || {})[Meteor.userId()] || []).concat(tickets));
+    var cmd = {};
+    var user = Meteor.users.findOne(Meteor.userId());
+    ticketList.forEach(ticket => {
+      var match = ticket.match(/[0-9]+/);
+      if(match) {
+        cmd[`brackets.${match}.participants`] = {
+          id: Meteor.userId(),
+          alias: user.username
+        }
+      }
+    });
+    Instances.update(instanceID, {
+      $set: {
+        [`access.${Meteor.userId()}`]: Array.from(ticketList)
+      },
+      $push: cmd
+    })
   }
 })

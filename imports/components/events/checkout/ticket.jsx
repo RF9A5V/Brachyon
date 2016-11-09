@@ -16,9 +16,28 @@ export default class TicketCheckout extends Component {
   }
 
   value(cb) {
-    cb({
-      tickets: this.state.ticketList
+    var instance = Instances.findOne();
+    var price = 0;
+    this.state.ticketList.map(ticket => {
+      price += instance.tickets[ticket];
     });
+    if(price == 0) {
+      Meteor.call("events.issueTickets", instance._id, this.state.ticketList, (err) => {
+        if(err) {
+          toastr.error(err.reason, "Error!");
+        }
+        else {
+          cb({
+            tickets: this.state.ticketList
+          });
+        }
+      });
+    }
+    else {
+      cb({
+        tickets: this.state.ticketList
+      });
+    }
   }
 
   ticketName(ticket) {

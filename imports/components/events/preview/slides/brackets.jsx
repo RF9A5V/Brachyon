@@ -74,7 +74,7 @@ export default class BracketSlide extends Component {
         <button onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          if(instance.tickets) {
+          if(instance.tickets && instance.access[Meteor.userId()].indexOf("bracketIndex0") >= 0) {
             browserHistory.push(`/events/${this.props.event.slug}/checkout`)
           }
           else {

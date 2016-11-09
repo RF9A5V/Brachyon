@@ -84,7 +84,8 @@ Meteor.methods({
       $pull: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userId
-        }
+        },
+        [`access.${Meteor.userId()}`]: `bracketEntry${bracketIndex}`
       }
     })
   },
