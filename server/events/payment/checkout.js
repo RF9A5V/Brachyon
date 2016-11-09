@@ -32,7 +32,7 @@ Meteor.methods({
           throw err;
         }
         if(price == 0 && ticketValues > 0) {
-          Meteor.call("chargeCard", event.owner, obj.amount, obj.token, (err) => {
+          Meteor.call("chargeCard", event.owner, obj.amount, obj.token, obj.amount - obj.baseAmount, (err) => {
             if(err) {
               throw new Meteor.Error(500, err.reason);
             }

@@ -260,13 +260,14 @@ Meteor.methods({
       "hasCard": false
     }
   },
-  "chargeCard": function(payableTo, chargeAmount, cardID){
+  "chargeCard": function(payableTo, chargeAmount, cardID, fee){
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
       customer: Meteor.user().stripeCustomer,
       card: cardID,
-      destination: Meteor.users.findOne(payableTo).services.stripe.id
+      destination: Meteor.users.findOne(payableTo).services.stripe.id,
+      application_fee: fee
     }, function(err, response){
       console.log(response);
       if(err){

@@ -10,8 +10,6 @@ export default class CardPaymentProcess extends Component {
     super(props);
     var self = this;
     var customer = Meteor.call("user.getStripeCustomerData", (a, b) => {
-      console.log(a);
-      console.log(b);
       this.setState({
         cards: b.result.data || []
       });
