@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import { browserHistory } from "react-router";
+import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
 import ImageForm from "/imports/components/public/img_form.jsx";
 
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class GamesIndex extends Component {
 
@@ -15,12 +18,12 @@ export default class GamesIndex extends Component {
           this.setState({ ready: true })
         }
       }),
-      ready: false
+      ready: false,
+      open: false
     }
   }
 
   onImageUploaded(data) {
-    console.log(data);
     Meteor.call("games.submitForReview", this.refs.gameName.value, this.refs.gameDescription.value, data._id, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
@@ -29,6 +32,9 @@ export default class GamesIndex extends Component {
         this.refs.image.reset();
         this.refs.gameName.value = "";
         this.refs.gameDescription.value = "";
+        this.setState({
+          open: false
+        })
         return toastr.success("Successfully sent game for review!", "Success!");
       }
     })
@@ -48,11 +54,21 @@ export default class GamesIndex extends Component {
           Games.find().map((game) => {
             return (
               <div className="game">
-                <img src={Images.findOne(game.banner).link()} />
-                <div>
-                  <span>
+                <img src={GameBanners.findOne(game.banner).link()} />
+                <div className="col game-description">
+                  <span className="game-title">
                     { game.name }
                   </span>
+                  <div className="row center">
+                    <span className="game-count col-1">
+                      <FontAwesome name="users" style={{marginRight: 10}} />
+                      { game.playerCount || 0 }
+                    </span>
+                    <span className="game-count col-1">
+                      <FontAwesome name="gamepad" style={{marginRight: 10}} />
+                      { game.eventCount || 0 }
+                    </span>
+                  </div>
                 </div>
               </div>
             )
@@ -69,14 +85,17 @@ export default class GamesIndex extends Component {
     this.refs.image.value();
   }
 
-  render() {
+  gameCreateModal() {
     return (
-      <div className="col" style={{marginTop: 20}}>
-        <div className="row" style={{padding: 20}}>
-          <div className="col center x-center col-1">
-            <ImageForm ref="image" collection={Images} aspectRatio={16/9} callback={this.onImageUploaded.bind(this)} />
+      <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+        <div className="row" style={{justifyContent: "flex-end"}}>
+          <FontAwesome name="times" size="2x" onClick={() => { this.setState({ open: false }) }} />
+        </div>
+        <div className="col x-center" style={{padding: 20}}>
+          <div className="col center x-center" style={{marginBottom: 20}}>
+            <ImageForm ref="image" collection={ GameBanners } aspectRatio={3/4} callback={this.onImageUploaded.bind(this)} />
           </div>
-          <div className="col-1 col">
+          <div className="col" style={{width: "70%"}}>
             <span>Game Name</span>
             <input type="text" placeholder="Game Name" ref="gameName" />
             <span>Game Description</span>
@@ -88,8 +107,22 @@ export default class GamesIndex extends Component {
             </div>
           </div>
         </div>
+      </Modal>
+    )
+  }
+
+  render() {
+    return (
+      <div className="col" style={{marginTop: 20}}>
+        <div className="row center">
+          <button onClick={() => { this.setState({open: true}) }}>Create Game</button>
+        </div>
+        <hr className="discover-divider" />
         {
           this.gameDisplay()
+        }
+        {
+          this.gameCreateModal()
         }
       </div>
     )

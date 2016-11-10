@@ -6,7 +6,8 @@ export default class RoundModal extends Component {
 
   constructor(props) {
     super(props);
-    var match = Events.findOne().brackets[0].rounds[props.page].matches[props.i];
+    var instance = Instances.findOne(Events.findOne().instances.pop());
+    var match = instance.brackets[0].rounds[props.page].matches[props.i];
     this.state = {
       p1score: match.p1score,
       p2score: match.p2score,
@@ -19,7 +20,8 @@ export default class RoundModal extends Component {
     if(this.state.active) {
       return false;
     }
-    var match = Events.findOne().brackets[0].rounds[this.props.page].matches[this.props.i];
+    var instance = Instances.findOne(Events.findOne().instances.pop());
+    var match = instance.brackets[0].rounds[this.props.page].matches[this.props.i];
     var score = 3;
     var multi = inc === true ? 1 : -1;
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
@@ -56,7 +58,8 @@ export default class RoundModal extends Component {
   }
 
   render() {
-    var match = Events.findOne().brackets[0].rounds[this.props.page].matches[this.props.i];
+    var instance = Instances.findOne(Events.findOne().instances.pop());
+    var match = instance.brackets[0].rounds[this.props.page].matches[this.props.i];
     var playerOneID = this.props.aliasMap[match.playerOne];
     var playerTwoID = this.props.aliasMap[match.playerTwo];
     return (

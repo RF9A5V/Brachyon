@@ -131,11 +131,11 @@ export default class Header extends TrackerReact(Component) {
                   </a>
                 )
               }
-              {
-                // <Link className={`hub ${window.location.pathname == "/games/index" ? "active" : ""}`} to="/games/index">
-                //   GAMES
-                // </Link>
-              }
+
+              <Link className={`hub ${window.location.pathname == "/games/index" ? "active" : ""}`} to="/games/index">
+                GAMES
+              </Link>
+
 
               {/*
               <Link className="hub" to="/events/discover">

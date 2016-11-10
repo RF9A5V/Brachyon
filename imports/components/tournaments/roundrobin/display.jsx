@@ -23,9 +23,9 @@ export default class RoundDisplay extends TrackerReact(Component) {
     if (this.props.rounds[0].players.length%2 == 1)
       rec--;
 
-    var event = Events.findOne();
+    var instance = Instances.findOne(Events.findOne().instances.pop());
     var aliasMap = {};
-    event.brackets[0].participants.forEach((player) => {
+    instance.brackets[0].participants.forEach((player) => {
       aliasMap[player.alias] = player.id;
     })
 
@@ -33,7 +33,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
       page: page + 1,
       wcount: num,
       recrounds: rec,
-      id: event._id,
+      id: Events.findOne()._id,
       aliasMap
     }
   }
@@ -68,7 +68,14 @@ export default class RoundDisplay extends TrackerReact(Component) {
   }
 
   endTourn(){
-    return;
+    Meteor.call("events.endGroup", this.state.id, 0, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Ended bracket!", "Success!");
+      }
+    })
   }
 
   openModal(args) {

@@ -2,6 +2,8 @@ import Games from '/imports/api/games/games.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { Images } from "/imports/api/event/images.js";
+import Instances from "/imports/api/event/instance.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -104,11 +106,15 @@ Meteor.publish('userEvents', (id) => {
       $in: imgIds
     }
   })
+  var instances = events.map((event) => {
+    return event.instances[event.instances.length - 1];
+  })
   return [
     Events.find({owner: id}, { limit: 6 }),
     games,
     ProfileImages.find({_id: user.profile.image}).cursor,
-    images.cursor
+    images.cursor,
+    Instances.find({ _id: { $in: instances } })
   ];
 })
 
@@ -214,29 +220,6 @@ Meteor.publish('unapproved_games', function() {
     Games.find({ approved: false }),
     Images.find({_id: { $in: games }}).cursor
   ];
-})
-
-Meteor.publish('games', function(){
-  var games = Games.find({approved: true}).fetch().map(function(game) { return game.banner });
-  return [
-    Games.find({approved: true}),
-    Images.find({_id: { $in: games }}).cursor
-  ]
-})
-
-Meteor.publish('game_search', function(query) {
-  if(query == ""){
-    return [];
-  }
-  var games = Games.find({
-    name: new RegExp(`^${query}[.]*`, "i"),
-    approved: true
-  });
-  var banners = games.map(function(game) { return game.banner });
-  return [
-    games,
-    Images.find({_id: { $in: banners }}).cursor
-  ]
 })
 
 Meteor.publish("getUserByUsername", function(query) {

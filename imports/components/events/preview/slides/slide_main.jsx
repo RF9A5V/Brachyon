@@ -9,7 +9,8 @@ export default class SlideMain extends Component {
     this.state = {
       activeSlide: 0,
       tocActive: false,
-      isAnim: false
+      isAnim: false,
+      scrollAmount: 0
     }
   }
 
