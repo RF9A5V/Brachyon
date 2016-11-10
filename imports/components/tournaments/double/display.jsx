@@ -11,6 +11,7 @@ export default class DoubleDisplay extends Component {
   }
 
   render() {
+    var eventID = Events.findOne()._id;
     return (
       <div classname="delim">
         <div className="col">
