@@ -73,8 +73,8 @@ export default class BlockContainer extends Component {
         <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
-            this.props.events.map((event, i) => {
-              var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+            (this.props.events || []).map((event, i) => {
+              var instance = Instances.findOne();
               return (
                 <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>

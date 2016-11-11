@@ -42,42 +42,12 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     this.state.user.stop();
   }
 
-  createEvent(event) {
-    event.preventDefault();
-    Meteor.call('events.create');
-  }
-
-  updateDisplay(currentEvent){
-    return function(e){
-      this.setState({currentEvent});
-    }
-  }
-
-  onLogOut(e){
-    e.preventDefault();
-    Meteor.logout();
-  }
-
-  imgUrl(id) {
-    var img = Images.findOne(id);
-    if(img) {
-      return img.link();
-    }
-    else {
-      return "/images/bg.jpg";
-    }
-  }
-
   profileBannerURL(id) {
     var banner = ProfileBanners.findOne(Meteor.user().profile.banner);
     if(banner){
       return banner.link();
     }
     return "/images/bg.jpg";
-  }
-
-  gameBannerURL(id) {
-    return gameBannerURLs.findOne(id).link();
   }
 
   profileImage() {
@@ -112,7 +82,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     this.state.events.stop();
     this.setState({
       events: Meteor.subscribe(subName, Meteor.userId(), page, {
-        onReady: () => { console.log("done"); this.forceUpdate() }
+        onReady: () => { this.forceUpdate() }
       })
     })
   }

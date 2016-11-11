@@ -9,7 +9,7 @@ Meteor.publish('event', (slug) => {
   var event = Events.findOne({slug: slug});
   var _id = event._id;
   var instanceIndex = event.instances.length - 1;
-  var instance = Instances.findOne(event.instances[instanceIndex]);
+  var instance = Instances.findOne(event.instances.pop());
   var gameIDs = [];
   var banners = [];
   if(instance.brackets) {
@@ -25,7 +25,7 @@ Meteor.publish('event', (slug) => {
     Images.find({
       _id: event.details.banner
     }).cursor,
-    Instances.find({ _id: event.instances[instanceIndex] }),
+    Instances.find({ _id: instance._id }),
     Games.find({_id: { $in: gameIDs }}),
     GameBanners.find({ _id: { $in: banners } }).cursor
   ];
