@@ -139,12 +139,16 @@ Meteor.publish("discoverEvents", function(){
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
   imageIDs = imageIDs.concat(games.map((game) => { return game.banner }));
   var ownerImages = Meteor.users.find({_id:{$in: eventOwnerIds}}).map((user) => { return user.profile.image});
+  var instances = events.map((event) => {
+    return event.instances.pop();
+  })
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
     Images.find({_id: { $in: imageIDs }}).cursor,
     games,
-    ProfileImages.find({_id: { $in: ownerImages }}).cursor
+    ProfileImages.find({_id: { $in: ownerImages }}).cursor,
+    Instances.find({ _id: { $in: instances } })
   ]
 });
 
@@ -166,11 +170,15 @@ Meteor.publish("promotedEvents", function() {
   var imgIds = users.map(user => {
     return user.profile.image;
   })
+  var instances = events.map((event) => {
+    return event.instances.pop();
+  })
   return [
     events,
     users,
     ProfileImages.find({ _id: { $in: imgIds } }).cursor,
-    Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor
+    Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor,
+    Instances.find({ _id: { $in: instances } })
   ]
 })
 

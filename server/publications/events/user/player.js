@@ -1,4 +1,5 @@
 import { Images } from "/imports/api/event/images.js";
+import Instances from "/imports/api/event/instance.js";
 
 Meteor.publish("player.upcomingEvents", function(id, page) {
   var events = Events.find({
@@ -23,7 +24,8 @@ Meteor.publish("player.upcomingEvents", function(id, page) {
   });
   return [
     events,
-    imgs.cursor
+    imgs.cursor,
+    Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } })
   ]
 });
 
@@ -50,7 +52,8 @@ Meteor.publish("player.ongoingEvents", function(id, page) {
   });
   return [
     events,
-    imgs.cursor
+    imgs.cursor,
+    Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } })
   ]
 })
 
@@ -74,6 +77,7 @@ Meteor.publish("player.pastEvents", function(id, page) {
   });
   return [
     events,
-    imgs.cursor
+    imgs.cursor,
+    Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } })
   ]
 });
