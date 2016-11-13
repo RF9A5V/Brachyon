@@ -2,6 +2,14 @@ import React, { Component } from 'react'
 import MatchBlock from './match.jsx';
 
 export default class SingleDisplay extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: Events.findOne()._id
+    }
+  }
+
   render() {
     return (
       <div className="col">

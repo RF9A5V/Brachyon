@@ -10,7 +10,9 @@ import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 import LogisticsPanel from "./admin_comps/logistics.jsx";
-import Brackets from "/imports/api/brackets/brackets.js"
+import Brackets from "/imports/api/brackets/brackets.js";
+
+import Instances from "/imports/api/event/instance.js";
 
 export default class BracketAdminScreen extends TrackerReact(Component) {
 
@@ -25,7 +27,14 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           }
         }
       }),
-      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex)
+      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex, {
+        onReady: () => {
+          this.setState({
+            bracketsReady: true
+          })
+        }
+      }),
+      bracketsReady: false
     }
   }
 
@@ -35,10 +44,10 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   items() {
-    var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
-    var rounds = Brackets.findOne().rounds;
+    var instance = Instances.findOne();
+    var bracket = instance.brackets[this.props.params.bracketIndex];
     var defaultItems = [];
-    if(!bracket.isComplete) {
+    if(bracket.endedAt == null) {
       defaultItems.push({
         text: "Participants",
         icon: "users",
@@ -66,7 +75,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket.inProgress) {
+    if(bracket) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
@@ -78,11 +87,14 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
                 id: bracket.id,
                 eid: this.props.params.eventId,
                 format: bracket.format.baseFormat,
-                rounds: rounds
               }
             }
           ]
-        },
+        }
+      ])
+    }
+    if(bracket.endedAt == null && bracket.startedAt != null) {
+      defaultItems = defaultItems.concat([
         {
           text: "Logistics",
           icon: "edit",
@@ -97,7 +109,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
-    else if(!bracket.inProgress && !bracket.isComplete) {
+    else if(bracket.endedAt == null && bracket.startedAt == null) {
       defaultItems = defaultItems.concat([
         {
           text: "Start",
@@ -117,7 +129,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready()) {
+    if(!this.state.event.ready() || !this.state.bracketsReady) {
       return (
         <div>
           Loading...

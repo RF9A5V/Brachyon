@@ -9,6 +9,7 @@ import BrachyonEditor from "/imports/components/public/editor.jsx";
 
 import { Images } from "/imports/api/event/images.js";
 import Games from "/imports/api/games/games.js";
+import Instances from "/imports/api/event/instance.js";
 
 export default class EventTitlePage extends Component {
 
@@ -41,6 +42,9 @@ export default class EventTitlePage extends Component {
     var revenue = this.props.event.revenue;
     var promotion = this.props.event.promotion || {};
     var event = this.props.event;
+    var instance = Instances.findOne();
+    var brackets = instance.brackets;
+    var tickets = instance.tickets;
 
     var pages = [
       (
@@ -101,7 +105,7 @@ export default class EventTitlePage extends Component {
 
               <div className="row">
                 {
-                  event.tickets ? (
+                  tickets ? (
                     <div>
                       <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push("/events/"+event.slug+"/checkout") }}>Register</button>
                     </div>
@@ -110,8 +114,8 @@ export default class EventTitlePage extends Component {
                   )
                 }
                 {
-                  event.brackets && !event.tickets ? (
-                    event.brackets.some((bracket) => {
+                  brackets && !tickets ? (
+                    brackets.some((bracket) => {
                       return (bracket.participants || []).some((player) => {
                         return player.id == Meteor.userId()
                       })

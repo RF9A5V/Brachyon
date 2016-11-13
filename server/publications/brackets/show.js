@@ -1,9 +1,8 @@
 import Brackets from "/imports/api/brackets/brackets.js";
+import Instances from "/imports/api/event/instance.js"
 
-Meteor.publish('brackets', (slug, bracketIndex) => {
-  var id = Events.findOne({slug: slug}).brackets[bracketIndex].id;
-  var test = Brackets.findOne(id);
+Meteor.publish('brackets', (_id) => {
   return [
-    Brackets.find({_id: id})
+    Brackets.find({_id})
   ];
 });

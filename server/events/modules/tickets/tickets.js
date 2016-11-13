@@ -1,10 +1,13 @@
+import Instances from "/imports/api/event/instance.js";
+
 Meteor.methods({
   "events.tickets.createTicketCost"(id, name, amount, description) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    Events.update(id, {
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    Instances.update(instance._id, {
       $push: {
         "tickets.tickets": {
           name,
@@ -19,7 +22,9 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    Events.update(id, {
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    console.log(indexId);
+    Instances.update(instance._id, {
       $set: {
         [`tickets.${indexId}`]: {
           price: amount * 100,
@@ -33,6 +38,7 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
     }
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     var user = Meteor.user();
     if(!user) {
       throw new Meteor.Error(403, "Need to be logged in!");
@@ -46,7 +52,7 @@ Meteor.methods({
     });
     console.log(bracketIndices);
     bracketIndices.forEach((index) => {
-      Events.update(id, {
+      Instances.update(instance._id, {
         $push: {
           [`brackets.${index}.participants`]: {
             alias: user.username,

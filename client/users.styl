@@ -33,20 +33,17 @@
 
 
 .event-block, .bracket-block
-  flex-basis calc(98% / 3)
-  width calc(98% / 3)
+  width calc((100% - 20px) / 3)
   position relative
-  margin-bottom 1%
-  margin-left 1%
+  margin-bottom 10px
+  margin-left 10px
 
   +between(1000px, 1400px)
-    flex-basis calc(98% / 2)
-    width calc(98% / 2)
+    width calc((100% - 10px) / 2)
     font-size 1.5em
 
   +below(1000px)
     margin-left 0
-    flex-basis 100%
     width 100%
     font-size 2em
 
@@ -83,7 +80,6 @@
 
 
 .event-block-title
-  background-color #222
   color white
   text-align left
   margin 0
@@ -93,12 +89,14 @@
   white-space nowrap;
 
 .event-block-edit
-  opacity 0.5
   position absolute
-  top 5
-  right 5
+  top 5px
+  right 5px
 
-.event-block-edit:hover
+.event-block-edit .fa
+  opacity 0.5
+
+.event-block-edit .fa:hover
   opacity 1
 
 .event-block-content

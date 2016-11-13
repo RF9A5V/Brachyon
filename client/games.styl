@@ -103,38 +103,53 @@
 
 
 .game-result-template img
-  width 80px
-  height 45px
+  width 45px
+  height 60px
 
 .game
-  width calc(100% / 3 - 15px)
+  width calc((100% - (20px * 8)) / 9)
   margin-right 20px
   margin-bottom 20px
   background-color #222
   +between(800px, 1200px)
-    width calc(50% - 10px)
+    width calc((100% - (20px * 5)) / 6)
   +below(800px)
-    width 100%
+    width calc((100% - (20px * 3)) / 4)
 
 .game:hover
   cursor pointer
 
 +above(1200px)
-  .game:nth-child(3n)
+  .game:nth-child(5n)
     margin-right 0
 +between(800px, 1200px)
-  .game:nth-child(2n)
+  .game:nth-child(4n)
     margin-right 0
 +below(800px)
-  .game
+  .game:nth-child(3n)
     margin-right 0
 
 .game img
   width 100%
 
-.game div
-  padding 20px
-  text-align center
+.game .game-title
   font-size 20px
   font-weight bold
-  background-color: #111
+  margin-bottom 10px
+  text-align center
+
+.game .game-description
+  padding 10px
+  padding-top 5px
+
+.game .game-count
+  font-size 14px
+  font-weight normal
+  padding-right 5px
+  margin-right 5px
+  border-right solid 2px white
+
+.game-count:last-child
+  padding-right 0
+  border-right none
+  margin-right 0

@@ -4,7 +4,7 @@ import ImageForm from "/imports/components/public/img_form.jsx";
 import TagAuto from "./tag_autocomplete.jsx";
 
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import Tags from "/imports/api/meta/tags.js";
 
 export default class AddGameAction extends Component {
@@ -79,7 +79,7 @@ export default class AddGameAction extends Component {
       <div className="col">
         <div className="row" style={{width: "70%", margin: "20px auto"}}>
           <div className="col-1 col center x-center">
-            <ImageForm ref="image" collection={Images} aspectRatio={16/9} callback={this.onImgUploaded.bind(this)} />
+            <ImageForm ref="image" collection={GameBanners} aspectRatio={3/4} callback={this.onImgUploaded.bind(this)} />
           </div>
           <div className="col col-1">
             <input type="text" placeholder="Game Name" ref="name" />
@@ -93,9 +93,11 @@ export default class AddGameAction extends Component {
           {
             games.map(game => {
               return (
-                <div className="col" style={{width: "calc(33% - 10px)", flexBasis: "calc(33% - 10px)", flexWrap: "wrap", marginRight: 10}} onClick={() => { this.setState({ gameID: game._id }) }}>
-                  <img src={game.bannerUrl} style={{width: "100%", height: "auto"}} />
-                  <span>{ game.name }</span>
+                <div className="game" onClick={() => { this.setState({ game: game._id }) }}>
+                  <img src={GameBanners.findOne(game.banner).link()} />
+                  <div>
+                    { game.name }
+                  </div>
                 </div>
               )
             })
@@ -114,7 +116,7 @@ export default class AddGameAction extends Component {
         </div>
         <div className="row" style={{width: "70%", margin: "0 auto"}}>
           <div className="col-1 col center x-center" style={{marginRight: 20}}>
-            <ImageForm ref="image" collection={Images} aspectRatio={16/9} callback={this.onImgUploadedForEdit.bind(this)} id={game.banner} />
+            <ImageForm ref="image" collection={GameBanners} aspectRatio={16/9} callback={this.onImgUploadedForEdit.bind(this)} id={game.banner} />
           </div>
           <div className="col col-1">
             <input type="text" placeholder="Game Name" ref="name" defaultValue={ game.name } />

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import AutocompleteForm from "../../public/autocomplete_form.jsx";
 import GameResultTemplate from "../../public/search_results/game_template.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from "/imports/api/games/games.js";
 
 class GameOption extends Component {
@@ -16,7 +16,7 @@ class GameOption extends Component {
           <button>Save</button>
         </div>
         <label>{ this.props.name }</label>
-        <img src={Images.findOne(this.props.banner).link()} style={{width: 400, height: "auto"}} />
+        <img src={GameBanners.findOne(this.props.banner).link()} style={{width: 400, height: "auto"}} />
       </div>
     )
   }
@@ -42,7 +42,7 @@ export default class GameOptionsPanel extends Component {
   selectedImage() {
     if(this.state.image){
       return (
-        <img style={{width: 400, height: "auto"}} src={Images.findOne(this.state.image).link()} />
+        <img style={{width: 400, height: "auto"}} src={GameBanners.findOne(this.state.image).link()} />
       )
     }
     return "";
@@ -69,7 +69,7 @@ export default class GameOptionsPanel extends Component {
     return (
       <div>
         {
-          Meteor.user().profile.games.map(function(id){
+          (Meteor.user().profile.games || []).map(function(id){
             return (
               <GameOption {...Games.findOne(id)} />
             );

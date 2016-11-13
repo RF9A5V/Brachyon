@@ -6,6 +6,8 @@ import SwissMatchBlock from "./match.jsx"
 import SwissModal from "./modal.jsx";
 import Brackets from "/imports/api/brackets/brackets.js"
 
+import Instances from "/imports/api/event/instance.js";
+
 //Called by: imports\components\events\show\bracket.jsx
 export default class SwissDisplay extends TrackerReact(Component) {
   // Page = 0 Will access the leaderboard
@@ -22,11 +24,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
     }
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
 
-    var event = Events.findOne();
     var bracket = Brackets.findOne();
+    var instance = Instances.findOne(Events.findOne().instances.pop());
 
     var aliasMap = {};
-    event.brackets[0].participants.forEach((player) => {
+    instance.brackets[0].participants.forEach((player) => {
       aliasMap[player.alias] = player.id;
     })
 
@@ -34,8 +36,8 @@ export default class SwissDisplay extends TrackerReact(Component) {
       page: page + 1,
       wcount: num,
       recrounds: rec,
-      id: event._id,
       brid: bracket._id,
+      id: Events.findOne()._id,
       aliasMap
     }
   }
@@ -70,7 +72,14 @@ export default class SwissDisplay extends TrackerReact(Component) {
   }
 
   endTourn(){
-    return;
+    Meteor.call("events.endGroup", this.state.id, 0, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Ended bracket!", "Success!");
+      }
+    })
   }
 
   openModal(args) {
