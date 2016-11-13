@@ -24,12 +24,11 @@ Meteor.methods({
     })
   },
   "events.brackets.updateMatchScore"(id, bracketNum, round, match, useP1, value) {
-    var event = Events.findOne(id);
-    var bracket = event.brackets[bracket];
+    var bracket = Brackets.findOne(id).rounds;
     var scoreField = useP1 ? "scoreOne" : "scoreTwo";
-    Events.update(id, {
+    Brackets.update(id, {
       $inc: {
-        [`brackets.0.rounds.${bracketNum}.${round}.${match}.${scoreField}`]: value
+        [`rounds.${bracketNum}.${round}.${match}.${scoreField}`]: value
       }
     })
   }
