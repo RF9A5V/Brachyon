@@ -209,7 +209,7 @@ Meteor.methods({
       }
     }
 
-    else if (roundNumber + 1 >= event.rounds[bracketNumber].length){
+    else if (roundNumber + 1 >= bracket.rounds[bracketNumber].length){
       advMatch = bracket.rounds[2][0][0];
       if (bracketNumber == 0) advMatch.playerOne = match.winner;
       else advMatch.playerTwo = match.winner;

@@ -24,18 +24,19 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             browserHistory.pop();
           }
         }
-      })
+      }),
+      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex)
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
+    this.state.brackets.stop();
   }
 
   items() {
     var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
-    var rounds = Brackets.findOne(bracket.id);
-    console.log(rounds);
+    var rounds = Brackets.findOne().rounds;
     var defaultItems = [];
     if(!bracket.isComplete) {
       defaultItems.push({
