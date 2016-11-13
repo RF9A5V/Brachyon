@@ -84,6 +84,14 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return pages;
   }
 
+  imgOrDefault() {
+    var event = this.event();
+    if(event.details.imageUrl) {
+      return this.state.event.details.imageUrl;
+    }
+    return "/images/bg.jpg";
+  }
+
   render() {
     if(!this.state.isReady){
       return (
@@ -93,6 +101,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var event = this.event();
     return (
       <div className="box col" style={{flexFlow: "row", position: "relative"}}>
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:title" content={event.details.name + " @ Brachyon"} />
+        <meta property="og:image" content={this.imgOrDefault()} />
+        <meta property="fb:app_id" content="1033113360129199" />
         <SlideMain slides={this.slides()} event={event} />
       </div>
     )

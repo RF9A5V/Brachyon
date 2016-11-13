@@ -3,7 +3,6 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import SideTabs from "../public/side_tabs.jsx";
 
-
 export default class ShowEventScreen extends TrackerReact(Component) {
 
   constructor(props) {
@@ -19,13 +18,6 @@ export default class ShowEventScreen extends TrackerReact(Component) {
 
   items() {
     return ["Leaderboard", "Brackets", "Participant List"];
-  }
-
-  imgOrDefault() {
-    if(this.state.event.details.imageUrl) {
-      return this.state.event.details.imageUrl;
-    }
-    return "/images/bg.jpg";
   }
 
   content() {
@@ -46,10 +38,6 @@ export default class ShowEventScreen extends TrackerReact(Component) {
     }
     return (
       <div>
-        <meta property="og:url" content={window.location.href} />
-        <meta property="og:title" content={event.details.name + " @ Brachyon"} />
-        <meta property="og:image" content={this.imgOrDefault()} />
-        <meta property="fb:app_id" content="1033113360129199" />
         <SideTabs items={this.items()} panels={this.content()} />
       </div>
     )
