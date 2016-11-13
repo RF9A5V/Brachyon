@@ -5,8 +5,10 @@ export default class TicketCheckout extends Component {
 
   constructor(props) {
     super(props);
+    var instance = Instances.findOne();
+    var hasVenue = instance.access[Meteor.userId()] && instance.access[Meteor.userId()]["venue"] && instance.access[Meteor.userId()]["venue"].paid;
     this.state = {
-      ticketList: [],
+      ticketList: hasVenue ? [] : ["venue"],
       activeTicket: null
     }
   }
@@ -74,7 +76,7 @@ export default class TicketCheckout extends Component {
     var instance = Instances.findOne();
     if(instance.access) {
       var access = instance.access[Meteor.userId()];
-      if(access && access.indexOf(ticket) > -1) {
+      if(access && access[ticket] && access[ticket].paid) {
         return "#0D0";
       }
     }
@@ -86,9 +88,9 @@ export default class TicketCheckout extends Component {
 
   ticketButton() {
     var instance = Instances.findOne();
-    if(instance.tickets.ticketAccess) {
-      var access = instance.ticketAccess[Meteor.userId()];
-      if(access && access.indexOf(this.state.activeTicket) > -1) {
+    if(instance.access) {
+      var access = instance.access[Meteor.userId()];
+      if(access && access[this.state.activeTicket] && access[this.state.activeTicket].paid) {
         return "";
       }
     }

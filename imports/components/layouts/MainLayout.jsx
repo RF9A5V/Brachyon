@@ -33,7 +33,7 @@ export default class MainLayout extends Component {
         pageIsTransitioning: true,
         cachedComponent: null
       });
-    }), 500);
+    }), 400);
   }
 
   onBodyClick() {

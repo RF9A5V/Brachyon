@@ -69,9 +69,10 @@ Meteor.methods({
     if(isNaN(obj.venue)) {
       throw new Meteor.Error(403, "Venue fee has to be a number.");
     }
-    if(isNaN(obj.spectator)) {
-      throw new Meteor.Error(403, "Spectator fee has to be a number.");
-    }
+    delete(obj.spectator);
+    // if(isNaN(obj.spectator)) {
+    //   throw new Meteor.Error(403, "Spectator fee has to be a number.");
+    // }
     if(fullObj.brackets) {
       fullObj.brackets.forEach((_, i) => {
         if(isNaN(obj[`bracketEntry${i}`])) {

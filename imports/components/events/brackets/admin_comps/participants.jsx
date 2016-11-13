@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import Modal from "react-modal";
 
 import BracketOptionsPanel from "../options.jsx";
 
@@ -13,8 +14,11 @@ export default class AddPartipantAction extends Component {
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     var bracket = instance.brackets[this.props.index];
     var participants = bracket.participants || [];
+    var hasPrice = !isNaN(instance.tickets[`bracketEntry${this.props.index}`]) && instance.tickets[`bracketEntry${this.props.index}`] >= 0;
     this.state = {
-      participants
+      participants,
+      open: false,
+      hasPrice
     }
   }
 
@@ -23,14 +27,14 @@ export default class AddPartipantAction extends Component {
     return img ? img.url() : "/images/profile.png";
   }
 
-  onUserDelete(alias, index) {
+  onUserDelete(alias, id, index) {
     var eventId = Events.findOne()._id;
-    Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, (err) => {
+    Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, id, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
       this.state.participants.splice(index, 1);
-      this.forceUpdate();
+      this.setState({ open: false, alias: null, index: null })
       return toastr.success("Successfully removed participant from event!", "Success!");
     })
   }
@@ -41,6 +45,7 @@ export default class AddPartipantAction extends Component {
   }
 
   render() {
+    var instance = Instances.findOne();
     var participants = this.state.participants;
     return (
       <div>
@@ -69,13 +74,45 @@ export default class AddPartipantAction extends Component {
                     { user ? user.username : "" }
                   </div>
                   <div className="col-1 row" style={{justifyContent: "flex-end"}}>
-                    <FontAwesome name="times" size="2x" onClick={() => { this.onUserDelete(participant.alias, index) }} />
+                    {
+                      this.state.hasPrice && instance.access[participant.id] && instance.access[participant.id][`bracketEntry${this.props.index}`] && instance.access[participant.id][`bracketEntry${this.props.index}`].charge != null ? (
+                        <button onClick={() => {
+                          this.setState({ open: true, alias: participant.alias, id: participant.id });
+                        }}>
+                          Refund
+                        </button>
+                      ) : (
+                        <button onClick={() => {
+                          this.onUserDelete(participant.alias, participant.id, index);
+                        }}>
+                          Delete
+                        </button>
+                      )
+                    }
                   </div>
                 </div>
               )
             })
           }
         </div>
+        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
+          <div className="row">
+            <div className="col-1"></div>
+            <FontAwesome name="times" size="2x" onClick={() => { this.setState({ open: false }) }} />
+          </div>
+          <h3>Refund Payment</h3>
+          <span>
+            { this.state.alias } has paid ${(instance.tickets[`bracketEntry${this.props.index}`] / 100).toFixed(2)} to you for entry to this bracket. Removing this player will refund the paid amount from your account to them. Are you sure you want to continue with this action?
+          </span>
+          <div className="row center">
+            <button onClick={() => { this.onUserDelete(this.state.alias, this.state.id, this.props.index); }} style={{marginRight: 10}}>
+              Yes
+            </button>
+            <button onClick={() => { this.setState({ open: false }) }}>
+              No
+            </button>
+          </div>
+        </Modal>
       </div>
     )
   }

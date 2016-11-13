@@ -269,7 +269,6 @@ Meteor.methods({
       destination: Meteor.users.findOne(payableTo).services.stripe.id,
       application_fee: fee
     }, function(err, response){
-      console.log(response);
       if(err){
         throw new Meteor.Error(500, "stripe-error", err.message);
       }

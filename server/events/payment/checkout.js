@@ -1,4 +1,5 @@
 import Instance from "/imports/api/event/instance.js";
+var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
 Meteor.methods({
   "events.checkout"(slug, obj) {
@@ -14,14 +15,9 @@ Meteor.methods({
     };
     if(obj.tickets) {
       var ticketAccess = instance.access || {};
-      var tickets = new Set(ticketAccess[Meteor.userId()] || []);
       obj.tickets.forEach(tick => {
         ticketValues += instance.tickets[tick];
-        tickets.add(tick);
       });
-      cmd["$set"]["access"] = {
-        [`${Meteor.userId()}`]: Array.from(tickets)
-      }
     }
     if(price + ticketValues != obj.baseAmount) {
       throw new Meteor.Error(403, "Invalid amount found for base price.");
@@ -32,55 +28,83 @@ Meteor.methods({
           throw err;
         }
         if(price == 0 && ticketValues > 0) {
-          Meteor.call("chargeCard", event.owner, obj.amount, obj.token, obj.amount - obj.baseAmount, (err) => {
+          var user = Meteor.users.findOne(Meteor.userId());
+          var cb = Meteor.bindEnvironment(function(err, response){
             if(err) {
-              throw new Meteor.Error(500, err.reason);
+              throw err;
             }
             else {
-              var bracketCmd = {};
+              var bracketPushCmd = {};
+              var bracketSetCmd = {};
               var hasBrackets = false;
-              var user = Meteor.users.findOne(Meteor.userId());
-              tickets.forEach(tick => {
+              obj.tickets.forEach(tick => {
                 var match = tick.match(/[0-9]+/);
                 if(match) {
-                  bracketCmd[`brackets.${match}.participants`] = {
-                    id: Meteor.userId(),
+                  bracketPushCmd[`brackets.${match}.participants`] = {
+                    id: user._id,
                     alias: user.username
                   };
                 }
-              })
-              if(Object.keys(bracketCmd).length > 0) {
-                cmd["$push"] = bracketCmd;
+                if(instance.tickets[tick] > 0) {
+                  bracketSetCmd[`access.${user._id}.${tick}`] = {
+                    charge: response.id,
+                    paid: true
+                  };
+                }
+              });
+              if(Object.keys(bracketPushCmd).length > 0) {
+                cmd["$push"] = bracketPushCmd;
+              }
+              if(Object.keys(bracketSetCmd).length > 0) {
+                cmd["$set"] = bracketSetCmd;
               }
               Instances.update(instance._id, cmd);
             }
-          })
+          });
+          stripe.charges.create({
+            amount: obj.amount,
+            currency: "usd",
+            customer: Meteor.user().stripeCustomer,
+            card: obj.token,
+            destination: Meteor.users.findOne(event.owner).services.stripe.id,
+            application_fee: obj.amount - obj.baseAmount
+          }, cb)
         }
       });
     }
     else if(Object.keys(cmd).length){
+      obj.tickets.forEach(tick => {
+        ticketValues += instance.tickets[tick];
+        // cmd["$set"][`access.${}`]
+      });
       Instances.update(instance._id, cmd);
     }
   },
   "events.issueTickets"(instanceID, tickets) {
-    var instance = Instances.findOne(instanceID);
-    var ticketList = new Set(((instance.access || {})[Meteor.userId()] || []).concat(tickets));
-    var cmd = {};
+    var pushCmd = {};
+    var setCmd = {};
     var user = Meteor.users.findOne(Meteor.userId());
-    ticketList.forEach(ticket => {
+    tickets.forEach(ticket => {
       var match = ticket.match(/[0-9]+/);
       if(match) {
-        cmd[`brackets.${match}.participants`] = {
+        pushCmd[`brackets.${match}.participants`] = {
           id: Meteor.userId(),
           alias: user.username
-        }
+        };
+      }
+      setCmd[`access.${Meteor.userId()}.${ticket}`] = {
+        paid: true,
+        charge: null
       }
     });
-    Instances.update(instanceID, {
-      $set: {
-        [`access.${Meteor.userId()}`]: Array.from(ticketList)
-      },
-      $push: cmd
-    })
+    var cmd = {};
+    if(Object.keys(pushCmd) > 0) {
+      cmd["$push"] = pushCmd;
+    }
+    if(Object.keys(setCmd > 0)) {
+      cmd["$set"] = setCmd;
+    }
+    Instances.update(instanceID, cmd);
+    return;
   }
 })

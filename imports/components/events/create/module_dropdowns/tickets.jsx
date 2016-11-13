@@ -22,8 +22,10 @@ export default class TicketsPanel extends Component {
       <div className="panel col">
         <span>Venue Fee</span>
         <input type="text" ref="venue" defaultValue={(0).toFixed(2)} onBlur={this.onFocusLeave.bind(this)} />
-        <span>Spectator Fee</span>
-        <input type="text" ref="spectator" defaultValue={(0).toFixed(2)} onBlur={this.onFocusLeave.bind(this)} />
+        {
+        // <span>Spectator Fee</span>
+        // <input type="text" ref="spectator" defaultValue={(0).toFixed(2)} onBlur={this.onFocusLeave.bind(this)} />
+        }
         {
           brackets ? (
             brackets.map((bracket, i) => {
