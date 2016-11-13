@@ -1,10 +1,13 @@
+import Instances from "/imports/api/event/instance.js";
+
 Meteor.methods({
   "events.brackets.close"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
     }
-    var bracket = event.brackets[bracketIndex];
+    var bracket = instance.brackets[bracketIndex];
     if(!bracket) {
       throw new Meteor.Error(404, "Bracket not found!");
     }
@@ -73,6 +76,7 @@ Meteor.methods({
     });
     cmd["$set"][`brackets.${bracketIndex}.isComplete`] = true;
     cmd["$set"][`brackets.${bracketIndex}.inProgress`] = false;
-    Events.update(eventID, cmd);
+    cmd["$set"][`brackets.${bracketIndex}.endedAt`] = new Date();
+    Instances.update(instance._id, cmd);
   }
 })

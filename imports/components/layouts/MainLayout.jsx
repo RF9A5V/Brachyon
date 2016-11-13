@@ -8,12 +8,10 @@ require('velocity-animate/velocity.ui');
 
 export default class MainLayout extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      fadeIn: false,
-      pageIsTransitioning: true,
-      cachedComponent: null
+      fadeIn: false
     };
   }
 
@@ -21,19 +19,6 @@ export default class MainLayout extends Component {
     this.setState({
       fadeIn: true
     })
-  }
-
-  componentWillReceiveProps(next) {
-    this.setState({
-      pageIsTransitioning: false,
-      cachedComponent: this.props.children
-    });
-    setTimeout((() => {
-      this.setState({
-        pageIsTransitioning: true,
-        cachedComponent: null
-      });
-    }), 500);
   }
 
   onBodyClick() {
@@ -45,11 +30,10 @@ export default class MainLayout extends Component {
       <VelocityComponent animation={{ opacity: this.state.fadeIn ? 1 : 0 }} duration={400}>
         <div style={{opacity: 0}}>
           <Header ref="header" onLoad={this.onHeaderLoaded.bind(this)} />
-          <VelocityComponent animation={{ opacity: this.state.pageIsTransitioning ? 1 : 0 }}>
-            <div className="box row content">
-              {this.state.cachedComponent || this.props.children}
-            </div>
-          </VelocityComponent>
+          <div className="box row content">
+            { this.props.children }
+          </div>
+
           <Footer />
         </div>
       </VelocityComponent>

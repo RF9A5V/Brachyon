@@ -1,5 +1,6 @@
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import Games from "/imports/api/games/games.js";
 
 Meteor.methods({
   "users.update_profile_image"(id) {
@@ -44,6 +45,14 @@ Meteor.methods({
       $push: {
         "profile.games": id
       }
+    })
+    Games.update(id, {
+      $inc: {
+        playerCount: 1
+      },
+       $push: {
+         players: Meteor.userId()
+       }
     })
   },
   "users.purchase_currency"(value, toCharge) {

@@ -5,8 +5,9 @@ import { browserHistory, Link } from "react-router"
 import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
-import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 import EventBlock from '../events/block.jsx';
@@ -41,42 +42,12 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     this.state.user.stop();
   }
 
-  createEvent(event) {
-    event.preventDefault();
-    Meteor.call('events.create');
-  }
-
-  updateDisplay(currentEvent){
-    return function(e){
-      this.setState({currentEvent});
-    }
-  }
-
-  onLogOut(e){
-    e.preventDefault();
-    Meteor.logout();
-  }
-
-  imgUrl(id) {
-    var img = Images.findOne(id);
-    if(img) {
-      return img.link();
-    }
-    else {
-      return "/images/bg.jpg";
-    }
-  }
-
   profileBannerURL(id) {
     var banner = ProfileBanners.findOne(Meteor.user().profile.banner);
     if(banner){
       return banner.link();
     }
     return "/images/bg.jpg";
-  }
-
-  gameBannerURL(id) {
-    return Images.findOne(id).link();
   }
 
   profileImage() {
@@ -111,7 +82,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     this.state.events.stop();
     this.setState({
       events: Meteor.subscribe(subName, Meteor.userId(), page, {
-        onReady: () => { console.log("done"); this.forceUpdate() }
+        onReady: () => { this.forceUpdate() }
       })
     })
   }
@@ -137,7 +108,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                   var g = Games.findOne(game);
                   console.log(g);
                   return (
-                    <div className="user-game-icon" style={{backgroundImage: `url(${Images.findOne(g.banner).link()})`}} key={i}>
+                    <div className="user-game-icon" style={{backgroundImage: `url(${GameBanners.findOne(g.banner).link()})`}} key={i}>
 
                     </div>
                   );

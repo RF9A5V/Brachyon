@@ -3,8 +3,20 @@ import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
 import SwissDisplay from "../../tournaments/swiss/display.jsx";
 import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
+import TrackerReact from "meteor/ultimatejs:tracker-react"
 
-export default class BracketPanel extends Component {
+export default class BracketPanel extends TrackerReact(Component) {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      bracket: Meteor.subscribe("brackets", props.id)
+    }
+  }
+
+  componentWillUnmount(){
+    this.state.bracket.stop();
+  }
 
   startEventHandler(e) {
     e.preventDefault();
@@ -17,33 +29,32 @@ export default class BracketPanel extends Component {
   }
 
   render() {
-    if(this.props.rounds) {
+    if(this.state.bracket.ready()) {
+      var rounds = Brackets.findOne().rounds;
       if(this.props.format == "single_elim") {
         return (
-          <SingleDisplay rounds={this.props.rounds} id={this.props.id} />
+          <SingleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "double_elim"){
         return (
-          <DoubleDisplay rounds={this.props.rounds} id={this.props.id} />
+          <DoubleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "swiss"){
         return (
-          <SwissDisplay rounds={this.props.rounds} id={this.props.id} />
+          <SwissDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else {
         return (
-          <RoundDisplay rounds={this.props.rounds} id={this.props.id} />
+          <RoundDisplay rounds={rounds} id={this.props.id} />
         )
       }
     }
     else {
       return (
-        <div>
-          <button onClick={this.startEventHandler.bind(this)}>Start this Event</button>
-        </div>
+        <p>Loading...</p>
       )
     }
   }

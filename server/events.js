@@ -2,11 +2,13 @@ import OrganizeSuite from "./tournament_api.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
 
+import Instances from "/imports/api/event/instance.js";
+
 Meteor.methods({
 
   "events.addParticipant"(eventID, bracketIndex, userID, alias) {
     var event = Events.findOne(eventID);
-
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
     }
@@ -17,10 +19,10 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Couldn't find this event.");
     }
-    if(event.brackets == null || event.brackets[bracketIndex] == null) {
+    if(instance.brackets == null || instance.brackets[bracketIndex] == null) {
       throw new Meteor.Error(404, "Couldn't find this bracket.");
     }
-    var bracket = event.brackets[bracketIndex];
+    var bracket = instance.brackets[bracketIndex];
 
     var bracketContainsAlias = (bracket.participants || []).some((player) => {
       return player.alias.toLowerCase() == alias.toLowerCase();
@@ -59,7 +61,7 @@ Meteor.methods({
         });
       }
     }
-    Events.update(eventID, {
+    Instances.update(instance._id, {
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userID,
@@ -74,11 +76,12 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.brackets[bracketIndex];
+    var instance = Instances.findOne(event.instances.pop());
+    var bracket = instance.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    Events.update(eventID, {
+    Instances.update(instance._id, {
       $pull: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userId
@@ -92,7 +95,8 @@ Meteor.methods({
     if(event == null) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var bracket = event.brackets[bracketIndex];
+    var instance = Instances.findOne(event.instances.pop());
+    var bracket = instance.brackets[bracketIndex];
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
@@ -110,35 +114,37 @@ Meteor.methods({
     if(bracketContainsAlias) {
       throw new Meteor.Error(403, "Someone is already using this alias. Choose another one or talk to your friendly neighborhood tournament organizer.");
     }
-    if(Notifications.findOne({ recipient: event.owner, eventSlug: event.slug, userId: user._id })) {
-      throw new Meteor.Error(403, "You've already requested entry to this event.");
-    }
-    Notifications.insert({
-      type: "eventRegistrationRequest",
-      recipient: event.owner,
-      image: user.profile.imageUrl,
-      user: user.profile.alias || user.profile.username,
-      userId: user._id,
-      eventSlug: event.slug,
-      event: event.details.name,
-      read: false
-    });
-    // Events.update(eventID, {
-    //   $push: {
-    //     [`brackets.${bracketIndex}.participants`]: {
-    //       id: user._id,
-    //       alias
-    //     }
-    //   }
-    // })
+    // if(Notifications.findOne({ recipient: event.owner, eventSlug: event.slug, userId: user._id })) {
+    //   throw new Meteor.Error(403, "You've already requested entry to this event.");
+    // }
+    // Notifications.insert({
+    //   type: "eventRegistrationRequest",
+    //   recipient: event.owner,
+    //   image: user.profile.imageUrl,
+    //   user: user.profile.alias || user.profile.username,
+    //   userId: user._id,
+    //   eventSlug: event.slug,
+    //   event: event.details.name,
+    //   read: false
+    // });
+    Instances.update(instance._id, {
+      $push: {
+        [`brackets.${bracketIndex}.participants`]: {
+          id: user._id,
+          alias
+        }
+      }
+    })
   },
 
   "events.start_event"(eventID, index) {
-    if(Events.findOne(eventID) == null) {
+    var event = Events.findOne(eventID);
+    if(event == null) {
       throw new Meteor.Error(404, "Couldn't find this event!");
     }
-    var organize = Events.findOne(eventID).brackets[index];
-    var format = Events.findOne(eventID).brackets[index].format.baseFormat;
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var organize = instance.brackets[index];
+    var format = instance.brackets[index].format.baseFormat;
     if (format == "single_elim")
       var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
         return participant.alias;
@@ -158,10 +164,12 @@ Meteor.methods({
     var br = Brackets.insert({
       rounds: rounds
     });
-    Events.update(eventID, {
+
+    Instances.update(instance._id, {
       $set: {
         [`brackets.${index}.inProgress`]: true,
-        [`brackets.${index}.id`]: br
+        [`brackets.${index}.id`]: br,
+        [`brackets.${index}.startedAt`]: new Date()
       }
     })
   },
@@ -738,6 +746,16 @@ Meteor.methods({
         [`rounds`]: rounds
       }
     });
+  },
+
+  "events.endGroup"(eventID, bracketIndex) {
+    var event = Events.findOne(eventID);
+    var instance = Instances.findOne(event.instances.pop());
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${bracketIndex}.endedAt`]: new Date()
+      }
+    })
   }
 
 })

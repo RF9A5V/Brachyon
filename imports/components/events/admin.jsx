@@ -23,6 +23,7 @@ import EditModules from "./admin/modules/edit_modules.jsx";
 import Close from "./admin/modules/close_event.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js"
+import Instances from "/imports/api/event/instance.js";
 
 export default class EventAdminPage extends TrackerReact(Component) {
 
@@ -39,6 +40,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
 
   items() {
     var event = Events.findOne();
+    var instance = Instances.findOne();
     var items = [
       // {
       //   text: "Overview",
@@ -68,7 +70,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
         ]
       });
     }
-    if(event.brackets) {
+    if(instance.brackets) {
       items.push({
         text: "Brackets",
         icon: "sitemap",
