@@ -186,7 +186,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
           </div>
           <div>
           {
-            this.state.page >= (this.state.recrounds-1) ? (
+            this.state.page >= (this.state.recrounds) ? (
               <button onClick={ () => {this.endTourn().bind(this)} }>
                 Finish Tournament
               </button>

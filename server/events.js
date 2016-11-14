@@ -268,7 +268,6 @@ Meteor.methods({
     if (!bracket){
       throw new Meteor.Error(404, "Couldn't find this bracket!");
     }
-    bracket = bracket.brackets[0];
     match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
     var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
