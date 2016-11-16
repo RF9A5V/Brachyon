@@ -35,7 +35,7 @@ export default class LocationPage extends Component {
           </div>
           <div className="row">
             <div className="submodule-section" style={{width: "30%", minWidth: 200, height: 500}}>
-              <LocationSelect ref="location" {...(event.details.location.online ? {} : event.details.location)} />
+              <LocationSelect ref="location" online={event.details.location.online} {...(event.details.location.online ? {} : event.details.location)} />
             </div>
             <div className="submodule-section col-1 row center x-center" style={{height: 500}}>
               {
