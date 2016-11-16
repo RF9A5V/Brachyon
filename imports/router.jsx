@@ -6,6 +6,7 @@ import LandingScreen from '../imports/components/public/index.jsx';
 import AboutScreen from '../imports/components/public/about.jsx';
 import AdvertiseScreen from '../imports/components/public/footer/advertise.jsx';
 import TermsScreen from '../imports/components/public/footer/terms.jsx'
+import ContactScreen from '../imports/components/public/footer/contact.jsx';
 import FaqScreen from "../imports/components/public/faq.jsx";
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
@@ -48,6 +49,7 @@ export const renderRoutes = () => (
       <Route path="about" component={AboutScreen} />
       <Route path="advertise" component={AdvertiseScreen} />
       <Route path="terms" component={TermsScreen} />
+      <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
       <Route path="events/:slug/edit" component={EditEventScreen} />
       <Route path="events/:slug/view" component={OrganizeEventScreen} />

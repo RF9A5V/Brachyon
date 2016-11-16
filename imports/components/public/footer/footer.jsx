@@ -56,10 +56,16 @@ export default class Footer extends React.Component {
             <div className="social-icon-bg col x-center center">
               <FontAwesome name="instagram" className="instagram social-icon" />
             </div></a>
+            <div className="footer-plugin-pad"></div>
+            <a href="https://brachyon.wordpress.com" target="_blank">
+            <div className="social-icon-bg col x-center center">
+              <FontAwesome name="wordpress" className="wordpress social-icon" />
+            </div></a>
           </div>
           <div className="col-1">
             <div className="row justify-end" style={{margin: '0 10px 0 0'}}>
               <Link to="/about" className="footer-hub-pad col x-center">About</Link>
+              <Link to="/contact" className="footer-hub-pad col x-center">Contact</Link>
               <Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>
               <Link to="/terms" className="footer-hub-pad col x-center">Terms</Link>
               <a href="#" className="footer-hub-pad col x-center">Privacy</a>
