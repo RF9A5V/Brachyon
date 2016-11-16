@@ -15,61 +15,69 @@ import { Images } from "/imports/api/event/images.js";
 
 export default class EventCreateScreen extends Component {
 
-  componentWillMount() {
-    var modules = this.availableModules();
-    this.setState({
-      moduleBits: {
-        nonReview: Array(modules.nonReview.length).fill(0),
-        review: Array(modules.review.length).fill(0)
-      }
-    });
-    window.addEventListener("resize", this.forceUpdate.bind(this));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.forceUpdate.bind(this));
+  constructor(props) {
+    super(props);
+    this.state = {
+      moduleState: {
+        details: {
+          active: true
+        },
+        brackets: {
+          active: false
+        },
+        stream: {
+          active: false
+        },
+        crowdfunding: {
+          active: false
+        },
+      },
+      currentItem: "details"
+    }
   }
 
   panels() {
+    var generator = (value) => {
+      return () => {
+        this.state.moduleState[value].active = !this.state.moduleState[value].active;
+        this.forceUpdate();
+      }
+    }
     return {
-      brackets: (<BracketsPanel ref="brackets" />),
-      crowdfunding: (<CrowdfundingPanel ref="crowdfunding" />),
-      stream: (<StreamPanel ref="stream" />)
+      details: (<DetailsPanel ref="details" style={{height: this.state.currentItem == "details" ? "initial" : 0, overflowY: "hidden"}} />),
+      brackets: (<BracketsPanel selected={this.state.moduleState["brackets"].active} ref="brackets" style={{height: this.state.currentItem == "brackets" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("brackets")} />),
+      crowdfunding: (<CrowdfundingPanel selected={this.state.moduleState["crowdfunding"].active} ref="crowdfunding" style={{height: this.state.currentItem == "crowdfunding" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("crowdfunding")} />),
+      stream: (<StreamPanel ref="stream" selected={this.state.moduleState["stream"].active} style={{height: this.state.currentItem == "stream" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("stream")} />)
     }
   }
 
   availableModules() {
-    return {
-      nonReview: [
-        {
-          name: "brackets",
-          icon: "sitemap"
-        },
-        {
-          name: "stream",
-          icon: "video-camera"
-        }
-      ],
-      review: [
-        {
-          name: "crowdfunding",
-          icon: "usd"
-        }
-      ]
-    }
-  }
-
-  toggleModuleState(category, index){
-    if(index >= this.state.moduleBits[category].length) {
-      return false;
-    }
-    if(this.state.moduleBits[category][index] == 0){
-      this.state.moduleBits[category][index] = 1;
-    }
-    else {
-      this.state.moduleBits[category][index] = 0;
-    }
-    this.forceUpdate();
+    return [
+      {
+        name: "details",
+        icon: "file-text",
+        requiresReview: false,
+        selected: this.state.moduleState["details"].active
+      },
+      {
+        name: "brackets",
+        icon: "sitemap",
+        requiresReview: false,
+        selected: this.state.moduleState["brackets"].active
+      },
+      {
+        name: "stream",
+        icon: "video-camera",
+        requiresReview: false,
+        selected: this.state.moduleState["stream"].active
+      },
+      {
+        name: "crowdfunding",
+        icon: "usd",
+        requiresReview: true,
+        selected: this.state.moduleState["crowdfunding"].active
+      }
+    ];
   }
 
   accordionItems() {
@@ -77,21 +85,14 @@ export default class EventCreateScreen extends Component {
     var modules = this.availableModules();
     var keys = Object.keys(modules);
     var panels = this.panels();
-    moduleItems.push({
-      title: "Details",
-      content: (<DetailsPanel ref="details" />)
-    });
     for(var i in modules){
-      for(var j in modules[i]){
-        if(this.state.moduleBits[i][j] == 1){
-          moduleItems.push({
-            title: modules[i][j].name[0].toUpperCase() + modules[i][j].name.slice(1),
-            content: (
-              panels[modules[i][j].name]
-            )
-          })
-        }
-      }
+      moduleItems.push({
+        title: modules[i].name[0].toUpperCase() + modules[i].name.slice(1),
+        content: (
+          panels[modules[i].name]
+        ),
+        active: modules[i].name == this.state.currentItem
+      })
     }
     return moduleItems;
   }
@@ -102,7 +103,9 @@ export default class EventCreateScreen extends Component {
     var args = {};
     for(var i in refKeys) {
       var key = refKeys[i];
-      args[key] = this.refs[key].value();
+      if(this.state.moduleState[key].active) {
+        args[key] = this.refs[key].value();
+      }
     }
     var createEvent = (args) => {
       Meteor.call("events.create", args, (err, event) => {
@@ -110,15 +113,7 @@ export default class EventCreateScreen extends Component {
           toastr.error(err.reason, "Error!");
         }
         else {
-          var reviewRequired = this.state.moduleBits.review.some(function(val){
-            return val == 1;
-          });
-          if(reviewRequired) {
-            browserHistory.push(`/events/${event}/edit`)
-          }
-          else {
-            browserHistory.push(`/events/${event}/show`);
-          }
+          browserHistory.push(`/events/${event}/show`);
         }
       });
     }
@@ -144,13 +139,13 @@ export default class EventCreateScreen extends Component {
     else {
       createEvent(args);
     }
-
   }
 
   buttons() {
-    var reviewRequired = this.state.moduleBits.review.some(function(val){
-      return val == 1;
-    });
+    // var reviewRequired = this.state.moduleBits.review.some(function(val){
+    //   return val == 1;
+    // });
+    var reviewRequired = false;
     return (
       <div style={{marginBottom: 20}}>
         {
@@ -168,24 +163,18 @@ export default class EventCreateScreen extends Component {
     var modules = this.availableModules();
     var keys = Object.keys(modules);
     return keys.map((key, index) => {
+      var mod = modules[key];
       return (
-        <div>
-          <h5 className="module-block-label">{key == "nonReview" ? ("No Review Required") : ("Review Required")}</h5>
-          {
-            modules[key].map((value, index) => {
-              return (
-                <ModuleBlock
-                  category={key}
-                  modName={value.name}
-                  icon={value.icon}
-                  index={index}
-                  isActive={this.state.moduleBits[key][index] == 1}
-                  callback={this.toggleModuleState.bind(this)}
-                />
-              )
+        <ModuleBlock
+          modName={mod.name}
+          icon={mod.icon}
+          isActive={this.state.currentItem == mod.name}
+          callback={() => {
+            this.setState({
+              currentItem: mod.name
             })
-          }
-        </div>
+          }}
+        />
       );
     })
   }
@@ -194,42 +183,28 @@ export default class EventCreateScreen extends Component {
     var self = this;
     return (
       <div className='box'>
-        <div className='col x-center'>
-          <h2>Create an Event</h2>
-          <div className="create-row" style={{width: window.innerWidth < 1450 ? "95%" : "85%", alignItems: window.innerWidth < 1450 ? "stretch" : "flex-start", minWidth: 200 }}>
-            <div style={{ border: "solid 2px white", padding: 20, margin: 20, width: window.innerWidth < 1450 ? "initial" : "22.5%" }}>
-              <div className="row center x-center">
-                <h5 style={{position: "relative", top: -32, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Add Modules</h5>
-              </div>
-              {
-                this.modulePanels()
-              }
-            </div>
-            <div className="col x-center edit-modules" style={{ margin: 20, padding: "30px 20px", border: "solid 2px white", width: window.innerWidth < 1450 ? "initial" : "65%" }}>
-              <div className="row center x-center">
-                <h5 style={{position: "relative", top: -42, backgroundColor: "#333", padding: "0 10px", display: "inline-block"}}>Edit Modules</h5>
-              </div>
-              {
-                this.accordionItems().map(function(item, index){
-                  return (
-                    <AccordionContainer title={item.title} open={self.state.active === index}
-                    handler={ () =>
-                      {
-                        self.setState({ active: (index !== self.state.active ? index : -1) })
-                      } }
-                    >
-                      { item.content }
-                    </AccordionContainer>
-                  )
-                })
-              }
-            </div>
-            <div style={{padding: 22, margin: 20, width: "22.5%", minWidth: 200}}>
-            </div>
+        <div className='col' style={{padding: 20}}>
+          <div className="row" style={{marginBottom: 20}}>
+            {
+              this.modulePanels()
+            }
           </div>
-          {
-            this.buttons()
-          }
+          <div className="col" style={{marginBottom: 20}}>
+            {
+              this.accordionItems().map(function(item){
+                return (
+                  <div style={{backgroundColor: "#666", padding: item.active ? 20 : 0}}>
+                    {item.content}
+                  </div>
+                );
+              })
+            }
+          </div>
+          <div className="row center">
+            {
+              this.buttons()
+            }
+          </div>
         </div>
       </div>
     )
