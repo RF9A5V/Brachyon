@@ -56,8 +56,8 @@ Meteor.methods({
   "events.validate_stream"(obj) {
     return {
       twitchStream: {
-        name: null,
-        chat: null
+        name: obj.value,
+        chat: obj.value
       }
     }
   },

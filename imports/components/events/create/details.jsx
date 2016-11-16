@@ -68,7 +68,7 @@ export default class DetailsPanel extends Component {
 
   render() {
     return (
-      <div className="panel">
+      <div style={this.props.style}>
         <div className="col">
           <div className="row x-center">
             <h5 style={{marginRight: 10}}>Event Name</h5>

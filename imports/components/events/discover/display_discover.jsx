@@ -45,7 +45,14 @@ export default class DisplayDiscover extends Component {
       <div style={{padding: "0 5em"}} onMouseEnter={() => { this.onPromotedAreaFocus() }} onMouseLeave={() => { this.onPromotedAreaLeave() }}>
         <div className="col x-center" style={{margin: 10}}>
           <VelocityComponent animation={ this.state.loadIn ? { opacity: 1 } : { opacity: 0 }} duration={500}>
-            <DisplayPromotedEvent event={this.props.events[this.state.panel]} active={true} />
+            {
+              (this.props.events || []).length > 0 ? (
+                <DisplayPromotedEvent event={this.props.events[this.state.panel]} active={true} />
+              ) : (
+                []
+              )
+            }
+
           </VelocityComponent>
           <div className="discover-selector row">
             {
