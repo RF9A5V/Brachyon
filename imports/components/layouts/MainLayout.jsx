@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import Header from '../public/header.jsx';
 import Footer from '../public/footer/footer.jsx';
+import { Session } from 'meteor/session';
+
+import moment from 'moment';
 
 require('velocity-animate');
 import { VelocityComponent } from "velocity-react";
 require('velocity-animate/velocity.ui');
+
+Session.set('patchUpdate', 'session value test');
 
 export default class MainLayout extends Component {
 
