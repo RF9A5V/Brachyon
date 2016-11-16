@@ -12,7 +12,7 @@ export default class ModuleBlock extends Component {
   render() {
     return (
       <VelocityComponent animation={this.props.isActive ? { backgroundColor: "#222", color: "#FF6000" } : { backgroundColor: "#666", color: "white" }} duration={300}>
-        <div className={`row x-center`} onClick={this.onModuleSelect.bind(this)} style={{padding: 10, marginRight: 10}}>
+        <div className={`row x-center`} onClick={this.onModuleSelect.bind(this)} style={{padding: 10, marginRight: 10, cursor: "pointer"}}>
           <div>
             <FontAwesome name={this.props.icon || "cog"} size="2x" />
           </div>
