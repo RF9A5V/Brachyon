@@ -89,16 +89,17 @@ export default class UserEvents extends TrackerReact(Component) {
       category,
       index,
       page: 0,
-      animOn: false
+      animOn: false,
+      subName: subscription
     });
   }
 
-  onLoadMore(subscription) {
-    this.setEventSubscription(subscription, this.state.page + 1);
+  onLoadMore() {
+    this.setEventSubscription(this.state.subName, ++this.state.page);
   }
 
-  onLoadPrev(subscription) {
-    this.setEventSubscription(subscription, this.state.page - 1);
+  onLoadPrev() {
+    this.setEventSubscription(this.state.subName, --this.state.page);
   }
 
   sections() {
@@ -263,29 +264,29 @@ export default class UserEvents extends TrackerReact(Component) {
               ""
             )
           }
-          {
-            this.state.category != 0 ? (
-              <div className="row center x-center">
-                {
-                  this.state.page == 0 ? (
-                    ""
-                  ) : (
-                    <button onClick={() => {this.onLoadPrev()}} style={{marginRight: events.length < 6 ? 0 : 10}}>Load Previous</button>
-                  )
-                }
-                {
-                  events.length < 6 ? (
-                    ""
-                  ) : (
-                    <button onClick={this.onLoadMore.bind(this)}>Load Next</button>
-                  )
-                }
-              </div>
-            ) : (
-              ""
-            )
-          }
         </div>
+        {
+          this.state.subName != "userEvents" ? (
+            <div className="row center x-center">
+              {
+                this.state.page == 0 ? (
+                  ""
+                ) : (
+                  <button onClick={this.onLoadPrev.bind(this)} style={{marginRight: events.length < 6 ? 0 : 10}}>Load Previous</button>
+                )
+              }
+              {
+                events.length < 6 ? (
+                  ""
+                ) : (
+                  <button onClick={this.onLoadMore.bind(this)}>Load Next</button>
+                )
+              }
+            </div>
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }
