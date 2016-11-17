@@ -12,8 +12,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
     this.setState({
       events: Meteor.subscribe('discoverEvents'),
       promotedEvents: Meteor.subscribe("promotedEvents"),
-      query: {},
-      fadeIn: false
+      query: {}
     })
   }
 

@@ -14,7 +14,8 @@ export default class DetailsPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      charCount: 0
+      charCount: 0,
+      option: "Title"
     }
   }
 
@@ -66,24 +67,54 @@ export default class DetailsPanel extends Component {
     })
   }
 
+  blockStyle(keyword) {
+    if(this.state.option == keyword) {
+      return {
+        opacity: 1
+      }
+    }
+    return {
+      opacity: 0,
+      height: 0,
+      overflowY: "hidden"
+    }
+  }
+
   render() {
+
+    var options = ["Title", "Location", "Description", "Time", "Banner"]
+
     return (
-      <div className="panel">
-        <div className="col">
+      <div style={this.props.style}>
+        <div className="row" style={{marginBottom: 20}}>
+          {
+            options.map(op => {
+              var optionStyle = {
+                padding: 10,
+                marginRight: 10,
+                backgroundColor: this.state.option == op ? "#444" : "#111",
+                cursor: "pointer"
+              }
+              return (
+                <div style={optionStyle} onClick={() => { this.setState({ option: op }) }}>{op}</div>
+              )
+            })
+          }
+        </div>
+        <div className="col" style={this.blockStyle("Title")}>
           <div className="row x-center">
             <h5 style={{marginRight: 10}}>Event Name</h5>
             <span style={{fontSize: 12}}>{this.state.charCount || 0} / 50</span>
           </div>
           <input type="text" placeholder="Something Catchy..." ref="name" onChange={this.onTitleChange.bind(this)} />
         </div>
-        <div className="col">
-          <LocationSelect ref="location" onChange={this.onChange.bind(this)} />
+        <div className="col" style={this.blockStyle("Location")}>
+          <LocationSelect ref="location" online={true} onChange={this.onChange.bind(this)} />
         </div>
-        <div className="col" style={{marginBottom: 20}}>
-          <h5>Description</h5>
+        <div className="col" style={{marginBottom: 20}} style={this.blockStyle("Description")}>
           <Editor ref="description" />
         </div>
-        <div className="row col-2" style={{marginBottom: 20}}>
+        <div className="row col-2" style={{marginBottom: 20}} style={this.blockStyle("Time")}>
           <div className="col-1 x-center center">
             <h5 style={{marginBottom: 10}}>Date</h5>
             <div>
@@ -97,7 +128,7 @@ export default class DetailsPanel extends Component {
             </div>
           </div>
         </div>
-        <div>
+        <div style={this.blockStyle("Banner")}>
           <h5>Event Image (Optional)</h5>
           <div className="row center">
           <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />

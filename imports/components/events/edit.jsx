@@ -32,6 +32,7 @@ import PrizePoolBreakdown from "./edit/prize_pool.jsx";
 import EditModulePage from "./modules/edit_modules.jsx";
 
 import Games from "/imports/api/games/games.js";
+import Instances from "/imports/api/event/instance.js";
 
 export default class EditEventScreen extends TrackerReact(React.Component){
 
@@ -77,7 +78,8 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
   }
 
-  bracketItems(event) {
+  bracketItems() {
+    var instance = Instances.findOne();
     return {
       text: "Brackets",
       icon: "sitemap",
@@ -88,8 +90,8 @@ export default class EditEventScreen extends TrackerReact(React.Component){
             name: "Brackets"
           }
         }
-      ].concat((event.brackets ? (
-        event.brackets.map((bracket, index) => {
+      ].concat((instance.brackets ? (
+        instance.brackets.map((bracket, index) => {
           return {
             component: EditBracket,
             text: Games.findOne(bracket.game).name,
@@ -101,13 +103,13 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         })
       ) : (
         []
-      ))).concat(event.brackets.length == 0 ? [
+      ))).concat(instance.brackets.length == 0 ? [
         {
           component: AddBracket,
           text: "Add Bracket"
         }
       ] : []).concat(
-        event.brackets && event.brackets.length && false > 0 ? [ // Disabling this for alpha
+        instance.brackets && instance.brackets.length && false > 0 ? [ // Disabling this for alpha
           {
             component: PrizePoolBreakdown,
             text: "Prize Pool"
@@ -220,17 +222,18 @@ export default class EditEventScreen extends TrackerReact(React.Component){
 
   items() {
     var event = Events.findOne();
+    var instance = Instances.findOne();
     // Rearrange order rendered in side tabs by changing the item index in the item array.
     var items = [
       this.detailItems()
     ];
-    if(event.brackets) {
-      items.push(this.bracketItems(event));
+    if(instance.brackets) {
+      items.push(this.bracketItems());
     }
     if(event.crowdfunding) {
       items.push(this.crowdfundingItems());
     }
-    if(event.tickets) {
+    if(instance.tickets) {
       items.push(this.ticketItems());
     }
     if(event.organize) {

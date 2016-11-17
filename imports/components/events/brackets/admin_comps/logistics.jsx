@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 
+import Instances from "/imports/api/event/instance.js";
+
 export default class LogisticsPanel extends Component {
 
   constructor(props) {
@@ -36,7 +38,8 @@ export default class LogisticsPanel extends Component {
   }
 
   render() {
-    var bracket = Events.findOne().brackets[this.props.index];
+    var instance = Instances.findOne();
+    var bracket = instance.brackets[this.props.index];
     return (
       <div className="col">
         <h3>Restart the Bracket</h3>

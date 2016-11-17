@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import FontAwesome from 'react-fontawesome';
 import { browserHistory, Link } from "react-router"
 import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
-import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
+import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 import EventBlock from '../events/block.jsx';
@@ -17,54 +18,25 @@ import ImageForm from "/imports/components/public/img_form.jsx";
 import UserSections from "./show/sections.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
-export default class ShowUserScreen extends TrackerReact(React.Component) {
+export default class ShowUserScreen extends Component {
 
   componentWillMount() {
     self = this;
     this.setState({
-      user: Meteor.subscribe("user", Meteor.userId()),
-      events: Meteor.subscribe("userEvents", Meteor.userId(), {
+      user: Meteor.subscribe("user", Meteor.userId(), {
         onReady: () => {
           this.setState({
-            eventsInitiallyLoaded: true
+            ready: true
           })
         }
       }),
-      currentEvent: null,
       open: false,
-      eventsInitiallyLoaded: false
+      ready: false
     });
   }
 
   componentWillUnmount(){
-    this.state.events.stop();
     this.state.user.stop();
-  }
-
-  createEvent(event) {
-    event.preventDefault();
-    Meteor.call('events.create');
-  }
-
-  updateDisplay(currentEvent){
-    return function(e){
-      this.setState({currentEvent});
-    }
-  }
-
-  onLogOut(e){
-    e.preventDefault();
-    Meteor.logout();
-  }
-
-  imgUrl(id) {
-    var img = Images.findOne(id);
-    if(img) {
-      return img.link();
-    }
-    else {
-      return "/images/bg.jpg";
-    }
   }
 
   profileBannerURL(id) {
@@ -73,10 +45,6 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
       return banner.link();
     }
     return "/images/bg.jpg";
-  }
-
-  gameBannerURL(id) {
-    return Images.findOne(id).link();
   }
 
   profileImage() {
@@ -106,20 +74,10 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
     })
   }
 
-  setEventSubscription(subName, page) {
-    console.log(subName);
-    this.state.events.stop();
-    this.setState({
-      events: Meteor.subscribe(subName, Meteor.userId(), page, {
-        onReady: () => { console.log("done"); this.forceUpdate() }
-      })
-    })
-  }
-
   render() {
     var self = this;
 
-    if(!this.state.user.ready() || !this.state.eventsInitiallyLoaded){
+    if(!this.state.ready){
       return (
         <div className="row center x-center" style={{width: "100%", height: "100%"}}>
           <Loading />
@@ -137,7 +95,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
                   var g = Games.findOne(game);
                   console.log(g);
                   return (
-                    <div className="user-game-icon" style={{backgroundImage: `url(${Images.findOne(g.banner).link()})`}} key={i}>
+                    <div className="user-game-icon" style={{backgroundImage: `url(${GameBanners.findOne(g.banner).link()})`}} key={i}>
 
                     </div>
                   );
@@ -163,7 +121,7 @@ export default class ShowUserScreen extends TrackerReact(React.Component) {
         </div>
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="col">
-          <UserSections setEventSubscription={this.setEventSubscription.bind(this)} isReady={this.state.events.ready()}/>
+          <UserSections/>
         </div>
       </div>
     )

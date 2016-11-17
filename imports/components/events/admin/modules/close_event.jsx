@@ -17,7 +17,7 @@ export default class CloseEventAction extends Component {
 
   render() {
     var brackets = Events.findOne().brackets;
-    var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return !bracket.isComplete });
+    var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return bracket.endedAt != null });
     return (
       <div className="col x-center">
         <h3>Close Your Event</h3>
