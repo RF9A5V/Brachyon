@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 import SwissMatchBlock from "./match.jsx"
 import SwissModal from "./modal.jsx";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -23,6 +24,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     }
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
 
+    var bracket = Brackets.findOne();
     var instance = Instances.findOne(Events.findOne().instances.pop());
 
     var aliasMap = {};
@@ -34,6 +36,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       page: page + 1,
       wcount: num,
       recrounds: rec,
+      brid: bracket._id,
       id: Events.findOne()._id,
       aliasMap
     }
@@ -41,7 +44,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
 
   finalizeMatch(matchnumber)
   {
-    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, (err) => {
+    Meteor.call("events.complete_match", this.state.brid, this.state.page - 1, matchnumber, (err) => {
       if(err){
         toastr.error("Couldn't complete the match.", "Error!");
       }
@@ -56,7 +59,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.state.id, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
@@ -183,7 +186,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
           </div>
           <div>
           {
-            this.state.page >= (this.state.recrounds-1) ? (
+            this.state.page >= (this.state.recrounds) ? (
               <button onClick={ () => {this.endTourn().bind(this)} }>
                 Finish Tournament
               </button>

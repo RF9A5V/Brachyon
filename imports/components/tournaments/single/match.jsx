@@ -66,6 +66,7 @@ export default class MatchBlock extends Component {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
+      this.forceUpdate();
     })
   }
 

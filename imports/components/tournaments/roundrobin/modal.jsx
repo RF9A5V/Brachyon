@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 export default class RoundModal extends Component {
 
   constructor(props) {
     super(props);
-    var instance = Instances.findOne(Events.findOne().instances.pop());
-    var match = instance.brackets[0].rounds[props.page].matches[props.i];
+    var match = Brackets.findOne().rounds[props.page].matches[props.i];
     this.state = {
       p1score: match.p1score,
       p2score: match.p2score,
@@ -20,15 +20,14 @@ export default class RoundModal extends Component {
     if(this.state.active) {
       return false;
     }
-    var instance = Instances.findOne(Events.findOne().instances.pop());
-    var match = instance.brackets[0].rounds[this.props.page].matches[this.props.i];
+    var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
     var score = 3;
     var multi = inc === true ? 1 : -1;
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
     var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
-  Meteor.call("events.update_roundmatch", Events.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
+  Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
       this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
@@ -58,8 +57,7 @@ export default class RoundModal extends Component {
   }
 
   render() {
-    var instance = Instances.findOne(Events.findOne().instances.pop());
-    var match = instance.brackets[0].rounds[this.props.page].matches[this.props.i];
+    var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
     var playerOneID = this.props.aliasMap[match.playerOne];
     var playerTwoID = this.props.aliasMap[match.playerTwo];
     return (
