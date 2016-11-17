@@ -77,26 +77,26 @@ export default class RoundModal extends Component {
               </div>
               <div className="row flex-padaround col-1">
                 <div className="col center x-center">
-                  <img src={this.imgOrDefault(playerOneID)} style={{width: 50, height: 50, borderRadius: "100%", marginBottom: 20}} />
-                  <div style={{marginBottom: 20}} className="participant-active">
+                  <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <h5 style={{color: "#FF6000"}}>
                     {match.playerOne}
-                  </div>
-                  <FontAwesome name="plus" size="3x" onClick={() => {this.updateMatch("p1", true)}} />
-                  <div style={{fontSize: 20, fontWeight: "bold", margin: "20px 0"}}>
+                  </h5>
+                  <FontAwesome name="caret-up" style={{fontSize: 58}} onClick={() => {this.updateMatch("p1", true)}} />
+                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                     { match.p1score }
                   </div>
-                  <FontAwesome name="minus" size="3x" onClick={() => {this.updateMatch("p1", false)}} />
+                  <FontAwesome name="caret-down" style={{fontSize: 58}} onClick={() => {this.updateMatch("p1", false)}} />
                 </div>
                 <div className="col x-center center">
-                  <img src={this.imgOrDefault(playerTwoID)} style={{width: 50, height: 50, borderRadius: "100%", marginBottom: 20}} />
-                  <div style={{marginBottom: 20}} className="participant-active">
+                  <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <h5 style={{color: "#FF6000"}}>
                     {match.playerTwo}
-                  </div>
-                  <FontAwesome name="plus" size="3x" onClick={() => {this.updateMatch("p2", true)}} />
-                  <div style={{fontSize: 20, fontWeight: "bold", margin: "20px 0"}}>
+                  </h5>
+                  <FontAwesome name="caret-up" style={{fontSize: 58}} onClick={() => {this.updateMatch("p2", true)}} />
+                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                     { match.p2score }
                   </div>
-                  <FontAwesome name="minus" size="3x" onClick={() => {this.updateMatch("p2", false)}} />
+                  <FontAwesome name="caret-down" style={{fontSize: 58}} onClick={() => {this.updateMatch("p2", false)}} />
                 </div>
               </div>
               <div className="col">
@@ -104,11 +104,11 @@ export default class RoundModal extends Component {
                   <h3>Ties</h3>
                 </div>
                 <div className="row center x-center" style={{marginBottom: 20}}>
-                  <FontAwesome name="minus" onClick={() => {this.updateMatch("ties", false)}} />
-                  <div style={{margin: "0 20px", fontSize: 20, fontWeight: "bold"}}>
+                  <FontAwesome name="caret-left" style={{fontSize: 58}} onClick={() => {this.updateMatch("ties", false)}} />
+                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333", margin: "0 10px"}}>
                     { match.ties }
                   </div>
-                  <FontAwesome name="plus" onClick={() => {this.updateMatch("ties", true)}}  />
+                  <FontAwesome name="caret-right" style={{fontSize: 58}} onClick={() => {this.updateMatch("ties", true)}}  />
                 </div>
               </div>
               <div className="row center">

@@ -22,11 +22,8 @@ export default class StartBracketAction extends Component {
 
   render() {
     return (
-      <div className="col">
-        <span>Start Bracket</span>
-        <div>
-          <button onClick={this.startEventHandler.bind(this)}>Start It</button>
-        </div>
+      <div className="col center x-center col-1" style={{height: "calc(100% - 78px)"}}>
+        <button onClick={this.startEventHandler.bind(this)}>Start Bracket</button>
       </div>
     )
   }
