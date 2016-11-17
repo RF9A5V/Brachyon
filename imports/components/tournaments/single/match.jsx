@@ -74,6 +74,21 @@ export default class MatchBlock extends Component {
     return id;
   }
 
+  getProfileImage(id) {
+    var participants = Instances.findOne().brackets[0].participants;
+    var user = null;
+    for(var i in participants) {
+      if(participants[i].alias == id) {
+        user = Meteor.users.findOne(participants[i].id);
+        break;
+      }
+    }
+    if(user && user.profile.image) {
+      return ProfileImages.findOne(user.profile.image).link();
+    }
+    return "/images/profile.png";
+  }
+
   render() {
     var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
     return (
@@ -129,13 +144,14 @@ export default class MatchBlock extends Component {
                 </div>
                 <div className="row col-1">
                   <div className="col x-center col-1">
-                    <h5>{ this.getUsername(match.playerOne) }</h5>
+                    <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
+                    <h5 style={{color: "#FF6000"}}>{ this.getUsername(match.playerOne) }</h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome size="3x" name="plus" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
+                      <FontAwesome style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
                       <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                         { match.scoreOne }
                       </div>
-                      <FontAwesome size="3x" name="minus" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
+                      <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
                     </div>
                     {
                       match.scoreOne > match.scoreTwo ? (
@@ -147,13 +163,14 @@ export default class MatchBlock extends Component {
 
                   </div>
                   <div className="col x-center col-1">
-                    <h5>{ this.getUsername(match.playerTwo) }</h5>
+                    <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
+                    <h5 style={{color: "#FF6000"}}>{ this.getUsername(match.playerTwo) }</h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome size="3x" name="plus" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
+                      <FontAwesome style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
                       <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                         { match.scoreTwo }
                       </div>
-                      <FontAwesome size="3x" name="minus" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
+                      <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
                     </div>
                     {
                       match.scoreTwo > match.scoreOne ? (
