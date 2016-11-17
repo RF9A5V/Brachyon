@@ -29,11 +29,15 @@ Meteor.publish("searchEvents", (params) => {
   var usrs = Meteor.users.find({_id: { $in: Array.from(ownerIDs) }});
   var imgs = Images.find({ _id: { $in: imgIDs } });
   var profImgs = ProfileImages.find({_id: { $in: usrs.map((usr) => { return (usr.profile || {}).image }) }})
+  var instances = events.map((event) => {
+    return event.instances.pop();
+  })
   return [
     events,
     games,
     imgs.cursor,
     Meteor.users.find({_id: { $in: Array.from(ownerIDs) }}),
-    profImgs.cursor
+    profImgs.cursor,
+    Instances.find({ _id: { $in: instances } })
   ];
 });

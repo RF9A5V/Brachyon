@@ -13,16 +13,12 @@ export default class UserSections extends Component {
     }
   }
 
-  onEventSubscriptionChange(subName, page) {
-    this.props.setEventSubscription(subName, page);
-  }
-
   componentWillMount() {
     this.setState({
       sections: [
         {
           name: "Events",
-          component: <UserEvents onAction={this.onEventSubscriptionChange.bind(this)} isReady={this.props.isReady} />
+          component: <UserEvents isReady={this.props.isReady} />
         }
         // {
         //   name: "Stats",

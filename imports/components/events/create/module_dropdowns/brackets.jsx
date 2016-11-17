@@ -29,25 +29,48 @@ export default class BracketsPanel extends Component {
 
   render() {
     return (
-      <div className="col panel">
+      <div className="col" style={this.props.style}>
+        <div className="row flex-pad" style={{marginBottom: 10}}>
+          <div>
+          </div>
+          <div className="row x-center" style={{backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
+            <div className="row center x-center" style={{backgroundColor: "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
+              <span style={{color: "#333"}}>
+                {
+                  this.props.selected ? (
+                    "On"
+                  ) : (
+                    "Off"
+                  )
+                }
+              </span>
+            </div>
+          </div>
+        </div>
         {
-          this.state.brackets.map((bracket, key) => {
-            if(bracket == null){
-              return "";
-            }
-            if(this.state.bracketCount > 1){
+          this.props.selected ? (
+            this.state.brackets.map((bracket, key) => {
+              if(bracket == null){
+                return "";
+              }
+              if(this.state.bracketCount > 1){
+                return (
+                  <div className="game-bracket-container">
+                    <BracketForm key={key} ref={key} deletable={true} cb={(e) => { this.state.brackets[key] = null; this.state.bracketCount--; this.forceUpdate() }} />
+                  </div>
+                );
+              }
               return (
                 <div className="game-bracket-container">
-                  <BracketForm key={key} ref={key} deletable={true} cb={(e) => { this.state.brackets[key] = null; this.state.bracketCount--; this.forceUpdate() }} />
+                  <BracketForm key={key} ref={key} />
                 </div>
               );
-            }
-            return (
-              <div className="game-bracket-container">
-                <BracketForm key={key} ref={key} />
-              </div>
-            );
-          })
+            })
+          ) : (
+            <div>
+              Tom put words here
+            </div>
+          )
         }
       </div>
     )

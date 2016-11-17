@@ -9,6 +9,12 @@ import OverviewMain from "./admin/modules/overview/main.jsx";
 import CrowdfundingMain from "./admin/modules/crowdfunding/main.jsx";
 import TierBreakdown from "./admin/modules/crowdfunding/tiers.jsx";
 
+// Details stuff
+import DescriptionPage from "./modules/details/description.jsx";
+import LocationPage from "./modules/details/location.jsx";
+import DatetimePage from "./modules/details/datetime.jsx";
+import ImagePage from "./modules/details/image.jsx";
+
 import BracketsMain from "./admin/modules/brackets/main.jsx";
 
 import PromotionMain from "./admin/modules/promotion/main.jsx";
@@ -21,6 +27,8 @@ import Schedule from "./modules/organize/schedule.jsx";
 import Unpublish from "./admin/modules/unpublish.jsx";
 import EditModules from "./admin/modules/edit_modules.jsx";
 import Close from "./admin/modules/close_event.jsx";
+
+import Instances from "/imports/api/event/instance.js";
 
 export default class EventAdminPage extends TrackerReact(Component) {
 
@@ -35,8 +43,41 @@ export default class EventAdminPage extends TrackerReact(Component) {
     this.state.event.stop();
   }
 
+
+  detailItems() {
+    return {
+      text: "Details",
+      icon: "file-text",
+      subitems: [
+        {
+          component: Main,
+          args: {
+            name: "Details"
+          }
+        },
+        {
+          component: DescriptionPage,
+          text: "Description"
+        },
+        {
+          component: LocationPage,
+          text: "Location"
+        },
+        {
+          component: DatetimePage,
+          text: "Date and Time"
+        },
+        {
+          component: ImagePage,
+          text: "Event Image"
+        }
+      ]
+    }
+  }
+
   items() {
     var event = Events.findOne();
+    var instance = Instances.findOne();
     var items = [
       // {
       //   text: "Overview",
@@ -48,6 +89,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
       //   ]
       // }
     ];
+    items.push(this.detailItems());
     if(event.crowdfunding) {
       items.push({
         text: "Crowdfunding",
@@ -66,7 +108,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
         ]
       });
     }
-    if(event.brackets) {
+    if(instance.brackets) {
       items.push({
         text: "Brackets",
         icon: "sitemap",
