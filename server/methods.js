@@ -4,6 +4,7 @@ import Sponsorships from "/imports/api/event/sponsorship.js";
 import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { GameBanners } from "/imports/api/games/game_banner.js";
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -280,7 +281,7 @@ Meteor.methods({
     Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
   },
   'games.create'(name, description, imgID) {
-    var img = Images.findOne(imgID);
+    var img = GameBanners.findOne(imgID);
     Games.insert({
       name,
       description,
