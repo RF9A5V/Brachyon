@@ -6,9 +6,3 @@ Meteor.publish('brackets', (_id) => {
     Brackets.find({_id})
   ];
 });
-
-Meteor.publish("bracketByEvent", (slug, index) => {
-  var event = Events.findOne({slug});
-  var instance = Instances.findOne(event.instances.pop());
-  return Brackets.find({_id: instance.brackets[index].id});
-})

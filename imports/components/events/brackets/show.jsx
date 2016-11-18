@@ -5,6 +5,7 @@ import LeaderboardPanel from "../show/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
@@ -34,7 +35,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
             component: ParticipantList,
             args: {
               participants: bracket.participants || [],
-              rounds: bracket.rounds,
+              rounds: Brackets.findOne(bracket.id),
               bracketIndex: this.props.params.bracketIndex
             }
           }
@@ -66,7 +67,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
               args: {
                 id: this.props.params.eventId,
                 format: bracket.format.baseFormat,
-                rounds: bracket.rounds
+                rounds: Brackets.findOne(bracket.id)
               }
             }
           ]

@@ -1,5 +1,6 @@
 import OrganizeSuite from "./tournament_api.js";
 import Notifications from "/imports/api/users/notifications.js";
+import Brackets from "/imports/api/brackets/brackets.js"
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -160,23 +161,24 @@ Meteor.methods({
     var rounds = OrganizeSuite.roundRobin(organize.participants.map(function(participant) {
       return participant.alias;
     }));
+    var br = Brackets.insert({
+      rounds: rounds
+    });
 
     Instances.update(instance._id, {
       $set: {
         [`brackets.${index}.inProgress`]: true,
-        [`brackets.${index}.rounds`]: rounds,
+        [`brackets.${index}.id`]: br,
         [`brackets.${index}.startedAt`]: new Date()
       }
     })
   },
 
-  "events.advance_match"(eventID, bracketNumber, roundNumber, matchNumber, placement) {
-    var event = Events.findOne(eventID);
-    if(!event){
-      throw new Meteor.Error(404, "Couldn't find this event!");
+  "events.advance_match"(bracketID, bracketNumber, roundNumber, matchNumber, placement) {
+    var bracket = Brackets.findOne(bracketID);
+    if(!bracket){
+      throw new Meteor.Error(404, "Couldn't find this bracket!");
     }
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
-    var bracket = instance.brackets[0];
     var loser;
     var match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     if (match.winner != null || match.playerOne == null || match.playerTwo == null)
@@ -196,9 +198,9 @@ Meteor.methods({
       if (losMatch.playerOne == null) losMatch.playerOne = loser;
       else losMatch.playerTwo = loser;
       var losr = match.losr, losm = match.losm;
-      Instances.update(instance._id, {
+      Brackets.update(bracketID, {
         $set: {
-          [`brackets.0.rounds.${1}.${losr}.${losm}`]: losMatch
+          [`rounds.${1}.${losr}.${losm}`]: losMatch
         }
       })
     }
@@ -206,9 +208,9 @@ Meteor.methods({
     if((roundNumber + 1 >= bracket.rounds[bracketNumber].length && bracket.rounds.length == 1) || (bracketNumber == 2 && (match.playerOne == match.winner || (roundNumber == 1)))){
       if (bracket.rounds.length == 1 || bracketNumber == 2)
       {
-        Instances.update(instance._id, {
+        Brackets.update(bracketID, {
           $set: {
-            [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+            [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
             complete: true
           }
         })
@@ -219,10 +221,10 @@ Meteor.methods({
       advMatch = bracket.rounds[2][0][0];
       if (bracketNumber == 0) advMatch.playerOne = match.winner;
       else advMatch.playerTwo = match.winner;
-      Instances.update(instance._id, {
+      Brackets.update(bracketID, {
         $set: {
-          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`brackets.0.rounds.${2}.${0}.${0}`]: advMatch
+          [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`rounds.${2}.${0}.${0}`]: advMatch
         }
       })
     }
@@ -248,26 +250,24 @@ Meteor.methods({
       {
         advMatch.playerTwo = match.winner;
       }
-      Instances.update(instance._id, {
+      Brackets.update(bracketID, {
         $set: {
-          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`brackets.0.rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
+          [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+          [`rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
         }
       })
     }
   },
 
-  "events.place_winner"(eventID, bracketNumber, roundNumber, matchNumber){
+  "events.place_winner"(bracketID, bracketNumber, roundNumber, matchNumber){
     return;
   },
 
-  "events.undo_match"(eventID, bracketNumber, roundNumber, matchNumber) {
-    var event = Events.findOne(eventID);
-    if (!event){
-      throw new Meteor.Error(404, "Couldn't find this event!");
+  "events.undo_match"(bracketID, bracketNumber, roundNumber, matchNumber) {
+    var bracket = Brackets.findOne(bracketID);
+    if (!bracket){
+      throw new Meteor.Error(404, "Couldn't find this bracket!");
     }
-    var instance = Instances.findOne(event.instances.pop());
-    var bracket = instance.brackets[0];
     match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
     var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
@@ -276,9 +276,9 @@ Meteor.methods({
     if ((bracketNumber == 2 && roundNumber == 1) || (bracket.rounds.length < 2 && roundNumber >= bracket.rounds[0].length-1))
     {
       match.winner = null;
-      Instances.update(instance._id, {
+      Brackets.update(bracketID, {
         $set: {
-          [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${0}`]: match
+          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match
         }
       });
       return;
@@ -288,8 +288,8 @@ Meteor.methods({
     //Call the function recursively on the ahead losers and update the matches
     if (advMatch.winner)
     {
-      Meteor.call("events.undo_match", eventID, fb, fr, fm);
-      bracket = instance.brackets[0];
+      Meteor.call("events.undo_match", bracketID, fb, fr, fm);
+      bracket = Brackets.findOne(bracketID).brackets[0];
       advMatch = bracket.rounds[fb][fr][fm];
       match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
     }
@@ -301,18 +301,17 @@ Meteor.methods({
       loserround = bracket.rounds[1][match.losr][match.losm];
       if (loserround.winner != null)
       {
-        Meteor.call("events.undo_match", eventID, 1, match.losr, match.losm);
-        var instanceID = Events.findOne(eventID).instances.pop();
-        bracket = Instances.findOne(instanceID).brackets[0];
+        Meteor.call("events.undo_match", bracketID, 1, match.losr, match.losm);
+        bracket = Brackets.findOne(bracketID).brackets[0];
         advMatch = bracket.rounds[fb][fr][fm];
         match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
         loserround = bracket.rounds[1][match.losr][match.losm];
       }
       if (loserround.playerOne == loser) loserround.playerOne = null;
       else loserround.playerTwo = null;
-      Instances.update(instance._id, {
+      Brackets.update(bracketID, {
         $set: {
-          [`brackets.0.rounds.${1}.${match.losr}.${match.losm}`]: loserround
+          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround
         }
       });
     }
@@ -346,23 +345,22 @@ Meteor.methods({
     }
 
     //Update the round
-    Instances.update(instance._id, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds.${fb}.${fr}.${fm}`]: advMatch,
-        [`brackets.0.rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
+        [`rounds.${fb}.${fr}.${fm}`]: advMatch,
+        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
       }
     })
     //Return for recursion
     return;
   },
 
-  "events.update_match"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  "events.update_match"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
-    var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var bracket = Brackets.findOne(bracketID);
     if (roundNumber > 0)
-      var prevround = instance.brackets[0].rounds[roundNumber-1];
-    var bracket = instance.brackets[0].rounds[roundNumber];
+      var prevround = bracket.rounds[roundNumber-1];
+    bracket = bracket.rounds[roundNumber];
     bracket.matches[matchNumber].p1score = winfirst;
     bracket.matches[matchNumber].p2score = winsecond;
     bracket.matches[matchNumber].ties = ties;
@@ -401,31 +399,29 @@ Meteor.methods({
         bracket.players[x].playedagainst[p1] = true;
       }
     }
-    Instances.update(instance._id, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds.${roundNumber}`]: bracket
+        [`rounds.${roundNumber}`]: bracket
       }
     })
   },
 
-  "events.complete_match"(eventID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
+  "events.complete_match"(bracketID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
-    var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances.pop());
-    var bracket = instance.brackets[0].rounds[roundNumber];
+    var bracket = Brackets.findOne(bracketID);
+    bracket = bracket.rounds[roundNumber];
     bracket.matches[matchNumber].played = true;
-    Instances.update(instance._id, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds.${roundNumber}`]: bracket
+        [`rounds.${roundNumber}`]: bracket
       }
     })
   },
 
-  "events.tiebreaker"(eventID, roundNumber, matchNumber, score)
+  "events.tiebreaker"(bracketID, roundNumber, matchNumber, score)
   {
-    var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
-    var bracket = instance.brackets[0].rounds[roundNumber];
+    var bracket = Brackets.findOne(bracketID);
+    bracket = bracket.rounds[roundNumber];
     var p1 = bracket.matches[matchNumber].playerOne;
     var p2 = bracket.matches[matchNumber].playerTwo;
     var bnum1 = 0;
@@ -465,12 +461,11 @@ Meteor.methods({
     }
   },
 
-  "events.update_round"(eventID, roundNumber, score) { //For swiss specifically
-    var instanceID = Events.findOne(eventID).instances.pop();
-    var event = Instances.findOne(instanceID);
-    rounds = event.brackets[0].rounds;
-    event = event.brackets[0].rounds[roundNumber];
-    var players = event.players;
+  "events.update_round"(bracketID, roundNumber, score) { //For swiss specifically
+    var bracket = Brackets.findOne(bracketID);
+    rounds = bracket.rounds;
+    bracket = bracket.rounds[roundNumber];
+    var players = bracket.players;
     var key = 'score';
     var scores = [];
     var max = 0;
@@ -664,24 +659,23 @@ Meteor.methods({
       matches: temp
     }
     rounds.push(newevent);
-    Instances.update(instanceID, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds`]: rounds
+        [`rounds`]: rounds
       }
     })
   },
 
-  "events.update_roundmatch"(eventID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  "events.update_roundmatch"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
-    var instanceID = Events.findOne(eventID).instances.pop()
-    var event = Instances.findOne(instanceID);
+    var bracket = Brackets.findOne(bracketID);
     var prevround;
     if (roundNumber > 0)
-      prevround = event.brackets[0].rounds[roundNumber-1];
-    event = event.brackets[0].rounds[roundNumber];
-    event.matches[matchNumber].p1score = winfirst;
-    event.matches[matchNumber].p2score = winsecond;
-    event.matches[matchNumber].ties = ties;
+      prevround = bracket.rounds[roundNumber-1];
+    bracket = bracket.rounds[roundNumber];
+    bracket.matches[matchNumber].p1score = winfirst;
+    bracket.matches[matchNumber].p2score = winsecond;
+    bracket.matches[matchNumber].ties = ties;
     var prevmatch1, prevmatch2;
     if (roundNumber < 1)
     {
@@ -690,33 +684,32 @@ Meteor.methods({
     }
     else
     {
-      var prep1 = prevround.pdic[ event.matches[matchNumber].playerOne ];
-      var prep2 = prevround.pdic[ event.matches[matchNumber].playerTwo ];
+      var prep1 = prevround.pdic[ bracket.matches[matchNumber].playerOne ];
+      var prep2 = prevround.pdic[ bracket.matches[matchNumber].playerTwo ];
       prevmatch1 = prevround.players[prep1];
       prevmatch2 = prevround.players[prep2];
     }
-    var p1 = event.pdic[event.matches[matchNumber].playerOne];
-    var p2 = event.pdic[event.matches[matchNumber].playerTwo];
-    event.players[p1].score = prevmatch1.score + score*winfirst;
-    event.players[p1].wins = prevmatch1.wins + winfirst;
-    event.players[p1].losses = prevmatch1.losses + winsecond;
-    event.players[p2].score = prevmatch2.score + score*winsecond;
-    event.players[p2].wins = prevmatch2.wins + winsecond;
-    event.players[p2].losses = prevmatch2.losses + winfirst;
+    var p1 = bracket.pdic[bracket.matches[matchNumber].playerOne];
+    var p2 = bracket.pdic[bracket.matches[matchNumber].playerTwo];
+    bracket.players[p1].score = prevmatch1.score + score*winfirst;
+    bracket.players[p1].wins = prevmatch1.wins + winfirst;
+    bracket.players[p1].losses = prevmatch1.losses + winsecond;
+    bracket.players[p2].score = prevmatch2.score + score*winsecond;
+    bracket.players[p2].wins = prevmatch2.wins + winsecond;
+    bracket.players[p2].losses = prevmatch2.losses + winfirst;
 
-    Instances.update(instanceID, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds.${roundNumber}`]: event
+        [`rounds.${roundNumber}`]: bracket
       }
     })
   },
 
-  "events.update_roundrobin"(eventID, roundNumber, score) { //For RR specifically
-    var instanceID = Events.findOne(eventID).instances.pop();
-    var event = Instances.findOne(instanceID);
-    rounds = event.brackets[0].rounds;
-    var playerarr = event.brackets[0].rounds[0].players;
-    event = event.brackets[0].rounds[roundNumber];
+  "events.update_roundrobin"(bracketID, roundNumber, score) { //For swiss specifically
+    var bracket = Brackets.findOne(bracketID);
+    var rounds = bracket.rounds;
+    var playerarr = bracket.rounds[0].players;
+    bracket = bracket.rounds[roundNumber];
     var lastp = playerarr.pop();
     playerarr.splice(1, 0, lastp);
     var participants = playerarr.map(function(x) { return x.name })
@@ -747,9 +740,9 @@ Meteor.methods({
       pdic: pdic
     };
     rounds.push(roundObj);
-    Instances.update(instanceID, {
+    Brackets.update(bracketID, {
       $set: {
-        [`brackets.0.rounds`]: rounds
+        [`rounds`]: rounds
       }
     });
   },
