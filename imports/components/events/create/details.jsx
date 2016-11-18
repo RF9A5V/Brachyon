@@ -92,11 +92,13 @@ export default class DetailsPanel extends Component {
               var optionStyle = {
                 padding: 10,
                 marginRight: 10,
-                backgroundColor: this.state.option == op ? "#444" : "#111",
+                width: 100,
+                color: this.state.option == op ? "#000" : "#FFF",
+                backgroundColor: this.state.option == op ? "#0BDDFF" : "#111",
                 cursor: "pointer"
               }
               return (
-                <div style={optionStyle} onClick={() => { this.setState({ option: op }) }}>{op}</div>
+                <div className="row x-center center" style={optionStyle} onClick={() => { this.setState({ option: op }) }}>{op}</div>
               )
             })
           }
