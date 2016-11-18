@@ -15,7 +15,8 @@ export default class DetailsPanel extends Component {
     super(props);
     this.state = {
       charCount: 0,
-      option: "Title"
+      option: "Title",
+      content: ""
     }
   }
 
@@ -36,7 +37,7 @@ export default class DetailsPanel extends Component {
       return {
         name: this.refs.name.value,
         location: this.refs.location.value(),
-        description: this.refs.description.value(),
+        description: this.state.content,
         datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate(),
         image: this.refs.image.value(true)
       }
@@ -80,6 +81,12 @@ export default class DetailsPanel extends Component {
     }
   }
 
+  setDescriptionState(content) {
+    this.setState({
+      content
+    })
+  }
+
   render() {
 
     var options = ["Title", "Location", "Description", "Time", "Banner"]
@@ -112,7 +119,7 @@ export default class DetailsPanel extends Component {
           <LocationSelect ref="location" online={true} onChange={this.onChange.bind(this)} />
         </div>
         <div className="col" style={{marginBottom: 20}} style={this.blockStyle("Description")}>
-          <Editor ref="description" />
+          <Editor onChange={this.setDescriptionState.bind(this)} />
         </div>
         <div className="row col-2" style={{marginBottom: 20}} style={this.blockStyle("Time")}>
           <div className="col-1 x-center center">

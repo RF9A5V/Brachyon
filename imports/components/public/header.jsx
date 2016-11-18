@@ -70,7 +70,7 @@ export default class Header extends TrackerReact(Component) {
           <Link to="/dashboard">
             <div className="row x-center">
               <div style={{position: "relative"}}>
-                <img style={{width: 50, height: 50, borderRadius: "100%", padding: "0 10px"}} src={this.imgOrDefault()} />
+                <img style={{width: 50, height: 50, borderRadius: "100%", margin: "0 10px"}} src={this.imgOrDefault()} />
                 <div style={{position: "absolute", bottom: -5, right: 5}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
                   <NotyDropdown open={this.state.notificationsMenuOpen} />
                 </div>
