@@ -23,6 +23,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
     if (this.props.rounds[0].players.length%2 == 1)
       rec--;
 
+    var bracket = Brackets.findOne();
     var instance = Instances.findOne(Events.findOne().instances.pop());
     var aliasMap = {};
     instance.brackets[0].participants.forEach((player) => {
@@ -33,6 +34,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
       page: page + 1,
       wcount: num,
       recrounds: rec,
+      brid: bracket._id,
       id: Events.findOne()._id,
       aliasMap
     }
@@ -40,7 +42,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
 
   finalizeMatch(matchnumber)
   {
-    Meteor.call("events.complete_match", this.state.id, this.state.page - 1, matchnumber, (err) => {
+    Meteor.call("events.complete_match", this.state.brid, this.state.page - 1, matchnumber, (err) => {
       if(err){
         toastr.error("Couldn't complete the match.", "Error!");
       }
@@ -55,7 +57,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_roundrobin", this.state.id, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, function(err) {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");

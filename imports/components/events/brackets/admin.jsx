@@ -10,6 +10,7 @@ import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 import LogisticsPanel from "./admin_comps/logistics.jsx";
+import Brackets from "/imports/api/brackets/brackets.js";
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -25,16 +26,24 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             browserHistory.pop();
           }
         }
-      })
+      }),
+      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex, {
+        onReady: () => {
+          this.setState({
+            bracketsReady: true
+          })
+        }
+      }),
+      bracketsReady: false
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
+    this.state.brackets.stop();
   }
 
   items() {
-    var event = Events.findOne();
     var instance = Instances.findOne();
     var bracket = instance.brackets[this.props.params.bracketIndex];
     var defaultItems = [];
@@ -66,7 +75,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket.inProgress || bracket.isComplete) {
+    if(bracket) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
@@ -75,9 +84,9 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             {
               component: BracketAction,
               args: {
-                id: this.props.params.eventId,
+                id: bracket.id,
+                eid: this.props.params.eventId,
                 format: bracket.format.baseFormat,
-                rounds: bracket.rounds
               }
             }
           ]
@@ -120,7 +129,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready()) {
+    if(!this.state.event.ready() || !this.state.bracketsReady) {
       return (
         <div>
           Loading...

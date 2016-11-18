@@ -16,16 +16,16 @@ Meteor.methods({
     }
     var ldrboard = {};
     var userCount = 1;
+    var roundobj = Brackets.findOne(bracket.id);
     if(bracket.format.baseFormat == "single_elim") {
-      var finals = bracket.rounds[bracket.rounds.length - 1].pop()[0];
+      var finals = roundobj.rounds[roundobj.rounds.length - 1].pop()[0];
       if(finals.winner == null) {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
       }
-      bracket.rounds[bracket.rounds.length - 1].push([finals]);
-      var singleElimBracket = bracket.rounds[bracket.rounds.length - 1];
+      roundobj.rounds[roundobj.rounds.length - 1].push([finals]);
+      var singleElimBracket = roundobj.rounds[roundobj.rounds.length - 1];
       singleElimBracket.reverse().forEach(round => {
         round.forEach(match => {
-          console.log(match);
           if(ldrboard[match.winner] == null) {
             ldrboard[match.winner] = userCount ++;
           }
@@ -38,14 +38,14 @@ Meteor.methods({
     }
     else if(bracket.format.baseFormat == "double_elim") {
       // Check to see if bracket has played to completion.
-      var finalSet = bracket.rounds[bracket.rounds.length - 1];
+      var finalSet = roundobj.rounds[roundobj.rounds.length - 1];
       var finalOne = finalSet[0][0];
       var finalTwo = finalSet[1][0];
       // If the first match has a winner and nobody is playing in the second match, the bracket is decided.
       // If the second match has a winner, the bracket is decided.
       if((finalOne.winner && !finalTwo.playerOne) || finalTwo.winner) {
         // Generate leaderboard
-        var losersBracket = bracket.rounds[1];
+        var losersBracket = roundobj.rounds[1];
         losersBracket = losersBracket.concat(finalSet).reverse();
         losersBracket.forEach(round => {
           round.forEach(match => {
