@@ -18,10 +18,11 @@ Meteor.methods({
     }
     var currentDate = moment().minute(0).second(0).millisecond(0);
     var eventStart = moment(obj.datetime).minute(0).second(0).millisecond(0);
-    console.log(currentDate.format());
-    console.log(eventStart.format());
     if(eventStart.isBefore(currentDate)) {
       throw new Meteor.Error(403, "Event cannot start before current date.");
+    }
+    if(obj.banner) {
+      obj.bannerUrl = Images.findOne(obj.banner).link();
     }
     return obj;
   },
@@ -50,9 +51,18 @@ Meteor.methods({
     }
   },
 
+  "events.validate_stream"(obj) {
+    return {
+      twitchStream: {
+        name: null,
+        chat: null
+      }
+    }
+  },
+
   "events.create"(obj) {
     var endObj = {};
-    var acceptedModules = ["details", "brackets", "organize", "crowdfunding"];
+    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {

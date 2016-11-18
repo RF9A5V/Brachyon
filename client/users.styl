@@ -33,20 +33,17 @@
 
 
 .event-block, .bracket-block
-  flex-basis calc(33% - 6.66px)
-  width calc(33% - 6.66px)
+  width calc((100% - 20px) / 3)
   position relative
   margin-bottom 10px
   margin-left 10px
-  border solid 2px #666
 
   +between(1000px, 1400px)
-    flex-basis calc(50% - 10px)
-    width calc(50% - 10px)
+    width calc((100% - 10px) / 2)
     font-size 1.5em
 
   +below(1000px)
-    flex-basis 100%
+    margin-left 0
     width 100%
     font-size 2em
 
@@ -58,26 +55,22 @@
   .event-block:nth-child(2n - 1)
     margin-left 0
 
-+below(1000px)
-  .event-block:nth-child(n)
-    margin-left 0
-
 .event-block:hover
   cursor pointer
 
 .event-block-container .event-block
   box-sizing border-box
   cursor pointer
-  border solid 2px #666
 
-.event-block img, .bracket-block img
+.event-block-img
   width 100%
-  height auto
-  box-sizing border-box
+  padding-bottom calc(100% * 9 / 16)
+  background-size cover
+  background-position center center
   border solid 2px #666
-  border-left none
-  border-right none
-
+  border-top none
+  border-bottom none
+  box-sizing border-box
 
 .bracket-block span
   position absolute
@@ -92,12 +85,9 @@
   text-align left
   margin 0
   padding 20px
-  border-bottom none
-  width 100%
-  height 100%
-  box-sizing border-box
   text-overflow ellipsis
   overflow-x hidden
+  white-space nowrap;
 
 .event-block-edit
   opacity 0.5
@@ -111,7 +101,7 @@
 .event-block-content
   padding 15px 20px
   background-color #222
-
+  border solid 2px #666
 
 .event-display
   height calc(33vh - 40px)
@@ -151,7 +141,6 @@
   display block
   max-width 100%
   height auto
-
 
 ul.error-container
   padding 10px

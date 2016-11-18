@@ -10,7 +10,7 @@ Meteor.methods({
     Events.update(id, {
       $set: {
         "details.banner": bannerId,
-        "details.bannerUrl": bannerUrl.link()
+        "details.bannerUrl": Images.findOne(bannerId).link()
       }
     })
   }

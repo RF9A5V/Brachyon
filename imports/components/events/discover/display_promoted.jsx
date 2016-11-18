@@ -52,13 +52,19 @@ export default class DisplayPromotedEvent extends Component {
     }
 
     var event = this.props.event;
+    if(!event) {
+      return null;
+    }
 
     return (
-      <div className="row center col-1" style={{width: "100vw", padding: 10}}>
+      <div className="row center col-1" style={{width: "80vw", padding: 10}}>
         <div className="promoted-event-block">
-          <div className="event-block" style={{width: "100%"}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
-            <h2 className="event-block-title">{ event.details.name }</h2>
-            <img src={this.imgOrDefault(event)} />
+          <div className="event-block" style={{width: "100%", margin: 0}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
+            <div style={{border: "solid 2px #666"}}>
+              <h2 className="event-block-title">{ event.details.name }</h2>
+            </div>
+            <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(event)})`}}>
+            </div>
             <div className="event-block-content" style={{position: "relative"}}>
               <div className="col">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>

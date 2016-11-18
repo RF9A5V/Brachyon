@@ -11,8 +11,6 @@ import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
 import OrganizeEventScreen from '../imports/components/events/organize.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
-import TournamentSingleScreen from '../imports/components/tournaments/single.jsx';
-import TournamentDoubleScreen from '../imports/components/tournaments/double.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import PublishEventScreen from '../imports/components/events/publish.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
@@ -25,6 +23,7 @@ import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout.jsx";
+import GamesIndexScreen from "../imports/components/games/index.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -56,14 +55,13 @@ export const renderRoutes = () => (
       <Route path="events/discover" component={EventDiscoveryScreen} />
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="games/select" component={GameSelectScreen} />
-      <Route path="tournaments/single" component={TournamentSingleScreen} />
-      <Route path="tournaments/double" component={TournamentDoubleScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:slug/admin" component={EventAdminScreen} />
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
+      <Route path="games/index" component={GamesIndexScreen} />
     </Route>
   </Router>
 )

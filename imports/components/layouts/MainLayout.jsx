@@ -36,11 +36,15 @@ export default class MainLayout extends Component {
     }), 500);
   }
 
+  onBodyClick() {
+    this.refs.header.removeNotifications();
+  }
+
   render() {
     return (
       <VelocityComponent animation={{ opacity: this.state.fadeIn ? 1 : 0 }} duration={400}>
         <div style={{opacity: 0}}>
-          <Header onLoad={this.onHeaderLoaded.bind(this)} />
+          <Header ref="header" onLoad={this.onHeaderLoaded.bind(this)} />
           <VelocityComponent animation={{ opacity: this.state.pageIsTransitioning ? 1 : 0 }}>
             <div className="box row content">
               {this.state.cachedComponent || this.props.children}

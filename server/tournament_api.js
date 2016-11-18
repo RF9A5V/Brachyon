@@ -279,7 +279,118 @@ var OrganizeSuite = {
     }
     frounds.push(finalround);
     return frounds;
+  },
+
+  swiss: function(participants) {
+    var frounds = [];
+    var exbye = false;
+    var length = participants.length;
+    if (participants.length%2 == 1)
+    {
+      exbye = true;
+      length--;
+    }
+
+    var temp = [];
+    for (var x = 0; x < length/2; x++)
+    {
+      var matchObj = {
+        playerOne: participants[x],
+        playerTwo: participants[x+length/2],
+        played: false,
+        p1score: 0,
+        p2score: 0,
+        ties: 0
+      };
+      temp.push(matchObj);
+    }
+    var tempb = [];
+    var tempc = [];
+    for (var x = 0; x < participants.length; x++)
+    {
+      var playarr = [];
+      for (var y = 0; y < participants.length; y++)
+      {
+        playarr[participants[y]] = false;
+      }
+      tempc[participants[x].name] = x;
+      var playerObj = {
+        name: participants[x],
+        score: 0,
+        bnum: 0,
+        wins: 0,
+        losses: 0,
+        bye: false,
+        playedagainst: playarr
+      }
+      if (exbye && x == participants.length-1)
+      {
+        playerObj.score = 3;
+        playerObj.bye = true;
+      }
+      tempb.push(playerObj);
+    }
+    var frounds = [];
+    var round = {
+      matches: temp,
+      players: tempb,
+      pdic: tempc
+    }
+    frounds.push(round);
+    return frounds;
+  },
+  roundRobin: function(participants) {
+    var frounds = [];
+    var score = 3, bye = false;
+    var temp = [];
+    var length = participants.length;
+    if (length%2 == 1)
+    {
+      participants.push("");
+      length++;
+    }
+    for (var x = 0; x < Math.floor(length/2); x++)
+    {
+      if (participants[length-1-x] != "")
+      {
+        var matchObj = {
+          playerOne: participants[x],
+          playerTwo: participants[length-1-x],
+          played: false,
+          p1score: 0,
+          p2score: 0,
+          ties: 0
+        };
+        temp.push(matchObj);
+      }
+    }
+    var tempb = [];
+    var tempc = [];
+    for (var x = 0; x < participants.length; x++)
+    {
+      var playarr = [];
+      tempc[participants[x]] = x;
+      var playerObj = {
+        name: participants[x],
+        score: 0,
+        wins: 0,
+        losses: 0,
+        ties: 0
+      };
+      tempb.push(playerObj);
+    }
+    var roundObj = {
+      matches: temp,
+      players: tempb,
+      pdic: tempc,
+      score: score
+    }
+    frounds.push(roundObj);
+
+    return frounds;
   }
 }
+
+
 
 export default OrganizeSuite;

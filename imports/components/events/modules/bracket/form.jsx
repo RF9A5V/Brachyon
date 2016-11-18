@@ -55,14 +55,12 @@ export default class BracketForm extends Component {
             <option value="double_elim">
               Double Elimination
             </option>
-            {
-              // <option value="swiss">
-              //   Swiss
-              // </option>
-              // <option value="round_robin">
-              //   Round Robin
-              // </option>
-            }
+            <option value="swiss">
+              Swiss
+            </option>
+            <option value="round_robin">
+              Round Robin
+            </option>
           </select>
         </div>
       )

@@ -3,11 +3,15 @@ import Events from '/imports/api/event/events.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
 import Games from '/imports/api/games/games.js';
-import Icons from '/imports/api/sponsorship/icon.js';
-import ProfileBanners from "/imports/api/users/profile_banners.js";
+import Notifications from "/imports/api/users/notifications.js";
 
 Events._ensureIndex({
-  'details.location.coords': '2dsphere'
+  'details.location.coords': '2dsphere',
+  slug: 1
+});
+
+Notifications._ensureIndex({
+  "recipient": 1
 })
 
 ServiceConfiguration.configurations.upsert(
@@ -78,8 +82,8 @@ Meteor.startup(() => {
   // })
 
   SyncedCron.start();
+
   Migrations.migrateTo(0);
   Migrations.migrateTo(1);
   Migrations.migrateTo(2);
-
 });

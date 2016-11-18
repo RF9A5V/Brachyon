@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
+import SwissDisplay from "../../tournaments/swiss/display.jsx";
+import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
 
 export default class BracketPanel extends Component {
 
@@ -21,9 +23,19 @@ export default class BracketPanel extends Component {
           <SingleDisplay rounds={this.props.rounds} id={this.props.id} />
         )
       }
-      else {
+      else if (this.props.format == "double_elim"){
         return (
           <DoubleDisplay rounds={this.props.rounds} id={this.props.id} />
+        )
+      }
+      else if (this.props.format == "swiss"){
+        return (
+          <SwissDisplay rounds={this.props.rounds} id={this.props.id} />
+        )
+      }
+      else {
+        return (
+          <RoundDisplay rounds={this.props.rounds} id={this.props.id} />
         )
       }
     }
