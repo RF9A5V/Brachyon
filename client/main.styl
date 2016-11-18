@@ -88,6 +88,8 @@ figure
 .row, .col, .col-to-row, .row-to-col
   display flex
 
+.row:before, .row:after
+  display none
 
 .col, .col-to-row
   flex-direction column
@@ -274,8 +276,12 @@ input-webkit-autofill
 a
   text-decoration none
   outline none
-  color#00BDFF
+  color #00BDFF
 
+a:hover, a:focus
+  color #00BDFF
+  text-decoration none
+  outline none
 
 .loading-screen
   display flex
