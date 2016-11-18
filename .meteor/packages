@@ -42,3 +42,4 @@ percolate:migrations
 force-ssl
 todda00:friendly-slugs
 session
+summernote:standalone
