@@ -100,8 +100,8 @@ export default class DetailsPanel extends Component {
                 padding: 10,
                 marginRight: 10,
                 width: 100,
-                color: this.state.option == op ? "#000" : "#FFF",
-                backgroundColor: this.state.option == op ? "#0BDDFF" : "#111",
+                color: this.state.option == op ? "#0BDDFF" : "white",
+                backgroundColor: "#111",
                 cursor: "pointer"
               }
               return (
@@ -132,7 +132,7 @@ export default class DetailsPanel extends Component {
           </div>
           <div className="col-1 col x-center">
             <h5 style={{marginBottom: 10}}>Time</h5>
-            <div className="row center x-center col-1">
+            <div className="row center x-center col-1" style={{marginBottom: 4, padding: "0 15px", border: "2px solid white", backgroundColor: "#333"}}>
               <TimeInput ref="time" />
             </div>
           </div>
