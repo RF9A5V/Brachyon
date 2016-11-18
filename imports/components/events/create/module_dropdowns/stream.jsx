@@ -72,7 +72,7 @@ export default class StreamPanel extends Component {
           this.props.selected ? (
             <div>
               <div className="row center x-center">
-                <span>https://twitch.tv/ </span>
+                <span style={{marginRight: 2}}>https://twitch.tv/</span>
                 <input type="text" placeholder="Stream Name" ref="stream" />
               </div>
             </div>
