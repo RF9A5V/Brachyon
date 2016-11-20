@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import MainLayout from '../imports/components/layouts/MainLayout.jsx';
+import NoFooter from "../imports/components/layouts/NoFooter.jsx";
+
 import LandingScreen from '../imports/components/public/index.jsx';
 import AboutScreen from '../imports/components/public/about.jsx';
 import AdvertiseScreen from '../imports/components/public/footer/advertise.jsx';
 import TermsScreen from '../imports/components/public/footer/terms.jsx'
+import ContactScreen from '../imports/components/public/footer/contact.jsx';
 import FaqScreen from "../imports/components/public/faq.jsx";
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
@@ -48,12 +51,12 @@ export const renderRoutes = () => (
       <Route path="about" component={AboutScreen} />
       <Route path="advertise" component={AdvertiseScreen} />
       <Route path="terms" component={TermsScreen} />
+      <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
       <Route path="events/:slug/edit" component={EditEventScreen} />
       <Route path="events/:slug/view" component={OrganizeEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
-      <Route path="events/create" component={EventCreateScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
@@ -62,6 +65,9 @@ export const renderRoutes = () => (
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="games/index" component={GamesIndexScreen} />
+    </Route>
+    <Route path="/" component={NoFooter}>
+      <Route path="events/create" component={EventCreateScreen} />
     </Route>
   </Router>
 )

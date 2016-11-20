@@ -191,7 +191,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
                 Finish Tournament
               </button>
             ) : (
-              this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) ? (
+              this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) && Instances.findOne().brackets[0].endedAt == null ? (
                 <button onClick={ () => {this.newRound().bind(this)} }>
                   Advance Round
                 </button>

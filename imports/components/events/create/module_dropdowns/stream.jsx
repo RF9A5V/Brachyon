@@ -10,11 +10,13 @@ export default class StreamPanel extends Component {
   }
 
   value() {
-    return {};
+    return {
+      value: this.refs.stream.value
+    };
   }
 
   itemTabs() {
-    var values = ["Chat", "Video"];
+    var values = ["Stream"];
     return (
       <div className="info-title-container">
         {
@@ -32,8 +34,7 @@ export default class StreamPanel extends Component {
 
   itemDescriptions() {
     var descriptions = [
-      "Intuition is fucking important. The details are not the details. They make the fucking design. Why are you fucking reading all of this? Get back to work. Design is all about fucking relationships—the relationship of form and content, the relationship of elements, the relationship of designer and user.",
-      "Intuition is fucking important. The details are not the details. They make the fucking design. Why are you fucking reading all of this? Get back to work. Design is all about fucking relationships—the relationship of form and content, the relationship of elements, the relationship of designer and user."
+      "Simply enter your Twitch name and we will generate a page on your event for your stream."
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
@@ -47,21 +48,51 @@ export default class StreamPanel extends Component {
   }
 
   render() {
-    var tabs = ["Chat", "Video"];
+    var tabs = ["Stream"];
     return (
-      <div className="row panel">
-        {
-          this.itemTabs()
-        }
-        <div className="col col-1 info-description">
-          <div className="row center">
-          <h3>{ tabs[this.state.item] }</h3>
+      <div style={this.props.style}>
+        <div className="row flex-pad" style={{marginBottom: 10}}>
+          <div>
           </div>
-          {
-            this.itemDescriptions()
-          }
+          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
+            <div className="row center x-center" style={{backgroundColor: this.props.selected ? "#FF6000" : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
+              <span style={{color: "#333"}}>
+                {
+                  this.props.selected ? (
+                    "On"
+                  ) : (
+                    "Off"
+                  )
+                }
+              </span>
+            </div>
+          </div>
         </div>
+        {
+          this.props.selected ? (
+            <div>
+              <div className="row center x-center">
+                <span style={{marginRight: 2}}>https://twitch.tv/</span>
+                <input type="text" placeholder="Stream Name" ref="stream" />
+              </div>
+            </div>
+          ) : (
+            <div className="row">
+              {
+                this.itemTabs()
+              }
+              <div className="col col-1 info-description">
+                <div className="row center">
+                <h3>{ tabs[this.state.item] }</h3>
+                </div>
+                {
+                  this.itemDescriptions()
+                }
+              </div>
+            </div>
+          )
+        }
       </div>
-    )
+    );
   }
 }
