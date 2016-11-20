@@ -1,3 +1,8 @@
+// External imports
+@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+@import "https://fonts.googleapis.com/css?family=Roboto:400,700";
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
+
 /* CSS declarations go here */
 @import "variables"
 
@@ -5,16 +10,13 @@
   color white
   font-family 'Roboto'
 
-
 html, body, #react-root, #app
   margin 0
   background-color #333
   overflow-x hidden
 
-
 body
   height 100%
-
 
 button:focus
   outline 0
@@ -79,9 +81,15 @@ figure
 
 /* Flex rows and column stuff */
 
+.row
+  margin-left 0
+  margin-right 0
+
 .row, .col, .col-to-row, .row-to-col
   display flex
 
+.row:before, .row:after
+  display none
 
 .col, .col-to-row
   flex-direction column
@@ -148,14 +156,16 @@ figure
   align-self flex-end
 
 
+
 h2  /* Titles for pages or for more prominent tabs like About.jsx */
-  color#00BDFF
+  color #00BDFF
   background-color #222
   padding 5px
+  font-weight bold
 
 
 h3  /* For side-tab-panels and any heading where there are other headings on the same page */
-  color#00BDFF
+  color #00BDFF
   margin 0
 
 
@@ -268,8 +278,12 @@ input-webkit-autofill
 a
   text-decoration none
   outline none
-  color#00BDFF
+  color #00BDFF
 
+a:hover, a:focus
+  color #00BDFF
+  text-decoration none
+  outline none
 
 .loading-screen
   display flex

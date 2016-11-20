@@ -1,6 +1,9 @@
 .box .row.footer
   flex 0 1 40px
 
+.footer-social
+  +below(740px)
+    display none !important
 
 .footer
   justify-content center
@@ -10,6 +13,11 @@
   width 100%
   height 50px
   position fixed
+
+.footer-hub
+  justify-content flex-end
+  +below(740px)
+    justify-content center
 
 .footer-hub-pad
   padding calc((50px - 14px) / 2) 5px
@@ -97,4 +105,7 @@
 
 
 .social-icon-bg:hover .youtube
+  color #00BDFF
+
+.social-icon-bg:hover .wordpress
   color #00BDFF
