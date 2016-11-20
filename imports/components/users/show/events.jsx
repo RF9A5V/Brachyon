@@ -16,8 +16,35 @@ export default class UserEvents extends TrackerReact(Component) {
     this.state = {
       index: 0,
       category: 0,
-      page: 0
+      page: 0,
+      subscription: Meteor.subscribe("userEvents", Meteor.userId(), {
+        onReady: () => {
+          this.setState({isReady: true})
+        }
+      }),
+      subName: "userEvents",
+      isReady: false,
+      animOn: false
     }
+  }
+
+  componentWillUnmount() {
+    this.state.subscription.stop();
+  }
+
+  setEventSubscription(subName, page) {
+    this.state.subscription.stop();
+    this.setState({
+      isReady: false,
+      subscription: Meteor.subscribe(subName, Meteor.userId(), page, {
+        onReady: () => {
+          setTimeout(() => {
+            this.setState({ isReady: true })
+          }, 500)
+        }
+      }),
+      subName
+    })
   }
 
   events() {
@@ -57,37 +84,32 @@ export default class UserEvents extends TrackerReact(Component) {
   }
 
   onSectionClick(category, index, subscription) {
-    this.props.onAction(subscription, 0);
+    this.setEventSubscription(subscription, 0);
     this.setState({
       category,
       index,
       page: 0,
-      subscription
-    })
-  }
-
-  onLoadMore() {
-    this.props.onAction(this.state.subscription, this.state.page + 1);
-    this.setState({
-      page: this.state.page + 1
+      animOn: false,
+      subName: subscription
     });
   }
 
+  onLoadMore() {
+    this.setEventSubscription(this.state.subName, ++this.state.page);
+  }
+
   onLoadPrev() {
-    this.props.onAction(this.state.subscription, this.state.page - 1);
-    this.setState({
-      page: this.state.page - 1
-    })
+    this.setEventSubscription(this.state.subName, --this.state.page);
   }
 
   sections() {
 
     var overall = {
-      title: "",
+      title: "Overview",
       sections: [
         {
           name: "All Events",
-          subscription: "organizer.unpublishedEvents"
+          subscription: "userEvents"
         },
       ]
     }
@@ -171,16 +193,33 @@ export default class UserEvents extends TrackerReact(Component) {
     var cats = [overall, organizer, player, sponsor, spectator];
     var rez = [];
     cats.forEach((cat, i) => {
-      rez.push(<div className="row" style={{paddingLeft: 10}}><h3>{cat.title}</h3></div>);
-      cat.sections.forEach((section, j) => {
-        rez.push(
-          <div className={`sub-section-select ${this.state.category == i && this.state.index == j ? "active" : ""}`} onClick={() => { this.onSectionClick(i, j, section.subscription) }}>
-            { section.name }
-          </div>
-        );
-      });
+      rez.push(
+        <div className={
+          `row x-center flex-pad category-header ${this.state.category == i ? "active" : ""}`
+        } onClick={() => { this.onSectionClick(i, 0, cat.sections[0].subscription) }}>
+          <h5>{cat.title}</h5>
+          <FontAwesome name={this.state.category == i ? "caret-up" : "caret-down"} size="2x" />
+        </div>
+      );
+      rez.push(this.sectionSelect(cat.sections, i));
     });
     return rez;
+  }
+
+  sectionSelect(sections, i) {
+    return (
+      <div className={`col category-section ${this.state.category != i ? "inactive" : ""}`}>
+        {
+          sections.map((section, j) => {
+            return (
+              <div className={`category-item ${this.state.category == i && this.state.index == j ? "active" : ""}`} onClick={() => { this.onSectionClick(i, j, section.subscription) }}>
+                { section.name }
+              </div>
+            );
+          })
+        }
+      </div>
+    )
   }
 
   profileImageOrDefault(id) {
@@ -192,8 +231,12 @@ export default class UserEvents extends TrackerReact(Component) {
   }
 
   eventResults() {
-    if(!this.props.isReady) {
-      return <Loading/>
+    if(!this.state.isReady) {
+      return (
+        <div className="col center x-center col-1" style={{height: "100%"}}>
+          <Loading/>
+        </div>
+      )
     }
     var events = this.events();
     return (
@@ -221,29 +264,29 @@ export default class UserEvents extends TrackerReact(Component) {
               ""
             )
           }
-          {
-            this.state.category != 0 ? (
-              <div className="row center x-center">
-                {
-                  this.state.page == 0 ? (
-                    ""
-                  ) : (
-                    <button onClick={this.onLoadPrev.bind(this)} style={{marginRight: events.length < 6 ? 0 : 10}}>Load Previous</button>
-                  )
-                }
-                {
-                  events.length < 6 ? (
-                    ""
-                  ) : (
-                    <button onClick={this.onLoadMore.bind(this)}>Load Next</button>
-                  )
-                }
-              </div>
-            ) : (
-              ""
-            )
-          }
         </div>
+        {
+          this.state.subName != "userEvents" ? (
+            <div className="row center x-center">
+              {
+                this.state.page == 0 ? (
+                  ""
+                ) : (
+                  <button onClick={this.onLoadPrev.bind(this)} style={{marginRight: events.length < 6 ? 0 : 10}}>Load Previous</button>
+                )
+              }
+              {
+                events.length < 6 ? (
+                  ""
+                ) : (
+                  <button onClick={this.onLoadMore.bind(this)}>Load Next</button>
+                )
+              }
+            </div>
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }

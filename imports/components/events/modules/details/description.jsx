@@ -8,12 +8,13 @@ export default class DescriptionPage extends Component {
     var event = Events.findOne();
     this.state = {
       id: Events.findOne()._id,
-      titleLength: event.details.name.length
+      titleLength: event.details.name.length,
+      content: event.details.description
     }
   }
 
   onDescriptionSave() {
-    Meteor.call("events.details.saveDescription", this.state.id, this.refs.name.value, this.refs.description.value(), (err) => {
+    Meteor.call("events.details.saveDescription", this.state.id, this.refs.name.value, this.state.content, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
@@ -35,6 +36,12 @@ export default class DescriptionPage extends Component {
     })
   }
 
+  updateDescription(content) {
+    this.setState({
+      content
+    })
+  }
+
   render() {
     var event = Events.findOne();
     return (
@@ -52,7 +59,7 @@ export default class DescriptionPage extends Component {
           </div>
           <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
           <h5 style={{marginBottom: 20}}>Description</h5>
-          <Editor value={event.details.description} ref="description" />
+          <Editor value={event.details.description} ref="description" onChange={this.updateDescription.bind(this)} />
         </div>
       </div>
     )
