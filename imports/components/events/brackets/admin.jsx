@@ -75,7 +75,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket) {
+    if(bracket && bracket.id) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
