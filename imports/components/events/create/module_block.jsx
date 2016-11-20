@@ -17,20 +17,22 @@ export default class ModuleBlock extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       active: nextProps.isActive
-    })  
+    })
+    this.refs.text1.runAnimation();
+    this.refs.text2.runAnimation();
   }
 
   render() {
     return (
       <VelocityComponent animation={this.state.active ? { backgroundColor: "#222" } : { backgroundColor: "#666" }} duration={300}>
-        <div className={`row x-center`} 
-          onClick={this.onModuleSelect.bind(this)} 
+        <div className={`row x-center`}
+          onClick={this.onModuleSelect.bind(this)}
           style={{width: 164, padding: 10, marginRight: 10, cursor: "pointer"}}
-        > 
-          <VelocityComponent animation={this.state.active ? { color: "#FF6000" } : { color: "white" }} duration={300}> 
-              <FontAwesome name={this.props.icon || "cog"} size="2x" />
+        >
+          <VelocityComponent ref="text1" animation={this.state.active ? { color: "#FF6000" } : { color: "#FFF" }} duration={300}>
+            <FontAwesome name={this.props.icon || "cog"} size="2x" />
           </VelocityComponent>
-          <VelocityComponent animation={this.state.active ? { color: "#FF6000" } : { color: "white" }} duration={300}> 
+          <VelocityComponent ref="text2" animation={this.state.active ? { color: "#FF6000" } : { color: "#FFF" }} duration={300}>
             <span className="module-block-header col-1">{ this.props.modName[0].toUpperCase() + this.props.modName.slice(1) }</span>
           </VelocityComponent>
         </div>
