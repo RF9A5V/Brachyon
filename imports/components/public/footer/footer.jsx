@@ -9,26 +9,27 @@ export default class Footer extends React.Component {
 
   constructor() {
     super();
-    window.addEventListener("resize", () => {
-      if(window.innerWidth <= 740 && !this.state.useSmall) {
-        this.setState({
-          useSmall: true
-        })
-      }
-      else if(window.innerWidth > 740 && this.state.useSmall) {
-        this.setState({
-          useSmall: false
-        })
-      }
-    });
     this.state = {
       useDefaultHeader: window.location.pathname.indexOf("preview") >= 0 ? false : true,
-      useSmall: window.innerWidth <= 740
+      useSmall: window.innerWidth <= 740,
+      cb: () => {
+        if(window.innerWidth <= 740 && !this.state.useSmall) {
+          this.setState({
+            useSmall: true
+          })
+        }
+        else if(window.innerWidth > 740 && this.state.useSmall) {
+          this.setState({
+            useSmall: false
+          })
+        }
+      }
     }
+    window.addEventListener("resize", this.state.cb);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize");
+    window.removeEventListener("resize", this.state.cb);
   }
 
   socialLinks() {
