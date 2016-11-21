@@ -14,17 +14,25 @@ export default class BracketShowScreen extends TrackerReact(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug)
+      event: Meteor.subscribe("event", this.props.params.slug, {
+        onReady: () => {
+          var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+        }
+      }),
+      ready: false
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
+    if(this.state.bracket) {
+      this.state.bracket.stop();
+    }
   }
 
   items() {
     var instance = Instances.findOne();
-    var bracket = instance.brackets[this.props.params.bracketIndex];
+    var bracket = Brackets.findOne();
     var defaultItems = [];
     if(!bracket.isComplete) {
       defaultItems.push({
@@ -78,15 +86,30 @@ export default class BracketShowScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready()) {
+    if(this.state.ready) {
+      return (
+        <TabController items={this.items()} />
+      );
+    }
+    if(this.state.event.ready()) {
+      var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+      var bracket = Meteor.subscribe("brackets", bracketID, {
+        onReady: () => {
+          this.setState({ ready: true, bracket });
+        }
+      });
       return (
         <div>
           Loading...
         </div>
-      )
+      );
     }
-    return (
-      <TabController items={this.items()} />
-    )
+    else if(!this.state.ready) {
+      return (
+        <div>
+          Loading...
+        </div>
+      );
+    }
   }
 }
