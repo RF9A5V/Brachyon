@@ -75,24 +75,6 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket && bracket.id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketAction,
-              args: {
-                id: bracket.id,
-                eid: this.props.params.eventId,
-                format: bracket.format.baseFormat,
-              }
-            }
-          ]
-        }
-      ])
-    }
     if(bracket.endedAt == null && bracket.startedAt != null) {
       defaultItems = defaultItems.concat([
         {
@@ -125,6 +107,24 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
+    if(bracket && bracket.id) {
+      defaultItems = defaultItems.concat([
+        {
+          text: "Bracket",
+          icon: "sitemap",
+          subitems: [
+            {
+              component: BracketAction,
+              args: {
+                id: bracket.id,
+                eid: this.props.params.eventId,
+                format: bracket.format.baseFormat,
+              }
+            }
+          ]
+        }
+      ])
+    }    
     return defaultItems;
   }
 
