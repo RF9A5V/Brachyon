@@ -49,7 +49,7 @@ export default class DisplayDiscover extends Component {
               (this.props.events || []).length > 0 ? (
                 <DisplayPromotedEvent event={this.props.events[this.state.panel]} active={true} />
               ) : (
-                []
+                null
               )
             }
 
