@@ -16,7 +16,8 @@ export default class BracketPanel extends TrackerReact(Component) {
   }
 
   componentWillUnmount(){
-    this.state.bracket.stop();
+    if (this.state.bracket)
+      this.state.bracket.stop();
   }
 
   startEventHandler(e) {
@@ -28,7 +29,7 @@ export default class BracketPanel extends TrackerReact(Component) {
       }
     });
   }
-  
+
   render() {
     var br = Meteor.subscribe("brackets", this.props.id, {
       onReady: () => {
