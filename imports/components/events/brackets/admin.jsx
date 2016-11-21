@@ -27,20 +27,11 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           }
         }
       }),
-      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex, {
-        onReady: () => {
-          this.setState({
-            bracketsReady: true
-          })
-        }
-      }),
-      bracketsReady: false
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
-    this.state.brackets.stop();
   }
 
   items() {
@@ -62,7 +53,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
       })
     }
     else {
-      defaultItems.push({
+      defaultItems.pusssh({
         text: "Leaderboard",
         icon: "trophy",
         subitems: [
@@ -129,7 +120,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.bracketsReady) {
+    if(!this.state.event.ready()) {
       return (
         <div>
           Loading...
