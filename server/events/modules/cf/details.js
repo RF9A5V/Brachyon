@@ -14,7 +14,7 @@ Meteor.methods({
 
     date.dayOfYear(date.dayOfYear() + 5);
 
-    if(date.isAfter(eventStartDate)) {
+    if(!date.isAfter(eventStartDate)) {
       throw new Meteor.Error(403, "Cannot crowdfund event unless due date is at least five days before event start!");
     }
 

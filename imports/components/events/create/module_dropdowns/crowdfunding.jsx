@@ -85,7 +85,7 @@ export default class RevenuePanel extends Component {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => { this.setState({ isOpen: true }) }}>
+          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => { this.props.onToggle() }}>
             <div className="row center x-center" style={{backgroundColor: this.props.selected ? "#FF6000" : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
               <span style={{color: "#333"}}>
                 {

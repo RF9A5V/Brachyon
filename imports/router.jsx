@@ -53,14 +53,12 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="events/:slug/edit" component={EditEventScreen} />
       <Route path="events/:slug/view" component={OrganizeEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
-      <Route path="events/:slug/admin" component={EventAdminScreen} />
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
@@ -68,6 +66,8 @@ export const renderRoutes = () => (
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
+      <Route path="events/:slug/edit" component={EditEventScreen} />
+      <Route path="events/:slug/admin" component={EventAdminScreen} />
     </Route>
   </Router>
 )

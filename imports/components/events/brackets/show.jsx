@@ -23,8 +23,8 @@ export default class BracketShowScreen extends TrackerReact(Component) {
   }
 
   items() {
-    console.log(Events.findOne())
-    var bracket = Events.findOne().brackets[this.props.params.bracketIndex];
+    var instance = Instances.findOne();
+    var bracket = instance.brackets[this.props.params.bracketIndex];
     var defaultItems = [];
     if(!bracket.isComplete) {
       defaultItems.push({
