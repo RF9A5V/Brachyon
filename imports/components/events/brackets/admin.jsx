@@ -27,20 +27,11 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           }
         }
       }),
-      brackets: Meteor.subscribe("brackets", this.props.params.slug, this.props.params.bracketIndex, {
-        onReady: () => {
-          this.setState({
-            bracketsReady: true
-          })
-        }
-      }),
-      bracketsReady: false
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
-    this.state.brackets.stop();
   }
 
   items() {
@@ -62,7 +53,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
       })
     }
     else {
-      defaultItems.push({
+      defaultItems.pusssh({
         text: "Leaderboard",
         icon: "trophy",
         subitems: [
@@ -74,6 +65,24 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           }
         ]
       })
+    }
+    if(bracket && bracket.id) {
+      defaultItems = defaultItems.concat([
+        {
+          text: "Bracket",
+          icon: "sitemap",
+          subitems: [
+            {
+              component: BracketAction,
+              args: {
+                id: bracket.id,
+                eid: this.props.params.eventId,
+                format: bracket.format.baseFormat,
+              }
+            }
+          ]
+        }
+      ])
     }
     if(bracket.endedAt == null && bracket.startedAt != null) {
       defaultItems = defaultItems.concat([
@@ -107,29 +116,11 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
-    if(bracket && bracket.id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketAction,
-              args: {
-                id: bracket.id,
-                eid: this.props.params.eventId,
-                format: bracket.format.baseFormat,
-              }
-            }
-          ]
-        }
-      ])
-    }    
     return defaultItems;
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.bracketsReady) {
+    if(!this.state.event.ready()) {
       return (
         <div>
           Loading...
