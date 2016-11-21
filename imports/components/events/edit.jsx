@@ -103,7 +103,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         })
       ) : (
         []
-      ))).concat(instance.brackets.length == 0 ? [
+      ))).concat(instance.brackets.length >= 0 ? [
         {
           component: AddBracket,
           text: "Add Bracket"
