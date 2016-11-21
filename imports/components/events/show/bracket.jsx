@@ -28,12 +28,7 @@ export default class BracketPanel extends TrackerReact(Component) {
       }
     });
   }
-
-  setupState(br)
-  {
-    this.setState({bracket: br});
-  }
-
+  
   render() {
     var br = Meteor.subscribe("brackets", this.props.id, {
       onReady: () => {
@@ -42,7 +37,7 @@ export default class BracketPanel extends TrackerReact(Component) {
           bracket: br
         });
       }
-    });    
+    });
     if(this.state.ready) {
       var rounds = Brackets.findOne().rounds;
       if(this.props.format == "single_elim") {
