@@ -12,7 +12,7 @@ export default class Main extends Component {
     super(props);
     this.state = {
       id: Events.findOne()._id,
-      bracket: Instances.findOne().brackets[0],
+      bracket: Instances.findOne().brackets,
       index: 0
     }
   }
@@ -45,34 +45,36 @@ export default class Main extends Component {
             }
           </div>
           {
-            this.state.bracket == null ? (
+            this.state.bracket[ this.state.index ] == null ? (
               ""
             ) : (
               <div className="submodule-section col-1 col center x-center">
-                <img src={ this.gameBanner(this.state.bracket.game) } style={{width: "25%", marginBottom: 20}} />
-                <h5>{ this.state.bracket.name }</h5>
+                <img src={ this.gameBanner(this.state.bracket[ this.state.index ].game) } style={{width: "25%", marginBottom: 20}} />
+                <h5>{ this.state.bracket[ this.state.index ].name }</h5>
               </div>
             )
           }
           {
-            this.state.bracket == null ? (
+            this.state.bracket[ this.state.index ] == null ? (
               ""
             ) : (
-              <div className="submodule-section col" style={{minWidth: "250px"}}>
-                <div className="row x-center" style={{marginBottom: 20}}>
-                  <FontAwesome name="user" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
-                  <h5>{ (this.state.bracket.participants || []).length }</h5>
-                </div>
-                <div className="row x-center" style={{marginBottom: 20}}>
-                  <FontAwesome name="gamepad" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
-                  <h5>{ Games.findOne(this.state.bracket.game).name }</h5>
-                </div>
-                <div className="row x-center" style={{marginBottom: 20}}>
-                  <FontAwesome name="trophy" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
-                  <h5>${ 0 }</h5>
-                </div>
-                <div className="row center">
-                  <button onClick={() => { browserHistory.push(`/events/${Events.findOne(this.state.id).slug}/brackets/${this.state.index}/admin`) }}>Admin Page</button>
+              <div>
+                <div className="submodule-section col" style={{minWidth: "250px"}}>
+                  <div className="row x-center" style={{marginBottom: 20}}>
+                    <FontAwesome name="user" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
+                    <h5>{ (this.state.bracket[ this.state.index ].participants || []).length }</h5>
+                  </div>
+                  <div className="row x-center" style={{marginBottom: 20}}>
+                    <FontAwesome name="gamepad" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
+                    <h5>{ Games.findOne(this.state.bracket[ this.state.index ].game).name }</h5>
+                  </div>
+                  <div className="row x-center" style={{marginBottom: 20}}>
+                    <FontAwesome name="trophy" size="2x" style={{width: 50, marginRight: 20, textAlign: "center"}} />
+                    <h5>${ 0 }</h5>
+                  </div>
+                  <div className="row center">
+                    <button onClick={() => { browserHistory.push(`/events/${Events.findOne(this.state.id).slug}/brackets/${this.state.index}/admin`) }}>Admin Page</button>
+                  </div>
                 </div>
               </div>
             )
