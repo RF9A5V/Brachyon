@@ -34,7 +34,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne();
     var defaultItems = [];
-    if(!bracket.isComplete) {
+    if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
         icon: "users",
@@ -42,7 +42,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
           {
             component: ParticipantList,
             args: {
-              participants: bracket.participants || [],
+              participants: instance.brackets[this.props.params.bracketIndex].participants || [],
               rounds: Brackets.findOne(bracket.id),
               bracketIndex: this.props.params.bracketIndex
             }
@@ -64,7 +64,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
         ]
       })
     }
-    if(bracket.inProgress) {
+    if(bracket) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
@@ -73,9 +73,9 @@ export default class BracketShowScreen extends TrackerReact(Component) {
             {
               component: BracketPanel,
               args: {
-                id: this.props.params.eventId,
-                format: bracket.format.baseFormat,
-                rounds: Brackets.findOne(bracket.id)
+                id: bracket._id,
+                format: instance.brackets[this.props.params.bracketIndex].format.baseFormat,
+                rounds: Brackets.findOne(bracket._id)
               }
             }
           ]
