@@ -9,8 +9,16 @@ export default class BracketPanel extends TrackerReact(Component) {
 
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
-      bracket: Meteor.subscribe("brackets", props.id)
+      bracket: Meteor.subscribe("brackets", props.id, {
+        onReady: () => {
+          this.setState({
+            ready: true
+          })
+        }
+      }),
+      ready: false
     }
   }
 
@@ -29,7 +37,7 @@ export default class BracketPanel extends TrackerReact(Component) {
   }
 
   render() {
-    if(this.state.bracket.ready()) {
+    if(this.state.ready) {
       var rounds = Brackets.findOne().rounds;
       if(this.props.format == "single_elim") {
         return (
