@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
+import Loading from "/imports/components/public/loading.jsx";
+import Editor from "/imports/components/public/editor.jsx";
+
+import Games from "/imports/api/games/games.js";
+import Instances from "/imports/api/event/instance.js";
+
 export default class TierPage extends Component {
 
   constructor(props) {
@@ -8,12 +14,15 @@ export default class TierPage extends Component {
     this.state = {
       id: Events.findOne()._id,
       rewards: [],
-      index: -1
+      index: -1,
+      ready: false,
+      tier: {},
+      loadTier: false
     }
   }
 
   onTierCreate() {
-    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.refs.description.value, this.state.rewards, (err) => {
+    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.state.description, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -21,7 +30,7 @@ export default class TierPage extends Component {
         this.refs.name.value = "";
         this.refs.price.value = "";
         this.refs.limit.value = "";
-        this.refs.description.value = "";
+        this.refs.description.reset();
         this.setState({
           index: -1,
           rewards: []
@@ -32,14 +41,7 @@ export default class TierPage extends Component {
   }
 
   onTierUpdate() {
-    var rewards = this.refs[`rewards`];
-    var indices = [];
-    rewards.childNodes.forEach((icon, index) => {
-      if(icon.classList.contains("active")) {
-        indices.push(index);
-      }
-    });
-    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 100, this.refs[`limit`].value * 1, this.refs[`description`].value, indices, (err) => {
+    Meteor.call("events.crowdfunding.updateTier", this.state.id, this.state.index, this.refs[`name`].value, this.refs[`price`].value * 100, this.refs[`limit`].value * 1, this.state.description, this.state.rewards, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -55,22 +57,16 @@ export default class TierPage extends Component {
         return toastr.error(err.reason, "Error!");
       }
       else {
-        this.refs["name"].value = "";
-        this.refs["price"].value = "";
-        this.refs["limit"].value = "";
-        this.refs["description"].value = "";
-        this.setState({
-          index: -1
-        });
+        this.setTier({}, -1);
         return toastr.success("Successfully deleted tier!", "Success!");
       }
     })
   }
 
-  toggleReward(index) {
-    var rewardIndex = this.state.rewards.indexOf(index);
+  toggleReward(id) {
+    var rewardIndex = this.state.rewards.indexOf(id);
     if(rewardIndex < 0){
-      this.state.rewards.push(index);
+      this.state.rewards.push(id);
     }
     else {
       this.state.rewards.splice(rewardIndex, 1);
@@ -78,10 +74,63 @@ export default class TierPage extends Component {
     this.forceUpdate();
   }
 
+  ticketView() {
+    var instance = Instances.findOne();
+    if(instance.tickets) {
+      var ticketRender = Object.keys(instance.tickets).map((ticket) => {
+        var content = "";
+        if(isNaN(ticket)) {
+          content = ticket[0].toUpperCase() + ticket.slice(1);
+        }
+        else {
+          var game = Games.findOne(instance.brackets[parseInt(ticket)].game);
+          content = game.name;
+        }
+        return (
+          <div className="ticket-selectable">
+            { content }
+          </div>
+        )
+      })
+      return [
+        <h5 style={{marginTop: 20}}>Tickets</h5>,
+        <span>Which tickets do you want on this tier?</span>,
+        ticketRender
+      ]
+    }
+    return [];
+  }
+
+  setTier(tier, index) {
+    this.setState({
+      tier,
+      loadTier: true,
+      description: tier.description,
+      index,
+      rewards: tier.rewards || []
+    });
+    setTimeout(() => {
+      this.setState({
+        loadTier: false
+      });
+    }, 10)
+  }
+
   render() {
+    if(!this.state.ready) {
+      var rewards = Meteor.subscribe("rewards", this.state.id, {
+        onReady: () => {
+          this.setState({
+            rewardSub: rewards,
+            ready: true
+          })
+        }
+      });
+      return <Loading />
+    }
     var crowdfunding = Events.findOne().crowdfunding || {};
     var tiers = crowdfunding.tiers || [];
-    var rewards = crowdfunding.rewards || [];
+    var rewards = Rewards.find();
     var tier = this.state.index > -1 ? tiers[this.state.index] : {};
     return (
       <div>
@@ -95,12 +144,7 @@ export default class TierPage extends Component {
                 tiers.map((tier, index) => {
                   return (
                     <div className="cf-tier col" onClick={() => {
-                      var tier = tiers[index];
-                      this.refs["name"].value = tier.name;
-                      this.refs["price"].value = (tier.price / 100).toFixed(2);
-                      this.refs["limit"].value = tier.limit;
-                      this.refs["description"].value = tier.description;
-                      this.setState({ index: index, rewards: tier.rewards });
+                      this.setTier(tier, index);
                     }} style={{backgroundColor: index == this.state.index ? "#FF6000" : "#333"}}>
                       { tier.name }
                     </div>
@@ -108,48 +152,50 @@ export default class TierPage extends Component {
                 })
               }
               <div className="cf-tier" onClick={() => {
-                this.refs["name"].value = "";
-                this.refs["price"].value = "";
-                this.refs["limit"].value = "";
-                this.refs["description"].value = "";
-                this.setState({ index: -1, rewards: [] });
-              }} style={{ textAlign: "center", backgroundColor: this.state.index == -1 ? "#FF6000" : "inherit" }}>
+                this.setTier({}, -1);
+              }} style={{ backgroundColor: this.state.index == -1 ? "#FF6000" : "inherit" }}>
                 <FontAwesome name="plus" style={{marginRight: 10}} />
                 Add Tier
               </div>
             </div>
-            <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
-              <h5>Name</h5>
-              <input type="text" ref={"name"} defaultValue={tier.name} />
-              <h5>Price</h5>
-              <div className="row x-center">
-                <input type="number" ref={"price"} defaultValue={((tier.price || 0) / 100).toFixed(2)} />
-              </div>
-              <h5>Limit</h5>
-              <span>How many backers can buy this tier?</span>
-              <div className="row x-center">
-                <input type="number" ref={"limit"} defaultValue={tier.limit} />
-              </div>
-              <h5>Description</h5>
-              <textarea ref={"description"} defaultValue={tier.description}></textarea>
-            </div>
+            {
+              this.state.loadTier ? (
+                <div className="col col-1 center x-center">
+                  <Loading />
+                </div>
+              ) : (
+                <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
+                  <h5>Name</h5>
+                  <input type="text" ref={"name"} defaultValue={this.state.tier.name} />
+                  <h5>Price</h5>
+                  <div className="row x-center">
+                    <input type="number" ref={"price"} defaultValue={((this.state.tier.price || 0) / 100).toFixed(2)} />
+                  </div>
+                  <h5>Limit</h5>
+                  <span>How many backers can buy this tier?</span>
+                  <div className="row x-center">
+                    <input type="number" ref={"limit"} defaultValue={this.state.tier.limit} />
+                  </div>
+                  <h5 style={{marginBottom: 10}}>Description</h5>
+                  <Editor ref="description" usePara={true} onChange={(value) => { this.setState({ description: value }) }} value={this.state.tier.description} />
+                </div>
+              )
+            }
             <div className="col col-1 x-center" style={{backgroundColor: "#444", padding: 20}}>
               <h5>Rewards</h5>
-              <span>Which rewards do you want on this tier?</span>
-              <div className="row x-center center" ref={"rewards"}>
-                {
-                  rewards.map((reward, index) => {
-                    return (
-                      <div className={`selectable reward block ${ (this.state.rewards).indexOf(index) < 0 ? "" : "active" }`} onClick={() => { this.toggleReward(index) }}>
-                        <img src={ reward.imgUrl } style={{width: 100, height: "auto"}} />
-                        <div style={{fontSize: "0.7em"}}>
-                          { reward.name }
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-              </div>
+              {
+                rewards.map((reward, index) => {
+                  return (
+                    <div className={`reward-selectable ${this.state.rewards.indexOf(reward._id) < 0 ? "" : "active"}`} onClick={() => { this.toggleReward(reward._id) }}>
+                      <img src={ reward.imgUrl } />
+                      <span>{ reward.name }</span>
+                    </div>
+                  )
+                })
+              }
+              {
+                this.ticketView()
+              }
             </div>
           </div>
           <div className="row center" style={{marginTop: 20}}>
