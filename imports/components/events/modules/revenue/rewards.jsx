@@ -6,6 +6,7 @@ import Editor from "/imports/components/public/editor.jsx";
 import ImageForm from "/imports/components/public/img_form.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
+import Rewards from "/imports/api/sponsorship/rewards.js";
 import { RewardIcons } from "/imports/api/sponsorship/reward_icon.js";
 
 export default class RewardsPage extends Component {
@@ -20,6 +21,12 @@ export default class RewardsPage extends Component {
     };
   }
 
+  componentWillUnmount() {
+    if(this.state.rewards) {
+      this.state.rewards.stop();
+    }
+  }
+
   onDescriptionChange(value) {
     this.setState({
       description: value
@@ -30,7 +37,8 @@ export default class RewardsPage extends Component {
     var name = this.refs.name.value;
     var img = data._id;
     var desc = this.state.description;
-    Meteor.call("events.crowdfunding.createReward", Events.findOne()._id, name, img, desc, (err) => {
+    var value = this.refs.dollarValue.value * 100;
+    Meteor.call("events.crowdfunding.createReward", Events.findOne()._id, name, img, desc, value, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
@@ -48,9 +56,11 @@ export default class RewardsPage extends Component {
     var name = this.refs.name.value;
     var img = data._id;
     var desc = this.state.description;
-    Meteor.call("events.crowdfunding.editReward", Events.findOne()._id, this.state.active, name, img, desc, (err) => {
+    var value = this.refs.dollarValue.value * 100;
+    var reward = Rewards.findOne(Events.findOne().crowdfunding.rewards[this.state.active]);
+    Meteor.call("events.crowdfunding.editReward", reward._id, name, img, desc, value, (err) => {
       if(err) {
-        return toastr.error(err.reason, "Error!")
+        return toastr.error(err.reason, "Error!");
       }
       else {
         this.setState({
@@ -77,7 +87,7 @@ export default class RewardsPage extends Component {
 
   setCurrentReward(index) {
     if(index >= 0) {
-      var reward = Events.findOne().crowdfunding.rewards[index];
+      var reward = Rewards.findOne(Events.findOne().crowdfunding.rewards[index]);
       this.setState({
         active: index,
         description: reward.description,
@@ -85,7 +95,6 @@ export default class RewardsPage extends Component {
         img: null,
         imgID: reward.img
       });
-      this.refs.name.value = reward.name;
     }
     else {
       this.setState({
@@ -95,7 +104,6 @@ export default class RewardsPage extends Component {
         img: null,
         imgID: null
       });
-      this.refs.name.value = "";
     }
     setTimeout(() => {
       this.setState({
@@ -106,9 +114,12 @@ export default class RewardsPage extends Component {
 
   render() {
     if(!this.state.ready) {
-      var reward = Meteor.subscribe("rewardImgs", Events.findOne()._id, {
+      if(this.state.rewards) {
+        this.state.rewards.stop();
+      }
+      var reward = Meteor.subscribe("rewards", Events.findOne()._id, {
         onReady: () => {
-          this.setState({ready: true, rewardImgs: reward});
+          this.setState({ready: true, rewards: reward});
           if(this.state.active >= 0) {
             this.setCurrentReward(this.state.active);
           }
@@ -118,6 +129,7 @@ export default class RewardsPage extends Component {
         <Loading />
       );
     }
+    var reward = Rewards.find().fetch()[this.state.active] || {};
     return (
       <div className="submodule-bg submodule-overflow">
         <div className="row x-center" style={{marginBottom: 10}}>
@@ -132,7 +144,7 @@ export default class RewardsPage extends Component {
         <div className="row">
           <div className="reward-preview-container">
             {
-              (Events.findOne().crowdfunding.rewards || []).map((reward, i) => {
+              Rewards.find({}).map((reward, i) => {
                 return (
                   <div className={`cf-reward ${this.state.active == i ? "active" : ""}`} onClick={() => {this.setCurrentReward(i)}}>
                     <span>{ reward.name }</span>
@@ -151,21 +163,24 @@ export default class RewardsPage extends Component {
                 <Loading />
               ) : (
                 <ImageForm collection={RewardIcons} callback={this.onUploadedCallback()} ref="image" defaultImage={this.state.img} onImgSelected={(img) => {
-                  this.setState({ img, imgID: null, loadDescription: true });
-                  setTimeout(() => { this.setState({loadDescription: false}) })
-                }} id={this.state.imgID} />
+                  this.setState({ img, imgID: null });
+                }} id={reward.img} />
               )
             }
           </div>
           <div className="reward-preview-form col-1 col">
-            <label>Prize Name</label>
-            <input type="text" ref="name" style={{marginTop: 0}} />
-            <label>Description</label>
             {
               this.state.loadDescription ? (
                 <Loading />
               ) : (
-                <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={this.state.description}/>
+                [
+                  <label>Prize Name</label>,
+                  <input type="text" ref="name" style={{marginTop: 0}} defaultValue={reward.name} />,
+                  <label>Nominal Value</label>,
+                  <input type="number" ref="dollarValue" style={{marginTop: 0}} defaultValue={(reward.value / 100).toFixed(2)} />,
+                  <label>Description</label>,
+                  <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={reward.description}/>
+                ]
               )
             }
           </div>

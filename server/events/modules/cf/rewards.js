@@ -1,7 +1,8 @@
 import { RewardIcons } from "/imports/api/sponsorship/reward_icon.js";
+import Rewards from "/imports/api/sponsorship/rewards.js";
 
 Meteor.methods({
-  "events.crowdfunding.createReward"(id, name, img, description) {
+  "events.crowdfunding.createReward"(id, name, img, description, value) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
@@ -10,34 +11,35 @@ Meteor.methods({
     if(!image) {
       throw new Meteor.Error(404, "Image not found.");
     }
+    var reward = Rewards.insert({
+      name,
+      img,
+      imgUrl: image.link(),
+      description,
+      value
+    })
     Events.update(id, {
       $push: {
-        "crowdfunding.rewards": {
-          name,
-          img,
-          imgUrl: image.link(),
-          description
-        }
+        "crowdfunding.rewards": reward
       }
     })
   },
-  "events.crowdfunding.editReward"(id, index, name, img, description) {
-    var event = Events.findOne(id);
-    if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
+  "events.crowdfunding.editReward"(id, name, img, description, value) {
+    var reward = Rewards.findOne(id);
+    if(!reward) {
+      throw new Meteor.Error(404, "Reward not found.");
     }
     var image = RewardIcons.findOne(img);
     if(!image) {
       throw new Meteor.Error(404, "Image not found.");
     }
-    Events.update(id, {
+    Rewards.update(id, {
       $set: {
-        [`crowdfunding.rewards.${index}`]: {
-          name,
-          img,
-          imgUrl: image.link(),
-          description
-        }
+        name,
+        img,
+        imgUrl: image.link(),
+        description,
+        value
       }
     })
   }
