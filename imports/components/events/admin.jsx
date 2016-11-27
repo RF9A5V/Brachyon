@@ -36,12 +36,14 @@ export default class EventAdminPage extends TrackerReact(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug)
+      event: Meteor.subscribe("event", this.props.params.slug),
+      rewards: Meteor.subscribe("rewards", this.props.params.slug)
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
+    this.state.sponsors.stop();
   }
 
 
@@ -191,7 +193,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready()){
+    if(!this.state.event.ready() || !this.state.rewards.ready()){
       return (
         <div>
           Loading...

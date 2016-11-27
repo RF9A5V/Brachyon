@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import { browserHistory } from "react-router";
 
 export default class CFModal extends Component {
 
@@ -55,6 +56,17 @@ export default class CFModal extends Component {
               )
             })
           }
+          <div className="row center">
+            <button onClick={() => {
+              browserHistory.push({
+                pathname: `/events/${Events.findOne().slug}/checkout`,
+                query: {
+                  use: "tier",
+                  selected: this.props.index
+                }
+              })
+            }}>Submit</button>
+          </div>
         </div>
       )
     }

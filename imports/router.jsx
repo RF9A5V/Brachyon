@@ -25,7 +25,7 @@ import CurrencyPurchaseScreen from "../imports/components/public/currency_purcha
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
-import CheckoutScreen from "../imports/components/events/checkout.jsx";
+import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";

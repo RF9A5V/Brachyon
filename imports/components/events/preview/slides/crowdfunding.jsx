@@ -49,7 +49,7 @@ export default class CrowdfundingPage extends Component {
 
   render() {
     if(!this.state.ready) {
-      var rewards = Meteor.subscribe("rewards", Events.findOne()._id, {
+      var rewards = Meteor.subscribe("rewards", Events.findOne().slug, {
         onReady: () => {
           this.setState({
             ready: true,
@@ -115,9 +115,9 @@ export default class CrowdfundingPage extends Component {
             </div>
             <div className="tier-container row" style={{flexWrap: "wrap", width: "100%", marginTop: 20}}>
               {
-                tiers.map(tier => {
+                tiers.map((tier, i) => {
                   return (
-                    <div className="tier-preview-block" onClick={() => { this.setState({ open: true, tier }) }}>
+                    <div className="tier-preview-block" onClick={() => { this.setState({ open: true, tier, i }) }}>
                       <div className="row flex-pad" style={{marginBottom: 20}}>
                         <h3>{ tier.name }</h3>
                         <h5>${ (tier.price / 100).toFixed(2) }</h5>
@@ -131,6 +131,11 @@ export default class CrowdfundingPage extends Component {
                           })
                         }
                       </div>
+                      <div className="row">
+                        <div className="col-1">
+                        </div>
+                        <i>{ tier.limit - ((Instances.findOne().cf || {})[i] || []).length } remaining</i>
+                      </div>
                     </div>
                   )
                 })
@@ -140,7 +145,7 @@ export default class CrowdfundingPage extends Component {
         </div>
         {
           this.state.open ? (
-            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} tier={this.state.tier} />
+            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} tier={this.state.tier} index={this.state.i} />
           ) : (
             ""
           )
