@@ -61,10 +61,111 @@
 .preview-nav:hover
   cursor pointer
 
+.bracket
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: calc((100% - 40px) / 3);
+  position: relative
+  +between(500px, 1100px)
+    width: calc((100% - 20px) / 2)
+  +below(500px)
+    width: 100%
+    margin-right: 0
+
+.bracket-overlay
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+
+.bracket-register-button
+  background-color: #FF6000;
+  border-radius: 100%;
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+.bracket-register-button .fa
+  font-size: 32px;
+
+.bracket-view-button
+  background-color #00BDFF
+  padding 20px
+  width: 50%
+  margin: 0 auto
+
+.bracket-view-button .fa
+  font-size 32px
+
 .bracket:hover
+  cursor default
+
+.bracket-view-button:hover, .bracket-register-button:hover
   cursor pointer
 
 .bracket-button
   bottom 0
   background-color rgba(0, 0, 0, 0.8)
   width 100%
+
+.bracket-details
+  display: flex
+  flex-direction: column;
+  width: 50%
+  margin: 0 auto
+  justify-content: center
+  flex: 1
+
+.bracket-detail-row
+  display: flex
+  border-bottom: solid 2px white
+
+.bracket-detail-row:last-child
+  border-bottom: none
+
+.bracket-detail-item
+  flex: 1
+  display: flex
+  justify-content: center;
+  align-items: center
+  padding: 20px
+
+.bracket-detail-item:first-child
+  border-right: solid 2px white
+
+.bracket-detail-item .fa
+  font-size: 38px;
+
+.bracket-detail-item span
+  font-size 20px
+
++above(1100px)
+  .bracket:nth-child(3n)
+    margin-right 0
+
++between(500px, 1100px)
+  .bracket:nth-child(2n)
+    margin-right 0
+  .bracket-register-button
+    padding 5px
+    width 40px
+    height 40px
+  .bracket-register-button .fa, .bracket-view-button .fa
+    font-size 24px
+  .bracket-view-button
+    padding 10px
+    width: 100%
+  .bracket-detail-item .fa
+    font-size 24px
+  .bracket-detail-item span
+    font-size 14px
+  .bracket-details
+    width: 80%

@@ -118,7 +118,7 @@ export default class DetailsPanel extends Component {
           <input type="text" placeholder="Something Catchy..." ref="name" onChange={this.onTitleChange.bind(this)} />
         </div>
         <div className="col" style={this.blockStyle("Location")}>
-          <LocationSelect ref="location" online={true} onChange={this.onChange.bind(this)} />
+          <LocationSelect ref="location" online={false} onChange={this.onChange.bind(this)} />
         </div>
         <div className="col" style={{marginBottom: 20}} style={this.blockStyle("Description")}>
           <Editor onChange={this.setDescriptionState.bind(this)} useInsert={true} usePara={true} useTable={true} />
