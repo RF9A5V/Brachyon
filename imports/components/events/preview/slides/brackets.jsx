@@ -59,60 +59,62 @@ export default class BracketSlide extends Component {
     if(note) {
       return [
         (
-          <button className="signup-button" style={{marginRight: 20}} onClick={() => { this.onInviteAccept(note) }}>
-            Accept
-          </button>
+          <div className="bracket-register-button" onClick={() => { this.onInviteAccept(note) }}>
+            <FontAwesome name="check" />
+          </div>
         ),
         (
-          <button className="login-button" onClick={() => { this.onInviteReject(note) }}>
-            Reject
-          </button>
+          <div className="bracket-register-button" onClick={() => { this.onInviteReject(note) }}>
+            <FontAwesome name="times" />
+          </div>
         )
       ]
     }
     if(isRegistered) {
-      return (
-        <button onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if(instance.tickets) {
-            browserHistory.push(`/events/${this.props.event.slug}/checkout`)
-          }
-          else {
-            Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
-              if(err) {
-                return toastr.error(err.reason, "Error!");
-              }
-              else {
-                return toastr.success("Successfully unregistered for bracket!", "Success!");
-              }
-            })
-          }
-        }}>
-          Unregister
-        </button>
-      )
-    }
-    return (
-      <button onClick={(e) => {
+      var f = (e) => {
         e.preventDefault();
         e.stopPropagation();
         if(instance.tickets) {
-          browserHistory.push(`/events/${this.props.event.slug}/checkout`);
+          browserHistory.push(`/events/${this.props.event.slug}/checkout`)
         }
         else {
-          Meteor.call("events.registerUser", this.state.id, i, (err) => {
+          Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
             if(err) {
               return toastr.error(err.reason, "Error!");
             }
             else {
-              return toastr.success("Successfully registered for bracket!", "Success!");
+              return toastr.success("Successfully unregistered for bracket!", "Success!");
             }
           })
         }
-      }}>
-        Register
-      </button>
+      };
+      return (
+        <div className="bracket-register-button" onClick={f}>
+          <FontAwesome name="times" />
+        </div>
+      )
+    }
+    var f = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if(instance.tickets) {
+        browserHistory.push(`/events/${this.props.event.slug}/checkout`);
+      }
+      else {
+        Meteor.call("events.registerUser", this.state.id, i, (err) => {
+          if(err) {
+            return toastr.error(err.reason, "Error!");
+          }
+          else {
+            return toastr.success("Successfully registered for bracket!", "Success!");
+          }
+        })
+      }
+    };
+    return (
+      <div className="bracket-register-button" onClick={f}>
+        <FontAwesome name="sign-in" />
+      </div>
     )
   }
 
@@ -129,9 +131,7 @@ export default class BracketSlide extends Component {
                     <img style={{width: "100%", height: "auto"}} src={GameBanners.findOne(Games.findOne(bracket.game).banner).link()} />
                     <div className="bracket-overlay">
                       <div className="row" style={{justifyContent: "flex-end"}}>
-                        <div className="bracket-register-button">
-                          <FontAwesome name="sign-in" />
-                        </div>
+                        { this.bracketButton(bracket, i) }
                       </div>
                       <div className="bracket-details">
                         {
