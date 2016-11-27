@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
+import { Session } from 'meteor/session'
 
 export default class CFModal extends Component {
 
@@ -58,13 +59,11 @@ export default class CFModal extends Component {
           }
           <div className="row center">
             <button onClick={() => {
-              browserHistory.push({
-                pathname: `/events/${Events.findOne().slug}/checkout`,
-                query: {
-                  use: "tier",
-                  selected: this.props.index
-                }
+              Session.set({
+                use: "tiers",
+                tier: this.props.index
               })
+              browserHistory.push(`/events/${Events.findOne().slug}/checkout`);
             }}>Submit</button>
           </div>
         </div>

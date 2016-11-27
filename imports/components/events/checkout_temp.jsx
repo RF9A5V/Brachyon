@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Session } from 'meteor/session'
 
 import Loading from "/imports/components/public/loading.jsx";
 import CheckoutSelector from "./checkout/selector.jsx";
@@ -26,8 +27,9 @@ export default class Checkout extends Component {
       ready0: false,
       ready1: false,
       selector: {
-        tickets: props.location.query["use"] == "tickets" ? props.location.query["selected"] : [],
-        tier: props.location.query["use"] == "tier" ? props.location.query["selected"] : -1
+        tickets: Session.get("use") == "tickets" ? Session.get("tickets") : [],
+        tier: Session.get("use") == "tiers" ? Session.get("tier") : -1,
+        use: Session.get("use")
       }
     }
   }
@@ -56,7 +58,7 @@ export default class Checkout extends Component {
       <div className="box col" style={{backgroundImage: `url(${this.imgOrDefault()})`, backgroundSize: "cover", backgroundPosition: "center center"}}>
         <div className="row col-1" style={{padding: 20}}>
           <CheckoutMain cart={this.state.selector} />
-          <CheckoutSelector init={this.state.selector} startWith={this.props.location.query.use} changeCart={(obj) => {
+          <CheckoutSelector init={this.state.selector} changeCart={(obj) => {
             this.setState({
               selector: obj
             })
