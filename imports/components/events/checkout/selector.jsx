@@ -9,7 +9,7 @@ export default class CheckoutSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: props.startsWith == "tickets" ? "tickets" : "tiers",
+      current: props.init.use,
       tier: props.init.tier,
       tickets: props.init.tickets
     }

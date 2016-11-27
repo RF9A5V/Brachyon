@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { browserHistory } from "react-router";
 import FontAwesome from "react-fontawesome";
+import { Session } from 'meteor/session'
 
 import Games from "/imports/api/games/games.js";
 import Notifications from "/imports/api/users/notifications.js";
@@ -74,19 +75,14 @@ export default class BracketSlide extends Component {
       var f = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if(instance.tickets) {
-          browserHistory.push(`/events/${this.props.event.slug}/checkout`)
-        }
-        else {
-          Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
-            if(err) {
-              return toastr.error(err.reason, "Error!");
-            }
-            else {
-              return toastr.success("Successfully unregistered for bracket!", "Success!");
-            }
-          })
-        }
+        Meteor.call("events.removeParticipant", this.state.id, i, Meteor.userId(), (err) => {
+          if(err) {
+            return toastr.error(err.reason, "Error!");
+          }
+          else {
+            return toastr.success("Successfully unregistered for bracket!", "Success!");
+          }
+        })
       };
       return (
         <div className="bracket-register-button" onClick={f}>
@@ -98,6 +94,10 @@ export default class BracketSlide extends Component {
       e.preventDefault();
       e.stopPropagation();
       if(instance.tickets) {
+        Session.set({
+          use: "tickets",
+          tickets: ["venue", `${i}`]
+        })
         browserHistory.push(`/events/${this.props.event.slug}/checkout`);
       }
       else {

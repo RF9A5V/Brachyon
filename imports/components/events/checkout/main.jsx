@@ -177,7 +177,10 @@ export default class CheckoutMain extends Component {
     if(Object.keys(this.props.cart).length == 0) {
       return "";
     }
-    var tierPrice = Events.findOne().crowdfunding.tiers[this.props.cart.tier].price;
+    var tierPrice = 0;
+    if(this.props.cart.tier >= 0) {
+      tierPrice = Events.findOne().crowdfunding.tiers[this.props.cart.tier].price;
+    }
     var ticketPrice = 0;
     var instance = Instances.findOne();
     (this.props.cart.tickets || []).forEach(key => {
