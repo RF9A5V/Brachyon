@@ -53,7 +53,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
       })
     }
     else {
-      defaultItems.pusssh({
+      defaultItems.push({
         text: "Leaderboard",
         icon: "trophy",
         subitems: [
