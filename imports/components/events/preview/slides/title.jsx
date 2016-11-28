@@ -91,7 +91,7 @@ export default class EventTitlePage extends Component {
             <div className="col-1">
             </div>
             <div className="col center x-center col-2">
-              <h3 className="sponsor-event-header">{ this.props.event.details.name }</h3>
+              <h2 className="sponsor-event-header">{ this.props.event.details.name }</h2>
               {
                 revenue ? (
                   <span className="cf-progress-amount">
