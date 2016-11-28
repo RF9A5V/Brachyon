@@ -25,7 +25,6 @@ export default class RewardTooltip extends Component {
 
   render() {
     var reward = this.state.reward;
-    console.log(reward);
     return (
       <div className="reward-tooltip" style={{top: this.state.y, left: this.state.x + 20}}>
         <div className="row x-center" style={{marginBottom: 20}}>
