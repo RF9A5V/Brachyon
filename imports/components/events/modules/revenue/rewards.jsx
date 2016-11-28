@@ -117,7 +117,7 @@ export default class RewardsPage extends Component {
       if(this.state.rewards) {
         this.state.rewards.stop();
       }
-      var reward = Meteor.subscribe("rewards", Events.findOne()._id, {
+      var reward = Meteor.subscribe("rewards", Events.findOne().slug, {
         onReady: () => {
           this.setState({ready: true, rewards: reward});
           if(this.state.active >= 0) {
