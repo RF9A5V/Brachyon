@@ -1,5 +1,5 @@
 Meteor.methods({
-  "events.crowdfunding.createTier"(id, name, price, limit, description, rewards) {
+  "events.crowdfunding.createTier"(id, name, price, limit, description, rewards, tickets) {
     var event = Events.findOne(id);
     if(!event){
       throw new Meteor.Error(404, "Event not found.");
@@ -13,7 +13,8 @@ Meteor.methods({
               price,
               limit,
               description,
-              rewards
+              rewards,
+              tickets
             }
           ],
           $sort: {

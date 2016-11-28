@@ -262,6 +262,10 @@ Meteor.methods({
     }
   },
   "chargeCard": function(payableTo, chargeAmount, cardID){
+    if(Meteor.user().stripeCustomer == Meteor.users.findOne(payableTo).services.stripe.id) {
+      throw new Meteor.Error(403, "Can't pay yourself.");
+    }
+    // Currently only used for tickets
     stripe.charges.create({
       amount: chargeAmount,
       currency: "usd",
@@ -277,6 +281,42 @@ Meteor.methods({
       }
     })
   },
+
+  "events.saveCFCharge"(eventID, amount, cardID){
+    var event = Events.findOne(eventID);
+    if(Meteor.user().stripeCustomer == Meteor.users.findOne(event.owner).services.stripe.id) {
+      throw new Meteor.Error(403, "Can't pay yourself.");
+    }
+    var instance = Instances.findOne(event.instances.pop());
+    if(!event.crowdfunding || !event.crowdfunding.tiers) {
+      throw new Meteor.Error(404, "Can't crowdfund event with no crowdfunding.");
+    }
+    var tierIndex = -1;
+    event.crowdfunding.tiers.forEach((tier, i) => {
+      if(tier.price == amount) {
+        tierIndex = i;
+      }
+    });
+    if(tierIndex < 0) {
+      throw new Meteor.Error(403, "Can't sponsor tier with less than minimum amount.");
+    }
+    var contribs = new Set((instance.cf || {})[tierIndex]);
+    var hasContributed = Array.from(contribs).map((obj) => { return obj.payee; }).indexOf(Meteor.userId()) >= 0;
+    if(hasContributed) {
+      throw new Meteor.Error(403, "Can't buy already purchased tier.");
+    }
+    else {
+      Instances.update(instance._id, {
+        $push: {
+          [`cf.${tierIndex}`]: {
+            payee: Meteor.userId(),
+            amount
+          }
+        }
+      })
+    }
+  },
+
   "isStripeConnected": function(connected){
     Meteor.users.update(Meteor.userId(), {$set: {"profile.isStripeConnected": connected}});
   },
