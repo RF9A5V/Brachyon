@@ -162,6 +162,22 @@ export default class EventTitlePage extends Component {
             {
               this.props.event.details.description ? (
                 <div className="slide-description">
+                  <div className="row-to-col flex-pad">
+                    {
+                      this.props.event.details.location.online ? (
+                        <span>Online</span>
+                      ) : (
+                        <div>
+                          <span>{ this.props.event.details.location.locationName }</span>
+                          <span>{ this.props.event.details.location.streetAddress }</span>
+                          <span>{ this.props.event.details.location.city + " " + this.props.event.details.location.state + ", " + this.props.event.details.location.zip }</span>
+                        </div>
+                      )
+                    }
+                    {
+                      <span>{ moment(this.props.event.details.datetime).format("MMMM Do, h:mmA") }</span>
+                    }
+                  </div>
                   <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}}>
                   </div>
                 </div>
@@ -169,7 +185,6 @@ export default class EventTitlePage extends Component {
                 ""
               )
             }
-
             {
               this.props.event.organize ? (
                 this.props.event.organize.schedule.map((day, index) => {

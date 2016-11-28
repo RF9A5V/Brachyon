@@ -22,7 +22,7 @@ Meteor.methods({
     }
     if(instance.tickets) {
       cmd["$set"] = {};
-      cmd["$set"]["tickets." + instance.brackets.length + "f"] = {
+      cmd["$set"]["tickets." + instance.brackets.length] = {
         price: 0,
         description: ""
       }

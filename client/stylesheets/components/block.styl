@@ -15,17 +15,63 @@
   width 100%
   height auto
 
+.reward-selectable
+  padding 15px
+  margin-top 10px
+  background-color #333
+  width 100%
 
-.reward.block
-  border solid 2px white
-  text-align center
+.reward-selectable:hover, .ticket-selectable:hover
+  cursor pointer
 
+.reward-selectable.active
+  background-color #FF6000
 
-.reward.block img
-  border-bottom solid 2px white
-  width 200px
-  height 200px
+.reward-selectable img
+  width 75px
+  height auto
+  border-radius 100%
+  margin-right 20px
 
+.reward-selectable span
+  font-size 20px
 
-.reward.block div
+.ticket-selectable
+  padding 15px
+  width 100%
+  text-align left
+  background-color #333
+  margin-top 10px
+  font-size 20px
+
+.ticket-selectable.active
+  background-color #FF6000
+
+.tier-preview-block
   padding 20px
+  background-color #333
+  margin-right 10px
+  margin-bottom 10px
+  width calc((100% - 20px) / 3)
+  +between(800px, 1200px)
+    width calc((100% - 10px) / 2)
+  +below(800px)
+    margin-right 0
+    width 100%
+
+.tier-preview-block:hover
+  cursor pointer
+
++above(1200px)
+  .tier-preview-block:nth-child(3n)
+    margin-right 0
+
++between(800px, 1200px)
+  .tier-preview-block:nth-child(2n)
+    margin-right 0
+
+.tier-preview-block img
+  width 50px
+  height 50px
+  margin-right 10px
+  border-radius 100%
