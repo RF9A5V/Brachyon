@@ -262,6 +262,9 @@ Meteor.methods({
     }
   },
   "chargeCard": function(payableTo, chargeAmount, cardID){
+    if(Meteor.user().stripeCustomer == Meteor.users.findOne(payableTo).services.stripe.id) {
+      throw new Meteor.Error(403, "Can't pay yourself.");
+    }
     // Currently only used for tickets
     stripe.charges.create({
       amount: chargeAmount,
@@ -281,6 +284,9 @@ Meteor.methods({
 
   "events.saveCFCharge"(eventID, amount, cardID){
     var event = Events.findOne(eventID);
+    if(Meteor.user().stripeCustomer == Meteor.users.findOne(event.owner).services.stripe.id) {
+      throw new Meteor.Error(403, "Can't pay yourself.");
+    }
     var instance = Instances.findOne(event.instances.pop());
     if(!event.crowdfunding || !event.crowdfunding.tiers) {
       throw new Meteor.Error(404, "Can't crowdfund event with no crowdfunding.");

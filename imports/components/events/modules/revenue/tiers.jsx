@@ -14,6 +14,7 @@ export default class TierPage extends Component {
     this.state = {
       id: Events.findOne()._id,
       rewards: [],
+      tickets: [],
       index: -1,
       ready: false,
       tier: {},
@@ -22,7 +23,7 @@ export default class TierPage extends Component {
   }
 
   onTierCreate() {
-    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.state.description, this.state.rewards, (err) => {
+    Meteor.call("events.crowdfunding.createTier", this.state.id, this.refs.name.value, this.refs.price.value * 100, this.refs.limit.value * 1, this.state.description, this.state.rewards, this.state.tickets, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
@@ -33,7 +34,8 @@ export default class TierPage extends Component {
         this.refs.description.reset();
         this.setState({
           index: -1,
-          rewards: []
+          rewards: [],
+          tickets: []
         });
         return toastr.success("Successfully created reward tier.", "Success!");
       }
@@ -84,10 +86,19 @@ export default class TierPage extends Component {
         }
         else {
           var game = Games.findOne(instance.brackets[parseInt(ticket)].game);
-          content = game.name;
+          content = `Entry to ${game.name}`;
         }
+        var hasTicket = this.state.tickets.indexOf(ticket) >= 0;
         return (
-          <div className="ticket-selectable">
+          <div className={`ticket-selectable ${hasTicket ? "active" : ""}`} onClick={() => {
+            if(hasTicket) {
+              this.state.tickets.splice(this.state.tickets.indexOf(ticket), 1);
+            }
+            else {
+              this.state.tickets.push(ticket);
+            }
+            this.forceUpdate();
+          }}>
             { content }
           </div>
         )
@@ -107,7 +118,8 @@ export default class TierPage extends Component {
       loadTier: true,
       description: tier.description,
       index,
-      rewards: tier.rewards || []
+      rewards: tier.rewards || [],
+      tickets: tier.tickets || []
     });
     setTimeout(() => {
       this.setState({
@@ -118,7 +130,7 @@ export default class TierPage extends Component {
 
   render() {
     if(!this.state.ready) {
-      var rewards = Meteor.subscribe("rewards", this.state.id, {
+      var rewards = Meteor.subscribe("rewards", Events.findOne().slug, {
         onReady: () => {
           this.setState({
             rewardSub: rewards,
@@ -167,14 +179,16 @@ export default class TierPage extends Component {
                 <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
                   <h5>Name</h5>
                   <input type="text" ref={"name"} defaultValue={this.state.tier.name} />
-                  <h5>Price</h5>
-                  <div className="row x-center">
-                    <input type="number" ref={"price"} defaultValue={((this.state.tier.price || 0) / 100).toFixed(2)} />
-                  </div>
-                  <h5>Limit</h5>
-                  <span>How many backers can buy this tier?</span>
-                  <div className="row x-center">
-                    <input type="number" ref={"limit"} defaultValue={this.state.tier.limit} />
+                  <div className="row">
+                    <div className="col col-1" style={{marginRight: 20}}>
+                      <h5 className="col-1">Price</h5>
+                      <input style={{marginRight: 0}} type="number" ref={"price"} defaultValue={((this.state.tier.price || 0) / 100).toFixed(2)} />
+                    </div>
+                    <div className="col col-1">
+                      <h5>Limit</h5>
+                      <span>How many backers can buy this tier?</span>
+                      <input style={{marginRight: 0}} type="number" ref={"limit"} defaultValue={this.state.tier.limit} />
+                    </div>
                   </div>
                   <h5 style={{marginBottom: 10}}>Description</h5>
                   <Editor ref="description" usePara={true} onChange={(value) => { this.setState({ description: value }) }} value={this.state.tier.description} />
@@ -186,9 +200,12 @@ export default class TierPage extends Component {
               {
                 rewards.map((reward, index) => {
                   return (
-                    <div className={`reward-selectable ${this.state.rewards.indexOf(reward._id) < 0 ? "" : "active"}`} onClick={() => { this.toggleReward(reward._id) }}>
+                    <div className={`reward-selectable row x-center ${this.state.rewards.indexOf(reward._id) < 0 ? "" : "active"}`} onClick={() => { this.toggleReward(reward._id) }}>
                       <img src={ reward.imgUrl } />
-                      <span>{ reward.name }</span>
+                      <div className="col">
+                        <span>{ reward.name }</span>
+                        <sub>Value of ${(reward.value / 100).toFixed(2)}</sub>
+                      </div>
                     </div>
                   )
                 })
