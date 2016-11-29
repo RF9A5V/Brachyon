@@ -21,7 +21,7 @@ Meteor.publish('event', (slug) => {
     banners.push(game.banner);
   })
   return [
-    Events.find({_id}),
+    Events.find({_id}, { sort: { "crowdfunding.tiers.price": 1 } }),
     Images.find({
       _id: event.details.banner
     }).cursor,

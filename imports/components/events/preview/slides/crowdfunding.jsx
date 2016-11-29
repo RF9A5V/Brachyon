@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import FontAwesome from "react-fontawesome";
 
 import PaymentContainer from "../../crowdfunding/payment_container.jsx";
 import SkillTree from "../stretch.jsx";
 import TierPaymentContainer from "../tier_payment_container.jsx";
 import CFModal from "../cf_modal.jsx";
+import Loading from "/imports/components/public/loading.jsx";
+import RewardTooltip from "../reward_tooltip.jsx";
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
@@ -12,8 +15,16 @@ export default class CrowdfundingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      ready: false,
+      rewardTooltipOpen: false
     };
+  }
+
+  componentWillUnmount() {
+    if(this.state.rewards) {
+      this.state.rewards.stop();
+    }
   }
 
   backgroundImage(useDarkerOverlay){
@@ -40,20 +51,39 @@ export default class CrowdfundingPage extends Component {
   }
 
   render() {
+    if(!this.state.ready) {
+      var rewards = Meteor.subscribe("rewards", Events.findOne().slug, {
+        onReady: () => {
+          this.setState({
+            ready: true,
+            rewards
+          })
+        }
+      });
+      return <Loading />
+    }
     var cf = this.props.event.crowdfunding.details;
     var sponsors = this.props.event.crowdfunding.sponsors || [];
     var tiers = this.props.event.crowdfunding.tiers;
+    var ledger = Instances.findOne().cf || {};
+    var totalPeople = [];
+    var totalDollars = Object.keys(ledger).map(key => {
+      var index = parseInt(key);
+      totalPeople = totalPeople.concat(ledger[key].map(spons => { return spons.payee }));
+      return ledger[key].length * tiers[index].price;
+    }).reduce((a, b) => { return a + b }, 0);
+    totalPeople = Array.from(new Set(totalPeople)).length
     return (
       <div className="slide-page-container">
         <div className="slide-page row" style={{backgroundImage: this.backgroundImage(true)}}>
-          <div className="col-3 col cf-main">
+          <div className="col-4 col cf-main">
             <div className="col x-center cf-progress">
               <span className="cf-progress-amount">
                 {
                   cf.amount == 0 ? (
-                    `$${(cf.current / 100) || 0} raised!`
+                    `$${((totalDollars / 100) || 0).toFixed(2)} raised!`
                   ) : (
-                    `$${(cf.current / 100) || 0} out of ${cf.amount} raised!`
+                    `$${((totalDollars / 100) || 0).toFixed(2)} out of $${(cf.amount / 100).toFixed(2)} raised!`
                   )
                 }
               </span>
@@ -62,66 +92,81 @@ export default class CrowdfundingPage extends Component {
                   ""
                 ) : (
                   <div className="cf-progress-container">
-                    <div className="cf-progress-display" style={{width: `${Math.min((cf.current || 0) / cf.amount * 100, 100)}%`}}></div>
+                    <div className="cf-progress-display" style={{width: `${Math.min((totalDollars || 0) / cf.amount * 100, 100)}%`}}></div>
                   </div>
                 )
               }
-              <button style={{margin: "10px 0"}} onClick={() => { this.setState({ open: true }) }}>Sponsor This Event!</button>
+
               {
-                sponsors.length > 0 ? (
-                  <div className="row" style={{justifyContent: "flex-start", flexWrap: "wrap", alignSelf: "stretch"}}>
-                    {
-                      sponsors.map(sponsor => {
-                        return (
-                          <div style={{width: 300, display: "inline-flex", marginRight: 20}}>
-                            <img src={this.profileImage(sponsor.id)} style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} />
-                            <div className="col" style={{width: 250}}>
-                              <h5>{ Meteor.users.findOne(sponsor.id).username + " - $" + (sponsor.cfAmount / 100) }</h5>
-                              <p style={{fontSize: 10, lineHeight: 1.2, textAlign: "justify"}}>
-                                Pasta ipsum dolor sit amet ciriole cellentani cencioni fiorentine cannelloni tripoline calamarata capunti trenette lasagnotte occhi di lupo lasagnotte ricciutelle mezze penne. Sorprese fiori bavettine mafalde orzo gomito.
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
+                totalPeople > 0 ? (
+                  <h5>{ totalPeople } sponsor{ totalPeople == 1 ? "" : "s" }!</h5>
                 ) : (
                   <h5>No Sponsors Yet!</h5>
                 )
               }
             </div>
-          </div>
-          <div className="col-1 col cf-tiers">
-            {
-              tiers ? (
+            <div className="tier-container row" style={{flexWrap: "wrap", width: "100%", marginTop: 20}}>
+              {
                 tiers.map((tier, i) => {
+                  var alreadyBought = ledger && ledger[i] && ledger[i].some(obj => { return obj.payee == Meteor.userId() });
                   return (
-                    <div className="cf-tier col" onClick={() => {this.setState({open: true})}}>
-                      <div className="row flex-pad x-center">
-                        <span className="cf-amount">
-                          ${(tier.price / 100).toFixed(2)}
-                        </span>
-                        <span className="cf-limit">
-                          {tier.limit - (tier.sponsors || []).length} Remaining
-                        </span>
+                    <div className="tier-preview-block" onClick={() => { if(alreadyBought){ return toastr.warning("Already bought this tier!"); } this.setState({ open: true, tier, i, rewardTooltipOpen: false }) }}>
+                      <div className="row" style={{marginBottom: 20}}>
+                        <div className="row col-1">
+                          <h3 style={{marginRight: 10}}>{ tier.name }</h3>
+                          {
+                            alreadyBought ? (
+                              <FontAwesome name="check" />
+                            ) : (
+                              ""
+                            )
+                          }
+                        </div>
+                        <h5>${ (tier.price / 100).toFixed(2) }</h5>
                       </div>
-                      <p className="cf-description">
-                        { tier.description }
-                      </p>
-                      <TierPaymentContainer tier={tier} ref={"payment"+i} index={i} />
+                      <div className="row">
+                        {
+                          tier.rewards.map(reward => {
+                            return (
+                              <div style={{borderRadius: "100%", marginRight: 10}} onMouseEnter={() => {
+                                this.setState({
+                                  reward,
+                                  rewardTooltipOpen: true
+                                })
+                              }} onMouseLeave={() => {
+                                this.setState({
+                                  reward: null,
+                                  rewardTooltipOpen: false
+                                })
+                              }}>
+                                <img src={Rewards.findOne(reward).imgUrl} />
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                      <div className="row">
+                        <div className="col-1">
+                        </div>
+                        <i>{ tier.limit - ((Instances.findOne().cf || {})[i] || []).length } remaining</i>
+                      </div>
                     </div>
                   )
                 })
-              ) : (
-                ""
-              )
-            }
+              }
+            </div>
           </div>
         </div>
         {
           this.state.open ? (
-            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+            <CFModal open={this.state.open} close={() => { this.setState({open: false}) }} tier={this.state.tier} index={this.state.i} />
+          ) : (
+            ""
+          )
+        }
+        {
+          this.state.rewardTooltipOpen ? (
+            <RewardTooltip reward={this.state.reward} />
           ) : (
             ""
           )

@@ -6,6 +6,15 @@ import 'bootstrap/js/dropdown';
 import 'bootstrap/js/tooltip';
 
 export default class Editor extends Component {
+
+  reset() {
+    ReactSummernote.reset();
+  }
+
+  componentWillReceiveProps() {
+    this.forceUpdate();
+  }
+
   render() {
     var tools = [['style', ['bold', 'italic', 'underline']]];
     if(this.props.useInsert) {

@@ -42,7 +42,7 @@ export default class ImageForm extends Component {
       type = ".png";
     }
     this.props.collection.insert({
-      file: this.state.url,
+      file: (this.state.url || this.props.defaultImage),
       isBase64: true,
       fileName: Meteor.userId() + type, // Weird shit until I figure out if we want to save the initial file name
       meta: boxData,

@@ -1,10 +1,14 @@
 import { Meteor } from 'meteor/meteor';
+
+var Stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+
 import Events from '/imports/api/event/events.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Images } from "/imports/api/event/images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
+import Instances from "/imports/api/event/instance.js";
 
 Events._ensureIndex({
   'details.location.coords': '2dsphere',
@@ -86,14 +90,46 @@ Meteor.startup(() => {
   //   }
   // })
 
-  SyncedCron.start();
-
-  docs = Games.find({slug: {$exists: false}});
-  docs.forEach((doc) => {
-    Games.update(doc._id, {
-      $set: {
-        blah: ""
-      }
-    })
+  SyncedCron.add({
+    name: "Test cron",
+    schedule: (parser) => {
+      return parser.recur().every().hour()
+    },
+    job: () => {
+      var events = Events.find({ "crowdfunding.details.dueDate": { $lte: new Date() }, "crowdfunding.details.complete": { $ne: true } });
+      events.forEach(e => {
+        var instance = Instances.findOne(e.instances.pop());
+        var amountFunded = Object.keys((instance.cf || {})).map(key => {
+          return instance.cf[key].length * e.crowdfunding.tiers[key].price;
+        }).reduce((a, b) => { return a + b }, 0);
+        if(amountFunded >= e.crowdfunding.details.amount && amountFunded > 0) {
+          var destination = Meteor.users.findOne(e.owner).services.stripe.id;
+          Object.keys(instance.cf).forEach(index => {
+            instance.cf[index].forEach(obj => {
+              console.log(obj);
+              Stripe.charges.create({
+                amount: obj.amount,
+                customer: Meteor.users.findOne(obj.payee).stripeCustomer,
+                currency: "usd",
+                application_fee: (parseInt(obj.amount * 0.029) + 30) + parseInt(obj.amount * 0.04),
+                destination
+              })
+            })
+          });
+        }
+      });
+      Events.update({
+        "crowdfunding.details.dueDate": {
+           $lte: new Date()
+         },
+         "crowdfunding.details.complete": { $ne: true }
+      }, {
+         $set: {
+           "crowdfunding.details.complete": true
+         }
+      });
+    }
   })
+
+  SyncedCron.start();
 });
