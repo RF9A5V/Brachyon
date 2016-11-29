@@ -107,7 +107,8 @@ export default class ParticipantListPanel extends Component {
             if(obj.id != null){
               participant = Meteor.users.findOne(obj.id);
             }
-            var isElim = this.isEliminated(obj.alias);
+            // var isElim = this.isEliminated(obj.alias);
+            var isElim = false;
             return (
               <div className="participant-panel" style={{opacity: isElim ? (0.3) : (1)}}>
                 <div className="participant-panel-image">

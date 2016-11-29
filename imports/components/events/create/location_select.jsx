@@ -117,10 +117,12 @@ export default class LocationSelect extends Component {
           Is this event online?
         </h5>
         <div>
-          <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={1} checked={!this.state.online} />
-          <label>No</label>
-          <input onChange={this.updateValue.bind(this)} name="online" type="radio" value={0} checked={this.state.online} />
-          <label>Yes</label>
+          <div className="row x-center" style={{margin: "10px 0"}}>
+            <input style={{margin: 0}} onChange={this.updateValue.bind(this)} name="online" type="radio" value={1} checked={!this.state.online} />
+            <label style={{margin: "8px 5px 5px"}}>No</label>
+            <input style={{margin: "0px 0px 0px 15px"}} onChange={this.updateValue.bind(this)} name="online" type="radio" value={0} checked={this.state.online} />
+            <label style={{margin: "8px 5px 5px"}}>Yes</label>
+          </div>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
           <h5>Location Name</h5>

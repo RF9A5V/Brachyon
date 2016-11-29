@@ -101,10 +101,15 @@ export default class EventCreateScreen extends Component {
     e.preventDefault();
     var refKeys = Object.keys(this.refs);
     var args = {};
+    var unpub = false;
+    var unpubList = ["crowdfunding"];
     for(var i in refKeys) {
       var key = refKeys[i];
       if(this.state.moduleState[key].active) {
         args[key] = this.refs[key].value();
+        if(unpubList.indexOf(key) >= 0) {
+          unpub = true;
+        }
       }
     }
     var createEvent = (args) => {
@@ -113,7 +118,12 @@ export default class EventCreateScreen extends Component {
           toastr.error(err.reason, "Error!");
         }
         else {
-          browserHistory.push(`/events/${event}/show`);
+          if(unpub) {
+            browserHistory.push(`/events/${event}/edit`);
+          }
+          else {
+            browserHistory.push(`/events/${event}/show`);
+          }
         }
       });
     }

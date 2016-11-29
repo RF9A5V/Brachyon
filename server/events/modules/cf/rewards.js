@@ -1,60 +1,45 @@
-import { ProfileImages } from "/imports/api/users/profile_images.js";
+import { RewardIcons } from "/imports/api/sponsorship/reward_icon.js";
+import Rewards from "/imports/api/sponsorship/rewards.js";
 
 Meteor.methods({
-  "events.crowdfunding.rewards.createReward"(id, name, img, description) {
+  "events.crowdfunding.createReward"(id, name, img, description, value) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
-    var profileImage = ProfileImages.findOne(img);
-    if(!profileImage) {
+    var image = RewardIcons.findOne(img);
+    if(!image) {
       throw new Meteor.Error(404, "Image not found.");
     }
+    var reward = Rewards.insert({
+      name,
+      img,
+      imgUrl: image.link(),
+      description,
+      value
+    })
     Events.update(id, {
       $push: {
-        "crowdfunding.rewards": {
-          name,
-          img,
-          imgUrl: profileImage.link(),
-          description
-        }
+        "crowdfunding.rewards": reward
       }
     })
   },
-  "events.crowdfunding.rewards.editReward"(id, name, img, description, index) {
-    var event = Events.findOne(id);
-    if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
+  "events.crowdfunding.editReward"(id, name, img, description, value) {
+    var reward = Rewards.findOne(id);
+    if(!reward) {
+      throw new Meteor.Error(404, "Reward not found.");
     }
-    var profileImage = ProfileImages.findOne(img);
-    if(!profileImage) {
+    var image = RewardIcons.findOne(img);
+    if(!image) {
       throw new Meteor.Error(404, "Image not found.");
     }
-    Events.update(id, {
+    Rewards.update(id, {
       $set: {
-        [`crowdfunding.rewards.${index}`]: {
-          name,
-          img,
-          imgUrl: profileImage.link(),
-          description
-        }
-      }
-    })
-  },
-  "events.crowdfunding.rewards.deleteReward"(id, index) {
-    var event = Events.findOne(id);
-    if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
-    }
-    ProfileImages.remove(event.crowdfunding.rewards[index].img);
-    Events.update(id, {
-      $unset: {
-        [`crowdfunding.rewards.${index}`]: 1
-      }
-    });
-    Events.update(id, {
-      $pull: {
-        "crowdfunding.rewards": null
+        name,
+        img,
+        imgUrl: image.link(),
+        description,
+        value
       }
     })
   }
