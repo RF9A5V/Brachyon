@@ -81,9 +81,9 @@ export default class CrowdfundingPage extends Component {
               <span className="cf-progress-amount">
                 {
                   cf.amount == 0 ? (
-                    `$${(totalDollars / 100) || 0} raised!`
+                    `$${((totalDollars / 100) || 0).toFixed(2)} raised!`
                   ) : (
-                    `$${(totalDollars / 100) || 0} out of ${cf.amount} raised!`
+                    `$${((totalDollars / 100) || 0).toFixed(2)} out of $${(cf.amount / 100).toFixed(2)} raised!`
                   )
                 }
               </span>
@@ -110,7 +110,7 @@ export default class CrowdfundingPage extends Component {
                 tiers.map((tier, i) => {
                   var alreadyBought = ledger && ledger[i] && ledger[i].some(obj => { return obj.payee == Meteor.userId() });
                   return (
-                    <div className="tier-preview-block" onClick={() => { if(alreadyBought){ return toastr.warning("Already bought this tier!"); } this.setState({ open: true, tier, i }) }}>
+                    <div className="tier-preview-block" onClick={() => { if(alreadyBought){ return toastr.warning("Already bought this tier!"); } this.setState({ open: true, tier, i, rewardTooltipOpen: false }) }}>
                       <div className="row" style={{marginBottom: 20}}>
                         <div className="row col-1">
                           <h3 style={{marginRight: 10}}>{ tier.name }</h3>
@@ -128,7 +128,7 @@ export default class CrowdfundingPage extends Component {
                         {
                           tier.rewards.map(reward => {
                             return (
-                              <div style={{borderRadius: "100%"}} onMouseEnter={() => {
+                              <div style={{borderRadius: "100%", marginRight: 10}} onMouseEnter={() => {
                                 this.setState({
                                   reward,
                                   rewardTooltipOpen: true

@@ -3,7 +3,7 @@ import Rewards from "/imports/api/sponsorship/rewards.js";
 
 Meteor.publish("rewards", (slug) => {
   var event = Events.findOne({slug});
-  var rewards = Rewards.find({ _id: { $in: event.crowdfunding.rewards || [] } }, { sort: { value: 1 } });
+  var rewards = Rewards.find({ _id: { $in: (event.crowdfunding || {}).rewards || [] } }, { sort: { value: 1 } });
   return [
     rewards,
     RewardIcons.find({_id: { $in: rewards.map((r) => { return r.img; }) }}).cursor
