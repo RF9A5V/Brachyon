@@ -6,6 +6,8 @@ import LoadingScreen from "/imports/components/public/loading.jsx";
 import Editor from "/imports/components/public/editor.jsx";
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
+import Rewards from "/imports/api/sponsorship/rewards.js";
+import { RewardIcons } from "/imports/api/sponsorship/reward_icon.js";
 
 export default class ApproveEventAction extends Component {
 
@@ -18,12 +20,19 @@ export default class ApproveEventAction extends Component {
           this.setState({ isEventsReady: true })
         }
       }),
-      isEventsReady: false
+      rewards: Meteor.subscribe("rewardsToReview", {
+        onReady: () => {
+          this.setState({ isRewardsReady: true })
+        }
+      }),
+      isEventsReady: false,
+      isRewardsReady: false
     }
   }
 
   componentWillUnmount() {
     this.state.eventsToApprove.stop();
+    this.state.rewards.stop();
   }
 
   events() {
@@ -83,7 +92,7 @@ export default class ApproveEventAction extends Component {
             return (
               <div className="event-block col" key={i} onClick={() => { this.setState({ eventID: event._id }) }}>
                 <h2 className="event-block-title">{ event.details.name }</h2>
-                <img src={this.imgOrDefault(event)} />
+                <img src={this.imgOrDefault(event)} style={{width: "100%", height: "auto"}} />
                 <div className="event-block-content">
                   <div className="col">
                     <div className="row flex-pad x-center" style={{marginBottom: 10}}>
@@ -125,7 +134,7 @@ export default class ApproveEventAction extends Component {
         <h3>{ event.details.name }</h3>
         <img src={this.imgOrDefault(event)} style={{width: 400, height: "auto", margin: "20px 0"}} />
         <h5>Description</h5>
-        <Editor value={event.details.description} isEditable={false} />
+        <div dangerouslySetInnerHTML={{__html: event.details.description}}></div>
         <h3 style={{marginBottom: 20}}>Crowdfunding Details</h3>
         {
           tiers.map(tier => {
@@ -133,18 +142,35 @@ export default class ApproveEventAction extends Component {
               <div>
                 <h5>{ tier.name } - ${ (tier.price / 100).toFixed(2) }</h5>
                 <span>Limit of { tier.limit }</span>
-                <p>{ tier.description }</p>
+                <div dangerouslySetInnerHTML={{__html: tier.description}}></div>
                 <div className="row x-center" style={{marginBottom: 20}}>
                   {
-                    tier.rewards.map(index => {
+                    tier.rewards.map(id => {
+                      var reward = Rewards.findOne(id);
+                      var rewardIcon = RewardIcons.findOne(reward.image);
                       return (
                         <div>
-                          <img src={rewards[index].imgUrl} />
-                          <span>{ rewards[index].name }</span>
+                          <img style={{width: 50, height: 50, marginRight: 10}} src={reward.imgUrl} />
+                          <span>{ reward.name }</span>
                         </div>
                       )
                     })
                   }
+                </div>
+              </div>
+            )
+          })
+        }
+        {
+          rewards.map(rewardId => {
+            var reward = Rewards.findOne(rewardId);
+            return (
+              <div>
+                <div className="row x-center" style={{marginBottom: 20}}>
+                  <img style={{width: 50, height: 50, marginRight: 20}} src={reward.imgUrl} />
+                  <h5>{ reward.name }</h5>
+                </div>
+                <div dangerouslySetInnerHTML={{__html: reward.description}}>
                 </div>
               </div>
             )
@@ -160,7 +186,7 @@ export default class ApproveEventAction extends Component {
   }
 
   render() {
-    if(!this.state.isEventsReady) {
+    if(!this.state.isEventsReady || !this.state.isRewardsReady) {
       return <LoadingScreen />
     }
     if(this.state.eventID) {

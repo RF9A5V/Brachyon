@@ -25,7 +25,7 @@ import CurrencyPurchaseScreen from "../imports/components/public/currency_purcha
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
-import CheckoutScreen from "../imports/components/events/checkout.jsx";
+import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
@@ -58,16 +58,16 @@ export const renderRoutes = () => (
       <Route path="events/discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
-      <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
-      <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="games/index" component={GamesIndexScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="events/:slug/edit" component={EditEventScreen} />
       <Route path="events/:slug/admin" component={EventAdminScreen} />
+      <Route path="events/:slug/show" component={PreviewEventScreen}/>
+      <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
     </Route>
   </Router>
 )
