@@ -16,6 +16,7 @@ import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
 
 import BracketsMain from "./admin/modules/brackets/main.jsx";
+import AddBracket from "./modules/bracket/add.jsx";
 
 import PromotionMain from "./admin/modules/promotion/main.jsx";
 import FeaturedList from "./admin/modules/promotion/featured.jsx";
@@ -118,6 +119,10 @@ export default class EventAdminPage extends TrackerReact(Component) {
         subitems: [
           {
             component: BracketsMain
+          },
+          {
+            component: AddBracket,
+            text: "Add Bracket"
           }
         ]
       });
