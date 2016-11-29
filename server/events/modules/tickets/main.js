@@ -9,11 +9,13 @@ Meteor.methods({
         "tickets": {
           venue: {
             price: 0,
-            description: ""
+            description: "",
+            entry: false
           },
           spectator: {
             price: 0,
-            description: ""
+            description: "",
+            entry: false
           }
         }
       }
@@ -22,7 +24,8 @@ Meteor.methods({
       instance.brackets.forEach((bracket, index) => {
         cmd["$set"]["tickets"][`${index}`] = {
           price: 0,
-          description: ""
+          description: "",
+          entry: true
         }
       });
     }
