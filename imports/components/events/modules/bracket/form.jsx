@@ -6,6 +6,8 @@ import GameTemplate from "/imports/components/public/search_results/game_templat
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
+import FontAwesome from "react-fontawesome";
+
 export default class BracketForm extends Component {
 
   constructor(props) {
@@ -181,7 +183,14 @@ export default class BracketForm extends Component {
         // <h5>Bracket Name</h5>
         // <input ref="name" defaultValue={this.props.name} />
         }
-        <h5>Game</h5>
+        <div className="row flex-pad">
+          <h5>Game</h5>
+          {
+            this.props.deletable ? (
+              <FontAwesome name="minus" onClick={() => {this.props.delfunc(this.props.key)}} />
+            ) : ( "" )
+          }
+        </div>
         {
           this.state.banner ? (
             <div style={{textAlign: "center"}}>
