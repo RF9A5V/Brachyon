@@ -68,7 +68,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         },
         {
           component: DatetimePage,
-          text: "Date and Time"
+          text: "Date & Time"
         },
         {
           component: ImagePage,
