@@ -68,7 +68,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
         },
         {
           component: DatetimePage,
-          text: "Date and Time"
+          text: "Date & Time"
         },
         {
           component: ImagePage,
