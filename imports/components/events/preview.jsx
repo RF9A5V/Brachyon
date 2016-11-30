@@ -12,12 +12,13 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
+import { Images } from "/imports/api/event/images.js";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
-  componentWillMount(){
-    var self = this;
-    this.setState({
+  constructor(props) {
+    super(props);
+    this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
           this.setState({
@@ -40,18 +41,44 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         }
       }),
       isReady: false,
-      anim: false
-    })
+      hasLoaded: false
+    }
   }
 
   componentWillUnmount(){
     this.state.event.stop();
     this.state.users.stop();
     this.state.sponsors.stop();
+    document.getElementById("fbTitle").setAttrbute("content", "Brachyon");
+    document.getElementById("fbDescription").setAttribute("content", "Beyond the Brackets");
+    document.getElementById("fbImage").setAttribute("content", "/images/logo.png");
+    document.getElementById("fbUrl").setAttribute("content", window.location.href);
   }
 
   event() {
     return Events.find().fetch()[0];
+  }
+
+  populateMetaTags() {
+    var event = this.event();
+    document.getElementById("fbTitle").setAttribute("content", event.details.name);
+    document.getElementById("fbDescription").setAttribute("content", this.fbDescriptionParser(event.details.description));
+    document.getElementById("fbImage").setAttribute("content", this.imgOrDefault());
+    document.getElementById("fbUrl").setAttribute("content", window.location.href);
+    this.setState({
+      hasLoaded: true
+    })
+  }
+
+  fbDescriptionParser(description) {
+    var startIndex = description.indexOf("<p>");
+    var endIndex = description.indexOf("</p>", startIndex);
+    var tempDesc = description.substring(startIndex + 3, endIndex);
+    console.log(tempDesc);
+    if(tempDesc.length > 200) {
+      tempDesc = tempDesc.substring(0, 196) + "...";
+    }
+    return tempDesc;
   }
 
   slides() {
@@ -84,11 +111,21 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return pages;
   }
 
+  imgOrDefault() {
+    var event = this.event();
+    return event.details.banner ? Images.findOne(event.details.banner).link() : "/images/logo.png";
+  }
+
   render() {
     if(!this.state.isReady){
       return (
         <div>Loading...</div>
       )
+    }
+    else {
+      if(!this.state.hasLoaded){
+        this.populateMetaTags();
+      }
     }
     var event = this.event();
     return (
