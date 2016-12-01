@@ -49,10 +49,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     this.state.event.stop();
     this.state.users.stop();
     this.state.sponsors.stop();
-    document.getElementById("fbTitle").setAttrbute("content", "Brachyon");
-    document.getElementById("fbDescription").setAttribute("content", "Beyond the Brackets");
-    document.getElementById("fbImage").setAttribute("content", "/images/logo.png");
-    document.getElementById("fbUrl").setAttribute("content", window.location.href);
+    document.querySelector("[property='og:title']").setAttrbute("content", "Brachyon");
+    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
+    document.querySelector("[property='og:image']").setAttribute("content", "/images/logo.png");
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
   }
 
   event() {
@@ -61,10 +61,10 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   populateMetaTags() {
     var event = this.event();
-    document.getElementById("fbTitle").setAttribute("content", event.details.name);
-    document.getElementById("fbDescription").setAttribute("content", this.fbDescriptionParser(event.details.description));
-    document.getElementById("fbImage").setAttribute("content", this.imgOrDefault());
-    document.getElementById("fbUrl").setAttribute("content", window.location.href);
+    document.querySelector("[property='og:title']").setAttribute("content", event.details.name);
+    document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
+    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
     this.setState({
       hasLoaded: true
     })
