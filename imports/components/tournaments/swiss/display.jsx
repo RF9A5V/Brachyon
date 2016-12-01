@@ -72,14 +72,28 @@ export default class SwissDisplay extends TrackerReact(Component) {
   }
 
   endTourn(){
-    Meteor.call("events.endGroup", this.state.id, 0, (err) => {
+    Meteor.call("events.tiebreaker", this.state.brid, this.state.page-1, 3, (err, isNotTied) => {
       if(err) {
-        toastr.error(err.reason, "Error!");
+        toastr.error(err.reason, "Error!")
       }
       else {
-        toastr.success("Ended bracket!", "Success!");
+        if (isNotTied)
+        {
+          Meteor.call("events.endGroup", this.state.id, 0, (error) => {
+            if(error) {
+              toastr.error(error.reason, "Error!");
+            }
+            else {
+              toastr.success("Ended bracket!", "Success!");
+            }
+          })
+        }
+        else //Hope this doesn't happen cuz some potentially janky shit I'd need to fix happens
+        {
+          this.newRound();
+        }
       }
-    })
+    });
   }
 
   openModal(args) {
@@ -187,12 +201,12 @@ export default class SwissDisplay extends TrackerReact(Component) {
           <div>
           {
             this.state.page >= (this.state.recrounds) ? (
-              <button onClick={ () => {this.endTourn().bind(this)} }>
+              <button onClick={ () => {this.endTourn()} }>
                 Finish Tournament
               </button>
             ) : (
               this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) && Instances.findOne().brackets[0].endedAt == null ? (
-                <button onClick={ () => {this.newRound().bind(this)} }>
+                <button onClick={ () => {this.newRound()} }>
                   Advance Round
                 </button>
               ) : (
