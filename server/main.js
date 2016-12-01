@@ -76,19 +76,7 @@ ServiceConfiguration.configurations.upsert(
 );
 
 Meteor.startup(() => {
-
-  Logger.info('Meteor started!')
-
-  // SyncedCron.add({
-  //   name: "Test cron job",
-  //   schedule: function(parser){
-  //     return parser.recur().every().minute()
-  //   },
-  //   job: function() {
-  //     console.log("Job run!");
-  //     return true;
-  //   }
-  // })
+  Logger.info('Meteor started!');
 
   SyncedCron.add({
     name: "Test cron",
