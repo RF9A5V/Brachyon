@@ -83,11 +83,11 @@ export default class Footer extends React.Component {
           { this.socialLinks() }
           <div className="col-1">
             <div className="row footer-hub" style={{margin: '0 10px 0 0'}}>
-              <Link to="/about" className="footer-hub-pad col x-center">About</Link>
+              <Link to="/about"><div className="footer-hub-bg col x-center center">About</div></Link>
               {/*<Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>*/}
-              <Link to="/terms" className="footer-hub-pad col x-center">Terms</Link>
+              <Link to="/terms"><div className="footer-hub-bg col x-center center">Terms</div></Link>
               {/*<a href="#" className="footer-hub-pad col x-center">Privacy</a>*/}
-              <a href="#" className="footer-hub-pad col x-center">&copy; Brachyon 2016</a>
+              <div className="footer-hub-bg col x-center center">&copy; Brachyon 2016</div>
             </div>
           </div>
         </div>
