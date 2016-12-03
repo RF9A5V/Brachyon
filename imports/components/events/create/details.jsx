@@ -140,7 +140,7 @@ export default class DetailsPanel extends Component {
         <div style={this.blockStyle("Banner")}>
           <h5>Event Image (Optional)</h5>
           <div className="row center">
-          <ImageForm ref="image" collection={Images} callback={() => {}} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
+          <ImageForm ref="image" collection={Images} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
           </div>
         </div>
       </div>

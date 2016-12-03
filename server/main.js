@@ -76,6 +76,9 @@ ServiceConfiguration.configurations.upsert(
 );
 
 Meteor.startup(() => {
+
+  
+
   Logger.info('Meteor started!');
 
   SyncedCron.add({

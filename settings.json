@@ -8,6 +8,18 @@
      }
    },
 
+   "googleCloud": {
+     "projectId": "peerless-tiger-130020",
+     "accessId": "brachyon@peerless-tiger-130020.iam.gserviceaccount.com"
+   },
+
+   "kraken": {
+     "auth": {
+       "api_key": "***REMOVED***",
+       "api_secret": "***REMOVED***"
+     }
+   },
+
   "public": {
 
     "analyticsSettings": {
