@@ -6,15 +6,13 @@ export default class ImageForm extends Component {
   componentWillMount() {
     this.setState({
       id: this.props.id,
-      uploader: null
+      uploader: null,
+      file: null
     });
   }
 
   value(getBase64) {
     if(!this.state.url && !this.props.defaultImage){
-      if(this.props.callback){
-        this.props.callback({_id: this.props.id});
-      }
       return this.props.id;
     }
     var imageData = this.refs.cropper.getImageData();
@@ -27,6 +25,12 @@ export default class ImageForm extends Component {
     boxData.height *= heightRatio;
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
+
+    if(this.props.meta) {
+      Object.keys(this.props.meta).forEach(key => {
+        boxData[key] = this.props.meta[key];
+      })
+    }
 
     if(getBase64){
       return {
@@ -41,6 +45,15 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
+    // var uploader = new Slingshot.Upload("event-banners");
+    // uploader.send(this.state.file, (err, downloadUrl) => {
+    //   if(err) {
+    //     console.log(err);
+    //   }
+    //   else {
+    //     console.log(downloadUrl);
+    //   }
+    // });
     this.props.collection.insert({
       file: (this.state.url || this.props.defaultImage),
       isBase64: true,
@@ -53,9 +66,6 @@ export default class ImageForm extends Component {
         if(err){
           toastr.error(err.reason);
         }
-        if(!err && this.props.callback){
-          this.props.callback(data);
-        }
       }
     });
   }
@@ -64,7 +74,8 @@ export default class ImageForm extends Component {
     e.preventDefault();
     var self = this;
     var reader = new FileReader();
-    var type = e.target.files[0].type;
+    var file = e.target.files[0];
+    var type = file.type;
     if(this.props.onSelect){
       this.props.onSelect();
     }
@@ -74,10 +85,11 @@ export default class ImageForm extends Component {
       }
       self.setState({
         url: reader.result,
+        file,
         type
       });
     }
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
   }
 
   componentWillReceiveProps(next) {

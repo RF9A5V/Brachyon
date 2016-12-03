@@ -19,8 +19,8 @@ if(Meteor.isServer) {
   bucket = gcs.bucket(bucketName);
 }
 
-var ProfileImages = new FilesCollection({
-  collectionName: "profileImages",
+var EventBanners = new FilesCollection({
+  collectionName: "eventBanners",
   allowClientCode: false,
   onBeforeUpload: function(file) {
     if(file.size <= 10485760 && /png|jpg|jpeg/i.test(file.extension)) {
@@ -58,11 +58,11 @@ var ProfileImages = new FilesCollection({
         console.log(err);
       }
       else {
-        Meteor.users.update({
-          _id: fileRef.meta.userId
+        Events.update({
+          _id: fileRef.meta.eventId
         }, {
           $set: {
-            "profile.imageUrl": (Meteor.isDevelopment ? "https://brachyontest-604a.kxcdn.com/" : "") + "profileImages/" + fileRef.meta.userId + ext
+            "profile.imageUrl": (Meteor.isDevelopment ? "https://brachyontest-604a.kxcdn.com/" : "") + "eventBanners/" + fileRef.meta.eventId + ext
           }
         });
         self.remove({_id: fileRef._id});
@@ -75,7 +75,7 @@ var ProfileImages = new FilesCollection({
       file.on("finish", Meteor.bindEnvironment(function() {
         file.close();
         bucket.upload(fileRef.path, {
-          destination: "profileImages/" + fileRef.meta.userId + ext,
+          destination: "eventBanners/" + fileRef.meta.userId + ext,
           public: true
         }, Meteor.bindEnvironment(gcUploadCB));
       }))
