@@ -6,7 +6,7 @@ import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Games from "/imports/api/games/games.js";
 import Instances from "/imports/api/event/instance.js";
 
@@ -22,10 +22,7 @@ export default class EventTitlePage extends Component {
   }
 
   backgroundImage(useDarkerOverlay){
-    var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Images.findOne(this.props.event.details.banner).link();
-    }
+    var imgUrl = this.props.event.details.bannerUrl ? this.props.event.details.bannerUrl : "/images/bg.jpg";
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
     }

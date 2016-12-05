@@ -7,7 +7,7 @@ import PaymentCheckout from "./checkout/payment.jsx";
 import CheckoutCompletion from "./checkout/completion.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class CheckoutPage extends TrackerReact(Component) {
 
@@ -42,7 +42,7 @@ export default class CheckoutPage extends TrackerReact(Component) {
 
   bannerOrDefault() {
     var event = Events.findOne();
-    var img = Images.findOne(event.details.banner);
+    var img = Banners.findOne(event.details.banner);
     if(img) {
       return img.link();
     }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Modal from "react-modal";
 import Dropzone from "react-dropzone";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 import ImageForm from "/imports/components/public/img_form.jsx";
 

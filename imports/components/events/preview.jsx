@@ -12,7 +12,7 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -46,13 +46,13 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   componentWillUnmount(){
-    this.state.event.stop();
-    this.state.users.stop();
-    this.state.sponsors.stop();
-    document.querySelector("[property='og:title']").setAttrbute("content", "Brachyon");
+    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
     document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
     document.querySelector("[property='og:image']").setAttribute("content", "/images/logo.png");
     document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+    this.state.event.stop();
+    this.state.users.stop();
+    this.state.sponsors.stop();
   }
 
   event() {
@@ -74,7 +74,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var startIndex = description.indexOf("<p>");
     var endIndex = description.indexOf("</p>", startIndex);
     var tempDesc = description.substring(startIndex + 3, endIndex);
-    console.log(tempDesc);
     if(tempDesc.length > 200) {
       tempDesc = tempDesc.substring(0, 196) + "...";
     }
@@ -113,7 +112,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   imgOrDefault() {
     var event = this.event();
-    return event.details.banner ? Images.findOne(event.details.banner).link() : "/images/logo.png";
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/logo.png";
   }
 
   render() {

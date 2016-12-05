@@ -43,7 +43,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
 
   componentWillUnmount() {
     this.state.event.stop();
-    this.state.sponsors.stop();
+    this.state.rewards.stop();
   }
 
 

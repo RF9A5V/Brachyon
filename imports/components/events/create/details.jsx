@@ -7,7 +7,7 @@ import TimeInput from './time_input.jsx';
 import ImageForm from "../../public/img_form.jsx";
 import Editor from "../../public/editor.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class DetailsPanel extends Component {
 
@@ -39,7 +39,7 @@ export default class DetailsPanel extends Component {
         location: this.refs.location.value(),
         description: this.state.content,
         datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate(),
-        image: this.refs.image.value(true)
+        image: this.refs.image
       }
     }
   }
@@ -140,7 +140,7 @@ export default class DetailsPanel extends Component {
         <div style={this.blockStyle("Banner")}>
           <h5>Event Image (Optional)</h5>
           <div className="row center">
-          <ImageForm ref="image" collection={Images} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
+          <ImageForm ref="image" collection={Banners} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
           </div>
         </div>
       </div>

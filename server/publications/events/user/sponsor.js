@@ -1,4 +1,4 @@
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Instance from "/imports/api/event/instance.js";
 
 Meteor.publish("sponsor.upcomingEvents", function(id, page) {
@@ -13,7 +13,7 @@ Meteor.publish("sponsor.upcomingEvents", function(id, page) {
       $gt: new Date()
     }
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }
@@ -37,7 +37,7 @@ Meteor.publish("sponsor.ongoingEvents", function(id, page) {
       $lte: new Date()
     }
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }
@@ -58,7 +58,7 @@ Meteor.publish("sponsor.completedEvents", function(id, page) {
       }
     }
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }

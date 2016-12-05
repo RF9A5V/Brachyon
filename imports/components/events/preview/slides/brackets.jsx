@@ -7,7 +7,7 @@ import Games from "/imports/api/games/games.js";
 import Notifications from "/imports/api/users/notifications.js";
 
 import Instances from "/imports/api/event/instance.js";
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class BracketSlide extends Component {
@@ -23,7 +23,7 @@ export default class BracketSlide extends Component {
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
     if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Images.findOne(this.props.event.details.banner).link();
+      imgUrl = Banners.findOne(this.props.event.details.banner).link();
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;

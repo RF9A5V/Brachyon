@@ -1,25 +1,9 @@
 import { FilesCollection } from "meteor/ostrio:files";
 import fs from "fs";
-import https from "https";
-import Kraken from "kraken";
 
-var kraken, gcs, bucket;
+import { compressThenStore } from "../upload_suite.js";
 
-if(Meteor.isServer) {
-  import Storage from "@google-cloud/storage";
-  kraken = new Kraken({
-    "api_key": Meteor.settings.kraken.auth.api_key,
-    "api_secret": Meteor.settings.kraken.auth.api_secret
-  });
-  gcs = Storage({
-    projectId: Meteor.settings.googleCloud.projectId,
-    keyFilename: Meteor.absolutePath + "/private/gc_key.json"
-  })
-  var bucketName = Meteor.isDevelopment ? "brachyon-test" : "brachyon-prod";
-  bucket = gcs.bucket(bucketName);
-}
-
-var EventBanners = new FilesCollection({
+var Banners = new FilesCollection({
   collectionName: "eventBanners",
   allowClientCode: false,
   onBeforeUpload: function(file) {
@@ -34,64 +18,38 @@ var EventBanners = new FilesCollection({
     var params = {
       file: fileRef.path,
       wait: true,
-      resize: {
-        width: parseInt(meta.width),
-        height: parseInt(meta.height),
-        x: parseInt(meta.left),
-        y: parseInt(meta.top),
-        scale: parseInt(640 / meta.width * 100),
-        strategy: "crop",
-        lossy: true
-      }
+      lossy: true
     };
-    var ext = "";
-    if(fileRef.type == "image/jpeg" || fileRef.type == "image/jpg") {
-      ext = ".jpg";
-    }
-    else {
-      ext = ".png";
-    }
+    var location = "eventBanners";
+
     var self = this;
-
-    var gcUploadCB = function(err) {
-      if(err) {
-        console.log(err);
-      }
-      else {
-        Events.update({
-          _id: fileRef.meta.eventId
-        }, {
-          $set: {
-            "profile.imageUrl": (Meteor.isDevelopment ? "https://brachyontest-604a.kxcdn.com/" : "") + "eventBanners/" + fileRef.meta.eventId + ext
-          }
-        });
-        self.remove({_id: fileRef._id});
-      }
-    }
-
-    var krakenDLCB = function(response) {
-      var file = fs.createWriteStream(fileRef.path);
-      response.pipe(file);
-      file.on("finish", Meteor.bindEnvironment(function() {
-        file.close();
-        bucket.upload(fileRef.path, {
-          destination: "eventBanners/" + fileRef.meta.userId + ext,
-          public: true
-        }, Meteor.bindEnvironment(gcUploadCB));
-      }))
-    }
-
-    var krakenCB = function(status) {
-      if(status.success) {
-        var request = https.get(status.kraked_url, Meteor.bindEnvironment(krakenDLCB));
-      }
-      else {
-        console.log(`Failed with error: ${status.message}`);
-      }
-    }
-
-    kraken.upload(params, Meteor.bindEnvironment(krakenCB));
+    var writeStream = fs.createWriteStream(fileRef.path + ".temp");
+    gm(fs.createReadStream(fileRef.path), fileRef.name).crop(meta.width, meta.height, meta.left, meta.top).resize("1280", "720").stream().pipe(writeStream);
+    writeStream.on("close", Meteor.bindEnvironment(function() {
+      fs.rename(fileRef.path + ".temp", fileRef.path, Meteor.bindEnvironment(() => {
+        if(!Meteor.isDevelopment) {
+          compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
+            Events.update({
+              slug: meta.eventSlug
+            }, {
+              $set: {
+                "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+              }
+            });
+            self.remove({_id: fileRef._id});
+          }));
+        }
+        else {
+          Events.update({ slug: meta.eventSlug }, {
+            $set: {
+              "details.bannerUrl": self.findOne(fileRef._id).link(),
+              "details.banner": fileRef._id
+            }
+          });
+        }
+      }));
+    }));
   }
 })
 
-export { ProfileImages };
+export { Banners };

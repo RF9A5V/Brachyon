@@ -5,7 +5,7 @@ import { browserHistory, Link } from "react-router"
 import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";

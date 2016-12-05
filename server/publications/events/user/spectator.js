@@ -1,4 +1,4 @@
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Instances from "/imports/api/event/instance.js";
 
 Meteor.publish("spectator.upcomingEvents", function(id, page) {
@@ -9,7 +9,7 @@ Meteor.publish("spectator.upcomingEvents", function(id, page) {
       $gt: new Date()
     }
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }
@@ -29,7 +29,7 @@ Meteor.publish("spectator.ongoingEvents", function(id, page) {
       $lte: new Date()
     }
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }
@@ -46,7 +46,7 @@ Meteor.publish("spectator.completedEvents", function(id, page) {
     isComplete: true,
     [`tickets.ticketAccess.${id}`]: "spectator",
   });
-  var imgs = Images.find({
+  var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
     }

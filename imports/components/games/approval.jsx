@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import Games from '/imports/api/games/games.js';
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class GameApprovalScreen extends TrackerReact(Component) {
 
@@ -22,7 +22,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
   }
 
   imageURL(id) {
-    return Images.findOne(id).link();
+    return Banners.findOne(id).link();
   }
 
   approveGame(id) {
