@@ -24,8 +24,6 @@ export default class ImageForm extends Component {
     return false;
   }
 
-
-
   value(cb) {
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
@@ -65,9 +63,10 @@ export default class ImageForm extends Component {
       onUploaded: (err, data) => {
         if(err){
           toastr.error(err.reason);
+          cb(err, data);
         }
         if(cb) {
-          cb(data);
+          cb(null, data);
         }
       }
     });
@@ -122,9 +121,6 @@ export default class ImageForm extends Component {
         zoomable={false}
         zoomOnWheel={false}
       />);
-    }
-    else if(this.props.id != null){
-      value = (<img src={this.image().link()} style={{width: "100%", height: "auto"}} />);
     }
     else if(this.props.url != null) {
       value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);

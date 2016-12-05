@@ -107,7 +107,6 @@ Meteor.publish("discoverEvents", function(){
   var eventOwnerIds = events.map(function(event){
     return event.owner;
   });
-  var imageIDs = events.map((e)=>{return e.details.banner});
   var gameSet = new Set();
   var instances = Instances.find({_id: { $in: events.map((e) => {
     return e.instances.pop();
@@ -120,14 +119,10 @@ Meteor.publish("discoverEvents", function(){
     }
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
-  imageIDs = imageIDs.concat(games.map((game) => { return game.banner }));
-  var ownerImages = Meteor.users.find({_id:{$in: eventOwnerIds}}).map((user) => { return user.profile.image});
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
-    Banners.find({_id: { $in: imageIDs }}).cursor,
     games,
-    ProfileImages.find({_id: { $in: ownerImages }}).cursor,
     instances
   ]
 });
@@ -147,17 +142,12 @@ Meteor.publish("promotedEvents", function() {
     userSet.add(event.owner);
   })
   var users = Meteor.users.find({ _id: { $in: Array.from(userSet) } });
-  var imgIds = users.map(user => {
-    return user.profile.image;
-  })
   var instances = events.map((event) => {
     return event.instances.pop();
   })
   return [
     events,
     users,
-    ProfileImages.find({ _id: { $in: imgIds } }).cursor,
-    Banners.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor,
     Instances.find({ _id: { $in: instances } })
   ]
 })
@@ -192,13 +182,9 @@ Meteor.publish('eventsUnderReview', function(){
       })
     }
   });
-  var eventBanners = Banners.find({_id: { $in: events.map(e => { return e.details.banner }) }});
-  var profileImages = ProfileImages.find({_id: { $in: owners.map(o => { return o.profile.image }) }});
   return [
     Events.find({ underReview: true }),
-    owners,
-    eventBanners.cursor,
-    profileImages.cursor
+    owners
   ];
 })
 

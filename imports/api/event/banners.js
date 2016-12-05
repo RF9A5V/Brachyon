@@ -40,6 +40,10 @@ var Banners = new FilesCollection({
           }));
         }
         else {
+          var event = Events.findOne({slug: meta.eventSlug});
+          if(event.details.banner) {
+            self.remove({_id: event.details.banner});
+          }
           Events.update({ slug: meta.eventSlug }, {
             $set: {
               "details.bannerUrl": self.findOne(fileRef._id).link(),

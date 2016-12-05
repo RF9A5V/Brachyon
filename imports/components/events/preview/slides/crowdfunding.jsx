@@ -28,10 +28,7 @@ export default class CrowdfundingPage extends Component {
   }
 
   backgroundImage(useDarkerOverlay){
-    var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Banners.findOne(this.props.event.details.banner).link();
-    }
+    var imgUrl = this.props.event.details.bannerUrl ? this.props.event.details.bannerUrl : "/images/bg.jpg";
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
     }
