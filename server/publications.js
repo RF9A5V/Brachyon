@@ -65,7 +65,7 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   return [
     Events.find({_id: eventID}),
     Games.find({_id: event.brackets[bracketIndex].game}),
-    Images.find({_id: game.banner}).cursor,
+    Banners.find({_id: game.banner}).cursor,
     users,
     ProfileImages.find({
       _id: {
@@ -125,7 +125,7 @@ Meteor.publish("discoverEvents", function(){
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
-    Images.find({_id: { $in: imageIDs }}).cursor,
+    Banners.find({_id: { $in: imageIDs }}).cursor,
     games,
     ProfileImages.find({_id: { $in: ownerImages }}).cursor,
     instances
@@ -157,7 +157,7 @@ Meteor.publish("promotedEvents", function() {
     events,
     users,
     ProfileImages.find({ _id: { $in: imgIds } }).cursor,
-    Images.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor,
+    Banners.find({ _id: { $in: events.map(e => { return e.details.banner }) } }).cursor,
     Instances.find({ _id: { $in: instances } })
   ]
 })
@@ -192,7 +192,7 @@ Meteor.publish('eventsUnderReview', function(){
       })
     }
   });
-  var eventBanners = Images.find({_id: { $in: events.map(e => { return e.details.banner }) }});
+  var eventBanners = Banners.find({_id: { $in: events.map(e => { return e.details.banner }) }});
   var profileImages = ProfileImages.find({_id: { $in: owners.map(o => { return o.profile.image }) }});
   return [
     Events.find({ underReview: true }),
@@ -206,7 +206,7 @@ Meteor.publish('unapproved_games', function() {
   var games = Games.find({approved: false}).fetch().map(function(game) { return game.banner });
   return [
     Games.find({ approved: false }),
-    Images.find({_id: { $in: games }}).cursor
+    Banners.find({_id: { $in: games }}).cursor
   ];
 })
 

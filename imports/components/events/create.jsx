@@ -11,7 +11,7 @@ import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
 import StreamPanel from "./create/module_dropdowns/stream.jsx";
 import ModuleBlock from "./create/module_block.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class EventCreateScreen extends Component {
 
@@ -112,43 +112,66 @@ export default class EventCreateScreen extends Component {
         }
       }
     }
-    var createEvent = (args) => {
-      Meteor.call("events.create", args, (err, event) => {
-        if(err){
-          toastr.error(err.reason, "Error!");
+
+    var imgRef = args["details"]["image"];
+    delete args["details"]["image"];
+
+    Meteor.call("events.create", args, (err, event) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
+        imgRef.setMeta("eventSlug", event);
+        if(imgRef.hasValue()) {
+          imgRef.value(() => {
+            browserHistory.push(href);
+          });
         }
         else {
-          if(unpub) {
-            browserHistory.push(`/events/${event}/edit`);
-          }
-          else {
-            browserHistory.push(`/events/${event}/show`);
-          }
+          browserHistory.push(href);
         }
-      });
-    }
-    if(args["details"]["image"]) {
-      var img = args["details"]["image"];
-      if(img.base64) {
-        Images.insert({
-          file: img.base64,
-          isBase64: true,
-          fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
-          meta: img.boxData,
-          onStart: () => {
-            toastr.warning("Processing event...", "Warning")
-          },
-          onUploaded: (err, data) => {
-            args["details"]["banner"] = data._id;
-            delete args["details"]["image"];
-            createEvent(args);
-          }
-        })
       }
-    }
-    else {
-      createEvent(args);
-    }
+    })
+
+    // var createEvent = (args) => {
+    //   Meteor.call("events.create", args, (err, event) => {
+    //     if(err){
+    //       toastr.error(err.reason, "Error!");
+    //     }
+    //     else {
+    //       if(unpub) {
+    //         browserHistory.push(`/events/${event}/edit`);
+    //       }
+    //       else {
+    //         browserHistory.push(`/events/${event}/show`);
+    //       }
+    //     }
+    //   });
+    // }
+    //
+    // if(args["details"]["image"]) {
+    //   var img = args["details"]["image"];
+    //   if(img.base64) {
+    //     Banners.insert({
+    //       file: img.base64,
+    //       isBase64: true,
+    //       fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
+    //       meta: img.boxData,
+    //       onStart: () => {
+    //         toastr.warning("Processing event...", "Warning")
+    //       },
+    //       onUploaded: (err, data) => {
+    //         args["details"]["banner"] = data._id;
+    //         delete args["details"]["image"];
+    //         createEvent(args);
+    //       }
+    //     })
+    //   }
+    // }
+    // else {
+    //   createEvent(args);
+    // }
   }
 
   buttons() {

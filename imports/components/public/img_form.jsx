@@ -7,14 +7,26 @@ export default class ImageForm extends Component {
     this.setState({
       id: this.props.id,
       uploader: null,
-      file: null
+      file: null,
+      url: null,
+      meta: {}
     });
   }
 
-  value(getBase64) {
-    if(!this.state.url && !this.props.defaultImage){
-      return this.props.id;
+  setMeta(key, value) {
+    this.state.meta[key] = value;
+  }
+
+  hasValue() {
+    if(this.state.url || this.props.defaultImage) {
+      return true;
     }
+    return false;
+  }
+
+
+
+  value(cb) {
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
     var heightRatio = imageData.naturalHeight / imageData.height;
@@ -31,13 +43,9 @@ export default class ImageForm extends Component {
         boxData[key] = this.props.meta[key];
       })
     }
-
-    if(getBase64){
-      return {
-        boxData,
-        base64: this.state.url || this.props.defaultImage
-      }
-    }
+    Object.keys(this.state.meta).forEach(key => {
+      boxData[key] = this.state.meta[key];
+    })
     var type = "";
     if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
       type = ".jpg";
@@ -45,15 +53,7 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
-    // var uploader = new Slingshot.Upload("event-banners");
-    // uploader.send(this.state.file, (err, downloadUrl) => {
-    //   if(err) {
-    //     console.log(err);
-    //   }
-    //   else {
-    //     console.log(downloadUrl);
-    //   }
-    // });
+
     this.props.collection.insert({
       file: (this.state.url || this.props.defaultImage),
       isBase64: true,
@@ -65,6 +65,9 @@ export default class ImageForm extends Component {
       onUploaded: (err, data) => {
         if(err){
           toastr.error(err.reason);
+        }
+        if(cb) {
+          cb(data);
         }
       }
     });

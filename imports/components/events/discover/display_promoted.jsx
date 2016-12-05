@@ -4,18 +4,18 @@ import moment from 'moment';
 import Editor from "/imports/components/public/editor.jsx";
 import { browserHistory } from "react-router";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
     if(event.details.banner) {
-      return Images.findOne(event.details.banner).link();
+      return Banners.findOne(event.details.banner).link();
     }
     var games = event.games.fetch();
     for(var i in games) {
       if(games[i].banner != null){
-        return Images.findOne(games[i].banner).link();
+        return Banners.findOne(games[i].banner).link();
       }
     }
     return "/images/bg.jpg";

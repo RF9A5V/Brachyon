@@ -41,7 +41,7 @@ export default class Checkout extends Component {
   imgOrDefault() {
     var event = Events.findOne();
     if(event.details.banner){
-      return Images.findOne(event.details.banner).link();
+      return Banners.findOne(event.details.banner).link();
     }
     else {
       return "/images/bg.jpg";

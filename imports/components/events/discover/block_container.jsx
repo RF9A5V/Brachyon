@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import Instances from "/imports/api/event/instance.js";
 
@@ -25,16 +25,7 @@ export default class BlockContainer extends Component {
   }
 
   imgOrDefault(event) {
-    if(event.details.banner) {
-      return Images.findOne(event.details.banner).link();
-    }
-    var games = event.games.fetch();
-    for(var i in games) {
-      if(games[i].banner != null){
-        return Images.findOne(games[i].banner).link();
-      }
-    }
-    return "/images/bg.jpg";
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
   profileImageOrDefault(id) {
