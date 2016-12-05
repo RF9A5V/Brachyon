@@ -29,11 +29,8 @@ export default class BlockContainer extends Component {
   }
 
   profileImageOrDefault(id) {
-    var img = ProfileImages.findOne(id);
-    if(!img) {
-      return "/images/profile.png";
-    }
-    return img.link();
+    var user = Meteor.users.findOne(id);
+    return user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
   onPencilClick(event) {
@@ -101,7 +98,7 @@ export default class BlockContainer extends Component {
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                         <div className="row x-center" style={{fontSize: 12}}>
-                          <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                          <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                         </div>
                         <span style={{fontSize: 12}}>{
                           (() => {

@@ -37,6 +37,10 @@ var RewardIcons = new FilesCollection({
           }));
         }
         else {
+          var reward = Rewards.findOne(meta.rewardId);
+          if(reward.img) {
+            self.remove({_id: reward.img});
+          }
           Rewards.update({_id: meta.rewardId}, {
             $set: {
               imgUrl: self.findOne(fileRef._id).link(),

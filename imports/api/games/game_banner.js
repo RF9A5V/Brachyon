@@ -1,6 +1,8 @@
 import { FilesCollection } from "meteor/ostrio:files";
 import fs from "fs";
 
+import Games from "/imports/api/games/games.js";
+
 import { compressThenStore } from "../upload_suite.js";
 
 var GameBanners = new FilesCollection({
@@ -29,23 +31,26 @@ var GameBanners = new FilesCollection({
       fs.rename(fileRef.path + ".temp", fileRef.path, Meteor.bindEnvironment(() => {
         if(!Meteor.isDevelopment) {
           compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
-            Meteor.users.update({
-              _id: fileRef.meta.userId
-            }, {
+            Games.update({_id: meta.gameId}, {
               $set: {
-                "profile.imageUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+                bannerUrl: "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
-            });
-            context.remove({_id: fileRef._id});
+            })
+            self.remove({_id: fileRef._id});
           }));
         }
         else {
-          Meteor.users.update({ _id: meta.userId }, {
+          console.log(meta);
+          var game = Games.findOne(meta.gameId);
+          if(game.banner) {
+            self.remove({_id: meta.gameId});
+          }
+          Games.update({_id: meta.gameId}, {
             $set: {
-              "profile.imageUrl": self.findOne(fileRef._id).link(),
-              "profile.image": fileRef._id
+              bannerUrl: self.findOne(fileRef._id).link(),
+              banner: fileRef._id
             }
-          });
+          })
         }
       }));
     }));

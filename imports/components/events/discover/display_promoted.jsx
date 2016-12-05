@@ -9,14 +9,9 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
-    if(event.details.banner) {
-      return Banners.findOne(event.details.banner).link();
-    }
-    var games = event.games.fetch();
-    for(var i in games) {
-      if(games[i].banner != null){
-        return Banners.findOne(games[i].banner).link();
-      }
+    console.log(event);
+    if(event.details.bannerUrl) {
+      return event.details.bannerUrl
     }
     return "/images/bg.jpg";
   }
@@ -37,11 +32,11 @@ export default class DisplayPromotedEvent extends Component {
   }
 
   profileImageOrDefault(id) {
-    var img = ProfileImages.findOne(id);
-    if(!img) {
-      return "/images/profile.png";
+    var user = Meteor.users.findOne(id);
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
-    return img.link();
+    return "/images/profile.png";
   }
 
   render(){
@@ -50,12 +45,10 @@ export default class DisplayPromotedEvent extends Component {
         <div></div>
       )
     }
-
     var event = this.props.event;
     if(!event) {
       return null;
     }
-
     return (
       <div className="row center col-1" style={{width: "80vw", padding: 10}}>
         <div className="promoted-event-block">
@@ -69,7 +62,7 @@ export default class DisplayPromotedEvent extends Component {
               <div className="col">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                   <div className="row x-center" style={{fontSize: 12}}>
-                    <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                    <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                   </div>
                   <span style={{fontSize: 12}}>{
                     (() => {

@@ -40,9 +40,9 @@ export default class ShowUserScreen extends TrackerReact(Component) {
   }
 
   profileBannerURL(id) {
-    var banner = ProfileBanners.findOne(Meteor.user().profile.banner);
-    if(banner){
-      return banner.link();
+    var user = Meteor.user();
+    if(user.profile.bannerUrl){
+      return user.profile.bannerUrl;
     }
     return "/images/bg.jpg";
   }

@@ -33,17 +33,21 @@ var ProfileBanners = new FilesCollection({
               _id: fileRef.meta.userId
             }, {
               $set: {
-                "profile.imageUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+                "profile.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
             });
-            context.remove({_id: fileRef._id});
+            self.remove({_id: fileRef._id});
           }));
         }
         else {
+          var user = Meteor.users.findOne(meta.userId);
+          if(user.profile.banner) {
+            self.remove({_id: user.profile.banner});
+          }
           Meteor.users.update({ _id: meta.userId }, {
             $set: {
-              "profile.imageUrl": self.findOne(fileRef._id).link(),
-              "profile.image": fileRef._id
+              "profile.bannerUrl": self.findOne(fileRef._id).link(),
+              "profile.banner": fileRef._id
             }
           });
         }

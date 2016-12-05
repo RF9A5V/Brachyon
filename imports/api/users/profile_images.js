@@ -36,10 +36,14 @@ var ProfileImages = new FilesCollection({
                 "profile.imageUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
             });
-            context.remove({_id: fileRef._id});
+            self.remove({_id: fileRef._id});
           }));
         }
         else {
+          var user = Meteor.users.findOne(meta.userId);
+          if(user.profile.image) {
+            self.remove({_id: user.profile.image});
+          }
           Meteor.users.update({ _id: meta.userId }, {
             $set: {
               "profile.imageUrl": self.findOne(fileRef._id).link(),
