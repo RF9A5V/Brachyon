@@ -50,7 +50,7 @@ export default class DisplayPromotedEvent extends Component {
       return null;
     }
     return (
-      <div className="row center col-1" style={{width: "80vw", padding: 10}}>
+      <div className="row center col-1" style={{width: "60vw", padding: 10}}>
         <div className="promoted-event-block">
           <div className="event-block" style={{width: "100%", margin: 0}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
             <div style={{border: "solid 2px #666"}}>
