@@ -30,10 +30,8 @@ export default class crowdfundingDetailsPage extends Component {
         <div className="button-row">
           <button onClick={this.onDetailsSave.bind(this)}>Save</button>
         </div>
+        <h4>Details</h4>
         <div className="submodule-bg">
-          <div className="row center" style={{marginBottom: 20}}>
-            <h3>Details</h3>
-          </div>
           <div className="row">
             <div className="col" style={{padding: 20, backgroundColor: "#444", marginRight: 20}}>
               <h5>Crowdfunding Request</h5>

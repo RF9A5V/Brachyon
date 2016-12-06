@@ -146,10 +146,8 @@ export default class TierPage extends Component {
     var tier = this.state.index > -1 ? tiers[this.state.index] : {};
     return (
       <div>
-        <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: "0 10px 20px"}}>
-          <div className="row center" style={{padding: "20px 0"}}>
-            <h3>Tiers</h3>
-          </div>
+        <h4>Tiers</h4>
+        <div className="submodule-bg submodule-overflow" style={{padding: "0 10px 20px"}}>
           <div className="row">
             <div className="col tier-preview-container" style={{width: "20%", minWidth: 200, backgroundColor: "#444", padding: 20, marginRight: 10}}>
               {
