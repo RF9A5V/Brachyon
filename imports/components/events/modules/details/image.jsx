@@ -28,10 +28,8 @@ export default class ImagePage extends Component {
         <div className="button-row">
           <button onClick={this.onImageSave.bind(this)}>Save</button>
         </div>
+        <h4>Event Image</h4>
         <div className="submodule-bg">
-          <div className="row center">
-            <h3 style={{marginBottom: 20}}>Event Image</h3>
-          </div>
           {
             img ? (
               <div style={{textAlign: "center"}}>

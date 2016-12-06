@@ -30,10 +30,8 @@ export default class crowdfundingDetailsPage extends Component {
         <div className="button-row">
           <button onClick={this.onDetailsSave.bind(this)}>Save</button>
         </div>
+        <h4>Details</h4>
         <div className="submodule-bg">
-          <div className="row center" style={{marginBottom: 20}}>
-            <h3>Details</h3>
-          </div>
           <div className="row">
             <div className="col" style={{padding: 20, backgroundColor: "#444", marginRight: 20}}>
               <h5>Crowdfunding Request</h5>
@@ -44,7 +42,7 @@ export default class crowdfundingDetailsPage extends Component {
               </div>
             </div>
             <div className="col-1 row center x-center" style={{padding: 20, backgroundColor: "#444"}}>
-              <span style={{fontSize: "2em"}}>You are requesting ${(event.crowdfunding.details.amount / 100).toFixed(2)} by { moment(event.crowdfunding.details.dueDate).format("MMMM Do") }.</span>
+              <span style={{fontSize: "2em"}}>You are raising <span style={{color: "#00BDFF"}}>${(event.crowdfunding.details.amount / 100).toFixed(2)}</span> by <span style={{color: "#00BDFF"}}>{ moment(event.crowdfunding.details.dueDate).format("MMMM Do") }</span>.</span>
             </div>
           </div>
         </div>

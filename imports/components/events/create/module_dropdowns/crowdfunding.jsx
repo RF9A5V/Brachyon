@@ -118,18 +118,6 @@ export default class RevenuePanel extends Component {
             this.itemDescriptions()
           }
         </div>
-        <Modal isOpen={this.state.isOpen} onRequestClose={() => { this.setState({ isOpen: false }) }}>
-          <div className="row flex-pad">
-            <div></div>
-            <FontAwesome name="times" size="2x" onClick={() => {this.setState({isOpen: false})}} />
-          </div>
-          <div className="col x-center">
-            <h3>Working on it</h3>
-          </div>
-          <p>So yeah. we're still working on this feature. Stay tuned for crowdfunding goodness later in the future!</p>
-          <p>XOXO</p>
-          <p>- Brachyon Devs</p>
-        </Modal>
       </div>
     )
   }
