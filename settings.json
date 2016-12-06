@@ -21,7 +21,6 @@
    },
 
   "public": {
-
     "analyticsSettings": {
       "Google Analytics" : {
         "trackingId": "UA-88263605-1"
