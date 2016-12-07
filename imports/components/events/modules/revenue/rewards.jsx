@@ -99,59 +99,68 @@ export default class RewardsPage extends Component {
       );
     }
     var reward = Rewards.findOne({ _id: this.state.active}) || {};
+    var rewards = Rewards.find({}).fetch();
+    rewards.push({
+      name: "Add Reward"
+    });
     return (
-      <div className="submodule-bg submodule-overflow">
-        <div className="row x-center" style={{marginBottom: 10}}>
-          <div className="col-1"></div>
-          <h3 style={{margin: 0}}>Rewards</h3>
-          <div className="row col-1">
-            <div className="col-1">
-            </div>
-            <button onClick={this.onRewardSave.bind(this)}>Save</button>
-          </div>
-        </div>
-        <div className="row">
-          <div className="reward-preview-container">
+      <div className="col">
+        <h4>Rewards</h4>
+        <div className="submodule-bg submodule-overflow" style={{padding: 20, marginBottom: 10}}>
+          <div className="row" style={{flexWrap: "wrap", paddingBottom: 20}}>
             {
-              Rewards.find({}).map((rewardIter, i) => {
+              rewards.map((reward, index) => {
+                var optionStyle = {
+                  padding: 10,
+                  marginRight: 10,
+                  width: 100,
+                  color: this.state.active == reward._id ? "#0BDDFF" : "white",
+                  backgroundColor: "#111",
+                  cursor: "pointer",
+                  textAlign: "center"
+                }
                 return (
-                  <div className={`cf-reward ${rewardIter._id == this.state.active ? "active" : ""}`} onClick={() => { this.setState({ active: rewardIter._id }); this.swap(); }}>
-                    <span>{ rewardIter.name }</span>
+                  <div style={optionStyle} onClick={() => {
+                    this.state.active = reward._id;
+                    this.swap();
+                  }}>
+                    { reward.name }
                   </div>
                 )
               })
             }
-            <div className={`cf-reward ${this.state.active == null ? "active" : ""}`} onClick={() => { this.setState({ active: null }); this.swap();}}>
-              <FontAwesome name="plus" />
-              <span>Add Reward</span>
+          </div>
+          <div className="row">
+            <div className="reward-preview-form col-1 col center x-center">
+              {
+                this.state.loadDescription ? (
+                  <Loading />
+                ) : (
+                  <ImageForm collection={RewardIcons} url={reward.imgUrl} ref="image" defaultImage={this.state.img} onImgSelected={(img) => {
+                    this.setState({ img });
+                  }} />
+                )
+              }
+            </div>
+            <div className="reward-preview-form col-1 col">
+              {
+                this.state.loadDescription ? (
+                  <Loading />
+                ) : (
+                  [
+                    <label>Prize Name</label>,
+                    <input type="text" ref="name" style={{marginTop: 0}} defaultValue={reward.name} />,
+                    <label>Nominal Value</label>,
+                    <input type="number" ref="dollarValue" style={{marginTop: 0}} defaultValue={(reward.value / 100).toFixed(2)} />,
+                    <label>Description</label>,
+                    <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={reward.description}/>
+                  ]
+                )
+              }
             </div>
           </div>
-          <div className="reward-preview-form col-1 col center x-center">
-            {
-              this.state.loadDescription ? (
-                <Loading />
-              ) : (
-                <ImageForm collection={RewardIcons} url={reward.imgUrl} ref="image" defaultImage={this.state.img} onImgSelected={(img) => {
-                  this.setState({ img });
-                }} />
-              )
-            }
-          </div>
-          <div className="reward-preview-form col-1 col">
-            {
-              this.state.loadDescription ? (
-                <Loading />
-              ) : (
-                [
-                  <label>Prize Name</label>,
-                  <input type="text" ref="name" style={{marginTop: 0}} defaultValue={reward.name} />,
-                  <label>Nominal Value</label>,
-                  <input type="number" ref="dollarValue" style={{marginTop: 0}} defaultValue={(reward.value / 100).toFixed(2)} />,
-                  <label>Description</label>,
-                  <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={reward.description}/>
-                ]
-              )
-            }
+          <div className="row center" style={{marginTop: 20}}>
+            <button onClick={this.onRewardSave.bind(this)}>Save</button>
           </div>
         </div>
       </div>

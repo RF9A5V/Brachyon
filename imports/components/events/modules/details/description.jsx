@@ -46,10 +46,7 @@ export default class DescriptionPage extends Component {
     var event = Events.findOne();
     return (
       <div className="col">
-        <div className="button-row">
-          <button onClick={this.onDescriptionSave.bind(this)}>Save</button>
-        </div>
-        <h4>Event Details</h4>
+        <h4 style={{marginTop: 10}}>Event Details</h4>
         <div style={{marginBottom: 10}} className="submodule-bg">
           <div className="row x-center">
             <h5 style={{marginRight: 20}}>Title</h5>

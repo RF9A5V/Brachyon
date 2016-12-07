@@ -6,7 +6,9 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     super(props);
     this.state = {
       readyList: (new Array(props.publications.length)).fill(false),
-      id: this.props.id
+      id: this.props.id,
+      top: 0,
+      left: 0
     }
   }
 
@@ -23,9 +25,28 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     this.state.active = false;
   }
 
+  componentDidMount() {
+    this.setTemplateLocation();
+  }
+
   componentWillUnmount() {
     this.state.pubs.forEach(function(item){
       item.stop();
+    })
+  }
+
+  componentWillReceiveProps(next) {
+    this.refs.input.value = next.value;
+    this.state.id = next.id;
+    this.forceUpdate();
+  }
+
+  setTemplateLocation() {
+    var pos = this.refs.input.getBoundingClientRect();
+    this.setState({
+      top: pos.top + 43,
+      left: pos.left,
+      width: this.refs.input.offsetWidth
     })
   }
 
@@ -33,6 +54,8 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     this.setState({
       id: obj._id,
       active: false
+    }, () => {
+      this.setTemplateLocation();
     });
     this.refs.input.value = name;
     if(this.props.onChange){
@@ -55,11 +78,18 @@ export default class AutocompleteForm extends TrackerReact(Component) {
   results() {
     var self = this;
     return this.props.types.map(function(item){
-      return item.type.find({}).fetch().map(function(instance){
+      var rez = item.type.find({}).fetch().map(function(instance){
         return (
           <item.template {...instance} onClick={self.onTemplateSelect.bind(self)} />
         )
-      })
+      });
+      var end = [];
+      rez.forEach((i) => {
+        end.push(i);
+        end.push(<hr />);
+      });
+      end.pop();
+      return end;
     })
   }
 
@@ -99,17 +129,17 @@ export default class AutocompleteForm extends TrackerReact(Component) {
 
   render() {
     return (
-      <div className="col" style={{position: "relative"}}>
+      <div className="col">
         <input ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} onKeyPress={ this.onKeyPress.bind(this) } />
-        <div className="template-container">
-          {
-            this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
-              this.results()
-            ) : (
-              ""
-            )
-          }
-        </div>
+        {
+          this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
+            <div className="template-container" style={{ top: this.state.top, left: this.state.left, width: this.state.width }}>
+              {this.results()}
+            </div>
+          ) : (
+            ""
+          )
+        }
       </div>
     )
   }

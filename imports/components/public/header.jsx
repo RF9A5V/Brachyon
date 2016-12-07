@@ -94,7 +94,6 @@ export default class Header extends TrackerReact(Component) {
     else {
       userCred = (
         <div className="head-credentials">
-          <SignUpModal />
           <LogInModal />
         </div>
       )
