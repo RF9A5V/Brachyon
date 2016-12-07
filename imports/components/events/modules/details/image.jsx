@@ -25,9 +25,6 @@ export default class ImagePage extends Component {
     var img = event.details.bannerUrl;
     return (
       <div>
-        <div className="button-row">
-          <button onClick={this.onImageSave.bind(this)}>Save</button>
-        </div>
         <h4>Event Image</h4>
         <div className="submodule-bg">
           {

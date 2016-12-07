@@ -23,7 +23,7 @@ export default class BracketForm extends Component {
       this.state = {
         id: game._id,
         name: game.name,
-        banner: game.banner,
+        bannerUrl: game.bannerUrl,
         format: subFormat || "NONE"
       }
     }
@@ -37,11 +37,41 @@ export default class BracketForm extends Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    var subFormat = null;
+    var format = this.props.format || {};
+    if(format.hasOwnProperty("groupFormat")){
+      subFormat = "GROUP";
+    }
+    else if(format.hasOwnProperty("poolFormat")) {
+      subFormat = "POOL";
+    }
+    var game = Games.findOne(props.game);
+    if(game) {
+      this.state = {
+        id: game._id,
+        name: game.name,
+        bannerUrl: game.bannerUrl,
+        format: subFormat || "NONE"
+      }
+    }
+    else {
+      this.state = {
+        format: "NONE"
+      };
+    }
+    for(var i in format){
+      this.state[i] = format[i];
+    }
+    // Only works for basic bracket formats.
+    this.refs.format.value = props.format.baseFormat;
+  }
+
   onGameSelect(game) {
     this.setState({
       id: game._id,
       name: game.name,
-      banner: game.banner
+      bannerUrl: game.bannerUrl
     })
   }
 
@@ -176,45 +206,49 @@ export default class BracketForm extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div className="row">
         {
         // <h5>Bracket Name</h5>
         // <input ref="name" defaultValue={this.props.name} />
         }
-        <h5>Game</h5>
-        {
-          this.state.banner ? (
-            <div style={{textAlign: "center"}}>
-              <img style={{width: "25%", height: "auto"}} src={GameBanners.findOne(this.state.banner).link()} />
+        <div className="col x-center" style={{justifyContent: "flex-end"}}>
+          {
+            this.state.bannerUrl ? (
+              <div style={{textAlign: "center"}}>
+                <img style={{width: "auto", height: 160, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              </div>
+            ) : (
+              ""
+            )
+          }
+        </div>
+        <div className="col col-1" style={{marginLeft: 20}}>
+          <h5>Game</h5>
+          <AutocompleteForm ref="game" publications={["game_search"]} types={[
+            {
+              type: Games,
+              template: GameTemplate,
+              name: "Game"
+            }
+          ]} onChange={this.onGameSelect.bind(this)} value={(this.state.name || "")} id={this.state.id}/>
+          <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
+            <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
+              <h5 style={{backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
             </div>
-          ) : (
-            ""
-          )
-        }
-        <AutocompleteForm ref="game" publications={["game_search"]} types={[
-          {
-            type: Games,
-            template: GameTemplate,
-            name: "Game"
-          }
-        ]} onChange={this.onGameSelect.bind(this)} value={(this.state.game || {}).name} />
-        <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
-          <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
-            <h5 style={{backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
-          </div>
-          {
+            {
 
-            // <div className="row center x-center" style={{margin: "20px 0"}}>
-            //   <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
-            //   <span style={{margin: "0 40px"}}>|</span>
-            //   <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
-            //   <span style={{margin: "0 40px"}}>|</span>
-            //   <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
-            // </div>
-          }
-          {
-            this.formatForm()
-          }
+              // <div className="row center x-center" style={{margin: "20px 0"}}>
+              //   <span className={`format-select ${this.state.format == "NONE" ? "active" : ""}`} onClick={() => { this.setState({format: "NONE"}) }}>NONE</span>
+              //   <span style={{margin: "0 40px"}}>|</span>
+              //   <span className={`format-select ${this.state.format == "POOL" ? "active" : ""}`} onClick={() => { this.setState({format: "POOL"}) }}>POOL</span>
+              //   <span style={{margin: "0 40px"}}>|</span>
+              //   <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
+              // </div>
+            }
+            {
+              this.formatForm()
+            }
+          </div>
         </div>
       </div>
     )

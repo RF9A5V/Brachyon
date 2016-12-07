@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import { browserHistory } from "react-router";
 
-import AccordionContainer from "/imports/components/public/accordion_container.jsx";
 import DetailsPanel from "./create/details.jsx";
 import CrowdfundingPanel from "./create/module_dropdowns/crowdfunding.jsx";
 import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
@@ -133,51 +132,9 @@ export default class EventCreateScreen extends Component {
         }
       }
     })
-
-    // var createEvent = (args) => {
-    //   Meteor.call("events.create", args, (err, event) => {
-    //     if(err){
-    //       toastr.error(err.reason, "Error!");
-    //     }
-    //     else {
-    //       if(unpub) {
-    //         browserHistory.push(`/events/${event}/edit`);
-    //       }
-    //       else {
-    //         browserHistory.push(`/events/${event}/show`);
-    //       }
-    //     }
-    //   });
-    // }
-    //
-    // if(args["details"]["image"]) {
-    //   var img = args["details"]["image"];
-    //   if(img.base64) {
-    //     Banners.insert({
-    //       file: img.base64,
-    //       isBase64: true,
-    //       fileName: Meteor.userId(), // Weird shit until I figure out if we want to save the initial file name
-    //       meta: img.boxData,
-    //       onStart: () => {
-    //         toastr.warning("Processing event...", "Warning")
-    //       },
-    //       onUploaded: (err, data) => {
-    //         args["details"]["banner"] = data._id;
-    //         delete args["details"]["image"];
-    //         createEvent(args);
-    //       }
-    //     })
-    //   }
-    // }
-    // else {
-    //   createEvent(args);
-    // }
   }
 
   buttons() {
-    // var reviewRequired = this.state.moduleBits.review.some(function(val){
-    //   return val == 1;
-    // });
     var reviewRequired = false;
     return (
       <div style={{marginBottom: 20}}>
@@ -195,6 +152,18 @@ export default class EventCreateScreen extends Component {
   modulePanels() {
     var modules = this.availableModules();
     var keys = Object.keys(modules);
+    var generator = (value) => {
+      return () => {
+        if(value == "details") {
+          return;
+        }
+        if(value == "crowdfunding") {
+          return toastr.warning("Under construction!", "Warning!");
+        }
+        this.state.moduleState[value].active = !this.state.moduleState[value].active;
+        this.forceUpdate();
+      }
+    }
     return keys.map((key, index) => {
       var mod = modules[key];
       return (
@@ -207,6 +176,8 @@ export default class EventCreateScreen extends Component {
               currentItem: mod.name
             })
           }}
+          isOn={this.state.moduleState[mod.name].active}
+          onToggle={generator(mod.name)}
         />
       );
     })

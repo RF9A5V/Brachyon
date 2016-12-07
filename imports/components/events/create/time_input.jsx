@@ -49,8 +49,8 @@ export default class TimeInput extends Component {
       minutes.push(i);
     }
     return (
-      <div>
-        <div className="time-input">
+      <div style={this.props.style || {}}>
+        <div className="time-input row center x-center">
           <select ref="hours" defaultValue={this.state.hour}>
             {
               hours.map((hour) => {

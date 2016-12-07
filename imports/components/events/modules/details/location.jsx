@@ -26,9 +26,6 @@ export default class LocationPage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="button-row">
-          <button onClick={this.onLocationSave.bind(this)}>Save</button>
-        </div>
         <h4>Location</h4>
         <div style={{marginBottom: 10}} className="submodule-bg">
           <div className="row">

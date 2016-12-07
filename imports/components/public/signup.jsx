@@ -41,32 +41,70 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
     });
   }
 
+  onEmailChange(e) {
+    var value = e.target.value;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    this.setState({
+      emailValid: re.test(value)
+    });
+  }
+
+  onPasswordChange(e) {
+    var value = e.target.value;
+    this.setState({
+      passValid: value.length >= 5
+    });
+  }
+
+  onPassConfChange(e) {
+    var value = e.target.value;
+    this.setState({
+      passConfValid: value == this.refs.password.value
+    })
+  }
+
   render() {
-    var user;
-    var bgColor;
-    var icon;
+    var icon, bgColor;
+    var emailBgColor, emailIcon;
     if(this.state.userValid.ready()){
-      user = this.state.value == "" || this.state.value.length < 3 ? true : Meteor.users.findOne({username: this.state.value})
-      bgColor = user ? "#FF1951" : "#00BDFF";
-      icon = user ? "times" : "check";
+      var error = this.state.value == "" || this.state.value.length < 3 || Meteor.users.findOne({username: this.state.value}) != null;
+      icon = error ? "times" : "check";
+      bgColor = error ? "none" : "#00BDFF";
     }
     else {
-      bgColor = "#CCC114";
       icon = "ellipsis-h";
     }
+    emailBgColor = this.state.emailValid ? "#00BDFF" : "none";
+    emailIcon = this.state.emailValid ? "check" : "times";
     return (
       <div className="col center modal-pad">
-        <form onSubmit={this.onSubmit.bind(this)} className="col center">
-          <div className="row x-center">
+        <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
+          <div className="row x-center" style={{alignItems: "flex-end"}}>
+            <input className="col-1" type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} />
+            <div className="row center x-center cred-form-status" style={{backgroundColor: emailBgColor}}>
+              <FontAwesome name={emailIcon} />
+            </div>
+          </div>
+          <div className="row x-center" style={{alignItems: "flex-end"}}>
             <input className="col-1" type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} />
-            <div className="row center x-center" style={{marginRight: 10, width: 39, height: 39, backgroundColor: bgColor}}>
+            <div className="row center x-center cred-form-status" style={{backgroundColor: bgColor}}>
               <FontAwesome name={icon} />
             </div>
           </div>
-          <input type="text" name="name" placeholder="Name" ref="name" />
-          <input type="text" name="email" placeholder="Email" ref="email" />
-          <input type="password" name="password" placeholder="Password" ref="password" />
-          <span style={{fontSize: "0.7em", marginBottom: 10}}>By signing up for Brachyon, you agree to our&nbsp;
+          <div className="row x-center" style={{alignItems: "flex-end"}}>
+            <input className="col-1" type="password" name="password" placeholder="Password" ref="password" onChange={this.onPasswordChange.bind(this)} />
+            <div className="row center x-center cred-form-status" style={{backgroundColor: this.state.passValid ? "#00BDFF" : "none"}}>
+              <FontAwesome name={this.state.passValid ? "check" : "times"} />
+            </div>
+          </div>
+          <div className="row x-center" style={{alignItems: "flex-end"}}>
+            <input className="col-1" type="password" name="confirm_password" placeholder="Confirm Password" ref="confirmPassword" onChange={this.onPassConfChange.bind(this)} />
+            <div className="row center x-center cred-form-status" style={{backgroundColor: this.state.passConfValid ? "#00BDFF" : "none"}}>
+              <FontAwesome name={this.state.passConfValid ? "check" : "times"} />
+            </div>
+          </div>
+
+          <span style={{fontSize: "0.7em", marginTop: 20}}>By signing up for Brachyon, you agree to our&nbsp;
             <Link to="/terms">Terms of Service</Link>.
           </span>
           <input type="submit" value="Sign Up" />
