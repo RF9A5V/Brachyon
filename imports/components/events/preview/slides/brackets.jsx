@@ -61,12 +61,12 @@ export default class BracketSlide extends Component {
       return [
         (
           <div className="bracket-register-button" onClick={() => { this.onInviteAccept(note) }}>
-            <FontAwesome name="check" />
+            <span>Accept</span>
           </div>
         ),
         (
           <div className="bracket-register-button" onClick={() => { this.onInviteReject(note) }}>
-            <FontAwesome name="times" />
+            <span>Reject</span>
           </div>
         )
       ]
@@ -86,7 +86,7 @@ export default class BracketSlide extends Component {
       };
       return (
         <div className="bracket-register-button" onClick={f}>
-          <FontAwesome name="times" />
+          <span>Unregister</span>
         </div>
       )
     }
@@ -113,7 +113,7 @@ export default class BracketSlide extends Component {
     };
     return (
       <div className="bracket-register-button" onClick={f}>
-        <FontAwesome name="sign-in" />
+        <span>Register</span>
       </div>
     )
   }
@@ -130,9 +130,6 @@ export default class BracketSlide extends Component {
                   <div className="bracket">
                     <img style={{width: "100%", height: "auto"}} src={GameBanners.findOne(Games.findOne(bracket.game).banner).link()} />
                     <div className="bracket-overlay">
-                      <div className="row" style={{justifyContent: "flex-end"}}>
-                        { this.bracketButton(bracket, i) }
-                      </div>
                       <div className="bracket-details">
                         {
                           // <div className="bracket-detail-row">
@@ -146,7 +143,7 @@ export default class BracketSlide extends Component {
                         }
                         <div className="bracket-detail-row">
                           <div className="bracket-detail-item">
-                            <FontAwesome name="user" />
+                            <FontAwesome name="users" />
                           </div>
                           <div className="bracket-detail-item">
                             <span>{ 0 }</span>
@@ -160,17 +157,29 @@ export default class BracketSlide extends Component {
                             <span>${0}</span>
                           </div>
                         </div>
+                        <div className="bracket-detail-row">
+                          <div className="bracket-detail-item">
+                            <FontAwesome name="sitemap" />
+                          </div>
+                          <div className="bracket-detail-item">
+                            <span>{ bracket.format.baseFormat.split("_").map(str => { if(str == "round") { return "RR" } return str.substring(0, 1).toUpperCase() + str.slice(1) })[0] }</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="bracket-view-button" onClick={() => {
-                        if(this.props.event.owner == Meteor.userId()) {
-                          browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
-                        }
-                        else {
-                          browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
-                        }
-                      }}>
-                        <FontAwesome name="eye" />
+                      <div className="row" style={{justifyContent: "flex-end"}}>
+                        <div className="bracket-view-button col-1" onClick={() => {
+                          if(this.props.event.owner == Meteor.userId()) {
+                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
+                          }
+                          else {
+                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
+                          }
+                        }}>
+                          <span>View</span>
+                        </div>
+                        { this.bracketButton(bracket, i) }
                       </div>
+
                     </div>
                     {
                       // <div className="col center x-center" style={{position: "absolute", width: "100%", height: "100%", top: 0}}>

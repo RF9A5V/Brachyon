@@ -39,6 +39,9 @@ export default class ImagePage extends Component {
           <div className="row center">
             <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Banners} onSelect={() => { this.setState({imgSelected: true}) }} meta={{eventSlug: event.slug}} />
           </div>
+          <div className="row center">
+            <button onClick={this.onImageSave.bind(this)}>Save</button>
+          </div>
         </div>
       </div>
     )
