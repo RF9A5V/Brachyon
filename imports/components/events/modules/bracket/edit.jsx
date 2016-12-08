@@ -7,7 +7,8 @@ export default class EditBracket extends Component {
   constructor(props){
     super(props);
     this.state = {
-      id: Events.findOne()._id
+      id: Events.findOne()._id,
+      bracket: props.bracket
     }
   }
 
@@ -36,20 +37,23 @@ export default class EditBracket extends Component {
     })
   }
 
+  componentWillReceiveProps(next){
+    this.setState({
+      bracket: next.bracket
+    });
+  }
+
   render() {
     return (
       <div>
-        <div className="button-row">
-          {
-            // <button onClick={this.onBracketDelete.bind(this)} style={{marginRight: 10}}>Delete</button>
-          }
-          <button onClick={this.onBracketSave.bind(this)}>Save</button>
-        </div>
         <div className="submodule-bg submodule-overflow" style={{width: "50%"}}>
           <div className="row center">
             <h3>{ this.props.bracket.name }</h3>
           </div>
-          <BracketForm ref="form" {...(this.props.bracket || {})} />
+          <BracketForm ref="form" {...(this.state.bracket || {})} />
+          <div className="row center" style={{marginTop: 20}}>
+            <button onClick={this.onBracketSave.bind(this)}>Save</button>
+          </div>
         </div>
       </div>
     )

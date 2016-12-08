@@ -1,6 +1,6 @@
 import Games from '/imports/api/games/games.js';
 import Instances from "/imports/api/event/instance.js";
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Icons } from "/imports/api/sponsorship/icon.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
@@ -22,7 +22,7 @@ Meteor.publish('event', (slug) => {
   })
   return [
     Events.find({_id}, { sort: { "crowdfunding.tiers.price": 1 } }),
-    Images.find({
+    Banners.find({
       _id: event.details.banner
     }).cursor,
     Instances.find({ _id: instance._id }),

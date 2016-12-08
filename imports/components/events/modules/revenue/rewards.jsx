@@ -14,8 +14,7 @@ export default class RewardsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: -1,
-      description: "",
+      active: null,
       loadDescription: false,
       ready: false
     };
@@ -33,83 +32,56 @@ export default class RewardsPage extends Component {
     })
   }
 
-  createReward(data) {
-    var name = this.refs.name.value;
-    var img = data._id;
-    var desc = this.state.description;
-    var value = this.refs.dollarValue.value * 100;
-    Meteor.call("events.crowdfunding.createReward", Events.findOne()._id, name, img, desc, value, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.setCurrentReward(-1);
-        this.setState({
-          ready: false
-        });
-        return toastr.success("Successfully created reward!", "Success!");
-      }
-    })
-  }
-
-  saveReward(data) {
-    var name = this.refs.name.value;
-    var img = data._id;
-    var desc = this.state.description;
-    var value = this.refs.dollarValue.value * 100;
-    var reward = Rewards.findOne(Events.findOne().crowdfunding.rewards[this.state.active]);
-    Meteor.call("events.crowdfunding.editReward", reward._id, name, img, desc, value, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.setState({
-          imgID: img,
-          ready: false
-        });
-        return toastr.success("Successfully edited reward!", "Success!");
-      }
-    })
-  }
-
-  onUploadedCallback() {
-    if(this.state.active < 0) {
-      return this.createReward.bind(this);
-    }
-    else {
-      return this.saveReward.bind(this);
-    }
-  }
-
   onRewardSave() {
-    this.refs.image.value();
-  }
-
-  setCurrentReward(index) {
-    if(index >= 0) {
-      var reward = Rewards.findOne(Events.findOne().crowdfunding.rewards[index]);
-      this.setState({
-        active: index,
-        description: reward.description,
-        loadDescription: true,
-        img: null,
-        imgID: reward.img
-      });
+    var name = this.refs.name.value;
+    var desc = this.state.description;
+    var value = this.refs.dollarValue.value * 100;
+    var eventId = Events.findOne()._id;
+    if(!this.state.active) {
+      if(!this.refs.image.hasValue()) {
+        return toastr.error("Need to supply image!", "Error!");
+      }
+      Meteor.call("events.crowdfunding.createReward", eventId, name, desc, value, (err, reward) => {
+        this.refs.image.setMeta("rewardId", reward);
+        this.refs.image.value((data) => {
+          this.refs.image.reset();
+          this.setState({
+            ready: false,
+            active: null
+          });
+          return toastr.success("Successfully created reward!", "Success!");
+        })
+      })
     }
     else {
-      this.setState({
-        active: -1,
-        description: "",
-        loadDescription: true,
-        img: null,
-        imgID: null
-      });
-    }
-    setTimeout(() => {
-      this.setState({
-        loadDescription: false
+      this.refs.image.setMeta("rewardId", this.state.active);
+      Meteor.call("events.crowdfunding.editReward", this.state.active, name, desc, value, (err) => {
+        var complete = () => {
+          this.setState({
+            ready: false
+          });
+          return toastr.success("Successfully edited reward!", "Success!");
+        }
+        if(this.refs.image.hasValue()) {
+          this.refs.image.setMeta("rewardId", this.state.active);
+          this.refs.image.value((data) => {
+            this.refs.image.reset();
+            complete();
+          });
+        }
+        else {
+          complete();
+        }
       })
+    }
+  }
+
+  swap() {
+    this.setState({ loadDescription: true, img: null });
+    setTimeout(() => {
+      this.setState({ loadDescription: false });
     }, 400);
+    this.refs.image.reset();
   }
 
   render() {
@@ -120,69 +92,75 @@ export default class RewardsPage extends Component {
       var reward = Meteor.subscribe("rewards", Events.findOne().slug, {
         onReady: () => {
           this.setState({ready: true, rewards: reward});
-          if(this.state.active >= 0) {
-            this.setCurrentReward(this.state.active);
-          }
         }
       });
       return (
         <Loading />
       );
     }
-    var reward = Rewards.find().fetch()[this.state.active] || {};
+    var reward = Rewards.findOne({ _id: this.state.active}) || {};
+    var rewards = Rewards.find({}).fetch();
+    rewards.push({
+      name: "Add Reward"
+    });
     return (
-      <div className="submodule-bg submodule-overflow">
-        <div className="row x-center" style={{marginBottom: 10}}>
-          <div className="col-1"></div>
-          <h3 style={{margin: 0}}>Rewards</h3>
-          <div className="row col-1">
-            <div className="col-1">
-            </div>
-            <button onClick={this.onRewardSave.bind(this)}>Save</button>
-          </div>
-        </div>
-        <div className="row">
-          <div className="reward-preview-container">
+      <div className="col">
+        <h4>Rewards</h4>
+        <div className="submodule-bg submodule-overflow" style={{padding: 20, marginBottom: 10}}>
+          <div className="row" style={{flexWrap: "wrap", paddingBottom: 20}}>
             {
-              Rewards.find({}).map((reward, i) => {
+              rewards.map((reward, index) => {
+                var optionStyle = {
+                  padding: 10,
+                  marginRight: 10,
+                  width: 100,
+                  color: this.state.active == reward._id ? "#0BDDFF" : "white",
+                  backgroundColor: "#111",
+                  cursor: "pointer",
+                  textAlign: "center"
+                }
                 return (
-                  <div className={`cf-reward ${this.state.active == i ? "active" : ""}`} onClick={() => {this.setCurrentReward(i)}}>
-                    <span>{ reward.name }</span>
+                  <div style={optionStyle} onClick={() => {
+                    this.state.active = reward._id;
+                    this.swap();
+                  }}>
+                    { reward.name }
                   </div>
                 )
               })
             }
-            <div className={`cf-reward ${this.state.active == -1 ? "active" : ""}`} onClick={() => { this.setCurrentReward(-1) }}>
-              <FontAwesome name="plus" />
-              <span>Add Reward</span>
+          </div>
+          <div className="row">
+            <div className="reward-preview-form col-1 col center x-center">
+              {
+                this.state.loadDescription ? (
+                  <Loading />
+                ) : (
+                  <ImageForm collection={RewardIcons} url={reward.imgUrl} ref="image" defaultImage={this.state.img} onImgSelected={(img) => {
+                    this.setState({ img });
+                  }} />
+                )
+              }
+            </div>
+            <div className="reward-preview-form col-1 col">
+              {
+                this.state.loadDescription ? (
+                  <Loading />
+                ) : (
+                  [
+                    <label>Prize Name</label>,
+                    <input type="text" ref="name" style={{marginTop: 0}} defaultValue={reward.name} />,
+                    <label>Nominal Value</label>,
+                    <input type="number" ref="dollarValue" style={{marginTop: 0}} defaultValue={(reward.value / 100).toFixed(2)} />,
+                    <label>Description</label>,
+                    <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={reward.description}/>
+                  ]
+                )
+              }
             </div>
           </div>
-          <div className="reward-preview-form col-1 col center x-center">
-            {
-              this.state.loadDescription ? (
-                <Loading />
-              ) : (
-                <ImageForm collection={RewardIcons} callback={this.onUploadedCallback()} ref="image" defaultImage={this.state.img} onImgSelected={(img) => {
-                  this.setState({ img, imgID: null });
-                }} id={reward.img} />
-              )
-            }
-          </div>
-          <div className="reward-preview-form col-1 col">
-            {
-              this.state.loadDescription ? (
-                <Loading />
-              ) : (
-                [
-                  <label>Prize Name</label>,
-                  <input type="text" ref="name" style={{marginTop: 0}} defaultValue={reward.name} />,
-                  <label>Nominal Value</label>,
-                  <input type="number" ref="dollarValue" style={{marginTop: 0}} defaultValue={(reward.value / 100).toFixed(2)} />,
-                  <label>Description</label>,
-                  <Editor ref="description" usePara={true} onChange={this.onDescriptionChange.bind(this)} value={reward.description}/>
-                ]
-              )
-            }
+          <div className="row center" style={{marginTop: 20}}>
+            <button onClick={this.onRewardSave.bind(this)}>Save</button>
           </div>
         </div>
       </div>

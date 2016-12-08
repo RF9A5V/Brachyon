@@ -78,10 +78,8 @@ export default class SlideMain extends Component {
         </VelocityComponent>
         {
           this.state.activeSlide > 0 ? (
-            <div className="slide-page-left">
-              <div className="slide-control" onClick={() => { this.onSlideChange(this.state.activeSlide - 1) }}>
-                <FontAwesome name="chevron-left" size="2x" />
-              </div>
+            <div className="slide-control left" onClick={() => { this.onSlideChange(this.state.activeSlide - 1) }}>
+              <FontAwesome name="chevron-left" size="2x" />
             </div>
           ) : (
             ""
@@ -89,10 +87,8 @@ export default class SlideMain extends Component {
         }
         {
           this.state.activeSlide < this.props.slides.length - 1 ? (
-            <div className="slide-page-right">
-              <div className="slide-control" onClick={() => { this.onSlideChange(this.state.activeSlide + 1) }}>
-                <FontAwesome name="chevron-right" size="2x" />
-              </div>
+            <div className="slide-control right" onClick={() => { this.onSlideChange(this.state.activeSlide + 1) }}>
+              <FontAwesome name="chevron-right" size="2x" />
             </div>
           ) : (
             ""

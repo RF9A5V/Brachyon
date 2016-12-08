@@ -23,23 +23,6 @@ export default class GamesIndex extends Component {
     }
   }
 
-  onImageUploaded(data) {
-    Meteor.call("games.submitForReview", this.refs.gameName.value, this.refs.gameDescription.value, data._id, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.refs.image.reset();
-        this.refs.gameName.value = "";
-        this.refs.gameDescription.value = "";
-        this.setState({
-          open: false
-        })
-        return toastr.success("Successfully sent game for review!", "Success!");
-      }
-    })
-  }
-
   gameDisplay() {
     if(!this.state.ready) {
       return (
@@ -82,7 +65,25 @@ export default class GamesIndex extends Component {
     if(this.refs.gameName.value == "") {
       return toastr.error("Game name can't be empty!", "Error!");
     }
-    this.refs.image.value();
+    var self = this;
+    Meteor.call("games.submitForReview", this.refs.gameName.value, this.refs.gameDescription.value, (err, game) => {
+      if(err) {
+        return toastr.error(err.reason, "Error!");
+      }
+      else {
+        this.refs.image.setMeta("gameId", game);
+        this.refs.image.value(() => {
+          this.refs.image.reset();
+          this.refs.gameName.value = "";
+          this.refs.gameDescription.value = "";
+          this.setState({
+            open: false
+          })
+          return toastr.success("Successfully sent game for review!", "Success!");
+        });
+      }
+    })
+
   }
 
   gameCreateModal() {
@@ -93,7 +94,7 @@ export default class GamesIndex extends Component {
         </div>
         <div className="col x-center" style={{padding: 20}}>
           <div className="col center x-center" style={{marginBottom: 20}}>
-            <ImageForm ref="image" collection={ GameBanners } aspectRatio={3/4} callback={this.onImageUploaded.bind(this)} />
+            <ImageForm ref="image" collection={ GameBanners } aspectRatio={3/4} />
           </div>
           <div className="col" style={{width: "70%"}}>
             <span>Game Name</span>

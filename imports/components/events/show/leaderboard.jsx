@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Faker from "faker";
 
 export default class LeaderboardPanel extends Component {
 

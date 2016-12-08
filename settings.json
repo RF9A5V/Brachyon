@@ -1,5 +1,32 @@
 {
+
+  "galaxy.meteor.com": {
+     "env": {
+       "ROOT_URL": "https://galaxy.brachyon.com",
+       "CDN_URL": "https://cdn-604a.kxcdn.com",
+       "MONGO_URL": "mongodb://application:7ej3C5Gb2msB5VGT@ds117168-a0.mlab.com:17168,ds117168-a1.mlab.com:17168/brachyon-main?replicaSet=rs-ds117168"
+     }
+   },
+
+   "googleCloud": {
+     "projectId": "peerless-tiger-130020",
+     "accessId": "brachyon@peerless-tiger-130020.iam.gserviceaccount.com"
+   },
+
+   "kraken": {
+     "auth": {
+       "api_key": "7fb489cc174a3a924ceb89c232c72e00",
+       "api_secret": "e95212732826ffc6557f32abec22442301842c67"
+     }
+   },
+
   "public": {
+    "analyticsSettings": {
+      "Google Analytics" : {
+        "trackingId": "UA-88263605-1"
+      }
+    },
+
     "stripe": {
       "testPublishableKey": "pk_test_dzbxXVvTa0bmS88ForcGsF2Y",
       "livePublishableKey": "pk_live_QMeWWW0ZG66HburlSe6Dvl5u",

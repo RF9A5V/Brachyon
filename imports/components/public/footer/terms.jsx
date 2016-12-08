@@ -25,7 +25,7 @@ export default class TermsScreen extends React.Component {
           <h4>Basic Terms</h4>
           <div className="about-what" style={{textAlign: "left"}}>
             By using our services, you are responsible for anything you upload and the
-            consequences of doing so. Images uploaded onto your account or public
+            consequences of doing so. Banners uploaded onto your account or public
             tournaments by default will be accessible to any other users of the website
             including third party services and other websites. Otherwise information
             uploaded onto your account such as name, location, age, and any other

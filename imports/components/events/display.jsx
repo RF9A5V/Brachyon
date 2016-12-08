@@ -1,5 +1,5 @@
 import React from "react";
-import Images from "/imports/api/event/images.js";
+import Banners from "/imports/api/event/banners.js";
 import { unmountComponentAtNode } from "react-dom";
 import { Link } from "react-router";
 
@@ -10,7 +10,7 @@ export default class EventDisplay extends React.Component {
       return "/images/bg.jpg";
     }
     else {
-      return Images.findOne(this.props.details.banner).url();
+      return Banners.findOne(this.props.details.banner).url();
     }
   }
 
