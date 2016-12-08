@@ -16,6 +16,10 @@ export default class DisplayDiscover extends Component {
     this.reset();
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.state.timer);
+  }
+
   reset() {
     this.state.timer = setTimeout(() => {
       this.setState({loadIn: false});

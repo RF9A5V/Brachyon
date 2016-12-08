@@ -10,7 +10,6 @@ export default class EditBracket extends Component {
       id: Events.findOne()._id,
       bracket: props.bracket
     }
-    console.log("wow")
   }
 
   onBracketSave() {

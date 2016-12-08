@@ -6,6 +6,8 @@ import GameTemplate from "/imports/components/public/search_results/game_templat
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
+import FontAwesome from "react-fontawesome";
+
 export default class BracketForm extends Component {
 
   constructor(props) {
@@ -211,19 +213,25 @@ export default class BracketForm extends Component {
         // <h5>Bracket Name</h5>
         // <input ref="name" defaultValue={this.props.name} />
         }
-        <div className="col x-center" style={{justifyContent: "flex-end"}}>
-          {
-            this.state.bannerUrl ? (
-              <div style={{textAlign: "center"}}>
-                <img style={{width: "auto", height: 160, border: "solid 4px #111"}} src={this.state.bannerUrl} />
-              </div>
-            ) : (
-              ""
-            )
-          }
-        </div>
-        <div className="col col-1" style={{marginLeft: 20}}>
-          <h5>Game</h5>
+        {
+          this.state.bannerUrl ? (
+            <div style={{textAlign: "center"}}>
+              <img style={{width: "auto", height: 160, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+            </div>
+          ) : (
+            ""
+          )
+        }
+        <div style={{marginLeft: 20}} className="col col-1">
+          <div className="row flex-pad">
+            <h5>Game</h5>
+            {
+              this.props.deletable ? (
+                <FontAwesome name="minus" onClick={() => {this.props.delfunc(this.props.key)}} />
+              ) : ( "" )
+            }
+          </div>
+
           <AutocompleteForm ref="game" publications={["game_search"]} types={[
             {
               type: Games,
