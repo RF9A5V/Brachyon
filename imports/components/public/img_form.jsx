@@ -6,17 +6,25 @@ export default class ImageForm extends Component {
   componentWillMount() {
     this.setState({
       id: this.props.id,
-      uploader: null
+      uploader: null,
+      file: null,
+      url: null,
+      meta: {}
     });
   }
 
-  value(getBase64) {
-    if(!this.state.url && !this.props.defaultImage){
-      if(this.props.callback){
-        this.props.callback({_id: this.props.id});
-      }
-      return this.props.id;
+  setMeta(key, value) {
+    this.state.meta[key] = value;
+  }
+
+  hasValue() {
+    if(this.state.url || this.props.defaultImage) {
+      return true;
     }
+    return false;
+  }
+
+  value(cb) {
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
     var heightRatio = imageData.naturalHeight / imageData.height;
@@ -28,12 +36,14 @@ export default class ImageForm extends Component {
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
 
-    if(getBase64){
-      return {
-        boxData,
-        base64: this.state.url || this.props.defaultImage
-      }
+    if(this.props.meta) {
+      Object.keys(this.props.meta).forEach(key => {
+        boxData[key] = this.props.meta[key];
+      })
     }
+    Object.keys(this.state.meta).forEach(key => {
+      boxData[key] = this.state.meta[key];
+    })
     var type = "";
     if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
       type = ".jpg";
@@ -41,6 +51,7 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
+
     this.props.collection.insert({
       file: (this.state.url || this.props.defaultImage),
       isBase64: true,
@@ -52,9 +63,10 @@ export default class ImageForm extends Component {
       onUploaded: (err, data) => {
         if(err){
           toastr.error(err.reason);
+          cb(err, data);
         }
-        if(!err && this.props.callback){
-          this.props.callback(data);
+        if(cb) {
+          cb(null, data);
         }
       }
     });
@@ -64,7 +76,8 @@ export default class ImageForm extends Component {
     e.preventDefault();
     var self = this;
     var reader = new FileReader();
-    var type = e.target.files[0].type;
+    var file = e.target.files[0];
+    var type = file.type;
     if(this.props.onSelect){
       this.props.onSelect();
     }
@@ -74,10 +87,11 @@ export default class ImageForm extends Component {
       }
       self.setState({
         url: reader.result,
+        file,
         type
       });
     }
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
   }
 
   componentWillReceiveProps(next) {
@@ -107,9 +121,6 @@ export default class ImageForm extends Component {
         zoomable={false}
         zoomOnWheel={false}
       />);
-    }
-    else if(this.props.id != null){
-      value = (<img src={this.image().link()} style={{width: "100%", height: "auto"}} />);
     }
     else if(this.props.url != null) {
       value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);

@@ -1,6 +1,6 @@
 import Games from '/imports/api/games/games.js';
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 Meteor.publish("searchEvents", (params) => {
@@ -27,7 +27,7 @@ Meteor.publish("searchEvents", (params) => {
     imgIDs.push(game.banner);
   });
   var usrs = Meteor.users.find({_id: { $in: Array.from(ownerIDs) }});
-  var imgs = Images.find({ _id: { $in: imgIDs } });
+  var imgs = Banners.find({ _id: { $in: imgIDs } });
   var profImgs = ProfileImages.find({_id: { $in: usrs.map((usr) => { return (usr.profile || {}).image }) }})
   var instances = events.map((event) => {
     return event.instances.pop();

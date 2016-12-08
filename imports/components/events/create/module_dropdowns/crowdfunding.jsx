@@ -81,13 +81,22 @@ export default class RevenuePanel extends Component {
     )
   }
 
+  blockIfIsProd() {
+    if(Meteor.isDevelopment) {
+      this.props.onToggle();
+    }
+    else {
+      return toastr.warning("Under construction!", "Warning!");
+    }
+  }
+
   render() {
     return (
       <div style={this.props.style}>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
+          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.blockIfIsProd.bind(this)}>
             <div className="row center x-center" style={{backgroundColor: this.props.selected ? "#FF6000" : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
               <span style={{color: this.props.selected ? "#FFF" : "#333", fontSize: 12}}>
                 {
@@ -109,18 +118,6 @@ export default class RevenuePanel extends Component {
             this.itemDescriptions()
           }
         </div>
-        <Modal isOpen={this.state.isOpen} onRequestClose={() => { this.setState({ isOpen: false }) }}>
-          <div className="row flex-pad">
-            <div></div>
-            <FontAwesome name="times" size="2x" onClick={() => {this.setState({isOpen: false})}} />
-          </div>
-          <div className="col x-center">
-            <h3>Working on it</h3>
-          </div>
-          <p>So yeah. we're still working on this feature. Stay tuned for crowdfunding goodness later in the future!</p>
-          <p>XOXO</p>
-          <p>- Brachyon Devs</p>
-        </Modal>
       </div>
     )
   }

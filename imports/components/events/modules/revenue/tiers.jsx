@@ -18,7 +18,8 @@ export default class TierPage extends Component {
       index: -1,
       ready: false,
       tier: {},
-      loadTier: false
+      loadTier: false,
+      option: "Add Tier"
     }
   }
 
@@ -144,39 +145,49 @@ export default class TierPage extends Component {
     var tiers = crowdfunding.tiers || [];
     var rewards = Rewards.find();
     var tier = this.state.index > -1 ? tiers[this.state.index] : {};
+    tiers.push({ name: "Add Tier" });
     return (
       <div>
-        <div className="submodule-bg submodule-overflow" style={{marginTop: 10, padding: "0 10px 20px"}}>
-          <div className="row center" style={{padding: "20px 0"}}>
-            <h3>Tiers</h3>
+        <h4>Tiers</h4>
+        <div className="submodule-bg submodule-overflow" style={{padding: 20, marginBottom: 10}}>
+          <div className="row" style={{flexWrap: "wrap", paddingBottom: 20}}>
+            {
+              tiers.map((tier, index) => {
+                var optionStyle = {
+                  padding: 10,
+                  marginRight: 10,
+                  width: 100,
+                  color: this.state.option == tier.name ? "#0BDDFF" : "white",
+                  backgroundColor: "#111",
+                  cursor: "pointer",
+                  textAlign: "center"
+                }
+                return (
+                  <div style={optionStyle} onClick={() => {
+                    if(index == tiers.length - 1) {
+                      this.setTier({}, -1);
+                    }
+                    else {
+                      this.setTier(tier, index);
+                    }
+                    this.setState({
+                      option: tier.name
+                    })
+                  }}>
+                    { tier.name }
+                  </div>
+                )
+              })
+            }
           </div>
           <div className="row">
-            <div className="col tier-preview-container" style={{width: "20%", minWidth: 200, backgroundColor: "#444", padding: 20, marginRight: 10}}>
-              {
-                tiers.map((tier, index) => {
-                  return (
-                    <div className="cf-tier col" onClick={() => {
-                      this.setTier(tier, index);
-                    }} style={{backgroundColor: index == this.state.index ? "#FF6000" : "#333"}}>
-                      { tier.name }
-                    </div>
-                  )
-                })
-              }
-              <div className="cf-tier" onClick={() => {
-                this.setTier({}, -1);
-              }} style={{ backgroundColor: this.state.index == -1 ? "#FF6000" : "inherit" }}>
-                <FontAwesome name="plus" style={{marginRight: 10}} />
-                Add Tier
-              </div>
-            </div>
             {
               this.state.loadTier ? (
                 <div className="col col-1 center x-center">
                   <Loading />
                 </div>
               ) : (
-                <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 10}}>
+                <div className="col col-1" style={{backgroundColor: "#444", padding: 20, marginRight: 20}}>
                   <h5>Name</h5>
                   <input type="text" ref={"name"} defaultValue={this.state.tier.name} />
                   <div className="row">

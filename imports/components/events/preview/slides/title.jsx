@@ -6,7 +6,7 @@ import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Games from "/imports/api/games/games.js";
 import Instances from "/imports/api/event/instance.js";
 
@@ -22,10 +22,7 @@ export default class EventTitlePage extends Component {
   }
 
   backgroundImage(useDarkerOverlay){
-    var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Images.findOne(this.props.event.details.banner).link();
-    }
+    var imgUrl = this.props.event.details.bannerUrl ? this.props.event.details.bannerUrl : "/images/bg.jpg";
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
     }
@@ -91,7 +88,7 @@ export default class EventTitlePage extends Component {
             <div className="col-1">
             </div>
             <div className="col center x-center col-2">
-              <h3 className="sponsor-event-header">{ this.props.event.details.name }</h3>
+              <h2 className="sponsor-event-header">{ this.props.event.details.name }</h2>
               {
                 revenue ? (
                   <span className="cf-progress-amount">
@@ -101,7 +98,6 @@ export default class EventTitlePage extends Component {
                   ""
                 )
               }
-
               <div className="row">
                 {
                   tickets ? (
@@ -141,13 +137,53 @@ export default class EventTitlePage extends Component {
               </div>
             </div>
             <div className="col col-1" style={{justifyContent: "flex-end", paddingBottom: 10}}>
-              <div className="slide-control">
+              <div className="slide-control down">
                 <FontAwesome name="chevron-down" size="2x" onClick={() => { this.onPageRequestChange(1)}} />
               </div>
             </div>
           </div>
           <div className="col col-1">
+            <div className="col" style={{backgroundColor: "#111", padding: 20}}>
+              {
+                this.props.event.details.location.online ? (
+                  <div className="row x-center" style={{marginBottom: 20}}>
+                    <div style={{width: 50, textAlign: "center", marginRight: 10}}>
+                      <FontAwesome name="signal" size="2x" />
+                    </div>
+                    <span>
+                      Online
+                    </span>
+                  </div>
+                ) : (
+                  <div className="row x-center" style={{marginBottom: 20}}>
+                    <div style={{width: 50, textAlign: "center", marginRight: 10}}>
+                      <FontAwesome name="map-marker" size="2x" />
+                    </div>
+                    <div className="col">
+                      <span>
+                        {
+                          this.props.event.details.location.locationName ? this.props.event.details.location.locationName : this.props.event.details.location.streetAddress
+                        }
+                      </span>
+                      <span>
+                        {
+                          this.props.event.details.location.city + ", " + this.props.event.details.location.state
+                        }
+                      </span>
+                    </div>
+                  </div>
+                )
+              }
 
+              <div className="row x-center">
+                <div style={{width: 50, textAlign: "center", marginRight: 10}}>
+                  <FontAwesome name="calendar" size="2x" />
+                </div>
+                <span>
+                  {moment(this.props.event.details.datetime).format("MMM Do, YYYY @ h:mmA")}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -161,26 +197,43 @@ export default class EventTitlePage extends Component {
           <div className="col col-3">
             {
               this.props.event.details.description ? (
-                <div className="slide-description">
-                  <div className="row-to-col flex-pad">
-                    {
-                      this.props.event.details.location.online ? (
-                        <span>Online</span>
-                      ) : (
-                        <div>
-                          <span>{ this.props.event.details.location.locationName }</span>
-                          <span>{ this.props.event.details.location.streetAddress }</span>
-                          <span>{ this.props.event.details.location.city + " " + this.props.event.details.location.state + ", " + this.props.event.details.location.zip }</span>
+                [
+                  (
+                    <div className="slide-description col">
+                      <div className="row x-center" style={{marginBottom: 20}}>
+                        <div style={{width: 40, textAlign: "center", marginRight: 20}}>
+                          <FontAwesome name="map-marker" size="2x" />
                         </div>
-                      )
-                    }
-                    {
-                      <span>{ moment(this.props.event.details.datetime).format("MMMM Do, h:mmA") }</span>
-                    }
-                  </div>
-                  <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}}>
-                  </div>
-                </div>
+                        {
+                          this.props.event.details.location.online ? (
+                            <span style={{fontSize: 16}}>Online</span>
+                          ) : (
+                            <div>
+                              <span style={{fontSize: 16}}>{ this.props.event.details.location.locationName }</span>
+                              <span style={{fontSize: 16}}>{ this.props.event.details.location.streetAddress + ", " }</span>
+                              <span style={{fontSize: 16}}>{ this.props.event.details.location.city + " " + this.props.event.details.location.state + ", " + this.props.event.details.location.zip }</span>
+                            </div>
+                          )
+                        }
+                      </div>
+                      <div className="row x-center">
+                        <div style={{width: 40, textAlign: "center", marginRight: 20}}>
+                          <FontAwesome name="calendar" size="2x" />
+                        </div>
+                        {
+                          <span style={{fontSize: 16}}>{ moment(this.props.event.details.datetime).format("MMMM Do, h:mmA") }</span>
+                        }
+                      </div>
+
+                    </div>
+                  ),
+                  (
+                    <div className="slide-description">
+                      <div dangerouslySetInnerHTML={{__html: this.props.event.details.description}}>
+                      </div>
+                    </div>
+                  )
+                ]
               ) : (
                 ""
               )

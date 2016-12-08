@@ -71,16 +71,7 @@ export default class UserEvents extends TrackerReact(Component) {
   }
 
   imgOrDefault(event) {
-    if(event.bannerUrl != null){
-      return event.bannerUrl;
-    }
-    var games = event.games.fetch();
-    for(var i in games) {
-      if(games[i].bannerUrl != null){
-        return games[i].bannerUrl;
-      }
-    }
-    return "/images/bg.jpg";
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
   onSectionClick(category, index, subscription) {

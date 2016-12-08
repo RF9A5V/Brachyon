@@ -4,7 +4,8 @@ var Stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
 import Events from '/imports/api/event/events.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
-import { Images } from "/imports/api/event/images.js";
+import { ProfileBanners } from "/imports/api/users/profile_banners.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
@@ -77,18 +78,9 @@ ServiceConfiguration.configurations.upsert(
 
 Meteor.startup(() => {
 
-  Logger.info('Meteor started!')
 
-  // SyncedCron.add({
-  //   name: "Test cron job",
-  //   schedule: function(parser){
-  //     return parser.recur().every().minute()
-  //   },
-  //   job: function() {
-  //     console.log("Job run!");
-  //     return true;
-  //   }
-  // })
+
+  Logger.info('Meteor started!');
 
   SyncedCron.add({
     name: "Test cron",

@@ -40,24 +40,15 @@ export default class ApproveEventAction extends Component {
   }
 
   imgOrDefault(event) {
-    if(event.bannerUrl != null){
-      return event.bannerUrl;
-    }
-    var games = event.games.fetch();
-    for(var i in games) {
-      if(games[i].bannerUrl != null){
-        return games[i].bannerUrl;
-      }
+    if(event.details.bannerUrl != null){
+      return event.details.bannerUrl;
     }
     return "/images/bg.jpg";
   }
 
   profileImageOrDefault(id) {
-    var img = ProfileImages.findOne(id);
-    if(!img) {
-      return "/images/profile.png";
-    }
-    return img.link();
+    var user = Meteor.users.findOne(id);
+    return user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
   approveEvent() {
@@ -97,7 +88,7 @@ export default class ApproveEventAction extends Component {
                   <div className="col">
                     <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                       <div className="row x-center" style={{fontSize: 12}}>
-                        <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                        <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                       </div>
                     </div>
                     <div className="row flex-pad">

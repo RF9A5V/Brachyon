@@ -83,13 +83,20 @@
 .template-container
   width 100%
   position absolute
-  top 50px
+  background-color #111;
+  padding 20px;
 
 
 .game-result-template, .user-result-template
   height 60px
-  padding 20px
   background-color #111
+  margin-bottom 20px
+
+.game-result-template:hover, .user-result-template:hover
+  cursor: pointer
+
+.game-result-template:last-child, .user-result-template:last-child
+  margin-bottom 0
 
 
 .game-result-template:hover .user-result-template:hover
@@ -113,20 +120,23 @@
   background-color #222
   +between(800px, 1200px)
     width calc((100% - (20px * 5)) / 6)
-  +below(800px)
+  +between(600px, 800px)
     width calc((100% - (20px * 3)) / 4)
+  +below(600px)
+    width 100%
+    margin-right 0
 
 .game:hover
   cursor pointer
 
 +above(1200px)
-  .game:nth-child(5n)
+  .game:nth-child(8n)
     margin-right 0
 +between(800px, 1200px)
-  .game:nth-child(4n)
+  .game:nth-child(6n)
     margin-right 0
-+below(800px)
-  .game:nth-child(3n)
++between(600px, 800px)
+  .game:nth-child(4n)
     margin-right 0
 
 .game img
@@ -137,6 +147,10 @@
   font-weight bold
   margin-bottom 10px
   text-align center
+  max-width: 100%
+  overflow-x hidden
+  white-space nowrap
+  text-overflow ellipsis
 
 .game .game-description
   padding 10px

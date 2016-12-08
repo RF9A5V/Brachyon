@@ -4,3 +4,4 @@ notes/
 settings.json
 .meteor/dev_bundle
 ssl/
+private/

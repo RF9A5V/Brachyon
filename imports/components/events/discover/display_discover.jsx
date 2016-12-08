@@ -16,6 +16,10 @@ export default class DisplayDiscover extends Component {
     this.reset();
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.state.timer);
+  }
+
   reset() {
     this.state.timer = setTimeout(() => {
       this.setState({loadIn: false});
@@ -43,7 +47,7 @@ export default class DisplayDiscover extends Component {
   render() {
     return (
       <div style={{padding: "0 5em"}} onMouseEnter={() => { this.onPromotedAreaFocus() }} onMouseLeave={() => { this.onPromotedAreaLeave() }}>
-        <div className="col x-center" style={{margin: 10}}>
+        <div className="col x-center">
           <VelocityComponent animation={ this.state.loadIn ? { opacity: 1 } : { opacity: 0 }} duration={500}>
             {
               (this.props.events || []).length > 0 ? (

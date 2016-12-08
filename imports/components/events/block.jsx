@@ -1,5 +1,5 @@
 import React from "react";
-import Images from "/imports/api/event/images.js";
+import Banners from "/imports/api/event/banners.js";
 
 export default class EventBlock extends React.Component {
 

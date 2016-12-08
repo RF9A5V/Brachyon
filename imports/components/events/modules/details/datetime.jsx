@@ -29,20 +29,18 @@ export default class DatetimePage extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <div className="button-row">
-          <button onClick={this.onDatetimeSave.bind(this)}>Save</button>
-        </div>
+        <h4>Date and Time</h4>
         <div className="submodule-bg">
           <div className="row">
             <div className="submodule-section">
-              <h3 style={{marginBottom: 20}}>Date and Time</h3>
               <DateSelect ref="date" init={event.details.datetime} />
-              <TimeSelect ref="time" init={event.details.datetime} />
+              <TimeSelect ref="time" init={event.details.datetime} style={{marginTop: 20}} />
             </div>
             <div className="submodule-section col-1 row center x-center">
-              <span className="section">This event will start at {moment(event.details.datetime).format("MMMM Do, YYYY h:mmA")}.</span>
+              <span className="section">This event will start on <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("MMMM Do, YYYY")}</span> @ <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("h:mmA")}</span>.</span>
             </div>
           </div>
+          <div style={{marginTop: 20}} className="row center"><button onClick={this.onDatetimeSave.bind(this)}>Save</button></div>
         </div>
       </div>
     )

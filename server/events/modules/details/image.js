@@ -1,4 +1,4 @@
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 Meteor.methods({
   "events.details.imageSave"(id, bannerId){
@@ -9,7 +9,7 @@ Meteor.methods({
     Events.update(id, {
       $set: {
         "details.banner": bannerId,
-        "details.bannerUrl": Images.findOne(bannerId).link()
+        "details.bannerUrl": Banners.findOne(bannerId).link()
       }
     })
   }

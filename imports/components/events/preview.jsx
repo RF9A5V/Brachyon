@@ -12,12 +12,13 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
-  componentWillMount(){
-    var self = this;
-    this.setState({
+  constructor(props) {
+    super(props);
+    this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
           this.setState({
@@ -40,11 +41,15 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         }
       }),
       isReady: false,
-      anim: false
-    })
+      hasLoaded: false
+    }
   }
 
   componentWillUnmount(){
+    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
+    document.querySelector("[property='og:image']").setAttribute("content", "/images/logo.png");
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
     this.state.event.stop();
     this.state.users.stop();
     this.state.sponsors.stop();
@@ -52,6 +57,27 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   event() {
     return Events.find().fetch()[0];
+  }
+
+  populateMetaTags() {
+    var event = this.event();
+    document.querySelector("[property='og:title']").setAttribute("content", event.details.name);
+    document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
+    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+    this.setState({
+      hasLoaded: true
+    })
+  }
+
+  fbDescriptionParser(description) {
+    var startIndex = description.indexOf("<p>");
+    var endIndex = description.indexOf("</p>", startIndex);
+    var tempDesc = description.substring(startIndex + 3, endIndex);
+    if(tempDesc.length > 200) {
+      tempDesc = tempDesc.substring(0, 196) + "...";
+    }
+    return tempDesc;
   }
 
   slides() {
@@ -84,11 +110,21 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     return pages;
   }
 
+  imgOrDefault() {
+    var event = this.event();
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/logo.png";
+  }
+
   render() {
     if(!this.state.isReady){
       return (
         <div>Loading...</div>
       )
+    }
+    else {
+      if(!this.state.hasLoaded){
+        this.populateMetaTags();
+      }
     }
     var event = this.event();
     return (
