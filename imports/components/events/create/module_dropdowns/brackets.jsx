@@ -28,6 +28,24 @@ export default class BracketsPanel extends Component {
     });
   }
 
+  addBracket() {
+    br = this.state.brackets;
+    br.push(this.state.brackets.length+1);
+    this.setState({
+      bracketCount: this.state.bracketCount+1,
+      brackets: br
+    })
+  }
+
+  deleteBracket(key) {
+    br = this.state.brackets;
+    br.splice(key, 1);
+    this.setState({
+      bracketCount: this.state.bracketCount-1,
+      brackets: br
+    })
+  }
+
   itemDescriptions() {
     var descriptions = [
       "Choose from Single Elimination, Double Elimination, Round Robin and Swiss. After you publish your event, a bracket page will be generated where participants can be added manually and/or users can request to join (in which case you will receive notification(s))."
@@ -66,23 +84,32 @@ export default class BracketsPanel extends Component {
         </div>
         {
           this.props.selected ? (
-            this.state.brackets.map((bracket, key) => {
-              if(bracket == null){
-                return "";
+            <div>
+              <div>
+              {
+                this.state.brackets.map((bracket, key) => {
+                  if(bracket == null){
+                    return "";
+                  }
+                  if(this.state.bracketCount > 1){
+                    return (
+                      <div className="game-bracket-container">
+                        <BracketForm key={key} ref={key} deletable={true} delfunc={this.deleteBracket.bind(this)} cb={(e) => { this.state.brackets[key] = null; this.state.bracketCount--; this.forceUpdate() }} />
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="game-bracket-container">
+                      <BracketForm key={key} ref={key} />
+                    </div>
+                  );
+                })
               }
-              if(this.state.bracketCount > 1){
-                return (
-                  <div className="game-bracket-container">
-                    <BracketForm key={key} ref={key} deletable={true} cb={(e) => { this.state.brackets[key] = null; this.state.bracketCount--; this.forceUpdate() }} />
-                  </div>
-                );
-              }
-              return (
-                <div className="game-bracket-container">
-                  <BracketForm key={key} ref={key} />
-                </div>
-              );
-            })
+              </div>
+              <div className="center">
+                <button onClick={() => { this.addBracket() }}>Add Bracket</button>
+              </div>
+            </div>
           ) : (
           <div className="row">
             <div className="col col-1 info-description">
