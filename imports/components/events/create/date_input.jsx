@@ -18,6 +18,17 @@ export default class DateInput extends Component {
     }
   }
 
+  componentWillReceiveProps(next) {
+    if(next.init) {
+      var initTime = moment(next.init);
+      this.setState({
+        time: initTime,
+        month: initTime.month(),
+        year: initTime.year()
+      })
+    }
+  }
+
   value() {
     return this.state.time.format("YYYYMMDD");
   }

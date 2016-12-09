@@ -8,6 +8,7 @@ import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
 import BotPanel from "./create/module_dropdowns/bot.jsx";
 import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
 import StreamPanel from "./create/module_dropdowns/stream.jsx";
+import LeaguePanel from "./create/module_dropdowns/leagues.jsx";
 import ModuleBlock from "./create/module_block.jsx";
 
 import { Banners } from "/imports/api/event/banners.js";
@@ -30,6 +31,9 @@ export default class EventCreateScreen extends Component {
         crowdfunding: {
           active: false
         },
+        leagues: {
+          active: false
+        }
       },
       currentItem: "details"
     }
@@ -46,7 +50,10 @@ export default class EventCreateScreen extends Component {
       details: (<DetailsPanel ref="details" style={{height: this.state.currentItem == "details" ? "initial" : 0, overflowY: "hidden"}} />),
       brackets: (<BracketsPanel selected={this.state.moduleState["brackets"].active} ref="brackets" style={{height: this.state.currentItem == "brackets" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("brackets")} />),
       crowdfunding: (<CrowdfundingPanel selected={this.state.moduleState["crowdfunding"].active} ref="crowdfunding" style={{height: this.state.currentItem == "crowdfunding" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("crowdfunding")} />),
-      stream: (<StreamPanel ref="stream" selected={this.state.moduleState["stream"].active} style={{height: this.state.currentItem == "stream" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("stream")} />)
+      stream: (<StreamPanel ref="stream" selected={this.state.moduleState["stream"].active} style={{height: this.state.currentItem == "stream" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("stream")} />),
+      leagues: (
+        <LeaguePanel ref="leagues" selected={this.state.moduleState["leagues"].active} style={{height: this.state.currentItem == "leagues" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("leagues")} />
+      )
     }
   }
 
@@ -75,6 +82,12 @@ export default class EventCreateScreen extends Component {
         icon: "usd",
         requiresReview: true,
         selected: this.state.moduleState["crowdfunding"].active
+      },
+      {
+        name: "leagues",
+        icon: "",
+        requiresReview: false,
+        selected: this.state.moduleState["leagues"].active
       }
     ];
   }

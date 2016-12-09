@@ -11,7 +11,7 @@ export default class GameResultTemplate extends Component {
   render() {
     return (
       <div className="game-result-template row x-center" onClick={this.onClick.bind(this)}>
-        <img src={GameBanners.findOne(this.props.banner).link()} />
+        <img src={this.props.bannerUrl} />
         <span style={{marginLeft: 10}}>
           { this.props.name }
         </span>

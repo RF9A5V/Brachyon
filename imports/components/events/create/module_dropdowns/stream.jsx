@@ -63,7 +63,7 @@ export default class StreamPanel extends Component {
             <div className="row">
             <div className="col col-1 info-description">
               <div className="row center">
-              <h3>{ tabs[this.state.item] }</h3>
+                <h3>{ tabs[this.state.item] }</h3>
               </div>
               <div style={{margin: "20px 25vw"}} className="row center">
                 {

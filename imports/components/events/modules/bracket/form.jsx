@@ -66,7 +66,7 @@ export default class BracketForm extends Component {
       this.state[i] = format[i];
     }
     // Only works for basic bracket formats.
-    this.refs.format.value = props.format.baseFormat;
+    this.refs.format.value = (props.format || {}).baseFormat;
   }
 
   onGameSelect(game) {

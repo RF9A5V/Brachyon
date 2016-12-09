@@ -40,6 +40,12 @@ export default class TimeInput extends Component {
     return hour + "" + minutes;
   }
 
+  onTimeChange() {
+    if(this.props.onChange) {
+      this.props.onChange();
+    }
+  }
+
   render() {
     var [hours, minutes] = [[], []];
     for(var i = 1; i <= 12; i ++){
@@ -51,7 +57,7 @@ export default class TimeInput extends Component {
     return (
       <div style={this.props.style || {}}>
         <div className="time-input row center x-center">
-          <select ref="hours" defaultValue={this.state.hour}>
+          <select ref="hours" defaultValue={this.state.hour} onChange={this.onTimeChange.bind(this)}>
             {
               hours.map((hour) => {
                 return (
@@ -65,7 +71,7 @@ export default class TimeInput extends Component {
           <span style={{margin: "0 10px"}}>
             :
           </span>
-          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute}>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onTimeChange.bind(this)}>
             {
               minutes.map((value) => {
                 return (
@@ -76,7 +82,7 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half" defaultValue={this.state.half}>
+          <select ref="half" defaultValue={this.state.half} onChange={this.onTimeChange.bind(this)}>
             <option value={"am"}>AM</option>
             <option value={"pm"}>PM</option>
           </select>
