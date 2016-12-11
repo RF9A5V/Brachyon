@@ -1,4 +1,4 @@
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Games from "/imports/api/games/games.js";
 import Sponsorships from "/imports/api/event/sponsorship.js";
 import Icons from "/imports/api/sponsorship/icon.js";
@@ -34,7 +34,7 @@ Meteor.methods({
     });
     var event = Events.findOne(id);
     if(obj["details.banner"] && event.details.banner) {
-      Images.remove(event.details.banner);
+      Banners.remove(event.details.banner);
     }
     if(Object.keys(obj).length > 0){
       Events.update(id, {
@@ -333,7 +333,7 @@ Meteor.methods({
 
   "games.edit"(id, name, description, imgID) {
     var game = Games.findOne(id);
-    var img = Images.findOne(imgID);
+    var img = Banners.findOne(imgID);
     if(!game) {
       throw new Meteor.Error(404, "Game not found!");
     }

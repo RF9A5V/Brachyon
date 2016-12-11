@@ -11,7 +11,7 @@ Meteor.startup(() => {
   // code to run on server at startup
 
   toastr.options.progressBar = true;
-  toastr.options.positionClass = "toast-bottom-right";
+  toastr.options.positionClass = "toast-top-right";
 
   var overlay = Modal.defaultStyles.overlay;
 

@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 var generateQuery = {};
 

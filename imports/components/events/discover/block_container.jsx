@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import Instances from "/imports/api/event/instance.js";
 
@@ -25,24 +25,12 @@ export default class BlockContainer extends Component {
   }
 
   imgOrDefault(event) {
-    if(event.details.banner) {
-      return Images.findOne(event.details.banner).link();
-    }
-    var games = event.games.fetch();
-    for(var i in games) {
-      if(games[i].banner != null){
-        return Images.findOne(games[i].banner).link();
-      }
-    }
-    return "/images/bg.jpg";
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
   profileImageOrDefault(id) {
-    var img = ProfileImages.findOne(id);
-    if(!img) {
-      return "/images/profile.png";
-    }
-    return img.link();
+    var user = Meteor.users.findOne(id);
+    return user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
   onPencilClick(event) {
@@ -110,7 +98,7 @@ export default class BlockContainer extends Component {
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                         <div className="row x-center" style={{fontSize: 12}}>
-                          <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                          <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                         </div>
                         <span style={{fontSize: 12}}>{
                           (() => {

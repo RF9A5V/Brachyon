@@ -69,7 +69,20 @@
 .info-description p
   line-height 1.5
   margin-bottom 10px
-  font-size 0.8em
+  font-size 1em
+  +below(600px)
+    font-size 0.8em
 
 .info-description p:last-child
   margin-bottom 0
+
+.mod-block-toggle
+  width: 10px
+  height: 20px
+  background-color: #111
+  padding 2px
+  box-sizing content-box
+
+.mod-block-control
+  width 100%
+  height 50%

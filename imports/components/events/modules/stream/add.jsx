@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class AddStream extends Component{
+export default class AddStream extends Component {
 
   constructor(props){
     super(props);
@@ -23,12 +23,16 @@ export default class AddStream extends Component{
 
   render(){
     return(
-      <div className="col" style={{alignItems: "flex-start"}}>
-        <h5>Stream Name</h5>
-        <input ref="twitchStreamName" placeholder="Copy and paste your Twitch IFRAME tag here!" defaultValue={(Events.findOne().twitchStream || {}).name} />
-        <a href="#">How do I do this?</a>
-        <div className="row center x-center" style={{marginTop: 10}}>
-          <button onClick={this.onStreamNameSave.bind(this)}>Save</button>
+      <div className="col" style={{width: "50%", minWidth: 300, margin: "0 auto"}}>
+        <h4>Stream</h4>
+        <div className="submodule-bg">
+          <div className="row center x-center">
+            <span>https://twitch.tv/</span>
+            <input ref="twitchStreamName" placeholder="Twitch Username" defaultValue={(Events.findOne().twitchStream || {}).name} />
+          </div>
+          <div className="row center x-center">
+            <button onClick={this.onStreamNameSave.bind(this)}>Save</button>
+          </div>
         </div>
       </div>
     )

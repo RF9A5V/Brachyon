@@ -5,7 +5,7 @@ import { browserHistory, Link } from "react-router"
 import Modal from "react-modal";
 
 import Games from '/imports/api/games/games.js';
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
@@ -18,7 +18,7 @@ import ImageForm from "/imports/components/public/img_form.jsx";
 import UserSections from "./show/sections.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
-export default class ShowUserScreen extends Component {
+export default class ShowUserScreen extends TrackerReact(Component) {
 
   componentWillMount() {
     self = this;
@@ -40,17 +40,17 @@ export default class ShowUserScreen extends Component {
   }
 
   profileBannerURL(id) {
-    var banner = ProfileBanners.findOne(Meteor.user().profile.banner);
-    if(banner){
-      return banner.link();
+    var user = Meteor.user();
+    if(user.profile.bannerUrl){
+      return user.profile.bannerUrl;
     }
     return "/images/bg.jpg";
   }
 
   profileImage() {
     var user = Meteor.user();
-    if(user.profile.image) {
-      return ProfileImages.findOne(user.profile.image).link();
+    if(user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
@@ -58,20 +58,7 @@ export default class ShowUserScreen extends Component {
   updateProfileImage(e) {
     e.preventDefault();
     this.refs.img.value();
-  }
-
-  onImageUploaded(data) {
-    Meteor.call("users.update_profile_image", data._id, (err) => {
-      if(err) {
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.setState({
-          open: false
-        })
-        toastr.success("Updated profile image.", "Success!");
-      }
-    })
+    this.setState({open: false});
   }
 
   render() {
@@ -93,7 +80,6 @@ export default class ShowUserScreen extends Component {
               {
                 Meteor.user().profile.games.slice(0, 3).map((game, i) => {
                   var g = Games.findOne(game);
-                  console.log(g);
                   return (
                     <div className="user-game-icon" style={{backgroundImage: `url(${GameBanners.findOne(g.banner).link()})`}} key={i}>
 
@@ -109,7 +95,7 @@ export default class ShowUserScreen extends Component {
               </div>
               <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
                 <div className="col center x-center" style={{width: "100%", height: "100%"}}>
-                  <ImageForm ref="img" collection={ProfileImages} callback={this.onImageUploaded.bind(this)} />
+                  <ImageForm ref="img" collection={ProfileImages} meta={{userId: Meteor.userId()}} />
                   <button onClick={this.updateProfileImage.bind(this)}>Submit</button>
                 </div>
               </Modal>
