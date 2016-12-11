@@ -46,13 +46,8 @@ export default class DescriptionPage extends Component {
     var event = Events.findOne();
     return (
       <div className="col">
-        <div className="button-row">
-          <button onClick={this.onDescriptionSave.bind(this)}>Save</button>
-        </div>
-        <div className="submodule-bg">
-          <div className="row center">
-            <h3>Event Details</h3>
-          </div>
+        <h4 style={{marginTop: 10}}>Event Details</h4>
+        <div style={{marginBottom: 10}} className="submodule-bg">
           <div className="row x-center">
             <h5 style={{marginRight: 20}}>Title</h5>
             <span>{ this.state.titleLength } / 50</span>
@@ -60,6 +55,7 @@ export default class DescriptionPage extends Component {
           <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
           <h5 style={{marginBottom: 20}}>Description</h5>
           <Editor value={event.details.description} ref="description" onChange={this.updateDescription.bind(this)} useInsert={true} usePara={true} useTable={true} />
+          <div style={{marginTop: 10}} className="row center"><button onClick={this.onDescriptionSave.bind(this)}>Save</button></div>
         </div>
       </div>
     )

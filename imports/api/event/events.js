@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import Games from "../games/games.js";
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 
 Events = new Mongo.Collection('events', {
   transform: (doc) => {

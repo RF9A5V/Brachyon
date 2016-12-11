@@ -44,7 +44,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
 
   componentWillUnmount() {
     this.state.event.stop();
-    this.state.sponsors.stop();
+    this.state.rewards.stop();
   }
 
 
@@ -69,7 +69,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
         },
         {
           component: DatetimePage,
-          text: "Date and Time"
+          text: "Date & Time"
         },
         {
           component: ImagePage,

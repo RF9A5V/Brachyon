@@ -31,19 +31,24 @@ export default class Main extends Component {
     var brackets = Instances.findOne().brackets || [];
     return (
       <div className="submodule-bg" style={{marginTop: 10}}>
+        <div className="row" style={{flexWrap: "wrap", paddingBottom: 20}}>
+          {
+            brackets.map((bracket, i) => {
+              var optionStyle = {
+                padding: 10,
+                marginRight: 10,
+                width: 100,
+                color: this.state.index == i ? "#0BDDFF" : "white",
+                backgroundColor: "#111",
+                cursor: "pointer"
+              }
+              return (
+                <div className="row x-center center" style={optionStyle} onClick={() => { this.setState({ index: i }) }}>{Games.findOne(bracket.game).name}</div>
+              )
+            })
+          }
+        </div>
         <div className="row">
-          <div className="submodule-section col">
-            {
-              brackets.map((bracket, i) => {
-                var game = Games.findOne(bracket.game);
-                return (
-                  <div className={`sub-section-select ${this.state.index == i ? "active" : ""}`} onClick={() => { this.setState({index: i}) }}>
-                    { game.name }
-                  </div>
-                )
-              })
-            }
-          </div>
           {
             this.state.bracket[ this.state.index ] == null ? (
               ""

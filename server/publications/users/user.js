@@ -1,7 +1,4 @@
 import Games from "/imports/api/games/games.js";
-import { Images } from "/imports/api/event/images.js";
-import { ProfileImages } from "/imports/api/users/profile_images.js";
-import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import Notifications from "/imports/api/users/notifications.js";
 
@@ -11,21 +8,12 @@ Meteor.publish("user", (_id) => {
     return Meteor.users.find({_id});
   }
   var games = Games.find({_id: {$in: user.profile.games || []}});
-  var imgs = ProfileImages.find({_id: user.profile.image});
-  var gameBanners = GameBanners.find({
-    _id: {
-      $in: games.map((g) => { return g.banner })
-    }
-  });
   var eventIDs = [];
   var userIDs = [];
   userIDs.push(_id);
   return [
     Meteor.users.find({_id}),
-    ProfileBanners.find({_id: user.profile.banner}).cursor,
-    imgs.cursor,
     games,
-    gameBanners.cursor
   ];
 })
 

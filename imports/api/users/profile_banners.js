@@ -1,74 +1,59 @@
 import { FilesCollection } from "meteor/ostrio:files";
-
-import Grid from "gridfs-stream";
-import { MongoInternals } from "meteor/mongo";
 import fs from "fs";
 
-let gfs;
-if(Meteor.isServer){
-  gfs = Grid(
-    MongoInternals.defaultRemoteCollectionDriver().mongo.db,
-    MongoInternals.NpmModule
-  );
-}
+import { compressThenStore } from "../upload_suite.js";
 
-export const ProfileBanners = new FilesCollection({
-  debug: false,
-  collectionName: "profile_banners",
+var ProfileBanners = new FilesCollection({
+  collectionName: "profileBanners",
   allowClientCode: false,
-  onBeforeUpload(file) {
-    return true;
-  },
-  onAfterUpload(image) {
-    Object.keys(image.versions).forEach(versionName => {
-      const metadata = {
-        versionName,
-        imageId: image._id,
-        storedAt: new Date()
-      };
-      const writeStream = gfs.createWriteStream({
-        filename: image.name,
-        metadata
-      });
-      var dims = image.meta;
-      gm(fs.createReadStream(image.versions[versionName].path), image.name).crop(dims.width, dims.height, dims.left, dims.top).resize("1280", "320").stream().pipe(writeStream);
-      writeStream.on("close", Meteor.bindEnvironment(file => {
-        const property = `versions.${versionName}.meta.gridFsFileId`;
-        this.collection.update(image._id, {
-          $set: {
-            [property]: file._id.toString()
-          }
-        });
-        Meteor.users.update(image.userId, {
-          $set: {
-            "profile.banner": image._id
-          }
-        })
-        this.unlink(this.collection.findOne(image._id), versionName);
-      }))
-    });
-  },
-  interceptDownload(http, image, versionName) {
-    const _id = (image.versions[versionName].meta || {}).gridFsFileId;
-    if(_id) {
-      const readStream = gfs.createReadStream({ _id });
-      readStream.on("error", err => { throw err; });
-      readStream.pipe(http.response);
+  onBeforeUpload: function(file) {
+    if(file.size <= 10485760 && /png|jpg|jpeg/i.test(file.extension)) {
+      return true;
+    } else {
+      return "Image can only be less than 10MB.";
     }
-    return Boolean(_id);
   },
-  onAfterRemove(images) {
-    images.forEach(image => {
-      Object.keys(image.versions).forEach(versionName => {
-        const _id = (image.versions[versionName].meta || {}).gridFsFileId;
-        if(_id) {
-          gfs.remove({_id}, err => {
-            if(err) {
-              throw err;
-            }
-          })
+  onAfterUpload: function(fileRef) {
+    var meta = fileRef.meta;
+    var params = {
+      file: fileRef.path,
+      wait: true,
+      lossy: true
+    };
+    var location = "profileBanners";
+
+    var self = this;
+    var writeStream = fs.createWriteStream(fileRef.path + ".temp");
+    gm(fs.createReadStream(fileRef.path), fileRef.name).crop(meta.width, meta.height, meta.left, meta.top).resize("1280", "360").stream().pipe(writeStream);
+    writeStream.on("close", Meteor.bindEnvironment(function() {
+      fs.rename(fileRef.path + ".temp", fileRef.path, Meteor.bindEnvironment(() => {
+        if(!Meteor.isDevelopment) {
+          compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
+            Meteor.users.update({
+              _id: fileRef.meta.userId
+            }, {
+              $set: {
+                "profile.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+              }
+            });
+            self.remove({_id: fileRef._id});
+          }));
         }
-      })
-    })
+        else {
+          var user = Meteor.users.findOne(meta.userId);
+          if(user.profile.banner) {
+            self.remove({_id: user.profile.banner});
+          }
+          Meteor.users.update({ _id: meta.userId }, {
+            $set: {
+              "profile.bannerUrl": self.findOne(fileRef._id).link(),
+              "profile.banner": fileRef._id
+            }
+          });
+        }
+      }));
+    }));
   }
 })
+
+export { ProfileBanners };

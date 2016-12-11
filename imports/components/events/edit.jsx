@@ -68,7 +68,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
         },
         {
           component: DatetimePage,
-          text: "Date and Time"
+          text: "Date & Time"
         },
         {
           component: ImagePage,
@@ -253,7 +253,9 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     }
     else {
       return (
+        <div className="box">
         <TabController items={this.items()} />
+        </div>
       )
     }
   }

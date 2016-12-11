@@ -46,21 +46,23 @@ export default class UserDropdown extends Component {
         <div className="triangle-top"></div>
         <div className="user-dropdown-content col">
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessProfile.bind(this)}>
-            <div className="col-2 row center"><i className="fa fa-user fa-2x" aria-hidden="true"></i></div>
+            <div className="user-dropdown-icon"><i className="fa fa-user fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Profile</span>
           </a>
           {
             // <a className="user-dropdown-option row x-center" href="#" onClick={this.accessWallet.bind(this)}>
-            //   <div className="col-2 row center"><i className="fa fa-usd fa-2x" aria-hidden="true"></i></div>
+            //   <div className="user-dropdown-icon"><i className="fa fa-usd fa-2x" aria-hidden="true"></i></div>
             //   <span className="col-3">Wallet</span>
             // </a>
           }
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOptions.bind(this)}>
-            <div className="col-2 row center"><i className="fa fa-cog fa-2x" aria-hidden="true"></i></div>
+            <div className="user-dropdown-icon">
+              <i className="fa fa-cog fa-2x" aria-hidden="true"></i>
+            </div>
             <span className="col-3">Options</span>
           </a>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessNotifications.bind(this)}>
-            <div className="col-2 row center" style={{position: "relative"}}>
+            <div className="user-dropdown-icon" style={{position: "relative"}}>
               <i className="fa fa-envelope fa-2x" aria-hidden="true"></i>
               <span style={{fontSize: 16, position: "absolute", right: 2.5, bottom: -10, fontWeight: "bold", color: "#FF6000"}}>
                 {
@@ -71,7 +73,7 @@ export default class UserDropdown extends Component {
             <span className="col-3">Notifications</span>
           </a>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
-            <div className="col-2 row center"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
+            <div className="user-dropdown-icon"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Logout</span>
           </a>
         </div>

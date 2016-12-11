@@ -1,3 +1,5 @@
+import { Banners } from "/imports/api/event/banners.js";
+
 Meteor.methods({
   "events.updateDetailsName"(id, name) {
     // Validation
@@ -8,8 +10,10 @@ Meteor.methods({
     });
   },
   "events.updateDetailsBanner"(id, bannerID) {
+    console.log(id);
     Events.update(id, {
       $set: {
+        "details.bannerUrl": Banners.findOne(bannerID).link(),
         "details.banner": bannerID
       }
     });

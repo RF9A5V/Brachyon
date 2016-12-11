@@ -1,4 +1,4 @@
-import { Images } from "/imports/api/event/images.js";
+import { Banners } from "/imports/api/event/banners.js";
 import Instances from "/imports/api/event/instance.js";
 import Games from "/imports/api/games/games.js";
 import moment from "moment";
@@ -24,7 +24,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Event cannot start before current date.");
     }
     if(obj.banner) {
-      obj.bannerUrl = Images.findOne(obj.banner).link();
+      obj.bannerUrl = Banners.findOne(obj.banner).link();
     }
     return obj;
   },

@@ -4,12 +4,13 @@
   background-repeat no-repeat
   background-size cover
   background-position center center
-
+  padding 40px
+  position: relative;
 
 .slide-page-container
   overflow-y auto
-  height calc(100vh - 120px)
-
+  height calc(100vh - 110px)
+  overflow-x hidden
 
 .slide-temp-block
   background-color #666
@@ -143,7 +144,24 @@
   display flex
   justify-content center
   align-items center
+  position absolute;
 
+
+.slide-control.up
+  top 20px
+  left calc(50% - 14px);
+
+.slide-control.down
+  bottom 20px
+  left calc(50% - 14px);
+
+.slide-control.right
+  right 20px
+  top calc(50% - 10px);
+
+.slide-control.left
+  left 20px
+  top calc(50% - 10px);
 
 .slide-control:hover
   opacity 1

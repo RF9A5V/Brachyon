@@ -18,8 +18,6 @@ export default class ModuleBlock extends Component {
     this.setState({
       active: nextProps.isActive
     })
-    this.refs.text1.runAnimation();
-    this.refs.text2.runAnimation();
   }
 
   render() {
@@ -29,12 +27,17 @@ export default class ModuleBlock extends Component {
           onClick={this.onModuleSelect.bind(this)}
           style={{width: 164, padding: 10, marginRight: 10, cursor: "pointer"}}
         >
-          <VelocityComponent ref="text1" animation={this.state.active ? { color: "#FF6000" } : { color: "#FFF" }} duration={300}>
-            <FontAwesome name={this.props.icon || "cog"} size="2x" />
-          </VelocityComponent>
-          <VelocityComponent ref="text2" animation={this.state.active ? { color: "#FF6000" } : { color: "#FFF" }} duration={300}>
-            <span className="module-block-header col-1">{ this.props.modName[0].toUpperCase() + this.props.modName.slice(1) }</span>
-          </VelocityComponent>
+          <FontAwesome name={this.props.icon || "cog"} size="2x" />
+          <span className="module-block-header col-1">{ this.props.modName[0].toUpperCase() + this.props.modName.slice(1) }</span>
+          {
+            this.props.modName == "details" ? (
+              ""
+            ) : (
+              <div className="col mod-block-toggle" style={{justifyContent: this.props.isOn ? "flex-start" : "flex-end"}} onClick={() => { this.props.onToggle() }}>
+                <div className="mod-block-control" style={{backgroundColor: this.props.isOn ? "#FF6000" : "white"}}></div>
+              </div>
+            )
+          }
         </div>
       </VelocityComponent>
     )

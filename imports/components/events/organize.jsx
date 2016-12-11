@@ -22,7 +22,7 @@ export default class OrganizeEventScreen extends TrackerReact(Component) {
   }
 
   image() {
-    return Images.find().fetch()[0];
+    return Banners.find().fetch()[0];
   }
 
   participants() {
