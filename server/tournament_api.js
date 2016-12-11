@@ -313,7 +313,6 @@ var OrganizeSuite = {
       {
         playarr[participants[y]] = false;
       }
-      tempc[participants[x].name] = x;
       var playerObj = {
         name: participants[x],
         score: 0,
@@ -330,6 +329,7 @@ var OrganizeSuite = {
       }
       tempb.push(playerObj);
     }
+    console.log(tempc);
     var frounds = [];
     var round = {
       matches: temp,

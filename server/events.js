@@ -418,47 +418,57 @@ Meteor.methods({
     })
   },
 
-  "events.tiebreaker"(bracketID, roundNumber, matchNumber, score)
+  "events.tiebreaker"(bracketID, roundNumber, score)
   {
-    var bracket = Brackets.findOne(bracketID);
-    bracket = bracket.rounds[roundNumber];
-    var p1 = bracket.matches[matchNumber].playerOne;
-    var p2 = bracket.matches[matchNumber].playerTwo;
-    var bnum1 = 0;
-    var bnum2 = 0;
+    console.log(roundNumber);
+    var bracket = Brackets.findOne(bracketID).rounds[roundNumber];
+    var max = -1, tied = false, tiedplayers = [];
     for (var x = 0; x < bracket.players.length; x++)
     {
-      if (bracket.players[x].name == p1)
+      if (max < bracket.players[x].score)
       {
-        for (var y = 0; y < bracket.players[x].length; y++)
-        {
-          var name = bracket.players[y].name;
-          if (bracket.players[x].playedagainst[name] = true)
-            bnum1 += bracket.players[y].score;
-        }
+        max = bracket.players[x].score;
+        tiedplayers = [];
+        tiedplayers.push(bracket.players[x].name);
+        tied = false;
       }
-      if (bracket.players[x].name == p2)
+      else if (max == bracket.players[x].score)
       {
-        for (var y = 0; y < bracket.players[x].length; y++)
-        {
-          var name = bracket.players[y].name;
-          if (bracket.players[x].playedagainst[name] = true)
-            bnum2 += bracket.players[y].score;
-        }
-      }
-      if (bnum1 > bnum2)
-      {
-        //Insert p1 is winner
-      }
-      else if (bnum2 > bnum1)
-      {
-        //Insert p2 is winner
-      }
-      else
-      {
-        //Next round mathafucka
+        tiedplayers.push(bracket.players[x].name);
+        tied = true;
       }
     }
+    if (tied == false)
+      return true;
+
+    console.log(bracket);
+    var p1 = bracket.pdic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
+    //TODO: Make system dynamic array for 3+ tied players
+    var bnum1 = 0, bnum2 = 0;
+    console.log("Does this ever happen?");
+
+    for (var y = 0; y < bracket.players.length; y++)
+    {
+      var name = bracket.players[y].name;
+      if (bracket.players[p1].playedagainst[name] = true)
+        bnum1 += bracket.players[y].score;
+      if (bracket.players[p2].playedagainst[name] = true)
+        bnum2 += bracket.players[y].score;
+    }
+
+    if (bnum1 > bnum2)
+      bracket.players[p1].score += 1;
+    else if (bnum2 > bnum1)
+      bracket.players[p2].score += 1;
+    else
+      return false;
+    Brackets.update(bracketID, {
+      $set: {
+        [`rounds.${roundNumber}`]: bracket
+      }
+    });
+
+    return true;
   },
 
   "events.update_round"(bracketID, roundNumber, score) { //For swiss specifically
@@ -654,9 +664,13 @@ Meteor.methods({
     newpl.sort(function(a, b) {
       return b.score - a.score;
     })
+    var pdic = [];
+    for (var x = 0; x < newpl.length; x++)
+      pdic[newpl[x].name] = x;
     var newevent = {
+      matches: temp,
       players: newpl,
-      matches: temp
+      pdic: pdic
     }
     rounds.push(newevent);
     Brackets.update(bracketID, {
