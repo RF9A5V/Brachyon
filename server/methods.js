@@ -355,14 +355,13 @@ Meteor.methods({
     Games.remove(id);
   },
 
-  "users.create"(name, email, username, password) {
+  "users.create"(email, username, password) {
     var user = Accounts.createUser({
       email,
       password,
       username,
       profile: {
-        games: [],
-        name
+        games: []
       },
       oauth: {
         isStripeConnected: false
