@@ -60,6 +60,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           {
             component: LeaderboardAction,
             args: {
+              id: bracket.id,
               index: this.props.params.bracketIndex
             }
           }
