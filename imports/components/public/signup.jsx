@@ -17,8 +17,11 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
 
   onSubmit(e) {
     e.preventDefault();
-    self = this;
-    Meteor.call("users.create", this.refs.name.value, this.refs.email.value, this.refs.username.value, this.refs.password.value, function(err, rez) {
+    var self = this;
+    if(this.refs.password.value != this.refs.confirmPassword.value) {
+      return toastr.error("Passwords must match!", "Error!");
+    }
+    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, function(err, rez) {
       if(err){
         toastr.error(err.reason, "Error!");
       }
