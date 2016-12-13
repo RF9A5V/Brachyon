@@ -40,6 +40,8 @@ figure
 
 .match-participant
   padding 10px 5px
+  //&:hover
+  // box-shadow 0 0 10px #FF60FF
 
 
 .match-participant span
@@ -48,16 +50,19 @@ figure
   font-size 12px
   width calc(100% - 30px)
   display inline-block
-
+  overflow-x hidden
+  white-space nowrap
+  text-overflow ellipsis
+  
+.match-highlight:hover
+  box-shadow 0 0 10px  #FF6000
 
 .match-active
   cursor pointer
 
-
 .match-participant:first-child
   border-bottom solid 5px white
-
-
+      
 .box
   display flex
   flex-flow column
