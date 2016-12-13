@@ -94,36 +94,38 @@ export default class MatchBlock extends Component {
     var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
     return (
       <div className="match-block col center" style={{height: 50 * Math.pow(2, i)}}>
-        {
-          match.playerOne == match.playerTwo && i == 0 ? (
-            ""
-          ) : (
-            [match.playerOne, match.playerTwo].map((p, index) => {
+        <div className="match-highlight">
+          {
+            match.playerOne == match.playerTwo && i == 0 ? (
+              ""
+            ) : (
+              [match.playerOne, match.playerTwo].map((p, index) => {
 
-              var isLoser = match.winner != null && match.winner != p;
+                var isLoser = match.winner != null && match.winner != p;
 
-              return (
-                <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
-                  match.playerOne != null && match.playerTwo != null ? (
-                    () => {if(Meteor.user()){this.setState({open: true});} }
-                  ) : (
-                    () => {}
-                  )
-                } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                  <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
-                    {
-                      p == null ? (
-                        "TBD"
-                      ) : (
-                        this.getUsername(p)
-                      )
-                    }
-                  </span>
-                </div>
-              )
-            })
-          )
-        }
+                return (
+                  <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
+                    match.playerOne != null && match.playerTwo != null ? (
+                      () => {if(Meteor.user()){this.setState({open: true});} }
+                    ) : (
+                      () => {}
+                    )
+                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                    <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
+                      {
+                        p == null ? (
+                          "TBD"
+                        ) : (
+                          this.getUsername(p)
+                        )
+                      }
+                    </span>
+                  </div>
+                )
+              })
+            )
+          }
+        </div>
         {
           i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 ? (
             ""
