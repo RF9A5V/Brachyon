@@ -178,6 +178,7 @@ export default class EventCreateScreen extends Component {
           }}
           isOn={this.state.moduleState[mod.name].active}
           onToggle={generator(mod.name)}
+          toggleable={mod.name == "details"}
         />
       );
     })
