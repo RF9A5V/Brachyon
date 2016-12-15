@@ -49,9 +49,10 @@ export default class SingleDisplay extends Component {
                           nextMatch = this.props.rounds[0][rNum][mNum];
                         }
                       }
-                      return (
+                      return (<div className="bracket-match-spacing">
                         <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                      );
+                      
+                      </div>);
                     })
                   }
                 </div>

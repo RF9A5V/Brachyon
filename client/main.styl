@@ -33,16 +33,13 @@ figure
 
 .match-block
   width 150px
-  margin 20px 0
+  margin 20px 0px
   position relative
   text-align left
 
 
 .match-participant
   padding 10px 5px
-  //&:hover
-  // box-shadow 0 0 10px #FF60FF
-
 
 .match-participant span
   border solid 2px white
@@ -53,16 +50,31 @@ figure
   overflow-x hidden
   white-space nowrap
   text-overflow ellipsis
-  
+
 .match-highlight:hover
-  box-shadow 0 0 10px  #FF6000
+  box-shadow 0 0  2px 10px  #FF6000
+  
+.bracket-match-spacing
+  margin-top 20px
+  margin-bottom 20px
 
 .match-active
   cursor pointer
 
 .match-participant:first-child
   border-bottom solid 5px white
-      
+  margin-top -10px 
+  margin-left -18px
+  margin-right -18px
+
+.match-participant:last-child
+  margin-bottom -15px
+  margin-left -18px
+  margin-right -18px
+  
+.col
+  margin-right 16px
+
 .box
   display flex
   flex-flow column

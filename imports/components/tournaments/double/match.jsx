@@ -93,44 +93,46 @@ export default class MatchBlock extends Component {
     var k = this.props.bracket ? Math.floor(i/2):i;
     return (
       <div className="match-block col center" style={{height: 50 * Math.pow(2, k)}}>
-        {
-          match.playerOne == match.playerTwo && i == 0 && this.props.bracket == 0 || this.props.bracket == 1 && (i == 0 || i == 1) && match.truebye == null ? (
-            ""
-          ) : (
-            [match.playerOne, match.playerTwo].map((p, index) => {
+        <div className="match-highlight">
+          {
+            match.playerOne == match.playerTwo && i == 0 && this.props.bracket == 0 || this.props.bracket == 1 && (i == 0 || i == 1) && match.truebye == null ? (
+              ""
+            ) : (
+              [match.playerOne, match.playerTwo].map((p, index) => {
 
-              var isLoser = match.winner != null && match.winner != p;
+                var isLoser = match.winner != null && match.winner != p;
 
-              return (
-                <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
-                  match.playerOne != null && match.playerTwo != null ? (
-                    () => {if(Meteor.user()){this.setState({open: true});} }
-                  ) : (
-                    () => {}
-                  )
-                } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                  <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
-                    {
-                      p == null ? (
-                        "TBD"
-                      ) : (
-                        this.getUsername(p)
-                      )
-                    }
-                  </span>
-                </div>
-              )
-            })
-          )
-        }
+                return (
+                  <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
+                    match.playerOne != null && match.playerTwo != null ? (
+                      () => {if(Meteor.user()){this.setState({open: true});} }
+                    ) : (
+                      () => {}
+                    )
+                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                    <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
+                      {
+                        p == null ? (
+                          "TBD"
+                        ) : (
+                          this.getUsername(p)
+                        )
+                      }
+                    </span>
+                  </div>
+                )
+              })
+            )
+          }
+        </div>
         {
           i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 || this.props.bracket == 1 && (i%2 == 0 || (i < 2 && match.truebye == null)) || this.props.bracket == 2 ? (
             ""
           ) : (
             j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), top: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)))+(Math.pow(2,this.props.roundNumber)*19)+6, top: (50 * Math.pow(2, k - 1) - 2.5) + 6, left: 162.5 , backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             ) : (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)), bottom: 50 * Math.pow(2, k - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, k) - (5 * (Math.pow(2, k) - 1)))+(Math.pow(2,this.props.roundNumber)*19)+6, bottom: (50 * Math.pow(2, k - 1) - 2.5) -2, left: 162.5 ,backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             )
           )
         }

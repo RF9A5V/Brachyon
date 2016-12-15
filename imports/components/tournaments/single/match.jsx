@@ -131,9 +131,9 @@ export default class MatchBlock extends Component {
             ""
           ) : (
             j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)), top: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20)-6, top: (50 * Math.pow(2, i - 1) - 2.5)+6, left: 162.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             ) : (
-              <div className="bracket-line-v" style={{height: 50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)), bottom: 50 * Math.pow(2, i - 1) - 2.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20), bottom: 50 * Math.pow(2, i - 1) - 5, left: 162.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             )
           )
         }
