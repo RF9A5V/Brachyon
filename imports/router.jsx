@@ -28,6 +28,9 @@ import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx"
 import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 
+import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
+import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
+
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
@@ -61,6 +64,8 @@ export const renderRoutes = () => (
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
+      <Route path="create" component={CreateRunnableScreen} />
+      <Route path="leagues/create" component={CreateLeagueScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />

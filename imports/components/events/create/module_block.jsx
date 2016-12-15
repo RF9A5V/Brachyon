@@ -30,7 +30,7 @@ export default class ModuleBlock extends Component {
           <FontAwesome name={this.props.icon || "cog"} size="2x" />
           <span className="module-block-header col-1">{ this.props.modName[0].toUpperCase() + this.props.modName.slice(1) }</span>
           {
-            this.props.modName == "details" ? (
+            this.props.toggleable ? (
               ""
             ) : (
               <div className="col mod-block-toggle" style={{justifyContent: this.props.isOn ? "flex-start" : "flex-end"}} onClick={() => { this.props.onToggle() }}>

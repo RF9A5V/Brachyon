@@ -103,7 +103,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
           </div>
         </div>
         <div className="row center">
-          <button onClick={() => { browserHistory.push("/events/create") }} style={{marginTop: 100}}>Create an Event</button>
+          <button onClick={() => { browserHistory.push("/create") }} style={{marginTop: 100}}>Create an Event</button>
         </div>
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="col">
