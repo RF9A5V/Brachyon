@@ -13,6 +13,13 @@ export default class ImageForm extends Component {
     });
   }
 
+  shouldComponentUpdate() {
+    if(this.refs.cropper) {
+      return false;
+    }
+    return true;
+  }
+
   setMeta(key, value) {
     this.state.meta[key] = value;
   }
@@ -24,7 +31,7 @@ export default class ImageForm extends Component {
     return false;
   }
 
-  value(cb) {
+  dimensions() {
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;
     var heightRatio = imageData.naturalHeight / imageData.height;
@@ -35,6 +42,12 @@ export default class ImageForm extends Component {
     boxData.height *= heightRatio;
     boxData.left = (boxData.left - widthOffset) * widthRatio;
     boxData.top = (boxData.top - heightOffset) * heightRatio;
+    return boxData;
+  }
+
+  value(cb) {
+
+    var boxData = this.dimensions();
 
     if(this.props.meta) {
       Object.keys(this.props.meta).forEach(key => {
@@ -100,27 +113,34 @@ export default class ImageForm extends Component {
     })
   }
 
-  image() {
-    return this.props.collection.findOne(this.props.id);
-  }
-
   reset() {
     this.setState({
       url: null
     })
   }
 
+  getDataUrl() {
+    if(this.refs.cropper) {
+      return this.refs.cropper.getCroppedCanvas().toDataURL();
+    }
+    return null;
+  }
+
   render() {
     var value = "";
     if(this.state.url || this.props.defaultImage){
-      value = (<Cropper
-        aspectRatio={this.props.aspectRatio || 1}
-        src={this.state.url || this.props.defaultImage}
-        style={{width: "100%", maxWidth: 500, height: 300}}
-        ref="cropper"
-        zoomable={false}
-        zoomOnWheel={false}
-      />);
+      value = (
+        <div className="row">
+          <Cropper
+            aspectRatio={this.props.aspectRatio || 1}
+            src={this.state.url || this.props.defaultImage}
+            style={{width: "100%", maxWidth: 500, height: 300}}
+            ref="cropper"
+            zoomable={false}
+            zoomOnWheel={false}
+          />
+        </div>
+      );
     }
     else if(this.props.url != null) {
       value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
@@ -132,7 +152,9 @@ export default class ImageForm extends Component {
     }
     return (
       <div className="col">
-        { value }
+        <div className="row">
+          { value }
+        </div>
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
         <div style={{marginTop: 20}}>
           <button onClick={() => { this.refs.file.click() }}>Choose Image</button>

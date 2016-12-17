@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import moment from "moment";
 
 import ModuleBlock from "../events/create/module_block.jsx";
 import DetailsPanel from "./create/details_panel.jsx";
+import BracketsPanel from "./create/brackets_panel.jsx";
 import EventsPanel from "./create/events_panel.jsx";
 
 export default class CreateLeagueScreen extends Component {
@@ -30,7 +32,14 @@ export default class CreateLeagueScreen extends Component {
         details: {
 
         },
-        events: [{}]
+        events: [{ date: moment().toDate() }],
+        brackets: {
+          format: {
+            baseFormat: "single_elim"
+          },
+          scoring: "linear",
+          gameObj: null
+        }
       },
       currentItem: "details"
     }
@@ -112,10 +121,13 @@ export default class CreateLeagueScreen extends Component {
     )
     switch(this.state.currentItem) {
       case "details":
-        item = <DetailsPanel setValue={this.updateAttrs.bind(this)} attrs={this.state.attrs} />
+        item = <DetailsPanel attrs={this.state.attrs} />
         break;
       case "events":
-        item = <EventsPanel setValue={this.updateAttrs.bind(this)} attrs={this.state.attrs} />
+        item = <EventsPanel attrs={this.state.attrs} />
+        break;
+      case "brackets":
+        item = <BracketsPanel attrs={this.state.attrs} />
         break;
       default:
         break;
@@ -127,16 +139,27 @@ export default class CreateLeagueScreen extends Component {
     )
   }
 
-  updateAttrs() {
-    var obj = this.state.attrs;
-    var temp = this.state.attrs;
-    for(var i = 0; i < arguments.length - 2; i ++) {
-      console.log(obj);
-      temp = temp[arguments[i]];
+  createLeague() {
+    var attrs = this.state.attrs;
+    if(attrs.details.name == null) {
+      return toastr.error("League name can't be empty!");
     }
-    obj[arguments[arguments.length - 2]] = obj[arguments[arguments.length - 1]];
-    this.state.attrs = obj;
-    this.forceUpdate();
+    if(attrs.details.description == null) {
+      return toastr.error("League description can't be empty!");
+    }
+    if(attrs.brackets.gameObj == null) {
+      console.log(attrs.brackets);
+      return toastr.error("League bracket game can't be empty!");
+    }
+    attrs.events.forEach((e, i) => {
+      if(moment(e.date).isBefore(moment())) {
+        return toastr.error("Event start date can't be before now!");
+      }
+      if(e.name == null) {
+        e.name = attrs.details.name + " " + (i + 1);
+      }
+    });
+    console.log(attrs);
   }
 
   render() {
@@ -151,6 +174,9 @@ export default class CreateLeagueScreen extends Component {
           {
             this.currentPanel()
           }
+        </div>
+        <div className="row center" style={{marginTop: 10}}>
+          <button onClick={this.createLeague.bind(this)}>Submit</button>
         </div>
       </div>
     )

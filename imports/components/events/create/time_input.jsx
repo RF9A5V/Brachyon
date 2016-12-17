@@ -15,18 +15,40 @@ export default class TimeInput extends Component {
       obj = {
         hour: parseInt(current.format("h")),
         minute: parseInt(current.format("mm")),
-        half: current.format("a")
+        half: current.format("A")
       }
     }
     this.state = obj;
   }
 
+  componentWillReceiveProps(next) {
+    if(next.init) {
+      var current = moment(this.props.init);
+      obj = {
+        hour: parseInt(current.format("h")),
+        minute: parseInt(current.format("mm")),
+        half: current.format("A")
+      }
+      this.state = obj;
+      this.forceUpdate();
+    }
+  }
+
+  onChange() {
+    if(this.props.onChange){
+      var value = this.value();
+      var hour = value.substring(0, 2);
+      var minutes = value.substring(2, 4);
+      this.props.onChange(moment().hour(hour).minutes(minutes).toDate());
+    }
+  }
+
   value() {
     var hour = parseInt(this.refs.hours.value);
-    if(hour == 12 && this.refs.half.value == "am") {
+    if(hour == 12 && this.refs.half.value == "AM") {
       hour = 0;
     }
-    else if(hour < 12 && this.refs.half.value == "pm") {
+    else if(hour < 12 && this.refs.half.value == "PM") {
       hour += 12;
     }
     if(hour < 10) {
@@ -36,7 +58,6 @@ export default class TimeInput extends Component {
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
-    console.log(hour + ":" + minutes);
     return hour + "" + minutes;
   }
 
@@ -51,7 +72,7 @@ export default class TimeInput extends Component {
     return (
       <div style={this.props.style || {}}>
         <div className="time-input row center x-center">
-          <select ref="hours" defaultValue={this.state.hour}>
+          <select ref="hours" defaultValue={this.state.hour} onChange={this.onChange.bind(this)}>
             {
               hours.map((hour) => {
                 return (
@@ -65,7 +86,7 @@ export default class TimeInput extends Component {
           <span style={{margin: "0 10px"}}>
             :
           </span>
-          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute}>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onChange.bind(this)}>
             {
               minutes.map((value) => {
                 return (
@@ -76,9 +97,9 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half" defaultValue={this.state.half}>
-            <option value={"am"}>AM</option>
-            <option value={"pm"}>PM</option>
+          <select ref="half" defaultValue={this.state.half} onChange={this.onChange.bind(this)}>
+            <option value={"AM"}>AM</option>
+            <option value={"PM"}>PM</option>
           </select>
         </div>
       </div>
