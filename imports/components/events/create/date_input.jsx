@@ -10,6 +10,15 @@ export default class DateInput extends Component {
     if(props.init) {
       initTime = moment(props.init);
     }
+    if(props.startsAt) {
+      var temp = moment(props.startsAt);
+      if(initTime.isBefore(temp)){
+        initTime = temp.add(1, "day");
+        if(props.onChange){
+          props.onChange(initTime.toDate());
+        }
+      }
+    }
     this.state = {
       open: false,
       time: initTime,
@@ -18,20 +27,30 @@ export default class DateInput extends Component {
     }
   }
 
+  componentWillReceiveProps(next) {
+    var initTime = moment();
+    if(next.init) {
+      initTime = moment(next.init);
+
+    }
+    if(next.startsAt) {
+      var temp = moment(next.startsAt);
+      if(initTime.isBefore(temp)){
+        initTime = temp.add(1, "day");
+        if(next.onChange){
+          next.onChange(initTime.toDate());
+        }
+      }
+    }
+    this.setState({
+      time: initTime,
+      month: initTime.month(),
+      year: initTime.year()
+    })
+  }
+
   value() {
     return this.state.time.format("YYYYMMDD");
-  }
-
-  openCalendar() {
-    this.setState({
-      open: true
-    })
-  }
-
-  closeCalendar() {
-    this.setState({
-      open: false
-    })
   }
 
   days() {
@@ -51,12 +70,12 @@ export default class DateInput extends Component {
         {
           vals.map((value) => {
 
-            // var yearPass = this.state.year >= moment().year()
-            // var dayPass = this.state.month > moment().month() || (this.state.month == moment().month() && value + 1 >= moment().date());
-            //
             var isSelected = this.state.time.year() == this.state.year && this.state.time.month() == this.state.month && this.state.time.date() == value + 1;
             var targetTime = moment().year(this.state.year).month(this.state.month).date(value + 1).endOf("day");
-            var pass = moment().isBefore(targetTime) || moment().isSame(targetTime);
+            var pass = targetTime.isAfter(moment())
+            if(this.props.startsAt) {
+              pass = targetTime.isAfter(moment(this.props.startsAt).add(1, "day"));
+            }
 
             return (
               <div className={`calendar-days-entry ${pass ? "active" : ""} ${isSelected ? "selected" : ""}`} onClick={pass ? self.setValue.bind(self) : () => {}}>
@@ -73,13 +92,11 @@ export default class DateInput extends Component {
     if(!e.target.classList.contains("active")){
       return;
     }
-    // this.refs.value.value = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML).format("MM/DD/YYYY");
     this.state.time = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML);
     if(this.props.onChange){
-      this.props.onChange();
+      this.props.onChange(this.state.time.toDate());
     }
     this.forceUpdate();
-    //this.closeCalendar();
   }
 
   prevMonth() {
@@ -132,15 +149,6 @@ export default class DateInput extends Component {
       </div>
     )
   }
-
-  // <input type="text" ref="value" defaultValue={this.state.time.format("MM/DD/YYYY")} onClick={this.openCalendar.bind(this)} onFocus={(e) => e.target.blur()} style={{margin: 0}} />
-  // {
-  //   this.state.open ? (
-  //     this.calendar()
-  //   ) : (
-  //     <div></div>
-  //   )
-  // }
 
   render() {
     return (

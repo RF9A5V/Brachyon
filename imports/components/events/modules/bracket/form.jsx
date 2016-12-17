@@ -20,7 +20,7 @@ export default class BracketForm extends Component {
     else if(format.hasOwnProperty("poolFormat")) {
       subFormat = "POOL";
     }
-    var game = Games.findOne(props.game);
+    var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
       this.state = {
         id: game._id,
@@ -34,9 +34,7 @@ export default class BracketForm extends Component {
         format: "NONE"
       };
     }
-    for(var i in format){
-      this.state[i] = format[i];
-    }
+    console.log(props);
   }
 
   componentWillReceiveProps(props) {
@@ -48,7 +46,7 @@ export default class BracketForm extends Component {
     else if(format.hasOwnProperty("poolFormat")) {
       subFormat = "POOL";
     }
-    var game = Games.findOne(props.game);
+    var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
       this.state = {
         id: game._id,
@@ -70,11 +68,15 @@ export default class BracketForm extends Component {
   }
 
   onGameSelect(game) {
+    if(this.props.onChange) {
+      this.props.onChange(game, { baseFormat: this.refs.format.value });
+    }
     this.setState({
       id: game._id,
       name: game.name,
       bannerUrl: game.bannerUrl
     })
+
   }
 
   formatForm() {
@@ -91,7 +93,16 @@ export default class BracketForm extends Component {
           {
             // <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
           }
-          <select ref="format" defaultValue={this.state.baseFormat}>
+          <select ref="format" defaultValue={this.props.format.baseFormat} onChange={(e) => {
+            if(this.props.onChange) {
+              var game = {
+                _id: this.state.id,
+                name: this.state.name,
+                bannerUrl: this.state.bannerUrl
+              }
+              this.props.onChange(game, { baseFormat: e.target.value })
+            }
+          }}>
             <option value="single_elim">
               Single Elimination
             </option>
@@ -222,7 +233,7 @@ export default class BracketForm extends Component {
             ""
           )
         }
-        <div style={{marginLeft: 20}} className="col col-1">
+        <div style={{marginLeft: this.state.bannerUrl ? 20 : 0}} className="col col-1">
           <div className="row flex-pad">
             <h5>Game</h5>
             {

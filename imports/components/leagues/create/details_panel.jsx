@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import Editor from "/imports/components/public/editor.jsx";
+import ImageForm from "/imports/components/public/img_form.jsx";
+import LocationForm from "/imports/components/events/create/location_select.jsx";
 
 export default class DetailsPanel extends Component {
 
@@ -12,8 +14,17 @@ export default class DetailsPanel extends Component {
     };
   }
 
+  componentWillUnmount() {
+    if(this.refs.image && this.refs.image.hasValue()) {
+      this.props.attrs.details.image = {
+        file: this.state.cache,
+        meta: this.refs.image.dimensions()
+      }
+    }
+  }
+
   categories() {
-    var options = ["Title", "Description"];
+    var options = ["Title", "Description", "Location", "Image"];
     return options.map((val, i) => {
       var style = {
         backgroundColor: "#111",
@@ -25,7 +36,15 @@ export default class DetailsPanel extends Component {
         cursor: "pointer"
       }
       return (
-        <div style={style} onClick={() => { this.setState({ option: i }) }}>
+        <div style={style} onClick={() => {
+          if(this.state.cache && this.refs.image && this.refs.image.hasValue()) {
+            this.props.attrs.details.image = {
+              file: this.state.cache,
+              meta: this.refs.image.dimensions()
+            }
+          }
+          this.setState({ option: i })
+        }}>
           { val }
         </div>
       )
@@ -45,10 +64,10 @@ export default class DetailsPanel extends Component {
             if(value.length > 50) {
               e.target.value = value.substring(0, 50);
             }
+            this.props.attrs.details.name = e.target.value;
             this.setState({
               titleLength: value.length
             });
-            this.props.setValue("details", "name", e.target.value);
           }} />
         </div>
       )
@@ -56,8 +75,26 @@ export default class DetailsPanel extends Component {
     if(this.state.option == 1) {
       return (
         <Editor usePara={true} useInsert={true} useTable={true} onChange={(value) => {
-          this.props.setValue("details", "description", value);
+          this.props.attrs.details.description = value;
         }} />
+      )
+    }
+    if(this.state.option == 2) {
+      return (
+        <LocationForm {...this.props.attrs.details.location} onChange={(loc) => { this.props.attrs.details.location = loc; }} />
+      )
+    }
+    if(this.state.option == 3) {
+      return (
+        <div className="row x-center">
+          <ImageForm
+            aspectRatio={16/9}
+            defaultImage={(this.props.attrs.details.image || {}).file || this.state.cache}
+            onImgSelected={(img) => { this.setState({ cache: img }) }}
+            onCrop={(url, dims) => { this.setState({ preview: url })} }
+            ref="image"
+          />
+        </div>
       )
     }
   }
