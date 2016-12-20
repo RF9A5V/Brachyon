@@ -59,7 +59,7 @@ export default class DetailsPanel extends Component {
             <h5 style={{marginRight: 20}}>Event Title</h5>
             <span>{ this.state.titleLength } / 50</span>
           </div>
-          <input type="text" onChange={(e) => {
+          <input type="text" defaultValue={this.props.attrs.details.name} onChange={(e) => {
             var value = e.target.value;
             if(value.length > 50) {
               e.target.value = value.substring(0, 50);
@@ -74,7 +74,7 @@ export default class DetailsPanel extends Component {
     }
     if(this.state.option == 1) {
       return (
-        <Editor usePara={true} useInsert={true} useTable={true} onChange={(value) => {
+        <Editor value={this.props.attrs.details.description} usePara={true} useInsert={true} useTable={true} onChange={(value) => {
           this.props.attrs.details.description = value;
         }} />
       )

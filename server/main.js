@@ -10,6 +10,7 @@ import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
 import Instances from "/imports/api/event/instance.js";
+import Leagues from "/imports/api/leagues/league.js"
 
 Events._ensureIndex({
   'details.location.coords': '2dsphere',
@@ -17,6 +18,10 @@ Events._ensureIndex({
 });
 
 Games._ensureIndex({
+  slug: 1
+})
+
+Leagues._ensureIndex({
   slug: 1
 })
 

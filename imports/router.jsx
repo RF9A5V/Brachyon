@@ -30,6 +30,7 @@ import GamesIndexScreen from "../imports/components/games/index.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
+import EditLeagueScreen from "../imports/components/leagues/edit.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -66,6 +67,7 @@ export const renderRoutes = () => (
       <Route path="games/index" component={GamesIndexScreen} />
       <Route path="create" component={CreateRunnableScreen} />
       <Route path="leagues/create" component={CreateLeagueScreen} />
+      <Route path="leagues/:slug/edit" component={EditLeagueScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />

@@ -69,7 +69,7 @@ export default class BlockContainer extends Component {
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
                       Meteor.userId() == event.owner ? (
-                        <div className="event-block-edit" >
+                        <div className="event-block-edit">
                           {
                             event.isComplete ? (
                               <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {

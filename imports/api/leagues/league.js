@@ -1,3 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 
-export default Leagues = new Mongo.Collection("leagues");
+Leagues = new Mongo.Collection("leagues");
+
+Leagues.friendlySlugs("details.name");
+
+export default Leagues;

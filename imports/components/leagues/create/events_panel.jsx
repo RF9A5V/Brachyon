@@ -28,9 +28,8 @@ export default class EventsPanel extends Component {
     ) : (
       <FontAwesome name="caret-right" size="3x" onClick={() => {
         var event = moment(events[events.length - 1].date);
-        console.log(event.toDate());
         events.push({
-          date: event.add(1, "day")
+          date: event.add(1, "day").toDate()
         });
         this.forceUpdate(); }} />
     );

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { browserHistory } from "react-router";
 
 import ModuleBlock from "../events/create/module_block.jsx";
 import DetailsPanel from "./create/details_panel.jsx";
@@ -158,8 +159,17 @@ export default class CreateLeagueScreen extends Component {
       if(e.name == null) {
         e.name = attrs.details.name + " " + (i + 1);
       }
+      console.log(e);
     });
-    console.log(attrs);
+    Meteor.call("leagues.create", attrs, (err) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully created league!", "Success!");
+        browserHistory.push("/")
+      }
+    });
   }
 
   render() {
