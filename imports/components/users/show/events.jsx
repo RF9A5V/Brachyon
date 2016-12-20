@@ -6,7 +6,9 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import Loading from "/imports/components/public/loading.jsx";
 import BlockContainer from "/imports/components/events/discover/block_container.jsx";
+import LeagueDisplay from "./league_display.jsx";
 
+import Leagues from "/imports/api/leagues/league.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class UserEvents extends TrackerReact(Component) {
@@ -102,6 +104,10 @@ export default class UserEvents extends TrackerReact(Component) {
           name: "All Events",
           subscription: "userEvents"
         },
+        {
+          name: "All Leagues",
+          subscription: "userLeagues"
+        }
       ]
     }
 
@@ -230,18 +236,23 @@ export default class UserEvents extends TrackerReact(Component) {
       )
     }
     var events = this.events();
+    var leagues = Leagues.find().fetch();
     return (
       <div className="col-1 col submodule-section">
         <div className="col-1 row" style={{flexWrap: "wrap"}}>
           {
-            events.length > 0 ? (
-              <BlockContainer events={events} />
+            this.state.subName == "userLeagues" ? (
+              <LeagueDisplay leagues={leagues} />
             ) : (
-              ""
+              events.length > 0 ? (
+                <BlockContainer events={events} />
+              ) : (
+                ""
+              )
             )
           }
           {
-            events.length == 0 ? (
+            events.length == 0 && leagues.length == 0 ? (
               this.state.category == 1 ? (
                 <div className="row center col-1" style={{padding: "100px 0"}}>
                   <h5>Looks like you don't have any events. Click <Link to={"/events/create"}>here</Link> to create one!</h5>
@@ -257,7 +268,7 @@ export default class UserEvents extends TrackerReact(Component) {
           }
         </div>
         {
-          this.state.subName != "userEvents" ? (
+          this.state.subName != "userEvents" && this.state.subName != "userLeagues" ? (
             <div className="row center x-center">
               {
                 this.state.page == 0 ? (

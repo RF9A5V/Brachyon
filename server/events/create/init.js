@@ -62,7 +62,7 @@ Meteor.methods({
     }
   },
 
-  "events.create"(obj) {
+  "events.create"(obj, leagueID) {
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
@@ -79,6 +79,9 @@ Meteor.methods({
     endObj.underReview = false;
     endObj.isComplete = false;
     endObj.owner = Meteor.userId();
+    if(leagueID) {
+      endObj.league = leagueID;
+    }
     var instance = Instances.insert({
       brackets: endObj.brackets,
       tickets: endObj.tickets,

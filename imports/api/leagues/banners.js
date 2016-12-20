@@ -1,6 +1,7 @@
 import { FilesCollection } from "meteor/ostrio:files";
 import fs from "fs";
 
+import Leagues from "./league.js";
 import { compressThenStore } from "../upload_suite.js";
 
 var Banners = new FilesCollection({
@@ -29,27 +30,30 @@ var Banners = new FilesCollection({
       fs.rename(fileRef.path + ".temp", fileRef.path, Meteor.bindEnvironment(() => {
         if(!Meteor.isDevelopment) {
           compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
-            Events.update({
-              slug: meta.eventSlug
+            var league = Leagues.findOne({ slug: meta.slug });
+            Leagues.update({
+              slug: meta.slug
             }, {
               $set: {
                 "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
             });
+            Events.update({ _id: { $in: league.eventIds } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
             self.remove({_id: fileRef._id});
           }));
         }
         else {
-          var event = Events.findOne({slug: meta.leagueSlug});
-          if(event.details.banner) {
-            self.remove({_id: event.details.banner});
+          var league = Leagues.findOne({slug: meta.slug});
+          if(league.details.banner) {
+            self.remove({_id: league.details.banner});
           }
-          Events.update({ slug: meta.eventSlug }, {
+          Leagues.update({ slug: meta.slug }, {
             $set: {
               "details.bannerUrl": self.findOne(fileRef._id).link(),
               "details.banner": fileRef._id
             }
           });
+          Events.update({ _id: { $in: league.eventIds } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
         }
       }));
     }));

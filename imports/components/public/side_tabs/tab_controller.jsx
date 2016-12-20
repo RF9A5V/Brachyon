@@ -16,6 +16,10 @@ export default class TabController extends Component {
   }
 
   setActive(item, subItem){
+    if(this.state.activeItem == item) {
+      this.setState({activeItem: item, activeSub: subItem});
+      return;
+    }
     this.setState({
       isAnimating: true
     });
