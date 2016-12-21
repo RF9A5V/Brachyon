@@ -24,7 +24,6 @@ export default class LeagueDisplay extends Component {
         <div className='event-block-container'>
           {
             (this.props.leagues || []).map((league, i) => {
-              console.log(league.details.location)
               return (
                 <div className="event-block" onClick={() => {}} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>

@@ -4,7 +4,7 @@ import fs from "fs";
 import Leagues from "./league.js";
 import { compressThenStore } from "../upload_suite.js";
 
-var Banners = new FilesCollection({
+var LeagueBanners = new FilesCollection({
   collectionName: "leagueBanners",
   allowClientCode: false,
   onBeforeUpload: function(file) {
@@ -22,7 +22,6 @@ var Banners = new FilesCollection({
       lossy: true
     };
     var location = "leagueBanners";
-
     var self = this;
     var writeStream = fs.createWriteStream(fileRef.path + ".temp");
     gm(fs.createReadStream(fileRef.path), fileRef.name).crop(meta.width, meta.height, meta.left, meta.top).resize("1280", "720").stream().pipe(writeStream);
@@ -38,7 +37,7 @@ var Banners = new FilesCollection({
                 "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
             });
-            Events.update({ _id: { $in: league.eventIds } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
+            Events.update({ _id: { $in: league.events } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
             self.remove({_id: fileRef._id});
           }));
         }
@@ -53,11 +52,11 @@ var Banners = new FilesCollection({
               "details.banner": fileRef._id
             }
           });
-          Events.update({ _id: { $in: league.eventIds } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
+          Events.update({ _id: { $in: league.events } }, { $set: { "details.bannerUrl": self.findOne(fileRef._id).link() } })
         }
       }));
     }));
   }
 })
 
-export { Banners };
+export { LeagueBanners };

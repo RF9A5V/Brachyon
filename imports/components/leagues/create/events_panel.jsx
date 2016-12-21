@@ -11,8 +11,7 @@ export default class EventsPanel extends Component {
     super(props);
     this.state = {
       option: 0,
-      events: props.attrs.events,
-      charCount: (props.attrs.events[0].name || props.attrs.details.name || "").length
+      events: props.attrs.events
     }
   }
 
@@ -61,12 +60,9 @@ export default class EventsPanel extends Component {
       return (
         <div style={style} onClick={() => {
           this.setState({ option: i });
-          if(this.refs.name) {
-            this.refs.name.value = (val ? (val) : this.props.attrs.details.name || "Default" + " " + (i + 1));
-          }
         }}>
           <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
-          { (val ? (val) : (this.props.attrs.details.name || "Default") + " " + (i + 1)) }
+          { ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (i + 1)) }
           </span>
         </div>
       )
@@ -78,17 +74,8 @@ export default class EventsPanel extends Component {
     return (
       <div className="col">
         <div className="row">
-          <h5>Event Name</h5>
+          <h5>{ ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (this.state.option + 1)) }</h5>
         </div>
-        <input type="text" ref="name" onChange={(e) => {
-          var value = e.target.value;
-          e.target.value = value.substring(0, 50);
-          this.setState({
-            charCount: value.length
-          });
-          event.name = value;
-          this.forceUpdate();
-        }} defaultValue={event.name || ((this.props.attrs.details.name || "Default") + " " + (this.state.option + 1))} />
         <div className="row x-center center" style={{padding: 20, backgroundColor: "#111"}}>
           <div style={{marginRight: 20}}>
             <DateInput init={event.date} onChange={(date) => {
