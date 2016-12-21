@@ -1,6 +1,7 @@
 import Games from "/imports/api/games/games.js";
 
 Meteor.publish("league", (slug) => {
+  console.log(slug);
   var league = Leagues.findOne({slug});
   return [
     Leagues.find({ slug }),
