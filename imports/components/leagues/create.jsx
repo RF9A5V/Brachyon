@@ -33,7 +33,7 @@ export default class CreateLeagueScreen extends Component {
       },
       attrs: {
         details: {
-
+          season: 1
         },
         events: [{ date: moment().toDate() }],
         brackets: {
@@ -151,7 +151,6 @@ export default class CreateLeagueScreen extends Component {
       return toastr.error("League description can't be empty!");
     }
     if(attrs.brackets.gameObj == null) {
-      console.log(attrs.brackets);
       return toastr.error("League bracket game can't be empty!");
     }
     attrs.events.forEach((e, i) => {
