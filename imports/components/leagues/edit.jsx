@@ -25,6 +25,20 @@ export default class EditLeagueScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.state.league.stop();
+  }
+
+  componentWillReceiveProps(next) {
+    this.state.ready = false;
+    this.state.league.stop();
+    this.state.league = Meteor.subscribe("league", next.params.slug, {
+      onReady: () => {
+        this.setState({ ready: true, changelog: {} })
+      }
+    })
+  }
+
   detailItems(league) {
     return {
       icon: "file-text",

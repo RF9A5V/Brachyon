@@ -108,9 +108,31 @@ class LeagueLocation extends Component {
 }
 
 class LeagueImage extends Component {
+
+  componentWillUnmount() {
+    var log = this.props.changelog;
+    if(!log.league) {
+      log.league = {};
+    }
+    if(!log.league.details) {
+      log.league.details = {};
+    }
+    log.league.details.image = {
+      file: this.state.cache,
+      meta: this.refs.img.dimensions()
+    };
+  }
+
   render() {
     return (
-      <ImageForm url={this.props.image} />
+      <ImageForm
+        url={this.props.image}
+        aspectRatio={16/9}
+        onImgSelected={(img) => {
+          this.setState({ cache: img })
+        }}
+        ref="img"
+      />
     )
   }
 }

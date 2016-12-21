@@ -97,7 +97,6 @@ export default class DetailsPanel extends Component {
             aspectRatio={16/9}
             defaultImage={(this.props.attrs.details.image || {}).file || this.state.cache}
             onImgSelected={(img) => { this.setState({ cache: img }) }}
-            onCrop={(url, dims) => { this.setState({ preview: url })} }
             ref="image"
           />
         </div>
