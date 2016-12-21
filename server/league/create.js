@@ -21,6 +21,7 @@ Meteor.methods({
       createObj.brackets = [bracket];
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
-    Leagues.update({ _id: league }, { $set: { "events": eventSlugs } })
+    Leagues.update({ _id: league }, { $set: { "events": eventSlugs } });
+    return Leagues.findOne(league).slug;
   }
 })

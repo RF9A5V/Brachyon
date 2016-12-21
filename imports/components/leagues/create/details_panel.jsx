@@ -54,21 +54,27 @@ export default class DetailsPanel extends Component {
   forms() {
     if(this.state.option == 0) {
       return (
-        <div className="col" style={{marginTop: 10}}>
-          <div className="row x-center">
-            <h5 style={{marginRight: 20}}>Event Title</h5>
-            <span>{ this.state.titleLength } / 50</span>
+        <div className="row" style={{marginTop: 10}}>
+          <div className="col col-2" style={{marginRight: 20}}>
+            <div className="row x-center">
+              <h5 style={{marginRight: 20}}>Event Title</h5>
+              <span>{ this.state.titleLength } / 50</span>
+            </div>
+            <input type="text" defaultValue={this.props.attrs.details.name} onChange={(e) => {
+              var value = e.target.value;
+              if(value.length > 50) {
+                e.target.value = value.substring(0, 50);
+              }
+              this.props.attrs.details.name = e.target.value;
+              this.setState({
+                titleLength: value.length
+              });
+            }} />
           </div>
-          <input type="text" defaultValue={this.props.attrs.details.name} onChange={(e) => {
-            var value = e.target.value;
-            if(value.length > 50) {
-              e.target.value = value.substring(0, 50);
-            }
-            this.props.attrs.details.name = e.target.value;
-            this.setState({
-              titleLength: value.length
-            });
-          }} />
+          <div className="col col-1">
+            <h5>Season</h5>
+            <input onChange={(e) => { this.props.attrs.details.season = parseInt(e.target.value) }} type="number" defaultValue={1} />
+          </div>
         </div>
       )
     }

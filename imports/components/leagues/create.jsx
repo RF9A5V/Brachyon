@@ -7,6 +7,8 @@ import DetailsPanel from "./create/details_panel.jsx";
 import BracketsPanel from "./create/brackets_panel.jsx";
 import EventsPanel from "./create/events_panel.jsx";
 
+import { LeagueBanners } from "/imports/api/leagues/banners.js";
+
 export default class CreateLeagueScreen extends Component {
 
   constructor(props) {
@@ -159,15 +161,41 @@ export default class CreateLeagueScreen extends Component {
       if(e.name == null) {
         e.name = attrs.details.name + " " + (i + 1);
       }
-      console.log(e);
     });
-    Meteor.call("leagues.create", attrs, (err) => {
+    var img = null;
+    if(attrs.details.image) {
+      img = {};
+      img.file = attrs.details.image.file;
+      img.meta = attrs.details.image.meta;
+    }
+    delete attrs.details.image;
+    Meteor.call("leagues.create", attrs, (err, slug) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
       else {
-        toastr.success("Successfully created league!", "Success!");
-        browserHistory.push("/")
+        if(img) {
+          img.meta.slug = slug;
+          var dataSeg = img.file.substring(img.file.indexOf("/"), img.file.indexOf(";")).slice(1);
+          LeagueBanners.insert({
+            file: img.file,
+            isBase64: true,
+            meta: img.meta,
+            fileName: slug + "." + dataSeg,
+            onUploaded: (err, data) => {
+              console.log("woo?")
+              if(err) {
+                return toastr.error(err.reason, "Error!");
+              }
+              toastr.success("Successfully created league!", "Success!");
+              browserHistory.push("/")
+            }
+          })
+        }
+        else {
+          toastr.success("Successfully created league!", "Success!");
+          browserHistory.push("/")
+        }
       }
     });
   }
