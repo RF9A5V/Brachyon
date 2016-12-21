@@ -10,6 +10,7 @@
     "bootstrap": "^3.3.7",
     "bson-ext": "^0.1.13",
     "fast-crc32c": "^1.0.4",
+    "flat": "^2.0.1",
     "font-awesome": "^4.6.3",
     "google-map-react": "^0.12.1",
     "google-maps": "^3.2.1",

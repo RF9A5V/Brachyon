@@ -38,7 +38,6 @@ class LeagueNameInput extends Component {
   render() {
     var name = checkForDefaultAttr(this.props.changelog, this.props, "name");
     var season = checkForDefaultAttr(this.props.changelog, this.props, "season");
-    console.log(season);
     return (
       <div className="row">
         <div className="col col-2">
