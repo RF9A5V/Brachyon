@@ -8,6 +8,9 @@ Meteor.methods({
     var league = Leagues.findOne({slug});
     if(changelog.league) {
       var attrs = flatten(changelog.league);
+      if(attrs["details.image"]) {
+        delete attrs["details.image"];
+      }
       //attrs.slug = ((changelog.league.details || {}).name || league.details.name).replace(/\W/g, "") + "." + ((changelog.league.details || {}).season || league.details.season);
       Leagues.update({slug}, {
         $set: attrs

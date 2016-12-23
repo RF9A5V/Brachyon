@@ -25,7 +25,9 @@ export default class LeagueDisplay extends Component {
           {
             (this.props.leagues || []).map((league, i) => {
               return (
-                <div className="event-block" onClick={() => {}} key={i}>
+                <div className="event-block" onClick={() => {
+                  browserHistory.push(`/leagues/${league.slug}/show`);
+                }} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ league.details.name }</h2>
                     {

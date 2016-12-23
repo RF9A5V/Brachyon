@@ -6,6 +6,7 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import { DetailsPanel, LeagueNameInput, LeagueDescription, LeagueLocation, LeagueImage } from "./edit/details.jsx";
 import { BracketsPanel, LeagueBracketForm } from "./edit/brackets.jsx";
 import { EventsPanel, LeagueEvent } from "./edit/events.jsx";
+import LeaderboardPanel from "./edit/leaderboard.jsx";
 import SubmitPanel from "./edit/submit.jsx";
 
 import Leagues from "/imports/api/leagues/league.js";
@@ -156,6 +157,19 @@ export default class EditLeagueScreen extends Component {
     }
   }
 
+  leaderboardItems(league) {
+    return {
+      icon: "cog",
+      text: "Leaderboard",
+      subitems: [
+        {
+          text: "Overview",
+          component: LeaderboardPanel
+        }
+      ]
+    }
+  }
+
   submitItem(league) {
     return {
       text: "Submit",
@@ -176,6 +190,7 @@ export default class EditLeagueScreen extends Component {
       this.detailItems(league),
       this.bracketItems(league),
       this.eventItems(league),
+      this.leaderboardItems(league),
       this.submitItem(league)
     ];
   }
