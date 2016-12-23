@@ -21,7 +21,19 @@ Meteor.methods({
       createObj.brackets = [bracket];
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
-    Leagues.update({ _id: league }, { $set: { "events": eventSlugs } });
+
+    // Leaderboard @ 0 is overall main leaderboard
+    // Leaderboard @ i is leaderboard for event
+
+    var leaderboard = [[]].concat(Array(eventSlugs.length).fill([]));
+    Leagues.update({
+      _id: league
+    }, {
+      $set: {
+        "events": eventSlugs,
+        "leaderboard": leaderboard
+      }
+    });
     return Leagues.findOne(league).slug;
   }
 })

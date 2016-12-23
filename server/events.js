@@ -1,6 +1,7 @@
 import OrganizeSuite from "./tournament_api.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
+import Leagues from "/imports/api/leagues/league.js";
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -11,6 +12,11 @@ Meteor.methods({
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
+    }
+    else {
+      if(event.league) {
+        throw new Meteor.Error("Can't add a non-user player to a league event!");
+      }
     }
     //console.log(alias);
     if(alias == "" || alias == null) {
@@ -81,6 +87,31 @@ Meteor.methods({
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
+    if(event.league) {
+      var league = Leagues.findOne(event.league);
+      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      var pullObj = {
+        [`leaderboard.${leaderboardIndex}`]: {
+          id: userId
+        }
+      };
+      var inPrevEvents = league.leaderboard.some((ldr, i) => {
+        if(i == leaderboardIndex || i == 0) {
+          return false;
+        }
+        return ldr.some(obj => {
+          return obj.id == userId;
+        })
+      });
+      if(!inPrevEvents) {
+        pullObj[`leaderboard.${0}`] = {
+          id: userId
+        }
+      }
+      Leagues.update(event.league, {
+        $pull: pullObj
+      })
+    }
     Instances.update(instance._id, {
       $pull: {
         [`brackets.${bracketIndex}.participants`]: {
@@ -101,6 +132,9 @@ Meteor.methods({
       throw new Meteor.Error(404, "Bracket not found.");
     }
     var user = Meteor.user();
+    if(!user) {
+      throw new Meteor.Error(403, "You must be logged in to register yourself for an event!");
+    }
     var alias = user.profile.alias || user.username;
     var bracketContainsUser = (bracket.participants || []).some((player) => {
       return player.id == user._id;
@@ -127,6 +161,30 @@ Meteor.methods({
     //   event: event.details.name,
     //   read: false
     // });
+    if(event.league) {
+      var league = Leagues.findOne(event.league);
+      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      var pushObj = {
+        [`leaderboard.${leaderboardIndex}`]: {
+          id: user._id,
+          score: 0,
+          bonus: 0
+        }
+      };
+      var isGlobalRegistered = league.leaderboard[0].some(obj => {
+        return obj.id == user._id;
+      });
+      if(!isGlobalRegistered) {
+        pushObj["leaderboard.0"] = {
+          id: user._id,
+          score: 0,
+          bonus: 0
+        }
+      }
+      Leagues.update({ _id: event.league }, {
+        $push: pushObj
+      })
+    }
     Instances.update(instance._id, {
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
