@@ -71,7 +71,7 @@ export default class BlockContainer extends Component {
                       Meteor.userId() == event.owner ? (
                         <div className="event-block-edit">
                           {
-                            event.isComplete ? (
+                            event.isComplete && !event.league ? (
                               <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();

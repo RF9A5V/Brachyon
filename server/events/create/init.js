@@ -109,6 +109,9 @@ Meteor.methods({
 
   "events.reinstantiate"(id) {
     var event = Events.findOne(id);
+    if(event.league) {
+      throw new Meteor.Error(403, "Can't reinstantiate a league event.");
+    }
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
     }

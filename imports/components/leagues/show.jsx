@@ -43,7 +43,7 @@ export default class LeagueShowPage extends Component {
         component: LeaderboardSlide
       }
     ];
-    if(league.tiebreaker) {
+    if(league.tiebreaker && !league.complete) {
       pages.push({
         name: "Tiebreaker",
         component: TiebreakerSlide
