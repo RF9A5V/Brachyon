@@ -7,6 +7,7 @@ import Leagues from "/imports/api/leagues/league.js";
 import MainSlide from "./show/main.jsx";
 import EventSlide from "./show/events.jsx";
 import LeaderboardSlide from "./show/leaderboards.jsx";
+import TiebreakerSlide from "./show/tiebreaker.jsx";
 
 export default class LeagueShowPage extends Component {
 
@@ -27,6 +28,7 @@ export default class LeagueShowPage extends Component {
   }
 
   slides() {
+    var league = Leagues.findOne();
     var pages = [
       {
         name: "Home",
@@ -41,6 +43,12 @@ export default class LeagueShowPage extends Component {
         component: LeaderboardSlide
       }
     ];
+    if(league.tiebreaker) {
+      pages.push({
+        name: "Tiebreaker",
+        component: TiebreakerSlide
+      });
+    }
     return pages;
   }
 
