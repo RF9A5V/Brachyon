@@ -827,12 +827,36 @@ Meteor.methods({
 
   "events.endGroup"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances.pop());
-    Instances.update(instance._id, {
-      $set: {
-        [`brackets.${bracketIndex}.endedAt`]: new Date()
-      }
-    })
+    if(!event) {
+      var incObj = {};
+      var league = Leagues.findOne(eventID);
+      var bracket = Brackets.findOne(league.tiebreaker.id);
+      var numPlayers = bracket.rounds[0].players.length;
+      bracket.rounds[0].players.sort((a, b) => {
+        return (b.score - a.score);
+      }).map((obj, i) => {
+        var user = Meteor.users.findOne({ username: obj.name });
+        var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
+          return entry.id == user._id;
+        });
+        incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
+      });
+      console.log(incObj);
+      Leagues.update(eventID, {
+        $inc: incObj,
+        $set: {
+          complete: true
+        }
+      })
+    }
+    else {
+      var instance = Instances.findOne(event.instances.pop());
+      Instances.update(instance._id, {
+        $set: {
+          [`brackets.${bracketIndex}.endedAt`]: new Date()
+        }
+      })
+    }
   }
 
 })
