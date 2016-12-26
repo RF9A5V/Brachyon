@@ -15,7 +15,7 @@ export default class TiebreakerSlide extends Component {
     return (
       <div className="col-1 row slide" style={{backgroundImage: this.backgroundImage(false)}}>
         <div className="col-1" style={{padding: 20}}>
-          <RoundRobinDisplay rounds={Brackets.findOne().rounds} />
+          <RoundRobinDisplay rounds={Brackets.findOne().rounds} id={Leagues.findOne()._id}/>
         </div>
       </div>
     )
