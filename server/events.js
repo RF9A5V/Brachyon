@@ -447,6 +447,9 @@ Meteor.methods({
         bracket.players[x].score = prevmatch1.score + score*winfirst;
         bracket.players[x].wins = prevmatch1.wins + winfirst;
         bracket.players[x].losses = prevmatch1.losses + winsecond;
+        if(!bracket.players[x].playedagainst) {
+          bracket.players[x].playedagainst = {};
+        }
         bracket.players[x].playedagainst[p2] = true;
       }
       if (bracket.players[x].name == p2)
@@ -454,6 +457,9 @@ Meteor.methods({
         bracket.players[x].score = prevmatch2.score + score*winsecond;
         bracket.players[x].wins = prevmatch2.wins + winsecond;
         bracket.players[x].losses = prevmatch2.losses + winfirst;
+        if(!bracket.players[x].playedagainst) {
+          bracket.players[x].playedagainst = {};
+        }
         bracket.players[x].playedagainst[p1] = true;
       }
     }
@@ -722,7 +728,7 @@ Meteor.methods({
     newpl.sort(function(a, b) {
       return b.score - a.score;
     })
-    var pdic = [];
+    var pdic = {};
     for (var x = 0; x < newpl.length; x++)
       pdic[newpl[x].name] = x;
     var newevent = {
@@ -802,7 +808,7 @@ Meteor.methods({
       }
     }
     var tempb = JSON.parse(JSON.stringify(playerarr));
-    var pdic = [];
+    var pdic = {};
     for (var x = 0; x < tempb.length; x++)
       pdic[tempb[x].name] = x;
     var roundObj = {

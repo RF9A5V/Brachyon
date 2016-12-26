@@ -53,7 +53,7 @@ export default class LeaderboardPanel extends Component {
                         <input type="number" style={{margin: 0, marginRight: 10}} defaultValue={obj.bonus || 0} ref={`${i}`}
                           onKeyPress={(e) => { if(e.key == "Enter") { e.target.blur() } }}
                           onBlur={(e) => {
-                            Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, index, i, e.target.value, (err) => {
+                            Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, index, obj.id, e.target.value, (err) => {
                               if(err) {
                                 toastr.error("Couldn\'t update bonus points");
                               }

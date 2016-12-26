@@ -8,8 +8,6 @@ export default class SwissModal extends Component {
   constructor(props) {
     super(props);
     var match = Brackets.findOne().rounds[props.page].matches[props.i];
-    var instanceID = Events.findOne().instances.pop();
-    var instance = Instances.findOne(instanceID);
     this.state = {
       p1score: match.p1score,
       p2score: match.p2score,
@@ -23,8 +21,6 @@ export default class SwissModal extends Component {
       return false;
     }
     var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    var instanceID = Events.findOne().instances.pop();
-    var instance = Instances.findOne(instanceID);
     var score = 3;
     var multi = inc === true ? 1 : -1;
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
@@ -62,8 +58,6 @@ export default class SwissModal extends Component {
 
   render() {
     var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    var instanceID = Events.findOne().instances.pop();
-    var instance = Instances.findOne(instanceID);
     var playerOneID = this.props.aliasMap[match.playerOne];
     var playerTwoID = this.props.aliasMap[match.playerTwo];
     return (

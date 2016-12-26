@@ -305,7 +305,7 @@ var OrganizeSuite = {
       temp.push(matchObj);
     }
     var tempb = [];
-    var tempc = [];
+    var tempc = {};
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
@@ -329,7 +329,6 @@ var OrganizeSuite = {
       }
       tempb.push(playerObj);
     }
-    console.log(tempc);
     var frounds = [];
     var round = {
       matches: temp,
@@ -365,7 +364,7 @@ var OrganizeSuite = {
       }
     }
     var tempb = [];
-    var tempc = [];
+    var tempc = {};
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];

@@ -11,6 +11,7 @@ Meteor.publish("league", (slug) => {
     Events.find({ slug: { $in: league.events } }),
     Games.find({_id: league.game}),
     instances,
-    Meteor.users.find({ _id: { $in: userIds } }, { username: 1, "profile.imageUrl": 1 })
+    Meteor.users.find({ _id: { $in: userIds } }, { username: 1, "profile.imageUrl": 1 }),
+    Brackets.find({ _id: (league.tiebreaker || {}).id })
   ]
 })
