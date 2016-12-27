@@ -128,7 +128,16 @@ Meteor.startup(() => {
          }
       });
     }
-  })
+  });
+
+  Accounts.emailTemplates.siteName = "Brachyon";
+  Accounts.emailTemplates.from = "Brachyon Admin <steven@brachyon.com>";
+  Accounts.emailTemplates.verifyEmail.subject = (user) => {
+    return "Hi, " + user.username + "!";
+  }
+  Accounts.emailTemplates.verifyEmail.text = (user, url) => {
+    return "Click the link below to verify your email!\n" + url;
+  }
 
   SyncedCron.start();
 });
