@@ -78,7 +78,14 @@ ServiceConfiguration.configurations.upsert(
 
 Meteor.startup(() => {
 
+  var smtp = {
+    username: "steven@brachyon.com",
+    password: "IcarusLive5",
+    server: "smtp-relay.gmail.com",
+    port: 587
+  }
 
+  process.env.MAIL_URL = `smtp://${encodeURIComponent(smtp.username)}:${encodeURIComponent(smtp.password)}@${smtp.server}:${smtp.port};`
 
   Logger.info('Meteor started!');
 
