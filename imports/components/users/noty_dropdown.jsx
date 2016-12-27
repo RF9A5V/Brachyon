@@ -18,6 +18,10 @@ export default class NotyDropdown extends Component {
     this.state.notes.stop();
   }
 
+  componentWillReceiveProps(next) {
+    console.log(next);
+  }
+
   hasUnreadNotifications() {
     return Notifications.find({ seen: false }).fetch().length > 0
   }
@@ -121,20 +125,14 @@ export default class NotyDropdown extends Component {
         <div className="row center x-center" style={{borderRadius: "100%", backgroundColor: "rgba(48, 48, 48, 0.7)", padding: 5, width: 20, height: 20}}>
           <FontAwesome name="envelope" style={{color: this.hasUnreadNotifications() ? "#FF6000" : "white"}} />
         </div>
-        {
-          this.props.open ? (
-            <div className="col" style={{position: "absolute"}}>
-              <div className="triangle-top"></div>
-              <div className="col" style={{position: "relative", right: 210, backgroundColor: "#222", padding: 10, width: 300}}>
-                {
-                  this.notifications()
-                }
-              </div>
-            </div>
-          ) : (
-            ""
-          )
-        }
+        <div className="col" style={{position: "absolute", display: this.props.open ? "inherit" : "none"}}>
+          <div className="triangle-top"></div>
+          <div className="col" style={{position: "relative", right: 210, backgroundColor: "#222", padding: 10, width: 300}}>
+            {
+              this.notifications()
+            }
+          </div>
+        </div>
       </div>
     )
   }

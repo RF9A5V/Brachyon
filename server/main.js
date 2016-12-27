@@ -11,6 +11,8 @@ import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
 import Instances from "/imports/api/event/instance.js";
 
+import { Accounts } from 'meteor/accounts-base'
+
 Events._ensureIndex({
   'details.location.coords': '2dsphere',
   slug: 1
@@ -76,6 +78,26 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+Accounts.emailTemplates.siteName = "Brachyon";
+Accounts.emailTemplates.from = "Brachyon Admin <steven@brachyon.com>";
+Accounts.emailTemplates.verifyEmail.subject = (user) => {
+  return "Hi, " + user.username + "!";
+}
+Accounts.emailTemplates.verifyEmail.text = (user, url) => {
+  return "Click the link below to verify your email!\n" + url;
+}
+
+Accounts.onEmailVerificationLink = (token, done) => {
+  Accounts.verifyEmail(token, (err) => {
+    if(err) {
+      throw new Meteor.Error(404, "Issue with verifying email!");
+    }
+    else {
+      done()
+    }
+  })
+}
+
 Meteor.startup(() => {
 
   var smtp = {
@@ -129,15 +151,6 @@ Meteor.startup(() => {
       });
     }
   });
-
-  Accounts.emailTemplates.siteName = "Brachyon";
-  Accounts.emailTemplates.from = "Brachyon Admin <steven@brachyon.com>";
-  Accounts.emailTemplates.verifyEmail.subject = (user) => {
-    return "Hi, " + user.username + "!";
-  }
-  Accounts.emailTemplates.verifyEmail.text = (user, url) => {
-    return "Click the link below to verify your email!\n" + url;
-  }
 
   SyncedCron.start();
 });
