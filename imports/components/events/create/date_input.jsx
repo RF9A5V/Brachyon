@@ -10,12 +10,42 @@ export default class DateInput extends Component {
     if(props.init) {
       initTime = moment(props.init);
     }
+    if(props.startsAt) {
+      var temp = moment(props.startsAt);
+      if(initTime.isBefore(temp)){
+        initTime = temp.add(1, "day");
+        if(props.onChange){
+          props.onChange(initTime.toDate());
+        }
+      }
+    }
     this.state = {
       open: false,
       time: initTime,
       month: initTime.month(),
       year: initTime.year()
     }
+  }
+
+  componentWillReceiveProps(next) {
+    var initTime = moment();
+    if(next.init) {
+      initTime = moment(next.init);
+    }
+    if(next.startsAt) {
+      var temp = moment(next.startsAt);
+      if(initTime.isBefore(temp)){
+        initTime = temp.add(1, "day");
+        if(next.onChange){
+          next.onChange(initTime.toDate());
+        }
+      }
+    }
+    this.setState({
+      time: initTime,
+      month: initTime.month(),
+      year: initTime.year()
+    })
   }
 
   value() {
@@ -56,8 +86,11 @@ export default class DateInput extends Component {
             //
             var isSelected = this.state.time.year() == this.state.year && this.state.time.month() == this.state.month && this.state.time.date() == value + 1;
             var targetTime = moment().year(this.state.year).month(this.state.month).date(value + 1).endOf("day");
-            var pass = moment().isBefore(targetTime) || moment().isSame(targetTime);
-
+            var pass = targetTime.isAfter(moment())
+            if(this.props.startsAt) {
+              pass = targetTime.isAfter(moment(this.props.startsAt).add(1, "day"));
+            }
+            
             return (
               <div className={`calendar-days-entry ${pass ? "active" : ""} ${isSelected ? "selected" : ""}`} onClick={pass ? self.setValue.bind(self) : () => {}}>
                 {value + 1}
