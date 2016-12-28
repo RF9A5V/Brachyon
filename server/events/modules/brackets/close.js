@@ -3,9 +3,12 @@ import Instances from "/imports/api/event/instance.js";
 Meteor.methods({
   "events.brackets.close"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance;
     if(!event) {
-      throw new Meteor.Error(404, "Event not found!");
+      instance = Instances.findOne(eventID);
+    }
+    else {
+      var instance = Instances.findOne(event.instances.pop());
     }
     var bracket = instance.brackets[bracketIndex];
     if(!bracket) {
@@ -79,7 +82,7 @@ Meteor.methods({
     cmd["$set"][`brackets.${bracketIndex}.endedAt`] = new Date();
 
     // League update
-    if(event.league) {
+    if(event && event.league) {
       var updateObj = {};
       var league = Leagues.findOne(event.league);
       var totalScore = participants.length;

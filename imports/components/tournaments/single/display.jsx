@@ -5,9 +5,6 @@ export default class SingleDisplay extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      id: Events.findOne()._id
-    }
   }
 
   render() {

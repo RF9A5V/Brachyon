@@ -21,22 +21,28 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
+          if(!Events.findOne()) {
+            return;
+          }
           if(Events.findOne().owner != Meteor.userId()) {
             toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
             browserHistory.pop();
           }
         }
       }),
+      instance: Meteor.subscribe("bracketContainer", this.props.params.id)
     }
   }
 
   componentWillUnmount() {
     this.state.event.stop();
+    this.state.instance.stop();
   }
 
   items() {
     var instance = Instances.findOne();
-    var bracket = instance.brackets[this.props.params.bracketIndex];
+    var index = this.props.params.bracketIndex || 0;
+    var bracket = instance.brackets[index];
     var defaultItems = [];
     if(bracket.endedAt == null) {
       defaultItems.push({
@@ -46,7 +52,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           {
             component: ParticipantAction,
             args: {
-              index: this.props.params.bracketIndex
+              index: index
             }
           }
         ]
@@ -61,7 +67,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             component: LeaderboardAction,
             args: {
               id: bracket.id,
-              index: this.props.params.bracketIndex
+              index: index
             }
           }
         ]
@@ -94,7 +100,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             {
               component: LogisticsPanel,
               args: {
-                index: this.props.params.bracketIndex
+                index: index
               }
             }
           ]
@@ -110,7 +116,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             {
               component: StartBracketAction,
               args: {
-                index: this.props.params.bracketIndex
+                index: index
               }
             }
           ]
@@ -121,7 +127,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.event.ready()) {
+    if(!this.state.event.ready() || !this.state.instance.ready()) {
       return (
         <div>
           Loading...

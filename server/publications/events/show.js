@@ -7,6 +7,9 @@ import { GameBanners } from "/imports/api/games/game_banner.js";
 
 Meteor.publish('event', (slug) => {
   var event = Events.findOne({slug: slug});
+  if(!event) {
+    return [];
+  }
   var _id = event._id;
   var instanceIndex = event.instances.length - 1;
   var instance = Instances.findOne(event.instances.pop());
