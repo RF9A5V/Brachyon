@@ -5,6 +5,7 @@ import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
+import { Email } from 'meteor/email'
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -368,6 +369,9 @@ Meteor.methods({
       }
     });
     if(user){
+      console.log("sending mail...");
+      Accounts.sendVerificationEmail(user);
+      console.log("verification sent");
       var token = Accounts._generateStampedLoginToken();
       Accounts._insertLoginToken(user, token);
       return token;

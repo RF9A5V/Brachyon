@@ -35,7 +35,7 @@ export default class crowdfundingDetailsPage extends Component {
               <input ref="amount" type="number" defaultValue={event.crowdfunding.details.amount / 100} style={{marginRight: 0}} />
               <h5 style={{marginBottom: 20}}>Crowdfunding Due Date</h5>
               <div>
-                <DateInput init={event.crowdfunding.details.dueDate} ref="date" />
+                <DateInput init={event.crowdfunding.details.dueDate} startsAt={moment(event.details.datetime).subtract(5, "days").toDate()} ref="date" />
               </div>
             </div>
             <div className="col-1 row center x-center" style={{padding: 20, backgroundColor: "#444"}}>
