@@ -108,9 +108,19 @@ Meteor.publish("discoverEvents", function(){
     return event.owner;
   });
   var gameSet = new Set();
-  var instances = Instances.find({_id: { $in: events.map((e) => {
-    return e.instances.pop();
-  })}})
+  var instances = Instances.find({
+    $or: [{
+      _id: {
+        $in: events.map((e) => {
+          return e.instances.pop();
+        })
+      }
+    }, {
+      owner: {
+        $exists: true
+      }
+    }]
+  })
   instances.forEach((e) => {
     if(e.brackets != null){
       e.brackets.forEach((bracket) => {
@@ -119,11 +129,13 @@ Meteor.publish("discoverEvents", function(){
     }
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
+  var leagues = Leagues.find();
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
     games,
-    instances
+    instances,
+    leagues
   ]
 });
 

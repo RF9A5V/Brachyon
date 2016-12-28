@@ -242,7 +242,11 @@ export default class UserEvents extends TrackerReact(Component) {
         <div className="col-1 row" style={{flexWrap: "wrap"}}>
           {
             this.state.subName == "userLeagues" ? (
-              <LeagueDisplay leagues={leagues} />
+              leagues.length > 0 ? (
+                <LeagueDisplay leagues={leagues} />
+              ) : (
+                ""
+              )
             ) : (
               events.length > 0 ? (
                 <BlockContainer events={events} />
