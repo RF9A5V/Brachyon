@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import FontAwesome from "react-fontawesome";
+import { browserHistory } from "react-router";
 
 // Container to handle generic block objects for discovery
 
@@ -31,17 +32,27 @@ export default class BlockContainer extends Component {
     var title = (obj.type == "instance") ? "TEMP" : obj.details.name;
     var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
 
+    var action = (val) => {
+      return (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        var type = obj.type;
+        if(type == "instance") {
+          type = "bracket";
+        }
+        var identifier = obj.slug || obj._id;
+        browserHistory.push("/" + type + "s" + "/" + identifier + "/" + val);
+      }
+    }
+
     return (
-      <div className={`event-block ${obj.type}`}>
+      <div className={`event-block ${obj.type}`} onClick={action("show")}>
         <div style={{borderStyle: "solid", borderWidth: 2, position: "relative"}}>
           <h2 className="event-block-title">{ title }</h2>
           {
             Meteor.userId() == obj.owner ? (
               <div className="event-block-edit">
-                <FontAwesome name="pencil" onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }} />
+                <FontAwesome name="pencil" onClick={action("admin")} />
               </div>
             ) : (
               ""
