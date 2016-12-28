@@ -62,7 +62,25 @@ export default class BlockContainer extends Component {
         <div className='event-block-container'>
           {
             (this.props.events || []).map((event, i) => {
-              var instance = Instances.findOne();
+              var e = Events.findOne(event._id);
+              var count = 0;
+              if(!e) {
+                count = event.leaderboard[0].length;
+              }
+              else {
+                var instance = Instances.findOne(event.instances.pop());
+                count = (() => {
+                  var count = 0;
+                  if(instance.brackets) {
+                    instance.brackets.forEach(bracket => {
+                      if(bracket.participants) {
+                        count += bracket.participants.length;
+                      }
+                    });
+                  }
+                  return count;
+                })()
+              }
               return (
                 <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
@@ -101,17 +119,7 @@ export default class BlockContainer extends Component {
                           <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                         </div>
                         <span style={{fontSize: 12}}>{
-                          (() => {
-                            var count = 0;
-                            if(instance.brackets) {
-                              instance.brackets.forEach(bracket => {
-                                if(bracket.participants) {
-                                  count += bracket.participants.length;
-                                }
-                              });
-                            }
-                            return count;
-                          })()
+                          count
                         }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
                       </div>
                       <div className="row flex-pad">
