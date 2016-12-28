@@ -52,27 +52,6 @@ export default class DateInput extends Component {
     return this.state.time.format("YYYYMMDD");
   }
 
-    }
-    if(next.startsAt) {
-      var temp = moment(next.startsAt);
-      if(initTime.isBefore(temp)){
-        initTime = temp.add(1, "day");
-        if(next.onChange){
-          next.onChange(initTime.toDate());
-        }
-      }
-    }
-    this.setState({
-      time: initTime,
-      month: initTime.month(),
-      year: initTime.year()
-    })
-  }
-
-  value() {
-    return this.state.time.format("YYYYMMDD");
-  }
-
   days() {
     self = this;
     var cursor = moment().year(this.state.year).month(this.state.month);
