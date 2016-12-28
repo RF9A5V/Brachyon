@@ -67,7 +67,7 @@ Meteor.methods({
       }
       else {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
-      }
+      } 
     }
     var cmd = {
       $set: {}
