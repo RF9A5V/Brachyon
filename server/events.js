@@ -9,21 +9,30 @@ Meteor.methods({
 
   "events.addParticipant"(eventID, bracketIndex, userID, alias) {
     var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance;
+    if(event) {
+      // Hack.
+      // If the event ID collides with an instance ID, shit will likely break.
+      var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    }
+    else {
+      var instance = Instances.findOne(eventID);
+    }
+
+    console.log(eventID);
+    console.log(instance);
+
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
     }
     else {
-      if(event.league) {
+      if(event && event.league) {
         throw new Meteor.Error("Can't add a non-user player to a league event!");
       }
     }
     //console.log(alias);
     if(alias == "" || alias == null) {
       throw new Meteor.Error(403, "Alias for a participant has to exist.");
-    }
-    if(event == null) {
-      throw new Meteor.Error(404, "Couldn't find this event.");
     }
     if(instance.brackets == null || instance.brackets[bracketIndex] == null) {
       throw new Meteor.Error(404, "Couldn't find this bracket.");
@@ -49,22 +58,24 @@ Meteor.methods({
       if(bracketContainsUser) {
         throw new Meteor.Error(403, "User is already registered for this bracket.");
       }
-      var note = Notifications.findOne({ type: "eventInvite", event: event._id, recipient: userID });
-      if(note) {
-        throw new Meteor.Error(403, "Notification already sent!");
-      }
-      else {
-        var owner = Meteor.users.findOne(event.owner);
-        Notifications.insert({
-          type: "eventInvite",
-          owner: owner.username,
-          image: owner.profile.imageUrl,
-          event: event.details.name,
-          eventSlug: event.slug,
-          alias,
-          recipient: userID,
-          seen: false
-        });
+      if(event) {
+        var note = Notifications.findOne({ type: "eventInvite", event: event._id, recipient: userID });
+        if(note) {
+          throw new Meteor.Error(403, "Notification already sent!");
+        }
+        else {
+          var owner = Meteor.users.findOne(event.owner);
+          Notifications.insert({
+            type: "eventInvite",
+            owner: owner.username,
+            image: owner.profile.imageUrl,
+            event: event.details.name,
+            eventSlug: event.slug,
+            alias,
+            recipient: userID,
+            seen: false
+          });
+        }
       }
     }
     Instances.update(instance._id, {
@@ -197,10 +208,16 @@ Meteor.methods({
 
   "events.start_event"(eventID, index) {
     var event = Events.findOne(eventID);
-    if(event == null) {
-      throw new Meteor.Error(404, "Couldn't find this event!");
+    var instance;
+    if(!event) {
+      var instance = Instances.findOne(eventID);
+      if(!instance) {
+        throw new Meteor.Error(404, "Couldn't find this event!");
+      }
     }
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    else {
+      instance = Instances.findOne(event.instances.pop());
+    }
     var organize = instance.brackets[index];
     var format = instance.brackets[index].format.baseFormat;
     if (format == "single_elim")

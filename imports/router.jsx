@@ -33,6 +33,8 @@ import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
 import EditLeagueScreen from "../imports/components/leagues/edit.jsx";
 import ShowLeagueScreen from "../imports/components/leagues/show.jsx";
 
+import CreateBracketScreen from "../imports/components/brackets/create.jsx";
+
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
@@ -68,6 +70,8 @@ export const renderRoutes = () => (
       <Route path="games/index" component={GamesIndexScreen} />
       <Route path="create" component={CreateRunnableScreen} />
       <Route path="leagues/create" component={CreateLeagueScreen} />
+      <Route path="brackets/create" component={CreateBracketScreen} />
+      <Route path="brackets/:id/admin" component={BracketAdminScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />

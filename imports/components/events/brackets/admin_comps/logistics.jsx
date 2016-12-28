@@ -26,8 +26,8 @@ export default class LogisticsPanel extends Component {
   }
 
   closeBracketHandler() {
-    var event = Events.findOne();
-    Meteor.call("events.brackets.close", event._id, this.props.index, (err) => {
+    var event = Events.findOne() || {};
+    Meteor.call("events.brackets.close", event._id || Instances.findOne()._id, this.props.index || 0, (err) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }

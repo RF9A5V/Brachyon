@@ -62,7 +62,7 @@ export default class ParticipantAddField extends Component {
 
   onParticipantAdd() {
     if(this.state.user != null) {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, this.state.user, null, (err) => {
+      Meteor.call("events.addParticipant", (Events.findOne() || {})._id || Instances.findOne()._id, this.props.bracketIndex, this.state.user, null, (err) => {
         if(err){
           toastr.error(err.reason, "Error!");
         }
@@ -84,7 +84,7 @@ export default class ParticipantAddField extends Component {
       })
     }
     else {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, null, this.refs.username.value, (err) => {
+      Meteor.call("events.addParticipant", (Events.findOne() || {})._id || Instances.findOne()._id, this.props.bracketIndex, null, this.refs.username.value, (err) => {
         if(err){
           toastr.error(err.reason, "Error!");
         }

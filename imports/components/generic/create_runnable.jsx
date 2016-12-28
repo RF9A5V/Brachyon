@@ -13,7 +13,7 @@ export default class CreateRunnableScreen extends Component {
     return (
       <div className="box col center">
         <div className="row col-1 center x-center">
-          <div className="generic-block">
+          <div className="generic-block" onClick={ () => { browserHistory.push("/brackets/create") } }>
             <FontAwesome  size="3x" name="sitemap" />
             <h4>Quick Create</h4>
             <p>
