@@ -27,6 +27,8 @@ import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
+import OrganizationCreateScreen from "../imports/components/organizations/create.jsx";
+import OrganizationShowScreen from "../imports/components/organizations/show.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -55,7 +57,7 @@ export const renderRoutes = () => (
       <Route path="faq" component={FaqScreen} />
       <Route path="events/:slug/view" component={OrganizeEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
-      <Route path="events/discover" component={EventDiscoveryScreen} />
+      <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
@@ -68,6 +70,8 @@ export const renderRoutes = () => (
       <Route path="events/:slug/admin" component={EventAdminScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="orgs/create" component={OrganizationCreateScreen} />
+      <Route path="orgs/:slug" component={OrganizationShowScreen} />
     </Route>
   </Router>
 )

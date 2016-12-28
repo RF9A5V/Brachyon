@@ -248,7 +248,7 @@ export default class UserEvents extends TrackerReact(Component) {
                 </div>
               ) : (
                 <div className="row center col-1" style={{padding: "100px 0"}}>
-                  <h5>Looks like you don't have any events. Click <Link to={"/events/discover"}>here</Link> to find one!</h5>
+                  <h5>Looks like you don't have any events. Click <Link to={"/discover"}>here</Link> to find one!</h5>
                 </div>
               )
             ) : (

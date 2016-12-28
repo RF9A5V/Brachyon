@@ -1,5 +1,6 @@
 import Games from '/imports/api/games/games.js';
 import Instances from "/imports/api/event/instance.js";
+import Organizations from "/imports/api/organizations/organizations.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -199,4 +200,9 @@ Meteor.publish('unapproved_games', function() {
 Meteor.publish("getUserByUsername", function(query) {
   var user = Meteor.users.find({username: query});
   return user;
+});
+
+Meteor.publish('userOwnedOrganization', function(id) {
+  var org = Meteor.organizations.find({owner: id});
+  return org
 });
