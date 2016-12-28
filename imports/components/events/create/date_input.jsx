@@ -31,6 +31,26 @@ export default class DateInput extends Component {
     var initTime = moment();
     if(next.init) {
       initTime = moment(next.init);
+    }
+    if(next.startsAt) {
+      var temp = moment(next.startsAt);
+      if(initTime.isBefore(temp)){
+        initTime = temp.add(1, "day");
+        if(next.onChange){
+          next.onChange(initTime.toDate());
+        }
+      }
+    }
+    this.setState({
+      time: initTime,
+      month: initTime.month(),
+      year: initTime.year()
+    })
+  }
+
+  value() {
+    return this.state.time.format("YYYYMMDD");
+  }
 
     }
     if(next.startsAt) {
@@ -76,7 +96,6 @@ export default class DateInput extends Component {
             if(this.props.startsAt) {
               pass = targetTime.isAfter(moment(this.props.startsAt).add(1, "day"));
             }
-
             return (
               <div className={`calendar-days-entry ${pass ? "active" : ""} ${isSelected ? "selected" : ""}`} onClick={pass ? self.setValue.bind(self) : () => {}}>
                 {value + 1}
