@@ -92,7 +92,7 @@ export default class BracketForm extends Component {
           {
             // <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
           }
-          <select ref="format" defaultValue={this.props.format.baseFormat} onChange={(e) => {
+          <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
             if(this.props.onChange) {
               var game = {
                 _id: this.state.id,
