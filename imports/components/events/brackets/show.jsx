@@ -16,9 +16,12 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
-          var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+          if(Instances.findOne()) {
+            var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+          }
         }
       }),
+      instance: Meteor.subscribe("bracketContainer", this.props.params.id),
       ready: false
     }
   }
@@ -42,7 +45,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
           {
             component: ParticipantList,
             args: {
-              participants: instance.brackets[this.props.params.bracketIndex].participants || [],
+              participants: Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [],
               bracketIndex: this.props.params.bracketIndex
             }
           }
@@ -73,7 +76,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
               component: BracketPanel,
               args: {
                 id: bracket._id,
-                format: instance.brackets[this.props.params.bracketIndex].format.baseFormat,
+                format: Brackets.findOne().format.baseFormat,
                 rounds: Brackets.findOne(bracket._id)
               }
             }
@@ -91,7 +94,7 @@ export default class BracketShowScreen extends TrackerReact(Component) {
       );
     }
     if(this.state.event.ready()) {
-      var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+      var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex || 0].id;
       var bracket = Meteor.subscribe("brackets", bracketID, {
         onReady: () => {
           this.setState({ ready: true, bracket });

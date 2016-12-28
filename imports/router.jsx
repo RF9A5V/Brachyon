@@ -72,6 +72,7 @@ export const renderRoutes = () => (
       <Route path="leagues/create" component={CreateLeagueScreen} />
       <Route path="brackets/create" component={CreateBracketScreen} />
       <Route path="brackets/:id/admin" component={BracketAdminScreen} />
+      <Route path="brackets/:id/show" component={BracketShowScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
@@ -80,6 +81,7 @@ export const renderRoutes = () => (
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="leagues/:slug/edit" component={EditLeagueScreen} />
+      <Route path="leagues/:slug/admin" component={EditLeagueScreen} />
       <Route path="leagues/:slug/show" component={ShowLeagueScreen} />
     </Route>
   </Router>
