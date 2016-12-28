@@ -13,7 +13,7 @@ export default class LogInScreen extends Component {
       }
       else {
         toastr.success("Successfully logged in!", "Success!");
-        browserHistory.push("/events/discover");
+        browserHistory.push("/discover");
       }
     })
   }

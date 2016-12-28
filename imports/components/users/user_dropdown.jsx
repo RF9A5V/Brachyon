@@ -29,6 +29,11 @@ export default class UserDropdown extends Component {
     this.props.onAccessNotes();
   }
 
+  accessOrgs(e) {
+    e.preventDefault();
+    browserHistory.push("/orgs/create");
+  }
+
   logout(e){
     e.preventDefault();
     this.props.clear();
@@ -71,6 +76,10 @@ export default class UserDropdown extends Component {
               </span>
             </div>
             <span className="col-3">Notifications</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOrgs.bind(this)}>
+            <div className="user-dropdown-icon"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Create Orgs</span>
           </a>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
             <div className="user-dropdown-icon"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>

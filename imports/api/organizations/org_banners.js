@@ -1,12 +1,12 @@
 import { FilesCollection } from "meteor/ostrio:files";
 import fs from "fs";
 
-import Games from "/imports/api/games/games.js";
+import Organizations from "/imports/api/organizations/organizations.js"
 
 import { compressThenStore } from "../upload_suite.js";
 
-var GameBanners = new FilesCollection({
-  collectionName: "gameBanners",
+var OrgBanners = new FilesCollection({
+  collectionName: "orgBanners",
   allowClientCode: false,
   onBeforeUpload: function(file) {
     if(file.size <= 10485760 && /png|jpg|jpeg/i.test(file.extension)) {
@@ -22,39 +22,41 @@ var GameBanners = new FilesCollection({
       wait: true,
       lossy: true
     };
-    var location = "gameBanners";
+    var location = "orgBanners";
 
     var self = this;
     var writeStream = fs.createWriteStream(fileRef.path + ".temp");
-    gm(fs.createReadStream(fileRef.path), fileRef.name).crop(meta.width, meta.height, meta.left, meta.top).resize("450", "600").stream().pipe(writeStream);
+    gm(fs.createReadStream(fileRef.path), fileRef.name).crop(meta.width, meta.height, meta.left, meta.top).resize("1280", "720").stream().pipe(writeStream);
     writeStream.on("close", Meteor.bindEnvironment(function() {
       fs.rename(fileRef.path + ".temp", fileRef.path, Meteor.bindEnvironment(() => {
         if(!Meteor.isDevelopment) {
           compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
-            Games.update({_id: meta.gameId}, {
+            Organizations.update({
+              _id: meta.orgId
+            }, {
               $set: {
-                bannerUrl: "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+                "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
-            })
+            });
             self.remove({_id: fileRef._id});
           }));
         }
         else {
-          console.log(meta);
-          var game = Games.findOne(meta.gameId);
-          if(game.banner) {
-            self.remove({_id: game.banner});
+          console.log(meta.orgId);
+          var org = Organizations.findOne(meta.orgId);
+          if(org.details.banner) {
+            self.remove({_id: org.details.banner});
           }
-          Games.update({_id: meta.gameId}, {
+          Organizations.update({ _id: meta.orgId }, {
             $set: {
-              bannerUrl: self.findOne(fileRef._id).link(),
-              banner: fileRef._id
+              "details.bannerUrl": self.findOne(fileRef._id).link(),
+              "details.banner": fileRef._id
             }
-          })
+          });
         }
       }));
     }));
   }
 })
 
-export { GameBanners };
+export { OrgBanners };
