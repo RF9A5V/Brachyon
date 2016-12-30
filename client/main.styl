@@ -50,31 +50,81 @@ figure
   overflow-x hidden
   white-space nowrap
   text-overflow ellipsis
+  
+  
+.marquee
+  overflow-x hidden
+  overflow-y hidden
+  white-space nowrap
+  text-overflow ellipsis
+  
+.marquee:hover
+  animation marquee 5s linear infinite
+  
+@keyframes marquee {
+  from  { text-indent:  0% }
+  to    { text-indent: -120% }
+}
+
+.pointerChange
+  cursor:pointer
 
 .match-highlight:hover
-  box-shadow 0 0  2px 10px  #FF6000
+  box-shadow 0 0  10px  white
+  
+.reset-highlight
+  border-color #FF6000
+  
+.reset-highlight:hover
+  box-shadow 0 0 10px  #FF6000
+  
+.match-highlight:hover .marquee
+  animation marquee 5s linear infinite
   
 .bracket-match-spacing
   margin-top 20px
   margin-bottom 20px
 
+.round-spacing
+  margin-right 18px
+  margin-left 18px
+  
+.create-mod
+  width 800px
+  backgroud-color black
+  
 .match-active
   cursor pointer
 
 .match-participant:first-child
   border-bottom solid 5px white
   margin-top -10px 
-  margin-left -18px
-  margin-right -18px
+  margin-left -20px
+  margin-right -20px
 
 .match-participant:last-child
   margin-bottom -15px
-  margin-left -18px
-  margin-right -18px
+  margin-left -20px
+  margin-right -20px
+  margin-top 5px
   
-.col
-  margin-right 16px
-
+.spacing
+  margin-right 18px
+  margin-left 18px
+  
+.start-button-hide
+  display none
+  
+.inline-button
+  display inline-block
+  
+.logistic-layout
+  border: solid
+  width: 80%
+  margin 0 auto
+  margin-top 20px
+  margin-bottom 20px
+  
 .box
   display flex
   flex-flow column

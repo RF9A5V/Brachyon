@@ -41,32 +41,40 @@ export default class LogisticsPanel extends Component {
     var instance = Instances.findOne();
     var bracket = instance.brackets[this.props.index];
     return (
-      <div className="col">
-        <h3>Restart the Bracket</h3>
-        <p>
-          Warning! This will regenerate your bracket from scratch, throwing everything back to round one. This is not recommended for large events or for events that have already played well into the bracket.
-        </p>
-        <div style={{marginBottom: 10}}>
-          <button onClick={() => { this.setState({ open: true }) }}>Restart</button>
-          <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
-            <div className="col x-center center">
-              <h3>DANGER</h3>
-              <p>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
-              <div>
-                <button onClick={this.resetEventHandler.bind(this)} style={{marginRight: 10}}>Reset</button>
-                <button onClick={() => { this.setState({open: false}) }}>Cancel</button>
+      <div className="col center">
+        <div className="logistic-layout">
+          <h5 style={{borderBottom:"solid"}}>Restart the Bracket</h5>
+          <p>
+            Warning! This will regenerate your bracket from scratch, throwing everything back to round one. This is not recommended for large events or for events that have already played well into the bracket.
+          </p>
+          <div style={{marginBottom: 10}}>
+            <button onClick={() => { this.setState({ open: true }) }} style={{width:"100px"}}> Reset </button>
+            <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} >
+              <div className="col x-center center">
+                <h3>DANGER</h3>
+                <p><br></br>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
+                <div style={{display:"inline-block"}}>
+                  <div className="inline-button">
+                    <button onClick={() => { this.setState({open: false}) }} style={{width:"100px", marginRight:"15px"}}>Cancel</button>
+                  </div>
+                  <div className="inline-button">
+                    <button className="reset-highlight" onClick={this.resetEventHandler.bind(this)} style={{margin:"0", width: "100px"}}>Reset</button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </Modal>
+            </Modal>
+          </div>
         </div>
-        <h3>
-          Close the Bracket
-        </h3>
-        <p>
-          Closing the bracket will generate a leaderboard for the bracket and push statistics on performance to individual players. This action will also allow you to close your event successfully. This action cannot be taken while there are still matches to be played.
-        </p>
-        <div>
-          <button onClick={this.closeBracketHandler.bind(this)}>Close</button>
+        <div className="logistic-layout">
+          <h5 style={{borderBottom:"solid"}}>
+            Close the Bracket
+          </h5>
+          <p>
+            Closing the bracket will generate a leaderboard for the bracket and push statistics on performance to individual players. This action will also allow you to close your event successfully. This action cannot be taken while there are still matches to be played.
+          </p>
+          <div>
+            <button className ="reset-highlight" onClick={this.closeBracketHandler.bind(this)} style={{width:"100px", marginBottom:15}}>Finalize</button>
+          </div>
         </div>
         {
           // bracket.isComplete ? (
