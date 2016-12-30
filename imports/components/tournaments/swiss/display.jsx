@@ -161,7 +161,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
+                    this.props.rounds[this.props.rounds.length-1].players.sort((a, b) => {
+                    return b.score - a.score;
+                    }).map((playerObj, i) => {
                       return (
                         <div className="row swiss-row">
                           <div className="swiss-entry">

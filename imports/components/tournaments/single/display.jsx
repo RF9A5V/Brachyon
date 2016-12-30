@@ -16,11 +16,21 @@ export default class SingleDisplay extends Component {
         <div className="row">
           {
             Array(this.props.rounds[0].length).fill("").map((_, i) => {
-              return (
-                <div style={{width: 150, textAlign: "center"}}>
-                  Round { i + 1 }
-                </div>
-              )
+              if(i == this.props.rounds[0].length-1)
+              {
+                return (
+                  <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                    Grand Finals
+                  </div>
+                )
+              }
+              else{
+                return (
+                  <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                    Round { i + 1 }
+                  </div>
+                )
+              }
             })
           }
         </div>

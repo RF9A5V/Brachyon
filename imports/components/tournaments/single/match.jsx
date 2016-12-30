@@ -93,7 +93,7 @@ export default class MatchBlock extends Component {
   render() {
     var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
     return (
-      <div className="match-block col center" style={{height: 50 * Math.pow(2, i)}}>
+      <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}>
         <div className="match-highlight">
           {
             match.playerOne == match.playerTwo && i == 0 ? (
@@ -110,17 +110,19 @@ export default class MatchBlock extends Component {
                     ) : (
                       () => {}
                     )
-                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>  
                     <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
-                      {
-                        p == null ? (
-                          "TBD"
-                        ) : (
-                          this.getUsername(p)
-                        )
-                      }
-                    </span>
-                  </div>
+                      <div className={p==null? (""): (this.getUsername(p).length<19?(""):("marquee"))}>
+                        {
+                          p == null ? (
+                            "TBD"
+                          ) : (
+                            this.getUsername(p)
+                          )
+                        }
+                        </div>
+                      </span>
+                    </div>
                 )
               })
             )
@@ -131,9 +133,9 @@ export default class MatchBlock extends Component {
             ""
           ) : (
             j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20)-6, top: (50 * Math.pow(2, i - 1) - 2.5)+6, left: 162.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20), top: (50 * Math.pow(2, i - 1) - 2.5), left: 164.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             ) : (
-              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20), bottom: 50 * Math.pow(2, i - 1) - 5, left: 162.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20)-5, bottom: (50 * Math.pow(2, i - 1) - 2.5) +5, left: 164.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
             )
           )
         }
@@ -143,18 +145,21 @@ export default class MatchBlock extends Component {
             (
               <div className="col" style={{height: "100%"}}>
                 <div className="self-end">
-                  <FontAwesome name="times" size="2x" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                  <FontAwesome className ="pointerChange" name="times" size="2x" onClick={() => { this.setState({open: false, chosen: 2}) }} />
                 </div>
                 <div className="row col-1">
                   <div className="col x-center col-1">
                     <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                    <h5 style={{color: "#FF6000"}}>{ this.getUsername(match.playerOne) }</h5>
+                    <h5 className={this.getUsername(match.playerOne)==null?(""):
+                      (this.getUsername(match.playerOne).length<15)?(""):("marquee")} 
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerOne) }
+                    </h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
+                      <FontAwesome className ="pointerChange" style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
                       <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                         { match.scoreOne }
                       </div>
-                      <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
+                      <FontAwesome className="pointerChange" style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
                     </div>
                     {
                       match.scoreOne > match.scoreTwo ? (
@@ -167,13 +172,16 @@ export default class MatchBlock extends Component {
                   </div>
                   <div className="col x-center col-1">
                     <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                    <h5 style={{color: "#FF6000"}}>{ this.getUsername(match.playerTwo) }</h5>
+                    <h5 className={this.getUsername(match.playerTwo)==null?(""):
+                      (this.getUsername(match.playerTwo).length<15)?(""):("marquee")} 
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerTwo) }
+                    </h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
+                      <FontAwesome className="pointerChange" style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
                       <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
                         { match.scoreTwo }
                       </div>
-                      <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
+                      <FontAwesome className="pointerChange" style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
                     </div>
                     {
                       match.scoreTwo > match.scoreOne ? (
@@ -188,7 +196,7 @@ export default class MatchBlock extends Component {
             ):(
               <div className="col" style={{height: "100%"}}>
                 <div className="self-end">
-                  <FontAwesome name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
+                  <FontAwesome className="pointerChange" name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
                 </div>
                 <button onClick={(this.onUndoUserClick()).bind(this)}>Undo</button>
               </div>
