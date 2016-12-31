@@ -12,7 +12,7 @@ if(Meteor.isServer && !Meteor.isDevelopment) {
   });
   gcs = Storage({
     projectId: Meteor.settings.googleCloud.projectId,
-    keyFilename: Meteor.absolutePath + "/private/gc_key.json"
+    credentials: require("../private/gc_key.json")
   })
   var bucketName = Meteor.isDevelopment ? "brachyon-test" : "brachyon-prod";
   bucket = gcs.bucket(bucketName);
