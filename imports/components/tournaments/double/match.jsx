@@ -159,11 +159,13 @@ export default class MatchBlock extends Component {
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerOne) }
                     </h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome className ="pointerChange" style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
-                      <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
-                        { match.scoreOne }
+                      <div className="row center x-center" style={{marginTop:10}}>
+                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
+                        <div className="row center x-center button-score">
+                          { match.scoreOne }
+                        </div>
+                        <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
                       </div>
-                      <FontAwesome className ="pointerChange" style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
                     </div>
                     {
                       match.scoreOne > match.scoreTwo ? (
@@ -181,11 +183,13 @@ export default class MatchBlock extends Component {
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerTwo) }
                     </h5>
                     <div className="col center x-center col-1">
-                      <FontAwesome className ="pointerChange" style={{fontSize: 58}} name="caret-up" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
-                      <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
-                        { match.scoreTwo }
+                      <div className="row center x-center" style={{marginTop:10}}>
+                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
+                        <div className="row center x-center button-score">
+                          { match.scoreTwo }
+                        </div>
+                        <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
                       </div>
-                      <FontAwesome className ="pointerChange" style={{fontSize: 58}} name="caret-down" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
                     </div>
                     {
                       match.scoreTwo > match.scoreOne ? (
