@@ -162,14 +162,9 @@ Meteor.publish("userSearch", function(usernameSubstring) {
     username: 1,
     profile: 1
   });
-  var profileImages = ProfileImages.find({
-    _id: {
-      $in: users.fetch().map((user) => { return user.profile.image })
-    }
-  });
   return [
-    users,
-    profileImages.cursor
+    users
+    
   ];
 })
 

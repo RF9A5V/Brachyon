@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
+import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
+
 import SideTabs from "../public/side_tabs.jsx";
 import UserDetailsPanel from "./options/user_details.jsx";
 import EventOptionsPanel from "./options/event_options.jsx";
@@ -28,13 +30,46 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
   }
 
   items() {
-    return (
-      [
-        "User Details",
-        "Games Played",
-        "Connected Accounts"
+
+    var defaultItems = [];
+    
+    defaultItems.push({
+      text: "User Details",
+      icon: "cog",
+      subitems: [
+        {
+          component: UserDetailsPanel
+          
+        }
       ]
-    );
+    })
+    defaultItems.push({
+      text: "Games Played",
+      icon: "cog",
+      subitems: [
+        {
+          component: GameOptionsPanel
+          
+        }
+      ]
+    })
+    defaultItems.push({
+      text: "Connected Accounts",
+      icon: "cog",
+      subitems: [
+        {
+          component: OAuthOptionsPanel
+          
+        }
+      ]
+    })
+
+    
+
+
+
+    return defaultItems;
+    
   }
 
   panels() {
@@ -55,7 +90,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     }
     return (
       <div className="box col">
-        <SideTabs items={this.items()} panels={this.panels()} />
+        <TabController items={this.items()} />
       </div>
     );
   }
