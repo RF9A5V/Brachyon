@@ -76,43 +76,50 @@ export default class SwissModal extends Component {
               <div className="self-end">
                 <FontAwesome name="times" size="2x" onClick={this.closeModal.bind(this)} />
               </div>
-              <div className="row center">
-                <h3>Set the Winner</h3>
-              </div>
               <div className="row flex-padaround col-1">
                 <div className="col center x-center">
                   <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 style={{color: "#FF6000"}}>
-                    {match.playerOne}
+                  <h5 className={(match.playerOne)==null?(""):
+                      ((match.playerOne).length<15)?(""):("marquee")} 
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerOne }
                   </h5>
-                  <FontAwesome name="caret-up" style={{fontSize: 58}} onClick={() => {this.updateMatch("p1", true)}} />
-                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
+
+                  <div className="row center x-center" style={{marginTop:10}}>
+                    <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p1", false)}} />
+                    <div className="row center x-center button-score">
                     { match.p1score }
+                    </div>
+                    <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p1", true)}} />
                   </div>
-                  <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.updateMatch("p1", false)}} />
+                  
                 </div>
                 <div className="col x-center center">
                   <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 style={{color: "#FF6000"}}>
-                    {match.playerTwo}
+                  <h5 className={(match.playerTwo)==null?(""):
+                      ((match.playerTwo).length<15)?(""):("marquee")} 
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerTwo}
                   </h5>
-                  <FontAwesome name="caret-up" style={{fontSize: 58}} onClick={() => {this.updateMatch("p2", true)}} />
-                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333"}}>
+                  
+                  <div className="row center x-center" style={{marginTop:10}}>
+                    <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p2", false)}} />
+                    <div className="row center x-center button-score">
                     { match.p2score }
+                    </div>
+                    <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p2", true)}} />
                   </div>
-                  <FontAwesome style={{fontSize: 58}} name="caret-down" onClick={() => {this.updateMatch("p2", false)}} />
+                  
                 </div>
               </div>
               <div className="col">
-                <div className="row center" style={{marginBottom: 20}}>
-                  <h3>Ties</h3>
+                <div className="row center" >
+                  <h5>Ties</h5>
                 </div>
-                <div className="row center x-center" style={{marginBottom: 20}}>
-                  <FontAwesome name="caret-left" style={{fontSize: 58}} onClick={() => {this.updateMatch("ties", false)}} />
-                  <div className="row center x-center" style={{fontSize: 24, padding: 10, backgroundColor: "#333", margin: "0 10px"}}>
+                <div className="row center x-center" >
+                  <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("ties", false)}} />
+                  <div className="row center x-center button-score">
                     { match.ties }
                   </div>
-                  <FontAwesome name="caret-right" style={{fontSize: 58}} onClick={() => {this.updateMatch("ties", true)}}  />
+                  <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("ties", true)}}  />
                 </div>
               </div>
               <div className="row center">
