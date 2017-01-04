@@ -2,18 +2,21 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
-import OverviewPanel from "/imports/components/sandbox/overview.jsx";
+import OverviewPanel from "./hubs/overview.jsx";
 
 import Games from "/imports/api/games/games.js";
 
-export default class Sandbox extends TrackerReact(Component) {
+export default class GameHubScreen extends TrackerReact(Component) {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      game: Meteor.subscribe("game", "sfv"),
-      ready: false
+      game: Meteor.subscribe("gamehub", props.params.slug)
     }
+  }
+
+  componentWillUnmount() {
+    this.state.game.stop();
   }
 
   items() {
@@ -26,21 +29,21 @@ export default class Sandbox extends TrackerReact(Component) {
             component: OverviewPanel
           }
         ]
-      },
-      {
-        text: "Wiki",
-        icon: "wikipedia-w",
-        subitems: [
-          {
-            component: OverviewPanel
-          }
-        ]
       }
+      // {
+      //   text: "Wiki",
+      //   icon: "wikipedia-w",
+      //   subitems: [
+      //     {
+      //       component: OverviewPanel
+      //     }
+      //   ]
+      // }
     ]
   }
 
   componentHeader() {
-    var game = Games.findOne();
+    var game = Games.findOne({ slug: this.props.params.slug });
     return (
       <div className="col center x-center" style={{padding: 10, borderBottom: "solid 2px #666", marginBottom: 10}}>
         <img src={game.bannerUrl} style={{width: 180, height: "auto", marginBottom: 10}} />

@@ -15,7 +15,7 @@ export default class BlockContainer extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event.slug}/show`);
+          browserHistory.push(`/event/${event.slug}`);
         }
         else {
           browserHistory.push(`/events/${event.slug}/edit`);

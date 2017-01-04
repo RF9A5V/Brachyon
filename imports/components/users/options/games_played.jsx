@@ -16,7 +16,7 @@ class GameOption extends Component {
           <button>Save</button>
         </div>
         <label>{ this.props.name }</label>
-        <img src={GameBanners.findOne(this.props.banner).link()} style={{width: 400, height: "auto"}} />
+        <img src={this.props.bannerUrl} style={{width: 400, height: "auto"}} />
       </div>
     )
   }
@@ -42,7 +42,7 @@ export default class GameOptionsPanel extends Component {
   selectedImage() {
     if(this.state.image){
       return (
-        <img style={{width: 400, height: "auto"}} src={GameBanners.findOne(this.state.image).link()} />
+        <img style={{width: 400, height: "auto"}} src={Games.findOne(game).bannerUrl} />
       )
     }
     return "";
