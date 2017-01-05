@@ -64,7 +64,7 @@ export default class LeagueDisplay extends Component {
                           <img src={this.profileImageOrDefault(league.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(league.owner).username }
                         </div>
                         <span style={{fontSize: 12}}>{
-                          0
+                          league.leaderboard[0].length
                         }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
                       </div>
                       <div className="row flex-pad">
