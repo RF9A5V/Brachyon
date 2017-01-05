@@ -14,6 +14,13 @@ export default class DetailsPanel extends Component {
     };
   }
 
+  componentWillReceiveProps(next) {
+    console.log(next.attrs.details);
+    this.setState({
+      titleLength: next.attrs.details.name.length
+    })
+  }
+
   componentWillUnmount() {
     if(this.refs.image && this.refs.image.hasValue()) {
       this.props.attrs.details.image = {
@@ -58,7 +65,7 @@ export default class DetailsPanel extends Component {
           <div className="col col-2" style={{marginRight: 20}}>
             <div className="row x-center">
               <h5 style={{marginRight: 20}}>Event Title</h5>
-              <span>{ this.state.titleLength } / 50</span>
+              <span>{ (this.props.attrs.details.name || "").length } / 50</span>
             </div>
             <input type="text" defaultValue={this.props.attrs.details.name} onChange={(e) => {
               var value = e.target.value;
@@ -73,7 +80,15 @@ export default class DetailsPanel extends Component {
           </div>
           <div className="col col-1">
             <h5>Season</h5>
-            <input onChange={(e) => { this.props.attrs.details.season = parseInt(e.target.value) }} type="number" defaultValue={1} />
+            <input onChange={(e) => {
+              var val = parseInt(e);
+              if(isNaN(val)) {
+                e.target.value = e.target.value.slice(0, e.target.value.length - 1);
+              }
+              else {
+                this.props.attrs.details.season = parseInt(e.target.value)
+              }
+            }} type="text" defaultValue={1} />
           </div>
         </div>
       )
@@ -91,6 +106,7 @@ export default class DetailsPanel extends Component {
       )
     }
     if(this.state.option == 3) {
+      console.log(this.props.attrs.details.image);
       return (
         <div className="row x-center">
           <ImageForm
