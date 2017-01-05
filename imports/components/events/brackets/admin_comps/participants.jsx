@@ -4,6 +4,9 @@ import FontAwesome from "react-fontawesome";
 import BracketOptionsPanel from "../options.jsx";
 
 import Instances from "/imports/api/event/instance.js";
+import Brackets from "/imports/api/brackets/brackets.js";
+
+import StartBracketAction from "./start.jsx";
 
 export default class AddPartipantAction extends Component {
 
@@ -40,12 +43,18 @@ export default class AddPartipantAction extends Component {
     this.forceUpdate();
   }
 
+  checkBracket(participants){
+    if (this.state.participants.length < 4){
+
+    }
+  }
+
   render() {
     var participants = this.state.participants;
     return (
       <div>
         <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
-        <div className="col participant-table">
+        <div className="col participant-table" style={{marginTop:"10px"}}>
           <div className="participant-row">
             <div className="col-1">
               Alias
@@ -75,6 +84,11 @@ export default class AddPartipantAction extends Component {
               )
             })
           }
+        </div>
+        <div className = { ((this.props.bracket.startedAt != null)) ? 
+          ("start-button-hide") :
+          (this.state.participants.length < 3 ? ("start-button-hide"):("")) } style={{marginTop:"20px"}}>
+          <StartBracketAction id ={this.state.id} index={this.props.index} />
         </div>
       </div>
     )
