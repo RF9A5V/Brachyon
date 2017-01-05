@@ -14,9 +14,9 @@ Meteor.methods({
         description
       },
       roles: {
-        owners: [],
-        admins: [],
-        members: []
+        "Owner": [],
+        "Admin": [],
+        "Member": []
       }
     });
 
