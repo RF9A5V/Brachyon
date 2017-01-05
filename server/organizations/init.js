@@ -9,12 +9,14 @@ Meteor.methods({
 
     var org = Organizations.insert({
       name,
-      owners: [owner],
+      owner: owner,
       details: {
         description
       },
       roles: {
-        admins: []
+        owners: [],
+        admins: [],
+        members: []
       }
     });
 
