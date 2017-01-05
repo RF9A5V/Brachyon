@@ -105,8 +105,15 @@ Meteor.publish("profileImage", (id) => {
 
 Meteor.publish("discoverEvents", function(){
   var events = Events.find({published: true});
-  var eventOwnerIds = events.map(function(event){
-    return event.owner;
+  var userIds = [];
+  var orgIds = [];
+  events.forEach(e => {
+    if(e.orgEvent) {
+      orgIds.push(e.owner);
+    }
+    else {
+      userIds.push(e.owner);
+    }
   });
   var gameSet = new Set();
   var instances = Instances.find({_id: { $in: events.map((e) => {
@@ -122,7 +129,8 @@ Meteor.publish("discoverEvents", function(){
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
   return [
     Events.find({published: true}),
-    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
+    Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
+    Organizations.find({ _id: { $in: orgIds } }),
     games,
     instances
   ]
