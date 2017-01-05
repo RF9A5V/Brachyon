@@ -365,7 +365,7 @@ var OrganizeSuite = {
       }
     }
     var tempb = [];
-    var tempc = [];
+    var tempc = {};
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
