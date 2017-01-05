@@ -9,7 +9,7 @@ Meteor.methods({
 
     var org = Organizations.insert({
       name,
-      owner,
+      owners: [owner],
       details: {
         description
       },
