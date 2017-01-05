@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import Games from "/imports/api/games/games.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
@@ -34,9 +36,21 @@ Meteor.publish("unapprovedGames", () => {
 
 Meteor.publish("game", (slug) => {
   var game = Games.findOne({slug});
-  var image = GameBanners.find({ _id: game.banner })
   return [
-    Games.find({slug}),
-    image.cursor
+    Games.find({slug})
+  ]
+})
+
+Meteor.publish("gamehub", (slug) => {
+  var g = Games.findOne({ slug });
+  var allInstances = Events.find({ isComplete: false, "details.datetime": { $gte: new Date(), $lte: moment().add(30, "days").toDate() } }).map(e => { return e.instances.pop() });
+  var instances = Instances.find({ _id: { $in: allInstances }, "brackets": { $elemMatch: { game: g._id } } });
+  var events = Events.find({ instances: { $in: instances.map(i => {return i._id}) } });
+  var users = Meteor.users.find({ _id: { $in: events.map(e => { return e.owner }) } }, { username: 1, "profile.imageUrl": 1 });
+  return [
+    Games.find({ slug }),
+    instances,
+    events,
+    users
   ]
 })
