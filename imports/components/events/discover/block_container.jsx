@@ -28,9 +28,26 @@ export default class BlockContainer extends Component {
     return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
-  profileImageOrDefault(id) {
-    var user = Meteor.users.findOne(id);
-    return user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
+  ownerDetails(event) {
+    var imgUrl, name;
+    if(event.orgEvent) {
+      var org = Organizations.findOne(event.owner);
+      imgUrl = org.profileUrl;
+      name = org.name;
+    }
+    else {
+      var user = Meteor.users.findOne(event.owner);
+      imgUrl = user.imageUrl;
+      name = user.username;
+    }
+    if(!imgUrl) {
+      imgUrl = "/images/profile.jpg";
+    }
+    return (
+      <div className="row x-center" style={{fontSize: 12}}>
+        <img src={imgUrl} style={{width: 12.5, height: "auto", marginRight: 5}} />{ name }
+      </div>
+    )
   }
 
   onPencilClick(event) {
@@ -97,9 +114,7 @@ export default class BlockContainer extends Component {
                   <div className="event-block-content">
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-                        <div className="row x-center" style={{fontSize: 12}}>
-                          <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
-                        </div>
+                        { this.ownerDetails(event) }
                         <span style={{fontSize: 12}}>{
                           (() => {
                             var count = 0;
