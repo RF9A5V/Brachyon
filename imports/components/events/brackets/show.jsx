@@ -34,6 +34,24 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
     var defaultItems = [];
+    if(bracket._id) {
+      defaultItems = defaultItems.concat([
+        {
+          text: "Bracket",
+          icon: "sitemap",
+          subitems: [
+            {
+              component: BracketPanel,
+              args: {
+                id: bracket._id,
+                format: instance.brackets[this.props.params.bracketIndex].format.baseFormat,
+                rounds: Brackets.findOne(bracket._id)
+              }
+            }
+          ]
+        }
+      ])
+    }
     if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
@@ -62,24 +80,6 @@ export default class BracketShowScreen extends TrackerReact(Component) {
           }
         ]
       })
-    }
-    if(bracket._id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketPanel,
-              args: {
-                id: bracket._id,
-                format: instance.brackets[this.props.params.bracketIndex].format.baseFormat,
-                rounds: Brackets.findOne(bracket._id)
-              }
-            }
-          ]
-        }
-      ])
     }
     return defaultItems;
   }

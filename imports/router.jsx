@@ -28,6 +28,7 @@ import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx"
 import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 import GameHubScreen from "../imports/components/games/hub.jsx";
+import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -54,7 +55,7 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="event/:slug" component={OrganizeEventScreen} />
+      <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
       <Route path="events/discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
@@ -70,6 +71,7 @@ export const renderRoutes = () => (
       <Route path="events/:slug/admin" component={EventAdminScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="events/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
     </Route>
   </Router>
 )
