@@ -29,6 +29,7 @@ export default class MatchShowScreen extends Component {
 
   ties() {
     var match = Brackets.findOne().rounds[this.props.params.round - 1].matches[this.props.params.match - 1];
+    var format = Instances.findOne().brackets[this.props.params.bracketIndex].format.baseFormat;
     var cb = (multi) => {
       var id = Brackets.findOne()._id;
       var round = this.props.params.round - 1;
@@ -37,7 +38,7 @@ export default class MatchShowScreen extends Component {
       var p1score = match.p1score;
       var p2score = match.p2score;
       var ties = Math.max(match.ties + (1 * multi), 0);
-      Meteor.call("events.update_match", id, round, matchIndex, score, p1score, p2score, ties, (err) => {
+      Meteor.call(format == "swiss" ? "events.update_match" : "events.update_roundmatch", id, round, matchIndex, score, p1score, p2score, ties, (err) => {
         if(err) {
           toastr.error(err.reason, "Error!");
         }

@@ -18,6 +18,7 @@ export default class GroupFormat extends Component {
   }
 
   onMatchUpdateScore(fieldToUpdate, multi) {
+    var format = Instances.findOne().brackets[this.props.params.bracketIndex].format.baseFormat;
     var match = Brackets.findOne().rounds[this.props.params.round - 1].matches[this.props.params.match - 1];
     var id = Brackets.findOne()._id;
     var round = this.props.params.round - 1;
@@ -26,7 +27,7 @@ export default class GroupFormat extends Component {
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
     var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
-    Meteor.call("events.update_match", id, round, matchIndex, score, p1score, p2score, ties, (err) => {
+    Meteor.call(format == "swiss" ? "events.update_match" : "events.update_roundmatch", id, round, matchIndex, score, p1score, p2score, ties, (err) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
