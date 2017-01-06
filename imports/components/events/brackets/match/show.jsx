@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
+import BracketFormat from "./bracket_format.jsx";
+import GroupFormat from "./group_format.jsx";
+
 export default class MatchShowScreen extends Component {
 
   constructor(props) {
@@ -24,103 +27,38 @@ export default class MatchShowScreen extends Component {
     }
   }
 
-  getProfileImage(id) {
-    var participants = Instances.findOne().brackets[0].participants;
-    var user = null;
-    for(var i in participants) {
-      if(participants[i].alias == id) {
-        user = Meteor.users.findOne(participants[i].id);
-        break;
-      }
-    }
-    if(user && user.profile.imageUrl) {
-      return user.profile.imageUrl;
-    }
-    return "/images/profile.png";
-  }
-
-  onMatchUpdateScore(isPlayerOne, value) {
-    var id = Brackets.findOne()._id;
-    var bracket = this.props.params.bracket - 1;
-    var round = this.props.params.round - 1;
-    var match = this.props.params.match - 1;
-    Meteor.call("events.brackets.updateMatchScore", id, bracket, round, match, isPlayerOne, value, (err) => {
-      if(err) {
-        toastr.error(err.reason, "Error!");
-      }
-      this.forceUpdate();
-    })
-  }
-
-  onMatchUserClick(index) {
-    return (e) => {
-      e.preventDefault();
-      if (index <= 2)
-      {
-        var id = Brackets.findOne()._id;
-        var bracket = this.props.params.bracket - 1;
-        var round = this.props.params.round - 1;
-        var match = this.props.params.match - 1;
-        Meteor.call("events.advance_match", id, bracket, round, match, index, function(err) {
-          if(err){
-            toastr.error("Couldn't advance this match.", "Error!");
-          }
-          else {
-            toastr.success("Player advanced to next round!", "Success!");
-          }
-        })
-      }
-    }
-  }
-
-  score(player, isP1) {
-    if(Meteor.userId() == Events.findOne().owner) {
-      var match = Brackets.findOne().rounds[this.props.params.bracket - 1][this.props.params.round - 1][this.props.params.match - 1];
-      return (
-        <div className="col x-center">
-          {
-            !match.winner ? (
-              <FontAwesome size="2x" name="caret-up" onClick={() => {
-                this.onMatchUpdateScore(isP1, 1)
-              }} />
-            ) : (
-              ""
-            )
-          }
-
-          <h1 style={{margin: "5px 0"}}>{player.score}</h1>
-          {
-            !match.winner ? (
-              player.score <= 0 ? (
-                <FontAwesome size="2x" name="caret-down" style={{color: "#666"}} />
-              ) : (
-                <FontAwesome size="2x" name="caret-down" onClick={() => {
-                  this.onMatchUpdateScore(isP1, -1)
-                }} />
-              )
-            ) : (
-              ""
-            )
-          }
-        </div>
-      )
-    }
-    else {
-      return (
-        <h1>{ match.score }</h1>
-      )
-    }
-  }
-
-  winButton(player, index) {
-    var match = Brackets.findOne().rounds[this.props.params.bracket - 1][this.props.params.round - 1][this.props.params.match - 1];
-    if(Meteor.userId() == Events.findOne().owner && !match.winner) {
-      return (
-        <button onClick={this.onMatchUserClick(index)}>Declare Winner</button>
-      )
+  ties() {
+    var match = Brackets.findOne().rounds[this.props.params.round - 1].matches[this.props.params.match - 1];
+    var cb = (multi) => {
+      var id = Brackets.findOne()._id;
+      var round = this.props.params.round - 1;
+      var matchIndex = this.props.params.match - 1;
+      var score = 3;
+      var p1score = match.p1score;
+      var p2score = match.p2score;
+      var ties = Math.max(match.ties + (1 * multi), 0);
+      Meteor.call("events.update_match", id, round, matchIndex, score, p1score, p2score, ties, (err) => {
+        if(err) {
+          toastr.error(err.reason, "Error!");
+        }
+        this.forceUpdate();
+      })
     }
     return (
-      <div></div>
+      <div>
+        <h5 style={{marginBottom: 10}}>Ties</h5>
+        <div className="row center x-center">
+          {
+            match.ties <= 0 ? (
+              <FontAwesome name="caret-left" size="2x" style={{color: "#666"}} />
+            ) : (
+              <FontAwesome name="caret-left" size="2x" onClick={() => { cb(-1) }} />
+            )
+          }
+          <h5 style={{margin: "0 10px"}}>{ match.ties }</h5>
+          <FontAwesome name="caret-right" size="2x" onClick={() => { cb(1) }} />
+        </div>
+      </div>
     )
   }
 
@@ -130,63 +68,66 @@ export default class MatchShowScreen extends Component {
         <div></div>
       )
     }
-    var match = Brackets.findOne().rounds[this.props.params.bracket - 1][this.props.params.round - 1][this.props.params.match - 1];
-    console.log(match);
-    var players = [
-      {
-        name: match.playerOne,
-        score: match.scoreOne
-      },
-      {
-        name: match.playerTwo,
-        score: match.scoreTwo
-      }
-    ];
-    var comps = players.map((p, i) => {
-      return (
-        <div className="col center x-center">
-          <h3 style={{marginBottom: 10}}>{ p.name }</h3>
-          {
-            i == 0 ? (
-              <div className="row x-center" style={{marginBottom: 20}}>
-                <img src={this.getProfileImage(p.name)} style={{width: 100, height: 100, borderRadius: "100%", marginRight: 25}} />
-                { this.score(p, i == 0) }
-              </div>
-            ) : (
-              <div className="row x-center" style={{marginBottom: 20}}>
-                { this.score(p, i == 0) }
-                <img src={this.getProfileImage(p.name)} style={{width: 100, height: 100, borderRadius: "100%", marginLeft: 25}} />
-              </div>
-            )
-          }
-          {
-            this.winButton(p, i)
-          }
-          {
-            match.winner && match.winner == p.name ? (
-              <span className="row x-center center" style={{color: "#FF6000", fontSize: 16}}>
-                <FontAwesome name="star" size="2x" style={{color: "#FF6000", marginRight: 10}} />
-                Winner
-              </span>
-            ) : (
-              <div style={{width: 10, height: 32}}></div>
-            )
-          }
-        </div>
-      )
-    });
+    var comps = [];
+    // Warning: This'll probably have to change when we deal with complex bracket systems.
+    var format = Instances.findOne().brackets[this.props.params.bracketIndex].format.baseFormat;
+    if(format == "single_elim" || format == "double_elim") {
+      var match = Brackets.findOne().rounds[this.props.params.bracket - 1][this.props.params.round - 1][this.props.params.match - 1];
+      var players = [
+        {
+          name: match.playerOne,
+          score: match.scoreOne
+        },
+        {
+          name: match.playerTwo,
+          score: match.scoreTwo
+        }
+      ];
+      comps = players.map((p, i) => {
+        return (
+          <BracketFormat params={this.props.params} p={p} i={i} parentUpdate={this.forceUpdate.bind(this)} />
+        );
+      });
+    }
+    else {
+      var match = Brackets.findOne().rounds[this.props.params.round - 1].matches[this.props.params.match - 1];
+      var players = [
+        {
+          name: match.playerOne,
+          score: match.p1score
+        },
+        {
+          name: match.playerTwo,
+          score: match.p2score
+        }
+      ];
+      comps = players.map((p, i) => {
+        return (
+          <GroupFormat params={this.props.params} p={p} i={i} parentUpdate={this.forceUpdate.bind(this)} />
+        )
+      })
+    }
     comps.splice(1, 0, (
       <h1>VERSUS</h1>
-    ))
+    ));
     return (
-      <div className="row flex-pad x-center" style={{width: "50%", height: "calc(100vh - 110px)", margin: "0 auto"}}>
+      <div className="col center x-center" style={{height: "calc(100vh - 110px)"}}>
         <div style={{position: "fixed", left: 20, top: 80}}>
           <button onClick={() => { browserHistory.goBack() }}>
             Back
           </button>
         </div>
+        <div className="row flex-pad x-center" style={{width: "50%", margin: "0 auto"}}>
+          {
+            comps
+          }
+        </div>
         {
-          comps
+          (format == "swiss" || format == "round_robin") && !match.played ? (
+            this.ties()
+          ) : (
+            ""
+          )
         }
       </div>
     )

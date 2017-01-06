@@ -128,7 +128,7 @@ export default class SwissModal extends Component {
                 <button onClick={ () => {
                   var event = Events.findOne();
                   var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                  browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                  browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${1}-${this.props.page + 1}-${this.props.i + 1}`)
                 }}>View</button>
               </div>
               <div className="row center">
