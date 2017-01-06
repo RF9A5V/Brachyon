@@ -9,17 +9,24 @@ import Brackets from "/imports/api/brackets/brackets.js"
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
-export default class BracketShowScreen extends TrackerReact(Component) {
+export default class BracketShowScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
-          var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
+          this.setState({
+            bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[this.props.params.bracketIndex].id, {
+              onReady: () => {
+                this.setState({
+                  ready: true
+                })
+              }
+            })
+          })
         }
-      }),
-      ready: false
+      })
     }
   }
 
@@ -88,19 +95,6 @@ export default class BracketShowScreen extends TrackerReact(Component) {
     if(this.state.ready) {
       return (
         <TabController items={this.items()} />
-      );
-    }
-    if(this.state.event.ready()) {
-      var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex].id;
-      var bracket = Meteor.subscribe("brackets", bracketID, {
-        onReady: () => {
-          this.setState({ ready: true, bracket });
-        }
-      });
-      return (
-        <div>
-          Loading...
-        </div>
       );
     }
     else if(!this.state.ready) {

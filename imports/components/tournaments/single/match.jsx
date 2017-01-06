@@ -214,12 +214,12 @@ export default class MatchBlock extends Component {
                   <FontAwesome className="pointerChange" name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
                 </div>
                 <div className="row x-center">
-                <button onClick={(this.onUndoUserClick()).bind(this)} style={{marginRight: 20}}>Undo</button>
-                <button onClick={ () => {
-                  var event = Events.findOne();
-                  var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                  browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
-                }}>View</button>
+                  <button onClick={(this.onUndoUserClick()).bind(this)} style={{marginRight: 20}}>Undo</button>
+                  <button onClick={ () => {
+                    var event = Events.findOne();
+                    var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+                    browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                  }}>View</button>
                 </div>
               </div>
             )
