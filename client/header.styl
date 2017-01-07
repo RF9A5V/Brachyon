@@ -10,15 +10,15 @@ header
   top 0
   left 0
   z-index 2
-  padding 20px 20px
+  padding 10px
   display flex
   justify-content flex-end
-  height 60px
+  height 50px
   background rgba(0, 0, 0, 0.9)
 
 
 header img
-  width 60px
+  width 50px
   height auto
 
 
@@ -84,10 +84,39 @@ header img:hover
 .hub.active
   border-bottom #FF6000 2px solid
 
-
 .hub
-  font-size 18px
+  font-size 14px
   margin 0 10px
   padding 4px 0 2px 0
   border-bottom transparent 2px solid
   color white
+
+.hub:first-child
+  margin-left 0px
+
+.org-sidebar
+  position: fixed
+  height: calc(100vh - 50px);
+  background-color: #111
+  right: 0;
+  top: 50px;
+  padding 0 10px
+
+.org-option
+  padding: 10px
+  padding-right 0;
+
+.org-option img
+  width 50px;
+  height 50px;
+  border-radius: 100%;
+  margin-right: 10px;
+
+.org-option span
+  text-overflow ellipsis
+
+.org-option:hover
+  cursor: pointer
+
+.org-option:hover span
+  color: #AAA

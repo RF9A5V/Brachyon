@@ -81,8 +81,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
                 Meteor.user().profile.games.slice(0, 3).map((game, i) => {
                   var g = Games.findOne(game);
                   return (
-                    <div className="user-game-icon" style={{backgroundImage: `url(${g.bannerUrl})`}} key={i}>
-
+                    <div className="user-game-icon" style={{backgroundImage: `url(${game.bannerUrl})`}} key={i}>
                     </div>
                   );
                 })
