@@ -72,13 +72,10 @@ export default class Header extends TrackerReact(Component) {
           <Link to="/dashboard">
             <div className="row x-center">
               <div style={{position: "relative"}}>
-                <img style={{width: 50, height: 50, borderRadius: "100%", margin: "0 10px"}} src={this.imgOrDefault()} />
+                <img style={{width: 40, height: 40, borderRadius: "100%", margin: "0 10px"}} src={this.imgOrDefault()} />
                 <div style={{position: "absolute", bottom: -5, right: 5}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
                   <NotyDropdown open={this.state.notificationsMenuOpen} />
                 </div>
-              </div>
-              <div className="col">
-                <span className="bold" style={{fontSize: 20, marginRight: 20, marginBottom: 5}}>{Meteor.user().profile.alias || Meteor.user().username}</span>
               </div>
             </div>
           </Link>
@@ -111,10 +108,9 @@ export default class Header extends TrackerReact(Component) {
             clearTimeout(this.state.timeout);
           }
         }} onClick={this.removeNotifications.bind(this)}>
-          <div className="row x-center">
-            <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
-            <div style={{marginLeft: 10, marginRight: 10}}>
-              <Link to="/events/discover" className={`hub ${window.location.pathname == "/events/discover" ? "active" : ""}`}>
+          <div className="row x-center col-1">
+            <div style={{marginLeft: 0, marginRight: 10}}>
+              <Link to="/discover" className={`hub ${window.location.pathname == "/discover" ? "active" : ""}`}>
                 DISCOVER
               </Link>
               {
@@ -137,11 +133,15 @@ export default class Header extends TrackerReact(Component) {
                 GAMES
               </Link>
 
-
               {/*
-              <Link className="hub" to="/events/discover">
+              <Link className="hub" to="/discover">
                 MARKET
               </Link>*/}
+            </div>
+          </div>
+          <div className="col-1 row center">
+            <div>
+              <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
             </div>
           </div>
           <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
