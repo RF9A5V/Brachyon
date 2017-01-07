@@ -2,7 +2,7 @@
 
   "galaxy.meteor.com": {
      "env": {
-       "ROOT_URL": "https://galaxy.brachyon.com",
+       "ROOT_URL": "https://www.brachyon.com",
        "CDN_URL": "https://cdn-604a.kxcdn.com",
        "MONGO_URL": "mongodb://application:7ej3C5Gb2msB5VGT@ds117168-a0.mlab.com:17168,ds117168-a1.mlab.com:17168/brachyon-main?replicaSet=rs-ds117168"
      }

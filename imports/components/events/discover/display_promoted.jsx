@@ -16,6 +16,28 @@ export default class DisplayPromotedEvent extends Component {
     return "/images/bg.jpg";
   }
 
+  ownerDetails(event) {
+    var imgUrl, name;
+    if(event.orgEvent) {
+      var org = Organizations.findOne(event.owner);
+      imgUrl = org.profileUrl;
+      name = org.name;
+    }
+    else {
+      var user = Meteor.users.findOne(event.owner);
+      imgUrl = user.imageUrl;
+      name = user.username;
+    }
+    if(!imgUrl) {
+      imgUrl = "/images/profile.jpg";
+    }
+    return (
+      <div className="row x-center" style={{fontSize: 12}}>
+        <img src={imgUrl} style={{width: 12.5, height: "auto", marginRight: 5}} />{ name }
+      </div>
+    )
+  }
+
   selectEvent(event) {
     return(
       function(e){
@@ -62,7 +84,7 @@ export default class DisplayPromotedEvent extends Component {
               <div className="col">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                   <div className="row x-center" style={{fontSize: 12}}>
-                    <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                    { this.ownerDetails(event) }
                   </div>
                   <span style={{fontSize: 12}}>{
                     (() => {

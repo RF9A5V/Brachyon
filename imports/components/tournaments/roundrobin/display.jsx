@@ -114,7 +114,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
     return (
       <div className="col">
         <div className="row center x-center">
-          <h2>{this.state.page == 0 ? "Leaderboard" : "Round " + (this.state.page)}</h2>
+          <h3>{this.state.page == 0 ? "Leaderboard" : "Round " + (this.state.page)}</h3>
         </div>
         <div className="row swiss-tabs">
           <div className={`swiss-tab-header ${this.state.page == 0 ? "active" : ""}`} onClick={() => { this.setState({ page: 0 }) }}>

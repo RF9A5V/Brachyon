@@ -47,7 +47,7 @@ export default class TabController extends Component {
     var buttons = this.persistentButtons();
     return (
       <div className="tab-container">
-        <SideTabMenu items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} />
+        <SideTabMenu items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           <SideTabContent items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
         </VelocityComponent>

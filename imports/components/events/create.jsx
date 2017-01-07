@@ -31,8 +31,20 @@ export default class EventCreateScreen extends Component {
           active: false
         },
       },
-      currentItem: "details"
+      currentItem: "details",
+      creator: {
+        type: "user",
+        id: Meteor.userId()
+      },
+      organizations: Meteor.subscribe("userOrganizations", Meteor.userId(), {
+        onReady: () => { this.setState({ ready: true }) }
+      }),
+      ready: false
     }
+  }
+
+  componentWillUnmount() {
+    this.state.organzations.stop();
   }
 
   panels() {
@@ -115,6 +127,8 @@ export default class EventCreateScreen extends Component {
     var imgRef = args["details"]["image"];
     delete args["details"]["image"];
 
+    args.creator = this.state.creator;
+
     Meteor.call("events.create", args, (err, event) => {
       if(err) {
         toastr.error(err.reason, "Error!");
@@ -147,6 +161,25 @@ export default class EventCreateScreen extends Component {
         }
       </div>
     );
+  }
+
+  onTypeSelect(e) {
+    if(e.target.value == 0) {
+      this.setState({
+        creator: {
+          type: "user",
+          id: Meteor.userId()
+        }
+      });
+    }
+    else {
+      this.setState({
+        creator: {
+          type: "organization",
+          id: e.target.value
+        }
+      })
+    }
   }
 
   modulePanels() {
@@ -186,13 +219,36 @@ export default class EventCreateScreen extends Component {
 
   render() {
     var self = this;
+    if(!this.state.ready) {
+      return (
+        <div>
+        </div>
+      )
+    }
     return (
       <div className='box'>
         <div className='col' style={{padding: 20}}>
-          <div className="row" style={{marginBottom: 20}}>
+          <div className="row flex-pad x-center" style={{marginBottom: 20}}>
+            <div className="row">
             {
               this.modulePanels()
             }
+            </div>
+            <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+              <span style={{marginBottom: 5}}>Create As</span>
+              <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+                <option value={0}>User - {Meteor.user().username}</option>
+                {
+                  Organizations.find().map(o => {
+                    return (
+                      <option value={o._id}>
+                        Organization - { o.name }
+                      </option>
+                    )
+                  })
+                }
+              </select>
+            </div>
           </div>
           <div className="col" style={{marginBottom: 20}}>
             {

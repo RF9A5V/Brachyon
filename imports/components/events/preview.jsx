@@ -12,7 +12,6 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
-import { Banners } from "/imports/api/event/banners.js";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
@@ -46,10 +45,17 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   componentWillUnmount(){
+    // FB Tags
     document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
     document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
     document.querySelector("[property='og:image']").setAttribute("content", "/images/logo.png");
     document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
+    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/logo.png");
+
     this.state.event.stop();
     this.state.users.stop();
     this.state.sponsors.stop();
@@ -61,10 +67,17 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
 
   populateMetaTags() {
     var event = this.event();
+    // FB Tags
     document.querySelector("[property='og:title']").setAttribute("content", event.details.name);
     document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
     document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
     document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", event.details.name);
+    document.querySelector("[name='twitter:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
+    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+
     this.setState({
       hasLoaded: true
     })

@@ -82,7 +82,6 @@ export default class ShowUserScreen extends TrackerReact(Component) {
                   var g = Games.findOne(game);
                   return (
                     <div className="user-game-icon" style={{backgroundImage: `url(${g.bannerUrl})`}} key={i}>
-
                     </div>
                   );
                 })

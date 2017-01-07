@@ -23,6 +23,10 @@ export default class GamesIndex extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.state.games.stop();
+  }
+
   gameDisplay() {
     if(!this.state.ready) {
       return (
@@ -36,8 +40,8 @@ export default class GamesIndex extends Component {
         {
           Games.find().map((game) => {
             return (
-              <div className="game">
-                <img src={GameBanners.findOne(game.banner).link()} />
+              <div className="game" onClick={ () => { browserHistory.push("/game/" + game.slug) } }>
+                <img src={game.bannerUrl} />
                 <div className="col game-description">
                   <span className="game-title">
                     { game.name }

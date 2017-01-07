@@ -75,9 +75,41 @@
 
 .swiss-match.complete
   opacity: 0.3
+  
+.swiss-player
+  width 100px
 
 .swiss-player:first-child
   margin-right 20px
 
 .swiss-player:last-child
   margin-left 20px
+  
+.swiss-match:hover .marquee
+  animation marquee 5s linear infinite
+
+.winner
+  color #FF6000
+  opacity 1
+  
+.marquee
+  overflow-x hidden
+  overflow-y hidden
+  white-space nowrap
+  text-overflow ellipsis
+  
+.marquee:hover
+  animation marquee 5s linear infinite
+  
+@keyframes marquee {
+  from  { text-indent:  0% }
+  to    { text-indent: -120% }
+}
+
+.button-score
+  font-size 24px
+  padding 10px
+  background-color #333
+  
+  
+

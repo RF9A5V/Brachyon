@@ -19,6 +19,7 @@ export default class SideTabMenu extends Component {
   render() {
     return (
       <div className="tab-menu active" ref="menu">
+        { this.props.componentHeader || (<div></div>) }
         {
           this.props.items.map((item, i) => {
             return (

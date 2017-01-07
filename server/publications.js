@@ -1,5 +1,6 @@
 import Games from '/imports/api/games/games.js';
 import Instances from "/imports/api/event/instance.js";
+import Organizations from "/imports/api/organizations/organizations.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -104,8 +105,15 @@ Meteor.publish("profileImage", (id) => {
 
 Meteor.publish("discoverEvents", function(){
   var events = Events.find({published: true});
-  var eventOwnerIds = events.map(function(event){
-    return event.owner;
+  var userIds = [];
+  var orgIds = [];
+  events.forEach(e => {
+    if(e.orgEvent) {
+      orgIds.push(e.owner);
+    }
+    else {
+      userIds.push(e.owner);
+    }
   });
   var gameSet = new Set();
   var instances = Instances.find({
@@ -132,7 +140,8 @@ Meteor.publish("discoverEvents", function(){
   var leagues = Leagues.find();
   return [
     Events.find({published: true}),
-    Meteor.users.find({_id:{$in: eventOwnerIds}}, {fields: {"username":1, "profile.image": 1}}),
+    Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
+    Organizations.find({ _id: { $in: orgIds } }),
     games,
     instances,
     leagues
@@ -205,4 +214,21 @@ Meteor.publish('unapproved_games', function() {
 Meteor.publish("getUserByUsername", function(query) {
   var user = Meteor.users.find({username: query});
   return user;
+});
+
+Meteor.publish("getOrganizationByOwner", function(id) {
+  var org = Organizations.find({owner: id});
+  return org;
+});
+
+Meteor.publish("getOrganizationBySlug", function(slug) {
+  var org = Organizations.find({slug: slug});
+  var ownerId = org.fetch()[0]._id;
+  var events = Events.find({owner: ownerId, orgEvent: true});
+  var instances = Instances.find({_id: {$in: events.map( (e) => {
+      return e.instances.pop();
+      }
+    )}
+  });
+  return [org, events, instances];
 });
