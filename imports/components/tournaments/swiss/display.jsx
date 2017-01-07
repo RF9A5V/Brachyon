@@ -126,7 +126,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     return (
       <div className="col">
         <div className="row center x-center">
-          <h2>{this.state.page == 0 ? "Leaderboard" : "Round " + (this.state.page)}</h2>
+          <h3>{this.state.page == 0 ? "Leaderboard" : "Round " + (this.state.page)}</h3>
         </div>
         <div className="row swiss-tabs">
           <div className={`swiss-tab-header ${this.state.page == 0 ? "active" : ""}`} onClick={() => { this.setState({ page: 0 }) }}>
@@ -161,7 +161,9 @@ export default class SwissDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.props.rounds.length-1].players.map((playerObj, i) => {
+                    this.props.rounds[this.props.rounds.length-1].players.sort((a, b) => {
+                      return b.score - a.score;
+                      }).map((playerObj, i) => {
                       return (
                         <div className="row swiss-row">
                           <div className="swiss-entry">

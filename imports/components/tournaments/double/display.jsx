@@ -24,7 +24,7 @@ export default class DoubleDisplay extends Component {
                 if (i < this.props.rounds[0].length)
                 {
                   return (
-                    <div style={{width: 150, textAlign: "center"}}>
+                    <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
                       Round { i + 1 }
                     </div>
                   )
@@ -32,8 +32,8 @@ export default class DoubleDisplay extends Component {
                 else if (!((i - this.props.rounds[0].length == 1) && this.props.rounds[2][1][0].playerOne == null))
                 {
                   return (
-                    <div style={{width: 150, textAlign: "center"}}>
-                      Final Round {i + 1 - this.props.rounds[0].length}
+                    <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                      Grand Finals {i + 1 - this.props.rounds[0].length}
                     </div>
                   )
                 }
@@ -62,9 +62,9 @@ export default class DoubleDisplay extends Component {
                             nextMatch = this.props.rounds[0][rNum][mNum];
                           }
                         }
-                        return (
+                        return (<div className="bracket-match-spacing">
                           <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                        );
+                        </div>);
                       })
                     }
                   </div>
@@ -96,9 +96,9 @@ export default class DoubleDisplay extends Component {
                               nextMatch = this.props.rounds[2][rNum][mNum];
                             }
                           }
-                          return (
+                          return (<div className="bracket-match-spacing">
                             <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                          );
+                          </div>);
                         }
                       })
                     }
@@ -117,11 +117,19 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             { //Loser's bracket block
               Array(this.props.rounds[1].length).fill("").map((_, i) => {
-                  if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
+                  if(i == this.props.rounds[1].length-1)
+                  {
+                    return (
+                      <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                        Losers Finals
+                      </div>
+                    )
+                  }
+                  else if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
                   {
                     i = (this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye) ? i:i-1;
                     return (
-                      <div style={{width: 150, textAlign: "center"}}>
+                      <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
                         Round { i + 1 }
                       </div>
                     )
@@ -152,9 +160,9 @@ export default class DoubleDisplay extends Component {
                               nextMatch = this.props.rounds[1][rNum][mNum];
                             }
                           }
-                          return (
+                          return (<div className="bracket-match-spacing">
                             <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                          );
+                          </div>);
                         })
                       }
                     </div>

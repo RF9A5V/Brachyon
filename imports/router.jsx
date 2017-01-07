@@ -29,6 +29,7 @@ import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 import OrganizationCreateScreen from "../imports/components/organizations/create.jsx";
 import OrganizationShowScreen from "../imports/components/organizations/show.jsx";
+import GameHubScreen from "../imports/components/games/hub.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
@@ -55,7 +56,7 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="events/:slug/view" component={OrganizeEventScreen} />
+      <Route path="event/:slug" component={OrganizeEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
       <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
@@ -63,6 +64,7 @@ export const renderRoutes = () => (
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
+      <Route path="game/:slug" component={GameHubScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
