@@ -21,10 +21,6 @@ export default class OrganizeEventScreen extends TrackerReact(Component) {
     return Events.find().fetch()[0];
   }
 
-  image() {
-    return Banners.find().fetch()[0];
-  }
-
   participants() {
     if(!this.event() || !this.event().participants){
       return [];
@@ -98,9 +94,9 @@ export default class OrganizeEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    url = '/images/balls.svg';
-    if(this.image()){
-      url = this.image().url();
+    var url = Events.findOne().details.bannerUrl;
+    if(!url) {
+      url = "/images/bg.jpg";
     }
     return (
       <div className='row screen'>
