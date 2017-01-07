@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
+import { browserHistory } from "react-router";
+
 import Brackets from "/imports/api/brackets/brackets.js"
 
 export default class SwissModal extends Component {
@@ -80,7 +82,7 @@ export default class SwissModal extends Component {
                 <div className="col center x-center">
                   <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
                   <h5 className={(match.playerOne)==null?(""):
-                      ((match.playerOne).length<15)?(""):("marquee")} 
+                      ((match.playerOne).length<15)?(""):("marquee")}
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerOne }
                   </h5>
 
@@ -91,15 +93,15 @@ export default class SwissModal extends Component {
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p1", true)}} />
                   </div>
-                  
+
                 </div>
                 <div className="col x-center center">
                   <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
                   <h5 className={(match.playerTwo)==null?(""):
-                      ((match.playerTwo).length<15)?(""):("marquee")} 
+                      ((match.playerTwo).length<15)?(""):("marquee")}
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerTwo}
                   </h5>
-                  
+
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p2", false)}} />
                     <div className="row center x-center button-score">
@@ -107,7 +109,7 @@ export default class SwissModal extends Component {
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p2", true)}} />
                   </div>
-                  
+
                 </div>
               </div>
               <div className="col">
@@ -121,6 +123,13 @@ export default class SwissModal extends Component {
                   </div>
                   <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("ties", true)}}  />
                 </div>
+              </div>
+              <div className="row center">
+                <button onClick={ () => {
+                  var event = Events.findOne();
+                  var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+                  browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${1}-${this.props.page + 1}-${this.props.i + 1}`)
+                }}>View</button>
               </div>
               <div className="row center">
                 <button onClick={() => { this.endMatch() }}>End Match</button>

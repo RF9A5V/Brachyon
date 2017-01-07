@@ -12,7 +12,6 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
-import { Banners } from "/imports/api/event/banners.js";
 
 export default class PreviewEventScreen extends TrackerReact(Component) {
 
