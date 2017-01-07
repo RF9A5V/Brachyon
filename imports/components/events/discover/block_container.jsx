@@ -80,12 +80,20 @@ export default class BlockContainer extends Component {
           {
             (this.props.events || []).map((event, i) => {
               var instance = Instances.findOne();
+              var isOwner = false;
+              if(event.orgEvent) {
+                var org = Organizations.findOne(event.owner);
+                isOwner = org.owner == Meteor.userId() || org.roles.owners.indexOf(Meteor.userId) >= 0;
+              }
+              else {
+                isOwner = Meteor.userId() == event.owner;
+              }
               return (
                 <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
-                      Meteor.userId() == event.owner ? (
+                      isOwner ? (
                         <div className="event-block-edit" >
                           {
                             event.isComplete ? (

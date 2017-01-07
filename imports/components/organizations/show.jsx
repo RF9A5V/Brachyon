@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import TrackerReact from "meteor/ultimatejs:tracker-react"
-import { browserHistory } from "react-router";
+import { Link, browserHistory } from "react-router";
 
 import Organizations from "/imports/api/organizations/organizations.js";
 //import Events from "/imports/api/event/events.js"
@@ -66,7 +66,7 @@ export default class OrganizationShowScreen extends TrackerReact(Component) {
             </div>
           </div>
         </div>
-        <div className="col-1 row" style={{flexWrap: "wrap"}}>
+        <div className="col-1 row" style={{flexWrap: "wrap", padding: 20}}>
           {
             events.length > 0 ? (
               <BlockContainer events={events} />
