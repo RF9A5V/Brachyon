@@ -10,8 +10,6 @@ Meteor.methods({
       $set: {},
       $push: {}
     };
-    console.log(id);
-    console.log(obj);
     if(obj.tickets) {
       var ticketAccess = event.tickets.ticketAccess || {};
       var tickets = new Set(ticketAccess[Meteor.userId()] || []);

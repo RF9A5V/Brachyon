@@ -79,6 +79,25 @@ export default class BlockContainer extends Component {
         <div className='event-block-container'>
           {
             (this.props.events || []).map((event, i) => {
+              var e = Events.findOne(event._id);
+              var count = 0;
+              if(!e) {
+                count = event.leaderboard[0].length;
+              }
+              else {
+                var instance = Instances.findOne(event.instances.pop());
+                count = (() => {
+                  var count = 0;
+                  if(instance.brackets) {
+                    instance.brackets.forEach(bracket => {
+                      if(bracket.participants) {
+                        count += bracket.participants.length;
+                      }
+                    });
+                  }
+                  return count;
+                })()
+              }
               var instance = Instances.findOne();
               var isOwner = false;
               if(event.orgEvent) {
@@ -96,7 +115,7 @@ export default class BlockContainer extends Component {
                       isOwner ? (
                         <div className="event-block-edit" >
                           {
-                            event.isComplete ? (
+                            event.isComplete && !event.league ? (
                               <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -124,17 +143,7 @@ export default class BlockContainer extends Component {
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                         { this.ownerDetails(event) }
                         <span style={{fontSize: 12}}>{
-                          (() => {
-                            var count = 0;
-                            if(instance.brackets) {
-                              instance.brackets.forEach(bracket => {
-                                if(bracket.participants) {
-                                  count += bracket.participants.length;
-                                }
-                              });
-                            }
-                            return count;
-                          })()
+                          count
                         }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
                       </div>
                       <div className="row flex-pad">

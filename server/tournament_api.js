@@ -133,7 +133,6 @@ var OrganizeSuite = {
     }
     brackets.winners[0] = initArray[0];
     brackets.winners[1] = initArray[1];
-    console.log(brackets);
     return brackets;
   },
 
@@ -237,7 +236,6 @@ var OrganizeSuite = {
         {
           if (j < Math.floor(frounds[0][k].length/2))  //if in top half of winners, -1 for the offset of arrays starting from 0 instead of 1
           {
-            console.log(Math.floor(frounds[0][k].length/2) - j - 1);
             frounds[0][k][Math.floor(frounds[0][k].length/2) - j - 1].losr = i;
             frounds[0][k][Math.floor(frounds[0][k].length/2) - j - 1].losm = j;
           }
@@ -305,7 +303,7 @@ var OrganizeSuite = {
       temp.push(matchObj);
     }
     var tempb = [];
-    var tempc = [];
+    var tempc = {};
     for (var x = 0; x < participants.length; x++)
     {
       var playarr = [];
@@ -329,7 +327,6 @@ var OrganizeSuite = {
       }
       tempb.push(playerObj);
     }
-    console.log(tempc);
     var frounds = [];
     var round = {
       matches: temp,

@@ -12,8 +12,7 @@ export default class AddPartipantAction extends Component {
 
   constructor(props) {
     super(props);
-    var event = Events.findOne();
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance = Instances.findOne();
     var bracket = instance.brackets[this.props.index];
     var participants = bracket.participants || [];
     this.state = {

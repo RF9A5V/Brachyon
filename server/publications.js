@@ -1,6 +1,7 @@
 import Games from '/imports/api/games/games.js';
 import Instances from "/imports/api/event/instance.js";
 import Organizations from "/imports/api/organizations/organizations.js";
+import Leagues from "/imports/api/leagues/league.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -116,9 +117,19 @@ Meteor.publish("discoverEvents", function(){
     }
   });
   var gameSet = new Set();
-  var instances = Instances.find({_id: { $in: events.map((e) => {
-    return e.instances.pop();
-  })}})
+  var instances = Instances.find({
+    $or: [{
+      _id: {
+        $in: events.map((e) => {
+          return e.instances.pop();
+        })
+      }
+    }, {
+      owner: {
+        $exists: true
+      }
+    }]
+  })
   instances.forEach((e) => {
     if(e.brackets != null){
       e.brackets.forEach((bracket) => {
@@ -127,12 +138,14 @@ Meteor.publish("discoverEvents", function(){
     }
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
+  var leagues = Leagues.find();
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
     Organizations.find({ _id: { $in: orgIds } }),
     games,
-    instances
+    instances,
+    leagues
   ]
 });
 
@@ -173,7 +186,6 @@ Meteor.publish("userSearch", function(usernameSubstring) {
   });
   return [
     users
-    
   ];
 })
 
@@ -219,5 +231,5 @@ Meteor.publish("getOrganizationBySlug", function(slug) {
       }
     )}
   });
-  return [org, events, instances];
+  return [org, events, instances, Leagues.find({ owner: ownerId })];
 });

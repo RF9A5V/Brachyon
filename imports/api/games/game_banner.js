@@ -40,7 +40,6 @@ var GameBanners = new FilesCollection({
           }));
         }
         else {
-          console.log(meta);
           var game = Games.findOne(meta.gameId);
           if(game.banner) {
             self.remove({_id: game.banner});

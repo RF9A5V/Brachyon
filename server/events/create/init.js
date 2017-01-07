@@ -62,7 +62,7 @@ Meteor.methods({
     }
   },
 
-  "events.create"(obj) {
+  "events.create"(obj, leagueID) {
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
@@ -78,6 +78,9 @@ Meteor.methods({
     endObj.published = !requiresReview;
     endObj.underReview = false;
     endObj.isComplete = false;
+    if(leagueID) {
+      endObj.league = leagueID;
+    }
     if(obj.creator.type == "user") {
       endObj.owner = Meteor.userId();
       endObj.orgEvent = false;
@@ -113,6 +116,9 @@ Meteor.methods({
 
   "events.reinstantiate"(id) {
     var event = Events.findOne(id);
+    if(event.league) {
+      throw new Meteor.Error(403, "Can't reinstantiate a league event.");
+    }
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
     }

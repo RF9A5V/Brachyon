@@ -126,7 +126,6 @@ Meteor.methods({
       throw new Meteor.Error(404, "Event not found!");
     }
     var sponsIndex = -1;
-    console.log(event.crowdfunding.tiers[index].sponsors);
     for(var i = 0; i < event.crowdfunding.tiers[index].sponsors.length; i ++){
       if(event.crowdfunding.tiers[index].sponsors[i].id == sponsId){
         sponsIndex = i;

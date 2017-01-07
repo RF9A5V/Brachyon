@@ -7,9 +7,13 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 import { Banners } from "/imports/api/event/banners.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
+import { LeagueBanners } from "/imports/api/leagues/banners.js";
 import Games from '/imports/api/games/games.js';
 import Notifications from "/imports/api/users/notifications.js";
 import Instances from "/imports/api/event/instance.js";
+import Leagues from "/imports/api/leagues/league.js"
+
+import { Accounts } from 'meteor/accounts-base'
 
 Events._ensureIndex({
   'details.location.coords': '2dsphere',
@@ -17,6 +21,10 @@ Events._ensureIndex({
 });
 
 Games._ensureIndex({
+  slug: 1
+})
+
+Leagues._ensureIndex({
   slug: 1
 })
 
@@ -76,9 +84,36 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+Accounts.emailTemplates.siteName = "Brachyon";
+Accounts.emailTemplates.from = "Brachyon Admin <steven@brachyon.com>";
+Accounts.emailTemplates.verifyEmail.subject = (user) => {
+  return "Hi, " + user.username + "!";
+}
+Accounts.emailTemplates.verifyEmail.text = (user, url) => {
+  return "Click the link below to verify your email!\n" + url;
+}
+
+Accounts.onEmailVerificationLink = (token, done) => {
+  Accounts.verifyEmail(token, (err) => {
+    if(err) {
+      throw new Meteor.Error(404, "Issue with verifying email!");
+    }
+    else {
+      done()
+    }
+  })
+}
+
 Meteor.startup(() => {
 
+  var smtp = {
+    username: "steven@brachyon.com",
+    password: "IcarusLive5",
+    server: "smtp-relay.gmail.com",
+    port: 587
+  }
 
+  process.env.MAIL_URL = `smtp://${encodeURIComponent(smtp.username)}:${encodeURIComponent(smtp.password)}@${smtp.server}:${smtp.port};`
 
   Logger.info('Meteor started!');
 
@@ -98,7 +133,6 @@ Meteor.startup(() => {
           var destination = Meteor.users.findOne(e.owner).services.stripe.id;
           Object.keys(instance.cf).forEach(index => {
             instance.cf[index].forEach(obj => {
-              console.log(obj);
               Stripe.charges.create({
                 amount: obj.amount,
                 customer: Meteor.users.findOne(obj.payee).stripeCustomer,
@@ -121,7 +155,7 @@ Meteor.startup(() => {
          }
       });
     }
-  })
+  });
 
   SyncedCron.start();
 });

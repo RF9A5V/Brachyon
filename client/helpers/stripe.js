@@ -6,7 +6,6 @@ Meteor.startup(function(){
     getToken: function( domElement, card, callback) {
       Stripe.card.createToken( card, function( status, response ){
         if ( response.error ) {
-          console.log("danger");
         }
         else {
           STRIPE.setToken( response.id, domElement, callback );

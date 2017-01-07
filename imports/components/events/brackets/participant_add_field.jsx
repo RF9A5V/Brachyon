@@ -5,11 +5,6 @@ export default class ParticipantAddField extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: Meteor.subscribe("userSearch", "", {
-        onReady: () => {
-          this.setState({ ready: true })
-        }
-      }),
       ready: false,
       loading: false,
       user: null,
@@ -43,24 +38,31 @@ export default class ParticipantAddField extends Component {
       loading: true,
       user: null
     });
-    this.state.users.stop();
+    if(this.state.users) {
+      this.state.users.stop();
+    }
     clearTimeout(this.state.timer);
     this.state.timer = setTimeout(() => {
       this.setState({
         users: Meteor.subscribe("userSearch", this.refs.username.value, {
-          onReady: () => { this.setState({ ready: true, loading: false, length: Meteor.users.find({
-            username: new RegExp(this.state.value, "i")
-          }).fetch().length }) }
+          onReady: () => {
+            console.log('shit')
+            this.setState({
+              ready: true,
+              loading: false,
+              length: Meteor.users.find({ username: new RegExp(this.state.value, "i") }).fetch().length
+            })
+          }
         }),
         value: this.refs.username.value,
         index: -1
-      })
+      });
     }, 500)
   }
 
   onParticipantAdd() {
     if(this.state.user != null) {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, this.state.user, null, (err) => {
+      Meteor.call("events.addParticipant", (Events.findOne() || {})._id || Instances.findOne()._id, this.props.bracketIndex, this.state.user, null, (err) => {
         if(err){
           toastr.error(err.reason, "Error!");
         }
@@ -82,7 +84,7 @@ export default class ParticipantAddField extends Component {
       })
     }
     else {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.bracketIndex, null, this.refs.username.value, (err) => {
+      Meteor.call("events.addParticipant", (Events.findOne() || {})._id || Instances.findOne()._id, this.props.bracketIndex, null, this.refs.username.value, (err) => {
         if(err){
           toastr.error(err.reason, "Error!");
         }

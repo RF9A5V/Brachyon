@@ -20,7 +20,7 @@ export default class BracketForm extends Component {
     else if(format.hasOwnProperty("poolFormat")) {
       subFormat = "POOL";
     }
-    var game = Games.findOne(props.game);
+    var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
       this.state = {
         id: game._id,
@@ -34,9 +34,6 @@ export default class BracketForm extends Component {
         format: "NONE"
       };
     }
-    for(var i in format){
-      this.state[i] = format[i];
-    }
   }
 
   componentWillReceiveProps(props) {
@@ -48,7 +45,7 @@ export default class BracketForm extends Component {
     else if(format.hasOwnProperty("poolFormat")) {
       subFormat = "POOL";
     }
-    var game = Games.findOne(props.game);
+    var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
       this.state = {
         id: game._id,
@@ -70,11 +67,15 @@ export default class BracketForm extends Component {
   }
 
   onGameSelect(game) {
+    if(this.props.onChange) {
+      this.props.onChange(game, { baseFormat: this.refs.format.value });
+    }
     this.setState({
       id: game._id,
       name: game.name,
       bannerUrl: game.bannerUrl
     })
+
   }
 
   formatForm() {
@@ -91,7 +92,16 @@ export default class BracketForm extends Component {
           {
             // <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
           }
-          <select ref="format" defaultValue={this.state.baseFormat}>
+          <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
+            if(this.props.onChange) {
+              var game = {
+                _id: this.state.id,
+                name: this.state.name,
+                bannerUrl: this.state.bannerUrl
+              }
+              this.props.onChange(game, { baseFormat: e.target.value })
+            }
+          }}>
             <option value="single_elim">
               Single Elimination
             </option>
@@ -208,21 +218,23 @@ export default class BracketForm extends Component {
 
   render() {
     return (
-      <div className="row">
+      <div className="row" style={{backgroundColor: "#111"}}>
         {
         // <h5>Bracket Name</h5>
         // <input ref="name" defaultValue={this.props.name} />
         }
         {
           this.state.bannerUrl ? (
-            <div style={{textAlign: "center"}}>
-              <img style={{width: "auto", height: 160, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+            <div style={{textAlign: "center", position: "relative"}}>
+              <img style={{width: "auto", height: 300, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
+              </div>
             </div>
           ) : (
             ""
           )
         }
-        <div style={{marginLeft: 20}} className="col col-1">
+        <div className="col col-1" style={{padding: 20}}>
           <div className="row flex-pad">
             <h5>Game</h5>
             {
@@ -241,7 +253,7 @@ export default class BracketForm extends Component {
           ]} onChange={this.onGameSelect.bind(this)} value={(this.state.name || "")} id={this.state.id}/>
           <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
             <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
-              <h5 style={{backgroundColor: "#666", padding: "0 20px"}}>Bracket Format</h5>
+              <h5 style={{backgroundColor: "#111", padding: "0 20px"}}>Bracket Format</h5>
             </div>
             {
 

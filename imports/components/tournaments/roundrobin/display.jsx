@@ -35,7 +35,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
       wcount: num,
       recrounds: rec,
       brid: bracket._id,
-      id: Events.findOne()._id,
+      id: props.id || Events.findOne()._id,
       aliasMap
     }
   }
