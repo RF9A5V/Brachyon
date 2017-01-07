@@ -147,8 +147,10 @@ export default class ParticipantAddField extends Component {
   render() {
     return (
       <div className="row center">
-        <div className="col x-center" style={{border: "solid 2px white", position: "relative", padding: 20, marginBottom: 20, width: "50vw"}}>
-          <h5 style={{position: "absolute", top: -17.5, backgroundColor: "#333", padding: 5}}>Add Player</h5>
+         <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
+            <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
+              <h5 style={{backgroundColor: "#333", padding: "0 20px"}}>Add Player</h5>
+            </div>
           <div className="row center x-center" style={{justifyContent: "flex-start"}}>
             <input type="text" placeholder="Add User or Alias" ref="username" onChange={this.onInputChange.bind(this)} style={{marginRight: 10}} onKeyDown={this.onKeyPress.bind(this)} />
             <div>

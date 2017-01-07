@@ -744,7 +744,7 @@ Meteor.methods({
       }
     }
     var tempb = JSON.parse(JSON.stringify(playerarr));
-    var pdic = [];
+    var pdic = {};
     for (var x = 0; x < tempb.length; x++)
       pdic[tempb[x].name] = x;
     var roundObj = {
