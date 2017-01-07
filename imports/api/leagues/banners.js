@@ -37,22 +37,32 @@ var LeagueBanners = new FilesCollection({
                 "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
               }
             });
-            Events.update({ _id: { $in: league.events } }, { $set: { "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name } })
+            Events.update({ league: league._id }, {
+              $set: {
+                "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
+              }
+            }, { multi: true });
             self.remove({_id: fileRef._id});
           }));
         }
         else {
           var league = Leagues.findOne({slug: meta.slug});
-          if(league.details.banner) {
-            self.remove({_id: league.details.banner});
-          }
+
+          var link = self.findOne(fileRef._id).link();
           Leagues.update({ slug: meta.slug }, {
             $set: {
-              "details.bannerUrl": self.findOne(fileRef._id).link(),
+              "details.bannerUrl": link,
               "details.banner": fileRef._id
             }
           });
-          Events.update({ _id: { $in: league.events } }, { $set: { "details.bannerUrl": self.findOne(fileRef._id).link() } })
+          Events.update({ league: league._id }, {
+            $set: {
+              "details.bannerUrl": link
+            }
+          }, { multi: true });
+          if(league.details.banner) {
+            self.remove({_id: league.details.banner});
+          }
         }
       }));
     }));

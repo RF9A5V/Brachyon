@@ -1,7 +1,6 @@
 import Games from "/imports/api/games/games.js";
 
 Meteor.publish("league", (slug) => {
-  console.log(slug);
   var league = Leagues.findOne({slug});
   var events = Events.find({ slug: { $in: league.events } });
   var instances = Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } });

@@ -42,7 +42,6 @@ var OrgBanners = new FilesCollection({
           }));
         }
         else {
-          console.log(meta.orgSlug);
           var org = Organizations.findOne({slug: meta.orgSlug});
           if(org.details.banner) {
             self.remove({_id: org.details.banner});

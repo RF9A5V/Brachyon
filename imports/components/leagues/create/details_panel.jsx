@@ -81,14 +81,15 @@ export default class DetailsPanel extends Component {
           <div className="col col-1">
             <h5>Season</h5>
             <input onChange={(e) => {
-              var val = parseInt(e);
+              var val = parseInt(e.target.value);
               if(isNaN(val)) {
                 e.target.value = e.target.value.slice(0, e.target.value.length - 1);
               }
               else {
-                this.props.attrs.details.season = parseInt(e.target.value)
+                this.props.attrs.details.season = parseInt(e.target.value);
+                e.target.value = parseInt(e.target.value);
               }
-            }} type="text" defaultValue={1} />
+            }} type="text" defaultValue={this.props.attrs.details.season || 1} />
           </div>
         </div>
       )

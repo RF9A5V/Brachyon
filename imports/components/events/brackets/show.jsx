@@ -89,27 +89,6 @@ export default class BracketShowScreen extends Component {
         ]
       })
     }
-<<<<<<< HEAD
-    if(bracket._id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketPanel,
-              args: {
-                id: bracket._id,
-                format: Brackets.findOne().format.baseFormat,
-                rounds: Brackets.findOne(bracket._id)
-              }
-            }
-          ]
-        }
-      ])
-    }
-=======
->>>>>>> 732984d34a8ada080fdd2467a760cd5cd2790484
     return defaultItems;
   }
 
@@ -119,23 +98,7 @@ export default class BracketShowScreen extends Component {
         <TabController items={this.items()} />
       );
     }
-<<<<<<< HEAD
-    if(this.state.event.ready()) {
-      var bracketID = Instances.findOne().brackets[this.props.params.bracketIndex || 0].id;
-      var bracket = Meteor.subscribe("brackets", bracketID, {
-        onReady: () => {
-          this.setState({ ready: true, bracket });
-        }
-      });
-      return (
-        <div>
-          Loading...
-        </div>
-      );
-    }
-=======
->>>>>>> 732984d34a8ada080fdd2467a760cd5cd2790484
-    else if(!this.state.ready) {
+    else {
       return (
         <div>
           Loading...

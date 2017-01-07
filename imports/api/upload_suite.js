@@ -21,7 +21,6 @@ if(Meteor.isServer && !Meteor.isDevelopment) {
 var compressThenStore = Meteor.bindEnvironment(function(params, fileRef, location, cb) {
   var gcUploadCB = Meteor.bindEnvironment(function(err) {
     if(err) {
-      console.log(err);
     }
     else {
       cb();
@@ -45,7 +44,6 @@ var compressThenStore = Meteor.bindEnvironment(function(params, fileRef, locatio
       var request = https.get(status.kraked_url, krakenDLCB);
     }
     else {
-      console.log(`Failed with error: ${status.message}`);
     }
   })
 

@@ -19,9 +19,6 @@ Meteor.methods({
       var instance = Instances.findOne(eventID);
     }
 
-    console.log(eventID);
-    console.log(instance);
-
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
     }
@@ -30,7 +27,6 @@ Meteor.methods({
         throw new Meteor.Error("Can't add a non-user player to a league event!");
       }
     }
-    //console.log(alias);
     if(alias == "" || alias == null) {
       throw new Meteor.Error(403, "Alias for a participant has to exist.");
     }
@@ -501,7 +497,6 @@ Meteor.methods({
 
   "events.tiebreaker"(bracketID, roundNumber, score)
   {
-    console.log(roundNumber);
     var bracket = Brackets.findOne(bracketID).rounds[roundNumber];
     var max = -1, tied = false, tiedplayers = [];
     for (var x = 0; x < bracket.players.length; x++)
@@ -522,11 +517,9 @@ Meteor.methods({
     if (tied == false)
       return true;
 
-    console.log(bracket);
     var p1 = bracket.pdic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
     //TODO: Make system dynamic array for 3+ tied players
     var bnum1 = 0, bnum2 = 0;
-    console.log("Does this ever happen?");
 
     for (var y = 0; y < bracket.players.length; y++)
     {
@@ -858,7 +851,6 @@ Meteor.methods({
         });
         incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
       });
-      console.log(incObj);
       Leagues.update(eventID, {
         $inc: incObj,
         $set: {

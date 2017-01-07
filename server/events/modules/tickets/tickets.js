@@ -23,7 +23,6 @@ Meteor.methods({
       throw new Meteor.Error(404, "Event not found.");
     }
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
-    console.log(indexId);
     Instances.update(instance._id, {
       $set: {
         [`tickets.${indexId}`]: {
@@ -50,7 +49,6 @@ Meteor.methods({
         bracketIndices.push(parseInt(check[0]));
       }
     });
-    console.log(bracketIndices);
     bracketIndices.forEach((index) => {
       Instances.update(instance._id, {
         $push: {

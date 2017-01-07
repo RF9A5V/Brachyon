@@ -1,6 +1,7 @@
 import Games from '/imports/api/games/games.js';
 import Instances from "/imports/api/event/instance.js";
 import Organizations from "/imports/api/organizations/organizations.js";
+import Leagues from "/imports/api/leagues/league.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
@@ -230,5 +231,5 @@ Meteor.publish("getOrganizationBySlug", function(slug) {
       }
     )}
   });
-  return [org, events, instances];
+  return [org, events, instances, Leagues.find({ owner: ownerId })];
 });

@@ -133,7 +133,6 @@ Meteor.startup(() => {
           var destination = Meteor.users.findOne(e.owner).services.stripe.id;
           Object.keys(instance.cf).forEach(index => {
             instance.cf[index].forEach(obj => {
-              console.log(obj);
               Stripe.charges.create({
                 amount: obj.amount,
                 customer: Meteor.users.findOne(obj.payee).stripeCustomer,
