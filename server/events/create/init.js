@@ -78,7 +78,14 @@ Meteor.methods({
     endObj.published = !requiresReview;
     endObj.underReview = false;
     endObj.isComplete = false;
-    endObj.owner = Meteor.userId();
+    if(obj.creator.type == "user") {
+      endObj.owner = Meteor.userId();
+      endObj.orgEvent = false;
+    }
+    else {
+      endObj.owner = obj.creator.id;
+      endObj.orgEvent = true;
+    }
     var instance = Instances.insert({
       brackets: endObj.brackets,
       tickets: endObj.tickets,
