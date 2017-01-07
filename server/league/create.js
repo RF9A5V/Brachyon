@@ -8,9 +8,20 @@ Meteor.methods({
       format: attrs.brackets.format
     };
     attrs.leaderboard = [];
-    attrs.owner = Meteor.userId();
     attrs.game = attrs.brackets.gameObj._id;
     delete attrs.brackets.gameObj;
+    if(attrs.creator.type == "user") {
+      attrs.owner = Meteor.userId();
+      attrs.orgEvent = false;
+    }
+    else {
+      attrs.owner = attrs.creator.id;
+      attrs.orgEvent = true;
+    }
+    var crObj = {};
+    crObj.id = attrs.creator.id;
+    crObj.type = attrs.creator.type;
+    delete attrs.creator;
     var league = Leagues.insert(attrs);
     var eventSlugs = [];
     events.forEach((e) => {
@@ -19,6 +30,7 @@ Meteor.methods({
       createObj.details.name = e.name;
       createObj.details.datetime = e.date;
       createObj.brackets = [bracket];
+      createObj.creator = crObj;
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
 

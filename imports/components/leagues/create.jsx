@@ -44,7 +44,15 @@ export default class CreateLeagueScreen extends Component {
           gameObj: null
         }
       },
-      currentItem: "details"
+      creator: {
+        type: "user",
+        id: Meteor.userId()
+      },
+      organizations: Meteor.subscribe("userOrganizations", Meteor.userId(), {
+        onReady: () => { this.setState({ ready: true }) }
+      }),
+      currentItem: "details",
+      ready: false
     }
   }
 
@@ -81,6 +89,25 @@ export default class CreateLeagueScreen extends Component {
         selected: this.state.moduleState["crowdfunding"].active
       }
     ];
+  }
+
+  onTypeSelect(e) {
+    if(e.target.value == 0) {
+      this.setState({
+        creator: {
+          type: "user",
+          id: Meteor.userId()
+        }
+      });
+    }
+    else {
+      this.setState({
+        creator: {
+          type: "organization",
+          id: e.target.value
+        }
+      })
+    }
   }
 
   modulePanels() {
@@ -168,6 +195,7 @@ export default class CreateLeagueScreen extends Component {
       img.meta = attrs.details.image.meta;
     }
     delete attrs.details.image;
+    attrs.creator = this.state.creator;
     Meteor.call("leagues.create", attrs, (err, slug) => {
       if(err) {
         toastr.error(err.reason, "Error!");
@@ -182,12 +210,11 @@ export default class CreateLeagueScreen extends Component {
             meta: img.meta,
             fileName: slug + "." + dataSeg,
             onUploaded: (err, data) => {
-              console.log("woo?")
               if(err) {
                 return toastr.error(err.reason, "Error!");
               }
               toastr.success("Successfully created league!", "Success!");
-              browserHistory.push("/")
+              browserHistory.push("/");
             }
           })
         }
@@ -200,12 +227,34 @@ export default class CreateLeagueScreen extends Component {
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <div>Loading...</div>
+      )
+    }
     return (
       <div className="box col" style={{padding: 20}}>
-        <div className="row" style={{marginBottom: 10}}>
-          {
-            this.modulePanels()
-          }
+        <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+          <div className="row">
+            {
+              this.modulePanels()
+            }
+          </div>
+          <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+            <span style={{marginBottom: 5}}>Create As</span>
+            <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+              <option value={0}>User - {Meteor.users.findOne().username}</option>
+              {
+                Organizations.find().map(o => {
+                  return (
+                    <option value={o._id}>
+                      Organization - { o.name }
+                    </option>
+                  )
+                })
+              }
+            </select>
+          </div>
         </div>
         <div>
           {
