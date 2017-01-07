@@ -32,7 +32,7 @@ var OrgBanners = new FilesCollection({
         if(!Meteor.isDevelopment) {
           compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
             Organizations.update({
-              _id: meta.orgId
+              slug: meta.orgSlug
             }, {
               $set: {
                 "details.bannerUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
@@ -42,12 +42,12 @@ var OrgBanners = new FilesCollection({
           }));
         }
         else {
-          console.log(meta.orgId);
-          var org = Organizations.findOne(meta.orgId);
+          console.log(meta.orgSlug);
+          var org = Organizations.findOne({slug: meta.orgSlug});
           if(org.details.banner) {
             self.remove({_id: org.details.banner});
           }
-          Organizations.update({ _id: meta.orgId }, {
+          Organizations.update({ slug: meta.orgSlug }, {
             $set: {
               "details.bannerUrl": self.findOne(fileRef._id).link(),
               "details.banner": fileRef._id

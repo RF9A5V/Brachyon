@@ -71,7 +71,7 @@ export const renderRoutes = () => (
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
-      <Route path="orgs/:slug" component={OrganizationShowScreen} />
+      <Route path="org/:slug" component={OrganizationShowScreen} />
     </Route>
   </Router>
 )

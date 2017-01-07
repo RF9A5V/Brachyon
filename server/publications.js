@@ -202,7 +202,12 @@ Meteor.publish("getUserByUsername", function(query) {
   return user;
 });
 
-Meteor.publish('userOwnedOrganization', function(id) {
-  var org = Meteor.organizations.find({owner: id});
-  return org
+Meteor.publish("getOrganizationByOwner", function(id) {
+  var org = Organizations.find({owner: id});
+  return org;
+});
+
+Meteor.publish("getOrganizationBySlug", function(slug) {
+  var org = Organizations.find({slug: slug});
+  return [org, Events.find({owner: org._id, orgEvent: true})];
 });
