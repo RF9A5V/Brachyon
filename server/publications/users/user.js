@@ -11,9 +11,20 @@ Meteor.publish("user", (_id) => {
   var eventIDs = [];
   var userIDs = [];
   userIDs.push(_id);
+  var orgs = Organizations.find({
+    $or: [
+      {
+        owner: _id
+      },
+      {
+        "roles.Owner": _id
+      }
+    ]
+  });
   return [
     Meteor.users.find({_id}),
     games,
+    orgs
   ];
 })
 
