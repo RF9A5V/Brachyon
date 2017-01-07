@@ -6,6 +6,19 @@ import Notifications from "/imports/api/users/notifications.js";
 
 export default class UserDropdown extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+  }
+
+  componentWillReceiveProps(next) {
+    if(!next.active) {
+      this.setState({ open: false })
+    }
+  }
+
   accessOptions(e) {
     e.preventDefault();
     browserHistory.push("/options");
@@ -29,6 +42,11 @@ export default class UserDropdown extends Component {
     this.props.onAccessNotes();
   }
 
+  accessOrgs(e) {
+    e.preventDefault();
+    browserHistory.push("/orgs/create");
+  }
+
   logout(e){
     e.preventDefault();
     this.props.clear();
@@ -43,8 +61,8 @@ export default class UserDropdown extends Component {
   render() {
     return (
       <div className="user-dropdown col" style={{alignItems: "flex-end", display: this.props.active ? "inherit" : "none"}}>
-        <div className="triangle-top"></div>
-        <div className="user-dropdown-content col">
+        <div className="triangle-top" style={{display: this.state.open ? "none" : "inherit"}}></div>
+        <div className="user-dropdown-content col" style={{display: this.state.open ? "none" : "inherit"}}>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.accessProfile.bind(this)}>
             <div className="user-dropdown-icon"><i className="fa fa-user fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Profile</span>
@@ -72,10 +90,33 @@ export default class UserDropdown extends Component {
             </div>
             <span className="col-3">Notifications</span>
           </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessOrgs.bind(this)}>
+            <div className="user-dropdown-icon"><i className="fa fa-users fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Create Orgs</span>
+          </a>
+          <a className="user-dropdown-option row x-center" href="#" onClick={(e) => {
+            e.preventDefault();
+            this.setState({ open: true })
+          }}>
+            <div className="user-dropdown-icon"><i className="fa fa-address-book fa-2x" aria-hidden="true"></i></div>
+            <span className="col-3">Show Orgs</span>
+          </a>
           <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
             <div className="user-dropdown-icon"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Logout</span>
           </a>
+        </div>
+        <div className="org-sidebar" style={{display: this.state.open ? "block" : "none"}} onBlur={() => { this.setState({ open: false }) }}>
+          {
+            Organizations.find().map((o) => {
+              return (
+                <div className="org-option row x-center" onClick={() => { browserHistory.push(`/org/${o.slug}`) }}>
+                  <img src={o.details.profileUrl} />
+                  <span>{ o.name }</span>
+                </div>
+              )
+            })
+          }
         </div>
       </div>
     );

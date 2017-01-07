@@ -28,9 +28,26 @@ export default class BlockContainer extends Component {
     return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
-  profileImageOrDefault(id) {
-    var user = Meteor.users.findOne(id);
-    return user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
+  ownerDetails(event) {
+    var imgUrl, name;
+    if(event.orgEvent) {
+      var org = Organizations.findOne(event.owner);
+      imgUrl = org.details.profileUrl;
+      name = org.name;
+    }
+    else {
+      var user = Meteor.users.findOne(event.owner);
+      imgUrl = user.profile.imageUrl;
+      name = user.username;
+    }
+    if(imgUrl == null) {
+      imgUrl = "/images/profile.png";
+    }
+    return (
+      <div className="row x-center" style={{fontSize: 12}}>
+        <img src={imgUrl} style={{width: 12.5, height: "auto", marginRight: 5}} />{ name }
+      </div>
+    )
   }
 
   onPencilClick(event) {
@@ -63,12 +80,20 @@ export default class BlockContainer extends Component {
           {
             (this.props.events || []).map((event, i) => {
               var instance = Instances.findOne();
+              var isOwner = false;
+              if(event.orgEvent) {
+                var org = Organizations.findOne(event.owner);
+                isOwner = org.owner == Meteor.userId() || org.roles.owners.indexOf(Meteor.userId) >= 0;
+              }
+              else {
+                isOwner = Meteor.userId() == event.owner;
+              }
               return (
                 <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
-                      Meteor.userId() == event.owner ? (
+                      isOwner ? (
                         <div className="event-block-edit" >
                           {
                             event.isComplete ? (
@@ -97,9 +122,7 @@ export default class BlockContainer extends Component {
                   <div className="event-block-content">
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-                        <div className="row x-center" style={{fontSize: 12}}>
-                          <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
-                        </div>
+                        { this.ownerDetails(event) }
                         <span style={{fontSize: 12}}>{
                           (() => {
                             var count = 0;
