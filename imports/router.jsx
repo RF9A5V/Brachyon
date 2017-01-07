@@ -27,6 +27,10 @@ import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
 import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
+import OrganizationCreateScreen from "../imports/components/organizations/create.jsx";
+import OrganizationShowScreen from "../imports/components/organizations/show.jsx";
+import GameHubScreen from "../imports/components/games/hub.jsx";
+import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -60,9 +64,9 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="events/:slug/view" component={OrganizeEventScreen} />
+      <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="events/:slug/publish" component={PublishEventScreen} />
-      <Route path="events/discover" component={EventDiscoveryScreen} />
+      <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
       <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
@@ -73,6 +77,7 @@ export const renderRoutes = () => (
       <Route path="brackets/create" component={CreateBracketScreen} />
       <Route path="brackets/:id/admin" component={BracketAdminScreen} />
       <Route path="brackets/:id/show" component={BracketShowScreen} />
+      <Route path="game/:slug" component={GameHubScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
@@ -83,6 +88,9 @@ export const renderRoutes = () => (
       <Route path="leagues/:slug/edit" component={EditLeagueScreen} />
       <Route path="leagues/:slug/admin" component={EditLeagueScreen} />
       <Route path="leagues/:slug/show" component={ShowLeagueScreen} />
+      <Route path="events/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
+      <Route path="orgs/create" component={OrganizationCreateScreen} />
+      <Route path="org/:slug" component={OrganizationShowScreen} />
     </Route>
   </Router>
 )

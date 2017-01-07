@@ -156,8 +156,14 @@ export default class ImageForm extends Component {
           { value }
         </div>
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
-        <div style={{marginTop: 20}}>
-          <button onClick={() => { this.refs.file.click() }}>Choose Image</button>
+        <div className="row center" style={{marginTop: 20}}>
+          {
+            this.state.url || this.props.defaultImage ? (
+              <button onClick={() => { this.refs.file.click() }}>Change</button>
+            ) : (
+              <button onClick={() => { this.refs.file.click() }}>Choose Image</button>
+            )
+          }
         </div>
       </div>
     )

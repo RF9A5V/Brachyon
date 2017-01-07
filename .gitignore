@@ -3,4 +3,4 @@ uploads/
 notes/
 settings.json
 .meteor/dev_bundle
-private/
+imports/private/
