@@ -16,7 +16,6 @@ export default class TabController extends React.Component {
 
   switchTab(page) {
     return function(e){
-      console.log(this);
       this.setState({page});
     }
   }

@@ -54,6 +54,7 @@ export default class EditEventScreen extends TrackerReact(React.Component){
       subitems: [
         {
           component: Main,
+          text: "Overview",
           args: {
             name: "Details"
           }

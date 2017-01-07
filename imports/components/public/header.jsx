@@ -115,11 +115,11 @@ export default class Header extends TrackerReact(Component) {
               </Link>
               {
                 Meteor.userId() ? (
-                  <Link className={`hub ${window.location.pathname == "/events/create" ? "active" : ""}`} to="/events/create">
+                  <Link className={`hub ${window.location.pathname == "/create" ? "active" : ""}`} to="/create">
                     CREATE
                   </Link>
                 ) : (
-                  <a href="#" className={`hub ${window.location.pathname == "/events/create" ? "active" : ""}`} onClick={ (e) => {
+                  <a href="#" className={`hub ${window.location.pathname == "/create" ? "active" : ""}`} onClick={ (e) => {
                     e.preventDefault();
                     toastr.warning("Please log in or sign up before creating an event!", "Warning!");
                     browserHistory.push("/")
@@ -128,11 +128,9 @@ export default class Header extends TrackerReact(Component) {
                   </a>
                 )
               }
-
               <Link className={`hub ${window.location.pathname == "/games/index" ? "active" : ""}`} to="/games/index">
                 GAMES
               </Link>
-
               {/*
               <Link className="hub" to="/discover">
                 MARKET

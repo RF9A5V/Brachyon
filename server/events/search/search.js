@@ -73,7 +73,6 @@ Meteor.methods({
       }
     }
     query["published"] = true;
-    console.log(query);
     return query;
   }
 })

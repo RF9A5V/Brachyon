@@ -26,7 +26,8 @@ export default class BracketShowScreen extends Component {
             })
           })
         }
-      })
+      }),
+      ready: false
     }
   }
 
@@ -67,7 +68,7 @@ export default class BracketShowScreen extends Component {
           {
             component: ParticipantList,
             args: {
-              participants: instance.brackets[this.props.params.bracketIndex].participants || [],
+              participants: Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [],
               bracketIndex: this.props.params.bracketIndex
             }
           }
@@ -97,7 +98,7 @@ export default class BracketShowScreen extends Component {
         <TabController items={this.items()} />
       );
     }
-    else if(!this.state.ready) {
+    else {
       return (
         <div>
           Loading...

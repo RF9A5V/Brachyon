@@ -4,6 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import DisplayDiscover from './display_discover.jsx';
 import DiscoverSearch from './search.jsx';
 import BlockContainer from './block_container.jsx';
+import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 
 export default class EventDiscoveryScreen extends TrackerReact(Component) {
 
@@ -12,7 +13,9 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
     this.setState({
       events: Meteor.subscribe('discoverEvents'),
       promotedEvents: Meteor.subscribe("promotedEvents"),
-      query: {}
+      query: {
+        league: null
+      }
     })
   }
 
@@ -26,7 +29,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   promotedEvents() {
-    return Events.find({"promotion.active": true}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
+    return Events.find({"promotion.active": true, league: null}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
   }
 
   setSubscription(params, query){
@@ -52,7 +55,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
         <div style={{padding: "0 5em"}}>
           {
             this.state.events.ready() ? (
-              <BlockContainer events={this.events()} />
+              <AltBlockContainer />
             ) : (
               <div></div>
             )

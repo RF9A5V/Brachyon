@@ -55,6 +55,7 @@ export default class EventAdminPage extends TrackerReact(Component) {
       subitems: [
         {
           component: Main,
+          text: "Overview",
           args: {
             name: "Details"
           }

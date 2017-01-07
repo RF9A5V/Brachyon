@@ -32,6 +32,13 @@ import OrganizationShowScreen from "../imports/components/organizations/show.jsx
 import GameHubScreen from "../imports/components/games/hub.jsx";
 import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
 
+import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
+import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
+import EditLeagueScreen from "../imports/components/leagues/edit.jsx";
+import ShowLeagueScreen from "../imports/components/leagues/show.jsx";
+
+import CreateBracketScreen from "../imports/components/brackets/create.jsx";
+
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
@@ -65,6 +72,11 @@ export const renderRoutes = () => (
       <Route path="events/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
+      <Route path="create" component={CreateRunnableScreen} />
+      <Route path="leagues/create" component={CreateLeagueScreen} />
+      <Route path="brackets/create" component={CreateBracketScreen} />
+      <Route path="brackets/:id/admin" component={BracketAdminScreen} />
+      <Route path="brackets/:id/show" component={BracketShowScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
@@ -73,6 +85,9 @@ export const renderRoutes = () => (
       <Route path="events/:slug/admin" component={EventAdminScreen} />
       <Route path="events/:slug/show" component={PreviewEventScreen}/>
       <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="leagues/:slug/edit" component={EditLeagueScreen} />
+      <Route path="leagues/:slug/admin" component={EditLeagueScreen} />
+      <Route path="leagues/:slug/show" component={ShowLeagueScreen} />
       <Route path="events/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />

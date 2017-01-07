@@ -16,6 +16,10 @@ export default class TabController extends Component {
   }
 
   setActive(item, subItem){
+    if(this.state.activeItem == item) {
+      this.setState({activeItem: item, activeSub: subItem});
+      return;
+    }
     this.setState({
       isAnimating: true
     });
@@ -24,7 +28,7 @@ export default class TabController extends Component {
         activeItem: item,
         activeSub: subItem,
         isAnimating: false
-      })
+      });
     }, 500)
   }
 
@@ -45,7 +49,7 @@ export default class TabController extends Component {
       <div className="tab-container">
         <SideTabMenu items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
-          <SideTabContent items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} />
+          <SideTabContent items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
         </VelocityComponent>
         <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", zIndex: 4, paddingRight: 80, justifyContent: "flex-end"}}>
           {

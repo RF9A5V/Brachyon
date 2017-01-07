@@ -17,6 +17,10 @@ export default class SubmitPage extends Component {
   }
 
   render() {
-    return null;
+    return (
+      <div>
+        One or more errors occurred. Check details of your event.
+      </div>
+    );
   }
 }

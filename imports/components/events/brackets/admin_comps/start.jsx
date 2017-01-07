@@ -5,12 +5,12 @@ export default class StartBracketAction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: Events.findOne()._id
+      id: (Events.findOne() || {})._id || Instances.findOne()._id
     }
   }
 
   startEventHandler() {
-    Meteor.call("events.start_event", this.state.id, this.props.index, function(err) {
+    Meteor.call("events.start_event", this.state.id, this.props.index || 0, function(err) {
       if(err){
         return toastr.error(err.reason, "Error!");
       }

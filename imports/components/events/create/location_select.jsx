@@ -4,6 +4,9 @@ import GoogleMapsLoader from "google-maps";
 export default class LocationSelect extends Component {
 
   componentWillMount() {
+
+    console.log("yee")
+
     this.setState({
       online: this.props.online === true,
       coords: [],
@@ -12,7 +15,7 @@ export default class LocationSelect extends Component {
       city: this.props.city || "",
       state: this.props.state || "",
       zip: this.props.zip || ""
-    })
+    });
 
     var self = this;
 
@@ -66,11 +69,28 @@ export default class LocationSelect extends Component {
           state,
           zip,
           coords
+        }, () => {
+          if(self.props.onChange) {
+            self.props.onChange(self.state);
+          }
         });
 
         self.forceUpdate();
       })
     });
+  }
+
+  componentWillReceiveProps() {
+    console.log("wow");
+    this.setState({
+      online: this.props.online === true,
+      coords: [],
+      locationName: this.props.locationName || "",
+      streetAddress: this.props.streetAddress || "",
+      city: this.props.city || "",
+      state: this.props.state || "",
+      zip: this.props.zip || ""
+    })
   }
 
   componentDidUpdate(){
@@ -86,7 +106,7 @@ export default class LocationSelect extends Component {
   updateValue(e){
     this.state.online = (e.target.value == 0);
     if(this.props.onChange){
-      this.props.onChange();
+      this.props.onChange(this.state);
     }
     this.forceUpdate();
   }
@@ -132,15 +152,15 @@ export default class LocationSelect extends Component {
           <div className="row">
             <div className="col" style={{width: "50%"}}>
               <h5>City</h5>
-              <input  type="text" ref="city" value={this.state.city} />
+              <input  type="text" ref="city" defaultValue={this.state.city} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <h5>State</h5>
-              <input  type="text" ref="state" value={this.state.state} />
+              <input  type="text" ref="state" defaultValue={this.state.state} />
             </div>
             <div className="col" style={{width: "25%"}}>
               <h5>Zip</h5>
-              <input  type="text" ref="zip" value={this.state.zip} />
+              <input  type="text" ref="zip" defaultValue={this.state.zip} />
             </div>
           </div>
         </div>

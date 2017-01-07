@@ -5,6 +5,7 @@ import Icons from "/imports/api/sponsorship/icon.js";
 import Tickets from "/imports/api/ticketing/ticketing.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
+import { Email } from 'meteor/email'
 
 var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -231,7 +232,6 @@ Meteor.methods({
         })
       })
       if(customerCreate.error){
-        console.log(customerUpdate.error.message);
         throw new Meteor.Error(500, "stripe-error-create", customerCreate.error.message);
       }
       else{
@@ -248,7 +248,6 @@ Meteor.methods({
         })
       })
       if(customerUpdate.error){
-        console.log(customerUpdate.error.message);
         throw Meteor.Error(500, "stripe-error-update", customerUpdate.error.message);
       }
       else{
@@ -368,6 +367,7 @@ Meteor.methods({
       }
     });
     if(user){
+      Accounts.sendVerificationEmail(user);
       var token = Accounts._generateStampedLoginToken();
       Accounts._insertLoginToken(user, token);
       return token;

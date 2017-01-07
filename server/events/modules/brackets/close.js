@@ -3,9 +3,12 @@ import Instances from "/imports/api/event/instance.js";
 Meteor.methods({
   "events.brackets.close"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance;
     if(!event) {
-      throw new Meteor.Error(404, "Event not found!");
+      instance = Instances.findOne(eventID);
+    }
+    else {
+      var instance = Instances.findOne(event.instances.pop());
     }
     var bracket = instance.brackets[bracketIndex];
     if(!bracket) {
@@ -64,7 +67,7 @@ Meteor.methods({
       }
       else {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
-      }
+      } 
     }
     var cmd = {
       $set: {}
@@ -77,6 +80,38 @@ Meteor.methods({
     cmd["$set"][`brackets.${bracketIndex}.isComplete`] = true;
     cmd["$set"][`brackets.${bracketIndex}.inProgress`] = false;
     cmd["$set"][`brackets.${bracketIndex}.endedAt`] = new Date();
+
+    // League update
+    if(event && event.league) {
+      var updateObj = {};
+      var league = Leagues.findOne(event.league);
+      var totalScore = participants.length;
+
+      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      league.leaderboard[leaderboardIndex].forEach((obj, localIndex) => {
+        var user = Meteor.users.findOne(obj.id);
+        var globalIndex = league.leaderboard[0].findIndex((usr) => { return usr.id == obj.id });
+        var scoreNeg = 0;
+        if(bracket.format.baseFormat == "single_elim") {
+          scoreNeg = parseInt(Math.log2(ldrboard[user.username]));
+        }
+        else if(bracket.format.baseFormat == "double_elim") {
+          var scoreNeg = ldrboard[user.username];
+          if(scoreNeg > 4) {
+            scoreNeg = parseInt(Math.log2(scoreNeg)) + 3
+          }
+        }
+        else {
+          scoreNeg = ldrboard[user.username];
+        }
+        updateObj[`leaderboard.0.${globalIndex}.score`] = totalScore - scoreNeg;
+        updateObj[`leaderboard.${leaderboardIndex}.${localIndex}.score`] = totalScore - scoreNeg;
+      });
+      Leagues.update(event.league, {
+        $inc: updateObj
+      });
+    }
+
     Instances.update(instance._id, cmd);
   }
 })
