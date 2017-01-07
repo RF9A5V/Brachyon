@@ -32,25 +32,26 @@ export default class OrganizationCreateScreen extends Component {
         toastr.error(err.reason, "Error!");
       }
       else{
-        profileRef.setMeta("orgId", organizations);
-        bannerRef.setMeta("orgId", organizations);
+        var href = `/org/${organizations}`
+        profileRef.setMeta("orgSlug", organizations);
+        bannerRef.setMeta("orgSlug", organizations);
 
         if(profileRef.hasValue()) {
           profileRef.value(() => {
             if(bannerRef.hasValue()) {
               bannerRef.value(() => {
-                console.log("REEEEE ME!");
+                browserHistory.push(href);
               });
             }
             else {
-              console.log("REEEE NO BANNER!");
+              browserHistory.push(href);
             }
           });
         }
         else {
           if(bannerRef.hasValue()) {
             bannerRef.value(() => {
-              console.log("REEE NO PROFILE!");
+              browserHistory.push(href);
             });
           }
         }

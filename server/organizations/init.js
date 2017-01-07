@@ -18,6 +18,6 @@ Meteor.methods({
       }
     });
 
-    return Organizations.findOne(org)._id;
+    return Organizations.findOne(org).slug;
   }
 });

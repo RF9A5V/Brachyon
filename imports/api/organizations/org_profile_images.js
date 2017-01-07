@@ -32,7 +32,7 @@ var OrgImages = new FilesCollection({
         if(!Meteor.isDevelopment) {
           compressThenStore(params, fileRef, location, Meteor.bindEnvironment(() => {
             Organizations.update({
-              _id: fileRef.meta.orgId
+              slug: fileRef.meta.orgSlug
             }, {
               $set: {
                 "details.profileUrl": "https://brachyontest-604a.kxcdn.com/" + location + "/" + fileRef.name
@@ -42,11 +42,11 @@ var OrgImages = new FilesCollection({
           }));
         }
         else {
-          var org = Organizations.findOne(meta.orgId);
+          var org = Organizations.findOne({slug: meta.orgSlug});
           if(org.details.profileImage) {
             self.remove({_id: org.details.profileImage});
           }
-          Organizations.update({ _id: meta.orgId }, {
+          Organizations.update({ slug: meta.orgSlug }, {
             $set: {
               "details.profileUrl": self.findOne(fileRef._id).link(),
               "details.profileImage": fileRef._id
