@@ -86,6 +86,7 @@ export default class Footer extends React.Component {
               <Link to="/about"><div className="footer-hub-bg col x-center center">About</div></Link>
               {/*<Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>*/}
               <Link to="/terms"><div className="footer-hub-bg col x-center center">Terms</div></Link>
+              <Link to="/privacy"><div className="footer-hub-bg col x-center center">Privacy</div></Link>
               {/*<a href="#" className="footer-hub-pad col x-center">Privacy</a>*/}
               <div className="footer-hub-bg col x-center center">&copy; Brachyon 2016</div>
             </div>
