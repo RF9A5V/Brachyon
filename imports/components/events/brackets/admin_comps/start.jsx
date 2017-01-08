@@ -56,7 +56,8 @@ export default class StartBracketAction extends Component {
     if(this.state.rez.action == "bracket") {
       return (
         <div>
-          Your bracket's fucked, yo
+          <h5>Close Your Bracket</h5>
+          <p>Tom put text here</p>
           <button onClick={() => {
             this.setState({
               open: false
@@ -68,8 +69,9 @@ export default class StartBracketAction extends Component {
     }
     else if(this.state.rez.action == "event") {
       return (
-        <div>
-          Your event's fucked, yo
+        <div className="col x-center">
+          <h5>Close Your Event</h5>
+          <p>Tom put text here</p>
           <button onClick={() => {
             Meteor.call("events.close", this.state.rez.id, (err) => {
               if(err) {
