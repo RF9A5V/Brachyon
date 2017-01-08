@@ -114,7 +114,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
         component: CFPage
       });
     }
-    if(event.twitchStream){
+    if(event.stream){
       pages.push({
         name: "Streams",
         component: StreamPage
