@@ -9,12 +9,6 @@ export default class StreamPanel extends Component {
     }
   }
 
-  value() {
-    return {
-      value: this.refs.stream.value
-    };
-  }
-
   itemDescriptions() {
     var descriptions = [
       "Simply enter your Twitch name and we will generate a page on your event for your stream."
@@ -33,7 +27,7 @@ export default class StreamPanel extends Component {
   render() {
     var tabs = ["Stream"];
     return (
-      <div style={this.props.style}>
+      <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
@@ -56,7 +50,7 @@ export default class StreamPanel extends Component {
             <div>
               <div className="row center x-center">
                 <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" />
+                <input type="text" placeholder="Stream Name" ref="stream" onChange={(e) => { this.props.attrs.stream.value = e.target.value; }} defaultValue={(this.props.attrs.stream || {}).value} />
               </div>
             </div>
           ) : (
