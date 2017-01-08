@@ -63,6 +63,7 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
+    console.log(obj);
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;

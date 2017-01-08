@@ -4,8 +4,17 @@ export default class StreamPanel extends Component {
 
   constructor(props) {
     super(props);
+    if(props.selected && !props.attrs.stream) {
+      props.attrs.stream = {};
+    }
     this.state = {
       item: 0
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if(!props.attrs.stream) {
+      props.attrs.stream = {};
     }
   }
 
@@ -50,7 +59,7 @@ export default class StreamPanel extends Component {
             <div>
               <div className="row center x-center">
                 <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" onChange={(e) => { this.props.attrs.stream.value = e.target.value; }} defaultValue={(this.props.attrs.stream || {}).value} />
+                <input type="text" placeholder="Stream Name" ref="stream" onChange={(e) => { this.props.attrs.stream.value = this.refs.stream.value; }} defaultValue={(this.props.attrs.stream || {}).value} />
               </div>
             </div>
           ) : (
