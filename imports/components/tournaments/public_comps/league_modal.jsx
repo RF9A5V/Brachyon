@@ -1,12 +1,26 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import Modal from "react-modal"
+import { browserHistory } from "react-router";
 
 export default class LeagueModal extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    var bracketIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+    this.state = {
+      league: Meteor.subscribe("leagueByID", Events.findOne().league, {
+        onReady: () => {
+          this.setState({ ready: true })
+        }
+      }),
+      ready: false,
+      bracketIndex
+    };
+  }
+
+  componentWillUnmount() {
+    this.state.league.stop();
   }
 
   closeModal() {
@@ -15,6 +29,12 @@ export default class LeagueModal extends Component {
 
   boardFormatting(ldrboard) {
     var totalPoints = Object.keys(ldrboard).length;
+    var localBoard = {};
+    var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
+    Leagues.findOne().leaderboard[eventIndex + 1].forEach((obj, i) => {
+      var user = Meteor.users.findOne(obj.id);
+      localBoard[user.username] = obj;
+    });
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
@@ -42,19 +62,26 @@ export default class LeagueModal extends Component {
                   { user }
                 </div>
                 <div className="col-1">
-                  { totalPoints - i  }
+                  { totalPoints - i  } +
                 </div>
                 <div className="col-1">
                   <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
                     if(isNaN(e.target.value)) {
                       e.target.value = e.target.value.slice(0, e.target.value.length - 1)
+                    } else {
+                      this.forceUpdate();
                     } }} onKeyPress={(e) => {
                       if(e.key == "Enter") {
                         e.target.blur();
                       }
                     }} onBlur={(e) => {
+                      Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex + 1, localBoard[user].id, parseInt(e.target.value), (err) => {
+                        if(err) {
+                          toastr.error("Couldn\'t update bonus points!");
+                        }
+                      })
                       this.state.participants[user] = parseInt(e.target.value);
-                    }}
+                    }} defaultValue={localBoard[user].bonus}
                   />
                 </div>
               </div>
@@ -124,8 +151,7 @@ export default class LeagueModal extends Component {
   }
 
   boardType() {
-    var bracketIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-    switch(Instances.findOne().brackets[bracketIndex].format.baseFormat) {
+    switch(Instances.findOne().brackets[this.state.bracketIndex].format.baseFormat) {
       case "single_elim":
         return this.singleElimLeaderboard();
       case "double_elim":
@@ -136,6 +162,12 @@ export default class LeagueModal extends Component {
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <div>
+        </div>
+      )
+    }
     return (
       <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
         <div className="row">
@@ -148,7 +180,22 @@ export default class LeagueModal extends Component {
         { this.boardType() }
         <div className="row center">
           <button onClick={this.closeModal.bind(this)} style={{marginRight: 20}}>Cancel</button>
-          <button onClick={ () => { console.log(this.state.participants) } }>Finalize</button>
+          <button onClick={ () => {
+            Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
+              if(err) {
+                return toastr.error("Couldn\'t close this bracket.", "Error!");
+              }
+              var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });
+              if(allBracketsComplete) {
+                Meteor.call("events.close", Events.findOne()._id, (err) => {
+                  if(err) {
+                    return toastr.error("Couldn\'t close the event.", "Error!");
+                  }
+                  browserHistory.push("/");
+                })
+              }
+            })
+          }}>Finalize</button>
         </div>
       </Modal>
     )

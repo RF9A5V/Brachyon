@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import MatchBlock from './match.jsx';
-import LeagueModal from "../public_comps/league_modal.jsx";
 
 export default class SingleDisplay extends Component {
 
@@ -85,13 +84,6 @@ export default class SingleDisplay extends Component {
             })
           }
         </div>
-        {
-          Events.findOne().league ? (
-            <LeagueModal open={this.state.open} close={() => { this.setState({open: false}) }} />
-          ) : (
-            ""
-          )
-        }
       </div>
     )
 

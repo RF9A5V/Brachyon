@@ -57,7 +57,7 @@ export default class LeaderboardSlide extends Component {
           <div className="row">
             <div className="col-2">
               {
-                (index > 0 ? ((obj.placement + 1) + ". ") : ("")) + user.username
+                (index > 0 ? ((obj.placement) + ". ") : ("")) + user.username
               }
             </div>
             <div className="col-1">
