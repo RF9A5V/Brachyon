@@ -8,6 +8,7 @@ import MainSlide from "./show/main.jsx";
 import EventSlide from "./show/events.jsx";
 import LeaderboardSlide from "./show/leaderboards.jsx";
 import TiebreakerSlide from "./show/tiebreaker.jsx";
+import StreamSlide from "./show/stream.jsx";
 
 export default class LeagueShowPage extends Component {
 
@@ -48,6 +49,12 @@ export default class LeagueShowPage extends Component {
         name: "Tiebreaker",
         component: TiebreakerSlide
       });
+    }
+    if(league.stream) {
+      pages.push({
+        name: "Stream",
+        component: StreamSlide
+      })
     }
     return pages;
   }

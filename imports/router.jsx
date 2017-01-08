@@ -31,6 +31,7 @@ import OrganizationCreateScreen from "../imports/components/organizations/create
 import OrganizationShowScreen from "../imports/components/organizations/show.jsx";
 import GameHubScreen from "../imports/components/games/hub.jsx";
 import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
+import PrivacyPolicyScreen from "../imports/components/public/privacy.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -78,6 +79,7 @@ export const renderRoutes = () => (
       <Route path="brackets/:id/admin" component={BracketAdminScreen} />
       <Route path="brackets/:id/show" component={BracketShowScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
+      <Route path="/privacy" component={PrivacyPolicyScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
