@@ -1,10 +1,28 @@
 import React, { Component } from 'react'
 import MatchBlock from './match.jsx';
+import LeagueModal from "../public_comps/league_modal.jsx";
 
 export default class SingleDisplay extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      open: false
+    }
+  }
+
+  componentDidMount() {
+    var finalMatch = this.props.rounds[0][this.props.rounds[0].length - 1][0];
+    if(finalMatch.winner) {
+      this.setState({ open: true });
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    var finalMatch = props.rounds[0][props.rounds[0].length - 1][0];
+    if(finalMatch.winner) {
+      this.setState({ open: true });
+    }
   }
 
   render() {
@@ -58,7 +76,7 @@ export default class SingleDisplay extends Component {
                       }
                       return (<div className="bracket-match-spacing">
                         <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
-                      
+
                       </div>);
                     })
                   }
@@ -67,6 +85,13 @@ export default class SingleDisplay extends Component {
             })
           }
         </div>
+        {
+          Events.findOne().league ? (
+            <LeagueModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+          ) : (
+            ""
+          )
+        }
       </div>
     )
 

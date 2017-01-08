@@ -28,5 +28,8 @@ Meteor.methods({
         [`leaderboard.0.${globalIndex}.bonus`]: diff
       }
     });
+  },
+  "leagues.leaderboard.batchUpdateBonus"(id, index, users) {
+    
   }
 })
