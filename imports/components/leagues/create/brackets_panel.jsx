@@ -12,7 +12,6 @@ export default class BracketsPanel extends Component {
     return (
       <div className="col">
         <BracketForm {...this.props.attrs.brackets} onChange={(game, format) => {
-          console.log(game);
           this.props.attrs.brackets.gameObj = game;
           this.props.attrs.brackets.format = format;
         }} />
