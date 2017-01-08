@@ -20,9 +20,11 @@ export default class BracketsPanel extends Component {
           <option value={"linear"}>
             Linear
           </option>
-          <option value={"exp"}>
-            Exponential
-          </option>
+          {
+            // <option value={"exp"}>
+            //   Exponential
+            // </option>
+          }
         </select>
       </div>
     )
