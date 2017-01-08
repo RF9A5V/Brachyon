@@ -15,7 +15,9 @@ export default class ParticipantAddField extends Component {
   }
 
   componentWillUnmount() {
-    this.state.users.stop();
+    if(this.state.users) {
+      this.state.users.stop();
+    }
   }
 
   userTemplate(user, index) {

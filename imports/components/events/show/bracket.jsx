@@ -3,6 +3,8 @@ import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
 import SwissDisplay from "../../tournaments/swiss/display.jsx";
 import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
+
+import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 import TrackerReact from "meteor/ultimatejs:tracker-react"
 
 export default class BracketPanel extends TrackerReact(Component) {
@@ -11,7 +13,8 @@ export default class BracketPanel extends TrackerReact(Component) {
     super(props);
     this.state = {
       ready: false,
-      bracket: null
+      bracket: null,
+      open: false
     }
   }
 
@@ -35,32 +38,48 @@ export default class BracketPanel extends TrackerReact(Component) {
       onReady: () => {
         this.setState({
           ready: true,
-          bracket: br
+          bracket: br,
+          open: Brackets.findOne().complete == true
         });
       }
     });
     if(this.state.ready) {
       var rounds = Brackets.findOne().rounds;
+      var component = (
+        <div></div>
+      )
       if(this.props.format == "single_elim") {
-        return (
+        component =  (
           <SingleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "double_elim"){
-        return (
+        component = (
           <DoubleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "swiss"){
-        return (
+        component = (
           <SwissDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else {
-        return (
+        component = (
           <RoundDisplay rounds={rounds} id={this.props.id} />
         )
       }
+      return (
+        <div>
+          {
+            Events.findOne().league && Brackets.findOne().complete && !Instances.findOne().brackets[Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id })].isComplete ? (
+              <LeagueModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+            ) : (
+              ""
+            )
+          }
+          { component }
+        </div>
+      )
     }
     else {
       return (
