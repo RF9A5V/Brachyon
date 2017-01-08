@@ -366,8 +366,10 @@ Meteor.methods({
         isStripeConnected: false
       }
     });
-    if(user && !Meteor.isDevelopment){
-      Accounts.sendVerificationEmail(user);
+    if(user){
+      if(!Meteor.isDevelopment) {
+        Accounts.sendVerificationEmail(user);
+      }
       var token = Accounts._generateStampedLoginToken();
       Accounts._insertLoginToken(user, token);
       return token;
