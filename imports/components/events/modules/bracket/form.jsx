@@ -62,8 +62,10 @@ export default class BracketForm extends Component {
     for(var i in format){
       this.state[i] = format[i];
     }
-    // Only works for basic bracket formats.
-    this.refs.format.value = props.format.baseFormat;
+    if(props.format) {
+      // Only works for basic bracket formats.
+      this.refs.format.value = props.format.baseFormat;
+    }
   }
 
   onGameSelect(game) {
@@ -239,7 +241,7 @@ export default class BracketForm extends Component {
             <h5>Game</h5>
             {
               this.props.deletable ? (
-                <FontAwesome name="minus" onClick={() => {this.props.delfunc(this.props.key)}} />
+                <FontAwesome name="minus" onClick={() => {this.props.delfunc()}} />
               ) : ( "" )
             }
           </div>
