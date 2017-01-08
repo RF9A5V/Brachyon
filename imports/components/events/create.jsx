@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import moment from "moment";
 import { browserHistory } from "react-router";
 
 import DetailsPanel from "./create/details.jsx";
@@ -39,6 +39,12 @@ export default class EventCreateScreen extends Component {
       organizations: Meteor.subscribe("userOrganizations", Meteor.userId(), {
         onReady: () => { this.setState({ ready: true }) }
       }),
+      attrs: {
+        details: {
+          date: moment().toDate(),
+          time: moment().add(1, "hour").startOf("hour").toDate()
+        }
+      },
       ready: false
     }
   }
@@ -46,21 +52,6 @@ export default class EventCreateScreen extends Component {
   componentWillUnmount() {
     if(this.state.organizations) {
       this.state.organzations.stop();
-    }
-  }
-
-  panels() {
-    var generator = (value) => {
-      return () => {
-        this.state.moduleState[value].active = !this.state.moduleState[value].active;
-        this.forceUpdate();
-      }
-    }
-    return {
-      details: (<DetailsPanel ref="details" style={{height: this.state.currentItem == "details" ? "initial" : 0, overflowY: "hidden"}} />),
-      brackets: (<BracketsPanel selected={this.state.moduleState["brackets"].active} ref="brackets" style={{height: this.state.currentItem == "brackets" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("brackets")} />),
-      crowdfunding: (<CrowdfundingPanel selected={this.state.moduleState["crowdfunding"].active} ref="crowdfunding" style={{height: this.state.currentItem == "crowdfunding" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("crowdfunding")} />),
-      stream: (<StreamPanel ref="stream" selected={this.state.moduleState["stream"].active} style={{height: this.state.currentItem == "stream" ? "initial" : 0, overflowY: "hidden"}} onToggle={generator("stream")} />)
     }
   }
 
@@ -93,55 +84,96 @@ export default class EventCreateScreen extends Component {
     ];
   }
 
-  accordionItems() {
-    var moduleItems = [];
-    var modules = this.availableModules();
-    var keys = Object.keys(modules);
-    var panels = this.panels();
-    for(var i in modules){
-      moduleItems.push({
-        title: modules[i].name[0].toUpperCase() + modules[i].name.slice(1),
-        content: (
-          panels[modules[i].name]
-        ),
-        active: modules[i].name == this.state.currentItem
-      })
+  currentPanel() {
+    var item = (
+      <div></div>
+    );
+    var generator = (value) => {
+      return () => {
+        this.state.moduleState[value].active = !this.state.moduleState[value].active;
+        if(this.state.moduleState[value].active) {
+          this.state.attrs[value] = {};
+        }
+        else {
+          delete this.state.attrs[value];
+        }
+        this.forceUpdate();
+      }
     }
-    return moduleItems;
+    var isActive = (value) => {
+      return this.state.moduleState[value].active;
+    }
+    switch(this.state.currentItem) {
+      case "details":
+        item = <DetailsPanel attrs={this.state.attrs} />
+        break;
+      case "crowdfunding":
+        item = <CrowdfundingPanel attrs={this.state.attrs} selected={isActive("crowdfunding")} onToggle={generator("crowdfunding")}/>
+        break;
+      case "brackets":
+        item = <BracketsPanel attrs={this.state.attrs} onToggle={generator("brackets")} selected={isActive("brackets")} />
+        break;
+      case "stream":
+        item = <StreamPanel attrs={this.state.attrs} selected={isActive("stream")} onToggle={generator("stream")} />
+        break;
+      default:
+        break;
+    }
+    return (
+      <div style={{padding: 20, backgroundColor: "#666"}}>
+        { item }
+      </div>
+    )
   }
 
   submit(e) {
     e.preventDefault();
-    var refKeys = Object.keys(this.refs);
-    var args = {};
-    var unpub = false;
-    var unpubList = ["crowdfunding"];
-    for(var i in refKeys) {
-      var key = refKeys[i];
-      if(this.state.moduleState[key].active) {
-        args[key] = this.refs[key].value();
-        if(unpubList.indexOf(key) >= 0) {
-          unpub = true;
-        }
-      }
+
+    var imgRef;
+    if(this.state.attrs.details.image != null) {
+      imgRef = {
+        file: this.state.attrs.details.image.file,
+        meta: this.state.attrs.details.image.meta
+      };
     }
-
-    var imgRef = args["details"]["image"];
-    delete args["details"]["image"];
-
-    args.creator = this.state.creator;
-
-    Meteor.call("events.create", args, (err, event) => {
+    this.state.attrs.details.datetime = moment(this.state.attrs.details.date).format("YYYYMMDD") + "T" + moment(this.state.attrs.details.time).format("HHmm");
+    delete this.state.attrs.details.date;
+    delete this.state.attrs.details.time;
+    delete this.state.attrs.details.image;
+    this.state.attrs.creator = this.state.creator;
+    if(this.state.attrs.brackets) {
+      this.state.attrs.brackets = Object.keys(this.state.attrs.brackets).map(key => {
+        var obj = this.state.attrs.brackets[key];
+        if(!obj.game) {
+          obj.game = obj.gameObj._id;
+          delete obj.gameObj;
+        }
+        return obj;
+      });
+    }
+    Meteor.call("events.create", this.state.attrs, (err, event) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
       else {
-        var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
-        imgRef.setMeta("eventSlug", event);
-        if(imgRef.hasValue()) {
-          imgRef.value(() => {
-            browserHistory.push(href);
-          });
+        //var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
+        var href = `/events/${event}/show`;
+        if(imgRef) {
+          imgRef.meta.eventSlug = event;
+          var dataSeg = imgRef.file.substring(imgRef.file.indexOf("/"), imgRef.file.indexOf(";")).slice(1);
+          Banners.insert({
+            file: imgRef.file,
+            isBase64: true,
+            meta: imgRef.meta,
+            fileName: event + "." + dataSeg,
+            onUploaded: (err, data) => {
+              if(err) {
+                return toastr.error(err.reason, "Error!");
+              }
+              toastr.success("Successfully created event!");
+              browserHistory.push(href);
+            }
+          })
         }
         else {
           browserHistory.push(href);
@@ -254,13 +286,7 @@ export default class EventCreateScreen extends Component {
           </div>
           <div className="col" style={{marginBottom: 20}}>
             {
-              this.accordionItems().map(function(item){
-                return (
-                  <div style={{backgroundColor: "#666", padding: item.active ? 20 : 0}}>
-                    {item.content}
-                  </div>
-                );
-              })
+              this.currentPanel()
             }
           </div>
           <div className="row center">

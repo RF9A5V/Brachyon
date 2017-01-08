@@ -9,41 +9,35 @@ export default class BracketsPanel extends Component {
 
   constructor(props) {
     super(props);
+    var bracketCount = Object.keys(props.attrs.brackets || {0 : 1}).pop();
+    if(Object.keys(props.attrs.brackets || {}).length == 0) {
+      props.attrs.brackets = { 0 : {} };
+    }
     this.state = {
       item: 0,
-      bracketCount: 1,
-      brackets: [1]
+      bracketCount
     };
   }
 
-  value() {
-    return Object.keys(this.refs).map((key, index) => {
-      try {
-        return this.refs[key].value();
-      }
-      catch(error) {
-        toastr.error("All fields in the Game Bracket form have to be complete!", "Error!");
-        throw error;
-      }
+  componentWillReceiveProps(props) {
+    var bracketCount = Object.keys(props.attrs.brackets || {0 : 1}).pop();
+    if(Object.keys(props.attrs.brackets || {}).length == 0) {
+      props.attrs.brackets = { 0 : {} };
+    }
+    this.setState({
+      item: 0,
+      bracketCount
     });
   }
 
   addBracket() {
-    br = this.state.brackets;
-    br.push(this.state.brackets.length+1);
-    this.setState({
-      bracketCount: this.state.bracketCount+1,
-      brackets: br
-    })
+    this.props.attrs.brackets[++this.state.bracketCount] = {};
+    this.forceUpdate();
   }
 
   deleteBracket(key) {
-    br = this.state.brackets;
-    br.splice(key, 1);
-    this.setState({
-      bracketCount: this.state.bracketCount-1,
-      brackets: br
-    })
+    delete this.props.attrs.brackets[key];
+    this.forceUpdate();
   }
 
   itemDescriptions() {
@@ -64,7 +58,7 @@ export default class BracketsPanel extends Component {
   render() {
     var tabs = ["Bracket"];
     return (
-      <div className="col" style={this.props.style}>
+      <div className="col">
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
@@ -87,20 +81,29 @@ export default class BracketsPanel extends Component {
             <div>
               <div>
               {
-                this.state.brackets.map((bracket, key) => {
+                Object.keys(this.props.attrs.brackets).map(key => {
+                  var bracket = this.props.attrs.brackets[key];
+                  var onBracketChange = (key) => {
+                    return (game, format) => {
+                      this.props.attrs.brackets[key] = {
+                        gameObj: game,
+                        format
+                      };
+                    }
+                  }
                   if(bracket == null){
                     return "";
                   }
-                  if(this.state.bracketCount > 1){
+                  if(Object.keys(this.props.attrs.brackets).length > 1){
                     return (
                       <div className="game-bracket-container">
-                        <BracketForm key={key} ref={key} deletable={true} delfunc={this.deleteBracket.bind(this)} cb={(e) => { this.state.brackets[key] = null; this.state.bracketCount--; this.forceUpdate() }} />
+                        <BracketForm key={key} ref={key} deletable={true} delfunc={() => {this.deleteBracket(key)}} onChange={onBracketChange(key)} {...bracket}/>
                       </div>
                     );
                   }
                   return (
                     <div className="game-bracket-container">
-                      <BracketForm key={key} ref={key} />
+                      <BracketForm key={key} ref={key} onChange={onBracketChange(key)} {...bracket} />
                     </div>
                   );
                 })
