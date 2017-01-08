@@ -36,7 +36,7 @@ export default class CreateLeagueScreen extends Component {
         details: {
           season: 1
         },
-        events: [{ date: moment().toDate() }],
+        events: [{ date: moment().add(1, "hour").startOf("hour").toDate() }],
         brackets: {
           format: {
             baseFormat: "single_elim"
