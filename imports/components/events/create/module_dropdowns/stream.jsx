@@ -4,15 +4,18 @@ export default class StreamPanel extends Component {
 
   constructor(props) {
     super(props);
+    if(props.selected && !props.attrs.stream) {
+      props.attrs.stream = {};
+    }
     this.state = {
       item: 0
     }
   }
 
-  value() {
-    return {
-      value: this.refs.stream.value
-    };
+  componentWillReceiveProps(props) {
+    if(!props.attrs.stream) {
+      props.attrs.stream = {};
+    }
   }
 
   itemDescriptions() {
@@ -33,7 +36,7 @@ export default class StreamPanel extends Component {
   render() {
     var tabs = ["Stream"];
     return (
-      <div style={this.props.style}>
+      <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
@@ -56,7 +59,7 @@ export default class StreamPanel extends Component {
             <div>
               <div className="row center x-center">
                 <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" />
+                <input type="text" placeholder="Stream Name" ref="stream" onChange={(e) => { this.props.attrs.stream.value = this.refs.stream.value; }} defaultValue={(this.props.attrs.stream || {}).value} />
               </div>
             </div>
           ) : (

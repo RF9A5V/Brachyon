@@ -14,44 +14,9 @@ export default class DetailsPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      charCount: 0,
       option: "Title",
       content: ""
     }
-  }
-
-  value() {
-
-    if(this.refs.name.value == "") {
-      toastr.error("Details name needs definition.");
-      throw new Error("Details name needs definition.");
-    }
-    else if(this.refs.location.value() == null) {
-      toastr.error("Details location needs definition.");
-      throw new Error("Details location needs definition.");
-    }
-    else if(this.refs.date.value() == null || this.refs.time.value() == null) {
-      toastr.error("Details datetime needs definition.");
-      throw new Error("Details datetime needs definition.");
-    }
-
-    else {
-      return {
-        name: this.refs.name.value,
-        location: this.refs.location.value(),
-        description: this.state.content,
-        datetime: moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate(),
-        image: this.refs.image
-      }
-    }
-  }
-
-  onChange(e) {
-    var loc = this.refs.location.value();
-    var locationValid = loc.online || Object.keys(loc).length >= 0;
-    // this.props.onChange(
-    //   this.refs.name.value != "" && this.refs.description.value != "" && locationValid
-    // );
   }
 
   onTitleChange() {
@@ -59,42 +24,95 @@ export default class DetailsPanel extends Component {
     if(text.length > 50) {
       this.refs.name.value = text.substring(0, 50);
     }
-    this.setState({
-      charCount: this.refs.name.value.length
-    })
+    this.props.attrs.details.name = this.refs.name.value;
+    this.forceUpdate();
   }
 
   setImage(base64) {
     this.setState({
       image: base64
-    })
-  }
-
-  blockStyle(keyword) {
-    if(this.state.option == keyword) {
-      return {
-        opacity: 1
-      }
-    }
-    return {
-      opacity: 0,
-      height: 0,
-      overflowY: "hidden"
+    });
+    this.props.attrs.details.image = {
+      file: this.state.image,
+      meta: this.refs.image.dimensions()
     }
   }
 
-  setDescriptionState(content) {
-    this.setState({
-      content
-    })
+  currentComponent() {
+    var item = (
+      <div></div>
+    );
+    switch(this.state.option) {
+      case "Title":
+        item = (
+          <div className="col">
+            <div className="row x-center">
+              <h5 style={{marginRight: 10}}>Event Name</h5>
+              <span style={{fontSize: 12}}>{(this.props.attrs.details.name || "").length} / 50</span>
+            </div>
+            <input type="text" placeholder="Something Catchy..." ref="name" onChange={this.onTitleChange.bind(this)} defaultValue={this.props.attrs.details.name} />
+          </div>
+        );
+        break;
+      case "Location":
+        item = (
+          <div className="col">
+            <LocationSelect ref="location" online={false} onChange={(location) => { this.props.attrs.details.location = location; }} {...this.props.attrs.details.location} />
+          </div>
+        )
+        break;
+      case "Description":
+        item = (
+          <div className="col" style={{marginBottom: 20}}>
+            <Editor onChange={(content) => { this.props.attrs.details.description = content; }} useInsert={true} usePara={true} useTable={true} value={this.props.attrs.details.description} />
+          </div>
+        )
+        break;
+      case "Time":
+        item = (
+          <div className="row col-2" style={{marginBottom: 20}}>
+            <div className="col-1 x-center center">
+              <h5 style={{marginBottom: 10}}>Date</h5>
+              <div>
+                <DateInput ref="date" onChange={(date) => {
+                  this.props.attrs.details.date = date;
+                }} init={this.props.attrs.details.date} />
+              </div>
+            </div>
+            <div className="col-1 col x-center">
+              <h5 style={{marginBottom: 10}}>Time</h5>
+              <div className="row center x-center col-1" style={{marginBottom: 4, padding: "0 15px", border: "2px solid white", backgroundColor: "#333"}}>
+                <TimeInput ref="time" onChange={(time) => { this.props.attrs.details.time = time; }} init={this.props.attrs.details.time} />
+              </div>
+            </div>
+          </div>
+        )
+        break;
+      case "Banner":
+        item = (
+          <div>
+            <h5>Event Image (Optional)</h5>
+            <div className="row center">
+            <ImageForm
+              ref="image"
+              aspectRatio={16/9}
+              onImgSelected={this.setImage.bind(this)}
+              defaultImage={(this.props.attrs.details.image || {}).file || this.state.image}
+            />
+            </div>
+          </div>
+        )
+        break;
+      default:
+        break;
+    }
+    return item;
   }
 
   render() {
-
     var options = ["Title", "Location", "Description", "Time", "Banner"]
-
     return (
-      <div style={this.props.style}>
+      <div>
         <div className="row" style={{marginBottom: 20}}>
           {
             options.map(op => {
@@ -112,39 +130,9 @@ export default class DetailsPanel extends Component {
             })
           }
         </div>
-        <div className="col" style={this.blockStyle("Title")}>
-          <div className="row x-center">
-            <h5 style={{marginRight: 10}}>Event Name</h5>
-            <span style={{fontSize: 12}}>{this.state.charCount || 0} / 50</span>
-          </div>
-          <input type="text" placeholder="Something Catchy..." ref="name" onChange={this.onTitleChange.bind(this)} />
-        </div>
-        <div className="col" style={this.blockStyle("Location")}>
-          <LocationSelect ref="location" online={false} onChange={this.onChange.bind(this)} />
-        </div>
-        <div className="col" style={{marginBottom: 20}} style={this.blockStyle("Description")}>
-          <Editor onChange={this.setDescriptionState.bind(this)} useInsert={true} usePara={true} useTable={true} />
-        </div>
-        <div className="row col-2" style={{marginBottom: 20}} style={this.blockStyle("Time")}>
-          <div className="col-1 x-center center">
-            <h5 style={{marginBottom: 10}}>Date</h5>
-            <div>
-              <DateInput ref="date" />
-            </div>
-          </div>
-          <div className="col-1 col x-center">
-            <h5 style={{marginBottom: 10}}>Time</h5>
-            <div className="row center x-center col-1" style={{marginBottom: 4, padding: "0 15px", border: "2px solid white", backgroundColor: "#333"}}>
-              <TimeInput ref="time" />
-            </div>
-          </div>
-        </div>
-        <div style={this.blockStyle("Banner")}>
-          <h5>Event Image (Optional)</h5>
-          <div className="row center">
-          <ImageForm ref="image" collection={Banners} aspectRatio={16/9} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
-          </div>
-        </div>
+        {
+          this.currentComponent()
+        }
       </div>
     )
   }
