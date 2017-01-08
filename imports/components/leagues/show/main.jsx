@@ -5,7 +5,7 @@ import moment from "moment";
 export default class MainSlide extends Component {
 
   // Even though the prop is called event, it's actually the league.
-  // Yes, I know it's dumb but I'll put this fire out when there are like 100 less to deal with.
+  // Yes, I know it's dumb but I'll put this fire out when there are like 100 less fires to deal with.
 
   constructor(props) {
     super(props);
