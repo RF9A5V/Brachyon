@@ -34,6 +34,25 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     }
   }
 
+  componentWillReceiveProps(next) {
+    this.state.event.stop();
+    this.state.instance.stop();
+    this.setState({
+      event: Meteor.subscribe("event", this.props.params.slug, {
+        onReady: () => {
+          if(!Events.findOne()) {
+            return;
+          }
+          if(Events.findOne().owner != Meteor.userId()) {
+            toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
+            browserHistory.pop();
+          }
+        }
+      }),
+      instance: Meteor.subscribe("bracketContainer", this.props.params.id)
+    })
+  }
+
   componentWillUnmount() {
     this.state.event.stop();
     this.state.instance.stop();

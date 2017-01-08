@@ -39,7 +39,7 @@ export default class BracketPanel extends TrackerReact(Component) {
         this.setState({
           ready: true,
           bracket: br,
-          open: Brackets.findOne().complete == true
+          open: true
         });
       }
     });
@@ -68,11 +68,12 @@ export default class BracketPanel extends TrackerReact(Component) {
           <RoundDisplay rounds={rounds} id={this.props.id} />
         )
       }
+      var showModal = Events.findOne().league != null && Brackets.find().fetch()[0].complete && this.state.open;
       return (
         <div>
           {
-            Events.findOne().league && Brackets.findOne().complete && !Instances.findOne().brackets[Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id })].isComplete ? (
-              <LeagueModal open={this.state.open} close={() => { this.setState({open: false}) }} />
+            showModal ? (
+              <LeagueModal open={showModal} close={() => { this.setState({open: false}) }} />
             ) : (
               ""
             )

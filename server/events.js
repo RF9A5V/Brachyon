@@ -81,7 +81,31 @@ Meteor.methods({
           alias: alias
         }
       }
-    })
+    });
+    if(event.league) {
+      var league = Leagues.findOne(event.league);
+      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      var pushObj = {
+        [`leaderboard.${leaderboardIndex}`]: {
+          id: userID,
+          score: 0,
+          bonus: 0
+        }
+      };
+      var isGlobalRegistered = league.leaderboard[0].some(obj => {
+        return obj.id == userID;
+      });
+      if(!isGlobalRegistered) {
+        pushObj["leaderboard.0"] = {
+          id: userID,
+          score: 0,
+          bonus: 0
+        }
+      }
+      Leagues.update({ _id: event.league }, {
+        $push: pushObj
+      })
+    }
   },
 
   "events.removeParticipant"(eventID, bracketIndex, userId) {

@@ -35,6 +35,8 @@ export default class LeagueModal extends Component {
       var user = Meteor.users.findOne(obj.id);
       localBoard[user.username] = obj;
     });
+    console.log(localBoard);
+    console.log(ldrboard);
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
@@ -94,7 +96,6 @@ export default class LeagueModal extends Component {
 
   singleElimLeaderboard() {
     var ldrboard = {};
-    var participants = {};
     var userCount = 1;
     var roundobj = Brackets.findOne();
     var finals = roundobj.rounds[roundobj.rounds.length - 1].pop()[0];
@@ -102,18 +103,18 @@ export default class LeagueModal extends Component {
     var singleElimBracket = roundobj.rounds[roundobj.rounds.length - 1];
     singleElimBracket.reverse().forEach(round => {
       round.forEach(match => {
+        if(match.winner == null) {
+          return;
+        }
         if(ldrboard[match.winner] == null) {
           ldrboard[match.winner] = userCount ++;
-          participants[match.winner] = 0;
         }
         var loser = match.winner == match.playerOne ? match.playerTwo : match.playerOne;
         if(ldrboard[loser] == null) {
           ldrboard[loser] = userCount ++;
-          participants[loser] = 0;
         }
       });
     });
-    this.state.participants = participants;
     return this.boardFormatting(ldrboard);
   }
 
