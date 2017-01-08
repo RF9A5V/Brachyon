@@ -32,9 +32,7 @@ Meteor.methods({
       createObj.brackets = [bracket];
       createObj.creator = crObj;
       if(attrs.stream) {
-        createObj.twitchStream = {
-          name: attrs.stream.value
-        };
+        createObj.stream = attrs.stream;
       }
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
