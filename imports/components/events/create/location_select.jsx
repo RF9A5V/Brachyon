@@ -4,9 +4,6 @@ import GoogleMapsLoader from "google-maps";
 export default class LocationSelect extends Component {
 
   componentWillMount() {
-
-    console.log("yee")
-
     this.setState({
       online: this.props.online === true,
       coords: [],

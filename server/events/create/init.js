@@ -18,13 +18,13 @@ Meteor.methods({
     if(!obj.datetime) {
       throw new Meteor.Error(403, "This event needs a start date.");
     }
-    var currentDate = moment().minute(0).second(0).millisecond(0);
-    var eventStart = moment(obj.datetime).minute(0).second(0).millisecond(0);
+    var currentDate = moment().startOf("minute");
+    var eventStart = moment(obj.datetime).startOf("minute");
     if(eventStart.isBefore(currentDate)) {
       throw new Meteor.Error(403, "Event cannot start before current date.");
     }
-    if(obj.banner) {
-      obj.bannerUrl = Banners.findOne(obj.banner).link();
+    else {
+      obj.datetime = eventStart.toDate();
     }
     return obj;
   },
@@ -63,6 +63,7 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
+    console.log(obj);
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
