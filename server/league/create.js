@@ -31,6 +31,11 @@ Meteor.methods({
       createObj.details.datetime = e.date;
       createObj.brackets = [bracket];
       createObj.creator = crObj;
+      if(attrs.stream) {
+        createObj.twitchStream = {
+          name: attrs.stream.value
+        };
+      }
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
 
