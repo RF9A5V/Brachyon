@@ -21,6 +21,7 @@ export default class DetailsPanel extends Component {
   }
 
   value() {
+
     if(this.refs.name.value == "") {
       toastr.error("Details name needs definition.");
       throw new Error("Details name needs definition.");
@@ -33,6 +34,7 @@ export default class DetailsPanel extends Component {
       toastr.error("Details datetime needs definition.");
       throw new Error("Details datetime needs definition.");
     }
+
     else {
       return {
         name: this.refs.name.value,

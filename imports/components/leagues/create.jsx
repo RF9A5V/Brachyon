@@ -6,6 +6,7 @@ import ModuleBlock from "../events/create/module_block.jsx";
 import DetailsPanel from "./create/details_panel.jsx";
 import BracketsPanel from "./create/brackets_panel.jsx";
 import EventsPanel from "./create/events_panel.jsx";
+import StreamPanel from "./create/stream_panel.jsx";
 
 import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
@@ -35,7 +36,7 @@ export default class CreateLeagueScreen extends Component {
         details: {
           season: 1
         },
-        events: [{ date: moment().toDate() }],
+        events: [{ date: moment().add(1, "hour").startOf("hour").toDate() }],
         brackets: {
           format: {
             baseFormat: "single_elim"
@@ -158,6 +159,9 @@ export default class CreateLeagueScreen extends Component {
         break;
       case "brackets":
         item = <BracketsPanel attrs={this.state.attrs} />
+        break;
+      case "stream":
+        item = <StreamPanel attrs={this.state.attrs} selected={this.state.moduleState.stream.active} onToggle={() => { this.state.moduleState.stream.active = !this.state.moduleState.stream.active; this.forceUpdate(); }} />
         break;
       default:
         break;

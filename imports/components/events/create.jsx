@@ -44,7 +44,9 @@ export default class EventCreateScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.state.organzations.stop();
+    if(this.state.organizations) {
+      this.state.organzations.stop();
+    }
   }
 
   panels() {
