@@ -15,7 +15,9 @@ export default class ParticipantAddField extends Component {
   }
 
   componentWillUnmount() {
-    this.state.users.stop();
+    if(this.state.users){
+      this.state.users.stop();
+    }
   }
 
   userTemplate(user, index) {
@@ -46,7 +48,6 @@ export default class ParticipantAddField extends Component {
       this.setState({
         users: Meteor.subscribe("userSearch", this.refs.username.value, {
           onReady: () => {
-            console.log('shit')
             this.setState({
               ready: true,
               loading: false,
