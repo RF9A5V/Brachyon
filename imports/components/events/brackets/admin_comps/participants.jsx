@@ -60,11 +60,48 @@ export default class AddPartipantAction extends Component {
     this.forceUpdate();
   }
 
+  randomizeSeeding()
+  {
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+    var nparticipants = shuffle(this.state.participants); //We might need to find a way to return the participants from the backend rather than put the work on the frontend
+    //For now though, we need to get the same list of participants on both front and back end.
+    Meteor.call("events.shuffle_seeding", this.state.iid, this.state.index, nparticipants, (err) => {
+      if(err){
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        toastr.success("Successfully shuffled seeding.", "Success!");
+        this.state.participants = nparticipants;
+        this.forceUpdate();
+      }
+    });
+  }
+
   render() {
     var participants = this.state.participants;
     return (
       <div>
         <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
+        <div>
+          <button onClick={this.randomizeSeeding.bind(this)}>Randomize Seeding</button>
+        </div>
         <div className="col participant-table" style={{marginTop:"10px"}}>
           <div className="participant-row">
             <div className="col-1">
@@ -86,7 +123,7 @@ export default class AddPartipantAction extends Component {
               return (
                 <div className="participant-row" key={index}>
                   <div className="col-1">
-                    <SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)} />
+                    <SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)}x />
                   </div>
                   <div className="col-1">
                     { participant.alias }

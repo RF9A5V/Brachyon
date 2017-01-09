@@ -221,6 +221,21 @@ Meteor.methods({
     })
   },
 
+  "events.shuffle_seeding"(eventID, index, nparticipants)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}`]: {
+          participants: nparticipants
+        }
+      }
+    })
+  },
+
   "events.start_event"(eventID, index) {
     var event = Events.findOne(eventID);
     var instance;
