@@ -78,7 +78,6 @@ export default class LocationSelect extends Component {
   }
 
   componentWillReceiveProps() {
-    console.log("wow");
     this.setState({
       online: this.props.online === true,
       coords: [],
