@@ -92,7 +92,7 @@ export default class RevenuePanel extends Component {
 
   render() {
     return (
-      <div style={this.props.style}>
+      <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>

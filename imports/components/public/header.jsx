@@ -52,12 +52,6 @@ export default class Header extends TrackerReact(Component) {
     });
   }
 
-  removeNotifications() {
-    this.setState({
-      notificationsMenuOpen: false
-    })
-  }
-
   render() {
     if(!this.state.user.ready()){
       return (
@@ -73,18 +67,23 @@ export default class Header extends TrackerReact(Component) {
             <div className="row x-center">
               <div style={{position: "relative"}}>
                 <img style={{width: 40, height: 40, borderRadius: "100%", margin: "0 10px"}} src={this.imgOrDefault()} />
-                <div style={{position: "absolute", bottom: -5, right: 5}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen }) }}>
+                <div style={{position: "absolute", bottom: -5, right: 5}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.setState({ notificationsMenuOpen: !this.state.notificationsMenuOpen, userMenuOpen: false }) }}>
                   <NotyDropdown open={this.state.notificationsMenuOpen} />
                 </div>
               </div>
             </div>
           </Link>
           <div className="row x-center">
-            <a href="#" className="row x-center" style={{lineHeight: "32px", cursor: "pointer"}} onClick={(e) => { e.preventDefault();this.setState({userMenuOpen: !this.state.userMenuOpen}) }}>
+            <a href="#" className="row x-center" style={{lineHeight: "32px", cursor: "pointer"}} onClick={(e) => { e.preventDefault();this.setState({userMenuOpen: !this.state.userMenuOpen, notificationsMenuOpen: false}) }}>
               <FontAwesome style={{position: "relative", bottom: 7}} name="sort-desc" size="2x" />
             </a>
           </div>
-          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => { this.setState({ userMenuOpen: false, notificationsMenuOpen: true }) }} />
+          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => {
+            this.setState({
+              notificationsMenuOpen: true,
+              userMenuOpen: false
+            })
+          }} />
         </div>
       );
     }
@@ -107,7 +106,7 @@ export default class Header extends TrackerReact(Component) {
           if(this.state.userMenuOpen || this.state.notificationsMenuOpen) {
             clearTimeout(this.state.timeout);
           }
-        }} onClick={this.removeNotifications.bind(this)}>
+        }}>
           <div className="row x-center col-1">
             <div style={{marginLeft: 0, marginRight: 10}}>
               <Link to="/discover" className={`hub ${window.location.pathname == "/discover" ? "active" : ""}`}>
