@@ -68,7 +68,15 @@ export default class BracketPanel extends TrackerReact(Component) {
           <RoundDisplay rounds={rounds} id={this.props.id} />
         )
       }
-      var showModal = Events.findOne().league != null && Brackets.find().fetch()[0].complete && this.state.open;
+      var bracketComplete;
+      if(this.props.format == "single_elim" || this.props.format == "double_elim") {
+        bracketComplete = Brackets.find().fetch()[0].complete
+      }
+      else {
+        bracketComplete = Brackets.find().fetch()[0].rounds.pop().matches.every(match => { return match.played });
+      }
+      console.log(bracketComplete);
+      var showModal = Events.findOne().league != null && bracketComplete && this.state.open;
       return (
         <div>
           {

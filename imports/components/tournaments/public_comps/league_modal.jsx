@@ -151,12 +151,28 @@ export default class LeagueModal extends Component {
     return this.boardFormatting(ldrboard);
   }
 
+  swissLeaderboard() {
+    var ldrboard = {};
+    var players = Brackets.findOne().rounds[Brackets.findOne().rounds.length - 1].players.sort((a, b) => { return b.score - a.score; }).forEach((p, i) => {
+      ldrboard[p.name] = i;
+    });
+    return this.boardFormatting(ldrboard);
+  }
+
+  rrLeaderboard() {
+    return this.swissLeaderboard();
+  }
+
   boardType() {
     switch(Instances.findOne().brackets[this.state.bracketIndex].format.baseFormat) {
       case "single_elim":
         return this.singleElimLeaderboard();
       case "double_elim":
         return this.doubleElimLeaderboard();
+      case "swiss":
+        return this.swissLeaderboard();
+      case "round_robin":
+        return this.rrLeaderboard();
       default:
         return (<div></div>)
     }
