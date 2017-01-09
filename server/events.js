@@ -214,9 +214,7 @@ Meteor.methods({
     nparticipants.splice(newVal, 0, participant); //Put him back at his new seeding area.
     Instances.update(instance._id, {
       $set: {
-        [`brackets.${index}`]: {
-          participants: nparticipants
-        }
+        [`brackets.${index}.participants`]: nparticipants
       }
     })
   },
@@ -229,9 +227,7 @@ Meteor.methods({
     }
     Instances.update(instance._id, {
       $set: {
-        [`brackets.${index}`]: {
-          participants: nparticipants
-        }
+        [`brackets.${index}.participants`]: nparticipants
       }
     })
   },

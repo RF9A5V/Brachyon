@@ -10,12 +10,13 @@ export default class StartBracketAction extends Component {
   }
 
   startEventHandler() {
-    Meteor.call("events.start_event", this.state.id, this.props.index || 0, function(err) {
+    Meteor.call("events.start_event", this.state.id, this.props.index || 0, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
       else {
         toastr.success("Successfully started bracket!", "Success!");
+        this.props.sBracket();
       }
     });
   }
