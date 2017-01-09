@@ -71,7 +71,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           {
             component: ParticipantAction,
             args: {
-              index: this.props.params.bracketIndex,
+              index: this.props.params.bracketIndex || 0,
               bracket
             }
           }

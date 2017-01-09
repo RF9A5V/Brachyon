@@ -13,22 +13,33 @@ export default class BracketShowScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug, {
-        onReady: () => {
-          this.setState({
-            bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[this.props.params.bracketIndex].id, {
-              onReady: () => {
-                this.setState({
-                  ready: true
-                })
-              }
+    if(this.props.params.slug) {
+      this.state = {
+        event: Meteor.subscribe("event", this.props.params.slug, {
+          onReady: () => {
+            this.setState({
+              bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[this.props.params.bracketIndex].id, {
+                onReady: () => {
+                  this.setState({
+                    ready: true
+                  })
+                }
+              })
             })
-          })
-        }
-      }),
-      ready: false
+          }
+        }),
+        ready: false
+      }
     }
+    else {
+      this.state = {
+        bracket: Meteor.subscribe("bracketContainer", this.props.params.id, {
+          onReady: () => { this.setState({ ready: true }) }
+        }),
+        ready: false
+      }
+    }
+
   }
 
   componentWillUnmount() {
@@ -42,7 +53,8 @@ export default class BracketShowScreen extends Component {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
     var defaultItems = [];
-    if(bracket._id) {
+    var id = instance.brackets[this.props.params.bracketIndex || 0].id
+    if(id) {
       defaultItems = defaultItems.concat([
         {
           text: "Bracket",
@@ -51,9 +63,8 @@ export default class BracketShowScreen extends Component {
             {
               component: BracketPanel,
               args: {
-                id: bracket._id,
-                format: instance.brackets[this.props.params.bracketIndex].format.baseFormat,
-                rounds: Brackets.findOne(bracket._id)
+                id: id,
+                format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat
               }
             }
           ]
