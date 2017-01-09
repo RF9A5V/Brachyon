@@ -263,21 +263,27 @@ export default class CreateLeagueScreen extends Component {
               this.modulePanels()
             }
           </div>
-          <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
-            <span style={{marginBottom: 5}}>Create As</span>
-            <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
-              <option value={0}>User - {Meteor.users.findOne().username}</option>
-              {
-                Organizations.find().map(o => {
-                  return (
-                    <option value={o._id}>
-                      Organization - { o.name }
-                    </option>
-                  )
-                })
-              }
-            </select>
-          </div>
+          {
+            Organizations.find().fetch().length > 0 ? (
+              <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+                <span style={{marginBottom: 5}}>Create As</span>
+                <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+                  <option value={0}>User - {Meteor.users.findOne().username}</option>
+                  {
+                    Organizations.find().map(o => {
+                      return (
+                        <option value={o._id}>
+                          Organization - { o.name }
+                        </option>
+                      )
+                    })
+                  }
+                </select>
+              </div>
+            ) : (
+              ""
+            )
+          }
         </div>
         <div>
           {
