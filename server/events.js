@@ -861,12 +861,16 @@ Meteor.methods({
 
   "events.endGroup"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
+
+    // Weird, but works.
+    // Pretty much find event by given ID, and if not found, try leagues.
+    // For tiebreaker
     if(!event) {
       var incObj = {};
       var league = Leagues.findOne(eventID);
       var bracket = Brackets.findOne(league.tiebreaker.id);
       var numPlayers = bracket.rounds[0].players.length;
-      bracket.rounds[0].players.sort((a, b) => {
+      bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
         return (b.score - a.score);
       }).map((obj, i) => {
         var user = Meteor.users.findOne({ username: obj.name });
@@ -889,6 +893,32 @@ Meteor.methods({
           [`brackets.${bracketIndex}.endedAt`]: new Date()
         }
       })
+      if(event.league) {
+        var league = Leagues.findOne(event.league);
+        var bracket = Brackets.findOne(instance.brackets[bracketIndex].id);
+        var numPlayers = bracket.rounds[0].players.length;
+        var eventIndex = league.events.indexOf(event.slug) + 1;
+        var incObj = {};
+        bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
+          return (b.score - a.score);
+        }).map((obj, i) => {
+          var user = Meteor.users.findOne({ username: obj.name });
+          var ldrboardIndex = league.leaderboard[eventIndex].findIndex(entry => {
+            return entry.id == user._id;
+          });
+          var globalIndex = league.leaderboard[0].findIndex(entry => {
+            return entry.id == user._id;
+          })
+          incObj[`leaderboard.${eventIndex}.${ldrboardIndex}.score`] = numPlayers - i;
+          incObj[`leaderboard.0.${globalIndex}.score`] = numPlayers - i;
+        });
+        Leagues.update(eventID, {
+          $inc: incObj,
+          $set: {
+            complete: true
+          }
+        })
+      }
     }
   }
 
