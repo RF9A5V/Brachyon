@@ -51,7 +51,12 @@ export default class EventCreateScreen extends Component {
 
   componentWillUnmount() {
     if(this.state.organizations) {
-      this.state.organzations.stop();
+      try {
+        this.state.organzations.stop();
+      }
+      catch(e) {
+        // This is fucked.
+      }
     }
   }
 
@@ -270,21 +275,27 @@ export default class EventCreateScreen extends Component {
               this.modulePanels()
             }
             </div>
-            <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
-              <span style={{marginBottom: 5}}>Create As</span>
-              <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
-                <option value={0}>User - {Meteor.user().username}</option>
-                {
-                  Organizations.find().map(o => {
-                    return (
-                      <option value={o._id}>
-                        Organization - { o.name }
-                      </option>
-                    )
-                  })
-                }
-              </select>
-            </div>
+            {
+              Organizations.find().fetch().length > 0 ? (
+                <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+                  <span style={{marginBottom: 5}}>Create As</span>
+                  <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+                    <option value={0}>User - {Meteor.user().username}</option>
+                    {
+                      Organizations.find().map(o => {
+                        return (
+                          <option value={o._id}>
+                            Organization - { o.name }
+                          </option>
+                        )
+                      })
+                    }
+                  </select>
+                </div>
+              ) : (
+                ""
+              )
+            }
           </div>
           <div className="col" style={{marginBottom: 20}}>
             {

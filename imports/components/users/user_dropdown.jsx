@@ -94,13 +94,19 @@ export default class UserDropdown extends Component {
             <div className="user-dropdown-icon"><i className="fa fa-users fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Create Orgs</span>
           </a>
-          <a className="user-dropdown-option row x-center" href="#" onClick={(e) => {
-            e.preventDefault();
-            this.setState({ open: true })
-          }}>
-            <div className="user-dropdown-icon"><i className="fa fa-address-book fa-2x" aria-hidden="true"></i></div>
-            <span className="col-3">Show Orgs</span>
-          </a>
+          {
+            Organizations.find().fetch().length > 0 ? (
+              <a className="user-dropdown-option row x-center" href="#" onClick={(e) => {
+                e.preventDefault();
+                this.setState({ open: true })
+              }}>
+                <div className="user-dropdown-icon"><i className="fa fa-address-book fa-2x" aria-hidden="true"></i></div>
+                <span className="col-3">Show Orgs</span>
+              </a>
+            ) : (
+              ""
+            )
+          }
           <a className="user-dropdown-option row x-center" href="#" onClick={this.logout.bind(this)}>
             <div className="user-dropdown-icon"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></div>
             <span className="col-3">Logout</span>
