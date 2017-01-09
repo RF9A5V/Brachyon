@@ -46,7 +46,7 @@ export default class LeaderboardSlide extends Component {
             }
           }
           else {
-            obj["placement"] = i;
+            obj["placement"] = i + 1;
           }
           return obj;
         })

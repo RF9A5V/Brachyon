@@ -60,12 +60,12 @@ export default class BracketPanel extends TrackerReact(Component) {
       }
       else if (this.props.format == "swiss"){
         component = (
-          <SwissDisplay rounds={rounds} id={this.props.id} />
+          <SwissDisplay rounds={rounds} id={Events.findOne()._id} />
         )
       }
       else {
         component = (
-          <RoundDisplay rounds={rounds} id={this.props.id} />
+          <RoundDisplay rounds={rounds} id={Events.findOne()._id} />
         )
       }
       var bracketComplete;

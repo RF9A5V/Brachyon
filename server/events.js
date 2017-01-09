@@ -890,13 +890,14 @@ Meteor.methods({
       var instance = Instances.findOne(event.instances.pop());
       Instances.update(instance._id, {
         $set: {
-          [`brackets.${bracketIndex}.endedAt`]: new Date()
+          [`brackets.${bracketIndex}.endedAt`]: new Date(),
+          [`brackets.${bracketIndex}.isComplete`]: true
         }
       })
       if(event.league) {
         var league = Leagues.findOne(event.league);
         var bracket = Brackets.findOne(instance.brackets[bracketIndex].id);
-        var numPlayers = bracket.rounds[0].players.length;
+        var numPlayers = bracket.rounds[bracket.rounds.length - 1].players.length;
         var eventIndex = league.events.indexOf(event.slug) + 1;
         var incObj = {};
         bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
@@ -912,7 +913,7 @@ Meteor.methods({
           incObj[`leaderboard.${eventIndex}.${ldrboardIndex}.score`] = numPlayers - i;
           incObj[`leaderboard.0.${globalIndex}.score`] = numPlayers - i;
         });
-        Leagues.update(eventID, {
+        Leagues.update(event.league, {
           $inc: incObj,
           $set: {
             complete: true
