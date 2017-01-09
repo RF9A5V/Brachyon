@@ -7,16 +7,20 @@ import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import StartBracketAction from "./start.jsx";
+import SeedDropDown from "./seeddropdown.jsx";
 
 export default class AddPartipantAction extends Component {
 
   constructor(props) {
     super(props);
     var instance = Instances.findOne();
+    var iid = instance._id;
     var bracket = instance.brackets[this.props.index];
     var participants = bracket.participants || [];
     this.state = {
-      participants
+      participants,
+      iid,
+      index: this.props.index
     }
   }
 
@@ -48,6 +52,14 @@ export default class AddPartipantAction extends Component {
     }
   }
 
+  updateList(oldVal, newVal)
+  {
+    participant = this.state.participants[oldVal];
+    this.state.participants.splice(oldVal, 1); //Delete the participant off the list
+    this.state.participants.splice(newVal, 0, participant); //Put him back at his new seeding area.
+    this.forceUpdate();
+  }
+
   render() {
     var participants = this.state.participants;
     return (
@@ -55,6 +67,9 @@ export default class AddPartipantAction extends Component {
         <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
         <div className="col participant-table" style={{marginTop:"10px"}}>
           <div className="participant-row">
+            <div className="col-1">
+              Seed
+            </div>
             <div className="col-1">
               Alias
             </div>
@@ -71,6 +86,9 @@ export default class AddPartipantAction extends Component {
               return (
                 <div className="participant-row" key={index}>
                   <div className="col-1">
+                    <SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)} />
+                  </div>
+                  <div className="col-1">
                     { participant.alias }
                   </div>
                   <div className="col-1">
@@ -84,7 +102,7 @@ export default class AddPartipantAction extends Component {
             })
           }
         </div>
-        <div className = { ((this.props.bracket.startedAt != null)) ? 
+        <div className = { ((this.props.bracket.startedAt != null)) ?
           ("start-button-hide") :
           (this.state.participants.length < 3 ? ("start-button-hide"):("")) } style={{marginTop:"20px"}}>
           <StartBracketAction id ={this.state.id} index={this.props.index} />
