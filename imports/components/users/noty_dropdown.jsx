@@ -19,7 +19,7 @@ export default class NotyDropdown extends Component {
   }
 
   componentWillReceiveProps(next) {
-    console.log(next);
+    // console.log(next);
   }
 
   hasUnreadNotifications() {

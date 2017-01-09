@@ -84,7 +84,9 @@ export default class Header extends TrackerReact(Component) {
               <FontAwesome style={{position: "relative", bottom: 7}} name="sort-desc" size="2x" />
             </a>
           </div>
-          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => { this.setState({ userMenuOpen: false, notificationsMenuOpen: true }) }} />
+          <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => {
+            this.setState({ notificationsMenuOpen: true })
+          }} />
         </div>
       );
     }
