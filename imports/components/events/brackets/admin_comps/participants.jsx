@@ -16,10 +16,12 @@ export default class AddPartipantAction extends Component {
     var instance = Instances.findOne();
     var iid = instance._id;
     var bracket = instance.brackets[this.props.index];
+    var started = instance.brackets[this.props.index].inProgress ? true:false;
     var participants = bracket.participants || [];
     this.state = {
       participants,
       iid,
+      started,
       index: this.props.index
     }
   }
@@ -60,6 +62,13 @@ export default class AddPartipantAction extends Component {
     this.forceUpdate();
   }
 
+  startBracket()
+  {
+    console.log("Does this run?");
+    this.state.started = true;
+    this.forceUpdate();
+  }
+
   randomizeSeeding()
   {
     function shuffle(array) {
@@ -88,8 +97,8 @@ export default class AddPartipantAction extends Component {
       }
       else {
         toastr.success("Successfully shuffled seeding.", "Success!");
-        this.state.participants = nparticipants;
         this.forceUpdate();
+        this.state.participants = nparticipants;
       }
     });
   }
@@ -100,7 +109,9 @@ export default class AddPartipantAction extends Component {
       <div>
         <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
         <div>
-          <button onClick={this.randomizeSeeding.bind(this)}>Randomize Seeding</button>
+        {
+          this.state.started ? ( "" ):(<button onClick={this.randomizeSeeding.bind(this)}>Randomize Seeding</button>)
+        }
         </div>
         <div className="col participant-table" style={{marginTop:"10px"}}>
           <div className="participant-row">
@@ -123,7 +134,9 @@ export default class AddPartipantAction extends Component {
               return (
                 <div className="participant-row" key={index}>
                   <div className="col-1">
-                    <SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)}x />
+                  {
+                    this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)} /> )
+                  }
                   </div>
                   <div className="col-1">
                     { participant.alias }
@@ -142,7 +155,7 @@ export default class AddPartipantAction extends Component {
         <div className = { ((this.props.bracket.startedAt != null)) ?
           ("start-button-hide") :
           (this.state.participants.length < 3 ? ("start-button-hide"):("")) } style={{marginTop:"20px"}}>
-          <StartBracketAction id ={this.state.id} index={this.props.index} />
+          <StartBracketAction id ={this.state.id} index={this.props.index} sBracket={this.startBracket.bind(this)} />
         </div>
       </div>
     )
