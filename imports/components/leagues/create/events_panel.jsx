@@ -62,7 +62,7 @@ export default class EventsPanel extends Component {
           this.setState({ option: i });
         }}>
           <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
-          { ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (i + 1)) }
+          { ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (i + 1)) }
           </span>
         </div>
       )
