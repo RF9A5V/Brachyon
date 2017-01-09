@@ -198,20 +198,39 @@ export default class LeagueModal extends Component {
         <div className="row center">
           <button onClick={this.closeModal.bind(this)} style={{marginRight: 20}}>Cancel</button>
           <button onClick={ () => {
-            Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
-              if(err) {
-                return toastr.error("Couldn\'t close this bracket.", "Error!");
-              }
-              var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });
-              if(allBracketsComplete) {
-                Meteor.call("events.close", Events.findOne()._id, (err) => {
-                  if(err) {
-                    return toastr.error("Couldn\'t close the event.", "Error!");
-                  }
-                  browserHistory.push("/");
-                })
-              }
-            })
+            var format = Instances.findOne().brackets[this.state.bracketIndex].format.baseFormat;
+            if(format == "single_elim" || format == "double_elim") {
+              Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
+                if(err) {
+                  return toastr.error("Couldn\'t close this bracket.", "Error!");
+                }
+                var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });
+                if(allBracketsComplete) {
+                  Meteor.call("events.close", Events.findOne()._id, (err) => {
+                    if(err) {
+                      return toastr.error("Couldn\'t close the event.", "Error!");
+                    }
+                    browserHistory.push("/");
+                  })
+                }
+              })
+            }
+            else {
+              Meteor.call("events.endGroup", Events.findOne()._id, this.state.bracketIndex, (err) => {
+                if(err) {
+                  return toastr.error("Couldn\'t close this bracket.", "Error!");
+                }
+                var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });
+                if(allBracketsComplete) {
+                  Meteor.call("events.close", Events.findOne()._id, (err) => {
+                    if(err) {
+                      return toastr.error("Couldn\'t close the event.", "Error!");
+                    }
+                    browserHistory.push("/");
+                  })
+                }
+              })
+            }
           }}>Finalize</button>
         </div>
       </Modal>

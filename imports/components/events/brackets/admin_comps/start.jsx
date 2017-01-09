@@ -84,6 +84,7 @@ export default class StartBracketAction extends Component {
                   }
                   else {
                     toastr.success("Successfully started bracket!", "Success!");
+                    this.setState({open: false});
                   }
                 });
               }
