@@ -225,7 +225,9 @@ export default class EventCreateScreen extends Component {
           return;
         }
         if(value == "crowdfunding") {
-          return toastr.warning("Under construction!", "Warning!");
+          if(!Meteor.isDevelopment){
+            return toastr.warning("Under construction!", "Warning!");
+          }
         }
         this.state.moduleState[value].active = !this.state.moduleState[value].active;
         this.forceUpdate();
