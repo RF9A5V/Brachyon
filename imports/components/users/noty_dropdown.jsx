@@ -18,10 +18,6 @@ export default class NotyDropdown extends Component {
     this.state.notes.stop();
   }
 
-  componentWillReceiveProps(next) {
-    console.log(next);
-  }
-
   hasUnreadNotifications() {
     return Notifications.find({ seen: false }).fetch().length > 0
   }

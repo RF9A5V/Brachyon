@@ -79,7 +79,7 @@ export default class UserDropdown extends Component {
             </div>
             <span className="col-3">Options</span>
           </a>
-          <a className="user-dropdown-option row x-center" href="#" onClick={this.accessNotifications.bind(this)}>
+          <a className="user-dropdown-option row x-center" href="#" onClick={(e) => { e.preventDefault(); this.props.onAccessNotes(); }}>
             <div className="user-dropdown-icon" style={{position: "relative"}}>
               <i className="fa fa-envelope fa-2x" aria-hidden="true"></i>
               <span style={{fontSize: 16, position: "absolute", right: 2.5, bottom: -10, fontWeight: "bold", color: "#FF6000"}}>
