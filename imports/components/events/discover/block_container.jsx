@@ -113,23 +113,27 @@ export default class BlockContainer extends Component {
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
                       isOwner ? (
-                        <div className="event-block-edit" >
+                        <div className="event-block-admin-row">
                           {
                             event.isComplete && !event.league ? (
-                              <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
+                              <div className="event-block-admin-button" onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 this.onRefreshClick(event);
-                              }} />
+                              }}>
+                                REFRESH
+                              </div>
                             ) : (
                               ""
                             )
                           }
-                          <FontAwesome name="pencil" onClick={(e) => {
+                          <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             this.onPencilClick(event);
-                          }} />
+                          }} >
+                            EDIT
+                          </div>
                         </div>
                       ) : (
                         ""
