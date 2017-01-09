@@ -21,6 +21,15 @@ export default class ModuleBlock extends Component {
   }
 
   render() {
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+      var fColor = "#333";
+    }
+    else if(window.location.pathname == "/league/create"){
+      var eColor = "#FF6000";
+      var fColor = "#FFF";
+    }
+    else{}
     return (
       <VelocityComponent animation={this.state.active ? { backgroundColor: "#222" } : { backgroundColor: "#666" }} duration={300}>
         <div className={`row x-center`}
@@ -34,7 +43,7 @@ export default class ModuleBlock extends Component {
               ""
             ) : (
               <div className="col mod-block-toggle" style={{justifyContent: this.props.isOn ? "flex-start" : "flex-end"}} onClick={() => { this.props.onToggle() }}>
-                <div className="mod-block-control" style={{backgroundColor: this.props.isOn ? "#FF6000" : "white"}}></div>
+                <div className="mod-block-control" style={{backgroundColor: this.props.isOn ? eColor : "white"}}></div>
               </div>
             )
           }

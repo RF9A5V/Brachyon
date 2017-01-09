@@ -7,8 +7,6 @@ import Games from "/imports/api/games/games.js";
 import Notifications from "/imports/api/users/notifications.js";
 
 import Instances from "/imports/api/event/instance.js";
-import { Banners } from "/imports/api/event/banners.js";
-import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class BracketSlide extends Component {
 
