@@ -51,8 +51,10 @@ export default class BlockContainer extends Component {
           <h2 className="event-block-title">{ title }</h2>
           {
             Meteor.userId() == obj.owner ? (
-              <div className="event-block-edit">
-                <FontAwesome name="pencil" onClick={action("admin")} />
+              <div className="event-block-admin-row">
+                <div className="event-block-admin-button col center x-center" onClick={action("admin")}>
+                  EDIT
+                </div>
               </div>
             ) : (
               ""
