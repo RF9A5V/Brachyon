@@ -7,6 +7,7 @@ import DetailsPanel from "./create/details_panel.jsx";
 import BracketsPanel from "./create/brackets_panel.jsx";
 import EventsPanel from "./create/events_panel.jsx";
 import StreamPanel from "./create/stream_panel.jsx";
+import CrowdfundingPanel from "/imports/components/events/create/module_dropdowns/crowdfunding.jsx";
 
 import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
@@ -163,6 +164,8 @@ export default class CreateLeagueScreen extends Component {
       case "stream":
         item = <StreamPanel attrs={this.state.attrs} selected={this.state.moduleState.stream.active} onToggle={() => { this.state.moduleState.stream.active = !this.state.moduleState.stream.active; this.forceUpdate(); }} />
         break;
+      case "crowdfunding":
+        item = <CrowdfundingPanel attrs={this.state.attrs} selected={false} onToggle={() => {} } />
       default:
         break;
     }
