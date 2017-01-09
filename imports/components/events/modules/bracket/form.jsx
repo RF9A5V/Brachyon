@@ -62,6 +62,7 @@ export default class BracketForm extends Component {
     for(var i in format){
       this.state[i] = format[i];
     }
+
     if(props.format) {
       // Only works for basic bracket formats.
       this.refs.format.value = props.format.baseFormat;

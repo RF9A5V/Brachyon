@@ -31,7 +31,7 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
       else {
         Meteor.loginWithToken(rez.token);
         toastr.success("Successfully created your account!", "Success!");
-        browserHistory.push('/events/discover');
+        browserHistory.push('/discover');
       }
     });
   }
