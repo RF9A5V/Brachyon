@@ -42,9 +42,9 @@ export default class CheckoutPage extends TrackerReact(Component) {
 
   bannerOrDefault() {
     var event = Events.findOne();
-    var img = Banners.findOne(event.details.banner);
+    var img = event.details.bannerUrl;
     if(img) {
-      return img.link();
+      return img;
     }
     return "/images/bg.jpg";
   }

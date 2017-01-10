@@ -74,7 +74,7 @@ export default class EventsPanel extends Component {
     return (
       <div className="col">
         <div className="row">
-          <h5>{ ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (this.state.option + 1)) }</h5>
+          <h5>{ ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (this.state.option + 1)) }</h5>
         </div>
         <div className="row x-center center" style={{padding: 20, backgroundColor: "#111"}}>
           <div style={{marginRight: 20}}>

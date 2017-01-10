@@ -21,10 +21,6 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
     return Games.find().fetch();
   }
 
-  imageURL(id) {
-    return Banners.findOne(id).link();
-  }
-
   approveGame(id) {
     return function(e){
       Meteor.call('games.approve', id, function(err){
@@ -76,7 +72,7 @@ export default class GameApprovalScreen extends TrackerReact(Component) {
                   <tr>
                     <td>{game.name}</td>
                     <td>
-                      <img src={self.imageURL(game.banner)} />
+                      <img src={game.bannerUrl} />
                     </td>
                     <td>
                       <button onClick={self.approveGame(game._id).bind(self)}>

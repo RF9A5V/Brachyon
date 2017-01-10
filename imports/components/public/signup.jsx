@@ -83,13 +83,13 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
       <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
           <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} />
+            <input className="col-1" type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} autoComplete="off" />
             <div className="row center x-center cred-form-status" style={{backgroundColor: emailBgColor}}>
               <FontAwesome name={emailIcon} />
             </div>
           </div>
           <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} />
+            <input className="col-1" type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} autoComplete="off" />
             <div className="row center x-center cred-form-status" style={{backgroundColor: bgColor}}>
               <FontAwesome name={icon} />
             </div>
