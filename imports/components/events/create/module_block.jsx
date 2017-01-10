@@ -23,11 +23,9 @@ export default class ModuleBlock extends Component {
   render() {
     if(window.location.pathname == "/events/create"){
       var eColor = "#00BDFF";
-      var fColor = "#333";
     }
-    else if(window.location.pathname == "/league/create"){
+    else if(window.location.pathname == "/leagues/create"){
       var eColor = "#FF6000";
-      var fColor = "#FFF";
     }
     else{}
     return (

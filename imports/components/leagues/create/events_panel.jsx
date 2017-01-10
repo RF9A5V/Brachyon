@@ -18,14 +18,14 @@ export default class EventsPanel extends Component {
   eventCounter() {
     var events = this.props.attrs.events;
     var decrementIcon = events.length <= 1 ? (
-      <FontAwesome name="caret-left" size="3x" style={{opacity: 0.3}} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" style={{opacity: 0.3}} />
     ) : (
-      <FontAwesome name="caret-left" size="3x" onClick={() => { events.pop(); this.forceUpdate(); }} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" onClick={() => { events.pop(); this.forceUpdate(); }} />
     );
     var incrementIcon = events.length >= 30 ? (
-      <FontAwesome name="caret-right" size="3x" style={{opacity: 0.3}} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-right" size="3x" style={{opacity: 0.3}} />
     ) : (
-      <FontAwesome name="caret-right" size="3x" onClick={() => {
+      <FontAwesome style={{cursor: "pointer"}} name="caret-right" size="3x" onClick={() => {
         var event = moment(events[events.length - 1].date);
         events.push({
           date: event.add(1, "day").toDate()
@@ -44,6 +44,13 @@ export default class EventsPanel extends Component {
   categories() {
     var events = this.props.attrs.events;
     var options = events.map((e, i) => { return e.name });
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      var eColor = "#FF6000";
+    }
+    else{}
     return options.map((val, i) => {
       var style = {
         backgroundColor: "#111",
@@ -61,7 +68,7 @@ export default class EventsPanel extends Component {
         <div style={style} onClick={() => {
           this.setState({ option: i });
         }}>
-          <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
+          <span style={{color: this.state.option == i ? eColor : "#FFF"}}>
           { ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (i + 1)) }
           </span>
         </div>

@@ -35,14 +35,23 @@ export default class StreamPanel extends Component {
 
   render() {
     var tabs = ["Stream"];
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+      var fColor = "#333";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      var eColor = "#FF6000";
+      var fColor = "#FFF";
+    }
+    else{}
     return (
       <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
           <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
-            <div className="row center x-center" style={{backgroundColor: this.props.selected ? "#FF6000" : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
-              <span style={{color: this.props.selected ? "#FFF" : "#333", fontSize: 12}}>
+            <div className="row center x-center" style={{backgroundColor: this.props.selected ? eColor : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
+              <span style={{color: this.props.selected ? fColor : "#333", fontSize: 12}}>
                 {
                   this.props.selected ? (
                     "ON"
