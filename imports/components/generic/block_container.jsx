@@ -30,7 +30,10 @@ export default class BlockContainer extends Component {
       obj.leaderboard[0].length
     );
     var title = (obj.type == "instance") ? "TEMP" : obj.details.name;
-    var img = (obj.type == "league" || obj.type == "instance") ? "/images/bg.jpg" : obj.details.bannerUrl;
+    var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
+    if(!img) {
+      img = "/images/bg.jpg";
+    }
 
     var action = (val) => {
       return (e) => {
