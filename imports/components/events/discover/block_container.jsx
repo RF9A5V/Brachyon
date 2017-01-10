@@ -18,7 +18,7 @@ export default class BlockContainer extends Component {
           browserHistory.push(`/event/${event.slug}`);
         }
         else {
-          browserHistory.push(`/events/${event.slug}/edit`);
+          browserHistory.push(`/event/${event.slug}/edit`);
         }
       }
     )
@@ -53,10 +53,10 @@ export default class BlockContainer extends Component {
   onPencilClick(event) {
     var url = "";
     if(event.published) {
-      url = `/events/${event.slug}/admin`;
+      url = `/event/${event.slug}/admin`;
     }
     else {
-      url = `/events/${event.slug}/edit`;
+      url = `/event/${event.slug}/edit`;
     }
     browserHistory.push(url);
   }

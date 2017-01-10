@@ -14,7 +14,7 @@ export default class LeagueDisplay extends Component {
   }
 
   onPencilClick(league) {
-    browserHistory.push(`/leagues/${league.slug}/edit`);
+    browserHistory.push(`/league/${league.slug}/edit`);
   }
 
   render() {
@@ -26,7 +26,7 @@ export default class LeagueDisplay extends Component {
             (this.props.leagues || []).map((league, i) => {
               return (
                 <div className="event-block" onClick={() => {
-                  browserHistory.push(`/leagues/${league.slug}/show`);
+                  browserHistory.push(`/league/${league.slug}`);
                 }} key={i}>
                   <div style={{border: "solid 2px #666", position: "relative"}}>
                     <h2 className="event-block-title">{ league.details.name }</h2>

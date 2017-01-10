@@ -3,6 +3,8 @@ import SingleDisplay from "../../tournaments/single/display.jsx";
 import DoubleDisplay from "../../tournaments/double/display.jsx";
 import SwissDisplay from "../../tournaments/swiss/display.jsx";
 import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
+
+import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 import TrackerReact from "meteor/ultimatejs:tracker-react"
 
 export default class BracketPanel extends TrackerReact(Component) {
@@ -11,7 +13,8 @@ export default class BracketPanel extends TrackerReact(Component) {
     super(props);
     this.state = {
       ready: false,
-      bracket: null
+      bracket: null,
+      open: false
     }
   }
 
@@ -35,32 +38,58 @@ export default class BracketPanel extends TrackerReact(Component) {
       onReady: () => {
         this.setState({
           ready: true,
-          bracket: br
+          bracket: br,
+          open: true
         });
       }
     });
     if(this.state.ready) {
       var rounds = Brackets.findOne().rounds;
+      var component = (
+        <div></div>
+      )
       if(this.props.format == "single_elim") {
-        return (
+        component =  (
           <SingleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "double_elim"){
-        return (
+        component = (
           <DoubleDisplay rounds={rounds} id={this.props.id} />
         )
       }
       else if (this.props.format == "swiss"){
-        return (
-          <SwissDisplay rounds={rounds} id={this.props.id} />
+        component = (
+          <SwissDisplay rounds={rounds} id={Events.findOne()._id} />
         )
       }
       else {
-        return (
-          <RoundDisplay rounds={rounds} id={this.props.id} />
+        component = (
+          <RoundDisplay rounds={rounds} id={Events.findOne()._id} />
         )
       }
+      var bracketComplete;
+      if(this.props.format == "single_elim" || this.props.format == "double_elim") {
+        bracketComplete = Brackets.find().fetch()[0].complete
+      }
+      else {
+        bracketComplete = Brackets.find().fetch()[0].rounds.pop().matches.every(match => { return match.played });
+      }
+      console.log(bracketComplete);
+      var showModal = Events.findOne().league != null && bracketComplete && this.state.open;
+      console.log(showModal);
+      return (
+        <div>
+          {
+            showModal ? (
+              <LeagueModal open={showModal} close={() => { this.setState({open: false}) }} />
+            ) : (
+              ""
+            )
+          }
+          { component }
+        </div>
+      )
     }
     else {
       return (
