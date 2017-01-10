@@ -7,19 +7,23 @@ import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 import TrackerReact from "meteor/ultimatejs:tracker-react"
 
-export default class BracketPanel extends TrackerReact(Component) {
+export default class BracketPanel extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       ready: false,
-      bracket: null,
-      open: false
+      bracket: Meteor.subscribe("brackets", this.props.id, {
+        onReady: () => {
+          this.setState({ ready: true })
+        }
+      }),
+      open: true
     }
   }
 
   componentWillUnmount(){
-    if (this.state.bracket)
+    if(this.state.bracket)
       this.state.bracket.stop();
   }
 
@@ -34,55 +38,64 @@ export default class BracketPanel extends TrackerReact(Component) {
   }
 
   render() {
-    var br = Meteor.subscribe("brackets", this.props.id, {
-      onReady: () => {
-        this.setState({
-          ready: true,
-          bracket: br,
-          open: true
-        });
-      }
-    });
     if(this.state.ready) {
       var rounds = Brackets.findOne().rounds;
       var component = (
         <div></div>
-      )
+      );
       if(this.props.format == "single_elim") {
         component =  (
-          <SingleDisplay rounds={rounds} id={this.props.id} />
+          <SingleDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       else if (this.props.format == "double_elim"){
         component = (
-          <DoubleDisplay rounds={rounds} id={this.props.id} />
+          <DoubleDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       else if (this.props.format == "swiss"){
         component = (
-          <SwissDisplay rounds={rounds} id={Events.findOne()._id} />
+          <SwissDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
         )
       }
       else {
         component = (
-          <RoundDisplay rounds={rounds} id={Events.findOne()._id} />
+          <RoundDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
         )
       }
       var bracketComplete;
       if(this.props.format == "single_elim" || this.props.format == "double_elim") {
-        bracketComplete = Brackets.find().fetch()[0].complete
+        bracketComplete = Brackets.findOne().complete;
       }
       else {
-        bracketComplete = Brackets.find().fetch()[0].rounds.pop().matches.every(match => { return match.played });
+        var rounds = Brackets.findOne().rounds;
+        var rec;
+        if(this.props.format == "swiss") {
+          rec = Math.ceil(Math.log2(rounds[0].players.length));
+        }
+        else {
+          rec = rounds[0].players.length;
+          if (rounds[0].players.length%2 == 1) {
+            rec--;
+          }
+        }
+        bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
       }
-      console.log(bracketComplete);
-      var showModal = Events.findOne().league != null && bracketComplete && this.state.open;
-      console.log(showModal);
+      var showModal = Events.findOne().league != null && bracketComplete;
       return (
         <div>
           {
             showModal ? (
-              <LeagueModal open={showModal} close={() => { this.setState({open: false}) }} />
+              <div className="row" style={{marginBottom: 10, justifyContent: "flex-end"}}>
+                <button onClick={() => { this.setState({ open: true }) }}>Close</button>
+              </div>
+            ) : (
+              ""
+            )
+          }
+          {
+            showModal ? (
+              <LeagueModal open={this.state.open} close={() => { this.setState({open: false}) }} />
             ) : (
               ""
             )

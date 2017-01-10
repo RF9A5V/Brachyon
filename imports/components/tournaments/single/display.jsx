@@ -5,23 +5,6 @@ export default class SingleDisplay extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      open: false
-    }
-  }
-
-  componentDidMount() {
-    var finalMatch = this.props.rounds[0][this.props.rounds[0].length - 1][0];
-    if(finalMatch.winner) {
-      this.setState({ open: true });
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    var finalMatch = props.rounds[0][props.rounds[0].length - 1][0];
-    if(finalMatch.winner) {
-      this.setState({ open: true });
-    }
   }
 
   render() {
@@ -74,7 +57,7 @@ export default class SingleDisplay extends Component {
                         }
                       }
                       return (<div className="bracket-match-spacing">
-                        <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                        <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} update={this.props.update} />
 
                       </div>);
                     })
