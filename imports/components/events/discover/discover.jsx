@@ -41,6 +41,9 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   render() {
+    if(!this.state.events.ready()) {
+      return (<div></div>)
+    }
     return (
       <div className="content col-1 x-center">
         {

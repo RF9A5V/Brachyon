@@ -104,7 +104,7 @@ Meteor.publish("profileImage", (id) => {
   return ProfileImages.find({_id: id});
 });
 
-Meteor.publish("discoverEvents", function(){
+Meteor.smartPublish("discoverEvents", () => {
   var events = Events.find({published: true});
   var userIds = [];
   var orgIds = [];
@@ -139,13 +139,15 @@ Meteor.publish("discoverEvents", function(){
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
   var leagues = Leagues.find();
+  var leagueEvents = Events.find({ slug: { $in: leagues.map(l => { return l.events[0] }) } })
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
     Organizations.find({ _id: { $in: orgIds } }),
     games,
     instances,
-    leagues
+    leagues,
+    leagueEvents
   ]
 });
 
