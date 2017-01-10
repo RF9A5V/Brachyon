@@ -65,32 +65,34 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="event/:slug" component={PreviewEventScreen} />
-      <Route path="events/:slug/publish" component={PublishEventScreen} />
+
+      <Route path="event/:slug/publish" component={PublishEventScreen} />
       <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
-      <Route path="events/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
-      <Route path="events/:slug/checkout" component={CheckoutScreen} />
+      <Route path="event/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
+      <Route path="event/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
       <Route path="create" component={CreateRunnableScreen} />
       <Route path="leagues/create" component={CreateLeagueScreen} />
       <Route path="brackets/create" component={CreateBracketScreen} />
-      <Route path="brackets/:id/admin" component={BracketAdminScreen} />
-      <Route path="brackets/:id/show" component={BracketShowScreen} />
+      <Route path="bracket/:id/admin" component={BracketAdminScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
       <Route path="/privacy" component={PrivacyPolicyScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
-      <Route path="events/:slug/edit" component={EditEventScreen} />
-      <Route path="events/:slug/admin" component={EventAdminScreen} />
-      <Route path="events/:slug/show" component={PreviewEventScreen}/>
-      <Route path="events/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
-      <Route path="leagues/:slug/edit" component={EditLeagueScreen} />
-      <Route path="leagues/:slug/admin" component={EditLeagueScreen} />
-      <Route path="leagues/:slug/show" component={ShowLeagueScreen} />
-      <Route path="events/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
+      <Route path="event/:slug/edit" component={EditEventScreen} />
+      <Route path="event/:slug/admin" component={EventAdminScreen} />
+      <Route path="event/:slug" component={PreviewEventScreen} />
+      <Route path="event/:slug/:slide" component={PreviewEventScreen} />
+      <Route path="event/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="league/:slug/edit" component={EditLeagueScreen} />
+      <Route path="league/:slug/admin" component={EditLeagueScreen} />
+      <Route path="league/:slug" component={ShowLeagueScreen} />
+      <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
+      <Route path="bracket/:id" component={BracketShowScreen} />
+      <Route path="event/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
     </Route>

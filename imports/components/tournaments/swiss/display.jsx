@@ -25,7 +25,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
 
     var bracket = Brackets.findOne();
-    var instance = Instances.findOne(Events.findOne().instances.pop());
+    var instance = Instances.findOne();
 
     var aliasMap = {};
     instance.brackets[0].participants.forEach((player) => {
@@ -51,6 +51,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       else {
         toastr.success("Match finalized!", "Success!");
         this.setState({wcount: this.state.wcount + 1});
+        this.props.update();
       }
     });
 
@@ -59,13 +60,14 @@ export default class SwissDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
       }
       else {
         toastr.success("New Round!");
+        this.props.update();
       }
     });
     this.setState({wcount: 0, page: this.state.page + 1});

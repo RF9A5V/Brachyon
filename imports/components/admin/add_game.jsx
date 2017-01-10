@@ -94,7 +94,7 @@ export default class AddGameAction extends Component {
             games.map(game => {
               return (
                 <div className="game" onClick={() => { this.setState({ game: game._id }) }}>
-                  <img src={GameBanners.findOne(game.banner).link()} />
+                  <img src={game.bannerUrl} />
                   <div>
                     { game.name }
                   </div>
