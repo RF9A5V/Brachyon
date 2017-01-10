@@ -68,7 +68,7 @@ export default class LeagueShowPage extends Component {
     }
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} event={ Leagues.findOne() } />
+        <SlideMain slides={this.slides()} event={ Leagues.findOne() } baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} />
       </div>
     )
   }
