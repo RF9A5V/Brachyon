@@ -83,6 +83,7 @@ modules-runtime@0.7.7
 mongo@1.1.14
 mongo-id@1.0.6
 mrgalaxy:stripe@2.2.2
+mrt:smart-publish@0.2.1
 msavin:jetsetter@2.0.0
 msavin:mongol@2.0.1
 nitrolabs:cdn@1.2.8
