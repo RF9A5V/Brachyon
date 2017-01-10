@@ -121,7 +121,9 @@ export default class CreateLeagueScreen extends Component {
           return;
         }
         if(value == "crowdfunding") {
-          return toastr.warning("Under construction!", "Warning!");
+          if(!Meteor.isDevelopment) {
+            return toastr.warning("Under construction!", "Warning!");
+          }
         }
         this.state.moduleState[value].active = !this.state.moduleState[value].active;
         this.forceUpdate();
@@ -151,6 +153,20 @@ export default class CreateLeagueScreen extends Component {
     var item = (
       <div></div>
     )
+    var generator = (value) => {
+      return () => {
+        if(value == "details" || value == "brackets") {
+          return;
+        }
+        if(value == "crowdfunding") {
+          if(!Meteor.isDevelopment) {
+            return toastr.warning("Under construction!", "Warning!");
+          }
+        }
+        this.state.moduleState[value].active = !this.state.moduleState[value].active;
+        this.forceUpdate();
+      }
+    }
     switch(this.state.currentItem) {
       case "details":
         item = <DetailsPanel attrs={this.state.attrs} />
@@ -165,7 +181,7 @@ export default class CreateLeagueScreen extends Component {
         item = <StreamPanel attrs={this.state.attrs} selected={this.state.moduleState.stream.active} onToggle={() => { this.state.moduleState.stream.active = !this.state.moduleState.stream.active; this.forceUpdate(); }} />
         break;
       case "crowdfunding":
-        item = <CrowdfundingPanel attrs={this.state.attrs} selected={false} onToggle={() => {} } />
+        item = <CrowdfundingPanel attrs={this.state.attrs} selected={this.state.moduleState.crowdfunding.active} onToggle={generator("crowdfunding")} />
       default:
         break;
     }
@@ -247,21 +263,27 @@ export default class CreateLeagueScreen extends Component {
               this.modulePanels()
             }
           </div>
-          <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
-            <span style={{marginBottom: 5}}>Create As</span>
-            <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
-              <option value={0}>User - {Meteor.users.findOne().username}</option>
-              {
-                Organizations.find().map(o => {
-                  return (
-                    <option value={o._id}>
-                      Organization - { o.name }
-                    </option>
-                  )
-                })
-              }
-            </select>
-          </div>
+          {
+            Organizations.find().fetch().length > 0 ? (
+              <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+                <span style={{marginBottom: 5}}>Create As</span>
+                <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+                  <option value={0}>User - {Meteor.users.findOne().username}</option>
+                  {
+                    Organizations.find().map(o => {
+                      return (
+                        <option value={o._id}>
+                          Organization - { o.name }
+                        </option>
+                      )
+                    })
+                  }
+                </select>
+              </div>
+            ) : (
+              ""
+            )
+          }
         </div>
         <div>
           {

@@ -68,8 +68,8 @@ export default class EventsPanel extends Component {
         <div style={style} onClick={() => {
           this.setState({ option: i });
         }}>
-          <span style={{color: this.state.option == i ? eColor : "#FFF"}}>
-          { ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (i + 1)) }
+          <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
+          { ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (i + 1)) }
           </span>
         </div>
       )
