@@ -71,6 +71,10 @@
       "token": "87xfieEgGoAAAAAAAAAAExkrBy5X9G_mrP1V6iPTcKHF9AW13XM3VEdq1bd9z9HF",
       "alphaSecret": "8nw6axzjbr35e2v",
       "alphaToken": "87xfieEgGoAAAAAAAAAASYjmfTlVmn6bAxnundDtRUEMGN7Ca5dAi5wYDxnS5RH5"
+    },
+    "gmail": {
+      "email": "steven@brachyon.com",
+      "password": "IcarusLive5"
     }
   }
 
