@@ -62,11 +62,11 @@ export default class RemoveEventAction extends Component {
   }
 
   profileImageOrDefault(id) {
-    var img = ProfileImages.findOne(id);
-    if(!img) {
-      return "/images/profile.png";
+    var user = Meteor.users.findOne(id);
+    if(user.profile.imageUrl) {
+      return return user.profile.imageUrl;
     }
-    return img.link();
+    return "/images/profile.png";
   }
 
   deleteEvent() {
@@ -113,7 +113,7 @@ export default class RemoveEventAction extends Component {
                     <div className="col">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                         <div className="row x-center" style={{fontSize: 12}}>
-                          <img src={this.profileImageOrDefault(Meteor.users.findOne(event.owner).profile.image)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
+                          <img src={this.profileImageOrDefault(event.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(event.owner).username }
                         </div>
                       </div>
                       <div className="row flex-pad">

@@ -22,8 +22,8 @@ export default class BracketSlide extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Banners.findOne(this.props.event.details.banner).link();
+    if(this.props.event && this.props.event.details.bannerUrl) {
+      imgUrl = this.props.event.details.banner;
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
@@ -128,7 +128,7 @@ export default class BracketSlide extends Component {
               instance.brackets.map((bracket, i) => {
                 return (
                   <div className="bracket">
-                    <img style={{width: "100%", height: "auto"}} src={GameBanners.findOne(Games.findOne(bracket.game).banner).link()} />
+                    <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
                     <div className="bracket-overlay">
                       <div className="bracket-details">
                         {

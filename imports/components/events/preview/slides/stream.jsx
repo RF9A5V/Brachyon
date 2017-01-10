@@ -5,8 +5,8 @@ export default class StreamPage extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Banners.findOne(this.props.event.details.banner).link();
+    if(this.props.event && this.props.event.details.bannerUrl) {
+      imgUrl = this.props.event.details.bannerUrl;
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
