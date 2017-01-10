@@ -44,12 +44,12 @@ export default class BlockContainer extends Component {
           type = "bracket";
         }
         var identifier = obj.slug || obj._id;
-        browserHistory.push("/" + type + "s" + "/" + identifier + "/" + val);
+        browserHistory.push("/" + type + "/" + identifier);
       }
     }
 
     return (
-      <div className={`event-block ${obj.type}`} onClick={action("show")}>
+      <div className={`event-block ${obj.type}`} onClick={action("")}>
         <div style={{borderStyle: "solid", borderWidth: 2, position: "relative"}}>
           <h2 className="event-block-title">{ title }</h2>
           {
