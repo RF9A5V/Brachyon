@@ -44,13 +44,6 @@ export default class EventsPanel extends Component {
   categories() {
     var events = this.props.attrs.events;
     var options = events.map((e, i) => { return e.name });
-    if(window.location.pathname == "/events/create"){
-      var eColor = "#00BDFF";
-    }
-    else if(window.location.pathname == "/leagues/create"){
-      var eColor = "#FF6000";
-    }
-    else{}
     return options.map((val, i) => {
       var style = {
         backgroundColor: "#111",
@@ -68,7 +61,7 @@ export default class EventsPanel extends Component {
         <div style={style} onClick={() => {
           this.setState({ option: i });
         }}>
-          <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
+          <span style={{color: this.state.option == i ? "#FF6000" : "#FFF"}}>
           { ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (i + 1)) }
           </span>
         </div>
