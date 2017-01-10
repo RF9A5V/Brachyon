@@ -13,4 +13,8 @@ Meteor.publish("league", (slug) => {
     Meteor.users.find({ _id: { $in: userIds } }, { username: 1, "profile.imageUrl": 1 }),
     Brackets.find({ _id: (league.tiebreaker || {}).id })
   ]
+});
+
+Meteor.publish("leagueByID", (id) => {
+  return Leagues.find({ _id: id });
 })

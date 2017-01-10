@@ -35,18 +35,18 @@ export default class LeaderboardSlide extends Component {
         var instance = Instances.findOne(event.instances.pop());
         sortedBoard = sortedBoard.map((obj, i) => {
           if(instance.brackets[0].format.baseFormat == "single_elim") {
-            obj["placement"] = parseInt(Math.log2(i + 1)) + 1;
+            obj["placement"] = Math.ceil(Math.log2(i + 1)) + 1;
           }
           else if(instance.brackets[0].format.baseFormat == "double_elim") {
             if(i < 4) {
               obj["placement"] = i;
             }
             else {
-              obj["placement"] = parseInt(Math.log2(i)) + 2;
+              obj["placement"] = Math.ceil(Math.log2(i)) + 2;
             }
           }
           else {
-            obj["placement"] = i;
+            obj["placement"] = i + 1;
           }
           return obj;
         })
@@ -57,7 +57,7 @@ export default class LeaderboardSlide extends Component {
           <div className="row">
             <div className="col-2">
               {
-                (index > 0 ? ((obj.placement + 1) + ". ") : ("")) + user.username
+                (index > 0 ? ((obj.placement) + ". ") : ("")) + user.username
               }
             </div>
             <div className="col-1">

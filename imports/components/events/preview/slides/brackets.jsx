@@ -23,7 +23,7 @@ export default class BracketSlide extends Component {
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
     if(this.props.event && this.props.event.details.bannerUrl) {
-      imgUrl = this.props.event.details.banner;
+      imgUrl = this.props.event.details.bannerUrl;
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
@@ -98,7 +98,7 @@ export default class BracketSlide extends Component {
           use: "tickets",
           tickets: ["venue", `${i}`]
         })
-        browserHistory.push(`/events/${this.props.event.slug}/checkout`);
+        browserHistory.push(`/event/${this.props.event.slug}/checkout`);
       }
       else {
         Meteor.call("events.registerUser", this.state.id, i, (err) => {
@@ -169,10 +169,10 @@ export default class BracketSlide extends Component {
                       <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
-                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
+                            browserHistory.push(`/event/${this.props.event.slug}/brackets/${i}/admin`)
                           }
                           else {
-                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
+                            browserHistory.push(`/event/${this.props.event.slug}/brackets/${i}`);
                           }
                         }}>
                           <span>View</span>
