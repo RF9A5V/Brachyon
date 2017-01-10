@@ -18,7 +18,7 @@ export default class Main extends Component {
   }
 
   gameBanner(gameID){
-    return GameBanners.findOne(Games.findOne(gameID).banner).link();
+    return Games.findOne(gameID).bannerUrl;
   }
 
   redirectToBracketPage(index) {

@@ -46,7 +46,7 @@ export default class ApproveGameAction extends Component {
     var game = Games.findOne(this.state.game);
     return (
       <div className="col center x-center">
-        <img src={GameBanners.findOne(game.banner).link()} style={{width: 300, height: "auto"}} />
+        <img src={game.bannerUrl} style={{width: 300, height: "auto"}} />
         <span>{ game.name }</span>
         <p>{ game.description }</p>
         <div className="row center x-center">
@@ -75,7 +75,7 @@ export default class ApproveGameAction extends Component {
           Games.find({ approved: false }).map((game) => {
             return (
               <div className="game" onClick={() => { this.setState({ game: game._id }) }}>
-                <img src={GameBanners.findOne(game.banner).link()} />
+                <img src={game.bannerUrl} />
                 <div>
                   { game.name }
                 </div>
