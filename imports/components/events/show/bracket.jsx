@@ -74,11 +74,10 @@ export default class BracketPanel extends Component {
           rec = Math.ceil(Math.log2(rounds[0].players.length));
         }
         else {
-          rec = rounds[0].players.length;
-          if (rounds[0].players.length%2 == 1) {
-            rec--;
-          }
+          rec = rounds[0].players.length - (rounds[0].players.length % 2) - 1;
         }
+        console.log(rec);
+        console.log(rounds.length);
         bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
       }
       var showModal = Events.findOne().league != null && bracketComplete;

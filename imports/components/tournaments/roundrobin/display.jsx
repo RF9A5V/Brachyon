@@ -194,12 +194,12 @@ export default class RoundDisplay extends TrackerReact(Component) {
           <div>
           {
             this.state.page >= (this.state.recrounds-1) ? (
-              <button onClick={ () => {this.endTourn().bind(this)} }>
+              <button onClick={ () => {this.endTourn()} }>
                 Finish Tournament
               </button>
             ) : (
               this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) ? (
-                <button onClick={ () => {this.newRound().bind(this)} }>
+                <button onClick={ () => {this.newRound()} }>
                   Advance Round
                 </button>
               ) : (
