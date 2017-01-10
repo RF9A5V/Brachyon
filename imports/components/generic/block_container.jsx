@@ -104,7 +104,8 @@ export default class BlockContainer extends Component {
 
   joinCollections() {
     var leagues = Leagues.find().map(obj => {
-      var events = Events.find({ slug: { $in: obj.events }, isComplete: false }).fetch();
+      console.log(obj);
+      var events = Events.find({ league: obj._id }).fetch();
       obj.date = events[0].details.datetime;
       obj.location = events[0].details.location;
       obj.type = "league";
