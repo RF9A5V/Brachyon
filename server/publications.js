@@ -118,17 +118,11 @@ Meteor.smartPublish("discoverEvents", () => {
   });
   var gameSet = new Set();
   var instances = Instances.find({
-    $or: [{
-      _id: {
-        $in: events.map((e) => {
-          return e.instances.pop();
-        })
-      }
-    }, {
-      owner: {
-        $exists: true
-      }
-    }]
+    _id: {
+      $in: events.map((e) => {
+        return e.instances.pop();
+      })
+    }
   })
   instances.forEach((e) => {
     if(e.brackets != null){
