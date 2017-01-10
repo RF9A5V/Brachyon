@@ -71,6 +71,10 @@
       "token": "***REMOVED***",
       "alphaSecret": "***REMOVED***",
       "alphaToken": "***REMOVED***"
+    },
+    "gmail": {
+      "email": "steven@brachyon.com",
+      "password": "***REMOVED***"
     }
   }
 
