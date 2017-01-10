@@ -32,11 +32,18 @@ export default class DetailsPanel extends Component {
 
   categories() {
     var options = ["Title", "Description", "Location", "Image"];
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      var eColor = "#FF6000";
+    }
+    else{}
     return options.map((val, i) => {
       var style = {
         backgroundColor: "#111",
         padding: 10,
-        color: this.state.option == i ? "#00BDFF" : "#FFF",
+        color: this.state.option == i ? eColor : "#FFF",
         width: 100,
         marginRight: 10,
         textAlign: "center",
