@@ -121,7 +121,7 @@ export default class BlockContainer extends Component {
                                 e.stopPropagation();
                                 this.onRefreshClick(event);
                               }}>
-                                REFRESH
+                                RERUN
                               </div>
                             ) : (
                               ""
