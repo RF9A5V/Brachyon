@@ -64,7 +64,7 @@ export default class RemoveEventAction extends Component {
   profileImageOrDefault(id) {
     var user = Meteor.users.findOne(id);
     if(user.profile.imageUrl) {
-      return return user.profile.imageUrl;
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
