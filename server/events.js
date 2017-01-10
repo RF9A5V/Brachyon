@@ -373,7 +373,8 @@ Meteor.methods({
       match.winner = null;
       Brackets.update(bracketID, {
         $set: {
-          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match
+          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match,
+          complete: false
         }
       });
       return;
@@ -406,7 +407,8 @@ Meteor.methods({
       else loserround.playerTwo = null;
       Brackets.update(bracketID, {
         $set: {
-          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround
+          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround,
+          complete: false
         }
       });
     }
@@ -443,7 +445,8 @@ Meteor.methods({
     Brackets.update(bracketID, {
       $set: {
         [`rounds.${fb}.${fr}.${fm}`]: advMatch,
-        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
+        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+        complete: false
       }
     })
     //Return for recursion

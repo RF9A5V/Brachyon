@@ -63,7 +63,7 @@ export default class DoubleDisplay extends Component {
                           }
                         }
                         return (<div className="bracket-match-spacing">
-                          <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                          <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} update={this.props.update} />
                         </div>);
                       })
                     }
@@ -97,7 +97,7 @@ export default class DoubleDisplay extends Component {
                             }
                           }
                           return (<div className="bracket-match-spacing">
-                            <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                            <MatchBlock match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} id={this.props.id} isFutureLoser={isFutureLoser} update={this.props.update}/>
                           </div>);
                         }
                       })
@@ -161,7 +161,7 @@ export default class DoubleDisplay extends Component {
                             }
                           }
                           return (<div className="bracket-match-spacing">
-                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} />
+                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length} id={this.props.id} isFutureLoser={isFutureLoser} update={this.props.update}/>
                           </div>);
                         })
                       }

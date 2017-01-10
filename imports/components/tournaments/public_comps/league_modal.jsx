@@ -32,11 +32,10 @@ export default class LeagueModal extends Component {
     var localBoard = {};
     var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
     Leagues.findOne().leaderboard[eventIndex + 1].forEach((obj, i) => {
+      console.log(obj);
       var user = Meteor.users.findOne(obj.id);
       localBoard[user.username] = obj;
     });
-    console.log(localBoard);
-    console.log(ldrboard);
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
@@ -153,9 +152,11 @@ export default class LeagueModal extends Component {
 
   swissLeaderboard() {
     var ldrboard = {};
-    var players = Brackets.findOne().rounds[Brackets.findOne().rounds.length - 1].players.sort((a, b) => { return b.score - a.score; }).forEach((p, i) => {
+    var rounds = Brackets.findOne().rounds;
+    rounds[rounds.length - 1].players.sort((a, b) => { return b.score - a.score; }).forEach((p, i) => {
       ldrboard[p.name] = i;
     });
+    console.log(ldrboard);
     return this.boardFormatting(ldrboard);
   }
 

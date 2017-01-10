@@ -16,5 +16,10 @@ Meteor.publish("league", (slug) => {
 });
 
 Meteor.publish("leagueByID", (id) => {
-  return Leagues.find({ _id: id });
+  var league = Leagues.findOne(id);
+  var users = league.leaderboard[0].map(p => { return p.id });
+  return [
+    Leagues.find({ _id: id }),
+    Meteor.users.find({ _id: { $in: users } })
+  ];
 })
