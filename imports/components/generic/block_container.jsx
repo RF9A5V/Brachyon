@@ -44,7 +44,7 @@ export default class BlockContainer extends Component {
           type = "bracket";
         }
         var identifier = obj.slug || obj._id;
-        browserHistory.push("/" + type + "/" + identifier);
+        browserHistory.push("/" + type + "/" + identifier + "/" + val);
       }
     }
 
@@ -107,7 +107,6 @@ export default class BlockContainer extends Component {
 
   joinCollections() {
     var leagues = Leagues.find().map(obj => {
-      console.log(obj);
       var events = Events.find({ league: obj._id }).fetch();
       obj.date = events[0].details.datetime;
       obj.location = events[0].details.location;
