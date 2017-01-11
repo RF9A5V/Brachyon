@@ -29,7 +29,7 @@ export default class BlockContainer extends Component {
     ) : (
       obj.leaderboard[0].length
     );
-    var title = (obj.type == "instance") ? "TEMP" : obj.details.name;
+    var title = (obj.type == "instance") ? obj.brackets[0].name || "Bracket" : obj.details.name;
     var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
     if(!img) {
       img = "/images/bg.jpg";

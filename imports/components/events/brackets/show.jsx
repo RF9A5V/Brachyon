@@ -43,7 +43,9 @@ export default class BracketShowScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.state.event.stop();
+    if(this.state.event) {
+      this.state.event.stop();
+    }
     if(this.state.bracket) {
       this.state.bracket.stop();
     }
