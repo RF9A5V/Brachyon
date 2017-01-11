@@ -162,7 +162,7 @@ export default class EventCreateScreen extends Component {
       }
       else {
         //var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
-        var href = `/events/${event}/show`;
+        var href = `/event/${event}`;
         if(imgRef) {
           imgRef.meta.eventSlug = event;
           var dataSeg = imgRef.file.substring(imgRef.file.indexOf("/"), imgRef.file.indexOf(";")).slice(1);

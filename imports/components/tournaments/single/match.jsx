@@ -31,13 +31,15 @@ export default class MatchBlock extends Component {
       e.preventDefault();
       if (index != 2)
       {
-        Meteor.call("events.advance_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, index, function(err) {
+        Meteor.call("events.advance_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, index, (err) => {
           if(err){
             console.log(err);
             toastr.error("Couldn't advance this match.", "Error!");
           }
           else {
             toastr.success("Player advanced to next round!", "Success!");
+            this.props.update();
+            this.forceUpdate();
           }
         })
         this.closeModal();
@@ -49,13 +51,15 @@ export default class MatchBlock extends Component {
   {
     return function(e) {
       e.preventDefault();
-      Meteor.call("events.undo_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, function(err) {
+      Meteor.call("events.undo_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, (err) => {
         if(err){
           console.log(err);
           toastr.error("Couldn't undo this match.", "Error!");
         }
         else {
           toastr.success("Match has been undone!", "Success!");
+          this.props.update();
+          this.forceUpdate();
         }
       })
       this.closeModal();
@@ -67,6 +71,7 @@ export default class MatchBlock extends Component {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
+      this.props.update();
       this.forceUpdate();
     })
   }
@@ -200,13 +205,19 @@ export default class MatchBlock extends Component {
                     }
                   </div>
                 </div>
-                <div className="row center">
-                  <button onClick={ () => {
-                    var event = Events.findOne();
-                    var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                    browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
-                  }}>View</button>
-                </div>
+                {
+                  Events.findOne() ? (
+                    <div className="row center">
+                      <button onClick={ () => {
+                        var event = Events.findOne();
+                        var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+                        browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                      }}>View</button>
+                    </div>
+                  ) : (
+                    ""
+                  )
+                }
               </div>
             ):(
               <div className="col" style={{height: "100%"}}>
@@ -215,11 +226,17 @@ export default class MatchBlock extends Component {
                 </div>
                 <div className="row x-center">
                   <button onClick={(this.onUndoUserClick()).bind(this)} style={{marginRight: 20}}>Undo</button>
-                  <button onClick={ () => {
-                    var event = Events.findOne();
-                    var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                    browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
-                  }}>View</button>
+                  {
+                    Events.findOne() ? (
+                      <button onClick={ () => {
+                        var event = Events.findOne();
+                        var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+                        browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                      }}>View</button>
+                    ) : (
+                      ""
+                    )
+                  }
                 </div>
               </div>
             )
