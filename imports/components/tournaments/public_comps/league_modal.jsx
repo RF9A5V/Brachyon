@@ -212,7 +212,7 @@ export default class LeagueModal extends Component {
                       return toastr.error("Couldn\'t close the event.", "Error!");
                     }
                     var leaguePath = Leagues.findOne();
-                    browserHistory.push("/league/"+league.slug+"/leaderboard");
+                    browserHistory.push("/league/"+leaguePath.slug+"/leaderboard");
                   })
                 }
               })
