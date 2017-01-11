@@ -39,6 +39,7 @@ export default class MatchBlock extends Component {
           else {
             toastr.success("Player advanced to next round!", "Success!");
             this.props.update();
+            this.forceUpdate();
           }
         })
         this.closeModal();
@@ -58,6 +59,7 @@ export default class MatchBlock extends Component {
         else {
           toastr.success("Match has been undone!", "Success!");
           this.props.update();
+          this.forceUpdate();
         }
       })
       this.closeModal();
@@ -69,6 +71,7 @@ export default class MatchBlock extends Component {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
+      this.props.update();
       this.forceUpdate();
     })
   }
