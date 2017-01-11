@@ -85,10 +85,21 @@ export default class BracketsPanel extends Component {
                   var bracket = this.props.attrs.brackets[key];
                   var onBracketChange = (key) => {
                     return (game, format) => {
-                      this.props.attrs.brackets[key] = {
-                        gameObj: game,
-                        format
-                      };
+                      if(game == null) {
+                        if(!this.props.attrs.brackets[key]) {
+                          this.props.attrs.brackets[key] = {};
+                        }
+                        this.props.attrs.brackets[key].name = format.name;
+                      }
+                      else {
+                        var prev = this.props.attrs.brackets[key] || {};
+                        this.props.attrs.brackets[key] = {
+                          gameObj: game,
+                          format
+                        };
+                        this.props.attrs.brackets[key].name = prev.name;
+                      }
+
                     }
                   }
                   if(bracket == null){
