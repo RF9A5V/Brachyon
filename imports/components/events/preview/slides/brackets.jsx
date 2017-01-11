@@ -128,6 +128,13 @@ export default class BracketSlide extends Component {
                   <div className="bracket">
                     <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
                     <div className="bracket-overlay">
+                      {
+                        bracket.name && bracket.name != "" ? (
+                          <div className="col-1"></div>
+                        ) : (
+                          ""
+                        )
+                      }
                       <div className="bracket-details">
                         {
                           // <div className="bracket-detail-row">
@@ -139,6 +146,7 @@ export default class BracketSlide extends Component {
                           //   </div>
                           // </div>
                         }
+                        <div className="col-1"></div>
                         <div className="bracket-detail-row">
                           <div className="bracket-detail-item">
                             <FontAwesome name="users" />
@@ -164,6 +172,16 @@ export default class BracketSlide extends Component {
                           </div>
                         </div>
                       </div>
+                      {
+                        // Set styles for bracket name here
+                        bracket.name && bracket.name != "" ? (
+                          <div className="row center x-center col-1">
+                            { bracket.name }
+                          </div>
+                        ) : (
+                          ""
+                        )
+                      }
                       <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {

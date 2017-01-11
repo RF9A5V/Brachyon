@@ -78,23 +78,19 @@ export default class BracketForm extends Component {
       name: game.name,
       bannerUrl: game.bannerUrl
     })
+  }
 
+  onNameChange() {
+    var name = this.refs.name.value;
+    if(this.props.onChange) {
+      this.props.onChange(null, { name });
+    }
   }
 
   formatForm() {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
-          <div className="row center">
-            {
-              // <span style={{marginBottom: 10}}>
-              //   All participants will go straight into this bracket!
-              // </span>
-            }
-          </div>
-          {
-            // <h5 style={{marginBottom: 20}}>Bracket Organization</h5>
-          }
           <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
             if(this.props.onChange) {
               var game = {
@@ -215,7 +211,8 @@ export default class BracketForm extends Component {
     }
     return {
       game: this.state.id,
-      format
+      format,
+      name: this.refs.name.value
     }
   }
 
@@ -223,13 +220,9 @@ export default class BracketForm extends Component {
     return (
       <div className="row" style={{backgroundColor: "#111"}}>
         {
-        // <h5>Bracket Name</h5>
-        // <input ref="name" defaultValue={this.props.name} />
-        }
-        {
           this.state.bannerUrl ? (
             <div style={{textAlign: "center", position: "relative"}}>
-              <img style={{width: "auto", height: 300, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              <img style={{width: "auto", height: 340, border: "solid 4px #111"}} src={this.state.bannerUrl} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
               </div>
             </div>
@@ -238,6 +231,10 @@ export default class BracketForm extends Component {
           )
         }
         <div className="col col-1" style={{padding: 20}}>
+          <div style={{textAlign: "left"}}>
+            <h5>Bracket Name</h5>
+          </div>
+          <input ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0}} />
           <div className="row flex-pad">
             <h5>Game</h5>
             {
