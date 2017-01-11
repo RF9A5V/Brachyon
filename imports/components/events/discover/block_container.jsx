@@ -132,7 +132,9 @@ export default class BlockContainer extends Component {
                             e.stopPropagation();
                             this.onPencilClick(event);
                           }} >
-                            EDIT
+                            <span>
+                              EDIT
+                            </span>
                           </div>
                         </div>
                       ) : (
