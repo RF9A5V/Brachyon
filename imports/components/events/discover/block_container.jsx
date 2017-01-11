@@ -50,7 +50,7 @@ export default class BlockContainer extends Component {
     )
   }
 
-  onPencilClick(event) {
+  onEditClick(event) {
     var url = "";
     if(event.published) {
       url = `/event/${event.slug}/admin`;
@@ -130,7 +130,7 @@ export default class BlockContainer extends Component {
                           <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            this.onPencilClick(event);
+                            this.onEditClick(event);
                           }} >
                             EDIT
                           </div>
