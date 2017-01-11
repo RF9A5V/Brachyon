@@ -265,7 +265,7 @@ export default class UserEvents extends TrackerReact(Component) {
             events.length == 0 && leagues.length == 0 && instances.length == 0 ? (
               this.state.category == 1 ? (
                 <div className="row center col-1" style={{padding: "100px 0"}}>
-                  <h5>Looks like you don't have any events. Click <Link to={"/events/create"}>here</Link> to create one!</h5>
+                  <h5>Looks like you don't have any events. Click <Link to={"/create"}>here</Link> to create one!</h5>
                 </div>
               ) : (
                 <div className="row center col-1" style={{padding: "100px 0"}}>
