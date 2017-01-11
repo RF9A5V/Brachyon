@@ -13,12 +13,7 @@ Meteor.publish("event_participants", (slug) => {
     });
     var imgIDs = users.fetch().map((user) => { return user.profile.image });
     return [
-      users,
-      ProfileImages.find({
-        _id: {
-          $in: imgIDs
-        }
-      }).cursor
+      users
     ]
   }
   else {

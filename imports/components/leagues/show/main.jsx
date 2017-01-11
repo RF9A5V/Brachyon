@@ -68,7 +68,7 @@ export default class MainSlide extends Component {
                   <FontAwesome name="calendar" size="2x" />
                 </div>
                 <span>
-                  {moment(this.props.event.details.datetime).format("MMM Do, YYYY @ h:mmA")}
+                  {moment(Events.findOne({slug: this.props.event.events[0]}).details.datetime).format("MMM Do, YYYY @ h:mmA")}
                 </span>
               </div>
             </div>

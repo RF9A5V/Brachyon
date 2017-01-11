@@ -111,6 +111,13 @@ export default class DetailsPanel extends Component {
 
   render() {
     var options = ["Title", "Location", "Description", "Time", "Banner"]
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      var eColor = "#FF6000";
+    }
+    else{}
     return (
       <div>
         <div className="row" style={{marginBottom: 20}}>
@@ -120,7 +127,7 @@ export default class DetailsPanel extends Component {
                 padding: 10,
                 marginRight: 10,
                 width: 100,
-                color: this.state.option == op ? "#0BDDFF" : "white",
+                color: this.state.option == op ? eColor : "white",
                 backgroundColor: "#111",
                 cursor: "pointer"
               }

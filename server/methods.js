@@ -370,7 +370,9 @@ Meteor.methods({
           }
         });
         if(user){
-          Accounts.sendVerificationEmail(user);
+          if(!Meteor.isDevelopment){
+            Accounts.sendVerificationEmail(user);
+          }
           var token = Accounts._generateStampedLoginToken();
           Accounts._insertLoginToken(user, token);
           return token;

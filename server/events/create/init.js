@@ -37,7 +37,8 @@ Meteor.methods({
       if(!bracket.game) {
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
-    })
+    });
+    console.log(ary);
     return ary;
   },
 

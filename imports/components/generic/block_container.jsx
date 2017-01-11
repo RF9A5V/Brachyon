@@ -29,7 +29,7 @@ export default class BlockContainer extends Component {
     ) : (
       obj.leaderboard[0].length
     );
-    var title = (obj.type == "instance") ? "TEMP" : obj.details.name;
+    var title = (obj.type == "instance") ? obj.brackets[0].name || "Bracket" : obj.details.name;
     var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
     if(!img) {
       img = "/images/bg.jpg";
@@ -44,18 +44,20 @@ export default class BlockContainer extends Component {
           type = "bracket";
         }
         var identifier = obj.slug || obj._id;
-        browserHistory.push("/" + type + "s" + "/" + identifier + "/" + val);
+        browserHistory.push("/" + type + "/" + identifier);
       }
     }
 
     return (
-      <div className={`event-block ${obj.type}`} onClick={action("show")}>
+      <div className={`event-block ${obj.type}`} onClick={action("")}>
         <div style={{borderStyle: "solid", borderWidth: 2, position: "relative"}}>
           <h2 className="event-block-title">{ title }</h2>
           {
             Meteor.userId() == obj.owner ? (
-              <div className="event-block-edit">
-                <FontAwesome name="pencil" onClick={action("admin")} />
+              <div className="event-block-admin-row">
+                <div className="event-block-admin-button col center x-center" onClick={action("admin")}>
+                  EDIT
+                </div>
               </div>
             ) : (
               ""
