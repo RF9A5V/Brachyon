@@ -62,7 +62,8 @@ export default class LeaderboardSlide extends Component {
         return (
           <div className="row leaderboard-record">
             <div className="col-2">
-              <span className="leaderboard-placement">{ (obj.placement || (index)) + ". "}</span><span className="leaderboard-name" style={{color: `${index == 1 ? "#FF6000" : "white"}`>{user.username }</span>
+              <span className="leaderboard-placement">{(index) + ". "}</span>
+              <span className="leaderboard-name" style={{color: `${index == 1 ? "#FF6000" : "white"}`, fontSize: 20 - (2 * Math.min(index, 4))}}>{user.username}</span>
             </div>
             <div className="col-1">
               <span style={{color: `${index == 1 ? "#FF6000" : "white"}`}}>{ current}</span>
@@ -78,7 +79,7 @@ export default class LeaderboardSlide extends Component {
     return (
       <div className="col-1 row slide" style={{backgroundImage: this.backgroundImage(false)}}>
         <div className="col col-1 league-leaderboard" style={{padding: 20, marginLeft: 60}}>
-          <h5 className="row center" style={{marginBottom: 12}}>Global Leaderboard</h5>
+          <h5 className="row center" style={{marginBottom: 18}}>Global Leaderboard</h5>
           <div className="row">
             <div style={{fontWeight: "bold"}} className="col-2">
               Players
