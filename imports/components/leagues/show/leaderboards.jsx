@@ -51,19 +51,21 @@ export default class LeaderboardSlide extends Component {
           return obj;
         })
       }
+      var index = 0;
+      var current = -1;
       return sortedBoard.map(obj => {
+        if(obj.score + obj.bonus != current){
+          current = obj.score + obj.bonus;
+          index += 1;
+        }
         var user = Meteor.users.findOne(obj.id);
         return (
-          <div className="row">
+          <div className="row leaderboard-record">
             <div className="col-2">
-              {
-                (index > 0 ? ((obj.placement) + ". ") : ("")) + user.username
-              }
+              <span className="leaderboard-placement">{ (obj.placement || (index)) + ". "}</span><span className="leaderboard-name" style={{color: `${index == 1 ? "#FF6000" : "white"}`>{user.username }</span>
             </div>
             <div className="col-1">
-              {
-                obj.score + " + " + obj.bonus + " = " + parseInt(obj.score + obj.bonus)
-              }
+              <span style={{color: `${index == 1 ? "#FF6000" : "white"}`}}>{ current}</span>
             </div>
           </div>
         )
@@ -75,33 +77,47 @@ export default class LeaderboardSlide extends Component {
     var leaderboards = this.props.event.leaderboard;
     return (
       <div className="col-1 row slide" style={{backgroundImage: this.backgroundImage(false)}}>
-        <div className="col col-1" style={{padding: 20}}>
-          <h5>Global Leaderboard</h5>
+        <div className="col col-1 league-leaderboard" style={{padding: 20, marginLeft: 60}}>
+          <h5 className="row center" style={{marginBottom: 12}}>Global Leaderboard</h5>
+          <div className="row">
+            <div style={{fontWeight: "bold"}} className="col-2">
+              Players
+            </div>
+            <div style={{fontWeight: "bold"}} className="col-1">
+              Points
+            </div>
+          </div>
           <div>
             {
               this.leaderboard(0)
             }
           </div>
         </div>
-        <div className="col-1" style={{padding: 20}}>
+        <div className="col-1 league-leaderboard event-leaderboards" style={{padding: 20, marginLeft: 20, marginRight: 60}}>
           <div className="row" style={{marginBottom: 10}}>
             {
               this.props.event.events.map((slug, i) => {
                 return (
-                  <div style={{paddingBottom: 5, borderBottom: `solid 2px ${this.state.current == i ? "#FF6000" : "#FFF"}`, marginRight: 10, cursor: "pointer"}} onClick={() => { this.setState({ current: i }) }}>
+                  <div style={{paddingBottom: 5, borderBottom: `solid 2px ${this.state.current == i ? "#FF6000" : "transparent"}`, marginRight: 10, cursor: "pointer"}} onClick={() => { this.setState({ current: i }) }}>
                     Event { i + 1 }
                   </div>
                 )
               })
             }
           </div>
+          <div className="row">
+            <div style={{fontWeight: "bold"}} className="col-2">
+              Players
+            </div>
+            <div style={{fontWeight: "bold"}} className="col-1">
+              Points
+            </div>
+          </div>
           <div>
           {
             this.leaderboard(this.state.current + 1)
           }
           </div>
-        </div>
-        <div className="col-2">
         </div>
       </div>
     )
