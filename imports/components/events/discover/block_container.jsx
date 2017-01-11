@@ -18,7 +18,7 @@ export default class BlockContainer extends Component {
           browserHistory.push(`/event/${event.slug}`);
         }
         else {
-          browserHistory.push(`/events/${event.slug}/edit`);
+          browserHistory.push(`/event/${event.slug}/edit`);
         }
       }
     )
@@ -53,10 +53,10 @@ export default class BlockContainer extends Component {
   onPencilClick(event) {
     var url = "";
     if(event.published) {
-      url = `/events/${event.slug}/admin`;
+      url = `/event/${event.slug}/admin`;
     }
     else {
-      url = `/events/${event.slug}/edit`;
+      url = `/event/${event.slug}/edit`;
     }
     browserHistory.push(url);
   }
@@ -113,23 +113,27 @@ export default class BlockContainer extends Component {
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
                       isOwner ? (
-                        <div className="event-block-edit" >
+                        <div className="event-block-admin-row">
                           {
                             event.isComplete && !event.league ? (
-                              <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
+                              <div className="event-block-admin-button" onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 this.onRefreshClick(event);
-                              }} />
+                              }}>
+                                RERUN
+                              </div>
                             ) : (
                               ""
                             )
                           }
-                          <FontAwesome name="pencil" onClick={(e) => {
+                          <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             this.onPencilClick(event);
-                          }} />
+                          }} >
+                            EDIT
+                          </div>
                         </div>
                       ) : (
                         ""
