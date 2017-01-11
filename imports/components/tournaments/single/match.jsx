@@ -117,8 +117,8 @@ export default class MatchBlock extends Component {
                       () => {}
                     )
                   } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                    <span style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}}>
-                      <div className={p==null? (""): (this.getUsername(p).length<19?(""):("marquee"))}>
+                    <span>
+                      <div style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}} className={p==null? (""): (this.getUsername(p).length < 19 ? "" : "marquee")}>
                         {
                           p == null ? (
                             "TBD"

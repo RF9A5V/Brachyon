@@ -33,23 +33,29 @@ export default class LeagueDisplay extends Component {
                     <h2 className="event-block-title">{ league.details.name }</h2>
                     {
                       Meteor.userId() == league.owner ? (
-                        <div className="event-block-edit">
+                        <div className="event-block-admin-row">
                           {
-                            league.isComplete ? (
-                              <FontAwesome name="refresh" style={{marginRight: 10}} onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                //this.onRefreshClick(league);
-                              }} />
-                            ) : (
-                              ""
-                            )
+                            // event.isComplete && !event.league ? (
+                            //   <div className="event-block-admin-button" onClick={(e) => {
+                            //     e.preventDefault();
+                            //     e.stopPropagation();
+                            //     this.onRefreshClick(event);
+                            //   }}>
+                            //     RERUN
+                            //   </div>
+                            // ) : (
+                            //   ""
+                            // )
                           }
-                          <FontAwesome name="pencil" onClick={(e) => {
+                          <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            this.onPencilClick(league);
-                          }} />
+                            this.onPencilClick(event);
+                          }} >
+                            <span>
+                              EDIT
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         ""
