@@ -49,6 +49,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
       else {
         toastr.success("Match finalized!", "Success!");
         this.setState({wcount: this.state.wcount + 1});
+        this.props.update();
       }
     });
 
@@ -57,13 +58,14 @@ export default class RoundDisplay extends TrackerReact(Component) {
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
-    Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, function(err) {
+    Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
         console.log(err);
         toastr.error("Couldn't update the round.", "Error!");
       }
       else {
         toastr.success("New Round!");
+        this.props.update();
       }
     });
     this.setState({wcount: 0, page: this.state.page + 1});
@@ -192,12 +194,12 @@ export default class RoundDisplay extends TrackerReact(Component) {
           <div>
           {
             this.state.page >= (this.state.recrounds-1) ? (
-              <button onClick={ () => {this.endTourn().bind(this)} }>
+              <button onClick={ () => {this.endTourn()} }>
                 Finish Tournament
               </button>
             ) : (
               this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) ? (
-                <button onClick={ () => {this.newRound().bind(this)} }>
+                <button onClick={ () => {this.newRound()} }>
                   Advance Round
                 </button>
               ) : (
