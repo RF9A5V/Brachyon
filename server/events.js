@@ -226,6 +226,36 @@ Meteor.methods({
     })
   },
 
+  "events.change_seeding"(eventID, index, oldVal, newVal)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    var nparticipants = instance.brackets[index].participants;
+    participant = nparticipants[oldVal];
+    nparticipants.splice(oldVal, 1); //Delete the participant off the list
+    nparticipants.splice(newVal, 0, participant); //Put him back at his new seeding area.
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.participants`]: nparticipants
+      }
+    })
+  },
+
+  "events.shuffle_seeding"(eventID, index, nparticipants)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.participants`]: nparticipants
+      }
+    })
+  },
+
   "events.start_event"(eventID, index) {
     var event = Events.findOne(eventID);
     var instance;

@@ -211,7 +211,8 @@ export default class LeagueModal extends Component {
                     if(err) {
                       return toastr.error("Couldn\'t close the event.", "Error!");
                     }
-                    browserHistory.push("/");
+                    var leaguePath = Leagues.findOne();
+                    browserHistory.push("/league/"+league.slug+"/leaderboard");
                   })
                 }
               })
@@ -227,7 +228,8 @@ export default class LeagueModal extends Component {
                     if(err) {
                       return toastr.error("Couldn\'t close the event.", "Error!");
                     }
-                    browserHistory.push("/");
+                    var leaguePath = Leagues.findOne();
+                    browserHistory.push("/league/"+leaguePath.slug+"/leaderboard");
                   })
                 }
               })

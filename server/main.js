@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import moment from "moment";
 
 var Stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -107,8 +108,8 @@ Accounts.onEmailVerificationLink = (token, done) => {
 Meteor.startup(() => {
 
   var smtp = {
-    username: "steven@brachyon.com",
-    password: "IcarusLive5",
+    username: Meteor.settings.private.gmail.email,
+    password: Meteor.settings.private.gmail.password,
     server: "smtp-relay.gmail.com",
     port: 587
   }
@@ -156,6 +157,19 @@ Meteor.startup(() => {
       });
     }
   });
+
+  // SyncedCron.add({
+  //   name: "Clear Test Brackets",
+  //   schedule: (parser) => {
+  //     return parser.recur().every(24).hour()
+  //   },
+  //   job: () => {
+  //     var instances = Instances.find({ owner: { $ne: null }, "brackets.startedAt": { $lte: moment().subtract(1, "day").toDate() } });
+  //     var brackets = Brackets.find({ _id: { $in: instances.map(i => { return i.brackets[0].id }) } }).map(b => { return b._id });
+  //     Instances.remove({ _id: { $in: instances.map(i => { return i._id }) } });
+  //     Brackets.remove({ _id: { $in: brackets } });
+  //   }
+  // })
 
   SyncedCron.start();
 });
