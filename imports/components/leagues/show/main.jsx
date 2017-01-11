@@ -9,7 +9,6 @@ export default class MainSlide extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {};
   }
 
