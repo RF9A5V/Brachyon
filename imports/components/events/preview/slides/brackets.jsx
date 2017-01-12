@@ -185,10 +185,10 @@ export default class BracketSlide extends Component {
                       <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
-                            browserHistory.push(`/event/${this.props.event.slug}/brackets/${i}/admin`)
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
                           }
                           else {
-                            browserHistory.push(`/event/${this.props.event.slug}/brackets/${i}`);
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}`);
                           }
                         }}>
                           <span>View</span>
