@@ -21,12 +21,21 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
-          if(!Events.findOne()) {
+          var event = Events.findOne();
+          if(!event) {
             return;
           }
-          if(Events.findOne().owner != Meteor.userId()) {
+          if(event.orgEvent) {
+            var organization = Organizations.findOne(event.owner);
+            console.log(organization);
+            if(organization.owner != Meteor.userId() && organization.roles["Owner"].indexOf(Meteor.userId()) < 0 && organization.roles["Admin"].indexOf(Meteor.userId()) < 0) {
+              toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
+              browserHistory.goBack();
+            }
+          }
+          else if(Events.findOne().owner != Meteor.userId()) {
             toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
-            browserHistory.pop();
+            browserHistory.goBack();
           }
         }
       }),

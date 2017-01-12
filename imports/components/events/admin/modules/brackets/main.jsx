@@ -23,7 +23,7 @@ export default class Main extends Component {
 
   redirectToBracketPage(index) {
     var event = Events.findOne(this.state.id);
-    browserHistory.push(`/events/${event.slug}/brackets/${index}/admin`);
+    browserHistory.push(`/events/${event.slug}/bracket/${index}/admin`);
   }
 
   render() {
@@ -78,7 +78,7 @@ export default class Main extends Component {
                     <h5>${ 0 }</h5>
                   </div>
                   <div className="row center">
-                    <button onClick={() => { browserHistory.push(`/events/${Events.findOne(this.state.id).slug}/brackets/${this.state.index}/admin`) }}>Admin Page</button>
+                    <button onClick={() => { browserHistory.push(`/event/${Events.findOne(this.state.id).slug}/bracket/${this.state.index}/admin`) }}>Admin Page</button>
                   </div>
                 </div>
               </div>

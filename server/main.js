@@ -126,6 +126,9 @@ Meteor.startup(() => {
     job: () => {
       var events = Events.find({ "crowdfunding.details.dueDate": { $lte: new Date() }, "crowdfunding.details.complete": { $ne: true } });
       events.forEach(e => {
+        if(!e.instances || e.instances.length == 0) {
+          return;
+        }
         var instance = Instances.findOne(e.instances.pop());
         var amountFunded = Object.keys((instance.cf || {})).map(key => {
           return instance.cf[key].length * e.crowdfunding.tiers[key].price;

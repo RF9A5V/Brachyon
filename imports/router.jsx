@@ -69,7 +69,7 @@ export const renderRoutes = () => (
       <Route path="event/:slug/publish" component={PublishEventScreen} />
       <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
-      <Route path="event/:slug/brackets/:bracketIndex" component={BracketShowScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
       <Route path="event/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
@@ -86,13 +86,13 @@ export const renderRoutes = () => (
       <Route path="event/:slug/admin" component={EventAdminScreen} />
       <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="event/:slug/:slide" component={PreviewEventScreen} />
-      <Route path="event/:slug/brackets/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex/admin" component={BracketAdminScreen} />
       <Route path="league/:slug/edit" component={EditLeagueScreen} />
       <Route path="league/:slug/admin" component={EditLeagueScreen} />
       <Route path="league/:slug" component={ShowLeagueScreen} />
       <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
       <Route path="bracket/:id" component={BracketShowScreen} />
-      <Route path="event/:slug/brackets/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
     </Route>

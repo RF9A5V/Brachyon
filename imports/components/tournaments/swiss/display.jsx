@@ -192,7 +192,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
           <div className="row" style={{flexWrap: "wrap"}} id="RoundDiv">
           {
             this.state.page > 0 ? (
-              this.props.rounds[this.state.page - 1].matches.map((match, i) => {
+              Brackets.findOne().rounds[this.state.page - 1].matches.map((match, i) => {
                 return (
                   <SwissMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
                 );
