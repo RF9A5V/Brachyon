@@ -1,5 +1,6 @@
 import { Banners } from "/imports/api/event/banners.js";
 import Instances from "/imports/api/event/instance.js";
+import Games from "/imports/api/games/games.js";
 
 Meteor.publish("player.upcomingEvents", function(id, page) {
   var events = Events.find({
