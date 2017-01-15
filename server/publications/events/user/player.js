@@ -30,29 +30,15 @@ Meteor.publish("player.upcomingEvents", function(id, page) {
 });
 
 Meteor.publish("player.ongoingEvents", function(id, page) {
+  var instances = Instances.find({
+    "brackets.participants.id": id
+  });
   var events = Events.find({
     published: true,
-    brackets: {
-      $elemMatch: {
-        participants: {
-          $elemMatch: {
-            id
-          }
-        }
-      }
-    },
-    "details.datetime": {
-      $lte: new Date()
-    }
-  });
-  var imgs = Banners.find({
-    _id: {
-      $in: events.map((e) => { return e.details.banner })
-    }
-  });
+    instances: { $in: instances.map(i => { return i._id }) }
+  }, { sort: { "details.datetime": 1 } });
   return [
     events,
-    imgs.cursor,
     Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } })
   ]
 })
