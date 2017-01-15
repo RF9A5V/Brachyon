@@ -37,9 +37,17 @@ Meteor.publish("player.ongoingEvents", function(id, page) {
     published: true,
     instances: { $in: instances.map(i => { return i._id }) }
   }, { sort: { "details.datetime": 1 } });
+  var gameIds = [];
+  instances.forEach(i => {
+    gameIds = gameIds.concat(i.brackets.map(b => { return b.game }));
+  });
+  var games = Games.find({
+    _id: { $in: gameIds }
+  })
   return [
     events,
-    Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } })
+    instances,
+    games
   ]
 })
 
