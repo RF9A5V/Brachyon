@@ -36,7 +36,7 @@ export default class Footer extends React.Component {
     return (
       <div className="col-1 row x-center justify-start footer-social" style={{margin: '0 0 0 10px'}}>
         <a href="https://www.twitch.tv/brachyon" target="_blank">
-        <div className="social-icon-bg col x-center center" onHover>
+        <div className="social-icon-bg col x-center center">
           <FontAwesome name="twitch" className="twitch" />
         </div></a>
         <div className="footer-plugin-pad"></div>
@@ -71,14 +71,8 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    if(!this.state.useDefaultHeader) {
-      return (
-        <div>
-        </div>
-      );
-    }
     return(
-      <Headroom id="footer" disableInlineStyles={true} downTolerance={"calc(100vh - 50px)"}>
+      <Headroom id="footer" disableInlineStyles={true} downTolerance={document.body.clientHeight - 50}>
         <div className="row footer x-center center">
           { this.socialLinks() }
           <div className="col-1">

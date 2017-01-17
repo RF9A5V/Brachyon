@@ -114,9 +114,9 @@ export default class UserDropdown extends Component {
         </div>
         <div className="org-sidebar" style={{display: this.state.open ? "block" : "none"}} onBlur={() => { this.setState({ open: false }) }}>
           {
-            Organizations.find().map((o) => {
+            Organizations.find().map((o, i) => {
               return (
-                <div className="org-option row x-center" onClick={() => { browserHistory.push(`/org/${o.slug}`) }}>
+                <div key={i} className="org-option row x-center" onClick={() => { browserHistory.push(`/org/${o.slug}`) }}>
                   <img src={o.details.profileUrl} />
                   <span>{ o.name }</span>
                 </div>

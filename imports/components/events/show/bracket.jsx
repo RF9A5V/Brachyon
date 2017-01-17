@@ -55,12 +55,12 @@ export default class BracketPanel extends Component {
       }
       else if (this.props.format == "swiss"){
         component = (
-          <SwissDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
+          <SwissDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       else {
         component = (
-          <RoundDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
+          <RoundDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       var bracketComplete;
@@ -76,11 +76,9 @@ export default class BracketPanel extends Component {
         else {
           rec = rounds[0].players.length - (rounds[0].players.length % 2) - 1;
         }
-        console.log(rec);
-        console.log(rounds.length);
         bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
       }
-      var showModal = Events.findOne().league != null && bracketComplete;
+      var showModal = Events.findOne() && Events.findOne().league != null && bracketComplete;
       return (
         <div>
           {

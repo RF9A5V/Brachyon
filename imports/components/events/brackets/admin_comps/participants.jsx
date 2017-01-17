@@ -32,15 +32,26 @@ export default class AddPartipantAction extends Component {
   }
 
   onUserDelete(alias, index) {
-    var eventId = Events.findOne()._id;
-    Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, (err) => {
-      if(err){
-        return toastr.error(err.reason, "Error!");
-      }
-      this.state.participants.splice(index, 1);
-      this.forceUpdate();
-      return toastr.success("Successfully removed participant from event!", "Success!");
-    })
+    var eventId = (Events.findOne() || {})._id;
+    if(eventId) {
+      Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, (err) => {
+        if(err){
+          return toastr.error(err.reason, "Error!");
+        }
+        this.state.participants.splice(index, 1);
+        this.forceUpdate();
+        return toastr.success("Successfully removed participant from event!", "Success!");
+      });
+    }
+    else {
+      Meteor.call("brackets.removeParticipant", Instances.findOne()._id, alias, (err) => {
+        if(err) {
+          toastr.error(err.reason, "Error!");
+        }
+        this.state.participants.splice(index, 1);
+        this.forceUpdate();
+      })
+    }
   }
 
   onUserAdd(participant) {

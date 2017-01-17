@@ -37,7 +37,6 @@ export default class SwissDisplay extends TrackerReact(Component) {
       wcount: num,
       recrounds: rec,
       brid: bracket._id,
-      id: Events.findOne()._id,
       aliasMap
     }
   }
@@ -81,7 +80,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       else {
         if (isNotTied)
         {
-          Meteor.call("events.endGroup", this.state.id, 0, (error) => {
+          Meteor.call("events.endGroup", this.props.id, 0, (error) => {
             if(error) {
               toastr.error(error.reason, "Error!");
             }

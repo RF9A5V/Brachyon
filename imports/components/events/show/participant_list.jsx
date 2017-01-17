@@ -127,7 +127,7 @@ export default class ParticipantListPanel extends Component {
                               )
                             }
                             {
-                              (obj.id == Meteor.userId() || this.props.isOwner) ? (
+                              Meteor.userId() && (obj.id == Meteor.userId() || this.props.isOwner) ? (
                                 <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
                               ) : (
                                 ""
