@@ -80,7 +80,7 @@ export default class BracketPanel extends Component {
         console.log(rounds.length);
         bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
       }
-      var showModal = Events.findOne().league != null && bracketComplete;
+      var showModal = Events.findOne() && Events.findOne().league != null && bracketComplete;
       return (
         <div>
           {
