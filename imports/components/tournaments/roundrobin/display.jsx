@@ -24,11 +24,15 @@ export default class RoundDisplay extends TrackerReact(Component) {
       rec--;
 
     var bracket = Brackets.findOne();
-    var instance = Instances.findOne(Events.findOne().instances.pop());
+    var event = Events.findOne();
     var aliasMap = {};
-    instance.brackets[0].participants.forEach((player) => {
-      aliasMap[player.alias] = player.id;
-    })
+    if(event) {
+      var instance = Instances.findOne(Events.findOne().instances.pop());
+      instance.brackets[0].participants.forEach((player) => {
+        aliasMap[player.alias] = player.id;
+      })
+    }
+
 
     this.state = {
       page: page + 1,
