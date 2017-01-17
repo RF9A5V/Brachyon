@@ -55,12 +55,12 @@ export default class BracketPanel extends Component {
       }
       else if (this.props.format == "swiss"){
         component = (
-          <SwissDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
+          <SwissDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       else {
         component = (
-          <RoundDisplay rounds={Brackets.findOne().rounds} id={Events.findOne()._id} update={this.forceUpdate.bind(this)} />
+          <RoundDisplay rounds={Brackets.findOne().rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
         )
       }
       var bracketComplete;

@@ -204,11 +204,17 @@ export default class MatchBlock extends Component {
                   </div>
                 </div>
                 <div className="row center">
-                  <button onClick={ () => {
-                    var event = Events.findOne();
-                    var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                    browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
-                  }}>View</button>
+                  {
+                    Events.findOne() ? (
+                      <button onClick={ () => {
+                        var event = Events.findOne();
+                        var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
+                        browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                      }}>View</button>
+                    ) : (
+                      ""
+                    )
+                  }
                 </div>
               </div>
             ):(
