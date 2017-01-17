@@ -72,6 +72,7 @@ export default class MatchBlock extends Component {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
+      this.props.update();
     })
   }
 
@@ -105,7 +106,7 @@ export default class MatchBlock extends Component {
                 var isLoser = match.winner != null && match.winner != p;
 
                 return (
-                  <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
+                  <div key={index} className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
                     match.playerOne != null && match.playerTwo != null ? (
                       () => {if(Meteor.user()){this.setState({open: true});} }
                     ) : (
@@ -145,7 +146,7 @@ export default class MatchBlock extends Component {
             )
           )
         }
-        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
+        <Modal contentLabel="Report Score" className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
           {
             match.winner == null ?
             (
