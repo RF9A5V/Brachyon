@@ -15,6 +15,15 @@ Meteor.methods({
       }
     })
   },
+  "brackets.removeParticipant"(id, alias) {
+    Instances.update(id, {
+      $pull: {
+        [`brackets.0.participants`]: {
+          alias
+        }
+      }
+    })
+  },
   "events.brackets.startBracket"(id, index) {
     var event = Events.findOne(id);
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);

@@ -22,7 +22,7 @@ export default class ParticipantAddField extends Component {
 
   userTemplate(user, index) {
     return (
-      <div className="row x-center" style={{padding: 20, cursor: "pointer", width: 400, backgroundColor: this.state.index == index ? "#666" : "#222", maxWidth: "100%"}} onClick={() => {
+      <div className="row x-center" style={{padding: 5, cursor: "pointer", width: 300, backgroundColor: this.state.index == index ? "#666" : "#222", maxWidth: "100%"}} onClick={() => {
         this.setState({ready: false});
         this.refs.username.value = user.username;
         this.state.user = user._id;
@@ -155,22 +155,27 @@ export default class ParticipantAddField extends Component {
               <h5 style={{backgroundColor: "#333", padding: "0 20px"}}>Add Player</h5>
             </div>
           <div className="row center x-center" style={{justifyContent: "flex-start"}}>
-            <input type="text" placeholder="Add User or Alias" ref="username" onChange={this.onInputChange.bind(this)} style={{marginRight: 10}} onKeyDown={this.onKeyPress.bind(this)} />
+            <div style={{position: "relative"}}>
+              <input type="text" placeholder="Add User or Alias" ref="username" onChange={this.onInputChange.bind(this)} style={{marginRight: 10, width: 300}} onKeyDown={this.onKeyPress.bind(this)} />
+              <div style={{position: "absolute", top: 64}}>
+                {
+                  this.state.ready && this.state.value != "" && this.state.user == null ? (
+                    Meteor.users.find({
+                      username: new RegExp(this.state.value, "i")
+                    }, { limit: 5 }).map((user, i) => {
+                      return this.userTemplate(user, i);
+                    })
+                  ) : (
+                    ""
+                  )
+                }
+              </div>
+            </div>
             <div>
               <button onClick={this.onParticipantAdd.bind(this)}>Submit</button>
             </div>
           </div>
-          {
-            this.state.ready && this.state.value != "" && this.state.user == null ? (
-              Meteor.users.find({
-                username: new RegExp(this.state.value, "i")
-              }).map((user, i) => {
-                return this.userTemplate(user, i);
-              })
-            ) : (
-              ""
-            )
-          }
+
         </div>
       </div>
     );
