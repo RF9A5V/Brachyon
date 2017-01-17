@@ -24,6 +24,9 @@ export default class StartBracketAction extends Component {
         }
       });
     }
+    if(!event) {
+      startFunc();
+    }
     if(event.league) {
       Meteor.call("leagues.checkEventCanRun", event.league, event.slug, (err, data) => {
         if(err) {

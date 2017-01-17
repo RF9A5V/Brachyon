@@ -28,6 +28,7 @@ export default class SnapModal extends React.Component {
 	        className = "snap-modal"
 	        isOpen={this.state.open}
           onRequestClose={this.closeModal.bind(this)}
+          contentLabel="Snapchat Modal"
         >
           <div className="row justify-end">
             <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
