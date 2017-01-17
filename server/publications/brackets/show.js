@@ -13,7 +13,7 @@ Meteor.publish("bracketContainer", (_id) => {
     return [];
   }
   var partIds = [];
-  instance.brackets.forEach(b => { partIds = partIds.concat(b.participants.map(p => { return p.id })) });
+  instance.brackets.forEach(b => { partIds = partIds.concat((b.participants || []).map(p => { return p.id })) });
   return [
     Instances.find({_id}),
     Brackets.find({ _id: {

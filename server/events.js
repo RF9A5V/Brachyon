@@ -82,7 +82,7 @@ Meteor.methods({
         }
       }
     });
-    if(event.league) {
+    if(event && event.league) {
       var league = Leagues.findOne(event.league);
       var leaderboardIndex = league.events.indexOf(event.slug) + 1;
       var pushObj = {

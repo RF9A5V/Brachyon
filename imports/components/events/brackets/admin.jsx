@@ -44,6 +44,9 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
   }
 
   componentWillReceiveProps(next) {
+    if(next.params.slug == this.props.params.slug || next.params.id == this.props.params.id) {
+      return;
+    }
     this.state.event.stop();
     this.state.instance.stop();
     this.setState({
