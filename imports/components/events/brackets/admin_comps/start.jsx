@@ -100,7 +100,7 @@ export default class StartBracketAction extends Component {
       <div className="col center x-center col-1" style={{height: "calc(100% - 78px)"}}>
         <button onClick={this.startEventHandler.bind(this)}>Start Bracket</button>
         {
-          Events.findOne().league ? (
+          Events.findOne() && Events.findOne().league ? (
             <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
               { this.leagueContent() }
             </Modal>

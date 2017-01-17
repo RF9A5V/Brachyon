@@ -43,6 +43,10 @@ export default class TabController extends Component {
     this.setActive(index, 0);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.activeItem != this.state.activeItem || nextState.activeSub != this.state.activeSub
+  }
+
   render() {
     var buttons = this.persistentButtons();
     return (

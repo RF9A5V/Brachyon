@@ -71,12 +71,6 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    if(!this.state.useDefaultHeader) {
-      return (
-        <div>
-        </div>
-      );
-    }
     return(
       <Headroom id="footer" disableInlineStyles={true} downTolerance={"calc(100vh - 50px)"}>
         <div className="row footer x-center center">
