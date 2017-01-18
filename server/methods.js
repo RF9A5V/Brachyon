@@ -355,25 +355,49 @@ Meteor.methods({
   },
 
   "users.create"(email, username, password) {
-    var user = Accounts.createUser({
-      email,
-      password,
-      username,
-      profile: {
-        games: []
-      },
-      oauth: {
-        isStripeConnected: false
+    var createUser = () => {
+      var user;
+      try {
+        user = Accounts.createUser({
+          email,
+          password,
+          username,
+          profile: {
+            games: []
+          },
+          oauth: {
+            isStripeConnected: false
+          }
+        });
+        if(user){
+          if(!Meteor.isDevelopment){
+            Accounts.sendVerificationEmail(user);
+          }
+          var token = Accounts._generateStampedLoginToken();
+          Accounts._insertLoginToken(user, token);
+          return token;
+        }
+        else {
+          return null;
+        }
       }
-    });
-    if(user){
-      Accounts.sendVerificationEmail(user);
-      var token = Accounts._generateStampedLoginToken();
-      Accounts._insertLoginToken(user, token);
-      return token;
+      catch(e) {
+        throw e;
+      }
+    }
+    if(!Meteor.isDevelopment) {
+      Meteor.http.post(`https://apilayer.net/api/check?access_key=${Meteor.settings.private.mailboxlayer.key}&email=${email}`, (err, val) => {
+        var response = val.data;
+        if(response.format_valid && response.mx_found && response.smtp_check && !response.disposable) {
+          return createUser();
+        }
+        else {
+          throw new Meteor.Error(403, "Need valid email.");
+        }
+      })
     }
     else {
-      return null;
+      return createUser();
     }
   },
 

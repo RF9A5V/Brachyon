@@ -3,7 +3,7 @@ import Brackets from "/imports/api/brackets/brackets.js";
 import Instances from "/imports/api/event/instance.js";
 
 Meteor.methods({
-  "brackets.create"(gameId, format) {
+  "brackets.create"(gameId, format, name) {
     var game = Games.findOne(gameId);
     if(!Meteor.userId()) {
       throw new Meteor.Error(403, "Can't create bracket while not logged in!");
@@ -15,7 +15,8 @@ Meteor.methods({
       brackets: [
         {
           game: gameId,
-          format
+          format,
+          name
         }
       ],
       owner: Meteor.userId(),

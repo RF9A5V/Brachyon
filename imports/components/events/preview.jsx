@@ -142,7 +142,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     var event = this.event();
     return (
       <div className="box col" style={{flexFlow: "row", position: "relative"}}>
-        <SlideMain slides={this.slides()} event={event} />
+        <SlideMain slides={this.slides()} event={event} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} />
       </div>
     )
   }

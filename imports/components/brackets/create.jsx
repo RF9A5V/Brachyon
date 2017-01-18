@@ -13,7 +13,7 @@ export default class BracketCreate extends Component {
         return toastr.error(err.reason);
       }
       else {
-        browserHistory.push("/brackets/" + val + "/admin");
+        browserHistory.push("/bracket/" + val + "/admin");
       }
     })
   }

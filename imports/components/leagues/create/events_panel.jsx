@@ -18,14 +18,14 @@ export default class EventsPanel extends Component {
   eventCounter() {
     var events = this.props.attrs.events;
     var decrementIcon = events.length <= 1 ? (
-      <FontAwesome name="caret-left" size="3x" style={{opacity: 0.3}} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" style={{opacity: 0.3}} />
     ) : (
-      <FontAwesome name="caret-left" size="3x" onClick={() => { events.pop(); this.forceUpdate(); }} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" onClick={() => { events.pop(); this.forceUpdate(); }} />
     );
     var incrementIcon = events.length >= 30 ? (
-      <FontAwesome name="caret-right" size="3x" style={{opacity: 0.3}} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-right" size="3x" style={{opacity: 0.3}} />
     ) : (
-      <FontAwesome name="caret-right" size="3x" onClick={() => {
+      <FontAwesome style={{cursor: "pointer"}} name="caret-right" size="3x" onClick={() => {
         var event = moment(events[events.length - 1].date);
         events.push({
           date: event.add(1, "day").toDate()
@@ -61,8 +61,8 @@ export default class EventsPanel extends Component {
         <div style={style} onClick={() => {
           this.setState({ option: i });
         }}>
-          <span style={{color: this.state.option == i ? "#00BDFF" : "#FFF"}}>
-          { ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (i + 1)) }
+          <span style={{color: this.state.option == i ? "#FF6000" : "#FFF"}}>
+          { ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (i + 1)) }
           </span>
         </div>
       )
@@ -74,7 +74,7 @@ export default class EventsPanel extends Component {
     return (
       <div className="col">
         <div className="row">
-          <h5>{ ((this.props.attrs.details.name || "Default") + "." + (this.props.attrs.details.season || 1) + " " + (this.state.option + 1)) }</h5>
+          <h5>{ ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (this.state.option + 1)) }</h5>
         </div>
         <div className="row x-center center" style={{padding: 20, backgroundColor: "#111"}}>
           <div style={{marginRight: 20}}>

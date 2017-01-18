@@ -178,7 +178,7 @@ Meteor.methods({
       }
       else {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
-      } 
+      }
     }
     var cmd = {
       $set: {}
@@ -204,12 +204,12 @@ Meteor.methods({
         var globalIndex = league.leaderboard[0].findIndex((usr) => { return usr.id == obj.id });
         var scoreNeg = 0;
         if(bracket.format.baseFormat == "single_elim") {
-          scoreNeg = parseInt(Math.log2(ldrboard[user.username]));
+          scoreNeg = Math.ceil(Math.log2(ldrboard[user.username] + 1)) - 1;
         }
         else if(bracket.format.baseFormat == "double_elim") {
           var scoreNeg = ldrboard[user.username];
           if(scoreNeg > 4) {
-            scoreNeg = parseInt(Math.log2(scoreNeg)) + 3
+            scoreNeg = Math.ceil(Math.log2(scoreNeg)) + 3
           }
         }
         else {

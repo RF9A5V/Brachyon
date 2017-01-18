@@ -1,17 +1,34 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { VelocityComponent } from "velocity-react";
+import { browserHistory } from "react-router";
 
 export default class SlideMain extends Component {
 
   constructor(props){
     super(props);
+    var slideIndex = props.slides.findIndex(o => { return o.name.toLowerCase() == props.slide });
     this.state = {
-      activeSlide: 0,
+      activeSlide: Math.max(slideIndex, 0),
       tocActive: false,
       isAnim: false,
       scrollAmount: 0
     }
+  }
+
+  componentWillReceiveProps(props) {
+    var slideIndex = props.slides.findIndex(o => { return o.name.toLowerCase() == props.slide });
+    this.setState({
+      isAnim: true
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          activeSlide: Math.max(slideIndex, 0),
+          isAnim: false
+        })
+      }, 500)
+    })
+
   }
 
   onSlideChange(index) {
@@ -35,7 +52,7 @@ export default class SlideMain extends Component {
   navElements() {
     var slides = this.props.slides.map((slide, index) => {
       return (
-        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} onClick={() => { this.onSlideChange(index) }}>
+        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} onClick={() => { browserHistory.push(this.props.baseUrl + slide.name.toLowerCase()) }}>
           { slide.name }
         </div>
       )
@@ -94,7 +111,7 @@ export default class SlideMain extends Component {
             ""
           )
         }
-        <div className="row x-center center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
+        <div className="row x-center" style={{paddingLeft: 20, position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
           {
             this.navElements()
           }

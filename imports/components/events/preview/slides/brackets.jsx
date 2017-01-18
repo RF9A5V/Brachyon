@@ -7,8 +7,6 @@ import Games from "/imports/api/games/games.js";
 import Notifications from "/imports/api/users/notifications.js";
 
 import Instances from "/imports/api/event/instance.js";
-import { Banners } from "/imports/api/event/banners.js";
-import { GameBanners } from "/imports/api/games/game_banner.js";
 
 export default class BracketSlide extends Component {
 
@@ -22,8 +20,8 @@ export default class BracketSlide extends Component {
 
   backgroundImage(useDarkerOverlay){
     var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.banner) {
-      imgUrl = Banners.findOne(this.props.event.details.banner).link();
+    if(this.props.event && this.props.event.details.bannerUrl) {
+      imgUrl = this.props.event.details.bannerUrl;
     }
     if(useDarkerOverlay){
       return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
@@ -98,7 +96,7 @@ export default class BracketSlide extends Component {
           use: "tickets",
           tickets: ["venue", `${i}`]
         })
-        browserHistory.push(`/events/${this.props.event.slug}/checkout`);
+        browserHistory.push(`/event/${this.props.event.slug}/checkout`);
       }
       else {
         Meteor.call("events.registerUser", this.state.id, i, (err) => {
@@ -128,8 +126,9 @@ export default class BracketSlide extends Component {
               instance.brackets.map((bracket, i) => {
                 return (
                   <div className="bracket">
-                    <img style={{width: "100%", height: "auto"}} src={GameBanners.findOne(Games.findOne(bracket.game).banner).link()} />
+                    <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
                     <div className="bracket-overlay">
+                      <div className="col-1"></div>
                       <div className="bracket-details">
                         {
                           // <div className="bracket-detail-row">
@@ -162,17 +161,20 @@ export default class BracketSlide extends Component {
                             <FontAwesome name="sitemap" />
                           </div>
                           <div className="bracket-detail-item">
-                            <span>{ bracket.format.baseFormat.split("_").map(str => { if(str == "round") { return "RR" } return str.substring(0, 1).toUpperCase() + str.slice(1) })[0] }</span>
+                            <span style={{fontSize: 14}}>{ bracket.format.baseFormat.split("_").map(str => { if(str == "round") { return "RR" } return str.substring(0, 1).toUpperCase() + str.slice(1) })[0] }</span>
                           </div>
                         </div>
+                      </div>
+                      <div className="row center x-center col-1">
+                        { bracket.name || "" }
                       </div>
                       <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
-                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}/admin`)
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
                           }
                           else {
-                            browserHistory.push(`/events/${this.props.event.slug}/brackets/${i}`);
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}`);
                           }
                         }}>
                           <span>View</span>

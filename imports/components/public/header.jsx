@@ -94,6 +94,7 @@ export default class Header extends TrackerReact(Component) {
         </div>
       )
     }
+    var createPath = ["/create","/events/create","/leagues/create","/brackets/create"];
     return (
       <Headroom id="header" disableInlineStyles={true}>
         <header className="row x-center header" onMouseLeave={() => {
@@ -114,11 +115,11 @@ export default class Header extends TrackerReact(Component) {
               </Link>
               {
                 Meteor.userId() ? (
-                  <Link className={`hub ${window.location.pathname == "/create" ? "active" : ""}`} to="/create">
+                  <Link className={`hub ${createPath.indexOf(window.location.pathname) >= 0 ? "active" : ""}`} to="/create">
                     CREATE
                   </Link>
                 ) : (
-                  <a href="#" className={`hub ${window.location.pathname == "/create" ? "active" : ""}`} onClick={ (e) => {
+                  <a href="#" className={`hub ${createPath.indexOf(window.location.pathname) >= 0 ? "active" : ""}`} onClick={ (e) => {
                     e.preventDefault();
                     toastr.warning("Please log in or sign up before creating an event!", "Warning!");
                     browserHistory.push("/")
