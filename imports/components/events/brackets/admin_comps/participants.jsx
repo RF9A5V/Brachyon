@@ -26,7 +26,7 @@ export default class AddPartipantAction extends Component {
   }
 
   onUserDelete(alias, index) {
-    var eventId = Events.findOne()._id;
+    var eventId = Instances.findOne()._id;
     Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
