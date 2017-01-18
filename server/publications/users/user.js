@@ -7,7 +7,7 @@ Meteor.publish("user", (_id) => {
   if(!user){
     return Meteor.users.find({_id});
   }
-  var games = Games.find({_id: {$in: user.profile.games || []}});
+  var games = Games.find({_id: {$in: Object.keys(user.stats) || []}});
   var eventIDs = [];
   var userIDs = [];
   userIDs.push(_id);
