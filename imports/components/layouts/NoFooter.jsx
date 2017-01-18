@@ -18,6 +18,12 @@ export default class NoFooterLayout extends Component {
     })
   }
 
+  componentDidMount() {
+    this.setState({
+      fadeIn: true
+    })
+  }
+
   componentWillReceiveProps(next) {
     this.setState({
       fadeIn: false,

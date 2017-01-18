@@ -81,7 +81,31 @@ Meteor.methods({
           alias: alias
         }
       }
-    })
+    });
+    if(event && event.league) {
+      var league = Leagues.findOne(event.league);
+      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      var pushObj = {
+        [`leaderboard.${leaderboardIndex}`]: {
+          id: userID,
+          score: 0,
+          bonus: 0
+        }
+      };
+      var isGlobalRegistered = league.leaderboard[0].some(obj => {
+        return obj.id == userID;
+      });
+      if(!isGlobalRegistered) {
+        pushObj["leaderboard.0"] = {
+          id: userID,
+          score: 0,
+          bonus: 0
+        }
+      }
+      Leagues.update({ _id: event.league }, {
+        $push: pushObj
+      })
+    }
   },
 
   "events.removeParticipant"(eventID, bracketIndex, userId) {
@@ -198,6 +222,36 @@ Meteor.methods({
           id: user._id,
           alias
         }
+      }
+    })
+  },
+
+  "events.change_seeding"(eventID, index, oldVal, newVal)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    var nparticipants = instance.brackets[index].participants;
+    participant = nparticipants[oldVal];
+    nparticipants.splice(oldVal, 1); //Delete the participant off the list
+    nparticipants.splice(newVal, 0, participant); //Put him back at his new seeding area.
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.participants`]: nparticipants
+      }
+    })
+  },
+
+  "events.shuffle_seeding"(eventID, index, nparticipants)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.Error(404, "Couldn't find this event!");
+    }
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.participants`]: nparticipants
       }
     })
   },
@@ -349,7 +403,8 @@ Meteor.methods({
       match.winner = null;
       Brackets.update(bracketID, {
         $set: {
-          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match
+          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match,
+          complete: false
         }
       });
       return;
@@ -382,7 +437,8 @@ Meteor.methods({
       else loserround.playerTwo = null;
       Brackets.update(bracketID, {
         $set: {
-          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround
+          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround,
+          complete: false
         }
       });
     }
@@ -419,7 +475,8 @@ Meteor.methods({
     Brackets.update(bracketID, {
       $set: {
         [`rounds.${fb}.${fr}.${fm}`]: advMatch,
-        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match
+        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+        complete: false
       }
     })
     //Return for recursion
@@ -883,12 +940,16 @@ Meteor.methods({
 
 
     var event = Events.findOne(eventID);
+
+    // Weird, but works.
+    // Pretty much find event by given ID, and if not found, try leagues.
+    // For tiebreaker
     if(!event) {
       var incObj = {};
       var league = Leagues.findOne(eventID);
       var bracket = Brackets.findOne(league.tiebreaker.id);
       var numPlayers = bracket.rounds[0].players.length;
-      bracket.rounds[0].players.sort((a, b) => {
+      bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
         return (b.score - a.score);
       }).map((obj, i) => {
         var user = Meteor.users.findOne({ username: obj.name });
@@ -908,9 +969,36 @@ Meteor.methods({
       var instance = Instances.findOne(event.instances.pop());
       Instances.update(instance._id, {
         $set: {
-          [`brackets.${bracketIndex}.endedAt`]: new Date()
+          [`brackets.${bracketIndex}.endedAt`]: new Date(),
+          [`brackets.${bracketIndex}.isComplete`]: true
         }
       })
+      if(event.league) {
+        var league = Leagues.findOne(event.league);
+        var bracket = Brackets.findOne(instance.brackets[bracketIndex].id);
+        var numPlayers = bracket.rounds[bracket.rounds.length - 1].players.length;
+        var eventIndex = league.events.indexOf(event.slug) + 1;
+        var incObj = {};
+        bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
+          return (b.score - a.score);
+        }).map((obj, i) => {
+          var user = Meteor.users.findOne({ username: obj.name });
+          var ldrboardIndex = league.leaderboard[eventIndex].findIndex(entry => {
+            return entry.id == user._id;
+          });
+          var globalIndex = league.leaderboard[0].findIndex(entry => {
+            return entry.id == user._id;
+          })
+          incObj[`leaderboard.${eventIndex}.${ldrboardIndex}.score`] = numPlayers - i;
+          incObj[`leaderboard.0.${globalIndex}.score`] = numPlayers - i;
+        });
+        Leagues.update(event.league, {
+          $inc: incObj,
+          $set: {
+            complete: true
+          }
+        })
+      }
     }
   }
 

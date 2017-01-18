@@ -29,9 +29,8 @@ export default class EventTitlePage extends Component {
     return `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
   }
 
-  imgOrDefault(imgId) {
-    var img = ProfileImages.findOne(imgId);
-    return img == null ? "/images/profile.png" : img.link();
+  imgOrDefault(img) {
+    return img == null ? "/images/profile.png" : img;
   }
 
   pages() {
@@ -53,7 +52,7 @@ export default class EventTitlePage extends Component {
                     var user = Meteor.users.findOne(id);
                     return (
                       <div className="col x-center">
-                        <img src={ this.imgOrDefault(user.profile.image) } className="big-name-img" />
+                        <img src={ this.imgOrDefault(user.profile.imageUrl) } className="big-name-img" />
                         <span>{ user.username }</span>
                       </div>
                     )
@@ -69,7 +68,7 @@ export default class EventTitlePage extends Component {
                     return (
                       <div className="sponsor-item col center">
                         <div className="row x-center">
-                          <img src={ user.profile.image ? ProfileImages.findOne(user.profile.image).link() : "/images/profile.png"} />
+                          <img src={ user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} />
                           <span>{ Meteor.users.findOne(sponsor.id).username } - ${sponsor.amount / 100}</span>
                         </div>
                         <p>
@@ -115,7 +114,7 @@ export default class EventTitlePage extends Component {
                         return player.id == Meteor.userId()
                       })
                     }) ? (
-                      <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/events/${event.slug}/brackets/0`) }}>
+                      <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/event/${event.slug}/bracket/0`) }}>
                         View Bracket
                       </button>
                     ) : (

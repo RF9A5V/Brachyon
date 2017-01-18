@@ -4,34 +4,28 @@ import { browserHistory } from "react-router";
 
 export default class CreateRunnableScreen extends Component {
   render() {
-    var blockStyle = {
-      width: "calc(33% - 20px)",
-      marginRight: 10,
-      backgroundColor: "#111"
-    };
-
     return (
       <div className="box col center">
         <div className="row col-1 center x-center">
-          <div className="generic-block" onClick={ () => { browserHistory.push("/brackets/create") } }>
+          <div className="create-sel sel-quick" onClick={ () => { browserHistory.push("/brackets/create") } }>
             <FontAwesome  size="3x" name="sitemap" />
-            <h4>Quick Create</h4>
+            <h5 style={{margin: 10}}>Quick Bracket</h5>
             <p>
-              Remember it’s called the creative process, it’s not the creative fucking moment. Think about all the fucking possibilities. Never let your guard down by thinking you’re fucking good enough. When you sit down to work, external critics aren’t the enemy. It’s you who you must to fight against to do great fucking work.
+              Instantly generate a bracket that tracks user stats. The bracket will not be displayed in discover.
             </p>
           </div>
-          <div className="generic-block" onClick={() => { browserHistory.push("/events/create") }}>
-            <FontAwesome  size="3x" name="sitemap" />
-            <h4>Event Create</h4>
+          <div className="create-sel sel-event" onClick={() => { browserHistory.push("/events/create") }}>
+            <FontAwesome  size="3x" name="square-o" />
+            <h5 style={{color: "#00BDFF", margin: 10}}>Event Create</h5>
             <p>
-              Remember it’s called the creative process, it’s not the creative fucking moment. Think about all the fucking possibilities. Never let your guard down by thinking you’re fucking good enough. When you sit down to work, external critics aren’t the enemy. It’s you who you must to fight against to do great fucking work.
+              Create a discoverable event. Add brackets, streaming, crowdfunding, promotion and many other modules to your event. 
             </p>
           </div>
-          <div className="generic-block" onClick={() => { browserHistory.push("/leagues/create") }}>
-            <FontAwesome size="3x"  name="sitemap" />
-            <h4>League Create</h4>
+          <div className="create-sel sel-league" onClick={() => { browserHistory.push("/leagues/create") }}>
+            <FontAwesome size="3x"  name="clone" />
+            <h5 style={{color: "#FF6000", margin: 10}}>League Create</h5>
             <p>
-              Remember it’s called the creative process, it’s not the creative fucking moment. Think about all the fucking possibilities. Never let your guard down by thinking you’re fucking good enough. When you sit down to work, external critics aren’t the enemy. It’s you who you must to fight against to do great fucking work.
+              Create a series of discoverable events, tracking competitor scores from event to event. The competitor with the most points at the end of the league becomes grand champion. 
             </p>
           </div>
         </div>

@@ -16,9 +16,10 @@ export default class BlockContainer extends Component {
     var username = Meteor.users.findOne(obj.owner) ? Meteor.users.findOne(obj.owner).username : "";
     var participantCount = (obj.type == "instance" || obj.type == "event") ? (
       (() => {
+        var instance = Instances.findOne((obj.instances || []).pop()) || obj;
         var count = 0;
-        if(obj.brackets) {
-          obj.brackets.forEach(bracket => {
+        if(instance.brackets) {
+          instance.brackets.forEach(bracket => {
             if(bracket.participants) {
               count += bracket.participants.length;
             }
@@ -29,8 +30,11 @@ export default class BlockContainer extends Component {
     ) : (
       obj.leaderboard[0].length
     );
-    var title = (obj.type == "instance") ? "TEMP" : obj.details.name;
-    var img = (obj.type == "league" || "instance") ? "/images/bg.jpg" : obj.details.bannerUrl;
+    var title = (obj.type == "instance") ? obj.brackets[0].name || "Bracket" : obj.details.name;
+    var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
+    if(!img) {
+      img = "/images/bg.jpg";
+    }
 
     var action = (val) => {
       return (e) => {
@@ -41,18 +45,20 @@ export default class BlockContainer extends Component {
           type = "bracket";
         }
         var identifier = obj.slug || obj._id;
-        browserHistory.push("/" + type + "s" + "/" + identifier + "/" + val);
+        browserHistory.push("/" + type + "/" + identifier + "/" + val);
       }
     }
 
     return (
-      <div className={`event-block ${obj.type}`} onClick={action("show")}>
+      <div className={`event-block ${obj.type}`} onClick={action("")}>
         <div style={{borderStyle: "solid", borderWidth: 2, position: "relative"}}>
           <h2 className="event-block-title">{ title }</h2>
           {
             Meteor.userId() == obj.owner ? (
-              <div className="event-block-edit">
-                <FontAwesome name="pencil" onClick={action("admin")} />
+              <div className="event-block-admin-row">
+                <div className="event-block-admin-button col center x-center" onClick={action("admin")}>
+                  EDIT
+                </div>
               </div>
             ) : (
               ""
@@ -102,7 +108,7 @@ export default class BlockContainer extends Component {
 
   joinCollections() {
     var leagues = Leagues.find().map(obj => {
-      var events = Events.find({ slug: { $in: obj.events }, isComplete: false }).fetch();
+      var events = Events.find({ league: obj._id }).fetch();
       obj.date = events[0].details.datetime;
       obj.location = events[0].details.location;
       obj.type = "league";

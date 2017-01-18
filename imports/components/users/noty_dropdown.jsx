@@ -67,10 +67,10 @@ export default class NotyDropdown extends Component {
       )
     }
     var objs = [];
-    Notifications.find().fetch().map((note) => {
+    Notifications.find().fetch().map((note, i) => {
       if(note.type == "eventInvite") {
         objs.push(
-          <div className="note col" onClick={() => { browserHistory.push(`/events/${note.eventSlug}/show`) }}>
+          <div key={i} className="note col" onClick={() => { browserHistory.push(`/events/${note.eventSlug}/show`) }}>
             <div className="row x-center">
               <img src={note.image} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
               <div className="col">
@@ -87,7 +87,7 @@ export default class NotyDropdown extends Component {
       }
       else if(note.type == "eventRegistrationRequest") {
         objs.push(
-          <div className="note row" onClick={() => { browserHistory.push(`/events/${note.eventSlug}/show`) }}>
+          <div key={i} className="note row" onClick={() => { browserHistory.push(`/events/${note.eventSlug}/show`) }}>
             <div className="row">
               <img src={note.image} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
             </div>
@@ -102,7 +102,7 @@ export default class NotyDropdown extends Component {
           </div>
         )
       }
-      objs.push(<hr className="discover-divider" />)
+      objs.push(<hr key={i + "_"} className="discover-divider" />)
     });
     objs.pop();
     if(objs.length == 0) {

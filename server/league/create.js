@@ -5,7 +5,8 @@ Meteor.methods({
     var events = attrs.events;
     var bracket = {
       game: attrs.brackets.gameObj._id,
-      format: attrs.brackets.format
+      format: attrs.brackets.format,
+      name: attrs.brackets.name || ""
     };
     attrs.leaderboard = [];
     attrs.game = attrs.brackets.gameObj._id;

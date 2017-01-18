@@ -193,7 +193,7 @@ export default class BracketForm extends Component {
           this.props.deletable ? (
             <div className="row">
               <div className="col-1"></div>
-              <FontAwesome name="minus" onClick={this.props.cb} />
+              <FontAwesome name="minus" style={{cursor: "pointer"}} onClick={this.props.cb} />
             </div>
           ) : (
             ""

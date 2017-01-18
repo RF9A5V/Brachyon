@@ -5,9 +5,6 @@ import { Session } from 'meteor/session';
 
 import { VelocityComponent } from "velocity-react";
 
-require('velocity-animate');
-require('velocity-animate/velocity.ui');
-
 import moment from 'moment';
 
 export default class MainLayout extends Component {
@@ -62,7 +59,9 @@ export default class MainLayout extends Component {
             { this.state.component }
           </div>
         </VelocityComponent>
-        <Footer />
+        <VelocityComponent animation={{top: this.state.fadeIn ? 0 : 40}} duration={400}>
+          <Footer />
+        </VelocityComponent>
       </div>
     )
   }

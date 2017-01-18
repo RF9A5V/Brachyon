@@ -21,6 +21,37 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     this.state = {
       event: Meteor.subscribe("event", this.props.params.slug, {
         onReady: () => {
+          var event = Events.findOne();
+          if(!event) {
+            return;
+          }
+          if(event.orgEvent) {
+            var organization = Organizations.findOne(event.owner);
+            console.log(organization);
+            if(organization.owner != Meteor.userId() && organization.roles["Owner"].indexOf(Meteor.userId()) < 0 && organization.roles["Admin"].indexOf(Meteor.userId()) < 0) {
+              toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
+              browserHistory.goBack();
+            }
+          }
+          else if(Events.findOne().owner != Meteor.userId()) {
+            toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
+            browserHistory.goBack();
+          }
+        }
+      }),
+      instance: Meteor.subscribe("bracketContainer", this.props.params.id)
+    }
+  }
+
+  componentWillReceiveProps(next) {
+    if(next.params.slug == this.props.params.slug || next.params.id == this.props.params.id) {
+      return;
+    }
+    this.state.event.stop();
+    this.state.instance.stop();
+    this.setState({
+      event: Meteor.subscribe("event", this.props.params.slug, {
+        onReady: () => {
           if(!Events.findOne()) {
             return;
           }
@@ -31,7 +62,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       }),
       instance: Meteor.subscribe("bracketContainer", this.props.params.id)
-    }
+    })
   }
 
   componentWillUnmount() {

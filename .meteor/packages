@@ -21,7 +21,6 @@ react-meteor-data
 service-configuration@1.0.11
 meteortoys:allthings
 ultimatejs:tracker-react
-velocityjs:velocityjs
 chrismbeckett:toastr
 lookback:logger
 u2622:persistent-session
@@ -49,3 +48,4 @@ nitrolabs:cdn
 edgee:slingshot
 ostrio:meteor-root
 email
+mrt:smart-publish

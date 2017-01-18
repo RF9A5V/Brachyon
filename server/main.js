@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import moment from "moment";
 
 var Stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
@@ -107,8 +108,8 @@ Accounts.onEmailVerificationLink = (token, done) => {
 Meteor.startup(() => {
 
   var smtp = {
-    username: "steven@brachyon.com",
-    password: "IcarusLive5",
+    username: Meteor.settings.private.gmail.email,
+    password: Meteor.settings.private.gmail.password,
     server: "smtp-relay.gmail.com",
     port: 587
   }
@@ -125,6 +126,9 @@ Meteor.startup(() => {
     job: () => {
       var events = Events.find({ "crowdfunding.details.dueDate": { $lte: new Date() }, "crowdfunding.details.complete": { $ne: true } });
       events.forEach(e => {
+        if(!e.instances || e.instances.length == 0) {
+          return;
+        }
         var instance = Instances.findOne(e.instances.pop());
         var amountFunded = Object.keys((instance.cf || {})).map(key => {
           return instance.cf[key].length * e.crowdfunding.tiers[key].price;
@@ -156,6 +160,19 @@ Meteor.startup(() => {
       });
     }
   });
+
+  // SyncedCron.add({
+  //   name: "Clear Test Brackets",
+  //   schedule: (parser) => {
+  //     return parser.recur().every(24).hour()
+  //   },
+  //   job: () => {
+  //     var instances = Instances.find({ owner: { $ne: null }, "brackets.startedAt": { $lte: moment().subtract(1, "day").toDate() } });
+  //     var brackets = Brackets.find({ _id: { $in: instances.map(i => { return i.brackets[0].id }) } }).map(b => { return b._id });
+  //     Instances.remove({ _id: { $in: instances.map(i => { return i._id }) } });
+  //     Brackets.remove({ _id: { $in: brackets } });
+  //   }
+  // })
 
   SyncedCron.start();
 });

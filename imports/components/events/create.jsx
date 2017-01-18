@@ -51,7 +51,12 @@ export default class EventCreateScreen extends Component {
 
   componentWillUnmount() {
     if(this.state.organizations) {
-      this.state.organzations.stop();
+      try {
+        this.state.organzations.stop();
+      }
+      catch(e) {
+        // This is fucked.
+      }
     }
   }
 
@@ -157,7 +162,7 @@ export default class EventCreateScreen extends Component {
       }
       else {
         //var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
-        var href = `/events/${event}/show`;
+        var href = `/event/${event}`;
         if(imgRef) {
           imgRef.meta.eventSlug = event;
           var dataSeg = imgRef.file.substring(imgRef.file.indexOf("/"), imgRef.file.indexOf(";")).slice(1);
@@ -225,7 +230,9 @@ export default class EventCreateScreen extends Component {
           return;
         }
         if(value == "crowdfunding") {
-          return toastr.warning("Under construction!", "Warning!");
+          if(!Meteor.isDevelopment){
+            return toastr.warning("Under construction!", "Warning!");
+          }
         }
         this.state.moduleState[value].active = !this.state.moduleState[value].active;
         this.forceUpdate();
@@ -268,21 +275,27 @@ export default class EventCreateScreen extends Component {
               this.modulePanels()
             }
             </div>
-            <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
-              <span style={{marginBottom: 5}}>Create As</span>
-              <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
-                <option value={0}>User - {Meteor.user().username}</option>
-                {
-                  Organizations.find().map(o => {
-                    return (
-                      <option value={o._id}>
-                        Organization - { o.name }
-                      </option>
-                    )
-                  })
-                }
-              </select>
-            </div>
+            {
+              Organizations.find().fetch().length > 0 ? (
+                <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+                  <span style={{marginBottom: 5}}>Create As</span>
+                  <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
+                    <option value={0}>User - {Meteor.user().username}</option>
+                    {
+                      Organizations.find().map(o => {
+                        return (
+                          <option value={o._id}>
+                            Organization - { o.name }
+                          </option>
+                        )
+                      })
+                    }
+                  </select>
+                </div>
+              ) : (
+                ""
+              )
+            }
           </div>
           <div className="col" style={{marginBottom: 20}}>
             {
