@@ -38,6 +38,41 @@ Meteor.methods({
           }
         });
       });
+
+      var players = {};
+      instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:1, wins:0, ties:0}});
+      var round=roundobj.rounds;
+      for (i=0; i<round[0].length; i++){
+        for(j=0; j<round[0][i].length ; j++){
+          var match = round[0][i][j];
+          if(match.winner != null){
+            if(players[match.playerOne]){
+              players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1 : 1;
+            }
+            if(players[match.playerTwo]){
+              players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1 : 1;
+            }
+          }
+        }
+      }
+      var finalWinner = round[0][round.length - 1].pop().winner;
+      if(players[finalWinner] != null){
+        players[finalWinner].wins += 1;
+        players[finalWinner].losses = 0;
+      }
+
+      Object.keys(players).forEach(p => { players[p].wins -= 1 });
+
+      Object.keys(players).forEach(player=>{
+        var scoreObject = players[player];
+        var updateObject = {
+          [`stats.${bracket.game}.wins`]: scoreObject.wins,
+          [`stats.${bracket.game}.losses`]: scoreObject.losses,
+          [`stats.${bracket.game}.ties`]: scoreObject.ties
+        };
+        Meteor.users.update(scoreObject.id,{$inc:updateObject});
+      })  
+
     }
     else if(bracket.format.baseFormat == "double_elim") {
       // Check to see if bracket has played to completion.
@@ -64,6 +99,82 @@ Meteor.methods({
             }
           })
         });
+
+
+        
+        var players = {};
+        instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:2, wins:0, ties:0}});
+        var round=roundobj.rounds;
+        //give points for winners bracket
+        for (i=0; i<round[0].length; i++){
+          for(j=0; j<round[0][i].length ; j++){
+            var match = round[0][i][j];
+            if(match.winner != null){
+              if(players[match.playerOne]){
+                players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1 : 1;
+              }
+              if(players[match.playerTwo]){
+                players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1 : 1;
+              }
+            }
+          }
+        }
+        //give points for losers bracket
+        for (i=0; i<round[1].length; i++){
+          for(j=0; j<round[1][i].length ; j++){
+            var match = round[1][i][j];
+            if(match.winner != null){
+              if(players[match.playerOne]){
+                players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1 : 1;
+              }
+              if(players[match.playerTwo]){
+                players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1 : 1;
+              }
+            }
+          }
+        }
+
+        var finalSet = roundobj.rounds[roundobj.rounds.length - 1];
+        var finalOne = finalSet[0][0];
+        var finalTwo = finalSet[1][0];
+
+        // If the first match has a winner and nobody is playing in the second match, the bracket is decided.
+        // If the second match has a winner, the bracket is decided.
+
+        if(finalOne.winner && !finalTwo.playerOne) {
+          //if grandFinals and no reset
+          players[finalOne.winner].wins = players[finalOne.winner].wins ? players[finalOne.winner].wins + 1 : 1;
+          players[finalOne.winner].losses = players[finalOne.winner].losses ? players[finalOne.winner].losses -2 : 1 ;
+
+        }
+        if (finalTwo.playerOne){
+          if (players[finalTwo.winner] == players[finalTwo.playerOne]){
+            players[finalTwo.playerOne].wins = players[finalTwo.playerOne].wins ? players[finalTwo.playerOne].wins + 2 : 1;
+            players[finalTwo.playerOne].losses = players[finalTwo.playerOne].losses ? players[finalTwo.playerOne].losses - 1 : 1;
+            players[finalTwo.playerTwo].wins = players[finalTwo.playerTwo].wins ? players[finalTwo.playerTwo].wins + 1 : 1;
+          }
+          else{
+            players[finalTwo.playerTwo].wins = players[finalTwo.playerTwo].wins ? players[finalTwo.playerTwo].wins + 2 : 1;
+            players[finalTwo.playerTwo].losses = players[finalTwo.playerTwo].losses ? players[finalTwo.playerTwo].losses - 1 : 1;
+            players[finalTwo.playerOne].wins = players[finalTwo.playerOne].wins ? players[finalTwo.playerOne].wins + 1 : 1;
+          }
+        }
+        
+
+        Object.keys(players).forEach(p => { players[p].wins -= 1 });
+
+        Object.keys(players).forEach(player=>{
+        var scoreObject = players[player];
+        var updateObject = {
+          [`stats.${bracket.game}.wins`]: scoreObject.wins,
+          [`stats.${bracket.game}.losses`]: scoreObject.losses,
+          [`stats.${bracket.game}.ties`]: scoreObject.ties
+        };
+        Meteor.users.update(scoreObject.id,{$inc:updateObject});
+      })
+
+
+
       }
       else {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
@@ -115,3 +226,16 @@ Meteor.methods({
     Instances.update(instance._id, cmd);
   }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+

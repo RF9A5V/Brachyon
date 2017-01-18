@@ -2,8 +2,7 @@ import Instances from "/imports/api/event/instance.js";
 
 Meteor.methods({
   "events.brackets.removeParticipant"(id, index, alias) {
-    var event = Events.findOne(id);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance = Instances.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Event not found.");
     }
