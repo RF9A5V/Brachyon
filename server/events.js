@@ -635,6 +635,8 @@ Meteor.methods({
     var scores = [];
     var max = 0;
 
+    //console.log(rounds[0].matches);
+
     for (var x = 0; x < players.length; x++)
     {
       if (typeof scores[players[x].score] == 'undefined')
@@ -917,6 +919,50 @@ Meteor.methods({
   },
 
   "events.endGroup"(eventID, bracketIndex) {
+
+    var event = Events.findOne(eventID);
+    var instance;
+    if(!event) {
+      instance = Instances.findOne(eventID);
+    }
+    else {
+      var instance = Instances.findOne(event.instances.pop());
+    }
+    var bracket = instance.brackets[bracketIndex];
+    var players = {};
+    var roundobj = Brackets.findOne(bracket.id);
+    var brack = roundobj.rounds;
+
+    instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
+    
+    for (var x = 0 ; x < brack.length ;  x ++){
+      for (var j = 0 ; j < brack[x].matches.length ; j++){
+        match= brack[x].matches[j];
+        if (match.p1score>match.p2score){
+          players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1: 1;
+          players[match.playerTwo].losses = players[match.playerTwo].losses ? players[match.playerTwo].losses + 1: 1;
+        }
+        else if(match.p1score<match.p2score){
+          players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1: 1;
+          players[match.playerOne].losses = players[match.playerOne].losses ? players[match.playerOne].losses + 1: 1;
+        }
+        else{
+          players[match.playerTwo].ties = players[match.playerTwo].ties ? players[match.playerTwo].ties + 1: 1;
+          players[match.playerOne].ties = players[match.playerOne].ties ? players[match.playerOne].ties + 1: 1;
+        }
+      }
+    }
+    Object.keys(players).forEach(player=>{
+        var scoreObject = players[player];
+        var updateObject = {
+          [`stats.${bracket.game}.wins`]: scoreObject.wins,
+          [`stats.${bracket.game}.losses`]: scoreObject.losses,
+          [`stats.${bracket.game}.ties`]: scoreObject.ties
+        };
+        Meteor.users.update(scoreObject.id,{$inc:updateObject});
+      })
+
+
     var event = Events.findOne(eventID);
 
     // Weird, but works.
