@@ -1,9 +1,22 @@
 import Brackets from "/imports/api/brackets/brackets.js";
 import Instances from "/imports/api/event/instance.js";
+import Matches from "/imports/api/event/matches.js";
 
 Meteor.publish('brackets', (_id) => {
+  var bracket = Brackets.findOne(_id);
+  var matches = [];
+  bracket.rounds.forEach(b => {
+    b.forEach(r => {
+      r.forEach(m => {
+        if(m) {
+          matches.push(m.id);
+        }
+      })
+    })
+  })
   return [
-    Brackets.find({_id})
+    Brackets.find({_id}),
+    Matches.find({ _id: { $in: matches } })
   ];
 });
 

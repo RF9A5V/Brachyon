@@ -2,6 +2,7 @@ import OrganizeSuite from "./tournament_api.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
 import Leagues from "/imports/api/leagues/league.js";
+import Matches from "/imports/api/event/matches.js";
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -270,22 +271,45 @@ Meteor.methods({
     }
     var organize = instance.brackets[index];
     var format = instance.brackets[index].format.baseFormat;
-    if (format == "single_elim")
-      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else if (format == "double_elim")
-      var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else if (format == "swiss")
-      var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else
-    var rounds = OrganizeSuite.roundRobin(organize.participants.map(function(participant) {
-      return participant.alias;
-    }));
+    var rounds = [];
+    if (format == "single_elim") {
+      rounds = OrganizeSuite.singleElim(organize.participants);
+    }
+    else if (format == "double_elim") {
+      rounds = OrganizeSuite.doubleElim(organize.participants);
+    }
+    else if (format == "swiss") {
+      rounds = OrganizeSuite.swiss(organize.participants);
+    }
+    else {
+      rounds = OrganizeSuite.roundRobin(organize.participants);
+    }
+    rounds = rounds.map((b, i) => {
+      return b.map((r, j) => {
+        return r.map(m => {
+
+          if(m.playerOne === null && m.playerTwo === null && i == 0 && j == 0) {
+            return null;
+          }
+
+          var obj = {};
+          var players = [];
+          players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
+          players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0 } : null);
+
+          if(m.losr >= 0 && m.losm >= 0 && m.losr !== null && m.losm !== null) {
+            obj.losr = m.losr;
+            obj.losm = m.losm;
+          }
+          if(m.truebye !== null) {
+            obj.truebye = m.truebye;
+          }
+          var match = Matches.insert({ players });
+          obj.id = match;
+          return obj;
+        })
+      })
+    })
     var br = Brackets.insert({
       rounds: rounds
     });

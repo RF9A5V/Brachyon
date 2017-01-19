@@ -76,9 +76,15 @@ export default class MatchBlock extends Component {
     })
   }
 
-  getUsername(id) {
+  getUsername(p) {
     // return Meteor.users.findOne(id).username;
-    return id;
+    if(!p) {
+      return "TBD"
+    }
+    if(p.id) {
+      return Meteor.users.findOne(p.id).username;
+    }
+    return p.alias;
   }
 
   getProfileImage(id) {
@@ -96,55 +102,10 @@ export default class MatchBlock extends Component {
     return "/images/profile.png";
   }
 
-  render() {
-    var [i, j, match] = [this.props.roundNumber, this.props.matchNumber, this.props.match];
-    return (
-      <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}>
-        <div className="match-highlight">
-          {
-            match.playerOne == match.playerTwo && i == 0 ? (
-              ""
-            ) : (
-              [match.playerOne, match.playerTwo].map((p, index) => {
 
-                var isLoser = match.winner != null && match.winner != p;
-
-                return (
-                  <div className={match.winner == null && match.playerOne != null && match.playerTwo != null ? ("match-participant match-active"):("match-participant")} onClick={
-                    match.playerOne != null && match.playerTwo != null ? (
-                      () => {if(Meteor.user()){this.setState({open: true});} }
-                    ) : (
-                      () => {}
-                    )
-                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                    <span>
-                      <div style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}} className={p==null? (""): (this.getUsername(p).length < 19 ? "" : "marquee")}>
-                        {
-                          p == null ? (
-                            "TBD"
-                          ) : (
-                            this.getUsername(p)
-                          )
-                        }
-                        </div>
-                      </span>
-                    </div>
-                )
-              })
-            )
-          }
-        </div>
-        {
-          i == this.props.roundSize - 1 || match.playerOne == match.playerTwo && i == 0 ? (
-            ""
-          ) : (
-            j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20), top: (50 * Math.pow(2, i - 1) - 2.5), left: 164.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            ) : (
-              <div className="bracket-line-v" style={{height: (50 * Math.pow(2, i) - (5 * (Math.pow(2, i) - 1)))+(Math.pow(2,this.props.roundNumber)*20)-5, bottom: (50 * Math.pow(2, i - 1) - 2.5) +5, left: 164.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            )
-          )
-        }
+  matchModal(match) {
+    if(match && match.players[0] && match.players[1]) {
+      return (
         <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
           {
             match.winner == null ?
@@ -155,24 +116,24 @@ export default class MatchBlock extends Component {
                 </div>
                 <div className="row col-1">
                   <div className="col x-center col-1">
-                    <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                    <h5 className={this.getUsername(match.playerOne)==null?(""):
-                      (this.getUsername(match.playerOne).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerOne) }
+                    <img src={this.getProfileImage(match.players[0])} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
+                    <h5 className={this.getUsername(match.players[0])==null?(""):
+                      (this.getUsername(match.players[0]).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.players[0]) }
                     </h5>
                     <div className="col center x-center col-1">
 
                       <div className="row center x-center" style={{marginTop:10}}>
                         <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
                         <div className="row center x-center button-score">
-                          { match.scoreOne }
+                          { match.players[0].score }
                         </div>
                         <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
                       </div>
 
                     </div>
                     {
-                      match.scoreOne > match.scoreTwo ? (
+                      match.players[0].score > match.players[1].score ? (
                         <button onClick={this.onMatchUserClick(0)}>Declare Winner</button>
                       ) : (
                         <button style={{opacity: 0.3}}>Declare Winner</button>
@@ -181,23 +142,23 @@ export default class MatchBlock extends Component {
 
                   </div>
                   <div className="col x-center col-1">
-                    <img src={this.getProfileImage(match.playerOne)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                    <h5 className={this.getUsername(match.playerTwo)==null?(""):
-                      (this.getUsername(match.playerTwo).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.playerTwo) }
+                    <img src={this.getProfileImage(match.players[0])} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
+                    <h5 className={this.getUsername(match.players[1])==null?(""):
+                      (this.getUsername(match.players[1]).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.players[1]) }
                     </h5>
                     <div className="col center x-center col-1">
                       <div className="row center x-center" style={{marginTop:10}}>
                         <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
                         <div className="row center x-center button-score">
-                          { match.scoreTwo }
+                          { match.players[1].score }
                         </div>
                         <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
                       </div>
                     </div>
 
                     {
-                      match.scoreTwo > match.scoreOne ? (
+                      match.players[1].score > match.players[0].score ? (
                         <button onClick={this.onMatchUserClick(1)}>Declare Winner</button>
                       ) : (
                         <button style={{opacity: 0.3}}>Declare Winner</button>
@@ -242,6 +203,96 @@ export default class MatchBlock extends Component {
             )
           }
         </Modal>
+      )
+    }
+    return (
+      <div></div>
+    )
+  }
+
+  lineHeight() {
+    var i = this.props.round;
+    var j = this.props.index;
+
+    // var matchComp = (50 * (Math.pow(2, i) - 1)) + (50 / 2);
+    // var marginComp = (40 * (Math.pow(2, i) - 1)) + (40 / 2);
+    var matchComp = (50 * (Math.pow(2, i - 1)));
+    var marginComp = (40 * (Math.pow(2, i)));
+    var totHeight = matchComp + marginComp;
+
+    var height = totHeight;
+    var top = totHeight / 2 + 10;
+    if(j % 2 == 0) {
+      top -= (7.5 * (Math.pow(2, i) + 1));
+    }
+    else {
+      if(i == 1) {
+        top += 2.5;
+      }
+      else if(i > 1) {
+        top += (Math.pow(2, i - 1) + Math.pow(2, i - 2) - 1) * 10 + 2.5
+      }
+    }
+
+    return { height, top }
+
+  }
+
+  render() {
+    var [i, j, id] = [this.props.round, this.props.index, this.props.id];
+    var match = Matches.findOne(id);
+
+    if(!match) {
+      return (
+        <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}></div>
+      )
+    }
+    console.log(match);
+
+    return (
+      <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}>
+        <div className="match-highlight">
+          {
+            match.players[0] == match.players[1] && i == 0 ? (
+              ""
+            ) : (
+              match.players.map((p, index) => {
+
+                var isLoser = match.winner != null && match.winner != p.alias;
+
+                return (
+                  <div className={match.winner == null && match.players[0] != null && match.players[1] != null ? ("match-participant match-active"):("match-participant")} onClick={
+                    match.players[0] != null && match.players[1] != null ? (
+                      () => {if(Meteor.user()){this.setState({open: true});} }
+                    ) : (
+                      () => {}
+                    )
+                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
+                    <span>
+                      <div style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}} className={p==null? (""): (this.getUsername(p).length < 19 ? "" : "marquee")}>
+                        {
+                          this.getUsername(p)
+                        }
+                        </div>
+                      </span>
+                    </div>
+                )
+              })
+            )
+          }
+        </div>
+        {
+          this.props.isLast || match.players[0] == match.players[1] && i == 0 ? (
+            ""
+          ) : (
+            j % 2 == 0 ? (
+              <div className="bracket-line-v" style={{height: this.lineHeight().height, top: this.lineHeight().top, left: 164.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+            ) : (
+              <div className="bracket-line-v" style={{height: this.lineHeight().height, top: -this.lineHeight().top, left: 164.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
+            )
+          )
+        }
+
       </div>
     )
   }
