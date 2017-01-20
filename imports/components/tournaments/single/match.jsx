@@ -31,7 +31,7 @@ export default class MatchBlock extends Component {
       e.preventDefault();
       if (index != 2)
       {
-        Meteor.call("events.advance_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, index, (err) => {
+        Meteor.call("events.advance_single", Brackets.findOne()._id, this.props.round, this.props.index, (err) => {
           if(err){
             console.log(err);
             toastr.error("Couldn't advance this match.", "Error!");
@@ -51,7 +51,7 @@ export default class MatchBlock extends Component {
   {
     return function(e) {
       e.preventDefault();
-      Meteor.call("events.undo_match", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, (err) => {
+      Meteor.call("events.undo_single", Brackets.findOne()._id, 0, this.props.round, this.props.index, (err) => {
         if(err){
           console.log(err);
           toastr.error("Couldn't undo this match.", "Error!");
@@ -67,7 +67,7 @@ export default class MatchBlock extends Component {
   }
 
   onMatchUpdateScore(isPlayerOne, value) {
-    Meteor.call("events.brackets.updateMatchScore", this.props.id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, isPlayerOne, value, (err) => {
+    Meteor.call("events.brackets.updateMatchScore", this.props.id, isPlayerOne, value, (err) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
@@ -122,9 +122,13 @@ export default class MatchBlock extends Component {
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.players[0]) }
                     </h5>
                     <div className="col center x-center col-1">
-
                       <div className="row center x-center" style={{marginTop:10}}>
-                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
+                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {
+                          if(match.players[0].score <= 0) {
+                            return;
+                          }
+                          this.onMatchUpdateScore(true, -1)
+                        }} />
                         <div className="row center x-center button-score">
                           { match.players[0].score }
                         </div>
@@ -149,7 +153,12 @@ export default class MatchBlock extends Component {
                     </h5>
                     <div className="col center x-center col-1">
                       <div className="row center x-center" style={{marginTop:10}}>
-                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
+                        <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {
+                          if(match.players[1].score <= 0) {
+                            return;
+                          }
+                          this.onMatchUpdateScore(false, -1)
+                        }} />
                         <div className="row center x-center button-score">
                           { match.players[1].score }
                         </div>
@@ -292,7 +301,9 @@ export default class MatchBlock extends Component {
             )
           )
         }
-
+        {
+          this.matchModal(match)
+        }
       </div>
     )
   }
