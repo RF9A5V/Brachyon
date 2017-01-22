@@ -296,8 +296,8 @@ var OrganizeSuite = {
         playerOne: participants[x],
         playerTwo: participants[x+length/2],
         played: false,
-        scoreOne: 0,
-        scoreTwo: 0,
+        p1score: 0,
+        p2score: 0,
         ties: 0
       };
       temp.push(matchObj);
@@ -312,7 +312,7 @@ var OrganizeSuite = {
         playarr[participants[y]] = false;
       }
       var playerObj = {
-        name: participants[x],
+        alias: participants[x],
         score: 0,
         bnum: 0,
         wins: 0,

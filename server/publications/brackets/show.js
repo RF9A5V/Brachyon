@@ -6,13 +6,20 @@ Meteor.publish('brackets', (_id) => {
   var bracket = Brackets.findOne(_id);
   var matches = [];
   bracket.rounds.forEach(b => {
-    b.forEach(r => {
-      r.forEach(m => {
-        if(m) {
-          matches.push(m.id);
-        }
+    if(Array.isArray(b)) {
+      b.forEach(r => {
+        r.forEach(m => {
+          if(m) {
+            matches.push(m.id);
+          }
+        })
       })
-    })
+    }
+    else {
+      b.matches.forEach(m => {
+        matches.push(m);
+      })
+    }
   })
   return [
     Brackets.find({_id}),

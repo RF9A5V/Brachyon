@@ -279,53 +279,84 @@ Meteor.methods({
       rounds = OrganizeSuite.doubleElim(organize.participants);
     }
     else if (format == "swiss") {
-      rounds = OrganizeSuite.swiss(organize.participants);
+      rounds = OrganizeSuite.swiss(organize.participants.map(p => { return p.alias }));
     }
     else {
-      rounds = OrganizeSuite.roundRobin(organize.participants);
+      rounds = OrganizeSuite.roundRobin(organize.participants.map(p => {return p.alias}));
     }
-    rounds = rounds.map((b, i) => {
-      return b.map((r, j) => {
-        return r.map(m => {
+    if(format == "single_elim" || format == "double_elim") {
+      if(instance.brackets[index].id) {
+        var bracket = Brackets.findOne(instance.brackets[index].id);
+        var matches = [];
+        bracket.rounds.forEach(b => {
+          b.map(r => {
+            r.map(m => {
+              if(m) {
+                matches.push(m.id);
+              }
+            })
+          })
+        })
+        Matches.remove({ _id: { $in: matches } });
+      }
+      var pipes = {};
+      rounds = rounds.map((b, i) => {
+        return b.map((r, j) => {
+          return r.map((m, k) => {
 
-          if(m.playerOne === null && m.playerTwo === null && i == 0 && j == 0) {
-            return null;
-          }
+            if(m.playerOne === null && m.playerTwo === null && i == 0 && j == 0) {
+              return null;
+            }
+            if(i == 1 && j < 2 && (!pipes[j] || pipes[j].indexOf(k) < 0)) {
+              return null;
+            }
 
-          var obj = {};
-          var players = [];
-          players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
-          players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0 } : null);
+            var obj = {};
+            var players = [];
+            players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
+            players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0 } : null);
 
-          if(m.losr >= 0 && m.losm >= 0 && m.losr !== null && m.losm !== null) {
-            obj.losr = m.losr;
-            obj.losm = m.losm;
-          }
-          if(m.truebye !== null) {
-            obj.truebye = m.truebye;
-          }
-          var match = Matches.insert({ players });
-          obj.id = match;
-          return obj;
+            if(m.losr >= 0 && m.losm >= 0 && m.losr !== null && m.losm !== null) {
+              obj.losr = m.losr;
+              obj.losm = m.losm;
+              pipes[m.losr] ? pipes[m.losr].push(m.losm) : (pipes[m.losr] = [m.losm]);
+            }
+            var match = Matches.insert({ players });
+            obj.id = match;
+            return obj;
+          })
         })
       })
-    })
-    var br = Brackets.insert({
-      rounds: rounds
-    });
+    }
 
-    Instances.update(instance._id, {
-      $set: {
-        [`brackets.${index}.inProgress`]: true,
-        [`brackets.${index}.id`]: br,
-        [`brackets.${index}.startedAt`]: new Date()
-      }
-    })
+    if(!instance.brackets[index].id) {
+      var br = Brackets.insert({
+        rounds: rounds
+      });
+
+      Instances.update(instance._id, {
+        $set: {
+          [`brackets.${index}.inProgress`]: true,
+          [`brackets.${index}.id`]: br,
+          [`brackets.${index}.startedAt`]: new Date()
+        }
+      })
+    }
+    else {
+      Brackets.update(instance.brackets[index].id, {
+        $set: {
+          rounds
+        }
+      })
+    }
+
   },
 
   "events.advance_single"(bracketId, round, index) {
     var bracket = Brackets.findOne(bracketId);
 
+
+    console.log(round, " ", index);
     var matchId = bracket.rounds[0][round][index].id;
     var match = Matches.findOne(matchId);
 
@@ -357,6 +388,7 @@ Meteor.methods({
         }
       }
     });
+    Meteor.call("match.end", matchId);
   },
 
   "events.advance_double"(bracketId, bracketIndex, roundIndex, index) {
@@ -374,7 +406,8 @@ Meteor.methods({
             id: players[0].id
           }
         }
-      })
+      });
+      Meteor.call("match.end", matchId);
     })
   },
 
@@ -526,14 +559,15 @@ Meteor.methods({
         }
       });
       var _nextIndex = (_bracketIndex == 0 || _roundIndex % 2) ? Math.floor(_index / 2) : _index;
-      var _nextPos = (_bracketIndex == 0 ? _index % 2 : 1);
+      var _nextPos = (_bracketIndex == 0 || _roundIndex % 2) ? _index % 2 : 1;
       cb(_bracketIndex, _roundIndex + 1, _nextIndex, _nextPos);
       if(_bracketIndex == 0) {
         cb(1, internalMeta.losr, internalMeta.losm, 0);
       }
     }
     var nextIndex = (bracketIndex == 0 || roundIndex % 2) ? Math.floor(index / 2) : index;
-    cb(bracketIndex, roundIndex + 1, nextIndex, bracketIndex == 0 ? index % 2 : 1);
+    var nextPos = (bracketIndex == 0 || roundIndex % 2) ? index % 2 : 1;
+    cb(bracketIndex, roundIndex + 1, nextIndex, nextPos);
     if(bracketIndex == 0) {
       cb(1, metadata.losr, metadata.losm, roundIndex == 0 ? index % 2 : 0);
     }

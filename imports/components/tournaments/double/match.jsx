@@ -224,6 +224,7 @@ export default class MatchBlock extends Component {
 
   render() {
     var match = Matches.findOne(this.props.id);
+    var emptyWinnersMatch = (this.props.bracket == 0 && !match);
     if(!match) {
       return (
         <div className="match-block col center spacing"></div>

@@ -4,7 +4,7 @@ import Matches from "/imports/api/event/matches.js";
 Meteor.methods({
   "events.brackets.removeParticipant"(id, index, alias) {
     var instance = Instances.findOne(id);
-    if(!event) {
+    if(!instance) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Instances.update(instance._id, {

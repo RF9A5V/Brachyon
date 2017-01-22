@@ -9,13 +9,7 @@ export default class SwissModal extends Component {
 
   constructor(props) {
     super(props);
-    var match = Brackets.findOne().rounds[props.page].matches[props.i];
-    this.state = {
-      p1score: match.p1score,
-      p2score: match.p2score,
-      ties: match.ties,
-      active: false
-    }
+    this.state = {};
   }
 
   updateMatch(fieldToUpdate, inc) {
@@ -23,20 +17,18 @@ export default class SwissModal extends Component {
       return false;
     }
     var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    var score = 3;
+    var score = 1;
     var multi = inc === true ? 1 : -1;
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
     var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
-    this.state.active = true;
     Meteor.call("events.update_match", Brackets.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
-      this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
         return err;
       }
       else {
-        this.forceUpdate();
+        this.props.update();
       }
     });
   }
@@ -50,18 +42,25 @@ export default class SwissModal extends Component {
     this.closeModal();
   }
 
-  imgOrDefault(id) {
-    var user = Meteor.users.findOne(id);
-    if(user && user.profile.imageUrl) {
-      return user.profile.imageUrl;
+  imgOrDefault(alias) {
+    var players = Brackets.findOne().rounds[this.props.page].players;
+    var pIndex = players.findIndex(o => { return o.alias == alias });
+    if(pIndex < 0) {
+      return "/images/profile.png";
+    }
+    else {
+      var user = Meteor.users.findOne(players[pIndex].id);
+      if(user && user.profile.imageUrl) {
+        return user.profile.imageUrl;
+      }
     }
     return "/images/profile.png";
   }
 
   render() {
     var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    var playerOneID = this.props.aliasMap[match.playerOne];
-    var playerTwoID = this.props.aliasMap[match.playerTwo];
+    //var match.players[0].id = this.props.aliasMap[match.players[0].alias];
+    //var match.players[1].id = this.props.aliasMap[match.players[1].alias];
     return (
       <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
         {
@@ -74,7 +73,7 @@ export default class SwissModal extends Component {
               </div>
               <div className="row flex-padaround col-1">
                 <div className="col center x-center">
-                  <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <img src={this.imgOrDefault(match.playerOne)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
                   <h5 className={(match.playerOne)==null?(""):
                       ((match.playerOne).length<15)?(""):("marquee")}
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerOne }
@@ -90,7 +89,7 @@ export default class SwissModal extends Component {
 
                 </div>
                 <div className="col x-center center">
-                  <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <img src={this.imgOrDefault(match.playerTwo)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
                   <h5 className={(match.playerTwo)==null?(""):
                       ((match.playerTwo).length<15)?(""):("marquee")}
                       style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerTwo}
