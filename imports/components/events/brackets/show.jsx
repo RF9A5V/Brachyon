@@ -86,7 +86,7 @@ export default class BracketShowScreen extends Component {
             }
           }
         ]
-      })
+      });
     }
     else {
       defaultItems.push({

@@ -10,6 +10,8 @@ import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 import LogisticsPanel from "./admin_comps/logistics.jsx";
+import MatchList from "./admin_comps/matches.jsx";
+
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import Instances from "/imports/api/event/instance.js";
@@ -121,7 +123,22 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
             }
           ]
         }
-      ])
+      ]);
+      if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
+        defaultItems.push({
+          text: "Matches",
+          icon: "cog",
+          subitems: [
+            {
+              component: MatchList,
+              args: {
+                id: bracket.id,
+                format: bracket.format.baseFormat
+              }
+            }
+          ]
+        });
+      }
     }
     if(bracket.endedAt == null && bracket.startedAt != null) {
       defaultItems = defaultItems.concat([

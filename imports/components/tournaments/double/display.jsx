@@ -78,7 +78,7 @@ export default class DoubleDisplay extends Component {
                     {
                       round.map((match, j) => {
                         var m = Matches.findOne(match.id);
-                        if(m.players[0] == null || m.players[1] == null) {
+                        if(!m || m.players[0] == null || m.players[1] == null) {
                           return "";
                         }
                         if (m.players[0].alias != null && m.players[1] != null)
@@ -126,9 +126,9 @@ export default class DoubleDisplay extends Component {
                       </div>
                     )
                   }
-                  else if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
+                  else if (i > 0 || this.props.rounds[1][0].length < 2)
                   {
-                    i = (this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye) ? i:i-1;
+                    i = (this.props.rounds[1][0].length < 2) ? i:i-1;
                     return (
                       <div key={i} className="round-spacing" style={{width: 150, textAlign: "center"}}>
                         Round { i + 1 }
@@ -141,7 +141,7 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             {
               this.props.rounds[1].map((round, i) => {
-                if (i > 0 || this.props.rounds[1][0].length < 2 || this.props.rounds[1][0][1].truebye)
+                if (i > 0 || this.props.rounds[1][0].length < 2)
                 {
                     return (
                     <div className="col" style={{justifyContent: "space-around"}} key={i}>

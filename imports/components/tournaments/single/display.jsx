@@ -62,7 +62,7 @@ export default class SingleDisplay extends Component {
                         <MatchBlock
                           isLast={i == this.props.rounds[0].length - 1}
                           round={i}
-                          id={match.id ? match.id : null}
+                          id={match && match.id ? match.id : null}
                           isFutureLoser={isFutureLoser}
                           update={this.props.update}
                           index={j}
