@@ -15,9 +15,12 @@ export default class MatchList extends Component {
         }
       }),
       ready: false,
-      open: false,
-      filter: "waiting"
+      open: false
     }
+  }
+
+  componentWillUnmount() {
+    this.state.sub.stop();
   }
 
   profileImageOrDefault(id) {
@@ -76,38 +79,6 @@ export default class MatchList extends Component {
     )
   }
 
-  filterSelect() {
-    var options = [
-      {
-        type: "Waiting",
-        value: "waiting"
-      },
-      {
-        type: "Running",
-        value: "running",
-      },
-      {
-        type: "Completed",
-        value: "completed"
-      },
-      {
-        type: "All",
-        value: "all"
-      }
-    ]
-    return (
-      <select onChange={(e) => { this.setState({ filter: e.target.value }) }}>
-        {
-          options.map(o => {
-            return (
-              <option value={o.value}>{ o.type }</option>
-            )
-          })
-        }
-      </select>
-    )
-  }
-
   render() {
     if(!this.state.ready) {
       return (
@@ -155,7 +126,15 @@ export default class MatchList extends Component {
                             case 1: return "Loser's Bracket";
                             default: return "Grand Finals";
                           }
-                        })()}, Round { i == 1 ? j : j + 1}</span>
+                        })()}, {(() => {
+                          var roundNum = (i == 1 ? j : (j + 1));
+                          switch(b.length - roundNum) {
+                            case 2: return "Quarter Finals";
+                            case 1: return "Semi Finals";
+                            case 0: return "Finals";
+                            default: return "Round " + roundNum;
+                          }
+                        })()}</span>
                       </div>
                     )
                   }).filter(m => { return m != "" });
@@ -200,7 +179,15 @@ export default class MatchList extends Component {
                     }
                   }}>
                     <span>
-                      {header}, Round {i == 1 ? j : j + 1}
+                      {header}, {(() => {
+                        var roundNum = j + 1;
+                        switch(b.length - roundNum) {
+                          case 2: return "Quarter Finals";
+                          case 1: return "Semi Finals";
+                          case 0: return "Finals";
+                          default: return "Round " + roundNum;
+                        }
+                      })()}
                     </span>
                     <FontAwesome name={this.state.bTab == i && this.state.rTab == j ? "caret-up" : "caret-down"} size="2x" />
                   </div>

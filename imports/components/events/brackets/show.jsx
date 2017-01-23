@@ -5,8 +5,9 @@ import LeaderboardPanel from "../show/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
-import Brackets from "/imports/api/brackets/brackets.js"
+import MatchList from "./show/matches.jsx";
 
+import Brackets from "/imports/api/brackets/brackets.js"
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 export default class BracketShowScreen extends Component {
@@ -101,6 +102,19 @@ export default class BracketShowScreen extends Component {
           }
         ]
       })
+    }
+    var bracketId = Instances.findOne().brackets[this.props.params.bracketIndex || 0].id;
+    if(bracketId) {
+      defaultItems.push({
+        text: "Matches",
+        icon: "cog",
+        subitems: [
+          {
+            component: MatchList,
+            id: bracketId
+          }
+        ]
+      });
     }
     return defaultItems;
   }
