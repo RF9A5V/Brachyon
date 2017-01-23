@@ -22,8 +22,8 @@ export default class MatchList extends Component {
 
   profileImageOrDefault(id) {
     var user = Meteor.users.findOne(id);
-    if(user && user.profile.image) {
-      return user.profile.image;
+    if(user && user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
@@ -33,22 +33,6 @@ export default class MatchList extends Component {
     if(!match) {
       return "";
     }
-
-    if(!match.startedAt) {
-      return (
-        <div className="row center">
-          <button onClick={() => {
-            Meteor.call("match.start", this.state.id, (err) => {
-              if(err) {
-                return toastr.error(err.reason);
-              }
-              this.forceUpdate();
-            })
-          }}>Start Match</button>
-        </div>
-      )
-    }
-
     var scoreComp = match.players.map((p, i) => {
 
       var cb = (val) => {
@@ -138,75 +122,130 @@ export default class MatchList extends Component {
             this.scoreModalContent()
           }
         </Modal>
-        <div className="row" style={{justifyContent: "flex-end"}}>
-          <div style={{backgroundColor: "#666", padding: 10}}>
-            { this.filterSelect() }
-          </div>
+        <div className="row center" style={{marginBottom: 20}}>
+          <h5>Pending Matches</h5>
+        </div>
+        <div className="row" style={{flexWrap: "wrap", marginBottom: 20}}>
+          {
+            (() => {
+              var content = bracket.rounds.map((b, i) => {
+                return b.map((r, j) => {
+                  return r.map((m, k) => {
+                    if(!m || !m.id) {
+                      return "";
+                    }
+                    var match = Matches.findOne(m.id);
+                    if(match.players[0] == null || match.players[1] == null || match.winner != null) {
+                      return "";
+                    }
+                    return (
+                      <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}} onClick={() => { this.setState({ id: m.id, open: true, bracket: i, round: j, match: k }) }}>
+                        <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                          <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
+                          <div className="col-1 col x-center" style={{padding: 10}}>
+                            <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
+                            <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+                            <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
+                          </div>
+                          <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
+                        </div>
+                        <span style={{padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
+                          switch(i) {
+                            case 0: return "Winner's Bracket";
+                            case 1: return "Loser's Bracket";
+                            default: return "Grand Finals";
+                          }
+                        })()}, Round { i == 1 ? j : j + 1}</span>
+                      </div>
+                    )
+                  }).filter(m => { return m != "" });
+                }).filter(r => { return r.length != 0 });
+              }).filter(b => { return b.length != 0 });
+              if(content.length > 0) {
+                return content;
+              }
+              return (
+                <div className="row center">
+                  No more matches pending. This bracket has finished!
+                </div>
+              )
+            })()
+
+          }
+        </div>
+        <div className="row center" style={{marginBottom: 20}}>
+          <h5>Completed Matches</h5>
         </div>
         {
           bracket.rounds.map((b, i) => {
-            var content = b.map((r, j) => {
-              if(i == 1) {
-                j -= 1;
-              }
-              var matches = r.map((m, k) => {
-                if(!m || !m.id) {
-                  return "";
-                }
-                var match = Matches.findOne(m.id);
-                if(match.players[0] == null || match.players[1] == null) {
-                  return "";
-                }
-                if(this.state.filter == "waiting" && match.startedAt) {
-                  return "";
-                }
-                else if(this.state.filter == "running" && (!match.startedAt || match.endedAt)) {
-                  return "";
-                }
-                else if(this.state.filter == "completed" && !match.endedAt) {
-                  return "";
-                }
-                var imgStyle = {
-                  width: 100, height: 100
-                }
-                return (
-                  <div className="row flex-pad x-center" style={{width: 400, marginBottom: 10, backgroundColor: "#666", marginRight: 10}} onClick={() => { this.setState({ id: m.id, open: true, bracket: i, round: j, match: k }) }}>
-                    <img src={this.profileImageOrDefault(match.players[0].id)} style={imgStyle} />
-                    <div className="col-1 col x-center" style={{padding: 10}}>
-                      <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
-                      <h5 style={{margin: "10px 0"}}>VERSUS</h5>
-                      <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
-                    </div>
-                    <img src={this.profileImageOrDefault(match.players[1].id)} style={imgStyle} />
-                  </div>
-                )
-              }).filter(m => {
-                return m != "";
-              });
-              if(matches.length > 0) {
-                return [
-                  <h4 style={{marginBottom: 10}}>Round {j + 1}</h4>,
-                  <div className="row" style={{flexWrap: "wrap"}}>
-                    { matches }
-                  </div>
-                ];
-              }
-              return "";
-            }).filter(r => { return r != "" });
-            if(content.length > 0) {
-              var header = "Winner's Bracket";
-              if(i == 1) {
-                header = "Loser's Bracket";
-              }
-              else if(i == 2) {
-                header = "Grand Finals";
-              }
-              return [
-                <h1 style={{textAlign: "center"}}>{ header }</h1>,
-                content
-              ]
+            var header;
+            switch(i) {
+              case 0: header = "Winner's Bracket"; break;
+              case 1: header = "Loser's Bracket"; break;
+              default: header = "Grand Finals";
             }
-            return "";
+
+            return b.map((r, j) => {
+              if(i == 1 && j == 0) {
+                return "";
+              }
+              return (
+                <div className="accordion-base">
+                  <div className="accordion-tab" onClick={() => {
+                    if(this.state.bTab == i && this.state.rTab == j) {
+                      this.setState({ bTab: null, rTab: null });
+                    }
+                    else {
+                      this.setState({ bTab: i, rTab: j })
+                    }
+                  }}>
+                    <span>
+                      {header}, Round {i == 1 ? j : j + 1}
+                    </span>
+                    <FontAwesome name={this.state.bTab == i && this.state.rTab == j ? "caret-up" : "caret-down"} size="2x" />
+                  </div>
+                  <div className="accordion-content" style={{display: this.state.bTab == i && this.state.rTab == j ? "inherit" : "none"}}>
+                    <div className="row" style={{flexWrap: "wrap"}}>
+                    {
+                      (() => {
+                        var content = r.map((m, k) => {
+                          if(!m || !m.id) {
+                            return "";
+                          }
+                          var match = Matches.findOne(m.id);
+                          if(!match.winner) {
+                            return "";
+                          }
+                          var winnerIndex = match.players[0].alias == match.winner.alias ? 0 : 1;
+                          return (
+                            <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
+                              <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                                <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
+                                <div className="col-1 col x-center" style={{padding: 10}}>
+                                  <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
+                                  <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+                                  <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
+                                </div>
+                                <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
+                              </div>
+                              <div className="row">
+                                <span className="col-1" style={{backgroundColor: winnerIndex == 0 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 0 ? "Winner" : "" }</span>
+                                <span className="col-1" style={{textAlign: "right", backgroundColor: winnerIndex == 1 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 1 ? "Winner" : "" }</span>
+                              </div>
+                            </div>
+                          )
+                        }).filter(m => { return m != "" });
+                        if(content.length > 0) {
+                          return content;
+                        }
+                        return "No matches for this round!";
+                      })()
+                    }
+                    </div>
+                  </div>
+                </div>
+              )
+            })
           })
         }
       </div>

@@ -352,11 +352,8 @@ Meteor.methods({
 
   },
 
-  "events.advance_single"(bracketId, round, index) {
+  "events.advance_single"(bracketId, bracketIndex, round, index) {
     var bracket = Brackets.findOne(bracketId);
-
-
-    console.log(round, " ", index);
     var matchId = bracket.rounds[0][round][index].id;
     var match = Matches.findOne(matchId);
 
@@ -367,19 +364,22 @@ Meteor.methods({
       throw new Meteor.Error(403, "Can't advance match with tied scores!");
     }
 
-    var nextId = bracket.rounds[0][round + 1][Math.floor(index / 2)].id;
-    var nextMatch = Matches.findOne(nextId);
-    if(nextMatch) {
-      Matches.update(nextId, {
-        $set: {
-          [`players.${index % 2}`]: {
-            id: players[0].id,
-            alias: players[0].alias,
-            score: 0
+    if(bracket.rounds[0][round + 1]) {
+      var nextId = bracket.rounds[0][round + 1][Math.floor(index / 2)].id;
+      var nextMatch = Matches.findOne(nextId);
+      if(nextMatch) {
+        Matches.update(nextId, {
+          $set: {
+            [`players.${index % 2}`]: {
+              id: players[0].id,
+              alias: players[0].alias,
+              score: 0
+            }
           }
-        }
-      });
+        });
+      }
     }
+
     Matches.update(matchId, {
       $set: {
         winner: {
@@ -388,7 +388,6 @@ Meteor.methods({
         }
       }
     });
-    Meteor.call("match.end", matchId);
   },
 
   "events.advance_double"(bracketId, bracketIndex, roundIndex, index) {
@@ -407,7 +406,6 @@ Meteor.methods({
           }
         }
       });
-      Meteor.call("match.end", matchId);
     })
   },
 

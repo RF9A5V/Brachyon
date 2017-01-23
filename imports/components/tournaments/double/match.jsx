@@ -70,7 +70,7 @@ export default class MatchBlock extends Component {
       return "TBD";
     }
     if(p.id) {
-      return Meteor.users.findOne(id).username;
+      return Meteor.users.findOne(p.id).username;
     }
     return p.alias;
   }
@@ -84,17 +84,12 @@ export default class MatchBlock extends Component {
     })
   }
 
-  getProfileImage(id) {
-    var participants = Instances.findOne().brackets[0].participants;
-    var user = null;
-    for(var i in participants) {
-      if(participants[i].alias == id) {
-        user = Meteor.users.findOne(participants[i].id);
-        break;
+  getProfileImage(p) {
+    if(p && p.id) {
+      var user = Meteor.users.findOne(p.id);
+      if(user.profile.imageUrl) {
+        return user.profile.imageUrl;
       }
-    }
-    if(user && user.profile.imageUrl) {
-      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
