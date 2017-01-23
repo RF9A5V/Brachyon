@@ -166,7 +166,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
                       return (
                         <div className="row swiss-row">
                           <div className="swiss-entry">
-                            { playerObj.alias }
+                            { playerObj.name }
                           </div>
                           <div className="swiss-entry">
                             { playerObj.score }
