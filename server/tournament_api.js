@@ -312,7 +312,7 @@ var OrganizeSuite = {
         playarr[participants[y]] = false;
       }
       var playerObj = {
-        alias: participants[x],
+        name: participants[x],
         score: 0,
         bnum: 0,
         wins: 0,
