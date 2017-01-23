@@ -1,4 +1,5 @@
 import Matches from "/imports/api/event/matches.js";
+import OrganizeSuite from "/server/tournament_api.js";
 
 Migrations.add({
   version: 2,
