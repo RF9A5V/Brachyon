@@ -36,8 +36,8 @@ Migrations.add({
                 var oldMatch = bracket.rounds[i][j][k];
                 var obj = {};
                 if(oldMatch.winner) {
-                  var user = Meteor.users.findOne(oldMatch.winner);
-                  obj.winner = { alias: oldMatch.winner, id: user._id };
+                  var user = Meteor.users.findOne({username: oldMatch.winner});
+                  obj.winner = { alias: oldMatch.winner, id: user ? user._id : null };
                 }
                 var players = [];
                 players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
@@ -56,7 +56,8 @@ Migrations.add({
                     [`rounds.${i}.${j}.${k}.id`]: mObj,
                     winner: obj.winner
                   }
-                })
+                });
+                Meteor.call("events.advance_" + (format == "single_elim" ? "single" : "double"), bracket._id, i, j, k);
               })
             })
           })
