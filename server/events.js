@@ -399,6 +399,11 @@ Meteor.methods({
       var bracket = Brackets.findOne(bracketId);
       var matchId = bracket.rounds[bracketIndex][roundIndex][index].id;
       var match = Matches.findOne(matchId);
+
+      if(match.players[0] == null || match.players[1] == null) {
+        return;
+      }
+
       var players = match.players.sort((a, b) => {
         return b.score - a.score;
       });
@@ -417,10 +422,16 @@ Meteor.methods({
     var bracket = Brackets.findOne(bracketId);
     var matchId = bracket.rounds[bracketIndex][roundIndex][index].id;
     var match = Matches.findOne(matchId);
+
+    if(match.players[0] == null || match.players[1] == null) {
+      return;
+    }
+
     var players = match.players.slice().sort((a, b) => {
       return b.score - a.score;
     });
     if(players[0].score == players[1].score) {
+      return;
       throw new Meteor.Error(403, "Cannot advance match with tie!");
     }
     if(bracketIndex == 2) {
