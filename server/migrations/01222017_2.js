@@ -57,12 +57,21 @@ Migrations.add({
                     winner: obj.winner
                   }
                 });
+              })
+            })
+          })
+          // Reload the bracket in cached memory after DB updates
+          bracket = Brackets.findOne(bracket._id);
+          bracket.rounds.forEach((b, i) => {
+            b.forEach((r, j) => {
+              r.forEach((m, k) => {
                 Meteor.call("events.advance_" + (format == "single_elim" ? "single" : "double"), bracket._id, i, j, k);
               })
             })
           })
         }
       })
+
     });
   }
 })
