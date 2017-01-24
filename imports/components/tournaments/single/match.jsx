@@ -26,24 +26,22 @@ export default class MatchBlock extends Component {
     });
   }
 
-  onMatchUserClick(index) {
+  onMatchUserClick() {
     return (e) => {
       e.preventDefault();
-      if (index != 2)
-      {
-        Meteor.call("events.advance_single", Brackets.findOne()._id, this.props.round, this.props.index, (err) => {
-          if(err){
-            console.log(err);
-            toastr.error("Couldn't advance this match.", "Error!");
-          }
-          else {
-            toastr.success("Player advanced to next round!", "Success!");
-            this.props.update();
-            this.forceUpdate();
-          }
-        })
-        this.closeModal();
-      }
+      Meteor.call("events.advance_single", Brackets.findOne()._id, 0, this.props.round, this.props.index, (err) => {
+        if(err){
+          console.log(err);
+          toastr.error("Couldn't advance this match.", "Error!");
+        }
+        else {
+          this.closeModal();
+          toastr.success("Player advanced to next round!", "Success!");
+          this.props.update();
+          this.forceUpdate();
+        }
+      })
+
     }
   }
 
