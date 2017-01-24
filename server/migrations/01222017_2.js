@@ -59,8 +59,7 @@ Migrations.add({
                     [`rounds.${i}.${j}.${k}.scoreTwo`]: 1
                   },
                   $set: {
-                    [`rounds.${i}.${j}.${k}.id`]: mObj,
-                    winner: obj.winner
+                    [`rounds.${i}.${j}.${k}.id`]: mObj
                   }
                 });
               })
