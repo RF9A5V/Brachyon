@@ -17,7 +17,7 @@ Migrations.add({
         }
       ]
     });
-    console.log(bracketInstances.fetch().length);
+    console.log(bracketInstances.fetch().length)
     bracketInstances.forEach(i => {
       i.brackets.forEach(idContainer => {
         var bracket = Brackets.findOne(idContainer.id);
@@ -40,8 +40,8 @@ Migrations.add({
                   obj.winner = { alias: oldMatch.winner, id: user ? user._id : null };
                 }
                 var players = [];
-                players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
-                players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0 } : null);
+                players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: oldMatch.scoreOne } : null);
+                players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: oldMatch.scoreTwo } : null);
                 var mObj = Matches.insert({
                   players
                 });
