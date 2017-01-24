@@ -161,7 +161,7 @@ Meteor.startup(() => {
     }
   });
 
-  // Migrations.migrateTo("latest");
+  Migrations.migrateTo("latest");
 
   // SyncedCron.add({
   //   name: "Clear Test Brackets",
