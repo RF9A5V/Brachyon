@@ -357,11 +357,15 @@ Meteor.methods({
     var matchId = bracket.rounds[0][round][index].id;
     var match = Matches.findOne(matchId);
 
+    if(match.players[0] == null || match.players[1] == null) {
+      return;
+    }
+
     var players = match.players.sort((a, b) => {
       return b.score - a.score;
     });
     if(players[0].score == players[1].score) {
-      throw new Meteor.Error(403, "Can't advance match with tied scores!");
+      return;
     }
 
     if(bracket.rounds[0][round + 1]) {
