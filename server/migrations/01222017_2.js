@@ -17,9 +17,9 @@ Migrations.add({
         }
       ]
     });
+    console.log(bracketInstances.fetch().length);
     bracketInstances.forEach(i => {
       i.brackets.forEach(idContainer => {
-
         var bracket = Brackets.findOne(idContainer.id);
         if(bracket) {
           var format = idContainer.format.baseFormat;
@@ -36,8 +36,8 @@ Migrations.add({
                 var oldMatch = bracket.rounds[i][j][k];
                 var obj = {};
                 if(oldMatch.winner) {
-                  var user = Meteor.users.findOne(m.winner);
-                  obj.winner = { alias: m.winner, id: user._id };
+                  var user = Meteor.users.findOne(oldMatch.winner);
+                  obj.winner = { alias: oldMatch.winner, id: user._id };
                 }
                 var players = [];
                 players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
