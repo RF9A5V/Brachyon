@@ -40,8 +40,14 @@ Migrations.add({
                   obj.winner = { alias: oldMatch.winner, id: user ? user._id : null };
                 }
                 var players = [];
-                players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: oldMatch.scoreOne } : null);
-                players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: oldMatch.scoreTwo } : null);
+                if(oldMatch.playerOne) {
+                  var user = Meteor.users.findOne({ username: oldMatch.playerOne });
+                  players.push({ alias: oldMatch.playerOne, id: user ? user._id : null });
+                }
+                if(oldMatch.playerTwo) {
+                  var user = Meteor.users.findOne({ username: oldMatch.playerTwo });
+                  players.push({ alias: oldMatch.playerTwo, id: user ? user._id : null })
+                }
                 var mObj = Matches.insert({
                   players
                 });
