@@ -49,3 +49,7 @@ edgee:slingshot
 ostrio:meteor-root
 email
 mrt:smart-publish
+practicalmeteor:mocha
+dburles:factory
+xolvio:cleaner
+practicalmeteor:chai
