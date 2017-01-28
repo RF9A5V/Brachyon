@@ -22,17 +22,20 @@ Meteor.methods({
     var roundobj = Brackets.findOne(bracket.id);
     if(bracket.format.baseFormat == "single_elim") {
       var finals = roundobj.rounds[roundobj.rounds.length - 1].pop()[0];
-      if(finals.winner == null) {
+      var finalMatch = Matches.findOne(finals.id);
+      if(finalMatch.winner == null) {
         throw new Meteor.Error(403, "Cannot end bracket while matches are unplayed!");
       }
       roundobj.rounds[roundobj.rounds.length - 1].push([finals]);
       var singleElimBracket = roundobj.rounds[roundobj.rounds.length - 1];
       singleElimBracket.reverse().forEach(round => {
         round.forEach(match => {
-          if(ldrboard[match.winner] == null) {
-            ldrboard[match.winner] = userCount ++;
+          if(!match) { return }
+          match = Matches.findOne(match.id);
+          if(ldrboard[match.winner.alias] == null) {
+            ldrboard[match.winner.alias] = userCount ++;
           }
-          var loser = match.winner == match.playerOne ? match.playerTwo : match.playerOne;
+          var loser = match.winner.alias == match.players[0].alias ? match.players[1].alias : match.players[0].alias;
           if(ldrboard[loser] == null) {
             ldrboard[loser] = userCount ++;
           }
@@ -44,18 +47,21 @@ Meteor.methods({
       var round=roundobj.rounds;
       for (i=0; i<round[0].length; i++){
         for(j=0; j<round[0][i].length ; j++){
-          var match = round[0][i][j];
+          if(!round[0][i][j]){ continue; }
+          var matchId = round[0][i][j].id;
+          match = Matches.findOne(matchId);
           if(match.winner != null){
-            if(players[match.playerOne]){
-              players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1 : 1;
+            if(players[match.players[0].alias]){
+              players[match.players[0].alias].wins = players[match.players[0].alias].wins ? players[match.players[0].alias].wins + 1 : 1;
             }
-            if(players[match.playerTwo]){
-              players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1 : 1;
+            if(players[match.players[1].alias]){
+              players[match.players[1].alias].wins = players[match.players[1].alias].wins ? players[match.players[1].alias].wins + 1 : 1;
             }
           }
         }
       }
-      var finalWinner = round[0][round.length - 1].pop().winner;
+      var finalId = round[0][round.length - 1].pop().id;
+      var finalWinner = Matches.findOne(finalId).winner.alias;
       if(players[finalWinner] != null){
         players[finalWinner].wins += 1;
         players[finalWinner].losses = 0;
@@ -71,7 +77,7 @@ Meteor.methods({
           [`stats.${bracket.game}.ties`]: scoreObject.ties
         };
         Meteor.users.update(scoreObject.id,{$inc:updateObject});
-      })  
+      })
 
     }
     else if(bracket.format.baseFormat == "double_elim") {
@@ -101,7 +107,7 @@ Meteor.methods({
         });
 
 
-        
+
         var players = {};
         instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:2, wins:0, ties:0}});
         var round=roundobj.rounds;
@@ -159,7 +165,7 @@ Meteor.methods({
             players[finalTwo.playerOne].wins = players[finalTwo.playerOne].wins ? players[finalTwo.playerOne].wins + 1 : 1;
           }
         }
-        
+
 
         Object.keys(players).forEach(p => { players[p].wins -= 1 });
 
@@ -226,16 +232,3 @@ Meteor.methods({
     Instances.update(instance._id, cmd);
   }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
