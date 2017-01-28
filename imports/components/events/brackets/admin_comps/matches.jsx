@@ -127,7 +127,7 @@ export default class MatchList extends Component {
                             default: return "Grand Finals";
                           }
                         })()}, {(() => {
-                          var roundNum = (i == 1 ? j : (j + 1));
+                          var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
                           switch(b.length - roundNum) {
                             case 2: return "Quarter Finals";
                             case 1: return "Semi Finals";

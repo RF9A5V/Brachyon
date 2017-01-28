@@ -141,7 +141,7 @@ export default class DoubleDisplay extends Component {
           <div className="row">
             {
               this.props.rounds[1].map((round, i) => {
-                if (i > 0 || this.props.rounds[1][0].length < 2)
+                if (i > 0 || this.props.rounds[1][0].filter((m) => { return m != null }).length > 0)
                 {
                     return (
                     <div className="col" style={{justifyContent: "space-around"}} key={i}>
