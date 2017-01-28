@@ -179,7 +179,7 @@ export default class MatchBlock extends Component {
                       <button onClick={ () => {
                         var event = Events.findOne();
                         var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                        browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                        browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${0}-${this.props.round}-${this.props.index}`)
                       }}>View</button>
                     </div>
                   ) : (
@@ -199,7 +199,7 @@ export default class MatchBlock extends Component {
                       <button onClick={ () => {
                         var event = Events.findOne();
                         var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                        browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                        browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.id}`)
                       }}>View</button>
                     ) : (
                       ""
@@ -254,7 +254,6 @@ export default class MatchBlock extends Component {
         <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}></div>
       )
     }
-    console.log(match);
 
     return (
       <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}>

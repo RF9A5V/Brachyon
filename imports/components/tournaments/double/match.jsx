@@ -189,7 +189,7 @@ export default class MatchBlock extends Component {
                     <button onClick={ () => {
                       var event = Events.findOne();
                       var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                      browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                      browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.bracket}-${this.props.roundNumber}-${this.props.matchNumber}`)
                     }}>View</button>
                   ) : (
                     ""
@@ -207,7 +207,7 @@ export default class MatchBlock extends Component {
                 <button onClick={ () => {
                   var event = Events.findOne();
                   var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                  browserHistory.push(`/events/${Events.findOne().slug}/brackets/${brackIndex}/match/${this.props.bracket + 1}-${this.props.roundNumber + 1}-${this.props.matchNumber + 1}`)
+                  browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.bracket}-${this.props.roundNumber}-${this.props.matchNumber}`)
                 }}>View</button>
               </div>
             </div>
