@@ -32,7 +32,6 @@ export default class LeagueModal extends Component {
     var localBoard = {};
     var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
     Leagues.findOne().leaderboard[eventIndex + 1].forEach((obj, i) => {
-      console.log(obj);
       var user = Meteor.users.findOne(obj.id);
       localBoard[user.username] = obj;
     });
@@ -102,13 +101,17 @@ export default class LeagueModal extends Component {
     var singleElimBracket = roundobj.rounds[roundobj.rounds.length - 1];
     singleElimBracket.reverse().forEach(round => {
       round.forEach(match => {
+        if(!match) {
+          return;
+        }
+        match = Matches.findOne(match.id);
         if(match.winner == null) {
           return;
         }
-        if(ldrboard[match.winner] == null) {
-          ldrboard[match.winner] = userCount ++;
+        if(ldrboard[match.winner.alias] == null) {
+          ldrboard[match.winner.alias] = userCount ++;
         }
-        var loser = match.winner == match.playerOne ? match.playerTwo : match.playerOne;
+        var loser = match.winner.alias == match.players[0].alias ? match.players[1].alias : match.players[0].alias;
         if(ldrboard[loser] == null) {
           ldrboard[loser] = userCount ++;
         }
@@ -132,14 +135,15 @@ export default class LeagueModal extends Component {
     losersBracket = losersBracket.concat(finalSet).reverse();
     losersBracket.forEach(round => {
       round.forEach(match => {
+        match = Matches.findOne(match.id);
         if(match.winner == null) {
           return;
         }
-        if(ldrboard[match.winner] == null) {
-          ldrboard[match.winner] = userCount ++;
-          participants[match.winner] = 0;
+        if(ldrboard[match.winner.alias] == null) {
+          ldrboard[match.winner.alias] = userCount ++;
+          participants[match.winner.alias] = 0;
         }
-        var loser = match.winner == match.playerOne ? match.playerTwo : match.playerOne;
+        var loser = match.winner.alias == match.players[0].alias ? match.players[1].alias : match.players[0].alias;
         if(ldrboard[loser] == null) {
           ldrboard[loser] = userCount ++;
           participants[loser] = 0;
@@ -156,7 +160,6 @@ export default class LeagueModal extends Component {
     rounds[rounds.length - 1].players.sort((a, b) => { return b.score - a.score; }).forEach((p, i) => {
       ldrboard[p.name] = i;
     });
-    console.log(ldrboard);
     return this.boardFormatting(ldrboard);
   }
 
@@ -203,6 +206,7 @@ export default class LeagueModal extends Component {
             if(format == "single_elim" || format == "double_elim") {
               Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
                 if(err) {
+                  console.log(err);
                   return toastr.error("Couldn\'t close this bracket.", "Error!");
                 }
                 var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });

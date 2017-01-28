@@ -383,6 +383,13 @@ Meteor.methods({
         });
       }
     }
+    else {
+      Brackets.update(bracketId, {
+        $set: {
+          complete: true
+        }
+      })
+    }
 
     Matches.update(matchId, {
       $set: {
@@ -436,6 +443,11 @@ Meteor.methods({
     }
     if(bracketIndex == 2) {
       if(players[0].alias == match.players[0].alias || roundIndex == 1) {
+        Brackets.update(bracketId, {
+          $set: {
+            complete: true
+          }
+        })
         return;
       }
       else {
@@ -549,6 +561,11 @@ Meteor.methods({
         winner: null
       }
     });
+    Brackets.update(bracketId, {
+      $set: {
+        complete: false
+      }
+    })
   },
 
   "events.undo_double"(bracketId, bracketIndex, roundIndex, index) {
@@ -589,6 +606,11 @@ Meteor.methods({
         winner: null
       }
     });
+    Brackets.update(bracketId, {
+      $set: {
+        complete: false
+      }
+    })
   },
 
   "events.update_match"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
