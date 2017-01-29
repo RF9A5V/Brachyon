@@ -249,53 +249,76 @@ export default class MatchBlock extends Component {
     var [i, j, id] = [this.props.round, this.props.index, this.props.id];
     var match = Matches.findOne(id);
 
+    var height = 35;
+    var margin = 10;
+
+    var lineHeight = 5;
+
+    var blockHeight = height * 2 + margin * 2 + lineHeight;
+    var blockMargin = 20;
+
+    var vLineBase = blockHeight + blockMargin;
+    var vLineHeight = Math.pow(2, i - 1) * vLineBase + lineHeight;
+
+    var participantWidth = 200;
+
     if(!match) {
       return (
-        <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}></div>
-      )
+        <div style={{height: blockHeight, marginBottom: blockMargin}}>
+        </div>
+      );
+    }
+
+    var p1 = (match.players[0] || {});
+    var p2 = (match.players[1] || {});
+
+    var isLoser = (p) => {
+      return match.winner && p.alias != match.winner.alias;
     }
 
     return (
-      <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, i)}}>
-        <div className="match-highlight">
-          {
-            match.players[0] == match.players[1] && i == 0 ? (
-              ""
-            ) : (
-              match.players.map((p, index) => {
-
-                var isLoser = match.winner != null && match.winner != p.alias;
-
-                return (
-                  <div className={match.winner == null && match.players[0] != null && match.players[1] != null ? ("match-participant match-active"):("match-participant")} onClick={
-                    match.players[0] != null && match.players[1] != null ? (
-                      () => {if(Meteor.user()){this.setState({open: true});} }
-                    ) : (
-                      () => {}
-                    )
-                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                    <span>
-                      <div style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}} className={p==null? (""): (this.getUsername(p).length < 19 ? "" : "marquee")}>
-                        {
-                          this.getUsername(p)
-                        }
-                        </div>
-                      </span>
-                    </div>
-                )
-              })
-            )
-          }
-        </div>
+      <div className="row x-center" style={{marginBottom: blockMargin}}>
         {
-          this.props.isLast || match.players[0] == match.players[1] && i == 0 ? (
-            ""
+          match.players[0] == null && match.players[1] == null && i == 0 ? (
+            <div style={{height: blockHeight}}>
+            </div>
           ) : (
-            j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: this.lineHeight().height, top: this.lineHeight().top, left: 164.5,  backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            ) : (
-              <div className="bracket-line-v" style={{height: this.lineHeight().height, top: -this.lineHeight().top, left: 164.5, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            )
+            [
+              <div className="match" onClick={() => { this.setState({ open: true }) }}>
+                <div className="participant" style={{height, marginBottom: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1}}>
+                  <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                    { p1.alias || "TBD" }
+                  </div>
+                  <div className="score">
+                    { p1.score || 0 }
+                  </div>
+                </div>
+                <div style={{width: participantWidth + 20, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+                </div>
+                <div className="participant" style={{height, marginTop: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1}}>
+                  <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                    { p2.alias || "TBD" }
+                  </div>
+                  <div className="score">
+                    { p2.score || 0 }
+                  </div>
+                </div>
+
+              </div>,
+              this.props.isLast ? (
+                ""
+              ) : (
+                <div style={{
+                  width: lineHeight,
+                  height: vLineHeight,
+                  backgroundColor: this.props.isFutureLoser ? "#999" : "white",
+                  position: "relative",
+                  zIndex: this.props.isFutureLoser ? 0 : 1,
+                  top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
+                }}>
+                </div>
+              )
+            ]
           )
         }
         {
