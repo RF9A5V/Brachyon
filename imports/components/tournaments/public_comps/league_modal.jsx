@@ -135,6 +135,9 @@ export default class LeagueModal extends Component {
     losersBracket = losersBracket.concat(finalSet).reverse();
     losersBracket.forEach(round => {
       round.forEach(match => {
+        if(!match){
+          return;
+        }
         match = Matches.findOne(match.id);
         if(match.winner == null) {
           return;

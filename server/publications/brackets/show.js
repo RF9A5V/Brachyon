@@ -5,6 +5,9 @@ import Matches from "/imports/api/event/matches.js";
 Meteor.publish('brackets', (_id) => {
   var bracket = Brackets.findOne(_id);
   var matches = [];
+  if(!bracket) {
+    return Brackets.find({_id});
+  }
   bracket.rounds.forEach(b => {
     if(Array.isArray(b)) {
       b.forEach(r => {
