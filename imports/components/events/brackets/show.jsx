@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-import LeaderboardPanel from "../show/leaderboard.jsx";
+import LeaderboardPanel from "./admin_comps/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
@@ -89,7 +89,7 @@ export default class BracketShowScreen extends Component {
         ]
       });
     }
-    else {
+    if(bracket.complete) {
       defaultItems.push({
         text: "Leaderboard",
         icon: "trophy",
@@ -97,7 +97,8 @@ export default class BracketShowScreen extends Component {
           {
             component: LeaderboardPanel,
             args: {
-              participants: this.props.params.bracketIndex
+              id: Brackets.findOne()._id,
+              index: this.props.params.bracketIndex
             }
           }
         ]

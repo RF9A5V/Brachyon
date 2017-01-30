@@ -286,7 +286,7 @@ export default class MatchBlock extends Component {
                 </div>
 
               </div>,
-              (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) ? (
+              (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
                 ""
               ) : (
                 <div style={{
