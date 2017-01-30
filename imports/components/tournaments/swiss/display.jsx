@@ -114,13 +114,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
   }
 
   onMatchClick(match, i) {
-    if(!match.played && this.state.page == this.props.rounds.length) {
-      this.setState({
-        open: true,
-        match,
-        i
-      })
-    }
+    this.setState({
+      match,
+      open: true,
+      i
+    });
   }
 
   render() {
@@ -193,7 +191,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
             this.state.page > 0 ? (
               Brackets.findOne().rounds[this.state.page - 1].matches.map((match, i) => {
                 return (
-                  <SwissMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
+                  <SwissMatchBlock key={i} match={match} onSelect={() => { this.onMatchClick(match, i) }} />
                 );
               })
             ) : (
@@ -220,7 +218,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
         </div>
         {
           this.state.open ? (
-            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
+            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} update={this.forceUpdate.bind(this)} />
           ) : (
             ""
           )

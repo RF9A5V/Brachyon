@@ -35,5 +35,10 @@
     "react-summernote": "^1.0.4",
     "request": "^2.75.0",
     "velocity-react": "^1.1.8"
+  },
+  "devDependencies": {
+    "enzyme": "^2.7.1",
+    "faker": "^3.1.0",
+    "react-addons-test-utils": "^15.4.2"
   }
 }

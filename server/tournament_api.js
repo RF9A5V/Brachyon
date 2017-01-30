@@ -354,8 +354,8 @@ var OrganizeSuite = {
           playerOne: participants[x],
           playerTwo: participants[length-1-x],
           played: false,
-          p1score: 0,
-          p2score: 0,
+          scoreOne: 0,
+          scoreTwo: 0,
           ties: 0
         };
         temp.push(matchObj);

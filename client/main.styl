@@ -24,6 +24,11 @@ button:focus
 figure
   margin: 0
 
+.bracket-line-h
+  height 5px;
+  width 20px;
+  background-color white;
+
 .bracket-line-v
   width 5px
   background-color white
@@ -33,13 +38,15 @@ figure
 
 .match-block
   width 150px
-  margin 20px 0px
+  min-height 50px
+  margin 40px 0px
   position relative
   text-align left
 
 
 .match-participant
   padding 10px 5px
+  width: 100%
 
 .match-participant span
   border solid 2px white
@@ -82,12 +89,10 @@ figure
   animation marquee 5s linear infinite
 
 .bracket-match-spacing
-  margin-top 20px
-  margin-bottom 20px
+  margin-bottom 40px
 
 .round-spacing
-  margin-right 18px
-  margin-left 18px
+  width 225px;
 
 .create-mod
   width 800px
@@ -99,13 +104,9 @@ figure
 .match-participant:first-child
   border-bottom solid 5px white
   margin-top -10px
-  margin-left -20px
-  margin-right -20px
 
 .match-participant:last-child
   margin-bottom -15px
-  margin-left -20px
-  margin-right -20px
   margin-top 5px
 
 .spacing
@@ -420,27 +421,21 @@ textarea:focus
   background-color #111
   padding 10px
 
-
-.accordion-container
+.accordion-base
   margin-bottom 20px
-  width 100%
-  &:last-child
-    margin-bottom 0
 
-.accordion-header
-  background-color #666
+.accordion-tab
   padding 10px
+  background-color #111
+  border solid 2px white
+  font-size 20px
   display flex
   justify-content space-between
   align-items center
 
-
 .accordion-content
-  padding 20px
-  background-color #444
-  box-sizing border-box
-  max-height 500px
-  overflow-y auto
+  background-color #666
+  padding: 10px
 
 
 label

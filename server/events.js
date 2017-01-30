@@ -2,6 +2,7 @@ import OrganizeSuite from "./tournament_api.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
 import Leagues from "/imports/api/leagues/league.js";
+import Matches from "/imports/api/event/matches.js";
 
 import Instances from "/imports/api/event/instance.js";
 
@@ -270,117 +271,264 @@ Meteor.methods({
     }
     var organize = instance.brackets[index];
     var format = instance.brackets[index].format.baseFormat;
-    if (format == "single_elim")
-      var rounds = OrganizeSuite.singleElim(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else if (format == "double_elim")
-      var rounds = OrganizeSuite.doubleElim(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else if (format == "swiss")
-      var rounds = OrganizeSuite.swiss(organize.participants.map(function(participant) {
-        return participant.alias;
-      }));
-    else
-    var rounds = OrganizeSuite.roundRobin(organize.participants.map(function(participant) {
-      return participant.alias;
-    }));
-    var br = Brackets.insert({
-      rounds: rounds
-    });
-
-    Instances.update(instance._id, {
-      $set: {
-        [`brackets.${index}.inProgress`]: true,
-        [`brackets.${index}.id`]: br,
-        [`brackets.${index}.startedAt`]: new Date()
-      }
-    })
-  },
-
-  "events.advance_match"(bracketID, bracketNumber, roundNumber, matchNumber, placement) {
-    var bracket = Brackets.findOne(bracketID);
-    if(!bracket){
-      throw new Meteor.Error(404, "Couldn't find this bracket!");
+    var rounds = [];
+    if (format == "single_elim") {
+      rounds = OrganizeSuite.singleElim(organize.participants);
     }
-    var loser;
-    var match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
-    if (match.winner != null || match.playerOne == null || match.playerTwo == null)
-      return false;
-    if(placement == 0) {
-      match.winner = match.playerOne;
-      loser = match.playerTwo;
+    else if (format == "double_elim") {
+      rounds = OrganizeSuite.doubleElim(organize.participants);
+    }
+    else if (format == "swiss") {
+      rounds = OrganizeSuite.swiss(organize.participants.map(p => { return p.alias }));
     }
     else {
-      match.winner = match.playerTwo;
-      loser = match.playerOne;
+      rounds = OrganizeSuite.roundRobin(organize.participants.map(p => {return p.alias}));
+    }
+    if(format == "single_elim" || format == "double_elim") {
+      if(instance.brackets[index].id) {
+        var bracket = Brackets.findOne(instance.brackets[index].id);
+        var matches = [];
+        bracket.rounds.forEach(b => {
+          b.map(r => {
+            r.map(m => {
+              if(m) {
+                matches.push(m.id);
+              }
+            })
+          })
+        })
+        Matches.remove({ _id: { $in: matches } });
+      }
+      var pipes = {};
+      rounds = rounds.map((b, i) => {
+        return b.map((r, j) => {
+          return r.map((m, k) => {
+
+            if(m.playerOne === null && m.playerTwo === null && i == 0 && j == 0) {
+              return null;
+            }
+            if(i == 1 && j < 2 && (!pipes[j] || pipes[j].indexOf(k) < 0)) {
+              return null;
+            }
+
+            var obj = {};
+            var players = [];
+            players.push(m.playerOne ? { alias: m.playerOne.alias, id: m.playerOne.id, score: 0 } : null);
+            players.push(m.playerTwo ? { alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0 } : null);
+
+            if(m.losr >= 0 && m.losm >= 0 && m.losr !== null && m.losm !== null) {
+              obj.losr = m.losr;
+              obj.losm = m.losm;
+              pipes[m.losr] ? pipes[m.losr].push(m.losm) : (pipes[m.losr] = [m.losm]);
+            }
+            var match = Matches.insert({ players });
+            obj.id = match;
+            return obj;
+          })
+        })
+      })
     }
 
-    if (bracketNumber == 0 && match.losm != null)
-    {
-      var losMatch = bracket.rounds[1][match.losr][match.losm];
-      if (losMatch.playerOne == null) losMatch.playerOne = loser;
-      else losMatch.playerTwo = loser;
-      var losr = match.losr, losm = match.losm;
-      Brackets.update(bracketID, {
+    if(!instance.brackets[index].id) {
+      var br = Brackets.insert({
+        rounds: rounds
+      });
+
+      Instances.update(instance._id, {
         $set: {
-          [`rounds.${1}.${losr}.${losm}`]: losMatch
+          [`brackets.${index}.inProgress`]: true,
+          [`brackets.${index}.id`]: br,
+          [`brackets.${index}.startedAt`]: new Date()
+        }
+      })
+    }
+    else {
+      Brackets.update(instance.brackets[index].id, {
+        $set: {
+          rounds
         }
       })
     }
 
-    if((roundNumber + 1 >= bracket.rounds[bracketNumber].length && bracket.rounds.length == 1) || (bracketNumber == 2 && (match.playerOne == match.winner || (roundNumber == 1)))){
-      if (bracket.rounds.length == 1 || bracketNumber == 2)
-      {
-        Brackets.update(bracketID, {
+  },
+
+  "events.advance_single"(bracketId, bracketIndex, round, index) {
+    var bracket = Brackets.findOne(bracketId);
+    var matchId = bracket.rounds[0][round][index].id;
+    var match = Matches.findOne(matchId);
+
+    if(match.players[0] == null || match.players[1] == null) {
+      return;
+    }
+
+    var players = match.players.sort((a, b) => {
+      return b.score - a.score;
+    });
+    if(players[0].score == players[1].score) {
+      return;
+    }
+
+    if(bracket.rounds[0][round + 1]) {
+      var nextId = bracket.rounds[0][round + 1][Math.floor(index / 2)].id;
+      var nextMatch = Matches.findOne(nextId);
+      if(nextMatch) {
+        Matches.update(nextId, {
           $set: {
-            [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+            [`players.${index % 2}`]: {
+              id: players[0].id,
+              alias: players[0].alias,
+              score: 0
+            }
+          }
+        });
+      }
+    }
+    else {
+      Brackets.update(bracketId, {
+        $set: {
+          complete: true
+        }
+      })
+    }
+
+    Matches.update(matchId, {
+      $set: {
+        winner: {
+          alias: players[0].alias,
+          id: players[0].id
+        }
+      }
+    });
+  },
+
+  "events.advance_double"(bracketId, bracketIndex, roundIndex, index) {
+    Meteor.call("events._advance_double", bracketId, bracketIndex, roundIndex, index, () => {
+      var bracket = Brackets.findOne(bracketId);
+      var matchId = bracket.rounds[bracketIndex][roundIndex][index].id;
+      var match = Matches.findOne(matchId);
+
+      if(match.players[0] == null || match.players[1] == null) {
+        return;
+      }
+
+      var players = match.players.sort((a, b) => {
+        return b.score - a.score;
+      });
+      Matches.update(matchId, {
+        $set: {
+          winner: {
+            alias: players[0].alias,
+            id: players[0].id
+          }
+        }
+      });
+    })
+  },
+
+  "events._advance_double"(bracketId, bracketIndex, roundIndex, index) {
+    var bracket = Brackets.findOne(bracketId);
+    var matchId = bracket.rounds[bracketIndex][roundIndex][index].id;
+    var match = Matches.findOne(matchId);
+
+    if(match.players[0] == null || match.players[1] == null) {
+      return;
+    }
+
+    var players = match.players.slice().sort((a, b) => {
+      return b.score - a.score;
+    });
+    if(players[0].score == players[1].score) {
+      return;
+      throw new Meteor.Error(403, "Cannot advance match with tie!");
+    }
+    if(bracketIndex == 2) {
+      if(players[0].alias == match.players[0].alias || roundIndex == 1) {
+        Brackets.update(bracketId, {
+          $set: {
             complete: true
+          }
+        })
+        return;
+      }
+      else {
+        var advMatchId = bracket.rounds[bracketIndex][roundIndex + 1][0].id;
+        var advMatch = Matches.findOne(advMatchId);
+        Matches.update(advMatchId, {
+          $set: {
+            players: [
+              {
+                alias: match.players[0].alias,
+                id: match.players[0].id,
+                score: 0
+              },
+              {
+                alias: match.players[1].alias,
+                id: match.players[1].id,
+                score: 0
+              }
+            ]
+          }
+        });
+        return;
+      }
+    }
+    var advIndex = Math.floor(index / 2);
+    if(bracketIndex == 1 && roundIndex % 2 == 0) {
+      advIndex = index;
+    }
+    if(roundIndex + 1 == bracket.rounds[bracketIndex].length) {
+      var winMatchId = bracket.rounds[2][0][0].id;
+      var winMatch = Matches.findOne(winMatchId);
+      Matches.update(winMatchId, {
+        $set: {
+          [`players.${bracketIndex}`]: {
+            alias: players[0].alias,
+            id: players[0].id,
+            score: 0
+          }
+        }
+      });
+    }
+    else {
+      var winMatchId = bracket.rounds[bracketIndex][roundIndex + 1][advIndex].id;
+      var winMatch = Matches.findOne(winMatchId);
+
+      if(winMatch) {
+        var playerPos = index % 2;
+        if(bracketIndex == 1 && roundIndex % 2 == 0) {
+          playerPos = 1;
+        }
+        Matches.update(winMatchId, {
+          $set: {
+            [`players.${playerPos}`]: {
+              alias: players[0].alias,
+              id: players[0].id,
+              score: 0
+            }
           }
         })
       }
     }
-
-    else if (roundNumber + 1 >= bracket.rounds[bracketNumber].length){
-      advMatch = bracket.rounds[2][0][0];
-      if (bracketNumber == 0) advMatch.playerOne = match.winner;
-      else advMatch.playerTwo = match.winner;
-      Brackets.update(bracketID, {
-        $set: {
-          [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`rounds.${2}.${0}.${0}`]: advMatch
+    if(bracketIndex == 0) {
+      var losr = bracket.rounds[bracketIndex][roundIndex][index].losr;
+      var losm = bracket.rounds[bracketIndex][roundIndex][index].losm;
+      var loserMatchId = bracket.rounds[1][losr][losm].id;
+      var loserMatch = Matches.findOne(loserMatchId);
+      if(loserMatch) {
+        var playerPos = 0;
+        if(roundIndex == 0) {
+          playerPos = index % 2;
         }
-      })
-    }
-
-    else {
-      var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
-      var advMatch = bracket.rounds[bracketNumber][roundNumber + 1][advMN];
-      if (bracketNumber == 0 || roundNumber%2 == 1)
-      {
-        if(matchNumber % 2 == 0){
-          advMatch.playerOne = match.winner;
-        }
-        else {
-          advMatch.playerTwo = match.winner;
-        }
+        Matches.update(loserMatchId, {
+          $set: {
+            [`players.${playerPos}`]: {
+              alias: players[1].alias,
+              id: players[1].id,
+              score: 0
+            }
+          }
+        });
       }
-      else if (bracketNumber == 2)
-      {
-        advMatch.playerOne = match.playerOne;
-        advMatch.playerTwo = match.playerTwo;
-      }
-      else
-      {
-        advMatch.playerTwo = match.winner;
-      }
-      Brackets.update(bracketID, {
-        $set: {
-          [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
-          [`rounds.${bracketNumber}.${roundNumber + 1}.${advMN}`]: advMatch
-        }
-      })
     }
   },
 
@@ -388,99 +536,81 @@ Meteor.methods({
     return;
   },
 
-  "events.undo_match"(bracketID, bracketNumber, roundNumber, matchNumber) {
-    var bracket = Brackets.findOne(bracketID);
-    if (!bracket){
-      throw new Meteor.Error(404, "Couldn't find this bracket!");
-    }
-    match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
-    var advMN = (bracketNumber > 0 && roundNumber%2==0) ? matchNumber:Math.floor(matchNumber / 2);
-    var [fb, fr, fm] = [bracketNumber, roundNumber+1, advMN];
-    if (fr >= bracket.rounds[bracketNumber].length)
-      var [fb, fr, fm] = bracketNumber == 2 ? [2, 1, 0]:[2, 0, 0];
-    if ((bracketNumber == 2 && roundNumber == 1) || (bracket.rounds.length < 2 && roundNumber >= bracket.rounds[0].length-1))
-    {
-      match.winner = null;
-      Brackets.update(bracketID, {
+  "events.undo_single"(bracketId, bracketIndex, roundIndex, index) {
+    var bracket = Brackets.findOne(bracketId);
+    var match = Matches.findOne(bracket.rounds[bracketIndex][roundIndex][index].id);
+    var cb = (_roundIndex, _index, direction) => {
+      if(_roundIndex >= bracket.rounds[bracketIndex].length) {
+        return;
+      }
+      var internalMatch = Matches.findOne(bracket.rounds[bracketIndex][_roundIndex][_index].id);
+      if(internalMatch.players[direction] == null) {
+        return;
+      }
+      Matches.update(internalMatch._id, {
         $set: {
-          [`rounds.${bracketNumber}.${roundNumber}.${0}`]: match,
-          complete: false
+          winner: null,
+          [`players.${direction}`]: null
         }
       });
-      return;
+      cb(_roundIndex + 1, Math.floor(_index / 2), _index % 2);
     }
-    var advMatch = bracket.rounds[fb][fr][fm];
-
-    //Call the function recursively on the ahead losers and update the matches
-    if (advMatch.winner)
-    {
-      Meteor.call("events.undo_match", bracketID, fb, fr, fm);
-      bracket = Brackets.findOne(bracketID).brackets[0];
-      advMatch = bracket.rounds[fb][fr][fm];
-      match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
-    }
-
-    //This is the function to undo loser bracket placement
-    if (bracket.rounds.length > 1 && bracketNumber == 0)
-    {
-      loser = match.winner == match.playerOne ? (match.playerTwo):(match.playerOne);
-      loserround = bracket.rounds[1][match.losr][match.losm];
-      if (loserround.winner != null)
-      {
-        Meteor.call("events.undo_match", bracketID, 1, match.losr, match.losm);
-        bracket = Brackets.findOne(bracketID).brackets[0];
-        advMatch = bracket.rounds[fb][fr][fm];
-        match = bracket.rounds[bracketNumber][roundNumber][matchNumber];
-        loserround = bracket.rounds[1][match.losr][match.losm];
-      }
-      if (loserround.playerOne == loser) loserround.playerOne = null;
-      else loserround.playerTwo = null;
-      Brackets.update(bracketID, {
-        $set: {
-          [`rounds.${1}.${match.losr}.${match.losm}`]: loserround,
-          complete: false
-        }
-      });
-    }
-    match.winner = null;
-
-    //Depending on the bracket is how the winner will be sent.
-    if (roundNumber >= bracket.rounds[bracketNumber].length-1)
-    {
-      if (bracketNumber == 0)
-        advMatch.playerOne = null;
-      else
-        advMatch.playerTwo = null;
-    }
-    else if (bracketNumber == 0 || roundNumber%2 == 1)
-    {
-      if(matchNumber % 2 == 0){
-        advMatch.playerOne = null;
-      }
-      else {
-        advMatch.playerTwo = null;
-      }
-    }
-    else if (bracketNumber == 2)
-    {
-      advMatch.playerOne = null;
-      advMatch.playerTwo = null;
-    }
-    else
-    {
-      advMatch.playerTwo = null;
-    }
-
-    //Update the round
-    Brackets.update(bracketID, {
+    cb(roundIndex + 1, Math.floor(index / 2), index % 2);
+    Matches.update(match._id, {
       $set: {
-        [`rounds.${fb}.${fr}.${fm}`]: advMatch,
-        [`rounds.${bracketNumber}.${roundNumber}.${matchNumber}`]: match,
+        winner: null
+      }
+    });
+    Brackets.update(bracketId, {
+      $set: {
         complete: false
       }
     })
-    //Return for recursion
-    return;
+  },
+
+  "events.undo_double"(bracketId, bracketIndex, roundIndex, index) {
+    var bracket = Brackets.findOne(bracketId);
+    var metadata = bracket.rounds[bracketIndex][roundIndex][index];
+    var match = Matches.findOne(metadata.id);
+    var cb = (_bracketIndex, _roundIndex, _index, direction) => {
+      if(_roundIndex >= bracket.rounds[_bracketIndex].length) {
+        cb(2, 0, 0, _bracketIndex);
+        return;
+      }
+      var internalMeta = bracket.rounds[_bracketIndex][_roundIndex][_index];
+      var internalMatch = Matches.findOne(internalMeta.id);
+      if(internalMatch.players[direction] == null) {
+        return;
+      }
+      Matches.update(internalMatch._id, {
+        $set: {
+          winner: null,
+          [`players.${direction}`]: null
+        }
+      });
+      var _nextIndex = (_bracketIndex == 0 || _roundIndex % 2) ? Math.floor(_index / 2) : _index;
+      var _nextPos = (_bracketIndex == 0 || _roundIndex % 2) ? _index % 2 : 1;
+      cb(_bracketIndex, _roundIndex + 1, _nextIndex, _nextPos);
+      if(_bracketIndex == 0) {
+        cb(1, internalMeta.losr, internalMeta.losm, 0);
+      }
+    }
+    var nextIndex = (bracketIndex == 0 || roundIndex % 2) ? Math.floor(index / 2) : index;
+    var nextPos = (bracketIndex == 0 || roundIndex % 2) ? index % 2 : 1;
+    cb(bracketIndex, roundIndex + 1, nextIndex, nextPos);
+    if(bracketIndex == 0) {
+      cb(1, metadata.losr, metadata.losm, roundIndex == 0 ? index % 2 : 0);
+    }
+    Matches.update(match._id, {
+      $set: {
+        winner: null
+      }
+    });
+    Brackets.update(bracketId, {
+      $set: {
+        complete: false
+      }
+    })
   },
 
   "events.update_match"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
@@ -910,7 +1040,7 @@ Meteor.methods({
     var brack = roundobj.rounds;
 
     instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
-    
+
     for (var x = 0 ; x < brack.length ;  x ++){
       for (var j = 0 ; j < brack[x].matches.length ; j++){
         match= brack[x].matches[j];
