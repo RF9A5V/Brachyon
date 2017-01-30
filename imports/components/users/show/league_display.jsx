@@ -50,7 +50,7 @@ export default class LeagueDisplay extends Component {
                           <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            this.onPencilClick(event);
+                            this.onPencilClick(league);
                           }} >
                             <span>
                               EDIT

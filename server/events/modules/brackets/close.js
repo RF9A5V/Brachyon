@@ -95,6 +95,9 @@ Meteor.methods({
         losersBracket = losersBracket.concat(finalSet).reverse();
         losersBracket.forEach(round => {
           round.forEach(match => {
+            if(!match) {
+              return;
+            }
             match = Matches.findOne(match.id);
             if(match.winner == null) {
               return;
@@ -118,6 +121,9 @@ Meteor.methods({
         for (i=0; i<round[0].length; i++){
           for(j=0; j<round[0][i].length ; j++){
             var match = round[0][i][j];
+            if(!match) {
+              continue;
+            }
             match = Matches.findOne(match.id);
             if(match.winner != null){
               if(players[match.players[0]]){
@@ -133,6 +139,9 @@ Meteor.methods({
         for (i=0; i<round[1].length; i++){
           for(j=0; j<round[1][i].length ; j++){
             var match = round[1][i][j];
+            if(!match){
+              continue;
+            }
             match = Matches.findOne(match.id);
             if(match.winner != null){
               if(players[match.players[0]]){
@@ -213,19 +222,19 @@ Meteor.methods({
         var globalIndex = league.leaderboard[0].findIndex((usr) => { return usr.id == obj.id });
         var scoreNeg = 0;
         if(bracket.format.baseFormat == "single_elim") {
-          scoreNeg = Math.ceil(Math.log2(ldrboard[user.username] + 1)) - 1;
+          scoreNeg = parseInt(Math.log2(ldrboard[user.username] + 1)) - 1;
         }
         else if(bracket.format.baseFormat == "double_elim") {
           var scoreNeg = ldrboard[user.username];
           if(scoreNeg > 4) {
-            scoreNeg = Math.ceil(Math.log2(scoreNeg)) + 3
+            scoreNeg = parseInt(Math.log2(scoreNeg)) + 3
           }
         }
         else {
           scoreNeg = ldrboard[user.username];
         }
-        updateObj[`leaderboard.0.${globalIndex}.score`] = totalScore - scoreNeg;
-        updateObj[`leaderboard.${leaderboardIndex}.${localIndex}.score`] = totalScore - scoreNeg;
+        updateObj[`leaderboard.0.${globalIndex}.score`] = totalScore - scoreNeg + 1;
+        updateObj[`leaderboard.${leaderboardIndex}.${localIndex}.score`] = totalScore - scoreNeg + 1;
       });
       Leagues.update(event.league, {
         $inc: updateObj
