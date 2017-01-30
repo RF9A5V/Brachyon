@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-import LeaderboardPanel from "../show/leaderboard.jsx";
+import LeaderboardPanel from "./admin_comps/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
-import Brackets from "/imports/api/brackets/brackets.js"
+import MatchList from "./show/matches.jsx";
 
+import Brackets from "/imports/api/brackets/brackets.js"
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 export default class BracketShowScreen extends Component {
@@ -86,9 +87,9 @@ export default class BracketShowScreen extends Component {
             }
           }
         ]
-      })
+      });
     }
-    else {
+    if(bracket.complete) {
       defaultItems.push({
         text: "Leaderboard",
         icon: "trophy",
@@ -96,11 +97,25 @@ export default class BracketShowScreen extends Component {
           {
             component: LeaderboardPanel,
             args: {
-              participants: this.props.params.bracketIndex
+              id: Brackets.findOne()._id,
+              index: this.props.params.bracketIndex
             }
           }
         ]
       })
+    }
+    var bracketId = Instances.findOne().brackets[this.props.params.bracketIndex || 0].id;
+    if(bracketId) {
+      defaultItems.push({
+        text: "Matches",
+        icon: "cog",
+        subitems: [
+          {
+            component: MatchList,
+            id: bracketId
+          }
+        ]
+      });
     }
     return defaultItems;
   }

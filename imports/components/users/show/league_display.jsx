@@ -50,7 +50,7 @@ export default class LeagueDisplay extends Component {
                           <div className="event-block-admin-button" onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            this.onPencilClick(event);
+                            this.onPencilClick(league);
                           }} >
                             <span>
                               EDIT
@@ -71,12 +71,12 @@ export default class LeagueDisplay extends Component {
                           <img src={this.profileImageOrDefault(league.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(league.owner).username }
                         </div>
                         <span style={{fontSize: 12}}>{
-                          league.leaderboard[0].length
+                          (league.leaderboard[0] || []).length
                         }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
                       </div>
                       <div className="row flex-pad">
                         {
-                          league.details.location.online ? (
+                          (league.details.location || {}).online ? (
                             <div style={{fontSize: 12}}><FontAwesome name="signal" /> Online League</div>
                           ) : (
                             <div style={{fontSize: 12}}>

@@ -58,17 +58,12 @@ Meteor.publish("bracket", (eventID, bracketIndex) => {
   }});
   var profileImageIDs = users.fetch().map((user) => {
     return user.profile.image
-  })
+  });
+
   return [
     Events.find({_id: eventID}),
     Games.find({_id: event.brackets[bracketIndex].game}),
-    Banners.find({_id: game.banner}).cursor,
-    users,
-    ProfileImages.find({
-      _id: {
-        $in: profileImageIDs
-      }
-    }).cursor
+    users
   ]
 })
 

@@ -19,7 +19,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
   componentWillUnmount(){
     if (this.state.bracket)
       this.state.bracket.stop();
-  }  
+  }
 
   getParticipants()
   {
@@ -35,11 +35,33 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
     }
     else {
       participants = this.state.inst.brackets[this.props.index].participants;
-      participants.sort((a, b) => {
-        return a.placement - b.placement;
-      });
+      var obj = {};
+      participants.forEach(p => {
+        var totMatches = Matches.find({ "players.alias": p.alias });
+        var winMatches = Matches.find({ "winner.alias": p.alias });
+        var wins = winMatches.fetch().length;
+        var losses = totMatches.fetch().length - wins;
+        var keyString = wins + "-" + losses;
+        if(obj[keyString] == null) {
+          obj[keyString] = [p];
+        }
+        else {
+          obj[keyString].push(p);
+        }
+      })
+      return obj;
     }
     return participants;
+  }
+
+  profileImageOrDefault(id) {
+    if(id) {
+      var user = Meteor.users.findOne(id);
+      if(user && user.profile.imageUrl) {
+        return user.profile.imageUrl;
+      }
+    }
+    return "/images/profile.png";
   }
 
   render() {
@@ -52,10 +74,70 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
       }
     });
 
-
     if (this.state.ready)
     {
       var participants = this.getParticipants();
+      var format = this.state.inst.brackets[this.props.index].format.baseFormat;
+      if(format == "single_elim" || format == "double_elim") {
+        var obj = this.getParticipants();
+        var content = Object.keys(obj).sort((a, b) => {
+          [win1, los1] = a.split("-").map(parseInt);
+          [win2, los2] = b.split("-").map(parseInt);
+          if(win1 > win2) {
+            return -1;
+          }
+          else if(win2 > win1) {
+            return 1;
+          }
+          else {
+            return (los1 > los2 ? -1 : 1);
+          }
+        }).map((key, i) => {
+          var rankers = obj[key];
+          var placement = i + 1;
+          var suffix = "th";
+          switch(placement % 10) {
+            case 1:
+              suffix = "st";
+              break;
+            case 2:
+              suffix = "nd";
+              break;
+            case 3:
+              suffix = "rd";
+              break;
+            default:
+              break;
+          }
+          return (
+            <div style={{marginBottom: 20}}>
+              <h5>{placement + suffix} Place</h5>
+              <span>Score of: { key }</span>
+              <div className="row" style={{flexWrap: "wrap"}}>
+              {
+                rankers.map(r => {
+                  return (
+                    <div className="row x-center" style={{width: 200, backgroundColor: r.id == Meteor.userId() ? "#FF6000" : "#666", marginRight: 10, marginBottom: 10}}>
+                      <img src={this.profileImageOrDefault(r.id)} style={{width: 50, height: 50, marginRight: 10}} />
+                      <span>
+                        { r.alias }
+                      </span>
+                    </div>
+                  )
+                })
+              }
+              </div>
+            </div>
+          )
+        });
+        console.log(content);
+        return (
+          <div>
+            { content }
+          </div>
+        )
+      }
+
       return (
         <div>
           <ol>
