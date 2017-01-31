@@ -18,14 +18,14 @@ export default class SingleDisplay extends Component {
               if(i == this.props.rounds[0].length-1)
               {
                 return (
-                  <div className="round-spacing" style={{textAlign: "center"}}>
+                  <div className="round-spacing spacing" style={{textAlign: "center"}}>
                     Grand Finals
                   </div>
                 )
               }
               else{
                 return (
-                  <div className="round-spacing" style={{textAlign: "center"}}>
+                  <div className="round-spacing spacing" style={{textAlign: "center"}}>
                     Round { i + 1 }
                   </div>
                 )
