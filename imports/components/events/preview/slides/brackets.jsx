@@ -127,7 +127,7 @@ export default class BracketSlide extends Component {
                 return (
                   <div className="bracket">
                     <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
-                    <div className="bracket-overlay">
+                    <div className={bracket.startedAt==null?("bracket-overlay"):("bracket-overlay started")}> 
                       <div className="col-1"></div>
                       <div className="bracket-details">
                         {
@@ -168,7 +168,9 @@ export default class BracketSlide extends Component {
                       <div className="row center x-center col-1">
                         { bracket.name || "" }
                       </div>
-                      <div className="row" style={{justifyContent: "flex-end"}}>
+                      {(bracket.startedAt == null)?
+                        ( 
+                        <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
                             browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
@@ -179,8 +181,23 @@ export default class BracketSlide extends Component {
                         }}>
                           <span>View</span>
                         </div>
-                        { this.bracketButton(bracket, i) }
-                      </div>
+                        { 
+                          this.bracketButton(bracket, i)
+                        }
+                      </div>)
+                        :( 
+                        <div className="bracket-view-button col-1" style={{width:"230px",maxHeight:"63px",margin:"auto",verticalAlign:"center"}}onClick={() => {
+                          if(this.props.event.owner == Meteor.userId()) {
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
+                          }
+                          else {
+                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}`);
+                          }
+                        }}>
+                          <span>View</span>
+                        </div>
+                      )}
+                     
 
                     </div>
                     {
