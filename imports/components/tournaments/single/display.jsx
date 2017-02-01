@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Matches from "/imports/api/event/matches.js";
+
 import MatchBlock from './match.jsx';
 
 export default class SingleDisplay extends Component {
@@ -16,14 +18,14 @@ export default class SingleDisplay extends Component {
               if(i == this.props.rounds[0].length-1)
               {
                 return (
-                  <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                  <div className="round-spacing" style={{textAlign: "center"}}>
                     Grand Finals
                   </div>
                 )
               }
               else{
                 return (
-                  <div className="round-spacing" style={{width: 150, textAlign: "center"}}>
+                  <div className="round-spacing" style={{textAlign: "center"}}>
                     Round { i + 1 }
                   </div>
                 )
@@ -39,27 +41,46 @@ export default class SingleDisplay extends Component {
                   {
                     round.map((match, j) => {
                       var isFutureLoser = false;
-                      if(i < this.props.rounds[0].length - 1){
-                        var rNum = i + 1;
-                        var nextMatch = this.props.rounds[0][rNum][Math.floor(j / 2)];
-                        var mNum = Math.floor(j / 2);
-                        while(rNum < this.props.rounds[0].length && nextMatch.winner != null) {
-                          if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
-                            isFutureLoser = true;
-                            break;
-                          }
-                          mNum = Math.floor(mNum / 2);
-                          rNum += 1;
-                          if(rNum == this.props.rounds[0].length) {
-                            break;
-                          }
-                          nextMatch = this.props.rounds[0][rNum][mNum];
+                      if(match) {
+                        var obj = Matches.findOne(match.id);
+                        if(obj.players[0] && obj.players[1]) {
+                          var p1Alias = obj.players[0].alias;
+                          var p2Alias = obj.players[1].alias;
+                          var matchLosses = Matches.find({
+                            $or: [
+                              {
+                                "players.alias": p1Alias,
+                                "winner": {
+                                  $ne: null
+                                },
+                                "winner.alias": {
+                                  $ne: p1Alias
+                                }
+                              },
+                              {
+                                "players.alias": p2Alias,
+                                "winner": {
+                                  $ne: null
+                                },
+                                "winner.alias": {
+                                  $ne: p2Alias
+                                }
+                              }
+                            ]
+                          }).fetch();
+                          isFutureLoser = matchLosses.length == 2;
                         }
                       }
-                      return (<div className="bracket-match-spacing">
-                        <MatchBlock match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} id={this.props.id} isFutureLoser={isFutureLoser} update={this.props.update} />
-
-                      </div>);
+                      return (
+                        <MatchBlock
+                          isLast={i == this.props.rounds[0].length - 1}
+                          round={i}
+                          id={match && match.id ? match.id : null}
+                          isFutureLoser={isFutureLoser}
+                          update={this.props.update}
+                          index={j}
+                        />
+                      );
                     })
                   }
                 </div>
