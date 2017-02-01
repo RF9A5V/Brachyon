@@ -1,9 +1,10 @@
 import Instances from "/imports/api/event/instance.js";
+import Matches from "/imports/api/event/matches.js";
 
 Meteor.methods({
   "events.brackets.removeParticipant"(id, index, alias) {
     var instance = Instances.findOne(id);
-    if(!event) {
+    if(!instance) {
       throw new Meteor.Error(404, "Event not found.");
     }
     Instances.update(instance._id, {
@@ -35,13 +36,12 @@ Meteor.methods({
       }
     })
   },
-  "events.brackets.updateMatchScore"(id, bracketNum, round, match, useP1, value) {
-    var bracket = Brackets.findOne(id).rounds;
-    var scoreField = useP1 ? "scoreOne" : "scoreTwo";
-    Brackets.update(id, {
+  "events.brackets.updateMatchScore"(id, useP1, value) {
+    var scoreField = useP1 ? 0 : 1;
+    Matches.update(id, {
       $inc: {
-        [`rounds.${bracketNum}.${round}.${match}.${scoreField}`]: value
+        [`players.${scoreField}.score`]: value
       }
-    })
+    });
   }
 })

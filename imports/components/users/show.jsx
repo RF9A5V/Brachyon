@@ -144,15 +144,17 @@ export default class ShowUserScreen extends TrackerReact(Component) {
         <div className="row center">
           <button onClick={() => { browserHistory.push("/create") }} style={{marginTop: 100}}>Create an Event</button>
         </div>
-        <div className="row" style={{padding:"0 30px"}}>
-          {
-            ["events","stats"].map((tab)=>{
-              var style = {padding:5, fontSize:24, borderBottom:`solid 2px ${this.state.tab==tab?"#ff6000":"white"}`, marginRight:10}
-              return (
-                <div className="user-tab" style={{borderColor:`${this.state.tab==tab?"#ff6000":"white"}`}} onClick={()=>{this.setState({tab})}}>{tab.slice(0,1).toUpperCase() + tab.slice(1)}</div>
-              )})
-          }
-        </div>
+        {
+          // <div className="row" style={{padding:"0 30px"}}>
+          //   {
+          //     ["events","stats"].map((tab)=>{
+          //       var style = {padding:5, fontSize:24, borderBottom:`solid 2px ${this.state.tab==tab?"#ff6000":"white"}`, marginRight:10}
+          //       return (
+          //         <div className="user-tab" style={{borderColor:`${this.state.tab==tab?"#ff6000":"white"}`}} onClick={()=>{this.setState({tab})}}>{tab.slice(0,1).toUpperCase() + tab.slice(1)}</div>
+          //       )})
+          //   }
+          // </div>
+        }
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="col">
           {this.tabContent()}

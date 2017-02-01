@@ -5,6 +5,8 @@ import { browserHistory } from "react-router";
 import BracketFormat from "./bracket_format.jsx";
 import GroupFormat from "./group_format.jsx";
 
+import Matches from "/imports/api/event/matches.js";
+
 export default class MatchShowScreen extends Component {
 
   constructor(props) {
@@ -73,15 +75,16 @@ export default class MatchShowScreen extends Component {
     // Warning: This'll probably have to change when we deal with complex bracket systems.
     var format = Instances.findOne().brackets[this.props.params.bracketIndex].format.baseFormat;
     if(format == "single_elim" || format == "double_elim") {
-      var match = Brackets.findOne().rounds[this.props.params.bracket - 1][this.props.params.round - 1][this.props.params.match - 1];
+      var matchId = Brackets.findOne().rounds[this.props.params.bracket][this.props.params.round][this.props.params.match].id;
+      var match = Matches.findOne(matchId);
       var players = [
         {
-          name: match.playerOne,
-          score: match.scoreOne
+          name: match.players[0].alias,
+          score: match.players[0].score
         },
         {
-          name: match.playerTwo,
-          score: match.scoreTwo
+          name: match.players[1].alias,
+          score: match.players[1].score
         }
       ];
       comps = players.map((p, i) => {
