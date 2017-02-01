@@ -87,7 +87,9 @@ export default class DetailsPanel extends Component {
           </div>
           <div className="col col-1">
             <h5>Season</h5>
-            <input type="text" defaultValue={this.props.attrs.details.season || 1} />
+            <input type="text" defaultValue={this.props.attrs.details.season || 1} onChange={(e) => {
+              this.props.attrs.details.season = e.target.value;
+            }} />
           </div>
         </div>
       )
