@@ -265,7 +265,16 @@ export default class MatchBlock extends Component {
             </div>
           ) : (
             [
-              <div className="match" onClick={() => { this.setState({ open: true }) }}>
+              <div className="match" onClick={() => {
+                var event = Events.findOne();
+                if(event) {
+                  this.setState({ open: Meteor.userId() == Events.findOne().owner });
+                }
+                else {
+                  var instance = Instances.findOne();
+                  this.setState({ open: instance.owner == Meteor.userId() });
+                }
+              }}>
                 <div className="participant" style={{height, marginBottom: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1}}>
                   <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
                     { p1.alias || "TBD" }
