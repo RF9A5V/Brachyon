@@ -386,15 +386,14 @@ Meteor.methods({
       }
     }
     if(!Meteor.isDevelopment) {
-      Meteor.http.post(`https://apilayer.net/api/check?access_key=${Meteor.settings.private.mailboxlayer.key}&email=${email}`, (err, val) => {
-        var response = val.data;
-        if(response.format_valid && response.mx_found && response.smtp_check && !response.disposable) {
-          return createUser();
-        }
-        else {
-          throw new Meteor.Error(403, "Need valid email.");
-        }
-      })
+      var response = Meteor.http.post(`https://apilayer.net/api/check?access_key=${Meteor.settings.private.mailboxlayer.key}&email=${email}`);
+      response = response.data;
+      if(response.format_valid && response.mx_found && response.smtp_check && !response.disposable) {
+        return createUser();
+      }
+      else {
+        throw new Meteor.Error(403, "Need valid email.");
+      }
     }
     else {
       return createUser();
