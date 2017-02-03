@@ -26,6 +26,9 @@ Meteor.methods({
     else {
       obj.datetime = eventStart.toDate();
     }
+    delete obj.date;
+    delete obj.time;
+    delete obj.image;
     return obj;
   },
 
