@@ -68,8 +68,8 @@ export default class BlockContainer extends Component {
         <div className="event-block-img" style={{backgroundImage: `url(${img})`}}>
         </div>
         <div className="event-block-content">
-          <div className="col">
-            <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+          <div className="col col-1">
+            <div className="row flex-pad x-center" style={{marginBottom: 15}}>
               <div className="row x-center" style={{fontSize: 12}}>
                 <img src={this.profileImageOrDefault(obj.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />
                 { username }
