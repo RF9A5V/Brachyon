@@ -12,11 +12,38 @@ export default class BlockContainer extends Component {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
+  navRowContent(obj) {
+    if(obj.type == "instance") {
+      return null;
+    }
+    var icons = [];
+    if(obj.type == "event") {
+      icons.push(<FontAwesome name="file-text" onClick={() => { browserHistory.push("/event/" + obj.slug) }} />);
+      console.log(obj);
+      var instance = Instances.findOne(obj.instances[obj.instances.length - 1]);
+      if(instance && instance.brackets) {
+        icons.push(<FontAwesome name="sitemap" onClick={() => { browserHistory.push("/event/" + obj.slug + "/brackets") }} />)
+      }
+    }
+    else {
+      return null;
+    }
+    return (
+      <div className="event-block-nav">
+        { icons }
+      </div>
+    );
+  }
+
   singleBracketFormat(obj) {
     var username = Meteor.users.findOne(obj.owner) ? Meteor.users.findOne(obj.owner).username : "";
     var participantCount = (obj.type == "instance" || obj.type == "event") ? (
       (() => {
-        var instance = Instances.findOne((obj.instances || []).pop()) || obj;
+        if(obj.instances.length == 0) {
+          return 0;
+        }
+        var instId = obj.instances[obj.instances.length - 1];
+        var instance = Instances.findOne(instId) || obj;
         var count = 0;
         if(instance.brackets) {
           instance.brackets.forEach(bracket => {
@@ -66,6 +93,7 @@ export default class BlockContainer extends Component {
           }
         </div>
         <div className="event-block-img" style={{backgroundImage: `url(${img})`}}>
+          { this.navRowContent(obj) }
         </div>
         <div className="event-block-content">
           <div className="col col-1">
