@@ -21,6 +21,7 @@ export default class BracketShowScreen extends Component {
             this.setState({
               bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[this.props.params.bracketIndex].id, {
                 onReady: () => {
+                  this.populateMetaTags();
                   this.setState({
                     ready: true
                   })
@@ -40,7 +41,10 @@ export default class BracketShowScreen extends Component {
         ready: false
       }
     }
+  }
 
+  componentWillReceiveProps() {
+    this.populateMetaTags();
   }
 
   componentWillUnmount() {
@@ -50,6 +54,47 @@ export default class BracketShowScreen extends Component {
     if(this.state.bracket) {
       this.state.bracket.stop();
     }
+    // FB Tags
+    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
+    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
+    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
+  }
+
+  imgOrDefault() {
+    var event = Events.findOne();
+    if(event && event.details.bannerUrl) {
+      return event.details.bannerUrl;
+    }
+    return "/images/brachyon_logo.png";
+  }
+
+  populateMetaTags() {
+    var event = Events.findOne();
+    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
+    var format = bracket.format.baseFormat.split("_").map(word => { return word[0].toUpperCase() + word.slice(1) }).join(" ");
+    if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
+      format += "ination";
+    }
+    // FB Tags
+    document.querySelector("[property='og:title']").setAttribute("content", event.details.name + (bracket.name ? ` - ${bracket.name}` : ""));
+    document.querySelector("[property='og:description']").setAttribute("content", format);
+    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", event.details.name + (bracket.name ? ` - ${bracket.name}` : ""));
+    document.querySelector("[name='twitter:description']").setAttribute("content", format);
+    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+
+    this.setState({
+      hasLoaded: true
+    })
   }
 
   items() {
@@ -108,7 +153,7 @@ export default class BracketShowScreen extends Component {
     if(bracketId) {
       defaultItems.push({
         text: "Matches",
-        icon: "cog",
+        icon: "cubes",
         subitems: [
           {
             component: MatchList,

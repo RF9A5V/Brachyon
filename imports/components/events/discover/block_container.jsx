@@ -109,11 +109,21 @@ export default class BlockContainer extends Component {
               }
               return (
                 <div className="event-block" onClick={this.selectEvent(event).bind(this)} key={i}>
-                  <div style={{border: "solid 2px #666", position: "relative"}}>
+                  <div style={{border: "solid 2px #666", position: "relative", maxWidth: "100%"}}>
                     <h2 className="event-block-title">{ event.details.name }</h2>
                     {
                       isOwner ? (
                         <div className="event-block-admin-row">
+
+                          <div className="event-block-admin-button" onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.onEditClick(event);
+                          }} >
+                            <span>
+                            EDIT
+                            </span>
+                          </div>
                           {
                             event.isComplete && !event.league ? (
                               <div className="event-block-admin-button" onClick={(e) => {
@@ -121,21 +131,14 @@ export default class BlockContainer extends Component {
                                 e.stopPropagation();
                                 this.onRefreshClick(event);
                               }}>
-                                RERUN
+                                <span>
+                                  RERUN
+                                </span>
                               </div>
                             ) : (
                               ""
                             )
                           }
-                          <div className="event-block-admin-button" onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            this.onEditClick(event);
-                          }} >
-                            <span>
-                              EDIT
-                            </span>
-                          </div>
                         </div>
                       ) : (
                         ""
@@ -145,8 +148,8 @@ export default class BlockContainer extends Component {
                   <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(event)})`}}>
                   </div>
                   <div className="event-block-content">
-                    <div className="col">
-                      <div className="row flex-pad x-center" style={{marginBottom: 10}}>
+                    <div className="col col-1">
+                      <div className="row flex-pad x-center" style={{marginBottom: 15}}>
                         { this.ownerDetails(event) }
                         <span style={{fontSize: 12}}>{
                           count
