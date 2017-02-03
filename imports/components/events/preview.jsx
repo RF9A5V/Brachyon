@@ -48,13 +48,13 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     // FB Tags
     document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
     document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
-    document.querySelector("[property='og:image']").setAttribute("content", "/images/logo.png");
+    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
     document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
 
     // Twitter Tags
     document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
     document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
-    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/logo.png");
+    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
 
     this.state.event.stop();
     this.state.users.stop();

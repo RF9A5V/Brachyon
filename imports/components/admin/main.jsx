@@ -8,6 +8,7 @@ import AddGameAction from "./add_game.jsx";
 import RemoveEventAction from "./remove_events.jsx";
 import TagAction from "./tags.jsx";
 import ApproveGameAction from "./approve_game.jsx";
+import Promo from "./promo.jsx";
 
 import LoadingScreen from "../public/loading.jsx";
 
@@ -89,6 +90,15 @@ export default class AdminFunctionMain extends Component {
         subitems: [
           {
             component: TagAction
+          }
+        ]
+      },
+      {
+        text: "Promo",
+        icon: "usd",
+        subitems: [
+          {
+            component: Promo
           }
         ]
       }
