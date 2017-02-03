@@ -93,7 +93,9 @@ export default class BlockContainer extends Component {
           }
         </div>
         <div className="event-block-img" style={{backgroundImage: `url(${img})`}}>
-          { this.navRowContent(obj) }
+          {
+            //this.navRowContent(obj)
+          }
         </div>
         <div className="event-block-content">
           <div className="col col-1">
