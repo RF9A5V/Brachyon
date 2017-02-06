@@ -139,7 +139,7 @@ export default class Header extends TrackerReact(Component) {
           </div>
           <div className="col-1 row center">
             <div>
-              <img src="/images/logo.png" onClick={() => {browserHistory.push("/")}}></img>
+              <img src="/images/brachyon_logo_trans.png" onClick={() => {browserHistory.push("/")}}></img>
             </div>
           </div>
           <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">

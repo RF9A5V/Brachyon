@@ -53,25 +53,26 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
 
   render() {
     return (
-      <div className="col">
-        <div className="side-tab-panel">
-          <div className="row x-center">
-            <h3 className="col-1">Profile Image</h3>
+      <div className="col side-tab-panel" style={{margin:"auto", paddingTop:10}}>
+        <h4>Profile Image</h4>
+        <div className="about-what" style={{marginBottom:10}}>
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={() => { this.onRequestImageSave("image") }}>Save</button>
           </div>
           <ImageForm aspectRatio={1} collection={ProfileImages} ref="profileImage" url={Meteor.user().profile.imageUrl} meta={{userId: Meteor.userId()}}/>
 
         </div>
-        <div className="side-tab-panel">
-          <div className="row x-center">
-            <h3 className="col-1">Profile Banner</h3>
+        <h4>Profile Banner</h4>
+        <div className="about-what" style={{marginBottom:10}}>
+          <div style={{display:"flex", justifyContent:"flex-end"}}>  
             <button onClick={() => { this.onRequestImageSave("banner") }}>Save</button>
           </div>
           <ImageForm aspectRatio={16/4.5} collection={ProfileBanners} ref="profileBanner" url={Meteor.user().profile.bannerUrl} meta={{userId: Meteor.userId()}} />
         </div>
-        <div className="side-tab-panel">
-          <div className="row x-center">
-            <h3 className="col-1">Alias</h3>
+
+        <h4 className="col-1">Alias</h4>
+        <div className="about-what" style={{marginBottom:10}}>
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={this.saveAlias.bind(this)}>Save</button>
           </div>
           <div>

@@ -127,7 +127,7 @@ export default class BracketSlide extends Component {
                 return (
                   <div className="bracket">
                     <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
-                    <div className={bracket.startedAt==null?("bracket-overlay"):("bracket-overlay started")}> 
+                    <div className="bracket-overlay started"> 
                       <div className="col-1"></div>
                       <div className="bracket-details">
                         {

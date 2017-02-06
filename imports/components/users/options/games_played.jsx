@@ -67,17 +67,19 @@ export default class GameOptionsPanel extends Component {
 
   render() {
     return (
-      <div>
-        {
-          (Meteor.user().profile.games || []).map(function(id){
-            return (
-              <GameOption {...Games.findOne(id)} />
-            );
-          })
-        }
-        <div className="side-tab-panel">
-          <div className="row x-center">
-            <h3 className="col-1">Add Games</h3>
+      <div className="col side-tab-panel" style={{margin:"auto", paddingTop:20}}>
+          {
+            (Meteor.user().profile.games || []).map(function(id){
+              return (
+                <div className="about-what">
+                  <GameOption {...Games.findOne(id)} />
+                </div>
+              );
+            })
+          }
+        <h4 className="col-1">Add Games</h4>
+        <div className="about-what">
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={this.saveGame.bind(this)}>Save</button>
           </div>
           {
