@@ -81,16 +81,13 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
       if(format == "single_elim" || format == "double_elim") {
         var obj = this.getParticipants();
         var content = Object.keys(obj).sort((a, b) => {
-          [win1, los1] = a.split("-").map(parseInt);
-          [win2, los2] = b.split("-").map(parseInt);
-          if(win1 > win2) {
-            return -1;
-          }
-          else if(win2 > win1) {
-            return 1;
+          [win1, los1] = a.split("-").map(i => parseInt(i));
+          [win2, los2] = b.split("-").map(i => parseInt(i));
+          if(los1 != los2) {
+            return (los1 < los2 ? -1 : 1);
           }
           else {
-            return (los1 > los2 ? -1 : 1);
+            return (win1 < win2 ? 1 : -1);
           }
         }).map((key, i) => {
           var rankers = obj[key];
@@ -130,7 +127,6 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
             </div>
           )
         });
-        console.log(content);
         return (
           <div>
             { content }
