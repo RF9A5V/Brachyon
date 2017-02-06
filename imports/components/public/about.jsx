@@ -127,7 +127,7 @@ export default class AboutScreen extends TrackerReact(Component) {
           <h4>Brachyon Lets You...</h4>
           <div className="col" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div className="row-to-col center x-center">
-              <Link to="/events/discover" className="col-to-row x-center col-1">
+              <Link to="/discover" className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="search" size="5x" className="about-icons" />
                 </div>
