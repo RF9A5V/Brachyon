@@ -127,7 +127,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
       if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
         defaultItems.push({
           text: "Matches",
-          icon: "cog",
+          icon: "cubes",
           subitems: [
             {
               component: MatchList,

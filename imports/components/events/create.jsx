@@ -142,9 +142,6 @@ export default class EventCreateScreen extends Component {
       };
     }
     this.state.attrs.details.datetime = moment(this.state.attrs.details.date).format("YYYYMMDD") + "T" + moment(this.state.attrs.details.time).format("HHmm");
-    delete this.state.attrs.details.date;
-    delete this.state.attrs.details.time;
-    delete this.state.attrs.details.image;
     this.state.attrs.creator = this.state.creator;
     if(this.state.attrs.brackets) {
       this.state.attrs.brackets = Object.keys(this.state.attrs.brackets).map(key => {
