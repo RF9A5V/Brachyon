@@ -35,7 +35,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     
     defaultItems.push({
       text: "User Details",
-      icon: "cog",
+      icon: "file-text",
       subitems: [
         {
           component: UserDetailsPanel
@@ -45,7 +45,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     })
     defaultItems.push({
       text: "Games Played",
-      icon: "cog",
+      icon: "gamepad",
       subitems: [
         {
           component: GameOptionsPanel
@@ -55,7 +55,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     })
     defaultItems.push({
       text: "Connected Accounts",
-      icon: "cog",
+      icon: "users",
       subitems: [
         {
           component: OAuthOptionsPanel

@@ -10,15 +10,15 @@ import GoogleConnect from "../../oauth/connect/google.jsx";
 export default class OAuthOptionsPanel extends Component {
   render() {
     return (
-      <div>
-        <div className="side-tab-panel">
-          <h3>Facebook</h3>
+      <div className="side-tab-panel" style={{margin:"auto", paddingTop:10}}>
+        <h4>Facebook</h4>
+        <div className="about-what center">       
           <div>
             <FacebookConnect />
           </div>
         </div>
-        <div className="side-tab-panel">
-          <h3>Stripe</h3>
+        <h4>Stripe</h4>
+        <div className="about-what center">          
           {
             Meteor.user().profile.isStripeConnected ? (
               "Already connected!"
@@ -28,14 +28,14 @@ export default class OAuthOptionsPanel extends Component {
           }
 
         </div>
-        <div className="side-tab-panel">
-          <h3>Twitch</h3>
+        <h4>Twitch</h4>
+        <div className="about-what center">   
           <div>
             <TwitchConnect />
           </div>
         </div>
-        <div className="side-tab-panel">
-          <h3>Google</h3>
+        <h4>Google</h4>
+        <div className="about-what center">   
           <div>
             <button >
               <FontAwesome style={{marginRight: 10}} name="google-plus" />
@@ -43,8 +43,8 @@ export default class OAuthOptionsPanel extends Component {
             </button>
           </div>
         </div>
-        <div className="side-tab-panel">
-          <h3>Twitter</h3>
+        <h4>Twitter</h4>
+        <div className="about-what center">
           <div>
             <TwitterConnect />
           </div>
