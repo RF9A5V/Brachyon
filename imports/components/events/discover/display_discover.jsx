@@ -21,6 +21,9 @@ export default class DisplayDiscover extends Component {
   }
 
   reset() {
+    if(this.props.events.length < 2) {
+      return;
+    }
     this.state.timer = setTimeout(() => {
       this.setState({loadIn: false});
       setTimeout(() => {
@@ -58,30 +61,37 @@ export default class DisplayDiscover extends Component {
             }
 
           </VelocityComponent>
-          <div className="discover-selector row">
-            {
-              this.props.events.map((val, i) => {
-                return (
-                  <div
-                    className={`discover-selector-square ${i === this.state.panel ? "active" : ""}`}
-                    ref={`panel_${i}`}
-                    onClick={
-                      (e) => {
-                        this.onPromotedAreaFocus();
-                        this.setState({loadIn: false});
-                        setTimeout(() => {
-                          this.setState({
-                            loadIn: true,
-                            panel: i
-                          })
-                        }, 500)
-                      }
-                    }>
-                  </div>
-                )
-              })
-            }
-          </div>
+          {
+            this.props.events.length > 1 ? (
+              <div className="discover-selector row">
+                {
+                  this.props.events.map((val, i) => {
+                    return (
+                      <div
+                        className={`discover-selector-square ${i === this.state.panel ? "active" : ""}`}
+                        ref={`panel_${i}`}
+                        onClick={
+                          (e) => {
+                            this.onPromotedAreaFocus();
+                            this.setState({loadIn: false});
+                            setTimeout(() => {
+                              this.setState({
+                                loadIn: true,
+                                panel: i
+                              })
+                            }, 500)
+                          }
+                        }>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            ) : (
+              ""
+            )
+          }
+
         </div>
       </div>
     );

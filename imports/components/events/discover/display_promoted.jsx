@@ -25,11 +25,11 @@ export default class DisplayPromotedEvent extends Component {
     }
     else {
       var user = Meteor.users.findOne(event.owner);
-      imgUrl = user.imageUrl;
+      imgUrl = user.profile.imageUrl;
       name = user.username;
     }
     if(!imgUrl) {
-      imgUrl = "/images/profile.jpg";
+      imgUrl = "/images/profile.png";
     }
     return (
       <div className="row x-center" style={{fontSize: 12}}>
@@ -81,7 +81,7 @@ export default class DisplayPromotedEvent extends Component {
             <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(event)})`}}>
             </div>
             <div className="event-block-content" style={{position: "relative"}}>
-              <div className="col">
+              <div className="col col-1">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                   <div className="row x-center" style={{fontSize: 12}}>
                     { this.ownerDetails(event) }
