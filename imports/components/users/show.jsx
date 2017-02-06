@@ -25,7 +25,9 @@ export default class ShowUserScreen extends TrackerReact(Component) {
     this.setState({
       user: Meteor.subscribe("user", Meteor.userId(), {
         onReady: () => {
+           console.log('helo');
           this.setState({
+
             ready: true
           })
         }
@@ -103,7 +105,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
 
   render() {
     var self = this;
-
+    console.log(this.state.ready);
     if(!this.state.ready){
       return (
         <div className="row center x-center" style={{width: "100%", height: "100%"}}>
