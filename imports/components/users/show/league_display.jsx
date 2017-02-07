@@ -65,7 +65,7 @@ export default class LeagueDisplay extends Component {
                   <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(league)})`}}>
                   </div>
                   <div className="event-block-content">
-                    <div className="col">
+                    <div className="col col-1">
                       <div className="row flex-pad x-center" style={{marginBottom: 10}}>
                         <div className="row x-center" style={{fontSize: 12}}>
                           <img src={this.profileImageOrDefault(league.owner)} style={{width: 12.5, height: "auto", marginRight: 5}} />{ Meteor.users.findOne(league.owner).username }

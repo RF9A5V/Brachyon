@@ -17,15 +17,63 @@ export default class LeagueShowPage extends Component {
     this.state = {
       league: Meteor.subscribe("league", props.params.slug, {
         onReady: () => {
-          this.setState({ ready: true })
+          this.setState({ ready: true });
+          this.populateMetaTags();
         }
       }),
       ready: false
     }
   }
 
+  imgOrDefault() {
+    var league = Leagues.findOne();
+    if(league.details.bannerUrl) {
+      return league.details.bannerUrl;
+    }
+    return "/images/brachyon_logo.png";
+  }
+
+  populateMetaTags() {
+    var league = Leagues.findOne();
+    // FB Tags
+    document.querySelector("[property='og:title']").setAttribute("content", league.details.name);
+    document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(league.details.description));
+    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", league.details.name);
+    document.querySelector("[name='twitter:description']").setAttribute("content", this.fbDescriptionParser(league.details.description));
+    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+
+    this.setState({
+      hasLoaded: true
+    })
+  }
+
+  fbDescriptionParser(description) {
+    var startIndex = description.indexOf("<p>");
+    var endIndex = description.indexOf("</p>", startIndex);
+    var tempDesc = description.substring(startIndex + 3, endIndex);
+    if(tempDesc.length > 200) {
+      tempDesc = tempDesc.substring(0, 196) + "...";
+    }
+    return tempDesc;
+  }
+
   componentWillUnmount() {
     this.state.league.stop();
+
+    // FB Tags
+    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
+    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
+    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
+
+    // Twitter Tags
+    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
+    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
+    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
   }
 
   slides() {
