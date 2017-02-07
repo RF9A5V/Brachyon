@@ -3,6 +3,8 @@ import FontAwesome from "react-fontawesome";
 import Modal from "react-modal"
 import { browserHistory } from "react-router";
 
+import Matches from "/imports/api/event/matches.js";
+
 export default class LeagueModal extends Component {
 
   constructor(props) {
@@ -28,13 +30,9 @@ export default class LeagueModal extends Component {
   }
 
   boardFormatting(ldrboard) {
-    var totalPoints = Object.keys(ldrboard).length;
-    var localBoard = {};
+    var participantCount = Instances.findOne().brackets[this.state.bracketIndex].participants.length;
     var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
-    Leagues.findOne().leaderboard[eventIndex + 1].forEach((obj, i) => {
-      var user = Meteor.users.findOne(obj.id);
-      localBoard[user.username] = obj;
-    });
+    var leaderboard = Leagues.findOne().leaderboard[eventIndex + 1];
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
@@ -52,109 +50,78 @@ export default class LeagueModal extends Component {
           </div>
         </div>
         {
-          Object.keys(ldrboard).map((user, i) => {
-            return (
-              <div className="row x-center" style={{marginBottom: 10}}>
-                <div className="col-1">
-                  { ldrboard[user] }
-                </div>
-                <div className="col-1">
-                  { user }
-                </div>
-                <div className="col-1">
-                  { totalPoints - i  } +
-                </div>
-                <div className="col-1">
-                  <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
-                    if(isNaN(e.target.value)) {
-                      e.target.value = e.target.value.slice(0, e.target.value.length - 1)
-                    } else {
-                      this.forceUpdate();
-                    } }} onKeyPress={(e) => {
-                      if(e.key == "Enter") {
-                        e.target.blur();
-                      }
-                    }} onBlur={(e) => {
-                      Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex + 1, localBoard[user].id, parseInt(e.target.value), (err) => {
-                        if(err) {
-                          toastr.error("Couldn\'t update bonus points!");
+          Object.keys(ldrboard).sort((a, b) => {
+            var [win1, los1] = a.split("-").map(i => parseInt(i));
+            var [win2, los2] = b.split("-").map(i => parseInt(i));
+            if(los1 != los2) {
+              return (los1 < los2 ? -1 : 1);
+            }
+            else {
+              return (win1 < win2 ? 1 : -1);
+            }
+          }).map((users, i) => {
+            users = ldrboard[users];
+            return users.map(user => {
+              return (
+                <div className="row x-center" style={{marginBottom: 10}}>
+                  <div className="col-1">
+                    { i + 1 }
+                  </div>
+                  <div className="col-1">
+                    { user.alias }
+                  </div>
+                  <div className="col-1">
+                    { participantCount - i  } +
+                  </div>
+                  <div className="col-1">
+                    <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
+                      if(isNaN(e.target.value)) {
+                        e.target.value = e.target.value.slice(0, e.target.value.length - 1)
+                      } else {
+                        this.forceUpdate();
+                      } }} onKeyPress={(e) => {
+                        if(e.key == "Enter") {
+                          e.target.blur();
                         }
-                      })
-                      this.state.participants[user] = parseInt(e.target.value);
-                    }} defaultValue={localBoard[user].bonus}
-                  />
+                      }} onBlur={(e) => {
+                        Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex + 1, user.id, parseInt(e.target.value), (err) => {
+                          if(err) {
+                            toastr.error("Couldn\'t update bonus points!");
+                          }
+                        })
+                      }} defaultValue={leaderboard[leaderboard.findIndex(p => { return p.id == user.id })].bonus}
+                    />
+                  </div>
                 </div>
-              </div>
-            )
+              )
+            })
           })
         }
       </div>
     );
   }
 
-  singleElimLeaderboard() {
-    var ldrboard = {};
-    var userCount = 1;
-    var roundobj = Brackets.findOne();
-    var finals = roundobj.rounds[roundobj.rounds.length - 1].pop()[0];
-    roundobj.rounds[roundobj.rounds.length - 1].push([finals]);
-    var singleElimBracket = roundobj.rounds[roundobj.rounds.length - 1];
-    singleElimBracket.reverse().forEach(round => {
-      round.forEach(match => {
-        if(!match) {
-          return;
-        }
-        match = Matches.findOne(match.id);
-        if(match.winner == null) {
-          return;
-        }
-        if(ldrboard[match.winner.alias] == null) {
-          ldrboard[match.winner.alias] = userCount ++;
-        }
-        var loser = match.winner.alias == match.players[0].alias ? match.players[1].alias : match.players[0].alias;
-        if(ldrboard[loser] == null) {
-          ldrboard[loser] = userCount ++;
-        }
-      });
-    });
-    return this.boardFormatting(ldrboard);
-  }
-
   doubleElimLeaderboard() {
-    var ldrboard = {};
-    var participants = {};
-    var userCount = 1;
     var roundobj = Brackets.findOne();
-    // Check to see if bracket has played to completion.
-    var finalSet = roundobj.rounds[roundobj.rounds.length - 1];
-    var finalOne = finalSet[0][0];
-    var finalTwo = finalSet[1][0];
-    // If the first match has a winner and nobody is playing in the second match, the bracket is decided.
-    // If the second match has a winner, the bracket is decided.
-    var losersBracket = roundobj.rounds[1];
-    losersBracket = losersBracket.concat(finalSet).reverse();
-    losersBracket.forEach(round => {
-      round.forEach(match => {
-        if(!match){
-          return;
-        }
-        match = Matches.findOne(match.id);
-        if(match.winner == null) {
-          return;
-        }
-        if(ldrboard[match.winner.alias] == null) {
-          ldrboard[match.winner.alias] = userCount ++;
-          participants[match.winner.alias] = 0;
-        }
-        var loser = match.winner.alias == match.players[0].alias ? match.players[1].alias : match.players[0].alias;
-        if(ldrboard[loser] == null) {
-          ldrboard[loser] = userCount ++;
-          participants[loser] = 0;
-        }
-      })
+    var obj = {};
+    var participants = Instances.findOne().brackets[this.state.bracketIndex].participants;
+    participants.forEach(p => {
+      var total = Matches.find({
+        "players.alias": p.alias
+      }).fetch().length;
+      var wins = Matches.find({
+        "winner.alias": p.alias
+      }).fetch().length;
+      var losses = total - wins;
+      var score = `${wins}-${losses}`;
+      if(!obj[score]) {
+        obj[score] = [p];
+      }
+      else {
+        obj[score].push(p);
+      }
     });
-    this.state.participants = participants;
-    return this.boardFormatting(ldrboard);
+    return this.boardFormatting(obj);
   }
 
   swissLeaderboard() {
@@ -173,7 +140,7 @@ export default class LeagueModal extends Component {
   boardType() {
     switch(Instances.findOne().brackets[this.state.bracketIndex].format.baseFormat) {
       case "single_elim":
-        return this.singleElimLeaderboard();
+        return this.doubleElimLeaderboard();
       case "double_elim":
         return this.doubleElimLeaderboard();
       case "swiss":

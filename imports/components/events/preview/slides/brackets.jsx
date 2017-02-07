@@ -127,7 +127,7 @@ export default class BracketSlide extends Component {
                 return (
                   <div className="bracket">
                     <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
-                    <div className="bracket-overlay started"> 
+                    <div className="bracket-overlay started">
                       <div className="col-1"></div>
                       <div className="bracket-details">
                         {
@@ -148,14 +148,16 @@ export default class BracketSlide extends Component {
                             <span>{ 0 }</span>
                           </div>
                         </div>
-                        <div className="bracket-detail-row">
-                          <div className="bracket-detail-item">
-                            <FontAwesome name="trophy" />
-                          </div>
-                          <div className="bracket-detail-item">
-                            <span>${0}</span>
-                          </div>
-                        </div>
+                        {
+                          // <div className="bracket-detail-row">
+                          //   <div className="bracket-detail-item">
+                          //     <FontAwesome name="trophy" />
+                          //   </div>
+                          //   <div className="bracket-detail-item">
+                          //     <span>${0}</span>
+                          //   </div>
+                          // </div>
+                        }
                         <div className="bracket-detail-row">
                           <div className="bracket-detail-item">
                             <FontAwesome name="sitemap" />
@@ -169,7 +171,7 @@ export default class BracketSlide extends Component {
                         { bracket.name || "" }
                       </div>
                       {(bracket.startedAt == null)?
-                        ( 
+                        (
                         <div className="row" style={{justifyContent: "flex-end"}}>
                         <div className="bracket-view-button col-1" onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
@@ -181,11 +183,11 @@ export default class BracketSlide extends Component {
                         }}>
                           <span>View</span>
                         </div>
-                        { 
+                        {
                           this.bracketButton(bracket, i)
                         }
                       </div>)
-                        :( 
+                        :(
                         <div className="bracket-view-button col-1" style={{width:"230px",maxHeight:"63px",margin:"auto",verticalAlign:"center"}}onClick={() => {
                           if(this.props.event.owner == Meteor.userId()) {
                             browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
@@ -197,7 +199,7 @@ export default class BracketSlide extends Component {
                           <span>View</span>
                         </div>
                       )}
-                     
+
 
                     </div>
                     {
