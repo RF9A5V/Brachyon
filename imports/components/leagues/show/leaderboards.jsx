@@ -30,27 +30,6 @@ export default class LeaderboardSlide extends Component {
       var sortedBoard = leaderboards[index].sort(function(a, b) {
         return (b.score + b.bonus) - (a.score + a.bonus);
       });
-      if(index > 0) {
-        var event = Events.findOne({slug: this.props.event.events[index - 1]});
-        var instance = Instances.findOne(event.instances.pop());
-        sortedBoard = sortedBoard.map((obj, i) => {
-          if(instance.brackets[0].format.baseFormat == "single_elim") {
-            obj["placement"] = Math.ceil(Math.log2(i + 1)) + 1;
-          }
-          else if(instance.brackets[0].format.baseFormat == "double_elim") {
-            if(i < 4) {
-              obj["placement"] = i;
-            }
-            else {
-              obj["placement"] = Math.ceil(Math.log2(i)) + 2;
-            }
-          }
-          else {
-            obj["placement"] = i + 1;
-          }
-          return obj;
-        })
-      }
       var index = 0;
       var current = -1;
       return sortedBoard.map(obj => {
