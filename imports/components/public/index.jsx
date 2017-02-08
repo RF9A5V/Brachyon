@@ -26,7 +26,7 @@ export default class LandingScreen extends React.Component {
             <SignUpModal />
           </div>
           <div className="discover-box">
-            <Link to="/events/discover" className="discover row center x-center">
+            <Link to="/discover" className="discover row center x-center">
               <span className="fa fa-compass fa-2x compass" ></span>
               <span className="discover-text">Discover Competitive Events</span>
             </Link>

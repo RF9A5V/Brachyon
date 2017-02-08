@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import BlockContainer from '/imports/components/events/discover/block_container.jsx';
+import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 
 export default class AboutScreen extends TrackerReact(Component) {
 
@@ -65,6 +66,9 @@ export default class AboutScreen extends TrackerReact(Component) {
   promotedEvents() {
     return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, limit: 3}).fetch();
   }
+  events(){
+    return Events.find();
+  }
 
   render() {
     this.handleResize();
@@ -82,7 +86,7 @@ export default class AboutScreen extends TrackerReact(Component) {
             <FontAwesome name="plus" size="5x" className="about-icons" />
           </Link>
           <Link to="events/create" className="col about-desc">
-            <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+            <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
           </Link>
         </div>
       );
@@ -96,19 +100,20 @@ export default class AboutScreen extends TrackerReact(Component) {
               <SignUpModal />
             </div>
             <div className="col about-desc">
-              <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+              <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
             </div>
           </div>
         );
       }
       else {
         createEvent = (
-          <div className="col-to-row x-center col-1">
-            <div onClick={this.toggleCreate.bind(this)} className="col center x-center about-blocks">
-              <FontAwesome name="plus" size="5x" className="about-icons" />
+           <div className="col-to-row x-center col-1">
+            <div id="about-block-cred" className="col center x-center" style={{maxHeight:145, marginTop:20}}>
+              <LogInModal />
+              <SignUpModal />
             </div>
-            <div onClick={this.toggleCreate.bind(this)} className="col about-desc">
-              <h3 style={{marginTop: 10}}>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+            <div className="col about-desc">
+              <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
             </div>
           </div>
         );
@@ -127,12 +132,12 @@ export default class AboutScreen extends TrackerReact(Component) {
           <h4>Brachyon Lets You...</h4>
           <div className="col" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div className="row-to-col center x-center">
-              <Link to="/events/discover" className="col-to-row x-center col-1">
+              <Link to="/discover" className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
                   <FontAwesome name="search" size="5x" className="about-icons" />
                 </div>
                 <div className="col about-desc">
-                  <h3 style={{marginTop: 10}}>Search</h3><div style={{marginTop: 10}}>Quickly find events by area, game and time.</div>
+                  <h3 >Search</h3><div style={{marginTop: 10}}>Quickly find events by area, game and time.</div>
                 </div>
               </Link>
               {createEvent}
@@ -141,7 +146,7 @@ export default class AboutScreen extends TrackerReact(Component) {
                   <FontAwesome name="arrow-up" size="5x" className="about-icons" />
                 </div>
                 <div className="col about-desc">
-                  <h3 style={{marginTop: 10}}>Promote</h3><div style={{marginTop: 10}}>Share and publicize your events.</div>
+                  <h3>Promote</h3><div style={{marginTop: 10}}>Share and publicize your events.</div>
                 </div>
               </Link>
               <div className="col-to-row x-center col-1">
@@ -149,7 +154,7 @@ export default class AboutScreen extends TrackerReact(Component) {
                   <FontAwesome name="usd" size="5x" className="about-icons" />
                 </div>
                 <div className="col about-desc">
-                  <h3 style={{marginTop: 10}}>Fund</h3><div style={{marginTop: 10}}>Make your event a reality with unique crowdfunding options.</div>
+                  <h3>Fund</h3><div style={{marginTop: 10}}>Make your event a reality with unique crowdfunding options.</div>
                 </div>
               </div>
             </div>
@@ -157,11 +162,15 @@ export default class AboutScreen extends TrackerReact(Component) {
           <h4>Which Leads To...</h4>
           <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div style={{marginLeft: 10}}>
-              <BlockContainer events={this.promotedEvents()} />
+            {this.promotedEvents().length == 0?
+              (this.state.events.ready() ?
+                (<AltBlockContainer />)
+                :(<div>hello</div>))
+              :(<BlockContainer events={this.promotedEvents()} />)}
             </div>
           </div>
           <h4>Why?</h4>
-          <div className="about-what">
+          <div className="about-what center">
             <p>We love competitive gaming. Nothing catered to our needs
             as competitors, so we built it ourselves.</p>
             <p>Brachyon formed out of our pure love for the game.</p>
