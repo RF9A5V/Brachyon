@@ -25,7 +25,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   events() {
-    return Events.find(this.state.query, {sort: {"promotion.bid": -1, "details.datetime": -1}}).fetch();;
+    return Events.find(this.state.query, {sort: {"promotion.bid": -1, "details.datetime": 1}}).fetch();;
   }
 
   promotedEvents() {
