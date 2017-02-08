@@ -23,7 +23,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
 
   getParticipants()
   {
-    bracket = Brackets.findOne();
+    var bracket = Brackets.findOne();
     if(this.state.inst.brackets[this.props.index].format.baseFormat == "round_robin") {
       participants = bracket.rounds[bracket.rounds.length-1].players;
       participants.sort(function(a, b) {
@@ -78,75 +78,78 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
     {
       var participants = this.getParticipants();
       var format = this.state.inst.brackets[this.props.index].format.baseFormat;
-      if(format == "single_elim" || format == "double_elim") {
-        var obj = this.getParticipants();
-        var content = Object.keys(obj).sort((a, b) => {
-          [win1, los1] = a.split("-").map(i => parseInt(i));
-          [win2, los2] = b.split("-").map(i => parseInt(i));
-          if(los1 != los2) {
-            return (los1 < los2 ? -1 : 1);
-          }
-          else {
-            return (win1 < win2 ? 1 : -1);
-          }
-        }).map((key, i) => {
-          var rankers = obj[key];
-          var placement = i + 1;
-          var suffix = "th";
-          switch(placement % 10) {
-            case 1:
-              suffix = "st";
-              break;
-            case 2:
-              suffix = "nd";
-              break;
-            case 3:
-              suffix = "rd";
-              break;
-            default:
-              break;
-          }
-          return (
-            <div style={{marginBottom: 20}}>
-              <h5>{placement + suffix} Place</h5>
-              <span>Score of: { key }</span>
-              <div className="row" style={{flexWrap: "wrap"}}>
-              {
-                rankers.map(r => {
-                  return (
-                    <div className="row x-center" style={{width: 200, backgroundColor: r.id == Meteor.userId() ? "#FF6000" : "#666", marginRight: 10, marginBottom: 10}}>
-                      <img src={this.profileImageOrDefault(r.id)} style={{width: 50, height: 50, marginRight: 10}} />
-                      <span>
-                        { r.alias }
-                      </span>
-                    </div>
-                  )
-                })
-              }
-              </div>
-            </div>
-          )
+      var rounds = Brackets.findOne().rounds;
+      var placement = [];
+      var content;
+      if(format == "single_elim") {
+        var finals = Matches.findOne(rounds[0].pop()[0].id);
+        placement.push([finals.winner]);
+        placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
+        rounds[0].reverse().map(r => {
+          var losers = [];
+          r.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+            if(!m) return;
+            losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+          });
+          placement.push(losers);
         });
-        return (
-          <div>
-            { content }
-          </div>
-        )
+      }
+      if(format == "double_elim") {
+        var finals = rounds[2].map(m => {return Matches.findOne(m[0].id)});
+        finals = finals[1] && finals[1].winner != null ? finals[1] : finals[0];
+        placement.push([finals.winner]);
+        placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
+        rounds[1].reverse().forEach(round => {
+          var losers = [];
+          round.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+            if(!m) return;
+            losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+          });
+          if(losers.length > 0) {
+            placement.push(losers);
+          }
+        });
       }
 
+      var content = placement.map((rank, i) => {
+        var place = i + 1;
+        var suffix = "th";
+        switch(place % 10) {
+          case 1:
+            suffix = "st";
+            break;
+          case 2:
+            suffix = "nd";
+            break;
+          case 3:
+            suffix = "rd";
+            break;
+          default:
+            break;
+        }
+        return (
+          <div style={{marginBottom: 20}}>
+            <h5 style={{marginBottom: 10}}>{place + suffix} Place</h5>
+            <div className="row" style={{flexWrap: "wrap"}}>
+            {
+              rank.map(r => {
+                return (
+                  <div className="row x-center" style={{width: 200, backgroundColor: r.id == Meteor.userId() ? "#FF6000" : "#666", marginRight: 10, marginBottom: 10}}>
+                    <img src={this.profileImageOrDefault(r.id)} style={{width: 50, height: 50, marginRight: 10}} />
+                    <span>
+                      { r.alias }
+                    </span>
+                  </div>
+                )
+              })
+            }
+            </div>
+          </div>
+        )
+      });
       return (
         <div>
-          <ol>
-          {
-            participants.map((player, index) => {
-              return (
-                <li style={{marginBottom: 10, padding: 20, backgroundColor: "#222"}}>
-                  { player.alias || player.name }
-                </li>
-              )
-            })
-          }
-          </ol>
+          { content }
         </div>
       )
     }

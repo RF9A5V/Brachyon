@@ -7,6 +7,17 @@ Meteor.methods({
     if(!instance) {
       throw new Meteor.Error(404, "Event not found.");
     }
+    var event = Events.findOne({instances: id});
+    if(event.league) {
+      var league = Leagues.findOne(event.league);
+      var eventIndex = league.events.indexOf(event.slug);
+      var user = Meteor.users.findOne({username: alias});
+      Leagues.update(event.league, {
+        $unset: {
+          [`leaderboard.${eventIndex}.${user._id}`]: 1
+        }
+      });
+    }
     Instances.update(instance._id, {
       $pull: {
         [`brackets.${index}.participants`]: {

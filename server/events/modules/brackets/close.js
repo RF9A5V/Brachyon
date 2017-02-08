@@ -1,5 +1,49 @@
 import Instances from "/imports/api/event/instance.js";
 
+var singlePlacement = (rounds) => {
+  var placement = [];
+  var finals = Matches.findOne(rounds[0].pop()[0].id);
+  placement.push([finals.winner]);
+  placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
+  rounds[0].reverse().map(r => {
+    var losers = [];
+    r.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+      if(!m) return;
+      losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+    });
+    placement.push(losers);
+  });
+  return placement;
+}
+
+var doublePlacement = (rounds) => {
+  var placement = [];
+  var finals = rounds[2].map(m => {return Matches.findOne(m[0].id)});
+  var last = finals[1] && finals[1].winner != null ? finals[1] : finals[0];
+  placement.push([last.winner]);
+  placement.push([last.winner.alias == last.players[0].alias ? last.players[1] : last.players[0]]);
+  rounds[1].reverse().forEach(round => {
+    var losers = [];
+    round.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+      if(!m) return;
+      losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+    });
+    if(losers.length > 0) {
+      placement.push(losers);
+    }
+  });
+  return placement;
+}
+
+var sortPlacement = (format, rounds) => {
+  if(format == "single_elim"){
+    return singlePlacement(rounds);
+  }
+  if(format == "double_elim") {
+    return doublePlacement(rounds);
+  }
+}
+
 Meteor.methods({
   "events.brackets.close"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
@@ -73,36 +117,24 @@ Meteor.methods({
 
     // League update
     if(event && event.league) {
-      var sortedKeys = Object.keys(obj).sort((a, b) => {
-        var [win1, los1] = a.split("-").map(i => parseInt(i));
-        var [win2, los2] = b.split("-").map(i => parseInt(i));
-        if(los1 != los2) {
-          return (los1 < los2 ? -1 : 1);
-        }
-        else {
-          return (win1 < win2 ? 1 : -1);
-        }
-      });
+      var placement = sortPlacement(bracket.format.baseFormat, roundobj.rounds);
+
       var updateObj = {};
       var league = Leagues.findOne(event.league);
       var totalScore = bracket.participants.length;
 
-      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
-      league.leaderboard[leaderboardIndex].forEach((entry, localIndex) => {
-        var negIndex = sortedKeys.findIndex(score => {
-          return obj[score].findIndex(player => {
-            return player.id == entry.id;
+      var leaderboardIndex = league.events.indexOf(event.slug);
+      var leaderboard = league.leaderboard[leaderboardIndex];
+      Object.keys(leaderboard).forEach(id => {
+        var negIndex = placement.findIndex(rank => {
+          return rank.findIndex(player => {
+            return player.id == id;
           }) >= 0;
         });
-        if(negIndex < 0) {
-          throw new Meteor.Error();
-        }
-        var globalIndex = league.leaderboard[0].findIndex((usr) => { return usr.id == entry.id });
-        updateObj[`leaderboard.0.${globalIndex}.score`] = totalScore - negIndex;
-        updateObj[`leaderboard.${leaderboardIndex}.${localIndex}.score`] = totalScore - negIndex;
-      });
+        updateObj[`leaderboard.${leaderboardIndex}.${id}.score`] = totalScore - negIndex;
+      })
       Leagues.update(event.league, {
-        $inc: updateObj
+        $set: updateObj
       });
     }
 
