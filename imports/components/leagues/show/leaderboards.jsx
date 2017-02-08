@@ -17,40 +17,74 @@ export default class LeaderboardSlide extends Component {
     return `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
   }
 
-  leaderboard(index) {
-    var leaderboards = this.props.event.leaderboard;
-    if(leaderboards[index].length == 0) {
+  userComp(id) {
+    var user = Meteor.users.findOne(id);
+    var image = user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
+    return (
+      <div className="row" style={{backgroundColor: "#666", width: 150, marginRight: 10, marginBottom: 10}}>
+        <img src={image} style={{width: 50, height: 50}} />
+        <div style={{padding: 5}}>
+          { user.username }
+        </div>
+      </div>
+    )
+  }
+
+  leaderboard(users) {
+    var usersByScore = {};
+    console.log(users);
+    Object.keys(users).forEach(user => {
+      var str = "" + users[user];
+      if(usersByScore[str] === undefined) {
+        usersByScore[str] = [user];
+      }
+      else {
+        usersByScore[str].push(user);
+      }
+    });
+    console.log(usersByScore);
+    return Object.keys(usersByScore).sort((a, b) => {
+      [a, b] = [parseInt(a), parseInt(b)];
+      return (a < b) ? 1 : -1;
+    }).map(score => {
       return (
         <div>
-          Leaderboard is empty!
+          <h5 style={{marginBottom: 10}}>{ score > 0 ? score : "No" } Points</h5>
+          <div className="row" style={{flexWrap: "wrap", marginBottom: 10}}>
+          {
+            usersByScore[score].map(uid => {
+              return this.userComp(uid);
+            })
+          }
+          </div>
         </div>
       )
-    }
-    else {
-      var sortedBoard = leaderboards[index].sort(function(a, b) {
-        return (b.score + b.bonus) - (a.score + a.bonus);
-      });
-      var index = 0;
-      var current = -1;
-      return sortedBoard.map(obj => {
-        if(obj.score + obj.bonus != current){
-          current = obj.score + obj.bonus;
-          index += 1;
+    })
+  }
+
+  users(index) {
+    var leaderboards = this.props.event.leaderboard;
+    var users = {};
+    Object.keys(leaderboards[index]).forEach(p => {
+      users[p] = leaderboards[index][p].score + leaderboards[index][p].bonus;
+    });
+    return users;
+  }
+
+  globalLeaderboard() {
+    var leaderboards = this.props.event.leaderboard;
+    var users = {};
+    leaderboards.forEach(l => {
+      Object.keys(l).forEach(p => {
+        if(!users[p]) {
+          users[p] = l[p].score + l[p].bonus;
         }
-        var user = Meteor.users.findOne(obj.id);
-        return (
-          <div className="row leaderboard-record">
-            <div className="col-2">
-              <span className="leaderboard-placement">{(index) + ". "}</span>
-              <span className="leaderboard-name" style={{color: `${index == 1 ? "#FF6000" : "white"}`, fontSize: 20 - (2 * Math.min(index, 4))}}>{user.username}</span>
-            </div>
-            <div className="col-1">
-              <span style={{color: `${index == 1 ? "#FF6000" : "white"}`}}>{ current}</span>
-            </div>
-          </div>
-        )
+        else {
+          users[p] += l[p].score + l[p].bonus;
+        }
       })
-    }
+    });
+    return this.leaderboard(users);
   }
 
   render() {
@@ -59,17 +93,9 @@ export default class LeaderboardSlide extends Component {
       <div className="col-1 row slide" style={{backgroundImage: this.backgroundImage(false)}}>
         <div className="col col-1 league-leaderboard" style={{padding: 20, marginLeft: 60}}>
           <h5 className="row center" style={{marginBottom: 18}}>Global Leaderboard</h5>
-          <div className="row">
-            <div style={{fontWeight: "bold"}} className="col-2">
-              Players
-            </div>
-            <div style={{fontWeight: "bold"}} className="col-1">
-              Points
-            </div>
-          </div>
           <div>
             {
-              this.leaderboard(0)
+              this.globalLeaderboard()
             }
           </div>
         </div>
@@ -85,17 +111,9 @@ export default class LeaderboardSlide extends Component {
               })
             }
           </div>
-          <div className="row">
-            <div style={{fontWeight: "bold"}} className="col-2">
-              Players
-            </div>
-            <div style={{fontWeight: "bold"}} className="col-1">
-              Points
-            </div>
-          </div>
           <div>
           {
-            this.leaderboard(this.state.current + 1)
+            this.leaderboard(this.users(this.state.current))
           }
           </div>
         </div>
