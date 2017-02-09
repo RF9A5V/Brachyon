@@ -9,6 +9,11 @@ import LogInModal from './loginmodal.jsx';
 import BlockContainer from '/imports/components/events/discover/block_container.jsx';
 import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 
+import Modal from 'react-modal';
+import LogInScreen from './login.jsx';
+import SignUpScreen from './signup.jsx';
+import DisplayDiscover from '/imports/components/events/discover/display_discover.jsx';
+
 export default class AboutScreen extends TrackerReact(Component) {
 
   componentWillMount() {
@@ -16,7 +21,8 @@ export default class AboutScreen extends TrackerReact(Component) {
     this.setState({
       user: Meteor.subscribe("user", Meteor.userId()),
       events: Meteor.subscribe('discoverEvents'),
-      clicked: false
+      clicked: false,
+      open: false
     });
   }
 
@@ -64,10 +70,13 @@ export default class AboutScreen extends TrackerReact(Component) {
   }
 
   promotedEvents() {
-    return Events.find({"promotion.active": {$ne: null}}, {sort: {"promotion.bid": -1}, limit: 3}).fetch();
+    return Events.find({"promotion.active": {$eq: true}}, {sort: {"promotion.bid": -1}, limit: 1}).fetch();
   }
   events(){
-    return Events.find();
+    return Events.find({"promotion.active": {$ne: true}}, {limit: 1}).fetch();
+  }
+  closeModal(){
+      this.setState({open: false});
   }
 
   render() {
@@ -92,32 +101,44 @@ export default class AboutScreen extends TrackerReact(Component) {
       );
     }
     else {
-      if(this.state.clicked){
-        createEvent = (
-          <div className="col-to-row x-center col-1">
-            <div id="about-block-cred" className="col center x-center">
-              <LogInModal />
-              <SignUpModal />
+      createEvent = (           
+        <div className="col-to-row x-center col-1">             
+          <div className="col center x-center about-blocks" onClick={() => {
+            this.setState({
+             open: true,
+             content: "login"
+           }) }}>               
+            <FontAwesome name="plus" size="5x" className="about-icons" />             
+          </div> 
+          <Modal
+            className="create-modal"
+            overlayClassName = "credential-overlay"
+            isOpen={this.state.open}
+            onRequestClose={this.closeModal.bind(this)}
+          >
+            <div className="row justify-end">
+              <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
             </div>
-            <div className="col about-desc">
-              <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+            <div className="row center">
+              <h5 onClick={() => { this.setState({ content: "login" }) }} style={{color: this.state.content == "login" ? "#00BDFF" : "white", cursor: "pointer"}}>LOG IN</h5>
+              <h5 style={{marginLeft: 10, marginRight: 10}}>/</h5>
+              <h5 onClick={() => { this.setState({ content: "signup" }) }} style={{color: this.state.content == "signup" ? "#00BDFF" : "white", cursor: "pointer"}}>SIGN UP</h5>
             </div>
-          </div>
-        );
-      }
-      else {
-        createEvent = (
-           <div className="col-to-row x-center col-1">
-            <div id="about-block-cred" className="col center x-center" style={{maxHeight:145, marginTop:20}}>
-              <LogInModal />
-              <SignUpModal />
+            <div className="row col-1 x-center center">
+              {
+                this.state.content == "login" ? (
+                  <LogInScreen />
+                ) : (
+                  <SignUpScreen />
+                )
+              }
             </div>
-            <div className="col about-desc">
-              <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
-            </div>
-          </div>
-        );
-      }
+          </Modal>            
+          <div onClick={this.toggleCreate.bind(this)} className="col about-desc">               
+            <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>             
+          </div>           
+        </div>
+      );
     }
     return(
       <div className="row center">
@@ -161,12 +182,12 @@ export default class AboutScreen extends TrackerReact(Component) {
           </div>
           <h4>Which Leads To...</h4>
           <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
-            <div style={{marginLeft: 10}}>
+            <div style={{margin:10}}>
             {this.promotedEvents().length == 0?
-              (this.state.events.ready() ?
-                (<AltBlockContainer />)
-                :(<div>hello</div>))
-              :(<BlockContainer events={this.promotedEvents()} />)}
+              (this.events().length>0 ?
+                (<DisplayDiscover events={this.events()} />)
+                :(<div><a style={{margin:"auto"}} href="./create">The opportunity to be the first event in Brachyon</a></div>))
+              :(<DisplayDiscover events={this.promotedEvents()} />)}
             </div>
           </div>
           <h4>Why?</h4>
