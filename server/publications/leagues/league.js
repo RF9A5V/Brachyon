@@ -10,6 +10,7 @@ Meteor.publish("league", (slug) => {
       ids[id] = 1;
     })
   });
+  ids[league.owner] = 1;
   return [
     Leagues.find({ slug }),
     Events.find({ slug: { $in: league.events } }),
