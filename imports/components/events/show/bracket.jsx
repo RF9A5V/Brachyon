@@ -31,7 +31,7 @@ export default class BracketPanel extends Component {
     e.preventDefault();
     Meteor.call("events.start_event", this.props.eid, this.props.format, function(err) {
       if(err){
-        console.log(err);
+        
         toastr.error(err.reason, "Error!");
       }
     });

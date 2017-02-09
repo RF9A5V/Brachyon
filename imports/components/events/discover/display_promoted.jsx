@@ -9,7 +9,7 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
-    console.log(event);
+    
     if(event.details.bannerUrl) {
       return event.details.bannerUrl
     }

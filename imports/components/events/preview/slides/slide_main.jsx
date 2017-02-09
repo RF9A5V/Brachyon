@@ -32,7 +32,7 @@ export default class SlideMain extends Component {
   }
 
   onSlideChange(index) {
-    console.log(index);
+    
     if(this.state.activeSlide == index) {
       return;
     }

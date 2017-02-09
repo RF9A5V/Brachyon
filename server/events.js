@@ -108,7 +108,7 @@ Meteor.methods({
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    console.log(event.league);
+    
     if(event.league) {
       var league = Leagues.findOne(event.league);
       var leaderboardIndex = league.events.indexOf(event.slug);
@@ -706,7 +706,7 @@ Meteor.methods({
     var scores = [];
     var max = 0;
 
-    //console.log(rounds[0].matches);
+    //
 
     for (var x = 0; x < players.length; x++)
     {

@@ -8,7 +8,7 @@ export default class TwitterConnect extends Component {
     Meteor.linkWithTwitter({
     }, function(err){
       if(err){
-        console.log(err);
+        
         toastr.error(err.reason, "Error!");
       }
       else {

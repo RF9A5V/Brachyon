@@ -14,7 +14,7 @@ export default class EventSlide extends Component {
 
   render() {
     var events = Events.find({});
-    console.log(events.fetch());
+
     return (
       <div className="col-1 slide" style={{backgroundImage: this.backgroundImage(false), padding: 20, marginBottom: 40}}>
         <BlockContainer events={Events.find({})} />

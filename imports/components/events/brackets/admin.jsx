@@ -29,7 +29,7 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
           }
           if(event.orgEvent) {
             var organization = Organizations.findOne(event.owner);
-            console.log(organization);
+            
             if(organization.owner != Meteor.userId() && organization.roles["Owner"].indexOf(Meteor.userId()) < 0 && organization.roles["Admin"].indexOf(Meteor.userId()) < 0) {
               toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
               browserHistory.goBack();

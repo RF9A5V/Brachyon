@@ -17,7 +17,7 @@ export default class SubmitPanel extends Component {
       img.meta = props.changelog.league.details.image.meta;
       props.changelog.league.details.image = null;
     }
-    console.log(props.changelog.league);
+    
     Meteor.call("leagues.edit", league.slug, props.changelog, (err, data) => {
       if(err) {
         toastr.error(err.reason, "Error!");
@@ -26,7 +26,7 @@ export default class SubmitPanel extends Component {
         if(img) {
           img.meta.slug = data;
           var dataSeg = img.file.substring(img.file.indexOf("/"), img.file.indexOf(";")).slice(1);
-          console.log(img);
+          
           LeagueBanners.insert({
             file: img.file,
             isBase64: true,

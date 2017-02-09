@@ -94,7 +94,7 @@ export default class EventTypeForm extends Component {
   }
 
   contextualForm() {
-    console.log(this.state.type, 1, this.state.type == 1);
+    
     // I'm tired and switches were bugging out.
     if(this.state.type == 0){
       return (

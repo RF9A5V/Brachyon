@@ -22,7 +22,7 @@ export default class CrowdfundingPanel extends Component {
 
   setGoal(goal){
     return (e) => {
-      console.log(goal);
+      
       this.setState({
         goal
       })

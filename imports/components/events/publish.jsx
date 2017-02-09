@@ -41,7 +41,7 @@ export default class PublishEventScreen extends Component {
       return;
     }
 
-    console.log(event);
+    
 
     // Incoming wall of text.
 
