@@ -21,7 +21,7 @@ export default class LocationSearch extends Component {
       (document.getElementById('locationInput')),
       {types: ['geocode']});
       autocomplete.addListener('place_changed', function(){
-        console.log("Gets to GMaps Handler");
+        
         lat = autocomplete.getPlace().geometry.location.lat();
         lng = autocomplete.getPlace().geometry.location.lng();
         self.setState({

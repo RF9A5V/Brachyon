@@ -17,7 +17,7 @@ Migrations.add({
         }
       ]
     });
-    console.log(bracketInstances.fetch().length)
+    
     bracketInstances.forEach(i => {
       i.brackets.forEach(idContainer => {
         var bracket = Brackets.findOne(idContainer.id);

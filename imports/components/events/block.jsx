@@ -13,7 +13,7 @@ export default class EventBlock extends React.Component {
     if(url == null){
       var games = this.event.games.fetch();
       for(var i in games){
-        console.log(games[i]);
+        
         if(games[i].bannerUrl != null){
           return games[i].bannerUrl;
         }

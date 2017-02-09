@@ -19,7 +19,7 @@ export default class BlockContainer extends Component {
     var icons = [];
     if(obj.type == "event") {
       icons.push(<FontAwesome name="file-text" onClick={() => { browserHistory.push("/event/" + obj.slug) }} />);
-      console.log(obj);
+      
       var instance = Instances.findOne(obj.instances[obj.instances.length - 1]);
       if(instance && instance.brackets) {
         icons.push(<FontAwesome name="sitemap" onClick={() => { browserHistory.push("/event/" + obj.slug + "/brackets") }} />)

@@ -24,7 +24,7 @@ export default class LeagueDisplay extends Component {
         <div className='event-block-container'>
           {
             (this.props.leagues || []).map((league, i) => {
-              console.log(league);
+              
               return (
                 <div className="event-block" onClick={() => {
                   browserHistory.push(`/league/${league.slug}`);

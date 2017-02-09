@@ -91,7 +91,7 @@ export default class CheckoutPage extends TrackerReact(Component) {
   }
 
   advanceState() {
-    console.log(this.state.keys[this.state.index]);
+    
     var comp = this.refs[this.state.keys[this.state.index]];
     if(comp.isValid()) {
       comp.value((obj) => {

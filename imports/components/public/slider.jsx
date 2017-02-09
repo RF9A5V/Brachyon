@@ -6,7 +6,7 @@ export default class PaymentSlider extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
+    
     var max = props.tiers[Object.keys(props.tiers).length - 1].price * 1;
     var found = false;
     var size = Object.keys(props.tiers).length;
