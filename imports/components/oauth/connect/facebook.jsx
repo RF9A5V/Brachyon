@@ -9,7 +9,7 @@ export default class FacebookConnect extends Component {
       requestPermissions: ["email", "public_profile"]
     }, function(err){
       if(err){
-        console.log(err);
+        
         toastr.error(err.reason, "Error!");
       }
       else {

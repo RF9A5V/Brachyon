@@ -9,7 +9,7 @@ export default class FacebookConnect extends Component {
       requestPermissions: ["user_read", "user_blocks_read", "user_subscriptions"]
     }, function(err){
       if(err){
-        console.log(err);
+        
         toastr.error(err.reason, "Error!");
       }
       else {

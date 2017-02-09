@@ -186,7 +186,7 @@ export default class LeagueModal extends Component {
             if(format == "single_elim" || format == "double_elim") {
               Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
                 if(err) {
-                  console.log(err);
+                  
                   return toastr.error("Couldn\'t close this bracket.", "Error!");
                 }
                 var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });

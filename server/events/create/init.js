@@ -41,7 +41,7 @@ Meteor.methods({
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
     });
-    console.log(ary);
+    
     return ary;
   },
 
@@ -67,7 +67,7 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
-    console.log(obj);
+    
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;

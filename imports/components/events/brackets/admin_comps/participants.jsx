@@ -65,7 +65,7 @@ export default class AddPartipantAction extends Component {
 
   startBracket()
   {
-    console.log("Does this run?");
+    
     this.state.started = true;
     this.forceUpdate();
   }

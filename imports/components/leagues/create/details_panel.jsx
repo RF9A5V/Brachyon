@@ -15,7 +15,7 @@ export default class DetailsPanel extends Component {
   }
 
   componentWillReceiveProps(next) {
-    console.log(next.attrs.details);
+    
     this.setState({
       titleLength: next.attrs.details.name.length
     })
@@ -107,7 +107,7 @@ export default class DetailsPanel extends Component {
       )
     }
     if(this.state.option == 3) {
-      console.log(this.props.attrs.details.image);
+      
       return (
         <div className="row x-center">
           <ImageForm

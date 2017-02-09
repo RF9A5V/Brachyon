@@ -53,7 +53,7 @@ export default class GameSelectScreen extends TrackerReact(Component) {
     else {
       this.state.diff.push(id);
     }
-    console.log(this.state);
+    
     this.forceUpdate();
   }
 

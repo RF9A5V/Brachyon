@@ -32,7 +32,7 @@ export default class LeaderboardSlide extends Component {
 
   leaderboard(users) {
     var usersByScore = {};
-    console.log(users);
+    
     Object.keys(users).forEach(user => {
       var str = "" + users[user];
       if(usersByScore[str] === undefined) {
@@ -42,7 +42,7 @@ export default class LeaderboardSlide extends Component {
         usersByScore[str].push(user);
       }
     });
-    console.log(usersByScore);
+    
     return Object.keys(usersByScore).sort((a, b) => {
       [a, b] = [parseInt(a), parseInt(b)];
       return (a < b) ? 1 : -1;
