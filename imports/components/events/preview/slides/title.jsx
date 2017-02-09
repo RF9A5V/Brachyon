@@ -99,7 +99,7 @@ export default class EventTitlePage extends Component {
               }
               <div className="row">
                 {
-                  tickets ? (
+                  tickets && !event.isComplete ? (
                     <div>
                       <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push("/events/"+event.slug+"/checkout") }}>Register</button>
                     </div>
@@ -108,7 +108,7 @@ export default class EventTitlePage extends Component {
                   )
                 }
                 {
-                  brackets && !tickets ? (
+                  brackets && !tickets && !event.isComplete ? (
                     brackets.some((bracket) => {
                       return (bracket.participants || []).some((player) => {
                         return player.id == Meteor.userId()
