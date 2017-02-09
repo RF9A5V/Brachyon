@@ -4,22 +4,32 @@ Meteor.publish("league", (slug) => {
   var league = Leagues.findOne({slug});
   var events = Events.find({ slug: { $in: league.events } });
   var instances = Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } });
-  var userIds = league.leaderboard[0].map(obj => { return obj.id });
+  var ids = {};
+  league.leaderboard.forEach(board => {
+    Object.keys(board).forEach(id => {
+      ids[id] = 1;
+    })
+  });
   return [
     Leagues.find({ slug }),
     Events.find({ slug: { $in: league.events } }),
     Games.find({_id: league.game}),
     instances,
-    Meteor.users.find({ _id: { $in: userIds } }, { username: 1, "profile.imageUrl": 1 }),
+    Meteor.users.find({ _id: { $in: Object.keys(ids) } }, { username: 1, "profile.imageUrl": 1 }),
     Brackets.find({ _id: (league.tiebreaker || {}).id })
   ]
 });
 
 Meteor.publish("leagueByID", (id) => {
   var league = Leagues.findOne(id);
-  var users = league.leaderboard[0].map(p => { return p.id });
+  var ids = {};
+  league.leaderboard.forEach(board => {
+    Object.keys(board).forEach(id => {
+      ids[id] = 1;
+    })
+  });
   return [
     Leagues.find({ _id: id }),
-    Meteor.users.find({ _id: { $in: users } })
+    Meteor.users.find({ _id: { $in: Object.keys(ids) } })
   ];
 })

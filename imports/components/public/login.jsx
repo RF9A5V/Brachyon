@@ -9,7 +9,7 @@ export default class LogInScreen extends Component {
     [token, password] = Object.keys(this.refs).map((value) => { return this.refs[value].value });
     Meteor.loginWithPassword(token, password, function(err){
       if(err){
-        console.log(err);
+        
         toastr.error("Username and password combination not found!", "Error!");
       }
       else {

@@ -31,7 +31,7 @@ export default class MatchBlock extends Component {
       e.preventDefault();
       Meteor.call("events.advance_single", Brackets.findOne()._id, 0, this.props.round, this.props.index, (err) => {
         if(err){
-          console.log(err);
+          
           toastr.error("Couldn't advance this match.", "Error!");
         }
         else {
@@ -51,7 +51,7 @@ export default class MatchBlock extends Component {
       e.preventDefault();
       Meteor.call("events.undo_single", Brackets.findOne()._id, 0, this.props.round, this.props.index, (err) => {
         if(err){
-          console.log(err);
+          
           toastr.error("Couldn't undo this match.", "Error!");
         }
         else {

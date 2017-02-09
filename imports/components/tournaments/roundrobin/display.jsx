@@ -64,7 +64,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
     Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
-        console.log(err);
+        
         toastr.error("Couldn't update the round.", "Error!");
       }
       else {

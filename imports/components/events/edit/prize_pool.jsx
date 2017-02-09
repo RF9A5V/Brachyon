@@ -162,7 +162,7 @@ export default class PrizePoolBreakdown extends Component {
     if (sum != 20)
     {
       Meteor.Error(404, "Incorrect placement percent");
-      console.log(narr);
+      
     }
     sum = narr[0];
     var nmarr = [20];

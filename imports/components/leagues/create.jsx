@@ -221,6 +221,7 @@ export default class CreateLeagueScreen extends Component {
     attrs.creator = this.state.creator;
     Meteor.call("leagues.create", attrs, (err, slug) => {
       if(err) {
+        attrs.details.image = img;
         toastr.error(err.reason, "Error!");
       }
       else {

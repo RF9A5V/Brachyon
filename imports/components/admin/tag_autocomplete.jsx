@@ -59,7 +59,7 @@ export default class TagAutocomplete extends Component {
   }
 
   onTagRemove(tag) {
-    console.log(this.state.defaultTags.indexOf(tag._id));
+    
     this.state.defaultTags.splice(this.state.defaultTags.indexOf(tag._id), 1);
     this.props.onTagRemove(tag);
     this.forceUpdate();

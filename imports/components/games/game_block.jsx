@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 export default class GameBlock extends Component {
 
   componentWillMount() {
-    console.log(this.props.played);
+    
     this.setState({
       selected: this.props.played
     })

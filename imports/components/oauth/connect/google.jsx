@@ -8,7 +8,7 @@ export default class GoogleConnect extends Component {
     Meteor.linkWithGoogle({
     }, function(err){
       if(err){
-        console.log(err);
+        
         toastr.error(err.reason, "Error!");
       }
       else {

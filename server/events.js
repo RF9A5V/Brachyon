@@ -62,16 +62,16 @@ Meteor.methods({
         }
         else {
           var owner = Meteor.users.findOne(event.owner);
-          Notifications.insert({
-            type: "eventInvite",
-            owner: owner.username,
-            image: owner.profile.imageUrl,
-            event: event.details.name,
-            eventSlug: event.slug,
-            alias,
-            recipient: userID,
-            seen: false
-          });
+          // Notifications.insert({
+          //   type: "eventInvite",
+          //   owner: owner.username,
+          //   image: owner.profile.imageUrl,
+          //   event: event.details.name,
+          //   eventSlug: event.slug,
+          //   alias,
+          //   recipient: userID,
+          //   seen: false
+          // });
         }
       }
     }
@@ -85,26 +85,15 @@ Meteor.methods({
     });
     if(event && event.league) {
       var league = Leagues.findOne(event.league);
-      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
-      var pushObj = {
-        [`leaderboard.${leaderboardIndex}`]: {
-          id: userID,
+      var leaderboardIndex = league.events.indexOf(event.slug);
+      var setObj = {
+        [`leaderboard.${leaderboardIndex}.${userID}`]: {
           score: 0,
           bonus: 0
         }
       };
-      var isGlobalRegistered = league.leaderboard[0].some(obj => {
-        return obj.id == userID;
-      });
-      if(!isGlobalRegistered) {
-        pushObj["leaderboard.0"] = {
-          id: userID,
-          score: 0,
-          bonus: 0
-        }
-      }
       Leagues.update({ _id: event.league }, {
-        $push: pushObj
+        $set: setObj
       })
     }
   },
@@ -119,29 +108,14 @@ Meteor.methods({
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
+    
     if(event.league) {
       var league = Leagues.findOne(event.league);
-      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
-      var pullObj = {
-        [`leaderboard.${leaderboardIndex}`]: {
-          id: userId
-        }
-      };
-      var inPrevEvents = league.leaderboard.some((ldr, i) => {
-        if(i == leaderboardIndex || i == 0) {
-          return false;
-        }
-        return ldr.some(obj => {
-          return obj.id == userId;
-        })
-      });
-      if(!inPrevEvents) {
-        pullObj[`leaderboard.${0}`] = {
-          id: userId
-        }
-      }
+      var leaderboardIndex = league.events.indexOf(event.slug);
       Leagues.update(event.league, {
-        $pull: pullObj
+        $unset: {
+          [`leaderboard.${leaderboardIndex}.${userId}`]: 1
+        }
       })
     }
     Instances.update(instance._id, {
@@ -196,25 +170,14 @@ Meteor.methods({
     if(event.league) {
       var league = Leagues.findOne(event.league);
       var leaderboardIndex = league.events.indexOf(event.slug) + 1;
-      var pushObj = {
-        [`leaderboard.${leaderboardIndex}`]: {
-          id: user._id,
+      var setObj = {
+        [`leaderboard.${leaderboardIndex}.${user._id}`]: {
           score: 0,
           bonus: 0
         }
       };
-      var isGlobalRegistered = league.leaderboard[0].some(obj => {
-        return obj.id == user._id;
-      });
-      if(!isGlobalRegistered) {
-        pushObj["leaderboard.0"] = {
-          id: user._id,
-          score: 0,
-          bonus: 0
-        }
-      }
       Leagues.update({ _id: event.league }, {
-        $push: pushObj
+        $set: setObj
       })
     }
     Instances.update(instance._id, {
@@ -441,6 +404,7 @@ Meteor.methods({
       return;
       throw new Meteor.Error(403, "Cannot advance match with tie!");
     }
+    // Grand Finals Results
     if(bracketIndex == 2) {
       if(players[0].alias == match.players[0].alias || roundIndex == 1) {
         Brackets.update(bracketId, {
@@ -472,6 +436,7 @@ Meteor.methods({
         return;
       }
     }
+    // END Grand Final Results
     var advIndex = Math.floor(index / 2);
     if(bracketIndex == 1 && roundIndex % 2 == 0) {
       advIndex = index;
@@ -515,7 +480,7 @@ Meteor.methods({
       var loserMatchId = bracket.rounds[1][losr][losm].id;
       var loserMatch = Matches.findOne(loserMatchId);
       if(loserMatch) {
-        var playerPos = 0;
+        var playerPos = loserMatch.players[0] == null ? 0 : 1;
         if(roundIndex == 0) {
           playerPos = index % 2;
         }
@@ -741,7 +706,7 @@ Meteor.methods({
     var scores = [];
     var max = 0;
 
-    //console.log(rounds[0].matches);
+    //
 
     for (var x = 0; x < players.length; x++)
     {
