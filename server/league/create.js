@@ -38,10 +38,10 @@ Meteor.methods({
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
 
-    // Leaderboard @ 0 is overall main leaderboard
-    // Leaderboard @ i is leaderboard for event
-
-    var leaderboard = [[]].concat(Array(eventSlugs.length).fill([]));
+    var leaderboard = [];
+    for(var i = 0; i < eventSlugs.length; i ++) {
+      leaderboard.push({});
+    }
     Leagues.update({
       _id: league
     }, {

@@ -7,25 +7,12 @@ Meteor.methods({
       throw new Meteor.Error(404, "League not found!");
     }
 
-    var localIndex = league.leaderboard[index].findIndex(obj => {
-      return obj.id == userId
-    });
-    var globalIndex = league.leaderboard[0].findIndex(obj => {
-      return obj.id == userId
-    });
-    if(globalIndex < 0 || localIndex < 0) {
-      throw new Meteor.Error(404, "User not found!");
-    }
-
-    var currentBonus = league.leaderboard[index][localIndex].bonus;
+    var currentBonus = league.leaderboard[index][userId].bonus;
     var diff = points - currentBonus;
 
     Leagues.update(id, {
       $set: {
-        [`leaderboard.${index}.${localIndex}.bonus`]: points
-      },
-      $inc: {
-        [`leaderboard.0.${globalIndex}.bonus`]: diff
+        [`leaderboard.${index}.${userId}.bonus`]: points
       }
     });
   },
