@@ -32,7 +32,7 @@ export default class LeagueModal extends Component {
   boardFormatting(ldrboard) {
     var participantCount = Instances.findOne().brackets[this.state.bracketIndex].participants.length;
     var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
-    var leaderboard = Leagues.findOne().leaderboard[eventIndex + 1];
+    var leaderboard = Leagues.findOne().leaderboard[eventIndex];
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
@@ -50,17 +50,7 @@ export default class LeagueModal extends Component {
           </div>
         </div>
         {
-          Object.keys(ldrboard).sort((a, b) => {
-            var [win1, los1] = a.split("-").map(i => parseInt(i));
-            var [win2, los2] = b.split("-").map(i => parseInt(i));
-            if(los1 != los2) {
-              return (los1 < los2 ? -1 : 1);
-            }
-            else {
-              return (win1 < win2 ? 1 : -1);
-            }
-          }).map((users, i) => {
-            users = ldrboard[users];
+          ldrboard.map((users, i) => {
             return users.map(user => {
               return (
                 <div className="row x-center" style={{marginBottom: 10}}>
@@ -84,12 +74,12 @@ export default class LeagueModal extends Component {
                           e.target.blur();
                         }
                       }} onBlur={(e) => {
-                        Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex + 1, user.id, parseInt(e.target.value), (err) => {
+                        Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex, user.id, parseInt(e.target.value), (err) => {
                           if(err) {
                             toastr.error("Couldn\'t update bonus points!");
                           }
                         })
-                      }} defaultValue={leaderboard[leaderboard.findIndex(p => { return p.id == user.id })].bonus}
+                      }} defaultValue={leaderboard[user.id].bonus}
                     />
                   </div>
                 </div>
@@ -101,27 +91,43 @@ export default class LeagueModal extends Component {
     );
   }
 
+  singleElimLeaderboard() {
+    var rounds = Brackets.findOne().rounds;
+    var placement = [];
+    var finals = Matches.findOne(rounds[0].pop()[0].id);
+    placement.push([finals.winner]);
+    placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
+    rounds[0].reverse().map(r => {
+      var losers = [];
+      r.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+        if(!m) return;
+        losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+      });
+      placement.push(losers);
+    });
+    return this.boardFormatting(placement);
+  }
+
   doubleElimLeaderboard() {
     var roundobj = Brackets.findOne();
-    var obj = {};
-    var participants = Instances.findOne().brackets[this.state.bracketIndex].participants;
-    participants.forEach(p => {
-      var total = Matches.find({
-        "players.alias": p.alias
-      }).fetch().length;
-      var wins = Matches.find({
-        "winner.alias": p.alias
-      }).fetch().length;
-      var losses = total - wins;
-      var score = `${wins}-${losses}`;
-      if(!obj[score]) {
-        obj[score] = [p];
-      }
-      else {
-        obj[score].push(p);
+
+    var placement = [];
+    var rounds = roundobj.rounds;
+    var finals = rounds[2].map(m => {return Matches.findOne(m[0].id)});
+    finals = finals[1] && finals[1].winner != null ? finals[1] : finals[0];
+    placement.push([finals.winner]);
+    placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]]);
+    rounds[1].reverse().forEach(round => {
+      var losers = [];
+      round.map(m => Matches.findOne((m || {}).id)).forEach(m => {
+        if(!m) return;
+        losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+      });
+      if(losers.length > 0) {
+        placement.push(losers);
       }
     });
-    return this.boardFormatting(obj);
+    return this.boardFormatting(placement);
   }
 
   swissLeaderboard() {
@@ -140,7 +146,7 @@ export default class LeagueModal extends Component {
   boardType() {
     switch(Instances.findOne().brackets[this.state.bracketIndex].format.baseFormat) {
       case "single_elim":
-        return this.doubleElimLeaderboard();
+        return this.singleElimLeaderboard();
       case "double_elim":
         return this.doubleElimLeaderboard();
       case "swiss":
@@ -158,6 +164,10 @@ export default class LeagueModal extends Component {
         <div>
         </div>
       )
+    }
+    var league = Leagues.findOne();
+    if(league.owner != Meteor.userId()) {
+      return null;
     }
     return (
       <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>

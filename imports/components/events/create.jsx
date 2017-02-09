@@ -141,6 +141,7 @@ export default class EventCreateScreen extends Component {
         meta: this.state.attrs.details.image.meta
       };
     }
+    delete this.state.attrs.details.image;
     this.state.attrs.details.datetime = moment(this.state.attrs.details.date).format("YYYYMMDD") + "T" + moment(this.state.attrs.details.time).format("HHmm");
     this.state.attrs.creator = this.state.creator;
     if(this.state.attrs.brackets) {
@@ -155,6 +156,7 @@ export default class EventCreateScreen extends Component {
     }
     Meteor.call("events.create", this.state.attrs, (err, event) => {
       if(err) {
+        this.state.attrs.details.image = imgRef;
         toastr.error(err.reason, "Error!");
       }
       else {
