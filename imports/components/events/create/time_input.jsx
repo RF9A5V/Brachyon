@@ -11,7 +11,7 @@ export default class TimeInput extends Component {
       half: "AM"
     }
     if(props.init) {
-      var current = moment(this.props.init);
+      var current = moment(props.init);
       obj = {
         hour: parseInt(current.format("h")),
         minute: parseInt(current.format("mm")),
@@ -23,7 +23,7 @@ export default class TimeInput extends Component {
 
   componentWillReceiveProps(next) {
     if(next.init) {
-      var current = moment(this.props.init);
+      var current = moment(next.init);
       obj = {
         hour: parseInt(current.format("h")),
         minute: parseInt(current.format("mm")),

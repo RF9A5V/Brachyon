@@ -23,13 +23,12 @@ Meteor.methods({
     crObj.id = attrs.creator.id;
     crObj.type = attrs.creator.type;
     delete attrs.creator;
-    var league = Leagues.insert(attrs);
+
     var eventSlugs = [];
     events.forEach((e) => {
       var createObj = {};
       createObj.details = attrs.details;
-      createObj.details.name = e.name;
-      createObj.details.datetime = e.date;
+      createObj.details.datetime = e;
       createObj.brackets = [bracket];
       createObj.creator = crObj;
       if(attrs.stream) {
@@ -37,7 +36,7 @@ Meteor.methods({
       }
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
-
+    var league = Leagues.insert(attrs);
     var leaderboard = [];
     for(var i = 0; i < eventSlugs.length; i ++) {
       leaderboard.push({});

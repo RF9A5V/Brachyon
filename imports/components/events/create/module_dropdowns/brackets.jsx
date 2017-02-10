@@ -29,19 +29,23 @@ export default class BracketsPanel extends Component {
     if(!this.props.status || !this.state.brackets) {
       return null;
     }
+    var brackets = [];
     Object.keys(this.state.brackets).forEach(key => {
       var bracket = this.state.brackets[key];
       var gameObj = bracket.gameObj;
-      if(!gameObj) {
+      if(!gameObj || !bracket.format) {
         toastr.error("Each bracket given requires a game!");
         throw new Error("Bracket at key " + key + " requires a game.");
       }
       else {
-        console.log(gameObj);
-        this.state.brackets[key].gameObj = gameObj._id;
+        var temp = {
+          format: bracket.format,
+          game: bracket.gameObj._id
+        }
+        brackets.push(temp);
       }
     })
-    return this.state.brackets;
+    return brackets;
   }
 
   addBracket() {

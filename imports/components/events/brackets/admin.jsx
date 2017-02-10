@@ -123,7 +123,6 @@ class BracketAdminScreen extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { ready } = this.props;
     if(!ready) {
       return (
