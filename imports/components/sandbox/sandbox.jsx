@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { browserHistory } from "react-router";
+
+import Title from "/imports/components/leagues/create/title.jsx";
+import Editor from "/imports/components/public/editor.jsx";
+import ImageForm from "/imports/components/public/img_form.jsx";
+import LocationForm from "/imports/components/events/create/location_select.jsx";
+
+import BracketsPanel from "/imports/components/leagues/create/brackets_panel.jsx";
+import EventsPanel from "/imports/components/leagues/create/events_panel.jsx";
+import StreamPanel from "/imports/components/leagues/create/stream_panel.jsx";
+
+import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
 import CreateContainer from "./create_container.jsx";
 
-import Title from "../events/create/title.jsx";
-import ImageForm from "../public/img_form.jsx";
-import Editor from "../public/editor.jsx";
-import DateTimeSelector from "../public/datetime_selector.jsx";
-import Location from "../events/create/location_select.jsx";
 
-import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
-
-import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
 
 // Emulation of implementation of a create container.
 
@@ -23,100 +27,116 @@ export default class Sandbox extends Component {
   }
 
   create() {
-    console.log(this.refs.create.value());
+    var obj = this.refs.create.value();
+    console.log(obj);
+    obj.details.name = obj.details.name.title + " " + obj.details.name.season;
+    var img = null;
+    if(obj.details.image) {
+      img = {};
+      img.file = obj.details.image.image;
+      img.meta = obj.details.image.meta;
+      img.type = obj.details.image.type;
+      delete obj.details.image;
+    }
+    Meteor.call("leagues.create", obj, (err, slug) => {
+      if(err) {
+        toastr.error(err.reason, "Error!");
+      }
+      else {
+        if(img) {
+          img.meta.slug = slug;
+          LeagueBanners.insert({
+            file: img.file,
+            isBase64: true,
+            meta: img.meta,
+            fileName: slug + "." + img.type,
+            onUploaded: (err, data) => {
+              if(err) {
+                return toastr.error(err.reason, "Error!");
+              }
+              toastr.success("Successfully created league!", "Success!");
+              browserHistory.push("/");
+            }
+          })
+        }
+        else {
+          toastr.success("Successfully created league!", "Success!");
+          browserHistory.push("/")
+        }
+      }
+    });
+
   }
 
   items() {
     return [
       {
         name: "Details",
-        icon: "file",
         key: "details",
+        icon: "file",
         subItems: [
           {
             name: "Title",
             key: "name",
-            content: (
-              Title
-            )
-          },
-          {
-            name: "Location",
-            key: "location",
-            content: (
-              Location
-            )
+            content: Title
           },
           {
             name: "Description",
             key: "description",
-            content: (
-              Editor
-            )
+            content: Editor
           },
           {
-            name: "Date",
-            key: "datetime",
-            content: (
-              DateTimeSelector
-            )
+            name: "Location",
+            key: "location",
+            content: LocationForm
           },
           {
             name: "Banner",
             key: "image",
-            content: (
-              ImageForm
-            ),
+            content: ImageForm,
             args: {
               aspectRatio: 16/9
             }
           }
-        ],
-        toggle: false
+        ]
       },
       {
         name: "Brackets",
-        icon: "sitemap",
         key: "brackets",
+        icon: "sitemap",
         subItems: [
           {
-            name: "Name",
+            name: "Brackets",
             key: "brackets",
-            content: (
-              BracketsPanel
-            )
+            content: BracketsPanel
           }
-        ],
-        toggle: true
+        ]
+      },
+      {
+        name: "Events",
+        key: "events",
+        icon: "cog",
+        subItems: [
+          {
+            name: "Events",
+            key: "events",
+            content: EventsPanel
+          }
+        ]
       },
       {
         name: "Stream",
-        icon: "video-camera",
         key: "stream",
+        icon: "video-camera",
         subItems: [
           {
-            name: "Name",
+            name: "Stream",
             key: "stream",
-            content: (
-              StreamPanel
-            )
+            content: StreamPanel
           }
         ],
         toggle: true
-      },
-      // {
-      //   name: "Crowdfunding",
-      //   icon: "usd",
-      //   subItems: [
-      //     {
-      //       name: "Name",
-      //       content: (
-      //         <span>$$$</span>
-      //       )
-      //     }
-      //   ],
-      //   toggle: true
-      // }
+      }
     ]
   }
 
@@ -124,7 +144,7 @@ export default class Sandbox extends Component {
     return (
       <div className="col">
         <CreateContainer items={this.items()} ref="create" />
-        <div className="row" style={{marginTop: 20}}>
+        <div className="row center" style={{marginTop: 20}}>
           <button onClick={this.create.bind(this)}>
             Publish
           </button>

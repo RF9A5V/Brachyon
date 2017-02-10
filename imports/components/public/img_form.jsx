@@ -59,7 +59,7 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
-
+    console.log("woo")
     return {
       image: this.state.url || this.props.defaultImage,
       type,

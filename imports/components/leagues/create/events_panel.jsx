@@ -11,12 +11,41 @@ export default class EventsPanel extends Component {
     super(props);
     this.state = {
       option: 0,
-      events: props.attrs.events
+      events: [
+        {
+          date: moment().add(1, "hour").startOf("hour").toDate()
+        }
+      ],
+      title: "",
+      season: ""
     }
   }
 
+  value() {
+    var { title, season } = this.props.getRefValue("details", "name");
+    if(title.length == 0 || season.length == 0) {
+      toastr.error("League or season name can't be empty!");
+      throw new Error("Name or season for league must be defined.");
+    }
+    return this.state.events.map(e => {
+      return e.date;
+    });
+  }
+
+  componentDidMount() {
+    var { title, season } = this.props.getRefValue("details", "name");
+    this.setState({
+      title: title,
+      season: season
+    })
+  }
+
+  componentWillReceiveProps() {
+    this.componentDidMount();
+  }
+
   eventCounter() {
-    var events = this.props.attrs.events;
+    var events = this.state.events;
     var decrementIcon = events.length <= 1 ? (
       <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" style={{opacity: 0.3}} />
     ) : (
@@ -30,7 +59,10 @@ export default class EventsPanel extends Component {
         events.push({
           date: event.add(1, "day").toDate()
         });
-        this.forceUpdate(); }} />
+        this.setState({
+          option: events.length - 1
+        })
+      }} />
     );
     return (
       <div className="row x-center center">
@@ -42,7 +74,7 @@ export default class EventsPanel extends Component {
   }
 
   categories() {
-    var events = this.props.attrs.events;
+    var events = this.state.events;
     var options = events.map((e, i) => { return e.name });
     return options.map((val, i) => {
       var style = {
@@ -57,12 +89,13 @@ export default class EventsPanel extends Component {
         textOverflow: "ellipsis",
         overflow: "hidden"
       }
+
       return (
         <div style={style} onClick={() => {
           this.setState({ option: i });
         }}>
           <span style={{color: this.state.option == i ? "#FF6000" : "#FFF"}}>
-          { ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (i + 1)) }
+          { ((this.state.title || "Default") + " " + (this.state.season || 1) + "." + (i + 1)) }
           </span>
         </div>
       )
@@ -70,24 +103,30 @@ export default class EventsPanel extends Component {
   }
 
   form() {
-    var event = this.props.attrs.events[this.state.option];
+    var event = this.state.events[this.state.option];
     return (
       <div className="col">
         <div className="row">
-          <h5>{ ((this.props.attrs.details.name || "Default") + " " + (this.props.attrs.details.season || 1) + "." + (this.state.option + 1)) }</h5>
+          <h5>{ ((this.state.title || "Default") + " " + (this.state.season || 1) + "." + (this.state.option + 1)) }</h5>
         </div>
         <div className="row x-center center" style={{padding: 20, backgroundColor: "#111"}}>
           <div style={{marginRight: 20}}>
             <DateInput init={event.date} onChange={(date) => {
-              var d = moment(date);
               var e = moment(event.date);
-              event.date = e.year(d.year()).month(d.month()).date(d.date()).toDate();
-            }} startsAt={this.state.option == 0 ? moment().subtract(1, "day").toDate() : moment(this.props.attrs.events[this.state.option - 1].date).toDate()} />
+              Object.keys(date).forEach(key => {
+                e.set(key, date[key]);
+              });
+              this.state.events[this.state.option].date = e.toDate();
+              this.forceUpdate();
+            }} startsAt={this.state.option == 0 ? moment().subtract(1, "day").startOf("day").toDate() : moment(this.state.events[this.state.option - 1].date).startOf("day").toDate()} />
           </div>
           <TimeInput init={event.date} onChange={(time) => {
-            var d = moment(time);
             var e = moment(event.date);
-            event.time = e.hour(d.hour()).minute(d.minute());
+            Object.keys(key => {
+              e.set(key, time[key]);
+            })
+            this.state.events[this.state.option].date = e.toDate();
+            this.forceUpdate();
           }} />
         </div>
       </div>
