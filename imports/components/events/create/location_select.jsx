@@ -101,6 +101,15 @@ export default class LocationSelect extends Component {
 
   updateValue(e){
     this.state.online = (e.target.value == 0);
+    if(this.state.online == true) {
+      this.setState({
+        streetAddress: "",
+        city: "",
+        state: "",
+        zip: "",
+        locationName: ""
+      })
+    }
     if(this.props.onChange){
       this.props.onChange(this.state);
     }

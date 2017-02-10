@@ -15,7 +15,12 @@ export default class DateInput extends Component {
       if(initTime.isBefore(temp)){
         initTime = temp.add(1, "day");
         if(props.onChange){
-          props.onChange(initTime.toDate());
+          var obj = {
+            month: initTime.month(),
+            year: initTime.year(),
+            date: initTime.date()
+          }
+          props.onChange(obj);
         }
       }
     }
@@ -37,7 +42,12 @@ export default class DateInput extends Component {
       if(initTime.isBefore(temp)){
         initTime = temp.add(1, "day");
         if(next.onChange){
-          next.onChange(initTime.toDate());
+          var obj = {
+            month: initTime.month(),
+            year: initTime.year(),
+            date: initTime.date()
+          }
+          next.onChange(obj);
         }
       }
     }
@@ -49,7 +59,11 @@ export default class DateInput extends Component {
   }
 
   value() {
-    return this.state.time.format("YYYYMMDD");
+    return {
+      month: this.state.month,
+      year: this.state.year,
+      date: this.state.time.date()
+    }
   }
 
   days() {
@@ -92,7 +106,12 @@ export default class DateInput extends Component {
     }
     this.state.time = moment().year(this.state.year).month(this.state.month).date(e.target.innerHTML);
     if(this.props.onChange){
-      this.props.onChange(this.state.time.toDate());
+      var obj = {
+        month: this.state.time.month(),
+        year: this.state.time.year(),
+        date: this.state.time.date()
+      }
+      this.props.onChange(obj);
     }
     this.forceUpdate();
   }

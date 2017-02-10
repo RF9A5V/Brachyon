@@ -37,9 +37,9 @@ export default class TimeInput extends Component {
   onChange() {
     if(this.props.onChange){
       var value = this.value();
-      var hour = value.substring(0, 2);
-      var minutes = value.substring(2, 4);
-      this.props.onChange(moment().hour(hour).minutes(minutes).toDate());
+      var hour = parseInt(value.substring(0, 2));
+      var minutes = parseInt(value.substring(2, 4));
+      this.props.onChange({hour, minutes});
     }
   }
 
@@ -58,7 +58,9 @@ export default class TimeInput extends Component {
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
-    return hour + "" + minutes;
+    return {
+      hour, minutes
+    };
   }
 
   render() {

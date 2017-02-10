@@ -9,35 +9,30 @@ export default class BracketsPanel extends Component {
 
   constructor(props) {
     super(props);
-    var bracketCount = Object.keys(props.attrs.brackets || {0 : 1}).pop();
-    if(Object.keys(props.attrs.brackets || {}).length == 0) {
-      props.attrs.brackets = { 0 : {} };
-    }
     this.state = {
-      item: 0,
-      bracketCount
-    };
+      brackets: null,
+      active: false,
+      item: 0
+    }
   }
 
-  componentWillReceiveProps(props) {
-    var bracketCount = Object.keys(props.attrs.brackets || {0 : 1}).pop();
-    if(Object.keys(props.attrs.brackets || {}).length == 0) {
-      props.attrs.brackets = { 0 : {} };
-    }
-    this.setState({
-      item: 0,
-      bracketCount
-    });
+  value() {
+    return this.state.brackets;
   }
 
   addBracket() {
-    this.props.attrs.brackets[++this.state.bracketCount] = {};
-    this.forceUpdate();
+    if(!this.state.brackets) {
+      this.state.brackets = {}
+    }
+    var bracketCount = Object.keys(this.state.brackets).length;
+    this.state.brackets[++bracketCount] = {};
+    this.setState({
+      active: true
+    });
   }
 
   deleteBracket(key) {
-    delete this.props.attrs.brackets[key];
-    this.forceUpdate();
+    delete this.state.brackets[key];
   }
 
   itemDescriptions() {
@@ -57,13 +52,15 @@ export default class BracketsPanel extends Component {
 
   render() {
     var tabs = ["Bracket"];
+    var active = this.state.active;
+    var eColor, fColor;
     if(window.location.pathname == "/events/create"){
-      var eColor = "#00BDFF";
-      var fColor = "#333";
+      eColor = "#00BDFF";
+      fColor = "#333";
     }
     else if(window.location.pathname == "/leagues/create"){
-      var eColor = "#FF6000";
-      var fColor = "#FFF";
+      eColor = "#FF6000";
+      fColor = "#FFF";
     }
     else{}
     return (
@@ -71,11 +68,21 @@ export default class BracketsPanel extends Component {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
-            <div className="row center x-center" style={{backgroundColor: this.props.selected ? eColor : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
-              <span style={{color: this.props.selected ? fColor : "#333", fontSize: 12}}>
+          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => {
+            if(!active) {
+              this.addBracket();
+            }
+            else {
+              this.setState({
+                active: false,
+                brackets: null
+              })
+            }
+          }}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
                 {
-                  this.props.selected ? (
+                  active ? (
                     "ON"
                   ) : (
                     "OFF"
@@ -86,27 +93,27 @@ export default class BracketsPanel extends Component {
           </div>
         </div>
         {
-          this.props.selected ? (
+          active ? (
             <div>
               <div>
               {
-                Object.keys(this.props.attrs.brackets).map(key => {
-                  var bracket = this.props.attrs.brackets[key];
+                Object.keys(this.state.brackets).map(key => {
+                  var bracket = this.state.brackets[key];
                   var onBracketChange = (key) => {
                     return (game, format) => {
                       if(game == null) {
-                        if(!this.props.attrs.brackets[key]) {
-                          this.props.attrs.brackets[key] = {};
+                        if(!this.state.brackets[key]) {
+                          this.state.brackets[key] = {};
                         }
-                        this.props.attrs.brackets[key].name = format.name;
+                        this.state.brackets[key].name = format.name;
                       }
                       else {
-                        var prev = this.props.attrs.brackets[key] || {};
-                        this.props.attrs.brackets[key] = {
+                        var prev = this.state.brackets[key] || {};
+                        this.state.brackets[key] = {
                           gameObj: game,
                           format
                         };
-                        this.props.attrs.brackets[key].name = prev.name;
+                        this.state.brackets[key].name = prev.name;
                       }
 
                     }
@@ -114,7 +121,7 @@ export default class BracketsPanel extends Component {
                   if(bracket == null){
                     return "";
                   }
-                  if(Object.keys(this.props.attrs.brackets).length > 1){
+                  if(Object.keys(this.state.brackets).length > 1){
                     return (
                       <div className="game-bracket-container">
                         <BracketForm key={key} ref={key} deletable={true} delfunc={() => {this.deleteBracket(key)}} onChange={onBracketChange(key)} {...bracket}/>
@@ -145,7 +152,7 @@ export default class BracketsPanel extends Component {
                 }
               </div>
               <div className="row col-1"></div>
-              <button style={{margin: "0 auto"}} onClick={this.props.onToggle}>Create a Bracket</button>
+              <button style={{margin: "0 auto"}} onClick={this.addBracket.bind(this)}>Create a Bracket</button>
             </div>
           </div>
         )

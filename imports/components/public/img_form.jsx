@@ -45,18 +45,13 @@ export default class ImageForm extends Component {
     return boxData;
   }
 
-  value(cb) {
-
-    var boxData = this.dimensions();
-
-    if(this.props.meta) {
-      Object.keys(this.props.meta).forEach(key => {
-        boxData[key] = this.props.meta[key];
-      })
+  value() {
+    try {
+      var boxData = this.dimensions();
     }
-    Object.keys(this.state.meta).forEach(key => {
-      boxData[key] = this.state.meta[key];
-    })
+    catch(e) {
+      return null;
+    }
     var type = "";
     if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
       type = ".jpg";
@@ -65,24 +60,11 @@ export default class ImageForm extends Component {
       type = ".png";
     }
 
-    this.props.collection.insert({
-      file: (this.state.url || this.props.defaultImage),
-      isBase64: true,
-      fileName: Meteor.userId() + type, // Weird shit until I figure out if we want to save the initial file name
-      meta: boxData,
-      onStart: () => {
-        toastr.warning("Now uploading image.", "Warning")
-      },
-      onUploaded: (err, data) => {
-        if(err){
-          toastr.error(err.reason);
-          cb(err, data);
-        }
-        if(cb) {
-          cb(null, data);
-        }
-      }
-    });
+    return {
+      image: this.state.url || this.props.defaultImage,
+      type,
+      meta: boxData
+    }
   }
 
   updateImage(e){
