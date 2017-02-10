@@ -23,7 +23,12 @@ export default class DatetimeSelector extends Component {
     Object.keys(minorComp).forEach(key => {
       time.set(key, minorComp[key]);
     });
-    return time.startOf("minute").toDate();
+    var result = time.startOf("minute");
+    if(result.isBefore(moment())) {
+      toastr.error(`Start time provided is before now. No time travelling is allowed.`);
+      throw new Error("Start time of " + moment().toDate() + " is after " + result.toDate());
+    }
+    return result.toDate();
   }
 
   render() {

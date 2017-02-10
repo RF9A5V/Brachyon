@@ -47,7 +47,7 @@ export default class SubContainer extends Component {
             this.props.items.map((item, i) => {
               return (
                 <div style={this.state.selected == i ? {} : { height: 0, overflowY: "hidden" }}>
-                  <item.content ref={i} {...item.args} />
+                  <item.content ref={i} {...item.args} status={this.props.status} setStatus={this.props.setStatus} />
                 </div>
               )
             })
