@@ -41,8 +41,7 @@ import ShowLeagueScreen from "../imports/components/leagues/show.jsx";
 import CreateBracketScreen from "../imports/components/brackets/create.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
-
-
+import Sandbox from "../imports/components/sandbox/sandbox.jsx";
 
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
@@ -81,6 +80,7 @@ export const renderRoutes = () => (
       <Route path="bracket/:id/admin" component={BracketAdminScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
       <Route path="/privacy" component={PrivacyPolicyScreen} />
+      <Route path="/sandbox" component={Sandbox} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
