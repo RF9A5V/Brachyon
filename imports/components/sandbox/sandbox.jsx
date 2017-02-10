@@ -11,6 +11,8 @@ import Location from "../events/create/location_select.jsx";
 
 import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
 
+import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
+
 // Emulation of implementation of a create container.
 
 export default class Sandbox extends Component {
@@ -87,19 +89,21 @@ export default class Sandbox extends Component {
         ],
         toggle: true
       },
-      // {
-      //   name: "Stream",
-      //   icon: "video-camera",
-      //   subItems: [
-      //     {
-      //       name: "Name",
-      //       content: (
-      //         <input type="text" />
-      //       )
-      //     }
-      //   ],
-      //   toggle: true
-      // },
+      {
+        name: "Stream",
+        icon: "video-camera",
+        key: "stream",
+        subItems: [
+          {
+            name: "Name",
+            key: "stream",
+            content: (
+              StreamPanel
+            )
+          }
+        ],
+        toggle: true
+      },
       // {
       //   name: "Crowdfunding",
       //   icon: "usd",

@@ -11,24 +11,46 @@ export default class BracketsPanel extends Component {
     super(props);
     this.state = {
       brackets: null,
-      active: false,
       item: 0
     }
   }
 
+  componentWillReceiveProps(next) {
+    if(next.status && !this.state.brackets) {
+      this.state.brackets = { 0: {} };
+    }
+    else if(!next.status) {
+      this.state.brackets = null;
+    }
+    this.forceUpdate();
+  }
+
   value() {
+    if(!this.props.status || !this.state.brackets) {
+      return null;
+    }
+    Object.keys(this.state.brackets).forEach(key => {
+      var bracket = this.state.brackets[key];
+      var gameObj = bracket.gameObj;
+      if(!gameObj) {
+        toastr.error("Each bracket given requires a game!");
+        throw new Error("Bracket at key " + key + " requires a game.");
+      }
+      else {
+        console.log(gameObj);
+        this.state.brackets[key].gameObj = gameObj._id;
+      }
+    })
     return this.state.brackets;
   }
 
   addBracket() {
     if(!this.state.brackets) {
-      this.state.brackets = {}
+      this.state.brackets = { }
     }
     var bracketCount = Object.keys(this.state.brackets).length;
-    this.state.brackets[++bracketCount] = {};
-    this.setState({
-      active: true
-    });
+    this.state.brackets[++bracketCount] = { };
+    this.props.setStatus(true);
   }
 
   deleteBracket(key) {
@@ -52,7 +74,7 @@ export default class BracketsPanel extends Component {
 
   render() {
     var tabs = ["Bracket"];
-    var active = this.state.active;
+    var active = this.props.status;
     var eColor, fColor;
     if(window.location.pathname == "/events/create"){
       eColor = "#00BDFF";
@@ -74,9 +96,9 @@ export default class BracketsPanel extends Component {
             }
             else {
               this.setState({
-                active: false,
                 brackets: null
-              })
+              });
+              this.props.setStatus(false);
             }
           }}>
             <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
