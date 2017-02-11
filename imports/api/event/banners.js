@@ -7,7 +7,7 @@ var Banners = new FilesCollection({
   collectionName: "eventBanners",
   allowClientCode: false,
   onBeforeUpload: function(file) {
-    if(file.size <= 10485760 && /png|jpg|jpeg/i.test(file.extension)) {
+    if(file.size <= 10485760 && /png|jpg|jpeg/i.test(file.type)) {
       return true;
     } else {
       return "Image can only be less than 10MB.";

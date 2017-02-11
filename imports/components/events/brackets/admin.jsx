@@ -119,6 +119,12 @@ class BracketAdminScreen extends Component {
         }
       ])
     }
+    defaultItems.push({
+      text: "Back To Event",
+      action: () => {
+        browserHistory.push(`/event/${Events.findOne().slug}`);
+      }
+    })
     return defaultItems;
   }
 

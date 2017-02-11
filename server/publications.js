@@ -123,7 +123,7 @@ Meteor.smartPublish("discoverEvents", () => {
   });
   var games = Games.find({_id: { $in: Array.from(gameSet) }});
   var leagues = Leagues.find();
-  var leagueEvents = Events.find({ slug: { $in: leagues.map(l => { return l.events[0] }) } })
+  var leagueEvents = Events.find({ league: { $in: leagues.map(l => l._id) }});
   return [
     Events.find({published: true}),
     Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
