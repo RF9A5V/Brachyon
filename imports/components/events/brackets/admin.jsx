@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { browserHistory } from "react-router";
+import { createContainer } from "meteor/react-meteor-data";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
@@ -16,64 +17,10 @@ import Brackets from "/imports/api/brackets/brackets.js";
 
 import Instances from "/imports/api/event/instance.js";
 
-export default class BracketAdminScreen extends TrackerReact(Component) {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug, {
-        onReady: () => {
-          var event = Events.findOne();
-          if(!event) {
-            return;
-          }
-          if(event.orgEvent) {
-            var organization = Organizations.findOne(event.owner);
-            
-            if(organization.owner != Meteor.userId() && organization.roles["Owner"].indexOf(Meteor.userId()) < 0 && organization.roles["Admin"].indexOf(Meteor.userId()) < 0) {
-              toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
-              browserHistory.goBack();
-            }
-          }
-          else if(Events.findOne().owner != Meteor.userId()) {
-            toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
-            browserHistory.goBack();
-          }
-        }
-      }),
-      instance: Meteor.subscribe("bracketContainer", this.props.params.id)
-    }
-  }
-
-  componentWillReceiveProps(next) {
-    if(next.params.slug == this.props.params.slug || next.params.id == this.props.params.id) {
-      return;
-    }
-    this.state.event.stop();
-    this.state.instance.stop();
-    this.setState({
-      event: Meteor.subscribe("event", this.props.params.slug, {
-        onReady: () => {
-          if(!Events.findOne()) {
-            return;
-          }
-          if(Events.findOne().owner != Meteor.userId()) {
-            toastr.warning("Can't access this page if you aren't an event organizer.", "Warning!");
-            browserHistory.pop();
-          }
-        }
-      }),
-      instance: Meteor.subscribe("bracketContainer", this.props.params.id)
-    })
-  }
-
-  componentWillUnmount() {
-    this.state.event.stop();
-    this.state.instance.stop();
-  }
+class BracketAdminScreen extends Component {
 
   items() {
-    var instance = Instances.findOne();
+    const { instance } = this.props;
     var index = this.props.params.bracketIndex || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
@@ -172,11 +119,18 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
         }
       ])
     }
+    defaultItems.push({
+      text: "Back To Event",
+      action: () => {
+        browserHistory.push(`/event/${Events.findOne().slug}`);
+      }
+    })
     return defaultItems;
   }
 
   render() {
-    if(!this.state.event.ready() || !this.state.instance.ready()) {
+    const { ready } = this.props;
+    if(!ready) {
       return (
         <div>
           Loading...
@@ -188,3 +142,16 @@ export default class BracketAdminScreen extends TrackerReact(Component) {
     )
   }
 }
+
+export default createContainer(({params}) => {
+  const { slug, id } = params;
+  const eventHandle = Meteor.subscribe("event", slug);
+  const instanceHandle = Meteor.subscribe("bracketContainer", id);
+  const ready = eventHandle.ready() && instanceHandle.ready();
+  return {
+    ready,
+    event: Events.findOne(),
+    instance: Instances.findOne(),
+    bracket: Brackets.findOne()
+  }
+}, BracketAdminScreen);

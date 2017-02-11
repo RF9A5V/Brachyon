@@ -145,7 +145,7 @@ export default class BracketSlide extends Component {
                             <FontAwesome name="users" />
                           </div>
                           <div className="bracket-detail-item">
-                            <span>{ 0 }</span>
+                            <span>{ (bracket.participants || []).length }</span>
                           </div>
                         </div>
                         {

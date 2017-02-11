@@ -69,22 +69,36 @@ export default class GamesIndex extends Component {
     if(this.refs.gameName.value == "") {
       return toastr.error("Game name can't be empty!", "Error!");
     }
-    var self = this;
+    var { image, meta, type } = this.refs.image.value();
+    if(!image) {
+      toastr.error("You need an image for this game!");
+      throw new Error("Game required image.");
+    }
     Meteor.call("games.submitForReview", this.refs.gameName.value, this.refs.gameDescription.value, (err, game) => {
       if(err) {
         return toastr.error(err.reason, "Error!");
       }
       else {
-        this.refs.image.setMeta("gameId", game);
-        this.refs.image.value(() => {
-          this.refs.image.reset();
-          this.refs.gameName.value = "";
-          this.refs.gameDescription.value = "";
-          this.setState({
-            open: false
-          })
-          return toastr.success("Successfully sent game for review!", "Success!");
-        });
+        meta.gameId = game;
+        GameBanners.insert({
+          file: image,
+          meta,
+          fileName: game + "." + type,
+          onUploaded: (err) => {
+            if(err){
+              toastr.error("Something went wrong!");
+            }
+            else {
+              this.refs.image.reset();
+              this.refs.gameName.value = "";
+              this.refs.gameDescription.value = "";
+              this.setState({
+                open: false
+              })
+              return toastr.success("Successfully sent game for review!", "Success!");
+            }
+          }
+        })
       }
     })
 
@@ -98,7 +112,7 @@ export default class GamesIndex extends Component {
         </div>
         <div className="col x-center" style={{padding: 20}}>
           <div className="col center x-center" style={{marginBottom: 20}}>
-            <ImageForm ref="image" collection={ GameBanners } aspectRatio={3/4} />
+            <ImageForm ref="image" aspectRatio={3/4} />
           </div>
           <div className="col" style={{width: "70%"}}>
             <span>Game Name</span>

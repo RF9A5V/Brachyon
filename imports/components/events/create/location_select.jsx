@@ -77,18 +77,6 @@ export default class LocationSelect extends Component {
     });
   }
 
-  componentWillReceiveProps() {
-    this.setState({
-      online: this.props.online === true,
-      coords: [],
-      locationName: this.props.locationName || "",
-      streetAddress: this.props.streetAddress || "",
-      city: this.props.city || "",
-      state: this.props.state || "",
-      zip: this.props.zip || ""
-    })
-  }
-
   componentDidUpdate(){
     Object.keys(this.refs).map((function(key){
       this.refs[key].value = this.state[key];
@@ -100,14 +88,27 @@ export default class LocationSelect extends Component {
   }
 
   updateValue(e){
-    this.state.online = (e.target.value == 0);
-    if(this.props.onChange){
-      this.props.onChange(this.state);
+    this.state.online = e.target.checked;
+    if(this.state.online == true) {
+      this.setState({
+        streetAddress: "",
+        city: "",
+        state: "",
+        zip: "",
+        locationName: "",
+        coords: []
+      })
     }
     this.forceUpdate();
   }
 
   value() {
+    if(!this.state.online) {
+      if(this.state.coords.length != 2) {
+        toastr.error("You need to set your location on this form!");
+        throw new Error("Location not set.");
+      }
+    }
     return this.state;
   }
 
@@ -129,15 +130,12 @@ export default class LocationSelect extends Component {
   render() {
     return (
       <div>
-        <h5>
-          Is this event online?
-        </h5>
         <div>
           <div className="row x-center" style={{margin: "10px 0"}}>
-            <input style={{margin: 0}} onChange={this.updateValue.bind(this)} name="online" type="radio" value={1} checked={!this.state.online} />
-            <label style={{margin: "8px 5px 5px"}}>No</label>
-            <input style={{margin: "0px 0px 0px 15px"}} onChange={this.updateValue.bind(this)} name="online" type="radio" value={0} checked={this.state.online} />
-            <label style={{margin: "8px 5px 5px"}}>Yes</label>
+            <h5>
+              Is this event online?
+            </h5>
+            <input type="checkbox" onChange={this.updateValue.bind(this)} defaultChecked={this.state.online} />
           </div>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>

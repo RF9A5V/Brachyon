@@ -26,7 +26,20 @@ export default class ImageModal extends Component {
   }
 
   onClick() {
-    this.props.handler(this.refs.image.value());
+    var { image, meta, type } = this.refs.image.value();
+    meta.userId = Meteor.userId();
+    ProfileImages.insert({
+      file: image,
+      meta,
+      fileName: Meteor.userId() + "." + type,
+      onUploaded: (err) => {
+        if(err) {
+          toastr.error(err.reason);
+          throw new Error(err.reason);
+        }
+        toastr.success("Updated profile image!");
+      }
+    })
   }
 
   render() {
@@ -36,7 +49,7 @@ export default class ImageModal extends Component {
           <div className="div-pad">
             <div className="close" onClick={this.closeModal.bind(this)}>&#10006;</div>
           </div>
-          <ImageForm ref="image" collection={ProfileImages} id={Meteor.user().profile.image}/>
+          <ImageForm ref="image" />
           <button onClick={this.onClick.bind(this)}>Submit</button>
         </Modal>
       </div>
