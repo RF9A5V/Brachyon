@@ -28,7 +28,6 @@ export default class Sandbox extends Component {
 
   create() {
     var obj = this.refs.create.value();
-    console.log(obj);
     obj.details.name = obj.details.name.title + " " + obj.details.name.season;
     var img = null;
     if(obj.details.image) {

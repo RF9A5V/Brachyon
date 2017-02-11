@@ -23,8 +23,8 @@ Meteor.methods({
     crObj.id = attrs.creator.id;
     crObj.type = attrs.creator.type;
     delete attrs.creator;
-
     var eventSlugs = [];
+    var league = Leagues.insert(attrs);
     events.forEach((e) => {
       var createObj = {};
       createObj.details = attrs.details;
@@ -36,19 +36,18 @@ Meteor.methods({
       }
       eventSlugs.push(Meteor.call("events.create", createObj, league));
     });
-    var league = Leagues.insert(attrs);
+
     var leaderboard = [];
     for(var i = 0; i < eventSlugs.length; i ++) {
       leaderboard.push({});
     }
-    Leagues.update({
-      _id: league
-    }, {
+    Leagues.update(league, {
       $set: {
-        "events": eventSlugs,
-        "leaderboard": leaderboard
+        events: eventSlugs,
+        leaderboard
       }
-    });
+    })
+
     return Leagues.findOne(league).slug;
   }
 })

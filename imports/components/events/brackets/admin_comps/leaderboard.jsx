@@ -110,9 +110,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
           }
         });
       }
-
-      var content = placement.map((rank, i) => {
-        var place = i + 1;
+      var getSuffix = (place) => {
         var suffix = "th";
         switch(place % 10) {
           case 1:
@@ -127,9 +125,16 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
           default:
             break;
         }
+        return suffix;
+      }
+      var currentPlace = 1;
+      var content = placement.map((rank, i) => {
+        var place = currentPlace;
+        var nextPlace = place + rank.length - 1;
+        currentPlace += 1 + rank.length - 1;
         return (
           <div style={{marginBottom: 20}}>
-            <h5 style={{marginBottom: 10}}>{place + suffix} Place</h5>
+            <h5 style={{marginBottom: 10}}>{place + getSuffix(place)} Place {nextPlace != place ? `To ${nextPlace + getSuffix(nextPlace)} Place` : ""}</h5>
             <div className="row" style={{flexWrap: "wrap"}}>
             {
               rank.map(r => {
