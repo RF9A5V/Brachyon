@@ -61,7 +61,7 @@ export default class CreateContainer extends Component {
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
-              <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
+              <div className="col" style={{padding: 10, backgroundColor: "#666", cursor: "pointer"}}>
                 <span style={{marginBottom: 5}}>Create As</span>
                 <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
                   <option value={0}>User - {Meteor.user().username}</option>

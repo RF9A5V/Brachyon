@@ -14,6 +14,8 @@ import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
 
 import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
 
+import { Banners } from "/imports/api/event/banners.js"
+
 // Emulation of implementation of a create container.
 
 export default class EventCreate extends Component {
@@ -51,9 +53,7 @@ export default class EventCreate extends Component {
           imgRef.meta.eventSlug = event;
           Banners.insert({
             file: imgRef.file,
-            isBase64: true,
             meta: imgRef.meta,
-            fileName: event + "." + imgRef.type,
             onUploaded: (err, data) => {
               if(err) {
                 return toastr.error(err.reason, "Error!");

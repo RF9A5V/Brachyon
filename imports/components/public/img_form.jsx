@@ -59,9 +59,8 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
-    console.log("woo")
     return {
-      image: this.state.url || this.props.defaultImage,
+      image: this.state.file,
       type,
       meta: boxData
     }
@@ -73,18 +72,15 @@ export default class ImageForm extends Component {
     var reader = new FileReader();
     var file = e.target.files[0];
     var type = file.type;
-    if(this.props.onSelect){
-      this.props.onSelect();
-    }
-    reader.onload = function() {
-      if(self.props.onImgSelected) {
-        self.props.onImgSelected(reader.result);
-      }
-      self.setState({
+    reader.onload = () => {
+      this.state = {
         url: reader.result,
         file,
         type
-      });
+      }
+      setTimeout(() => {
+        this.forceUpdate();
+      }, 250)
     }
     reader.readAsDataURL(file);
   }
