@@ -27,6 +27,13 @@ export default class SubContainer extends Component {
       style.overflowY = "hidden";
       style.padding = 0;
     }
+    var selectedColor = "white";
+    if(window.location.pathname == "/events/create"){
+      selectedColor = "#00BDFF";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      selectedColor = "#FF6000";
+    }
     return (
       <div style={style}>
         {
@@ -37,7 +44,7 @@ export default class SubContainer extends Component {
               {
                 this.props.items.map((item, i) => {
                   return (
-                    <div style={{padding: 10, textAlign: "center", width: 100, backgroundColor: "#111", marginRight: 10, color: this.state.selected == i ? "#00BDFF" : "white"}} onClick={() => {this.setState({selected: i})}}>
+                    <div style={{padding: 10, textAlign: "center", width: 100, backgroundColor: "#111", marginRight: 10, color: this.state.selected == i ? selectedColor : "white", cursor: "pointer"}} onClick={() => {this.setState({selected: i})}}>
                       { item.name }
                     </div>
                   )

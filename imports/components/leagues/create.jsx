@@ -36,8 +36,8 @@ export default class Sandbox extends Component {
       img.file = obj.details.image.image;
       img.meta = obj.details.image.meta;
       img.type = obj.details.image.type;
-      delete obj.details.image;
     }
+    delete obj.details.image;
     Meteor.call("leagues.create", obj, (err, slug) => {
       if(err) {
         toastr.error(err.reason, "Error!");
@@ -47,7 +47,6 @@ export default class Sandbox extends Component {
           img.meta.slug = slug;
           LeagueBanners.insert({
             file: img.file,
-            isBase64: true,
             meta: img.meta,
             fileName: slug + "." + img.type,
             onUploaded: (err, data) => {
