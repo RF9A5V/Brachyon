@@ -2,174 +2,58 @@ import React, { Component } from "react";
 import moment from "moment";
 import { browserHistory } from "react-router";
 
-import DetailsPanel from "./create/details.jsx";
-import CrowdfundingPanel from "./create/module_dropdowns/crowdfunding.jsx";
-import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
-import BotPanel from "./create/module_dropdowns/bot.jsx";
-import PromotionPanel from "./create/module_dropdowns/promotion.jsx";
-import StreamPanel from "./create/module_dropdowns/stream.jsx";
-import ModuleBlock from "./create/module_block.jsx";
+import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import { Banners } from "/imports/api/event/banners.js";
+import Title from "../events/create/title.jsx";
+import ImageForm from "../public/img_form.jsx";
+import Editor from "../public/editor.jsx";
+import DateTimeSelector from "../public/datetime_selector.jsx";
+import Location from "../events/create/location_select.jsx";
 
-export default class EventCreateScreen extends Component {
+import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
+
+import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
+
+import { Banners } from "/imports/api/event/banners.js"
+
+// Emulation of implementation of a create container.
+
+export default class EventCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      moduleState: {
-        details: {
-          active: true
-        },
-        brackets: {
-          active: false
-        },
-        stream: {
-          active: false
-        },
-        crowdfunding: {
-          active: false
-        },
-      },
-      currentItem: "details",
-      creator: {
-        type: "user",
-        id: Meteor.userId()
-      },
-      organizations: Meteor.subscribe("userOrganizations", Meteor.userId(), {
-        onReady: () => { this.setState({ ready: true }) }
-      }),
-      attrs: {
-        details: {
-          date: moment().toDate(),
-          time: moment().add(1, "hour").startOf("hour").toDate()
-        }
-      },
-      ready: false
-    }
+    this.state = {};
   }
 
-  componentWillUnmount() {
-    if(this.state.organizations) {
-      try {
-        this.state.organzations.stop();
-      }
-      catch(e) {
-        // This is fucked.
-      }
-    }
-  }
+  create() {
+    var obj = this.refs.create.value();
 
-  availableModules() {
-    return [
-      {
-        name: "details",
-        icon: "file-text",
-        requiresReview: false,
-        selected: this.state.moduleState["details"].active
-      },
-      {
-        name: "brackets",
-        icon: "sitemap",
-        requiresReview: false,
-        selected: this.state.moduleState["brackets"].active
-      },
-      {
-        name: "stream",
-        icon: "video-camera",
-        requiresReview: false,
-        selected: this.state.moduleState["stream"].active
-      },
-      {
-        name: "crowdfunding",
-        icon: "usd",
-        requiresReview: true,
-        selected: this.state.moduleState["crowdfunding"].active
+    Object.keys(obj).forEach(key1 => {
+      if(obj[key1] == null) {
+        delete obj[key1];
       }
-    ];
-  }
-
-  currentPanel() {
-    var item = (
-      <div></div>
-    );
-    var generator = (value) => {
-      return () => {
-        this.state.moduleState[value].active = !this.state.moduleState[value].active;
-        if(this.state.moduleState[value].active) {
-          this.state.attrs[value] = {};
-        }
-        else {
-          delete this.state.attrs[value];
-        }
-        this.forceUpdate();
-      }
-    }
-    var isActive = (value) => {
-      return this.state.moduleState[value].active;
-    }
-    switch(this.state.currentItem) {
-      case "details":
-        item = <DetailsPanel attrs={this.state.attrs} />
-        break;
-      case "crowdfunding":
-        item = <CrowdfundingPanel attrs={this.state.attrs} selected={isActive("crowdfunding")} onToggle={generator("crowdfunding")}/>
-        break;
-      case "brackets":
-        item = <BracketsPanel attrs={this.state.attrs} onToggle={generator("brackets")} selected={isActive("brackets")} />
-        break;
-      case "stream":
-        item = <StreamPanel attrs={this.state.attrs} selected={isActive("stream")} onToggle={generator("stream")} />
-        break;
-      default:
-        break;
-    }
-    return (
-      <div style={{padding: 20, backgroundColor: "#666"}}>
-        { item }
-      </div>
-    )
-  }
-
-  submit(e) {
-    e.preventDefault();
+    })
 
     var imgRef;
-    if(this.state.attrs.details.image != null) {
+    if(obj.details.image != null) {
       imgRef = {
-        file: this.state.attrs.details.image.file,
-        meta: this.state.attrs.details.image.meta
-      };
+        file: obj.details.image.image,
+        type: obj.details.image.type,
+        meta: obj.details.image.meta
+      }
     }
-    delete this.state.attrs.details.image;
-    this.state.attrs.details.datetime = moment(this.state.attrs.details.date).format("YYYYMMDD") + "T" + moment(this.state.attrs.details.time).format("HHmm");
-    this.state.attrs.creator = this.state.creator;
-    if(this.state.attrs.brackets) {
-      this.state.attrs.brackets = Object.keys(this.state.attrs.brackets).map(key => {
-        var obj = this.state.attrs.brackets[key];
-        if(!obj.game) {
-          obj.game = obj.gameObj._id;
-          delete obj.gameObj;
-        }
-        return obj;
-      });
-    }
-    Meteor.call("events.create", this.state.attrs, (err, event) => {
+    delete obj.details.image;
+    Meteor.call("events.create", obj, (err, event) => {
       if(err) {
-        this.state.attrs.details.image = imgRef;
         toastr.error(err.reason, "Error!");
       }
       else {
-        //var href = unpub ? `/events/${event}/edit` : `/events/${event}/show`;
         var href = `/event/${event}`;
         if(imgRef) {
           imgRef.meta.eventSlug = event;
-          var dataSeg = imgRef.file.substring(imgRef.file.indexOf("/"), imgRef.file.indexOf(";")).slice(1);
           Banners.insert({
             file: imgRef.file,
-            isBase64: true,
             meta: imgRef.meta,
-            fileName: event + "." + dataSeg,
             onUploaded: (err, data) => {
               if(err) {
                 return toastr.error(err.reason, "Error!");
@@ -184,128 +68,98 @@ export default class EventCreateScreen extends Component {
         }
       }
     })
+
   }
 
-  buttons() {
-    var reviewRequired = false;
-    return (
-      <div style={{marginBottom: 20}}>
-        {
-          reviewRequired ? (
-            <button onClick={this.submit.bind(this)}>Advanced Options</button>
-          ) : (
-            <button onClick={this.submit.bind(this)}>Publish</button>
-          )
-        }
-      </div>
-    );
-  }
-
-  onTypeSelect(e) {
-    if(e.target.value == 0) {
-      this.setState({
-        creator: {
-          type: "user",
-          id: Meteor.userId()
-        }
-      });
-    }
-    else {
-      this.setState({
-        creator: {
-          type: "organization",
-          id: e.target.value
-        }
-      })
-    }
-  }
-
-  modulePanels() {
-    var modules = this.availableModules();
-    var keys = Object.keys(modules);
-    var generator = (value) => {
-      return () => {
-        if(value == "details") {
-          return;
-        }
-        if(value == "crowdfunding") {
-          if(!Meteor.isDevelopment){
-            return toastr.warning("Under construction!", "Warning!");
+  items() {
+    return [
+      {
+        name: "Details",
+        icon: "file",
+        key: "details",
+        subItems: [
+          {
+            name: "Title",
+            key: "name",
+            content: (
+              Title
+            )
+          },
+          {
+            name: "Location",
+            key: "location",
+            content: (
+              Location
+            )
+          },
+          {
+            name: "Description",
+            key: "description",
+            content: (
+              Editor
+            )
+          },
+          {
+            name: "Date",
+            key: "datetime",
+            content: (
+              DateTimeSelector
+            )
+          },
+          {
+            name: "Banner",
+            key: "image",
+            content: (
+              ImageForm
+            ),
+            args: {
+              aspectRatio: 16/9
+            }
           }
-        }
-        this.state.moduleState[value].active = !this.state.moduleState[value].active;
-        this.forceUpdate();
+        ],
+        toggle: false
+      },
+      {
+        name: "Brackets",
+        icon: "sitemap",
+        key: "brackets",
+        subItems: [
+          {
+            name: "Name",
+            key: "brackets",
+            content: (
+              BracketsPanel
+            )
+          }
+        ],
+        toggle: true
+      },
+      {
+        name: "Stream",
+        icon: "video-camera",
+        key: "stream",
+        subItems: [
+          {
+            name: "Name",
+            key: "stream",
+            content: (
+              StreamPanel
+            )
+          }
+        ],
+        toggle: true
       }
-    }
-    return keys.map((key, index) => {
-      var mod = modules[key];
-      return (
-        <ModuleBlock
-          modName={mod.name}
-          icon={mod.icon}
-          isActive={this.state.currentItem == mod.name}
-          callback={() => {
-            this.setState({
-              currentItem: mod.name
-            })
-          }}
-          isOn={this.state.moduleState[mod.name].active}
-          onToggle={generator(mod.name)}
-          toggleable={mod.name == "details"}
-        />
-      );
-    })
+    ]
   }
 
   render() {
-    var self = this;
-    if(!this.state.ready) {
-      return (
-        <div>
-        </div>
-      )
-    }
     return (
-      <div className='box'>
-        <div className='col' style={{padding: 20}}>
-          <div className="row flex-pad x-center" style={{marginBottom: 20}}>
-            <div className="row">
-            {
-              this.modulePanels()
-            }
-            </div>
-            {
-              Organizations.find().fetch().length > 0 ? (
-                <div className="col" style={{padding: 10, backgroundColor: "#666"}}>
-                  <span style={{marginBottom: 5}}>Create As</span>
-                  <select defaultValue={0} onChange={this.onTypeSelect.bind(this)}>
-                    <option value={0}>User - {Meteor.user().username}</option>
-                    {
-                      Organizations.find().map(o => {
-                        return (
-                          <option value={o._id}>
-                            Organization - { o.name }
-                          </option>
-                        )
-                      })
-                    }
-                  </select>
-                </div>
-              ) : (
-                ""
-              )
-            }
-          </div>
-          <div className="col" style={{marginBottom: 20}}>
-            {
-              this.currentPanel()
-            }
-          </div>
-          <div className="row center">
-            {
-              this.buttons()
-            }
-          </div>
+      <div className="col" style={{padding: 20}}>
+        <CreateContainer items={this.items()} ref="create" />
+        <div className="row center" style={{marginTop: 20}}>
+          <button onClick={this.create.bind(this)}>
+            Publish
+          </button>
         </div>
       </div>
     )

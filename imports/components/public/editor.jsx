@@ -7,6 +7,21 @@ import 'bootstrap/js/tooltip';
 
 export default class Editor extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: ""
+    }
+  }
+
+  value() {
+    if(this.state.value.length == 0) {
+      toastr.error("Description must be given!");
+      throw new Error("Description for item cannot be zero-length. Please provide a brief description.");
+    }
+    return this.state.value;
+  }
+
   reset() {
     ReactSummernote.reset();
   }
@@ -27,11 +42,11 @@ export default class Editor extends Component {
       tools.push(['table', ['table']]);
     }
     return (
-      <ReactSummernote value={this.props.value || ""} options={{
+      <ReactSummernote value={this.state.value} options={{
         height: 350,
         toolbar: tools,
         disableDragAndDrop: !this.props.useInsert
-      }} onChange={this.props.onChange}/>
+      }} onChange={(value) => { this.setState({ value }) }}/>
     )
   }
 }

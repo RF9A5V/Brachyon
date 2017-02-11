@@ -39,6 +39,10 @@ export default class TabController extends Component {
   }
 
   onPersistentButtonClick(item) {
+    if(item.action) {
+      item.action();
+      return;
+    }
     var index = this.props.items.indexOf(item);
     this.setActive(index, 0);
   }
@@ -59,17 +63,20 @@ export default class TabController extends Component {
 
   render() {
     var buttons = this.persistentButtons();
+    var content = this.props.items.filter(i => {
+      return i.icon != null;
+    });
     return (
       <div className="tab-container">
-        <SideTabMenu items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
+        <SideTabMenu items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
-          <SideTabContent items={this.props.items} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
+          <SideTabContent items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
         </VelocityComponent>
         <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", zIndex: 4, paddingRight: 80, justifyContent: "flex-end"}}>
           {
             buttons.map((item, i) => {
               return (
-                <button className={i == buttons.length - 1 ? "signup-button" : "login-button" } style={{margin: 10}} onClick={() => { this.onPersistentButtonClick(item) }}>
+                <button className={i == buttons.length - 1 ? "signup-button" : "login-button" } style={{margin: 10}} onClick={item.action ? item.action : () => {}}>
                   { item.text }
                 </button>
               )
