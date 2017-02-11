@@ -4,7 +4,7 @@ import SlideMain from "/imports/components/events/preview/slides/slide_main.jsx"
 
 import Leagues from "/imports/api/leagues/league.js";
 
-import MainSlide from "./show/main.jsx";
+import HomeSlide from "./show/slides/main/home.jsx";
 import EventSlide from "./show/events.jsx";
 import LeaderboardSlide from "./show/leaderboards.jsx";
 import TiebreakerSlide from "./show/tiebreaker.jsx";
@@ -81,29 +81,30 @@ export default class LeagueShowPage extends Component {
     var pages = [
       {
         name: "Home",
-        component: MainSlide
+        slides: [
+          {
+            component: HomeSlide,
+            args: {
+              name: "title"
+            }
+          },
+          {
+            component: HomeSlide,
+            args: {
+              name: "change!"
+            }
+          }
+        ]
       },
       {
         name: "Events",
-        component: EventSlide
-      },
-      {
-        name: "Leaderboard",
-        component: LeaderboardSlide
+        slides: [
+          {
+            component: EventSlide
+          }
+        ]
       }
     ];
-    if(league.tiebreaker && !league.complete) {
-      pages.push({
-        name: "Tiebreaker",
-        component: TiebreakerSlide
-      });
-    }
-    if(league.stream) {
-      pages.push({
-        name: "Stream",
-        component: StreamSlide
-      })
-    }
     return pages;
   }
 
