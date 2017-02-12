@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
-import Swipeable from "react-swipeable";
+import Slider from "react-slick";
 
 export default class SubSlideContainer extends Component {
 
@@ -16,56 +16,29 @@ export default class SubSlideContainer extends Component {
     return this.props.backgroundImage ? this.props.backgroundImage : "/images/bg.jpg";
   }
 
-  onUp() {
-    if(this.state.currentItem < this.props.items.length - 1) {
-      this.state.currentItem ++;
-      this.refs.container.scrollTop = (window.innerHeight - 100) * this.state.currentItem;
-      this.forceUpdate();
-    }
-  }
-
-  onDown() {
-    if(this.state.currentItem > 0) {
-      this.state.currentItem --;
-      this.refs.container.scrollTop = (window.innerHeight - 100) * this.state.currentItem;
-      this.forceUpdate();
-    }
+  setCurrent(i) {
+    this.refs.slider.slickGoTo(i);
   }
 
   render() {
     return (
-      <div className="slide-container" ref="container">
-        {
-          this.props.items.map((item, i) => {
-            return (
-              <Swipeable onSwipedUp={this.onUp.bind(this)} onSwipedDown={this.onDown.bind(this)}>
-                <div className="slide" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${this.backgroundImage()})`}}>
-                  <item.component {...item.args} />
-                </div>
-              </Swipeable>
-            )
-          })
+      <Slider arrows={false} autoplay={false} dots={false} vertical={true} verticalSwiping={true} infinite={false} afterChange={
+        (current) => {
+          this.props.onAnimDone(current);
         }
-        {
-          this.props.items.length > 1 ? (
-            <div className="slide-controller">
-              {
-                this.props.items.map((item, i) => {
-
-                  return (
-                    <FontAwesome name="circle" className={`slide-controller-tab ${i == this.state.currentItem ? "active" : ""}`} onClick={() => {
-                      this.refs.container.scrollTop = (window.innerHeight - 100) * i;
-                      this.setState({ currentItem: i });
-                    }} />
-                  )
-                })
-              }
+      } ref="slider">
+      {
+        this.props.items.map((item, i) => {
+          return (
+            <div>
+              <div className="slide" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${this.backgroundImage()})`}}>
+                <item.component {...item.args} />
+              </div>
             </div>
-          ) : (
-            <div></div>
           )
-        }
-      </div>
+        })
+      }
+      </Slider>
     )
   }
 }

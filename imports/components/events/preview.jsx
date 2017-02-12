@@ -1,45 +1,25 @@
 import React, { Component } from "react"
-import TrackerReact from "meteor/ultimatejs:tracker-react"
 import GoogleMapsLoader from "google-maps";
 import moment from "moment";
 import { browserHistory } from "react-router";
+import { createContainer } from "meteor/react-meteor-data";
 
 import SlideMain from "./preview/slides/slide_main.jsx";
 
 import TitlePage from "./preview/slides/title.jsx";
+import DescriptionPage from "./preview/slides/description.jsx";
+
 import BracketPage from "./preview/slides/brackets.jsx";
 import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
 
-export default class PreviewEventScreen extends TrackerReact(Component) {
+class PreviewEventScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug, {
-        onReady: () => {
-          this.setState({
-            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
-          })
-        }
-      }),
-      users: Meteor.subscribe("event_participants", this.props.params.slug, {
-        onReady: () => {
-          this.setState({
-            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
-          })
-        }
-      }),
-      sponsors: Meteor.subscribe("event_sponsors", this.props.params.slug, {
-        onReady: () => {
-          this.setState({
-            isReady: this.state.event.ready() && this.state.users.ready() && this.state.sponsors.ready()
-          })
-        }
-      }),
-      isReady: false,
       hasLoaded: false
     }
   }
@@ -55,10 +35,6 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
     document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
     document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
-
-    this.state.event.stop();
-    this.state.users.stop();
-    this.state.sponsors.stop();
   }
 
   event() {
@@ -96,29 +72,39 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   slides() {
     var event = this.event();
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+
     var pages = [
       {
         name: "Home",
-        component: TitlePage
+        slides: [
+          {
+            component: TitlePage
+          },
+          {
+            component: DescriptionPage
+          }
+        ]
       }
     ];
     if(instance.brackets) {
       pages.push({
         name: "Brackets",
-        component: BracketPage
-      })
-    }
-    if(event.crowdfunding) {
-      pages.push({
-        name: "Crowdfunding",
-        component: CFPage
+        slides: [
+          {
+            component: BracketPage
+          }
+        ]
       });
     }
-    if(event.stream){
+    if(event.stream) {
       pages.push({
-        name: "Streams",
-        component: StreamPage
-      })
+        name: "Stream",
+        slides: [
+          {
+            component: StreamPage
+          }
+        ]
+      });
     }
     return pages;
   }
@@ -129,7 +115,7 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.isReady){
+    if(!this.props.ready){
       return (
         <div>Loading...</div>
       )
@@ -141,9 +127,17 @@ export default class PreviewEventScreen extends TrackerReact(Component) {
     }
     var event = this.event();
     return (
-      <div className="box col" style={{flexFlow: "row", position: "relative"}}>
-        <SlideMain slides={this.slides()} event={event} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} />
+      <div className="box col">
+        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} />
       </div>
     )
   }
 }
+
+export default createContainer(({params}) => {
+  const eventSub = Meteor.subscribe("event", params.slug);
+  const users = Meteor.subscribe("event_participants", params.slug);
+  return {
+    ready: eventSub.ready() && users.ready()
+  }
+}, PreviewEventScreen)
