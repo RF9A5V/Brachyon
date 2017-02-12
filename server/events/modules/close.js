@@ -19,15 +19,33 @@ Meteor.methods({
       var league = Leagues.findOne(event.league);
       var eventIndex = league.events.indexOf(event.slug);
       if(eventIndex == league.events.length - 1) {
-        var ldr = league.leaderboard[0].sort((a, b) => {
-          return (b.score + b.bonus) - (a.score + a.bonus);
+
+        var placements = {};
+        league.leaderboard.forEach(board => {
+          Object.keys(board).forEach(k => {
+            var entry = board[k];
+            if(!placements[k]) {
+              placements[k] = entry.score + entry.bonus;
+            }
+            else {
+              placements[k] += entry.score + entry.bonus;
+            }
+          })
         });
-        var maxScore = ldr[0].score + ldr[0].bonus;
-        ldr = ldr.filter(obj => {
-          return maxScore == (obj.score + obj.bonus);
+        var scores = {};
+        Object.keys(placements).forEach(k => {
+          if(!scores[placements[k]]) {
+            scores[placements[k]] = [k];
+          }
+          else {
+            scores[placements[k]].push(k);
+          }
+        })
+        var ldr = Object.keys(scores).sort((a, b) => {
+          return b - a;
         });
-        if(ldr.length > 1) {
-          var usrs = Meteor.users.find({ _id: { $in: ldr.map(obj => { return obj.id }) } });
+        if(scores[ldr[0]].length > 1) {
+          var usrs = Meteor.users.find({ _id: { $in: scores[ldr[0]] } });
           var rounds = OrganizeSuite.roundRobin(usrs.map(function(participant) {
             return participant.username;
           }));
