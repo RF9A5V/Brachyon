@@ -11,13 +11,35 @@ Meteor.publish("league", (slug) => {
     })
   });
   ids[league.owner] = 1;
+  var bIds = instances.map(i => {
+    return i.brackets[0].id;
+  });
+  bIds.push((league.tiebreaker || {}).id);
+  var brackets = Brackets.find({
+    _id: {
+      $in: bIds
+    }
+  });
+  var matches = [];
+  brackets.forEach(b => {
+    b.rounds.forEach(i => {
+      i.forEach(j => {
+        j.forEach(k => {
+          if(k) {
+            matches.push(k.id);
+          }
+        })
+      })
+    })
+  });
   return [
     Leagues.find({ slug }),
     Events.find({ slug: { $in: league.events } }),
     Games.find({_id: league.game}),
     instances,
     Meteor.users.find({ _id: { $in: Object.keys(ids) } }, { username: 1, "profile.imageUrl": 1 }),
-    Brackets.find({ _id: (league.tiebreaker || {}).id })
+    Brackets.find({ _id: { $in: bIds } }),
+    Matches.find({ _id: { $in: matches } })
   ]
 });
 
