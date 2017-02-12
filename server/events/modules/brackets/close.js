@@ -139,5 +139,19 @@ Meteor.methods({
     }
 
     Instances.update(instance._id, cmd);
+  },
+  "leagues.leaderboard.setBonusByPlacement"(id, index, points, rank) {
+    const league = Leagues.findOne(id);
+    const event = Events.findOne({slug: league.events[index]});
+    const instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    const bracket = Brackets.findOne(instance.brackets[0].id);
+    var placement = sortPlacement(instance.brackets[0].format.baseFormat, bracket.rounds);
+    var updateObj = {};
+    placement[rank].forEach(p => {
+      updateObj[`leaderboard.${index}.${p.id}.bonus`] = points;
+    });
+    Leagues.update(id, {
+      $set: updateObj
+    });
   }
 })
