@@ -35,7 +35,7 @@ export default class LeaderboardPanel extends Component {
     const event = Events.findOne({slug: Leagues.findOne().events[index]});
     const instance = Instances.findOne(event.instances[event.instances.length - 1]);
     const bracket = Brackets.findOne(instance.brackets[0].id);
-    if(!bracket.complete) {
+    if(!bracket || !bracket.complete) {
       return (
         <div className="row center">
           <h5>Waiting for this event to complete!</h5>
