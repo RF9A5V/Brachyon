@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { VelocityComponent } from "velocity-react";
 import { browserHistory } from "react-router";
-import Swipeable from "react-swipeable";
+import Slider from "react-slick";
 
 import SubSlideContainer from "./sub_slide.jsx";
 
@@ -16,26 +16,20 @@ export default class SlideMain extends Component {
     }
   }
 
-  componentDidMount() {
-    this.refs.container.scrollLeft = window.innerWidth * this.state.activeSlide;
-    console.log(window.innerWidth * this.state.activeSlide);
-    console.log(this.refs.container.scrollLeft);
-  }
-
   componentWillReceiveProps(props) {
     var slideIndex = props.slides.findIndex(o => { return o.name.toLowerCase() == props.slide });
-    this.refs.container.scrollLeft = window.innerWidth * slideIndex;
-    console.log(window.innerWidth * slideIndex);
-    console.log(this.refs.container.scrollLeft);
     this.setState({
-      activeSlide: Math.max(slideIndex, 0)
+      activeSlide: Math.max(slideIndex, 0),
+      activeSub: 0
     });
   }
 
   navElements() {
     var slides = this.props.slides.map((slide, index) => {
       return (
-        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} onClick={() => { browserHistory.push(this.props.baseUrl + slide.name.toLowerCase()) }}>
+        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} onClick={() => {
+          this.refs.slider.slickGoTo(index);
+        }}>
           { slide.name }
         </div>
       )
@@ -53,26 +47,41 @@ export default class SlideMain extends Component {
     return elems;
   }
 
-  onLeft() {
-    console.log("left!");
-  }
-
-  onRight() {
-    console.log("right!");
-  }
-
   render() {
+    var current = this.props.slides[this.state.activeSlide];
     return (
       <div>
-        <Swipeable ref="container" onSwipedLeft={this.onLeft.bind(this)} onSwipedRight={this.onRight.bind(this)} trackMouse={true} style={{whiteSpace: "nowrap"}}>
+        <Slider dots={false} initialSlide={this.state.activeSlide} infinite={false} arrows={false} style={{display: "flex"}} ref="slider" afterChange={(current) => {
+          window.history.pushState(null, null, this.props.baseUrl + this.props.slides[current].name.toLowerCase());
+          this.setState({ activeSlide: current })
+        }}>
           {
-            this.props.slides.map(item => {
+            this.props.slides.map((item, i) => {
               return (
-                <SubSlideContainer items={item.slides} />
+                <div className="slide">
+                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={(j) => { this.setState({ activeSub: j }) }} />
+                </div>
               )
             })
           }
-        </Swipeable>
+        </Slider>
+        {
+          current.slides.length > 1 ? (
+            <div className="slide-controller">
+              {
+                current.slides.map((item, i) => {
+                  return (
+                    <FontAwesome name="circle" className={`slide-controller-tab ${i == this.state.activeSub ? "active" : ""}`} onClick={() => {
+                      this.refs[this.state.activeSlide].setCurrent(i);
+                    }} />
+                  )
+                })
+              }
+            </div>
+          ) : (
+            <div></div>
+          )
+        }
         <div className="row x-center" style={{paddingLeft: 20, position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
           {
             this.navElements()

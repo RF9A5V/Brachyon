@@ -83,16 +83,7 @@ export default class LeagueShowPage extends Component {
         name: "Home",
         slides: [
           {
-            component: HomeSlide,
-            args: {
-              name: "title"
-            }
-          },
-          {
-            component: HomeSlide,
-            args: {
-              name: "change!"
-            }
+            component: HomeSlide
           }
         ]
       },
@@ -103,8 +94,36 @@ export default class LeagueShowPage extends Component {
             component: EventSlide
           }
         ]
+      },
+      {
+        name: "Leaderboard",
+        slides: [
+          {
+            component: LeaderboardSlide
+          }
+        ]
       }
     ];
+    if(league.tiebreaker && !league.complete) {
+      pages.push({
+        name: "Tiebreaker",
+        slides: [
+          {
+            component: TiebreakerSlide
+          }
+        ]
+      })
+    }
+    if(league.stream) {
+      pages.push({
+        name: "Stream",
+        slides: [
+          {
+            component: StreamSlide
+          }
+        ]
+      })
+    }
     return pages;
   }
 
@@ -117,7 +136,7 @@ export default class LeagueShowPage extends Component {
     }
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} event={ Leagues.findOne() } baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} />
+        <SlideMain slides={this.slides()} baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} />
       </div>
     )
   }
