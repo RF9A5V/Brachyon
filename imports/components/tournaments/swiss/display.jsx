@@ -162,11 +162,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
                       Player
                     </div>
                     <div className="swiss-header">
-                      Score
-                    </div>
-                    <div className="swiss-header">
                       Wins / Losses / Ties
                     </div>
+                    <div className="swiss-header">
+                      Score
+                    </div>                    
                     <div className="swiss-header">
                       Buchholz Rating
                     </div>
