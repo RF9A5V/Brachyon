@@ -10,6 +10,8 @@ import TitlePage from "./preview/slides/title.jsx";
 import DescriptionPage from "./preview/slides/description.jsx";
 
 import BracketPage from "./preview/slides/brackets.jsx";
+import BracketDetails from "./preview/slides/bracket_details.jsx";
+
 import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
@@ -87,13 +89,17 @@ class PreviewEventScreen extends Component {
       }
     ];
     if(instance.brackets) {
+      var slides = instance.brackets.map((b, i) => {
+        return {
+          component: BracketDetails,
+          args: {
+            index: i
+          }
+        }
+      })
       pages.push({
         name: "Brackets",
-        slides: [
-          {
-            component: BracketPage
-          }
-        ]
+        slides
       });
     }
     if(event.stream) {
@@ -128,7 +134,7 @@ class PreviewEventScreen extends Component {
     var event = this.event();
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} />
+        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} color="#00BDFF" />
       </div>
     )
   }

@@ -27,10 +27,12 @@ export default class SlideMain extends Component {
   navElements() {
     var slides = this.props.slides.map((slide, index) => {
       return (
-        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} onClick={() => {
+        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} style={{
+          color: this.state.activeSlide == index ? (this.props.color || "white") : "white"
+        }} onClick={() => {
           this.refs.slider.slickGoTo(index);
         }}>
-          { slide.name }
+          { slide.name.toUpperCase() }
         </div>
       )
     });
@@ -70,11 +72,27 @@ export default class SlideMain extends Component {
             <div className="slide-controller">
               {
                 current.slides.map((item, i) => {
-                  return (
-                    <FontAwesome name="circle" className={`slide-controller-tab ${i == this.state.activeSub ? "active" : ""}`} onClick={() => {
-                      this.refs[this.state.activeSlide].setCurrent(i);
-                    }} />
-                  )
+                  var icon;
+                  if(!item.icon) {
+                    icon = (
+                      <div className={`slide-controller-tab icon`} onClick={() => {
+                        this.refs[this.state.activeSlide].setCurrent(i)
+                      }}>
+                        <div className={`content ${i == this.state.activeSub ? "active" : ""}`} style={{
+                          backgroundColor: this.props.color || "white"
+                        }}>
+                        </div>
+                      </div>
+                    )
+                  }
+                  else {
+                    icon = (
+                      <FontAwesome name={item.icon} className={`slide-controller-tab ${i == this.state.activeSub ? "active" : ""}`} onClick={() => {
+                        this.refs[this.state.activeSlide].setCurrent(i);
+                      }} />
+                    )
+                  }
+                  return icon;
                 })
               }
             </div>

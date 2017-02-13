@@ -5,6 +5,8 @@ import SlideMain from "/imports/components/events/preview/slides/slide_main.jsx"
 import Leagues from "/imports/api/leagues/league.js";
 
 import HomeSlide from "./show/slides/main/home.jsx";
+import DescriptionSlide from "./show/slides/main/description.jsx";
+
 import EventSlide from "./show/events.jsx";
 import LeaderboardSlide from "./show/leaderboards.jsx";
 import TiebreakerSlide from "./show/tiebreaker.jsx";
@@ -84,6 +86,9 @@ export default class LeagueShowPage extends Component {
         slides: [
           {
             component: HomeSlide
+          },
+          {
+            component: DescriptionSlide
           }
         ]
       },
@@ -136,7 +141,7 @@ export default class LeagueShowPage extends Component {
     }
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} />
+        <SlideMain slides={this.slides()} baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} color="#FF6000" />
       </div>
     )
   }
