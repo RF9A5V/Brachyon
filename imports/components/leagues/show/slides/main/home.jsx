@@ -21,7 +21,7 @@ export default class MainSlide extends Component {
           <div className="col-1">
           </div>
           <div className="col-2 row center x-center">
-            <h2 className="sponsor-event-header">{league.details.name}</h2>
+            <h2 className="sponsor-event-header" style={{color: "#FF6000"}}>{league.details.name}</h2>
           </div>
           <div className="col-1">
             <div className="col" style={{backgroundColor: "#111", padding: 20, margin: 20}}>
