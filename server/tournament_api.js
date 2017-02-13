@@ -316,6 +316,7 @@ var OrganizeSuite = {
         score: 0,
         bnum: 0,
         wins: 0,
+        ties: 0,
         losses: 0,
         bye: false,
         playedagainst: playarr
