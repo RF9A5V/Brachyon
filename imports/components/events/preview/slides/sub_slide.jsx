@@ -20,11 +20,16 @@ export default class SubSlideContainer extends Component {
     this.refs.slider.slickGoTo(i);
   }
 
+  getCurrent() {
+    return this.state.currentItem;
+  }
+
   render() {
     return (
       <Slider arrows={false} autoplay={false} dots={false} vertical={true} verticalSwiping={true} infinite={false} afterChange={
         (current) => {
-          this.props.onAnimDone(current);
+          this.state.currentItem = current;
+          this.props.onAnimDone();
         }
       } ref="slider">
       {

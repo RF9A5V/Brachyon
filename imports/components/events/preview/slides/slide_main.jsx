@@ -59,13 +59,14 @@ export default class SlideMain extends Component {
       <div>
         <Slider dots={false} initialSlide={this.state.activeSlide} infinite={false} arrows={false} style={{display: "flex"}} ref="slider" afterChange={(current) => {
           window.history.pushState(null, null, this.props.baseUrl + this.props.slides[current].name.toLowerCase());
-          this.setState({ activeSlide: current })
+          this.state.activeSlide = current;
+          this.forceUpdate();
         }}>
           {
             this.props.slides.map((item, i) => {
               return (
                 <div className="slide">
-                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={(j) => { this.setState({ activeSub: j }) }} />
+                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={this.forceUpdate.bind(this)} />
                 </div>
               )
             })
@@ -77,12 +78,19 @@ export default class SlideMain extends Component {
               {
                 current.slides.map((item, i) => {
                   var icon;
+                  var currentRef = this.refs[this.state.activeSlide];
+                  if(currentRef) {
+                    currentRef = currentRef.getCurrent();
+                  }
+                  else {
+                    currentRef = 0;
+                  }
                   if(!item.icon) {
                     icon = (
                       <div className={`slide-controller-tab icon`} onClick={() => {
                         this.refs[this.state.activeSlide].setCurrent(i)
                       }}>
-                        <div className={`content ${i == this.state.activeSub ? "active" : ""}`} style={{
+                        <div className={`content ${i == currentRef ? "active" : ""}`} style={{
                           backgroundColor: this.props.color || "white"
                         }}>
                         </div>
