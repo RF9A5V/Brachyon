@@ -45,10 +45,10 @@ export default class Footer extends React.Component {
           <FontAwesome name="youtube-play" className="youtube social-icon" />
         </div></a>
         <div className="footer-plugin-pad"></div>
-        <a href="https://www.reddit.com/r/brachyon" target="_blank">
-        <div className="social-icon-bg col x-center center">
-          <FontAwesome name="reddit-alien" className="reddit social-icon" />
-        </div></a>
+        {/*<a href="https://www.reddit.com/r/brachyon" target="_blank">
+                <div className="social-icon-bg col x-center center">
+                  <FontAwesome name="reddit-alien" className="reddit social-icon" />
+                </div></a>*/}
         <div className="footer-plugin-pad"></div>
         <a href="https://www.facebook.com/BrachyonInc/" target="_blank">
         <div className="social-icon-bg col x-center center">
