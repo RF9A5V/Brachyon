@@ -6,6 +6,7 @@ import { browserHistory } from "react-router";
 import UserTab from "/imports/components/users/user_tab.jsx";
 import Games from "/imports/api/games/games.js";
 import { getSuffix } from "/imports/decorators/placement_suffix.js";
+import { formatter } from "/imports/decorators/formatter.js";
 
 class BracketDetails extends Component {
 
@@ -32,25 +33,16 @@ class BracketDetails extends Component {
       icon = "check";
     }
     return (
-      <div className="row x-center" style={{marginBottom: 10}}>
+      <div className="row x-center center" style={{marginBottom: 10}}>
         <FontAwesome name={icon} style={{marginRight: 10}} />
         <span>{ text }</span>
       </div>
     )
   }
 
-  bracketType(format) {
-    switch(format) {
-      case "single_elim": return "Single Elimination"
-      case "double_elim": return "Double Elimination"
-      case "swiss": return "Swiss"
-      case "round_robin": return "Round Robin"
-      default: return "Default"
-    }
-  }
-
   content(bracket) {
     var tabs = [
+      "Details",
       "Participants"
     ];
     if(bracket.id && !bracket.isComplete) {
@@ -61,21 +53,26 @@ class BracketDetails extends Component {
       // tabs.push("Bracket");
     }
     return (
-      <div className="col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, height: "100%", overflowY: "auto"}}>
+      <div className="col col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, height: "100%"}}>
         <div className="row" style={{marginBottom: 10}}>
           {
             tabs.map((t, i) => {
               return (
-                <div style={{padding: 10, marginRight: 10, cursor: "pointer", borderBottom: this.state.index == i ? "solid 2px #FF6000" : "none"}} onClick={() => { this.setState({ index: i }) }}>
+                <div
+                  style={{padding: 10, marginRight: 10, cursor: "pointer", borderBottom: this.state.index == i ? "solid 2px #FF6000" : "none", width: 100, textAlign: "center", fontSize: 14}}
+                  onClick={() => { this.setState({ index: i }) }}
+                >
                   { t }
                 </div>
               )
             })
           }
         </div>
+        <div className="col-1" style={{overflowY: "auto"}}>
         {
           this._content(tabs, bracket)
         }
+        </div>
       </div>
     )
   }
@@ -241,12 +238,68 @@ class BracketDetails extends Component {
     )
   }
 
+  _registrationButton(obj) {
+    if(!Meteor.userId()) {
+      return "";
+    }
+    var pIndex = (obj.participants || []).findIndex((p) => {
+      return p.id == Meteor.userId();
+    });
+    var eventId = Events.findOne()._id;
+    var func = pIndex >= 0 ? "events.removeParticipant" : "events.registerUser";
+    return (
+      <button style={{marginLeft: 10, borderColor: "#FF6000", width: 100}} onClick={() => {
+        Meteor.call(func, eventId, this.props.index, Meteor.userId(), (err) => {
+          if(err) toastr.error(err.reason);
+          else toastr.success("Success!");
+        })
+      }}>
+        { pIndex >= 0 ? "Unregister" : "Register" }
+      </button>
+    );
+  }
+
+  details(obj) {
+    var event = Events.findOne();
+    var bracket = Brackets.findOne(obj.id);
+    const game = Games.findOne(obj.game);
+    return (
+      <div className="col col-1 x-center center" style={{padding: 30}}>
+        <img src={game.bannerUrl} style={{width: 300 * 3 / 4, height: 300}} />
+        <div style={{padding: 20}}>
+          <h5 style={{marginBottom: 10}}>{ obj.name || game.name }</h5>
+          <div className="row center x-center" style={{marginBottom: 10}}>
+            <FontAwesome name="sitemap" style={{marginRight: 10}} />
+            <span>{ formatter(obj.format.baseFormat) }</span>
+          </div>
+          { this.status(obj) }
+          <div className="row center">
+            <button style={{width: 100}} onClick={() => {
+              if(event.owner == Meteor.userId()) {
+                browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
+              }
+              else {
+                browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
+              }
+            }}>
+              <span>View</span>
+            </button>
+            {
+              this._registrationButton(obj)
+            }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   _content(tabs, obj) {
     switch(tabs[this.state.index]) {
       case "Participants": return this.participants(obj.participants);
       case "Leaderboard": return this.leaderboard(obj);
       case "Bracket": return null;
       case "Matches": return this.matches(obj.id);
+      case "Details": return this.details(obj);
       default: return null;
     }
   }
@@ -265,30 +318,7 @@ class BracketDetails extends Component {
     const game = Games.findOne(bracketMeta.game);
     return (
       <div className="row" style={{padding: 10}}>
-        <div className="col col-1 x-center" style={{padding: 30}}>
-          <img src={game.bannerUrl} style={{width: "100%", height: "auto", marginBottom: 10}} />
-          <div style={{padding: 20, backgroundColor: "rgba(0, 0, 0, 0.5)", alignSelf: "stretch"}}>
-            <h5 style={{marginBottom: 10}}>{ bracketMeta.name || game.name }</h5>
-            <div className="row x-center" style={{marginBottom: 10}}>
-              <FontAwesome name="sitemap" style={{marginRight: 10}} />
-              <span>{ this.bracketType(bracketMeta.format.baseFormat) }</span>
-            </div>
-            { this.status(bracketMeta) }
-            <div className="row center">
-              <button onClick={() => {
-                if(event.owner == Meteor.userId()) {
-                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
-                }
-                else {
-                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
-                }
-              }}>
-                <span>View</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="col col-3" style={{padding: 20, paddingLeft: 10, paddingRight: 60}}>
+        <div className="col col-1" style={{padding: 20, paddingLeft: 10, paddingRight: 60}}>
           { this.content(bracketMeta) }
         </div>
       </div>
