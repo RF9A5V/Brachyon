@@ -60,7 +60,7 @@
   background-color #444
 
 
-.leaderboard-entry:nth-child(even) 
+.leaderboard-entry:nth-child(even)
   background-color #555
 
 
@@ -92,3 +92,24 @@
   width 100%
   height auto
   border solid 5px gold
+
+.event-bar
+  width: calc(50% - 10px);
+  margin-right: 20px !important;
+  margin-bottom: 20px
+  opacity: 0.8
+  +below(1200px)
+    width 100%
+    margin-right: 0 !important;
+
+.event-bar:hover
+  opacity: 1
+  cursor: pointer
+
++above(1200px)
+  .event-bar:nth-child(2n)
+    margin-right: 0 !important;
+
+.event-bar-img
+  height: 150px;
+  width: auto;

@@ -49,6 +49,10 @@ export default class SlideMain extends Component {
     return elems;
   }
 
+  setCurrent(i) {
+    this.refs[this.state.activeSlide].setCurrent(i);
+  }
+
   render() {
     var current = this.props.slides[this.state.activeSlide];
     return (
