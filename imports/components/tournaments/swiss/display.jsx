@@ -61,7 +61,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
     Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
-        
+
         toastr.error("Couldn't update the round.", "Error!");
       }
       else {
@@ -121,6 +121,18 @@ export default class SwissDisplay extends TrackerReact(Component) {
     });
   }
 
+  getBuchholz(players, pnum)
+  {
+    var targetPlayer = players[pnum];
+    var buchholzNumber = 0;
+    for (var x = 0; x < players.length; x++)
+    {
+      if (targetPlayer.playedagainst[players[x].name])
+        buchholzNumber += players[x].wins;
+    }
+    return buchholzNumber;
+  }
+
   render() {
     return (
       <div className="col">
@@ -150,13 +162,13 @@ export default class SwissDisplay extends TrackerReact(Component) {
                       Player
                     </div>
                     <div className="swiss-header">
+                      Wins / Losses / Ties
+                    </div>
+                    <div className="swiss-header">
                       Score
-                    </div>
+                    </div>                    
                     <div className="swiss-header">
-                      Wins
-                    </div>
-                    <div className="swiss-header">
-                      Losses
+                      Buchholz Rating
                     </div>
                   </div>
                   {
@@ -172,10 +184,10 @@ export default class SwissDisplay extends TrackerReact(Component) {
                             { playerObj.score }
                           </div>
                           <div className="swiss-entry">
-                            { playerObj.wins }
+                            { playerObj.wins + " / " + playerObj.losses + " / " + playerObj.ties }
                           </div>
                           <div className="swiss-entry">
-                            { playerObj.losses }
+                            { this.getBuchholz(this.props.rounds[this.props.rounds.length-1].players, i) }
                           </div>
                         </div>
                       );
