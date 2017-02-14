@@ -3,7 +3,9 @@ import { createContainer } from "meteor/react-meteor-data";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
+import UserTab from "/imports/components/users/user_tab.jsx";
 import Games from "/imports/api/games/games.js";
+import { getSuffix } from "/imports/decorators/placement_suffix.js";
 
 class BracketDetails extends Component {
 
@@ -59,7 +61,7 @@ class BracketDetails extends Component {
       tabs.push("Bracket");
     }
     return (
-      <div className="col col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10}}>
+      <div className="col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, height: "100%", overflowY: "auto"}}>
         <div className="row" style={{marginBottom: 10}}>
           {
             tabs.map((t, i) => {
@@ -85,13 +87,8 @@ class BracketDetails extends Component {
           (players || []).map(p => {
             var user = Meteor.users.findOne(p.id);
             return (
-              <div className="row" style={{width: 150, marginRight: 10, marginBottom: 10}}>
-                <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: 50, height: 50}} />
-                <div className="col-1" style={{padding: 10, backgroundColor: "#666"}}>
-                  <span style={{maxWidth: "100%"}}>{ p.alias }</span>
-                </div>
-              </div>
-            )
+              <UserTab id={p.id} alias={p.alias} />
+            );
           })
         }
       </div>
@@ -163,13 +160,91 @@ class BracketDetails extends Component {
 
   leaderboard(obj) {
     var bracket = Brackets.findOne(obj.id);
+    var losers = [];
+    var iterBracket = obj.format.baseFormat == "single_elim" ? bracket.rounds[0] : bracket.rounds[1];
+    var stillIn = {};
+    obj.participants.forEach(p => {
+      stillIn[p.alias] = p.id;
+    })
+    var placements = [];
+    iterBracket.forEach(r => {
+      var losers = [];
+      r.forEach(m => {
+        if(m) {
+          var match = Matches.findOne(m.id);
+          if(match.winner) {
+            var loser = match.winner.alias == match.players[0].alias ? match.players[1] : match.players[0];
+            losers.push(loser);
+            delete stillIn[loser.alias];
+          }
+        }
+      })
+      placements.push(losers);
+    });
+    if(obj.format.baseFormat == "double_elim") {
+      var finals = [bracket.rounds[2][1][0], bracket.rounds[2][0][0]].map(m => { return Matches.findOne(m.id); });
+      var match = finals[0].winner ? finals[0] : finals[1];
+      if(match.winner) {
+        var loser = match.winner.alias == match.players[0].alias ? match.players[1] : match.players[0];
+        placements.push([loser]);
+        delete stillIn[loser.alias];
+      }
+    }
+    var template = (alias, id) => {
+      return (
+        <UserTab id={id} alias={alias} />
+      );
+    }
 
+    var maxPlace = obj.participants.length;
+    var remaining = Object.keys(stillIn);
+    return (
+      <div className="col">
+
+        <h5 style={{marginBottom: 10}}>{ remaining.length > 1 ? "Still In" : "1st Place" }</h5>
+        <div className="row" style={{flexWrap: "wrap", marginBottom: 10}}>
+          {
+            Object.keys(stillIn).map(alias => {
+              return template(alias, stillIn[alias]);
+            })
+          }
+        </div>
+        {
+          placements.map(ary => {
+            if(ary.length == 0) {
+              return "";
+            }
+            var upper = maxPlace;
+            var lower = maxPlace - ary.length + 1;
+            maxPlace -= ary.length;
+            return (
+              [
+                (
+                  <h5 style={{marginBottom: 10}}>
+                    {getSuffix(lower)} Place{lower == upper ? "" : ` To ${getSuffix(upper)} Place`}
+                  </h5>
+                ),
+                (
+                  <div className="row" style={{flexWrap: "wrap", marginBottom: 10}}>
+                    {
+                      ary.map(p => {
+                        return template(p.alias, p.id);
+                      })
+                    }
+                  </div>
+                )
+              ]
+            )
+          }).reverse()
+        }
+      </div>
+    )
   }
 
   _content(tabs, obj) {
     switch(tabs[this.state.index]) {
       case "Participants": return this.participants(obj.participants);
-      case "Leaderboard": return null;
+      case "Leaderboard": return this.leaderboard(obj);
       case "Bracket": return null;
       case "Matches": return this.matches(obj.id);
       default: return null;
