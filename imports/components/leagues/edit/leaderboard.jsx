@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { sortPlacement } from "/imports/api/placement.js";
 
 import Leagues from "/imports/api/leagues/league.js";
 
@@ -17,10 +18,10 @@ export default class LeaderboardPanel extends Component {
       <div className="row" style={{marginBottom: 20}}>
         {
           leaderboard.map((ldr, i) => {
-            var event = Events.findOne({ slug: Leagues.findOne().events[i - 1] });
+            var event = Events.findOne({ slug: Leagues.findOne().events[i] });
             return (
               <div style={{padding: 10, backgroundColor: "#111", marginRight: 10, cursor: "pointer", color: this.state.index == i ? "#00BDFF" : "#FFF"}} onClick={() => { this.setState({ index: i }) }}>
-                { i == 0 ? "Main" : event.details.name }
+                { event.details.name }
               </div>
             )
           })
@@ -31,43 +32,66 @@ export default class LeaderboardPanel extends Component {
 
   currentLeaderboard(index) {
     var leaderboard = Leagues.findOne().leaderboard;
+    const event = Events.findOne({slug: Leagues.findOne().events[index]});
+    const instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    const bracket = Brackets.findOne(instance.brackets[0].id);
+    if(!bracket || !bracket.complete) {
+      return (
+        <div className="row center">
+          <h5>Waiting for this event to complete!</h5>
+        </div>
+      )
+    }
+    var placement = sortPlacement(instance.brackets[0].format.baseFormat, bracket.rounds);
+    var currentPlace = 1;
+    var getSuffix = (place) => {
+      switch(place % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    }
     return (
-      <div className="col">
+      <div>
         {
-          leaderboard[index].map((obj, i) => {
-            var user = Meteor.users.findOne(obj.id);
+          placement.map((users, i) => {
+            var place = currentPlace;
+            currentPlace += users.length;
+            var nextPlace = currentPlace - 1;
             return (
-              <div className="row x-center table-row">
-                <div className="col-2">
-                  { user.username }
+              <div className="col" style={{marginBottom: 10}}>
+                <div className="row flex-pad x-center">
+                  <h5>{place + getSuffix(place)}{ nextPlace != place ? ` - ${nextPlace + getSuffix(nextPlace)}` : "" }</h5>
+                  <div className="row">
+                    <input type="number" style={{width: 200, margin: 0, fontSize: 12, marginRight: 10}} onBlur={(e) => {
+                      var value = parseInt(e.target.value);
+                      if(isNaN(value)) {
+                        e.target.value = 0;
+                        return;
+                      }
+                      Meteor.call("leagues.leaderboard.setBonusByPlacement", Leagues.findOne()._id, index, value, i, (err) => {
+                        if(err) {
+                          toastr.error(err.reason);
+                        }
+                      })
+                    }} defaultValue={leaderboard[index][users[0].id].bonus} />
+                    <button>Save</button>
+                  </div>
                 </div>
-                <div className="col-1">
-                  { obj.score }
-                </div>
-                <div className="col-1">
+                <div className="row" style={{flexWrap: "wrap"}}>
                   {
-                    index == 0 ? (
-                      "+ " + obj.bonus
-                    ) : (
-                      [
-                        <input type="number" style={{margin: 0, marginRight: 10}} defaultValue={obj.bonus || 0} ref={`${i}`}
-                          onKeyPress={(e) => { if(e.key == "Enter") { e.target.blur() } }}
-                          onBlur={(e) => {
-                            Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, index, obj.id, e.target.value, (err) => {
-                              if(err) {
-                                toastr.error("Couldn\'t update bonus points");
-                              }
-                            })
-                          }}
-                        />,
-                        <button>
-                          {
-                            // This does nothing. It's here for users to click such that blur gets called on the input.
-                          }
-                          Save
-                        </button>
-                      ]
-                    )
+                    users.map(u => {
+                      var user = Meteor.users.findOne(u.id);
+                      return (
+                        <div className="row" style={{marginRight: 10, marginBottom: 10}}>
+                          <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: 50, height: 50}} />
+                          <div style={{padding: 10, backgroundColor: "#666", width: 150}}>
+                            { u.alias }
+                          </div>
+                        </div>
+                      )
+                    })
                   }
                 </div>
               </div>
@@ -75,7 +99,7 @@ export default class LeaderboardPanel extends Component {
           })
         }
       </div>
-    )
+    );
   }
 
   render() {

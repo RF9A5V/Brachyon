@@ -108,7 +108,7 @@ Meteor.methods({
     if(bracket == null) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    
+
     if(event.league) {
       var league = Leagues.findOne(event.league);
       var leaderboardIndex = league.events.indexOf(event.slug);
@@ -592,8 +592,8 @@ Meteor.methods({
     var prevmatch1, prevmatch2;
     if (roundNumber < 1)
     {
-      prevmatch1 = {score: 0, wins: 0, losses: 0};
-      prevmatch2 = {score: 0, wins: 0, losses: 0};
+      prevmatch1 = {score: 0, wins: 0, losses: 0, ties: 0};
+      prevmatch2 = {score: 0, wins: 0, losses: 0, ties: 0};
     }
     else
     {
@@ -612,6 +612,7 @@ Meteor.methods({
         bracket.players[x].score = prevmatch1.score + score*winfirst;
         bracket.players[x].wins = prevmatch1.wins + winfirst;
         bracket.players[x].losses = prevmatch1.losses + winsecond;
+        bracket.players[x].ties = prevmatch1.ties + ties;
         if(!bracket.players[x].playedagainst) {
           bracket.players[x].playedagainst = {};
         }

@@ -33,14 +33,20 @@ export default class LeagueModal extends Component {
     var participantCount = Instances.findOne().brackets[this.state.bracketIndex].participants.length;
     var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
     var leaderboard = Leagues.findOne().leaderboard[eventIndex];
+    var getSuffix = (place) => {
+      switch(place % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    }
+    var currentPlace = 1;
     return (
       <div style={{maxHeight: 300, overflowY: "auto"}}>
         <div className="row">
-          <div className="col-1">
+          <div className="col-2">
             Position
-          </div>
-          <div className="col-1">
-            Username
           </div>
           <div className="col-1">
             Points
@@ -51,40 +57,67 @@ export default class LeagueModal extends Component {
         </div>
         {
           ldrboard.map((users, i) => {
-            return users.map(user => {
-              return (
-                <div className="row x-center" style={{marginBottom: 10}}>
-                  <div className="col-1">
-                    { i + 1 }
-                  </div>
-                  <div className="col-1">
-                    { user.alias }
-                  </div>
-                  <div className="col-1">
-                    { participantCount - i  } +
-                  </div>
-                  <div className="col-1">
-                    <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
-                      if(isNaN(e.target.value)) {
-                        e.target.value = e.target.value.slice(0, e.target.value.length - 1)
-                      } else {
-                        this.forceUpdate();
-                      } }} onKeyPress={(e) => {
-                        if(e.key == "Enter") {
-                          e.target.blur();
-                        }
-                      }} onBlur={(e) => {
-                        Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex, user.id, parseInt(e.target.value), (err) => {
-                          if(err) {
-                            toastr.error("Couldn\'t update bonus points!");
-                          }
-                        })
-                      }} defaultValue={leaderboard[user.id].bonus}
-                    />
-                  </div>
+            var place = currentPlace;
+            currentPlace += users.length;
+            var nextPlace = currentPlace - 1;
+            return (
+              <div className="row x-center" style={{marginBottom: 10}}>
+                <div className="col-2">
+                  { place + getSuffix(place) }{ place != nextPlace ? ` - ${nextPlace + getSuffix(nextPlace)}` : "" }
                 </div>
-              )
-            })
+                <div className="col-1">
+                  { participantCount - i } +
+                </div>
+                <div className="col-1">
+                  <input type="number" style={{width: "100%", margin: 0, fontSize: 12}} defaultValue={leaderboard[users[0].id].bonus} onBlur={(e) => {
+                    var value = parseInt(e.target.value);
+                    if(isNaN(value)) {
+                      e.target.value = 0;
+                      return;
+                    }
+                    Meteor.call("leagues.leaderboard.setBonusByPlacement", Leagues.findOne()._id, eventIndex, parseInt(e.target.value), i, (err) => {
+                      if(err) {
+                        toastr.error(err.reason);
+                      }
+                    })
+                  }} onKeyPress={(e) => { if(e.key == "Enter") e.target.blur() }} />
+                </div>
+              </div>
+            )
+            // return users.map(user => {
+            //   return (
+            //     <div className="row x-center" style={{marginBottom: 10}}>
+            //       <div className="col-1">
+            //         { i + 1 }
+            //       </div>
+            //       <div className="col-1">
+            //         { user.alias }
+            //       </div>
+            //       <div className="col-1">
+            //         { participantCount - i  } +
+            //       </div>
+            //       <div className="col-1">
+            //         <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
+            //           if(isNaN(e.target.value)) {
+            //             e.target.value = e.target.value.slice(0, e.target.value.length - 1)
+            //           } else {
+            //             this.forceUpdate();
+            //           } }} onKeyPress={(e) => {
+            //             if(e.key == "Enter") {
+            //               e.target.blur();
+            //             }
+            //           }} onBlur={(e) => {
+            //             Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex, user.id, parseInt(e.target.value), (err) => {
+            //               if(err) {
+            //                 toastr.error("Couldn\'t update bonus points!");
+            //               }
+            //             })
+            //           }} defaultValue={leaderboard[user.id].bonus}
+            //         />
+            //       </div>
+            //     </div>
+            //   )
+            // })
           })
         }
       </div>
@@ -186,7 +219,7 @@ export default class LeagueModal extends Component {
             if(format == "single_elim" || format == "double_elim") {
               Meteor.call("events.brackets.close", Events.findOne()._id, this.state.bracketIndex, (err) => {
                 if(err) {
-                  
+
                   return toastr.error("Couldn\'t close this bracket.", "Error!");
                 }
                 var allBracketsComplete = Instances.findOne().brackets.map(b => { return b.isComplete == true }).every(el => { return el });
