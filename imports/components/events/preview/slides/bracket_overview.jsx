@@ -6,7 +6,7 @@ export default class BracketOverview extends Component {
   render() {
     var instance = Instances.findOne();
     return (
-      <div className="row" style={{flexWrap: "wrap", alignItems: "flex-start", padding: 20}}>
+      <div className="row" style={{flexWrap: "wrap", alignItems: "flex-start", padding: 60, alignContent: "flex-start"}}>
         {
           instance.brackets.map((b, i) => {
             return (

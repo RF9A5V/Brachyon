@@ -17,9 +17,19 @@ export default class BracketBar extends Component {
       [icon, color, text] = ["circle", "#00BDFF", "Underway"];
     }
     return (
-      <div className="row x-center" style={{padding: 5, backgroundColor: "#111"}}>
-        <FontAwesome name={icon} style={{color, marginRight: 10}} />
-        <span style={{color}}>{ text }</span>
+      <div className="row flex-pad" style={{padding: 5, backgroundColor: "#111"}}>
+        <div className="row x-center">
+          <FontAwesome name={icon} style={{color, marginRight: 10}} />
+          <span style={{color}}>{ text }</span>
+        </div>
+        <div className="event-block-admin-button" onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          var event = Events.findOne();
+          browserHistory.push("/event/" + event.slug + "/bracket/" + this.props.index + (event.owner == Meteor.userId() ? "/admin" : ""));
+        }}>
+          View
+        </div>
       </div>
     )
   }
@@ -36,20 +46,18 @@ export default class BracketBar extends Component {
         <div className="col col-1" style={{backgroundColor: "#333"}}>
           <div className="col col-1" style={{padding: 10}}>
             <h5 style={{marginBottom: 10}}>{ bracket.name || game.name }</h5>
+            {
+              bracket.name ? (
+                <span style={{fontSize: 12}}>Playing: {game.name}</span>
+              ) : ( "" )
+            }
             <div className="row x-center" style={{marginBottom: 10}}>
               <FontAwesome name="sitemap" style={{marginRight: 10}} />
-              <span style={{marginRight: 10}}>{ formatter(bracket.format.baseFormat) }</span>
+              <span>{ formatter(bracket.format.baseFormat) }</span>
+            </div>
+            <div className="row x-center" style={{marginBottom: 10}}>
               <FontAwesome name="users" style={{marginRight: 10}} />
               <span>{ (bracket.participants || []).length }</span>
-            </div>
-            <div className="col-1"></div>
-            <div className="row x-center">
-              <div className="event-block-admin-button" onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                var event = Events.findOne();
-                browserHistory.push("/event/" + event.slug + "/bracket/" + this.props.index + (event.owner == Meteor.userId() ? "/admin" : ""));
-              }}>View</div>
             </div>
           </div>
           {

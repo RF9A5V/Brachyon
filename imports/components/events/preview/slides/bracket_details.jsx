@@ -58,7 +58,7 @@ class BracketDetails extends Component {
     }
     if(bracket.id) {
       tabs.push("Leaderboard");
-      tabs.push("Bracket");
+      // tabs.push("Bracket");
     }
     return (
       <div className="col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, height: "100%", overflowY: "auto"}}>
