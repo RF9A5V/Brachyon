@@ -25,7 +25,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
     this.setState({
       user: Meteor.subscribe("user", Meteor.userId(), {
         onReady: () => {
-           
+
           this.setState({
 
             ready: true
@@ -61,7 +61,21 @@ export default class ShowUserScreen extends TrackerReact(Component) {
   updateProfileImage(e) {
     e.preventDefault();
     this.refs.img.value();
-    this.setState({open: false});
+    var { image, meta, type } = this.refs.img.value();
+    meta.userId = Meteor.userId();
+    ProfileImages.insert({
+      file: image,
+      meta,
+      fileName: Meteor.userId() + "." + type,
+      onUploaded: (err) => {
+        if(err) {
+          toastr.error(err.reason);
+          throw new Error(err.reason);
+        }
+        toastr.success("Uploaded profile image!");
+        this.setState({open: false});
+      }
+    })
   }
 
   tabContent() {
@@ -105,7 +119,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
 
   render() {
     var self = this;
-    
+
     if(!this.state.ready){
       return (
         <div className="row center x-center" style={{width: "100%", height: "100%"}}>

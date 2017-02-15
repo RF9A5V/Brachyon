@@ -10,9 +10,7 @@ export default class StreamPanel extends Component {
   }
 
   value() {
-    return {
-      value: this.refs.stream.value
-    };
+    return this.refs.stream.value();
   }
 
   itemDescriptions() {
@@ -41,16 +39,17 @@ export default class StreamPanel extends Component {
       var fColor = "#FFF";
     }
     else{}
+    var active = this.props.status;
     return (
-      <div style={this.props.style}>
+      <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={this.props.onToggle}>
-            <div className="row center x-center" style={{backgroundColor: this.props.selected ? eColor : "white", width: 45, height: 20, position: "relative", left: this.props.selected ? 50 : 5}}>
-              <span style={{color: this.props.selected ? fColor : "#333", fontSize: 12}}>
+          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => { this.props.setStatus(!active) }}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
                 {
-                  this.props.selected ? (
+                  active ? (
                     "ON"
                   ) : (
                     "OFF"
@@ -61,17 +60,11 @@ export default class StreamPanel extends Component {
           </div>
         </div>
         {
-          this.props.selected ? (
+          active ? (
             <div>
               <div className="row center x-center">
                 <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" defaultValue={(this.props.attrs.stream || {}).value} onChange={(e) => {
-                  if(!this.props.attrs.stream) {
-                    this.props.attrs.stream = { value: e.target.value };
-                  } else {
-                    this.props.attrs.stream.value = e.target.value;
-                  }
-                }}  />
+                <input type="text" placeholder="Stream Name" ref="stream" />
               </div>
             </div>
           ) : (
@@ -86,7 +79,7 @@ export default class StreamPanel extends Component {
                 }
               </div>
               <div className="row col-1"></div>
-              <button style={{margin: "0 auto"}} onClick={this.props.onToggle}>Create a Stream</button>
+              <button style={{margin: "0 auto"}} onClick={() => { this.props.setStatus(!active) }}>Create a Stream</button>
             </div>
           </div>
           )
