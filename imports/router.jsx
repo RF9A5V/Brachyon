@@ -42,8 +42,6 @@ import CreateBracketScreen from "../imports/components/brackets/create.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
-
-
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
     replace('/dashboard');

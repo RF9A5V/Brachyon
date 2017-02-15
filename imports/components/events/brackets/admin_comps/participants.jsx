@@ -115,18 +115,18 @@ export default class AddPartipantAction extends Component {
         }
         </div>
         <div className="col participant-table" style={{marginTop:"10px"}}>
-          <div className="participant-row">
+          <div className="participant-head">
             <div className="col-1">
-              Seed
+              SEED
             </div>
             <div className="col-1">
-              Alias
+              ALIAS
             </div>
             <div className="col-1">
-              Username
+              USERNAME
             </div>
             <div className="col-1 row" style={{justifyContent: "flex-end"}}>
-              Delete
+              REMOVE
             </div>
           </div>
           {

@@ -45,18 +45,13 @@ export default class ImageForm extends Component {
     return boxData;
   }
 
-  value(cb) {
-
-    var boxData = this.dimensions();
-
-    if(this.props.meta) {
-      Object.keys(this.props.meta).forEach(key => {
-        boxData[key] = this.props.meta[key];
-      })
+  value() {
+    try {
+      var boxData = this.dimensions();
     }
-    Object.keys(this.state.meta).forEach(key => {
-      boxData[key] = this.state.meta[key];
-    })
+    catch(e) {
+      return null;
+    }
     var type = "";
     if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
       type = ".jpg";
@@ -64,25 +59,11 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
-
-    this.props.collection.insert({
-      file: (this.state.url || this.props.defaultImage),
-      isBase64: true,
-      fileName: Meteor.userId() + type, // Weird shit until I figure out if we want to save the initial file name
-      meta: boxData,
-      onStart: () => {
-        toastr.warning("Now uploading image.", "Warning")
-      },
-      onUploaded: (err, data) => {
-        if(err){
-          toastr.error(err.reason);
-          cb(err, data);
-        }
-        if(cb) {
-          cb(null, data);
-        }
-      }
-    });
+    return {
+      image: this.state.file,
+      type,
+      meta: boxData
+    }
   }
 
   updateImage(e){
@@ -91,18 +72,15 @@ export default class ImageForm extends Component {
     var reader = new FileReader();
     var file = e.target.files[0];
     var type = file.type;
-    if(this.props.onSelect){
-      this.props.onSelect();
-    }
-    reader.onload = function() {
-      if(self.props.onImgSelected) {
-        self.props.onImgSelected(reader.result);
-      }
-      self.setState({
+    reader.onload = () => {
+      this.state = {
         url: reader.result,
         file,
         type
-      });
+      }
+      setTimeout(() => {
+        this.forceUpdate();
+      }, 250)
     }
     reader.readAsDataURL(file);
   }

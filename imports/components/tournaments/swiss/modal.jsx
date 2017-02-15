@@ -17,7 +17,7 @@ export default class SwissModal extends Component {
       return false;
     }
     var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    var score = 1;
+    var score = 3;
     var multi = inc === true ? 1 : -1;
     var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
     var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
