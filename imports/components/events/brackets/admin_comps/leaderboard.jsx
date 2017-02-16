@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import Instances from "/imports/api/event/instance.js";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
+import UserTab from "/imports/components/users/user_tab.jsx";
+
 export default class LeaderboardPanel extends TrackerReact(Component) {
 
   constructor(props) {
@@ -139,12 +141,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
             {
               rank.map(r => {
                 return (
-                  <div className="row x-center" style={{width: 200, backgroundColor: r.id == Meteor.userId() ? "#FF6000" : "#666", marginRight: 10, marginBottom: 10}}>
-                    <img src={this.profileImageOrDefault(r.id)} style={{width: 50, height: 50, marginRight: 10}} />
-                    <span>
-                      { r.alias }
-                    </span>
-                  </div>
+                  <UserTab id={r.id} alias={r.alias} />
                 )
               })
             }
