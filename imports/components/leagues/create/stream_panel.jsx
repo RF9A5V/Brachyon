@@ -10,7 +10,7 @@ export default class StreamPanel extends Component {
   }
 
   value() {
-    return this.refs.stream.value();
+    return this.refs.stream.value;
   }
 
   itemDescriptions() {
