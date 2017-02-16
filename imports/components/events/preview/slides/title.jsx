@@ -43,6 +43,8 @@ export default class EventTitlePage extends Component {
                     return (bracket.participants || []).some((player) => {
                       return player.id == Meteor.userId()
                     })
+                  }) || brackets.every(bracket => {
+                    return bracket.isComplete;
                   }) ? (
                     <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/event/${event.slug}/bracket/0`) }}>
                       View Bracket
