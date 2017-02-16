@@ -24,8 +24,62 @@
   margin-bottom 10px
 
 .slide
+  width: 100vw
+  height: calc(100vh - 100px)
   background-position center center
   background-size cover
+  position: relative;
+
+.slide > *
+  width: 100%
+  height: 100%
+
+.slide-container
+  min-width: 100vw;
+  height: calc(100vh - 100px);
+  overflow-y: hidden
+  position: relative
+  display: inline-block;
+
+.slide-controller
+  position: fixed;
+  right: 20px;
+  top: calc(50vh - 50px)
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+
+.slide-controller-tab.icon:hover
+  cursor pointer;
+
+.slide-controller-tab.icon
+  border solid 2px white
+  box-sizing border-box
+  width: 15px;
+  height: 15px;
+
+.slide-controller-tab .content
+  width: 100%
+  height: 100%
+
+.slide-controller-tab .content:not(.active)
+  opacity 0;
+
+.slide-controller-tab:hover .content:not(.active)
+  opacity: 0.5
+
+.slide-controller-tab
+  font-size 14px;
+  color: white;
+  margin-bottom: 10px;
+
+.slide-controller-tab.active
+  font-size 18px;
+  color: #FF6000;
+
+.slide-controller-tab:hover:not(.active)
+  font-size 16px
+  color: #00BDFF
 
 .toc
   position absolute
