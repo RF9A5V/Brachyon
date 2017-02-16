@@ -17,7 +17,22 @@ import Brackets from "/imports/api/brackets/brackets.js";
 
 import Instances from "/imports/api/event/instance.js";
 
+import OrganizeSuite from "/imports/decorators/organize.js";
+
 class BracketAdminScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: true
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.state.sub){
+      this.state.sub.stop();
+    }
+  }
 
   items() {
     const { instance } = this.props;
@@ -33,7 +48,14 @@ class BracketAdminScreen extends Component {
             component: ParticipantAction,
             args: {
               index: this.props.params.bracketIndex || 0,
-              bracket
+              bracket,
+              onStart: {
+                func: () => {
+                  this.setState({
+                    sub: Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), this.props.params.bracketIndex)
+                  });
+                }
+              }
             }
           }
         ]
@@ -54,23 +76,49 @@ class BracketAdminScreen extends Component {
         ]
       })
     }
-    if(bracket && bracket.id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketAction,
-              args: {
-                id: bracket.id,
-                eid: this.props.params.eventId,
-                format: bracket.format.baseFormat,
-              }
-            }
-          ]
+
+    if(bracket.participants && bracket.participants.length > 3) {
+      if(!bracket.id) {
+        switch(bracket.format.baseFormat) {
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracket.participants || []); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
+          default: break;
         }
-      ]);
+        rounds = rounds.map(b => {
+          return b.map(r => {
+            return r.map(m => {
+              if(m) {
+                return {
+                  players: [m.playerOne, m.playerTwo],
+                  winner: null
+                }
+              }
+              return null;
+            })
+          })
+        })
+      }
+      else {
+        var rounds = Brackets.findOne().rounds;
+      }
+    }
+    defaultItems.push({
+      text: "Bracket",
+      icon: "sitemap",
+      subitems: [
+        {
+          component: BracketAction,
+          args: {
+            id: bracket.id,
+            eid: this.props.params.eventId,
+            format: bracket.format.baseFormat,
+            rounds
+          }
+        }
+      ]
+    })
+
+    if(bracket && bracket.id) {
       if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
         defaultItems.push({
           text: "Matches",
@@ -112,7 +160,14 @@ class BracketAdminScreen extends Component {
             {
               component: StartBracketAction,
               args: {
-                index: index
+                index: index,
+                onStart: {
+                  func: () => {
+                    this.setState({
+                      sub: Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), this.props.params.bracketIndex)
+                    });
+                  }
+                }
               }
             }
           ]
@@ -130,7 +185,7 @@ class BracketAdminScreen extends Component {
 
   render() {
     const { ready } = this.props;
-    if(!ready) {
+    if(!ready || !this.state.ready) {
       return (
         <div>
           Loading...
@@ -144,14 +199,18 @@ class BracketAdminScreen extends Component {
 }
 
 export default createContainer(({params}) => {
-  const { slug, id } = params;
+  const { slug, bracketIndex } = params;
   const eventHandle = Meteor.subscribe("event", slug);
-  const instanceHandle = Meteor.subscribe("bracketContainer", id);
-  const ready = eventHandle.ready() && instanceHandle.ready();
+  if(eventHandle && eventHandle.ready()) {
+    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+    return {
+      ready: instanceHandle.ready(),
+      instance: Instances.findOne(),
+      bracket: Brackets.findOne(),
+      event: Events.findOne()
+    }
+  }
   return {
-    ready,
-    event: Events.findOne(),
-    instance: Instances.findOne(),
-    bracket: Brackets.findOne()
+    ready: false
   }
 }, BracketAdminScreen);
