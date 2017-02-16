@@ -31,7 +31,7 @@ export default class SubSlideContainer extends Component {
           this.state.currentItem = current;
           this.props.onAnimDone();
         }
-      } ref="slider">
+      } ref="slider" draggable={false}>
       {
         this.props.items.map((item, i) => {
           return (
