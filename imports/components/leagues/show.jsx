@@ -12,6 +12,8 @@ import LeaderboardSlide from "./show/leaderboards.jsx";
 import TiebreakerSlide from "./show/tiebreaker.jsx";
 import StreamSlide from "./show/stream.jsx";
 
+import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
+
 export default class LeagueShowPage extends Component {
 
   constructor(props) {
@@ -32,21 +34,18 @@ export default class LeagueShowPage extends Component {
     if(league.details.bannerUrl) {
       return league.details.bannerUrl;
     }
-    return "/images/brachyon_logo.png";
+    return "/images/bg.jpg";
   }
 
   populateMetaTags() {
     var league = Leagues.findOne();
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", league.details.name);
-    document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(league.details.description));
-    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
 
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", league.details.name);
-    document.querySelector("[name='twitter:description']").setAttribute("content", this.fbDescriptionParser(league.details.description));
-    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+    var title = league.details.name;
+    var desc = this.fbDescriptionParser(league.details.description);
+    var img = this.imgOrDefault();
+    var url = window.location.href;
+
+    generateMetaTags(title, desc, img, url);
 
     this.setState({
       hasLoaded: true
@@ -65,17 +64,7 @@ export default class LeagueShowPage extends Component {
 
   componentWillUnmount() {
     this.state.league.stop();
-
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
-    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
-
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
-    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
+    resetMetaTags();
   }
 
   slides() {
@@ -141,7 +130,7 @@ export default class LeagueShowPage extends Component {
     }
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} color="#FF6000" />
+        <SlideMain slides={this.slides()} baseUrl={"/league/" + Leagues.findOne().slug + "/"} slide={this.props.params.slide} color="#FF6000" backgroundImage={this.imgOrDefault()} />
       </div>
     )
   }

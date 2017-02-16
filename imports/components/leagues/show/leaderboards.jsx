@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import UserTab from "/imports/components/users/user_tab.jsx";
+
 export default class LeaderboardSlide extends Component {
 
   constructor(props) {
@@ -13,12 +15,7 @@ export default class LeaderboardSlide extends Component {
     var user = Meteor.users.findOne(id);
     var image = user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
     return (
-      <div className="row" style={{backgroundColor: "#666", width: 150, marginRight: 10, marginBottom: 10}}>
-        <img src={image} style={{width: 50, height: 50}} />
-        <div style={{padding: 5}}>
-          { user.username }
-        </div>
-      </div>
+      <UserTab id={id} alias={user.username} />
     )
   }
 

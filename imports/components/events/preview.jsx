@@ -18,6 +18,8 @@ import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
 
+import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
+
 class PreviewEventScreen extends Component {
 
   constructor(props) {
@@ -28,16 +30,7 @@ class PreviewEventScreen extends Component {
   }
 
   componentWillUnmount(){
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
-    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
-
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
-    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
+    resetMetaTags();
   }
 
   event() {
@@ -46,16 +39,13 @@ class PreviewEventScreen extends Component {
 
   populateMetaTags() {
     var event = this.event();
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", event.details.name);
-    document.querySelector("[property='og:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
-    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
 
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", event.details.name);
-    document.querySelector("[name='twitter:description']").setAttribute("content", this.fbDescriptionParser(event.details.description));
-    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+    var title = event.details.name;
+    var desc = this.fbDescriptionParser(event.details.description);
+    var img = this.imgOrDefault();
+    var url = window.location.href;
+
+    generateMetaTags(title, desc, img, url);
 
     this.setState({
       hasLoaded: true
@@ -146,7 +136,7 @@ class PreviewEventScreen extends Component {
     var event = this.event();
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} color="#00BDFF" ref="slider" />
+        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} color="#00BDFF" ref="slider" backgroundImage={this.imgOrDefault()} />
       </div>
     )
   }
