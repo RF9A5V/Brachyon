@@ -30,18 +30,31 @@ Meteor.publish('brackets', (_id) => {
   ];
 });
 
-Meteor.publish("bracketContainer", (_id) => {
+Meteor.publish("bracketContainer", (_id, index) => {
   var instance = Instances.findOne(_id);
   if(!instance) {
     return [];
   }
-  var partIds = [];
-  instance.brackets.forEach(b => { partIds = partIds.concat((b.participants || []).map(p => { return p.id })) });
+  var partIds = (instance.brackets[index].participants || []).map(b => { return b.id });
+  var matches = [];
+  var bracket = Brackets.findOne(instance.brackets[index].id);
+  if(bracket) {
+    bracket.rounds.forEach(b => {
+      b.forEach(r => {
+        r.forEach(m => {
+          if(m) {
+            matches.push(m.id);
+          }
+        })
+      })
+    })
+  }
   return [
     Instances.find({_id}),
-    Brackets.find({ _id: {
-      $in: instance.brackets.map(obj => { obj.id })
-    }}),
-    Meteor.users.find({ _id: { $in: partIds } })
+    Brackets.find({ _id: instance.brackets[index].id }),
+    Meteor.users.find({ _id: { $in: partIds } }),
+    Matches.find({ _id: {
+      $in: matches
+    } })
   ]
 })

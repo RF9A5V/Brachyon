@@ -14,6 +14,8 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 import Brackets from "/imports/api/brackets/brackets.js"
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
+import OrganizeSuite from "/imports/decorators/organize.js";
+
 class BracketShowScreen extends Component {
 
   componentWillReceiveProps() {
@@ -57,25 +59,44 @@ class BracketShowScreen extends Component {
   items() {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
+    var bracketMeta = instance.brackets[this.props.params.bracketIndex || 0];
     var defaultItems = [];
-    var id = instance.brackets[this.props.params.bracketIndex || 0].id
-    if(id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketPanel,
-              args: {
-                id: id,
-                format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat
-              }
+    var id = bracketMeta.id;
+    var rounds;
+    if(!id) {
+      switch(bracketMeta.format.baseFormat) {
+        case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants); break;
+        case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
+        default: break;
+      }
+      rounds = rounds.map(b => {
+        return b.map(r => {
+          return r.map(m => {
+            return {
+              players: [
+                m.playerOne,
+                m.playerTwo
+              ],
+              winner: null
             }
-          ]
-        }
-      ])
+          })
+        })
+      });
     }
+    defaultItems.push({
+      text: "Bracket",
+      icon: "sitemap",
+      subitems: [
+        {
+          component: BracketPanel,
+          args: {
+            id: id,
+            format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
+            rounds: bracket.rounds || rounds || []
+          }
+        }
+      ]
+    });
     if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
@@ -138,21 +159,19 @@ class BracketShowScreen extends Component {
   }
 }
 
-export default createContainer((props) => {
-  var temp;
-  if(props.params.slug) {
-    const eventHandle = Meteor.subscribe("event", props.params.slug, {
-      onReady: () => {
-        temp = Meteor.subscribe("bracket", Instances.findOne().brackets[props.params.bracketIndex].id);
-      }
-    });
-
-  }
-  else {
-    temp = Meteor.subscribe("bracketContainer", props.params.id);
+export default createContainer(({params}) => {
+  const { slug, bracketIndex } = params;
+  const eventHandle = Meteor.subscribe("event", slug);
+  if(eventHandle && eventHandle.ready()) {
+    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+    return {
+      ready: instanceHandle.ready(),
+      instance: Instances.findOne(),
+      bracket: Brackets.findOne(),
+      event: Events.findOne()
+    }
   }
   return {
-    ready: temp && temp.ready()
+    ready: false
   }
-
-})
+}, BracketShowScreen);
