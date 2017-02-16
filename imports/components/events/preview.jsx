@@ -119,7 +119,7 @@ class PreviewEventScreen extends Component {
 
   imgOrDefault() {
     var event = this.event();
-    return event.details.bannerUrl ? event.details.bannerUrl : "/images/logo.png";
+    return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
   }
 
   render() {
