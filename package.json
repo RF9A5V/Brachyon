@@ -33,7 +33,9 @@
     "react-mounter": "^1.2.0",
     "react-router": "^2.4.1",
     "react-sidebar": "^2.2.1",
+    "react-slick": "^0.14.6",
     "react-summernote": "^1.0.4",
+    "react-swipeable": "^3.9.1",
     "request": "^2.75.0",
     "velocity-react": "^1.1.8"
   },

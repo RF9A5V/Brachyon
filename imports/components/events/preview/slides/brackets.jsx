@@ -10,25 +10,6 @@ import Instances from "/imports/api/event/instance.js";
 
 export default class BracketSlide extends Component {
 
-  constructor(props) {
-    super(props);
-    var event = this.props.event;
-    this.state = {
-      id: event._id
-    }
-  }
-
-  backgroundImage(useDarkerOverlay){
-    var imgUrl = "/images/bg.jpg";
-    if(this.props.event && this.props.event.details.bannerUrl) {
-      imgUrl = this.props.event.details.bannerUrl;
-    }
-    if(useDarkerOverlay){
-      return `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
-    }
-    return `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.85)), url(${imgUrl})`;
-  }
-
   onInviteAccept(note) {
     Meteor.call("users.notifications.acceptInvitation", note._id, (err) => {
       if(err) {
@@ -52,9 +33,10 @@ export default class BracketSlide extends Component {
   }
 
   bracketButton(bracket, i) {
+    var event = Events.findOne();
     var instance = Instances.findOne();
     var isRegistered = bracket.participants && bracket.participants.some((obj, j) => { return obj.id == Meteor.userId() });
-    var note = Notifications.findOne({ eventSlug: this.props.event.slug, recipient: Meteor.userId(), type: "eventInvite" });
+    var note = Notifications.findOne({ eventSlug: event.slug, recipient: Meteor.userId(), type: "eventInvite" });
     if(note) {
       return [
         (
@@ -96,7 +78,7 @@ export default class BracketSlide extends Component {
           use: "tickets",
           tickets: ["venue", `${i}`]
         })
-        browserHistory.push(`/event/${this.props.event.slug}/checkout`);
+        browserHistory.push(`/event/${event.slug}/checkout`);
       }
       else {
         Meteor.call("events.registerUser", this.state.id, i, (err) => {
@@ -117,110 +99,109 @@ export default class BracketSlide extends Component {
   }
 
   render() {
-    var instance = Instances.findOne(this.props.event.instances[this.props.event.instances.length - 1]);
+    var event = Events.findOne();
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     return (
-      <div className="slide-page-container">
-        <div className="slide-page col x-center center" style={{backgroundImage: this.backgroundImage(true)}}>
-          <div className="row" style={{flexWrap: "wrap", width: "90%"}}>
-            {
-              instance.brackets.map((bracket, i) => {
-                return (
-                  <div className="bracket">
-                    <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
-                    <div className="bracket-overlay started">
-                      <div className="col-1"></div>
-                      <div className="bracket-details">
-                        {
-                          // <div className="bracket-detail-row">
-                          //   <div className="bracket-detail-item">
-                          //     <FontAwesome name="gamepad" />
-                          //   </div>
-                          //   <div className="bracket-detail-item">
-                          //     <span>{ Games.findOne(bracket.game).name }</span>
-                          //   </div>
-                          // </div>
-                        }
-                        <div className="bracket-detail-row">
-                          <div className="bracket-detail-item">
-                            <FontAwesome name="users" />
-                          </div>
-                          <div className="bracket-detail-item">
-                            <span>{ (bracket.participants || []).length }</span>
-                          </div>
+      <div className="col x-center center">
+        <div className="row" style={{flexWrap: "wrap", width: "90%"}}>
+          {
+            instance.brackets.map((bracket, i) => {
+              return (
+                <div className="bracket">
+                  <img style={{width: "100%", height: "auto"}} src={Games.findOne(bracket.game).bannerUrl} />
+                  <div className="bracket-overlay started">
+                    <div className="col-1"></div>
+                    <div className="bracket-details">
+                      {
+                        // <div className="bracket-detail-row">
+                        //   <div className="bracket-detail-item">
+                        //     <FontAwesome name="gamepad" />
+                        //   </div>
+                        //   <div className="bracket-detail-item">
+                        //     <span>{ Games.findOne(bracket.game).name }</span>
+                        //   </div>
+                        // </div>
+                      }
+                      <div className="bracket-detail-row">
+                        <div className="bracket-detail-item">
+                          <FontAwesome name="users" />
                         </div>
-                        {
-                          // <div className="bracket-detail-row">
-                          //   <div className="bracket-detail-item">
-                          //     <FontAwesome name="trophy" />
-                          //   </div>
-                          //   <div className="bracket-detail-item">
-                          //     <span>${0}</span>
-                          //   </div>
-                          // </div>
-                        }
-                        <div className="bracket-detail-row">
-                          <div className="bracket-detail-item">
-                            <FontAwesome name="sitemap" />
-                          </div>
-                          <div className="bracket-detail-item">
-                            <span style={{fontSize: 14}}>{ bracket.format.baseFormat.split("_").map(str => { if(str == "round") { return "RR" } return str.substring(0, 1).toUpperCase() + str.slice(1) })[0] }</span>
-                          </div>
+                        <div className="bracket-detail-item">
+                          <span>{ (bracket.participants || []).length }</span>
                         </div>
                       </div>
-                      <div className="row center x-center col-1">
-                        { bracket.name || "" }
+                      {
+                        // <div className="bracket-detail-row">
+                        //   <div className="bracket-detail-item">
+                        //     <FontAwesome name="trophy" />
+                        //   </div>
+                        //   <div className="bracket-detail-item">
+                        //     <span>${0}</span>
+                        //   </div>
+                        // </div>
+                      }
+                      <div className="bracket-detail-row">
+                        <div className="bracket-detail-item">
+                          <FontAwesome name="sitemap" />
+                        </div>
+                        <div className="bracket-detail-item">
+                          <span style={{fontSize: 14}}>{ bracket.format.baseFormat.split("_").map(str => { if(str == "round") { return "RR" } return str.substring(0, 1).toUpperCase() + str.slice(1) })[0] }</span>
+                        </div>
                       </div>
-                      {(bracket.startedAt == null)?
-                        (
-                        <div className="row" style={{justifyContent: "flex-end"}}>
-                        <div className="bracket-view-button col-1" onClick={() => {
-                          if(this.props.event.owner == Meteor.userId()) {
-                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
-                          }
-                          else {
-                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}`);
-                          }
-                        }}>
-                          <span>View</span>
-                        </div>
-                        {
-                          this.bracketButton(bracket, i)
-                        }
-                      </div>)
-                        :(
-                        <div className="bracket-view-button col-1" style={{width:"230px",maxHeight:"63px",margin:"auto",verticalAlign:"center"}}onClick={() => {
-                          if(this.props.event.owner == Meteor.userId()) {
-                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}/admin`)
-                          }
-                          else {
-                            browserHistory.push(`/event/${this.props.event.slug}/bracket/${i}`);
-                          }
-                        }}>
-                          <span>View</span>
-                        </div>
-                      )}
-
-
                     </div>
-                    {
-                      // <div className="col center x-center" style={{position: "absolute", width: "100%", height: "100%", top: 0}}>
-                      //   <div className="col-1 col center x-center">
-                      //     <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 55}}>
-                      //       Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
-                      //     </span>
-                      //   </div>
-                      //   <div className="bracket-button">
-                      //     {
-                      //       this.bracketButton(bracket, i)
-                      //     }
-                      //   </div>
-                      // </div>
-                    }
+                    <div className="row center x-center col-1">
+                      { bracket.name || "" }
+                    </div>
+                    {(bracket.startedAt == null)?
+                      (
+                      <div className="row" style={{justifyContent: "flex-end"}}>
+                      <div className="bracket-view-button col-1" onClick={() => {
+                        if(event.owner == Meteor.userId()) {
+                          browserHistory.push(`/event/${event.slug}/bracket/${i}/admin`)
+                        }
+                        else {
+                          browserHistory.push(`/event/${event.slug}/bracket/${i}`);
+                        }
+                      }}>
+                        <span>View</span>
+                      </div>
+                      {
+                        this.bracketButton(bracket, i)
+                      }
+                    </div>)
+                      :(
+                      <div className="bracket-view-button col-1" style={{width:"230px",maxHeight:"63px",margin:"auto",verticalAlign:"center"}}onClick={() => {
+                        if(event.owner == Meteor.userId()) {
+                          browserHistory.push(`/event/${event.slug}/bracket/${i}/admin`)
+                        }
+                        else {
+                          browserHistory.push(`/event/${event.slug}/bracket/${i}`);
+                        }
+                      }}>
+                        <span>View</span>
+                      </div>
+                    )}
+
+
                   </div>
-                );
-              })
-            }
-          </div>
+                  {
+                    // <div className="col center x-center" style={{position: "absolute", width: "100%", height: "100%", top: 0}}>
+                    //   <div className="col-1 col center x-center">
+                    //     <span style={{fontSize: 12, backgroundColor: "rgba(0, 0, 0, 0.8)", padding: 5, marginTop: 55}}>
+                    //       Click <a href="#" onClick={(e) => { e.preventDefault() }}>here</a> to view the bracket!
+                    //     </span>
+                    //   </div>
+                    //   <div className="bracket-button">
+                    //     {
+                    //       this.bracketButton(bracket, i)
+                    //     }
+                    //   </div>
+                    // </div>
+                  }
+                </div>
+              );
+            })
+          }
         </div>
       </div>
     )

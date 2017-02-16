@@ -19,7 +19,7 @@ export default class BlockContainer extends Component {
     var icons = [];
     if(obj.type == "event") {
       icons.push(<FontAwesome name="file-text" onClick={() => { browserHistory.push("/event/" + obj.slug) }} />);
-      
+
       var instance = Instances.findOne(obj.instances[obj.instances.length - 1]);
       if(instance && instance.brackets) {
         icons.push(<FontAwesome name="sitemap" onClick={() => { browserHistory.push("/event/" + obj.slug + "/brackets") }} />)
@@ -58,7 +58,15 @@ export default class BlockContainer extends Component {
         return count;
       })()
     ) : (
-      obj.leaderboard[0].length
+      (() => {
+        var keys = {};
+        obj.leaderboard.forEach(board => {
+          Object.keys(board).forEach(k => {
+            keys[k] = 1;
+          })
+        });
+        return Object.keys(keys).length;
+      })()
     );
     var title = (obj.type == "instance") ? obj.brackets[0].name || "Bracket" : obj.details.name;
     var img = obj.type == "instance" ? "/images/bg.jpg" : obj.details.bannerUrl;
