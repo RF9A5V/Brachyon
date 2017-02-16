@@ -41,7 +41,7 @@ Meteor.methods({
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
     });
-    
+
     return ary;
   },
 
@@ -60,14 +60,13 @@ Meteor.methods({
   "events.validate_stream"(obj) {
     return {
       twitchStream: {
-        name: obj.value,
-        chat: obj.value
+        name: obj
       }
     }
   },
 
   "events.create"(obj, leagueID) {
-    
+
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
     var requiresReview = false;
