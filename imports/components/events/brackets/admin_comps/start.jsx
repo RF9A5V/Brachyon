@@ -15,11 +15,12 @@ export default class StartBracketAction extends Component {
   startEventHandler() {
     var event = Events.findOne();
     var startFunc = () => {
-      Meteor.call("events.start_event", this.state.id, this.props.index || 0, function(err) {
+      Meteor.call("events.start_event", this.state.id, this.props.index || 0, (err) => {
         if(err){
           return toastr.error(err.reason, "Error!");
         }
         else {
+          this.props.onStart["func"]()
           toastr.success("Successfully started bracket!", "Success!");
         }
       });
