@@ -42,7 +42,10 @@ export default class SingleDisplay extends Component {
                     round.map((match, j) => {
                       var isFutureLoser = false;
                       if(match) {
-                        var obj = Matches.findOne(match.id);
+                        var obj = match;
+                        if(match.id) {
+                          obj = Matches.findOne(match.id);
+                        }
                         if(obj.players[0] && obj.players[1]) {
                           var p1Alias = obj.players[0].alias;
                           var p2Alias = obj.players[1].alias;
@@ -75,10 +78,11 @@ export default class SingleDisplay extends Component {
                         <MatchBlock
                           isLast={i == this.props.rounds[0].length - 1}
                           round={i}
-                          id={match && match.id ? match.id : null}
+                          match={obj}
                           isFutureLoser={isFutureLoser}
                           update={this.props.update}
                           index={j}
+                          onMatchClick={this.props.onMatchClick}
                         />
                       );
                     })
