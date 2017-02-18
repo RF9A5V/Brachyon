@@ -64,28 +64,13 @@ export default class Header extends TrackerReact(Component) {
     if(Meteor.userId()){
       userCred = (
         <div style={{position: "relative"}} className="row x-center">
-          <Link to="/dashboard">
-            <div className="row x-center">
-              <div style={{position: "relative"}}>
-                <img style={{width: 40, height: 40, borderRadius: "100%", margin: "0 10px"}} src={this.imgOrDefault()} />
-              </div>
+          <div className="row x-center" onClick={(e) => {
+            e.preventDefault();this.setState({userMenuOpen: true})
+          }}>
+            <div style={{position: "relative"}}>
+              <img style={{width: 40, height: 40, borderRadius: "100%"}} src={this.imgOrDefault()} />
             </div>
-          </Link>
-          <div className="row x-center">
-            <a href="#" className="row x-center" style={{cursor: "pointer"}} onClick={(e) => {
-              e.preventDefault();this.setState({userMenuOpen: true})
-            }}>
-              <FontAwesome name="bars" style={{fontSize: 18}} />
-            </a>
           </div>
-          {
-            // <UserDropdown active={this.state.userMenuOpen} clear={() => {this.setState({userMenuOpen: false})}} onAccessNotes={() => {
-            //   this.setState({
-            //     notificationsMenuOpen: true,
-            //     userMenuOpen: false
-            //   })
-            // }} />
-          }
         </div>
       );
     }

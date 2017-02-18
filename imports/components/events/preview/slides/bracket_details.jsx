@@ -318,7 +318,7 @@ class BracketDetails extends Component {
     const game = Games.findOne(bracketMeta.game);
     return (
       <div className="row" style={{padding: 10}}>
-        <div className="col col-1" style={{padding: 20, paddingLeft: 10, paddingRight: 60}}>
+        <div className="col col-1" style={{padding: "20px 60px"}}>
           { this.content(bracketMeta) }
         </div>
       </div>
