@@ -46,7 +46,9 @@ export default class NoFooterLayout extends Component {
       <div>
         <Header ref="header" onLoad={() => { this.setState({ fadeIn: true }) }} />
         <VelocityComponent animation={{opacity: this.state.fadeIn ? 1 : 0}} duration={400}>
-          { this.props.children }
+          <div className="box">
+            { this.props.children }
+          </div>
         </VelocityComponent>
       </div>
     )
