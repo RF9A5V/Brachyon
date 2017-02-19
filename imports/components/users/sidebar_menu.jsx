@@ -33,7 +33,22 @@ export default class SidebarMenu extends Component {
         action: () => {
           browserHistory.push("/orgs/create");
         }
+      },
+      {
+        icon: "sign-out",
+        name: "Log Out",
+        action: () => {
+          Meteor.logout(err => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              browserHistory.push("/");
+            }
+          })
+        }
       }
+
     ];
     return items.map(i => {
       return (
@@ -52,6 +67,9 @@ export default class SidebarMenu extends Component {
 
   render() {
     var user = Meteor.user();
+    if(!user) {
+      return null;
+    }
     return (
       <div style={{height: "100vh", backgroundColor: "#111", width: 250}}>
         <div className="col x-center">
