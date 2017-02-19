@@ -31,7 +31,7 @@ secretninjaman:link-accounts
 cfs:graphicsmagick
 percolate:synced-cron
 accounts-facebook@1.0.11
-accounts-twitter@1.1.12
+accounts-twitter
 accounts-google@1.0.11
 alexbeauchemin:accounts-twitch
 shell-server@0.2.1
