@@ -60,7 +60,7 @@ export default class LeaderboardPanel extends Component {
             currentPlace += users.length;
             var nextPlace = currentPlace - 1;
             return (
-              <div className="col" style={{marginBottom: 10}}>
+              <div className="col table-row" style={{padding: 10, backgroundColor: "transparent"}}>
                 <div className="row flex-pad x-center">
                   <h5>{place + getSuffix(place)}{ nextPlace != place ? ` - ${nextPlace + getSuffix(nextPlace)}` : "" }</h5>
                   <div className="row x-center">

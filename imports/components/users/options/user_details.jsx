@@ -12,14 +12,9 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
     super(props);
     this.state = {
       profileChanged: false,
-      user: Meteor.subscribe("user", Meteor.userId()),
       image: Meteor.user().profile.imageUrl,
       banner: Meteor.user().profile.bannerUrl,
     }
-  }
-
-  componentWillUnmount() {
-    this.state.user.stop();
   }
 
   onRequestImageSave(type) {
@@ -43,8 +38,16 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
 
   saveAlias(e) {
     e.preventDefault();
-    if(Meteor.user() && Meteor.user().profile.alias != this.refs.alias.value) {
-      Meteor.call("users.update_alias", this.refs.alias.value, this.genericError("alias").bind(this));
+    var alias = Meteor.users.findOne().profile.alias;
+    if(alias != this.refs.alias.value) {
+      Meteor.call("users.update_alias", this.refs.alias.value, (err) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          toastr.success("Updated alias.");
+        }
+      });
     }
     else {
       toastr.warning("No changes to be made.", "Warning!");
@@ -52,6 +55,7 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
   }
 
   render() {
+    var user = Meteor.users.findOne();
     return (
       <div className="col side-tab-panel" style={{margin:"auto", paddingTop:10}}>
         <h4>Profile Image</h4>
@@ -59,15 +63,15 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
           <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={() => { this.onRequestImageSave("image") }}>Save</button>
           </div>
-          <ImageForm aspectRatio={1} collection={ProfileImages} ref="profileImage" url={Meteor.user().profile.imageUrl} meta={{userId: Meteor.userId()}}/>
+          <ImageForm aspectRatio={1} collection={ProfileImages} ref="profileImage" url={user.profile.imageUrl} meta={{userId: Meteor.userId()}}/>
 
         </div>
         <h4>Profile Banner</h4>
         <div className="about-what" style={{marginBottom:10}}>
-          <div style={{display:"flex", justifyContent:"flex-end"}}>  
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={() => { this.onRequestImageSave("banner") }}>Save</button>
           </div>
-          <ImageForm aspectRatio={16/4.5} collection={ProfileBanners} ref="profileBanner" url={Meteor.user().profile.bannerUrl} meta={{userId: Meteor.userId()}} />
+          <ImageForm aspectRatio={16/4.5} ref="profileBanner" url={user.profile.bannerUrl} meta={{userId: Meteor.userId()}} />
         </div>
 
         <h4 className="col-1">Alias</h4>
@@ -76,7 +80,7 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
             <button onClick={this.saveAlias.bind(this)}>Save</button>
           </div>
           <div>
-            <input type="text" ref="alias" style={{width: 400}} maxLength={40} defaultValue={Meteor.user().profile.alias || Meteor.user().username} />
+            <input type="text" ref="alias" style={{width: 400}} maxLength={40} defaultValue={user.profile.alias || user.username} />
           </div>
         </div>
       </div>
