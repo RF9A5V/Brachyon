@@ -38,7 +38,7 @@ export default class MatchBlock extends Component {
     // var matchComp = (50 * (Math.pow(2, i) - 1)) + (50 / 2);
     // var marginComp = (40 * (Math.pow(2, i) - 1)) + (40 / 2);
     var matchComp = (50 * (Math.pow(2, i - 1)));
-    var marginComp = (40 * (Math.pow(2, i)));
+    var marginComp = (20 * (Math.pow(2, i)));
     var totHeight = matchComp + marginComp;
 
     var height = totHeight;
@@ -64,12 +64,12 @@ export default class MatchBlock extends Component {
     var match = this.props.match;
 
     var height = 35;
-    var margin = 10;
+    var margin = 0;
 
     var lineHeight = 5;
 
     var blockHeight = height * 2 + margin * 2 + lineHeight;
-    var blockMargin = 20;
+    var blockMargin = 10;
 
     var vLineBase = blockHeight + blockMargin;
     var vLineHeight = Math.pow(2, i - 1) * vLineBase + lineHeight;
@@ -90,8 +90,11 @@ export default class MatchBlock extends Component {
       return match.winner && p.alias != match.winner.alias;
     }
 
+    var bracket = Brackets.findOne().rounds[0][0];
+    var prevMatchesNull = this.props.round == 0 || (this.props.round == 1 && bracket[this.props.index * 2] == null && bracket[this.props.index * 2 + 1] == null);
+
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, left: this.props.round == 1 && prevMatchesNull ? 20 : 0, position: "relative"}}>
         {
           match.players[0] == null && match.players[1] == null && i == 0 ? (
             <div style={{height: blockHeight}}>
@@ -101,7 +104,7 @@ export default class MatchBlock extends Component {
               <div className="match" onClick={() => {
                 this.props.onMatchClick(match._id, 0, this.props.round, this.props.index);
               }}>
-                <div className="participant" style={{height, marginBottom: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1}}>
+                <div className="participant" style={{height, marginBottom: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                   <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
                     { p1.alias || "TBD" }
                   </div>
@@ -109,9 +112,9 @@ export default class MatchBlock extends Component {
                     { p1.score || 0 }
                   </div>
                 </div>
-                <div style={{width: participantWidth + 20, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+                <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
                 </div>
-                <div className="participant" style={{height, marginTop: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1}}>
+                <div className="participant" style={{height, marginTop: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                   <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
                     { p2.alias || "TBD" }
                   </div>

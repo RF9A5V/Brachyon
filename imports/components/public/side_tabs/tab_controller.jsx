@@ -72,7 +72,7 @@ export default class TabController extends Component {
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           <SideTabContent items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
         </VelocityComponent>
-        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", zIndex: 4, paddingRight: 80, justifyContent: "flex-end"}}>
+        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", height: 50, backgroundColor: "#111", paddingRight: 80, justifyContent: "flex-end"}}>
           {
             buttons.map((item, i) => {
               return (

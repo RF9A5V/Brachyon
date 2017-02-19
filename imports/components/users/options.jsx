@@ -32,14 +32,14 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
   items() {
 
     var defaultItems = [];
-    
+
     defaultItems.push({
       text: "User Details",
       icon: "file-text",
       subitems: [
         {
           component: UserDetailsPanel
-          
+
         }
       ]
     })
@@ -49,7 +49,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       subitems: [
         {
           component: GameOptionsPanel
-          
+
         }
       ]
     })
@@ -59,17 +59,13 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       subitems: [
         {
           component: OAuthOptionsPanel
-          
+
         }
       ]
     })
 
-    
-
-
-
     return defaultItems;
-    
+
   }
 
   panels() {

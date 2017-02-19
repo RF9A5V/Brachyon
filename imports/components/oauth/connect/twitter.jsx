@@ -8,7 +8,6 @@ export default class TwitterConnect extends Component {
     Meteor.linkWithTwitter({
     }, function(err){
       if(err){
-        
         toastr.error(err.reason, "Error!");
       }
       else {
@@ -18,7 +17,8 @@ export default class TwitterConnect extends Component {
   }
 
   render() {
-    if(Meteor.user().services.twitter == null) {
+    var user = Meteor.users.findOne();
+    if(user.services.twitter == null) {
       return (
         <button onClick={this.onClick.bind(this)} >
           <FontAwesome style={{marginRight: 10}} name="twitter" />
