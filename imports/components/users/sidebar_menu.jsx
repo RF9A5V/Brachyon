@@ -27,13 +27,13 @@ export default class SidebarMenu extends Component {
           // Do nothing for now.
         }
       },
-      {
-        icon: "users",
-        name: "Create Organizations",
-        action: () => {
-          browserHistory.push("/orgs/create");
-        }
-      },
+      // {
+      //   icon: "users",
+      //   name: "Create Organizations",
+      //   action: () => {
+      //     browserHistory.push("/orgs/create");
+      //   }
+      // },
       {
         icon: "sign-out",
         name: "Log Out",

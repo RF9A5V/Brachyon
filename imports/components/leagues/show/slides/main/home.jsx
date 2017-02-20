@@ -43,7 +43,7 @@ export default class MainSlide extends Component {
                     <div className="col">
                       <span>
                         {
-                          league.details.location.locationName ? this.props.event.details.location.locationName : league.details.location.streetAddress
+                          league.details.location.locationName ? league.details.location.locationName : league.details.location.streetAddress
                         }
                       </span>
                       <span>
