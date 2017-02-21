@@ -108,8 +108,11 @@ export default class LocationSelect extends Component {
         toastr.error("You need to set your location on this form!");
         throw new Error("Location not set.");
       }
+      return this.state;
     }
-    return this.state;
+    return {
+      online: true
+    };
   }
 
   onChange(e) {

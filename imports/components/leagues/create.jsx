@@ -15,8 +15,6 @@ import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-
-
 // Emulation of implementation of a create container.
 
 export default class Sandbox extends Component {
@@ -139,15 +137,19 @@ export default class Sandbox extends Component {
     ]
   }
 
+  actions() {
+    return [
+      {
+        name: "Publish",
+        action: this.create.bind(this)
+      }
+    ]
+  }
+
   render() {
     return (
       <div className="col" style={{padding: 20}}>
-        <CreateContainer items={this.items()} ref="create" />
-        <div className="row center" style={{marginTop: 20}}>
-          <button onClick={this.create.bind(this)}>
-            Publish
-          </button>
-        </div>
+        <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )
   }

@@ -57,7 +57,7 @@ export default class CreateContainer extends Component {
       eColor = "#FF6000";
     }
     return (
-      <div>
+      <div className="col col-1">
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
@@ -121,6 +121,17 @@ export default class CreateContainer extends Component {
                     this.forceUpdate();
                   }} getRefValue={this._getRefValue.bind(this)} />
                 </div>
+              )
+            })
+          }
+        </div>
+        <div className="row center x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+          {
+            (this.props.actions || []).map(a => {
+              return (
+                <button className="signup-button" onClick={a.action}>
+                  { a.name }
+                </button>
               )
             })
           }

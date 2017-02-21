@@ -11,30 +11,15 @@ export default class AddBracket extends Component {
     }
   }
 
-  onBracketSave(){
-    var bracket = this.refs.form.value();
-    Meteor.call("events.brackets.add", this.state.id, bracket.game, bracket.format, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.props.onItemSelect(this.props.activeItem, 0);
-        return toastr.success("Successfully added bracket!", "Success!");
-      }
-    })
-  }
-
   render() {
     return (
       <div className="col">
-        <div className="submodule-bg" style={{width: "50%"}}>
-          <div className="row center">
-            <h3>Add Bracket</h3>
-          </div>
+        <h4>Add Bracket</h4>
+        <div className="submodule-bg submodule-overflow">
           <BracketForm ref="form" />
-          <div className="row center" style={{marginTop: 20}}>
-            <button onClick={() => { this.onBracketSave() }}>Save</button>
-          </div>
+        </div>
+        <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
+          <button>Add Bracket</button>
         </div>
       </div>
     )
