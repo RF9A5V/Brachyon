@@ -71,7 +71,7 @@ export default class MatchBlock extends Component {
       return match.winner && p.alias != match.winner.alias;
     }
 
-    var bracket = Brackets.findOne().rounds[this.props.bracket][i - 1];
+    var bracket = this.props.rounds[this.props.bracket][i - 1];
 
     var prevMatchesNull;
     if(this.props.bracket == 0) {

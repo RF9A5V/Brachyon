@@ -63,40 +63,47 @@ class BracketShowScreen extends Component {
     var defaultItems = [];
     var id = bracketMeta.id;
     var rounds;
-    if(!id) {
-      switch(bracketMeta.format.baseFormat) {
-        case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants); break;
-        case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
-        default: break;
-      }
-      rounds = rounds.map(b => {
-        return b.map(r => {
-          return r.map(m => {
-            return {
-              players: [
-                m.playerOne,
-                m.playerTwo
-              ],
-              winner: null
-            }
+    if(bracketMeta.participants && bracketMeta.participants.length > 3) {
+      if(!bracketMeta.id) {
+        switch(bracketMeta.format.baseFormat) {
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants || []); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants || []); break;
+          default: break;
+        }
+        rounds = rounds.map(b => {
+          return b.map(r => {
+            return r.map(m => {
+              if(m) {
+                return {
+                  players: [m.playerOne, m.playerTwo],
+                  winner: null
+                }
+              }
+              return null;
+            })
           })
         })
+      }
+      else {
+        rounds = Brackets.findOne().rounds;
+      }
+    }
+    if(rounds) {
+      defaultItems.push({
+        text: "Bracket",
+        icon: "sitemap",
+        subitems: [
+          {
+            component: BracketPanel,
+            args: {
+              id: id,
+              format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
+              rounds: bracket.rounds || rounds || []
+            }
+          }
+        ]
       });
     }
-    defaultItems.push({
-      text: "Bracket",
-      icon: "sitemap",
-      subitems: [
-        {
-          component: BracketPanel,
-          args: {
-            id: id,
-            format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
-            rounds: bracket.rounds || rounds || []
-          }
-        }
-      ]
-    });
     if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
