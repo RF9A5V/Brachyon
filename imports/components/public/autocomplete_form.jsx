@@ -133,11 +133,11 @@ export default class AutocompleteForm extends TrackerReact(Component) {
 
   render() {
     return (
-      <div className="col">
+      <div className="col" style={{position: "relative"}}>
         <input ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} onKeyPress={ this.onKeyPress.bind(this) } style={{marginRight: 0}} />
         {
           this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
-            <div className="template-container" style={{ top: this.state.top, left: this.state.left, width: this.state.width }}>
+            <div className="template-container" style={{ top: 60, left: 0, width: this.state.width }}>
               {this.results()}
             </div>
           ) : (

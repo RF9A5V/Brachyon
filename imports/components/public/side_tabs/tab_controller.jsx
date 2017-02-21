@@ -68,7 +68,10 @@ export default class TabController extends Component {
     });
     return (
       <div className="tab-container">
-        <SideTabMenu items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
+        {
+          //<SideTabMenu items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} componentHeader={this.props.componentHeader} />
+        }
+
         <VelocityComponent animation={{opacity: this.state.isAnimating ? 0 : 1}} duration={500}>
           <SideTabContent items={content} activeItem={this.state.activeItem} activeSub={this.state.activeSub} onItemSelect={this.setActive.bind(this)} update={this.props.update} />
         </VelocityComponent>
