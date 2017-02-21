@@ -65,7 +65,7 @@ export default class DoubleDisplay extends Component {
                           }
                         }
                         return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick} />
+                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick} rounds={this.props.rounds} />
                         );
                       })
                     }
@@ -105,7 +105,7 @@ export default class DoubleDisplay extends Component {
                           //   }
                           // }
                           return (
-                            <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick}/>
+                            <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick} rounds={this.props.rounds}/>
                           );
                         }
                       })
@@ -174,7 +174,7 @@ export default class DoubleDisplay extends Component {
                             }
                           }
                           return (
-                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick}/>
+                            <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.props.onMatchClick} rounds={this.props.rounds}/>
                           );
                         })
                       }

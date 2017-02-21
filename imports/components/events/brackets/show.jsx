@@ -63,11 +63,11 @@ class BracketShowScreen extends Component {
     var defaultItems = [];
     var id = bracketMeta.id;
     var rounds;
-    if(bracket.participants && bracket.participants.length > 3) {
-      if(!bracket.id) {
-        switch(bracket.format.baseFormat) {
-          case "single_elim": rounds = OrganizeSuite.singleElim(bracket.participants || []); break;
-          case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
+    if(bracketMeta.participants && bracketMeta.participants.length > 3) {
+      if(!bracketMeta.id) {
+        switch(bracketMeta.format.baseFormat) {
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants || []); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants || []); break;
           default: break;
         }
         rounds = rounds.map(b => {
@@ -85,23 +85,25 @@ class BracketShowScreen extends Component {
         })
       }
       else {
-        var rounds = Brackets.findOne().rounds;
+        rounds = Brackets.findOne().rounds;
       }
     }
-    defaultItems.push({
-      text: "Bracket",
-      icon: "sitemap",
-      subitems: [
-        {
-          component: BracketPanel,
-          args: {
-            id: id,
-            format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
-            rounds: bracket.rounds || rounds || []
+    if(rounds) {
+      defaultItems.push({
+        text: "Bracket",
+        icon: "sitemap",
+        subitems: [
+          {
+            component: BracketPanel,
+            args: {
+              id: id,
+              format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
+              rounds: bracket.rounds || rounds || []
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+    }
     if(!bracket.endedAt) {
       defaultItems.push({
         text: "Participants",
