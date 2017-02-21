@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
+import { createContainer } from "meteor/react-meteor-data"
 
 import LeaderboardPanel from "./admin_comps/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
@@ -7,41 +8,15 @@ import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
 import MatchList from "./show/matches.jsx";
 
+import { formatter } from "/imports/decorators/formatter.js";
+import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
+
 import Brackets from "/imports/api/brackets/brackets.js"
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
-export default class BracketShowScreen extends Component {
+import OrganizeSuite from "/imports/decorators/organize.js";
 
-  constructor(props) {
-    super(props);
-    if(this.props.params.slug) {
-      this.state = {
-        event: Meteor.subscribe("event", this.props.params.slug, {
-          onReady: () => {
-            this.setState({
-              bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[this.props.params.bracketIndex].id, {
-                onReady: () => {
-                  this.populateMetaTags();
-                  this.setState({
-                    ready: true
-                  })
-                }
-              })
-            })
-          }
-        }),
-        ready: false
-      }
-    }
-    else {
-      this.state = {
-        bracket: Meteor.subscribe("bracketContainer", this.props.params.id, {
-          onReady: () => { this.setState({ ready: true }) }
-        }),
-        ready: false
-      }
-    }
-  }
+class BracketShowScreen extends Component {
 
   componentWillReceiveProps() {
     this.populateMetaTags();
@@ -54,16 +29,7 @@ export default class BracketShowScreen extends Component {
     if(this.state.bracket) {
       this.state.bracket.stop();
     }
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[property='og:description']").setAttribute("content", "Beyond the Brackets");
-    document.querySelector("[property='og:image']").setAttribute("content", "/images/brachyon_logo.png");
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
-
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", "Brachyon");
-    document.querySelector("[name='twitter:description']").setAttribute("content", "Brachyon - Beyond the Brackets");
-    document.querySelector("[name='twitter:image']").setAttribute("content", "/images/brachyon_logo.png");
+    resetMetaTags();
   }
 
   imgOrDefault() {
@@ -77,20 +43,13 @@ export default class BracketShowScreen extends Component {
   populateMetaTags() {
     var event = Events.findOne();
     var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
-    var format = bracket.format.baseFormat.split("_").map(word => { return word[0].toUpperCase() + word.slice(1) }).join(" ");
-    if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
-      format += "ination";
-    }
-    // FB Tags
-    document.querySelector("[property='og:title']").setAttribute("content", event.details.name + (bracket.name ? ` - ${bracket.name}` : ""));
-    document.querySelector("[property='og:description']").setAttribute("content", format);
-    document.querySelector("[property='og:image']").setAttribute("content", this.imgOrDefault());
-    document.querySelector("[property='og:url']").setAttribute("content", window.location.href);
 
-    // Twitter Tags
-    document.querySelector("[name='twitter:title']").setAttribute("content", event.details.name + (bracket.name ? ` - ${bracket.name}` : ""));
-    document.querySelector("[name='twitter:description']").setAttribute("content", format);
-    document.querySelector("[name='twitter:image']").setAttribute("content", this.imgOrDefault());
+    var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
+    var format = formatter(bracket.format.baseFormat);
+    var img = this.imgOrDefault();
+    var url = window.location.href;
+
+    generateMetaTags(title, format, img, url);
 
     this.setState({
       hasLoaded: true
@@ -100,24 +59,50 @@ export default class BracketShowScreen extends Component {
   items() {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
+    var bracketMeta = instance.brackets[this.props.params.bracketIndex || 0];
     var defaultItems = [];
-    var id = instance.brackets[this.props.params.bracketIndex || 0].id
-    if(id) {
-      defaultItems = defaultItems.concat([
-        {
-          text: "Bracket",
-          icon: "sitemap",
-          subitems: [
-            {
-              component: BracketPanel,
-              args: {
-                id: id,
-                format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat
-              }
-            }
-          ]
+    var id = bracketMeta.id;
+    var rounds;
+    if(bracketMeta.participants && bracketMeta.participants.length > 3) {
+      if(!bracketMeta.id) {
+        switch(bracketMeta.format.baseFormat) {
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants || []); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants || []); break;
+          default: break;
         }
-      ])
+        rounds = rounds.map(b => {
+          return b.map(r => {
+            return r.map(m => {
+              if(m) {
+                return {
+                  players: [m.playerOne, m.playerTwo],
+                  winner: null
+                }
+              }
+              return null;
+            })
+          })
+        })
+      }
+      else {
+        rounds = Brackets.findOne().rounds;
+      }
+    }
+    if(rounds) {
+      defaultItems.push({
+        text: "Bracket",
+        icon: "sitemap",
+        subitems: [
+          {
+            component: BracketPanel,
+            args: {
+              id: id,
+              format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
+              rounds: bracket.rounds || rounds || []
+            }
+          }
+        ]
+      });
     }
     if(!bracket.endedAt) {
       defaultItems.push({
@@ -166,7 +151,7 @@ export default class BracketShowScreen extends Component {
   }
 
   render() {
-    if(this.state.ready) {
+    if(this.props.ready) {
       return (
         <TabController items={this.items()} />
       );
@@ -180,3 +165,20 @@ export default class BracketShowScreen extends Component {
     }
   }
 }
+
+export default createContainer(({params}) => {
+  const { slug, bracketIndex } = params;
+  const eventHandle = Meteor.subscribe("event", slug);
+  if(eventHandle && eventHandle.ready()) {
+    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+    return {
+      ready: instanceHandle.ready(),
+      instance: Instances.findOne(),
+      bracket: Brackets.findOne(),
+      event: Events.findOne()
+    }
+  }
+  return {
+    ready: false
+  }
+}, BracketShowScreen);

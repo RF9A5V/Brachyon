@@ -1,106 +1,17 @@
-import React, { Component } from 'react'
-import Modal from "react-modal";
+import React, { Component } from 'react';
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
 import Matches from "/imports/api/event/matches.js";
 
 export default class MatchBlock extends Component {
-
-  componentWillMount() {
-    var match = Matches.findOne(this.props.id);
-    this.setState({
-      open: false,
-      chosen: 2
-    })
-  }
-
-  openModal() {
-    this.setState({
-      open: true,
-      chosen: 2
-    });
-  }
-
-  closeModal() {
-    this.setState({
-      open: false,
-      chosen: 2
-    });
-  }
-
-  onMatchUserClick(index) {
-    return (e) => {
-      e.preventDefault();
-      if (index != 2)
-      {
-        Meteor.call("events.advance_double", Brackets.findOne()._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, (err) => {
-          if(err){
-            toastr.error("Couldn't advance this match.", "Error!");
-          }
-          else {
-            toastr.success("Player advanced to next round!", "Success!");
-            this.props.update();
-          }
-        })
-        this.closeModal();
-      }
-    }
-  }
-
-  onUndoUserClick()
-  {
-    return function(e) {
-      e.preventDefault();
-      Meteor.call("events.undo_double", Brackets.findOne()._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, (err) => {
-        if(err){
-          toastr.error("Couldn't undo this match.", "Error!");
-        }
-        else {
-          toastr.success("Match has been undone!", "Success!");
-          this.props.update();
-        }
-      })
-      this.closeModal();
-    }
-  }
-
-  getUsername(p) {
-    if(!p) {
-      return "TBD";
-    }
-    if(p.id) {
-      return Meteor.users.findOne(p.id).username;
-    }
-    return p.alias;
-  }
-
-  onMatchUpdateScore(isPlayerOne, value) {
-    Meteor.call("events.brackets.updateMatchScore", this.props.id, isPlayerOne, value, (err) => {
-      if(err) {
-        toastr.error(err.reason, "Error!");
-      }
-      this.props.update();
-    })
-  }
-
-  getProfileImage(p) {
-    if(p && p.id) {
-      var user = Meteor.users.findOne(p.id);
-      if(user.profile.imageUrl) {
-        return user.profile.imageUrl;
-      }
-    }
-    return "/images/profile.png";
-  }
-
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
     i = this.props.bracket ? Math.floor(i/2):i;
 
     var matchComp = (50 * (Math.pow(2, i - 1)));
-    var marginComp = (60 * (Math.pow(2, i)));
+    var marginComp = (20 * (Math.pow(2, i)));
     var totHeight = matchComp + marginComp;
 
     var height = totHeight;
@@ -120,111 +31,14 @@ export default class MatchBlock extends Component {
     return { height, top }
   }
 
-  modal() {
-    var match = Matches.findOne(this.props.id);
-    if(match.players[0] == null && match.players[1] == null) {
-      return "";
-    }
-    return (
-      <Modal contentLabel="Report Score" className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={this.closeModal.bind(this)}>
-        {
-          match.winner == null ?
-          (
-            <div className="col" style={{height: "100%"}}>
-              <div className="self-end">
-                <FontAwesome className ="pointerChange" name="times" size="2x" onClick={() => { this.setState({open: false, chosen: 2}) }} />
-              </div>
-              <div className="row col-1">
-                <div className="col x-center col-1">
-                  <img src={this.getProfileImage(match.players[0])} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                  <h5 className={this.getUsername(match.players[0])==null?(""):
-                    (this.getUsername(match.players[0]).length<15)?(""):("marquee")}
-                    style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.players[0]) }
-                  </h5>
-                  <div className="col center x-center col-1">
-                    <div className="row center x-center" style={{marginTop:10}}>
-                      <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(true, -1)}} />
-                      <div className="row center x-center button-score">
-                        { match.players[0].score }
-                      </div>
-                      <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(true, 1)}} />
-                    </div>
-                  </div>
-                  {
-                    match.players[0].score > match.players[1].score ? (
-                      <button onClick={this.onMatchUserClick(0)}>Declare Winner</button>
-                    ) : (
-                      <button style={{opacity: 0.3}}>Declare Winner</button>
-                    )
-                  }
-
-                </div>
-                <div className="col x-center col-1">
-                  <img src={this.getProfileImage(match.players[1])} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
-                  <h5 className={this.getUsername(match.players[1])==null?(""):
-                    (this.getUsername(match.players[1]).length<15)?(""):("marquee")}
-                    style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ this.getUsername(match.players[1]) }
-                  </h5>
-                  <div className="col center x-center col-1">
-                    <div className="row center x-center" style={{marginTop:10}}>
-                      <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {this.onMatchUpdateScore(false, -1)}} />
-                      <div className="row center x-center button-score">
-                        { match.players[1].score }
-                      </div>
-                      <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {this.onMatchUpdateScore(false, 1)}} />
-                    </div>
-                  </div>
-                  {
-                    match.players[1].score > match.players[0].score ? (
-                      <button onClick={this.onMatchUserClick(1)}>Declare Winner</button>
-                    ) : (
-                      <button style={{opacity: 0.3}}>Declare Winner</button>
-                    )
-                  }
-                </div>
-              </div>
-              <div className="row center">
-                {
-                  Events.findOne() ? (
-                    <button onClick={ () => {
-                      var event = Events.findOne();
-                      var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                      browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.bracket}-${this.props.roundNumber}-${this.props.matchNumber}`)
-                    }}>View</button>
-                  ) : (
-                    ""
-                  )
-                }
-              </div>
-            </div>
-          ):(
-            <div className="col" style={{height: "100%"}}>
-              <div className="self-end">
-                <FontAwesome className ="pointerChange" name="times" onClick={() => { this.setState({open: false, chosen: 2}) }} />
-              </div>
-              <div className="row x-center">
-                <button onClick={(this.onUndoUserClick()).bind(this)} style={{marginRight: 20}}>Undo</button>
-                <button onClick={ () => {
-                  var event = Events.findOne();
-                  var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                  browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.bracket}-${this.props.roundNumber}-${this.props.matchNumber}`)
-                }}>View</button>
-              </div>
-            </div>
-          )
-        }
-      </Modal>
-    )
-  }
-
   render() {
-    var match = Matches.findOne(this.props.id);
+    var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
     var [i, j] = [this.props.roundNumber, this.props.matchNumber];
     var k = this.props.bracket ? Math.floor(i/2):i;
 
     var height = 35;
-    var margin = 10;
+    var margin = 0;
 
     var lineHeight = 5;
 
@@ -257,8 +71,18 @@ export default class MatchBlock extends Component {
       return match.winner && p.alias != match.winner.alias;
     }
 
+    var bracket = this.props.rounds[this.props.bracket][i - 1];
+
+    var prevMatchesNull;
+    if(this.props.bracket == 0) {
+      prevMatchesNull = i == 0 || (i == 1 && bracket[j * 2] == null && bracket[j * 2 + 1] == null);
+    }
+    if(this.props.bracket == 1) {
+      prevMatchesNull = i == 0 || (i == 1 && bracket[j] == null);
+    }
+
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: this.props.bracket == 0 && i == 1 && prevMatchesNull ? 20 : 0}}>
         {
           match.players[0] == null && match.players[1] == null && i == 0 ? (
             <div style={{height: blockHeight}}>
@@ -266,16 +90,9 @@ export default class MatchBlock extends Component {
           ) : (
             [
               <div className="match" onClick={() => {
-                var event = Events.findOne();
-                if(event) {
-                  this.setState({ open: Meteor.userId() == Events.findOne().owner });
-                }
-                else {
-                  var instance = Instances.findOne();
-                  this.setState({ open: instance.owner == Meteor.userId() });
-                }
+                this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
               }}>
-                <div className="participant" style={{height, marginBottom: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1}}>
+                <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                   <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
                     { p1.alias || "TBD" }
                   </div>
@@ -283,9 +100,9 @@ export default class MatchBlock extends Component {
                     { p1.score || 0 }
                   </div>
                 </div>
-                <div style={{width: participantWidth + 20, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+                <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
                 </div>
-                <div className="participant" style={{height, marginTop: margin, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1}}>
+                <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                   <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
                     { p2.alias || "TBD" }
                   </div>
@@ -311,7 +128,6 @@ export default class MatchBlock extends Component {
             ]
           )
         }
-        { match.players[0] != null && match.players[1] != null ? this.modal() : "" }
       </div>
     )
 
@@ -359,7 +175,6 @@ export default class MatchBlock extends Component {
 
           )
         }
-        { match.players[0] != null && match.players[1] != null ? this.modal() : "" }
       </div>
     )
   }

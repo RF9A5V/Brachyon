@@ -116,7 +116,6 @@
   align-items stretch;
   border solid 2px white
   box-sizing border-box
-  margin-left 10px
 
 .participant > *
   padding: 5px
@@ -132,3 +131,23 @@
 
 .match:hover
   cursor: pointer
+
+.bracket-bar
+  width: calc(33% - (40px / 3));
+  margin-right: 20px !important;
+  margin-bottom 20px
+  +below(1400px)
+    width: calc(50% - 10px)
+  +below(1000px)
+    width: 100%
+    margin-right: 0 !important
+
++above(1400px)
+  .bracket-bar:nth-child(3n)
+    margin-right: 0 !important
++between(1000px, 1400px)
+  .bracket-bar:nth-child(2n)
+    margin-right: 0 !important
+
+.bracket-bar:hover
+  cursor: pointer;

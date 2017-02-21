@@ -65,7 +65,7 @@ export default class AddPartipantAction extends Component {
 
   startBracket()
   {
-    
+
     this.state.started = true;
     this.forceUpdate();
   }
@@ -156,7 +156,7 @@ export default class AddPartipantAction extends Component {
         <div className = { ((this.props.bracket.startedAt != null)) ?
           ("start-button-hide") :
           (this.state.participants.length < 3 ? ("start-button-hide"):("")) } style={{marginTop:"20px"}}>
-          <StartBracketAction id ={this.state.id} index={this.props.index} sBracket={this.startBracket.bind(this)} />
+          <StartBracketAction id ={this.state.id} index={this.props.index} sBracket={this.startBracket.bind(this)} onStart={this.props.onStart} />
         </div>
       </div>
     )
