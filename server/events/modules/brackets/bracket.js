@@ -2,7 +2,7 @@ import Games from "/imports/api/games/games.js";
 import Instances from "/imports/api/event/instance.js";
 
 Meteor.methods({
-  "events.brackets.add"(id, gameId, format) {
+  "events.brackets.add"(id, gameId, format, name) {
     var event = Events.findOne(id);
     if(!event) {
       throw new Meteor.Error(404, "Couldn't find event!");
@@ -16,7 +16,9 @@ Meteor.methods({
       $push: {
         "brackets": {
           game: gameId,
-          format
+          format,
+          name,
+          participants: []
         }
       }
     }
@@ -47,38 +49,64 @@ Meteor.methods({
   },
   "events.brackets.remove"(id, index) {
     var event = Events.findOne(id);
-    var instance = Instances.findOne(event.instance[event.instances.length - 1]);
+    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     if(!instance) {
       throw new Meteor.Error(404, "Couldn't find event.");
     }
     if(!instance.brackets || !instance.brackets[index]) {
       throw new Meteor.Error(404, "Bracket not found.");
     }
-    var cmd = {
-      $pull: {
-        "brackets": null
-      }
-    }
-    if(instance.tickets) {
-      if(instance.brackets.length > 1) {
-        cmd["$set"] = {};
-        for(var i = index; i <= instance.brackets.length - 1; i ++){
-          cmd["$set"]["tickets." + i + "f"] = instance.tickets[(i + 1) + "f"];
-        }
-      }
-    }
-    Events.update(id, {
-      $unset: {
-        [`brackets.${index}`]: 1
-      }
-    });
-    Events.update(id, cmd);
-    if(instance.tickets) {
-      Events.update(id, {
+    // if(instance.tickets) {
+    //   if(instance.brackets.length > 1) {
+    //     cmd["$set"] = {};
+    //     for(var i = index; i <= instance.brackets.length - 1; i ++){
+    //       cmd["$set"]["tickets." + i + "f"] = instance.tickets[(i + 1) + "f"];
+    //     }
+    //   }
+    // }
+    if(instance.brackets.length == 1) {
+      Instances.update(instance._id, {
         $unset: {
-          [`tickets.${(instance.brackets.length - 1) + "f"}`]: 1
+          brackets: 1
+        }
+      })
+    }
+    else {
+      Instances.update(instance._id, {
+        $unset: {
+          [`brackets.${index}`]: 1
+        }
+      });
+      Instances.update(instance._id, {
+        $pull: {
+          brackets: null
         }
       });
     }
+    // if(instance.tickets) {
+    //   Events.update(id, {
+    //     $unset: {
+    //       [`tickets.${(instance.brackets.length - 1) + "f"}`]: 1
+    //     }
+    //   });
+    // }
+  },
+  "events.removeModule.brackets"(id) {
+    var event = Events.findOne(id);
+    var instance = Instances.findOne(event.instances.pop());
+    Instances.update(instance._id, {
+      $unset: {
+        brackets: 1
+      }
+    })
+  },
+  "events.addModule.brackets"(id) {
+    var event = Events.findOne(id);
+    var instance = Instances.findOne(event.instances.pop());
+    Instances.update(instance._id, {
+      $set: {
+        brackets: []
+      }
+    })
   }
 })

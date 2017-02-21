@@ -10,7 +10,7 @@ export default class CreateContainer extends Component {
     var modStatus = {};
     props.items.forEach(item => {
       if(item.toggle) {
-        modStatus[item.key] = false;
+        modStatus[item.key] = item.initialToggleState || false;
       }
     })
     this.state = {
@@ -48,12 +48,20 @@ export default class CreateContainer extends Component {
     return this.refs[key].value();
   }
 
+  defaultToggleAction(item) {
+    if(item.toggleAction) {
+      item.toggleAction();
+    }
+    this.state.modStatus[item.key] = !this.state.modStatus[item.key];
+    this.forceUpdate();
+  }
+
   render() {
     var eColor;
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league" >= 0)){
       eColor = "#FF6000";
     }
     return (
@@ -96,7 +104,7 @@ export default class CreateContainer extends Component {
                   <div className="col-1"></div>
                   {
                     item.toggle ? (
-                      <div className="col mod-block-toggle" style={{justifyContent: this.state.modStatus[item.key] ? "flex-start" : "flex-end"}} onClick={() => { this.state.modStatus[item.key] = !this.state.modStatus[item.key]; this.forceUpdate(); }}>
+                      <div className="col mod-block-toggle" style={{justifyContent: this.state.modStatus[item.key] ? "flex-start" : "flex-end"}} onClick={() => { this.defaultToggleAction(item) }}>
                         <div className="mod-block-control" style={{backgroundColor: this.state.modStatus[item.key] ? eColor : "white"}}></div>
                       </div>
                     ) : (
