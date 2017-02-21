@@ -89,13 +89,16 @@ export default class DisplayPromotedEvent extends Component {
                   <span style={{fontSize: 12}}>{
                     (() => {
                       var count = 0;
-                      if(event.brackets) {
-                        event.brackets.forEach(bracket => {
-                          if(bracket.participants) {
-                            count += bracket.participants.length;
-                          }
-                        });
+                      if(event.type==null||event.type=="event"){
+                        if(event.brackets) {
+                          event.brackets.forEach(bracket => {
+                            if(bracket.participants) {
+                              count += bracket.participants.length;
+                            }
+                          });
+                        }
                       }
+                      else{return;}
                       return count;
                     })()
                   }<FontAwesome name="users" style={{marginLeft: 5}} /></span>
