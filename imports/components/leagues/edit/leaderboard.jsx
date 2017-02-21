@@ -60,10 +60,13 @@ export default class LeaderboardPanel extends Component {
             currentPlace += users.length;
             var nextPlace = currentPlace - 1;
             return (
-              <div className="col" style={{marginBottom: 10}}>
+              <div className="col table-row" style={{padding: 10, backgroundColor: "transparent"}}>
                 <div className="row flex-pad x-center">
                   <h5>{place + getSuffix(place)}{ nextPlace != place ? ` - ${nextPlace + getSuffix(nextPlace)}` : "" }</h5>
-                  <div className="row">
+                  <div className="row x-center">
+                    <span style={{marginRight: 10}}>
+                      {leaderboard[index][users[0].id].score} +
+                    </span>
                     <input type="number" style={{width: 200, margin: 0, fontSize: 12, marginRight: 10}} onBlur={(e) => {
                       var value = parseInt(e.target.value);
                       if(isNaN(value)) {

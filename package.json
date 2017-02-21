@@ -19,6 +19,7 @@
     "kraken": "^0.3.3",
     "meteor-node-stubs": "^0.2.3",
     "moment": "^2.13.0",
+    "node-twitter-api": "^1.8.0",
     "react": "^15.4.0",
     "react-addons-pure-render-mixin": "^15.1",
     "react-cropper": "^0.8.0",
@@ -32,7 +33,10 @@
     "react-modal": "^1.3.0",
     "react-mounter": "^1.2.0",
     "react-router": "^2.4.1",
+    "react-sidebar": "^2.2.1",
+    "react-slick": "^0.14.6",
     "react-summernote": "^1.0.4",
+    "react-swipeable": "^3.9.1",
     "request": "^2.75.0",
     "velocity-react": "^1.1.8"
   },
