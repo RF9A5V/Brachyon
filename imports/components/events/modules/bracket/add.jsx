@@ -4,11 +4,17 @@ import BracketForm from "./form.jsx";
 
 export default class AddBracket extends Component {
 
-  constructor(props) {
-    super();
-    this.state = {
-      id: Events.findOne()._id
-    }
+  onAdd() {
+    var val = this.refs.form.value();
+    Meteor.call("events.brackets.add", Events.findOne()._id, val.game, val.format, val.name || "", (err) => {
+      if(err) {
+        return toastr.error(err.reason);
+      }
+      toastr.success("Added bracket!");
+      if(this.props.update){
+        this.props.update();
+      }
+    })
   }
 
   render() {
@@ -19,7 +25,7 @@ export default class AddBracket extends Component {
           <BracketForm ref="form" />
         </div>
         <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
-          <button>Add Bracket</button>
+          <button onClick={this.onAdd.bind(this)}>Add Bracket</button>
         </div>
       </div>
     )

@@ -28,10 +28,10 @@ export default class SubContainer extends Component {
       style.padding = 0;
     }
     var selectedColor = "white";
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       selectedColor = "#00BDFF";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league") >= 0){
       selectedColor = "#FF6000";
     }
     return (
