@@ -11,6 +11,10 @@ export default class EditBracket extends Component {
     }
   }
 
+  value() {
+    return this.refs.form.value();
+  }
+
   onRemove() {
     Meteor.call("events.brackets.remove", Events.findOne()._id, this.props.index, (err) => {
       if(err) {

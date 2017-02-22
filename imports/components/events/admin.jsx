@@ -15,10 +15,15 @@ import LocationPage from "./modules/details/location.jsx";
 import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
 
+// Bracket Stuff
 import BracketsMain from "./admin/modules/brackets/main.jsx";
 import AddBracket from "./modules/bracket/add.jsx";
 import EditBracket from "./modules/bracket/edit.jsx";
 import BracketInfo from "./modules/bracket/details.jsx";
+
+// Stream Stuff
+import StreamAdd from "./modules/stream/add.jsx";
+import StreamDetails from "./modules/stream/details.jsx";
 
 import Unpublish from "./admin/modules/unpublish.jsx";
 import EditModules from "./admin/modules/edit_modules.jsx";
@@ -32,17 +37,25 @@ class EventAdminPage extends Component {
 
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, () => {
+      var event = Events.findOne();
       var instance = Instances.findOne();
       if(instance.brackets && instance.brackets.length == 0) {
         return "You have to add a bracket if you want the bracket module.";
+      }
+      if(event.stream && event.stream.twitchStream == "") {
+        return "You have to provide a twitch username for your twitch stream!";
       }
     })
   }
 
   componentWillUnmount() {
+    var event = Events.findOne();
     var instance = Instances.findOne();
     if(instance.brackets && instance.brackets.length == 0) {
-      Meteor.call("events.removeModule.brackets", Events.findOne()._id);
+      Meteor.call("events.removeModule.brackets", event._id);
+    }
+    if(event.stream && event.stream.twitchStream == "") {
+      Meteor.call("events.removeModule.stream", event._id);
     }
   }
 
@@ -150,7 +163,57 @@ class EventAdminPage extends Component {
         }
       }
     }
+  }
 
+  streamItems() {
+    var event = Events.findOne();
+
+    var subs = [];
+    if(event.stream) {
+      subs.push({
+        content: StreamAdd,
+        name: "Add Stream",
+        key: "stream"
+      });
+    }
+    else {
+      subs.push({
+        content: StreamDetails,
+        name: "Main",
+        key: "stream"
+      });
+    }
+
+    return {
+      name: "Stream",
+      icon: "video-camera",
+      key: "stream",
+      subItems: subs,
+      toggle: true,
+      initialToggleState: !!event.stream,
+      toggleAction: () => {
+        if(event.stream) {
+          Meteor.call("events.removeModule.stream", event._id, (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.forceUpdate();
+            }
+          });
+        }
+        else {
+          Meteor.call("events.addModule.stream", event._id, (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.forceUpdate();
+            }
+          });
+        }
+      }
+    }
   }
 
   items() {
@@ -159,6 +222,7 @@ class EventAdminPage extends Component {
     var items = [];
     items.push(this.detailItems());
     items.push(this.bracketItems());
+    items.push(this.streamItems());
     return items;
   }
 
@@ -172,6 +236,9 @@ class EventAdminPage extends Component {
     // This is getting refactored in like a month anyways.
     details.name = details.description.name;
     details.description = details.description.description;
+
+    // Temporarily disabling global bracket edit
+    delete attrs.brackets;
 
     Object.keys(event.details).forEach(k => {
       if(event.details[k] == details[k]) {
@@ -190,6 +257,7 @@ class EventAdminPage extends Component {
     if(attrs.creator.id == event.owner) {
       delete attrs.creator;
     }
+
     Meteor.call("events.edit", event._id, attrs, (err) => {
       if(err) {
         return toastr.error(err.reason);

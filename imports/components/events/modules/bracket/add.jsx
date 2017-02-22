@@ -17,6 +17,10 @@ export default class AddBracket extends Component {
     })
   }
 
+  value() {
+    return null;
+  }
+
   render() {
     return (
       <div className="col">
