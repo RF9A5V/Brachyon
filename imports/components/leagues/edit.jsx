@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import moment from "moment";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
+import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import { DetailsPanel, LeagueNameInput, LeagueDescription, LeagueLocation, LeagueImage } from "./edit/details.jsx";
+import LeagueNameInput from "./modules/details/name.jsx";
+import LeagueDescription from "./modules/details/description.jsx";
+import LeagueLocation from "./modules/details/location.jsx";
+import LeagueImage from "./modules/details/image.jsx";
+
 import { BracketsPanel, LeagueBracketForm } from "./edit/brackets.jsx";
 import { EventsPanel, LeagueEvent } from "./edit/events.jsx";
 import LeaderboardPanel from "./edit/leaderboard.jsx";
@@ -43,43 +48,36 @@ export default class EditLeagueScreen extends Component {
   detailItems(league) {
     return {
       icon: "file-text",
-      text: "Details",
-      subitems: [
+      name: "Details",
+      key: "details",
+      subItems: [
         {
-          text: "Main",
-          component: DetailsPanel
-        },
-        {
-          text: "Name",
-          component: LeagueNameInput,
+          name: "Name",
+          content: LeagueNameInput,
           args: {
             name: league.details.name,
-            season: league.details.season,
-            changelog: this.state.changelog
+            season: league.details.season
           }
         },
         {
-          text: "Description",
-          component: LeagueDescription,
+          name: "Description",
+          content: LeagueDescription,
           args: {
-            description: league.details.description,
-            changelog: this.state.changelog
+            description: league.details.description
           }
         },
         {
-          text: "Location",
-          component: LeagueLocation,
+          name: "Location",
+          content: LeagueLocation,
           args: {
-            location: league.details.location,
-            changelog: this.state.changelog
+            location: league.details.location
           }
         },
         {
-          text: "Image",
-          component: LeagueImage,
+          name: "Image",
+          content: LeagueImage,
           args: {
-            image: league.details.bannerUrl,
-            changelog: this.state.changelog
+            image: league.details.bannerUrl
           }
         }
       ]
@@ -187,12 +185,55 @@ export default class EditLeagueScreen extends Component {
   items() {
     var league = Leagues.findOne();
     return [
-      this.detailItems(league),
-      this.bracketItems(league),
-      this.eventItems(league),
-      this.leaderboardItems(league),
-      this.submitItem(league)
+      this.detailItems(league)
     ];
+    // return [
+    //   this.detailItems(league),
+    //   this.bracketItems(league),
+    //   this.eventItems(league),
+    //   this.leaderboardItems(league),
+    //   this.submitItem(league)
+    // ];
+  }
+
+  save() {
+    var attrs = this.refs.create.value();
+
+    var imgTemp;
+    if(attrs.details.image) {
+      var file = attrs.details.image.image;
+      imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
+      imgTemp.image = file;
+    }
+    delete attrs.details.image;
+
+    if(league.owner == attrs.creator.id) {
+      delete attrs.creator;
+    }
+
+    console.log(attrs);
+    return;
+
+    Meteor.call("leagues.edit", Leagues.findOne()._id, attrs, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated league!");
+      }
+    })
+
+  }
+
+  actions() {
+    return [
+      {
+        name: "Save All",
+        action: () => {
+          console.log(this.refs.create.value());
+        }
+      }
+    ]
   }
 
   render() {
@@ -203,8 +244,8 @@ export default class EditLeagueScreen extends Component {
       )
     }
     return (
-      <div className="box">
-        <TabController items={this.items()} update={this.forceUpdate.bind(this)} />
+      <div style={{padding: 20}}>
+        <CreateContainer ref="create" items={this.items()} actions={this.actions()} />
       </div>
     )
   }
