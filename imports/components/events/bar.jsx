@@ -42,11 +42,18 @@ export default class Bar extends Component {
                   <span>{ (bracket.participants || []).length }</span>
                 </div>
               </div>
-              <div className="event-block-admin-button" onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                browserHistory.push("/event/" + event.slug + "/edit")
-              }}>Edit</div>
+              {
+                event.owner == Meteor.userId() ? (
+                  <div className="event-block-admin-button" onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    browserHistory.push("/event/" + event.slug + "/edit")
+                  }}>Edit</div>
+                ) : (
+                  <div></div>
+                )
+              }
+
             </div>
           </div>
           <div className="row flex-pad x-center" style={{padding: 10, backgroundColor: "#111"}}>
