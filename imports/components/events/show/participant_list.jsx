@@ -100,76 +100,65 @@ export default class ParticipantListPanel extends Component {
 
   render() {
     return (
-      <div className="participant-panel-container">
-        {
-          (this.props.participants).map((obj, i) => {
-            var participant = null;
-            if(obj.id != null){
-              participant = Meteor.users.findOne(obj.id);
-            }
-            // var isElim = this.isEliminated(obj.alias);
-            var isElim = false;
-            return (
-              <div className="participant-panel" style={{opacity: isElim ? (0.3) : (1)}}>
-                <div className="participant-panel-image">
-                  <div className="participant-panel-overlay">
-                    <div className="row x-center">
-                      <span style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}}>{i + 1}{this.numberDecorator(i+1)} Seed</span>
-                      <div className="col-1"></div>
-                      {
-                        isElim ? "" : (
-                          <div className="row">
-                            {
-                              this.props.isOwner ? (
-                                <FontAwesome name="cog" style={{marginRight: 10, backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
-                              ) : (
-                                ""
-                              )
-                            }
-                            {
-                              Meteor.userId() && (obj.id == Meteor.userId() || this.props.isOwner) ? (
-                                <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
-                              ) : (
-                                ""
-                              )
-                            }
-                          </div>
-                        )
-                      }
+      <div>
+        <h4>Participants</h4>
+        <div className="submodule-bg">
+          {
+            (this.props.participants).map((obj, i) => {
+              var participant = null;
+              if(obj.id != null){
+                participant = Meteor.users.findOne(obj.id);
+              }
+              // var isElim = this.isEliminated(obj.alias);
+              var isElim = false;
+              return (
+                <div className="participant-panel" style={{opacity: isElim ? (0.3) : (1)}}>
+                  <div className="participant-panel-image">
+                    <div className="participant-panel-overlay">
+                      <div className="row x-center">
+                        <span style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}}>{i + 1}{this.numberDecorator(i+1)} Seed</span>
+                        <div className="col-1"></div>
+                        {
+                          isElim ? "" : (
+                            <div className="row">
+                              {
+                                this.props.isOwner ? (
+                                  <FontAwesome name="cog" style={{marginRight: 10, backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
+                                ) : (
+                                  ""
+                                )
+                              }
+                              {
+                                Meteor.userId() && (obj.id == Meteor.userId() || this.props.isOwner) ? (
+                                  <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
+                                ) : (
+                                  ""
+                                )
+                              }
+                            </div>
+                          )
+                        }
+                      </div>
                     </div>
+                    {
+                      participant != null ? (
+                        <img src={this.imgOrDefault(participant._id)} />
+                      ) : (
+                        <img src={this.imgOrDefault(null)} />
+                      )
+                    }
                   </div>
-                  {
-                    participant != null ? (
-                      <img src={this.imgOrDefault(participant._id)} />
-                    ) : (
-                      <img src={this.imgOrDefault(null)} />
-                    )
-                  }
-                </div>
-                <div className="participant-panel-desc">
-                  {
-                    obj.alias
-                  }
-                </div>
+                  <div className="participant-panel-desc">
+                    {
+                      obj.alias
+                    }
+                  </div>
 
-              </div>
-            )
-          })
-        }
-        {
-          // this.props.participants.some((obj) => { return obj.id == Meteor.userId() || Meteor.userId() == null }) ? (
-          //   ""
-          // ) : (
-          //   <div className="participant-panel" onClick={/*this.registerUser.bind(this)*/}>
-          //     <div className="participant-panel-image">
-          //       <FontAwesome name="plus" size="5x" />
-          //     </div>
-          //     <div className="participant-panel-desc">
-          //       Register
-          //     </div>
-          //   </div>
-          // )
-        }
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     )
   }

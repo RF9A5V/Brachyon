@@ -130,7 +130,8 @@ class EditLeagueScreen extends Component {
         key: i,
         content: EditLeaderboard,
         args: {
-          index: i
+          index: i,
+          name: event.details.name
         }
       }
     })

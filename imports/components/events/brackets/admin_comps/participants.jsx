@@ -108,55 +108,64 @@ export default class AddPartipantAction extends Component {
     var participants = this.state.participants;
     return (
       <div>
-        <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
-        <div>
-        {
-          this.state.started ? ( "" ):(<button onClick={this.randomizeSeeding.bind(this)}>Randomize Seeding</button>)
-        }
-        </div>
-        <div className="col participant-table" style={{marginTop:"10px"}}>
-          <div className="participant-head">
-            <div className="col-1">
-              SEED
-            </div>
-            <div className="col-1">
-              ALIAS
-            </div>
-            <div className="col-1">
-              USERNAME
-            </div>
-            <div className="col-1 row" style={{justifyContent: "flex-end"}}>
-              REMOVE
+        <h4 style={{marginTop: 0}}>Participants</h4>
+        <div className="submodule-bg submodule-overflow">
+          {
+            this.props.bracket.isComplete ? (
+              ""
+            ) : (
+              <BracketOptionsPanel bracketIndex={this.props.index} onComplete={this.onUserAdd.bind(this)} />
+            )
+          }
+          <div className="row x-center">
+            {
+              this.props.bracket.isComplete ? ( "" ):(<button style={{marginRight: 10}} onClick={this.randomizeSeeding.bind(this)}>Randomize Seeding</button>)
+            }
+            <div className = { ((this.props.bracket.id != null)) ?
+              ("start-button-hide") :
+              (this.state.participants.length < 3 ? ("start-button-hide"):("")) }>
+              <StartBracketAction id ={this.state.id} index={this.props.index} sBracket={this.startBracket.bind(this)} onStart={this.props.onStart} />
             </div>
           </div>
-          {
-            participants.map((participant, index) => {
-              var user = Meteor.users.findOne(participant.id);
-              return (
-                <div className="participant-row" key={index}>
-                  <div className="col-1">
-                  {
-                    this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)} /> )
-                  }
+          <div className="col participant-table" style={{marginTop:"10px"}}>
+            <div className="participant-head">
+              <div className="col-1">
+                SEED
+              </div>
+              <div className="col-1">
+                ALIAS
+              </div>
+              <div className="col-1">
+                USERNAME
+              </div>
+              <div className="col-1 row" style={{justifyContent: "flex-end"}}>
+                REMOVE
+              </div>
+            </div>
+            {
+              participants.map((participant, index) => {
+                var user = Meteor.users.findOne(participant.id);
+                return (
+                  <div className="participant-row" key={index}>
+                    <div className="col-1">
+                    {
+                      this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.updateList.bind(this)} /> )
+                    }
+                    </div>
+                    <div className="col-1">
+                      { participant.alias }
+                    </div>
+                    <div className="col-1">
+                      { user ? user.username : "" }
+                    </div>
+                    <div className="col-1 row" style={{justifyContent: "flex-end"}}>
+                      <FontAwesome name="times" size="2x" onClick={() => { this.onUserDelete(participant.alias, index) }} />
+                    </div>
                   </div>
-                  <div className="col-1">
-                    { participant.alias }
-                  </div>
-                  <div className="col-1">
-                    { user ? user.username : "" }
-                  </div>
-                  <div className="col-1 row" style={{justifyContent: "flex-end"}}>
-                    <FontAwesome name="times" size="2x" onClick={() => { this.onUserDelete(participant.alias, index) }} />
-                  </div>
-                </div>
-              )
-            })
-          }
-        </div>
-        <div className = { ((this.props.bracket.startedAt != null)) ?
-          ("start-button-hide") :
-          (this.state.participants.length < 3 ? ("start-button-hide"):("")) } style={{marginTop:"20px"}}>
-          <StartBracketAction id ={this.state.id} index={this.props.index} sBracket={this.startBracket.bind(this)} onStart={this.props.onStart} />
+                )
+              })
+            }
+          </div>
         </div>
       </div>
     )

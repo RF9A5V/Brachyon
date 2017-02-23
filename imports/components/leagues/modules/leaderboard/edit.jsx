@@ -3,7 +3,8 @@ import React, { Component } from "react";
 import { sortPlacement } from "/imports/api/placement.js";
 
 export default class LeaderboardEdit extends Component {
-  render() {
+
+  leaderboard() {
     var index = this.props.index;
     var leaderboard = Leagues.findOne().leaderboard;
     const event = Events.findOne({slug: Leagues.findOne().events[index]});
@@ -77,5 +78,16 @@ export default class LeaderboardEdit extends Component {
         }
       </div>
     );
+  }
+
+  render() {
+    return (
+      <div>
+        <h4>Leaderboard for { this.props.name }</h4>
+        <div className="submodule-bg">
+          { this.leaderboard() }
+        </div>
+      </div>
+    )
   }
 }
