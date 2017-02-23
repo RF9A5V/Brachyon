@@ -5,7 +5,7 @@ import LocationSelect from "/imports/components/events/create/location_select.js
 export default class LeagueLocation extends Component {
 
   value() {
-    return this.refs.location.value
+    return this.refs.location.value();
   }
 
   render() {

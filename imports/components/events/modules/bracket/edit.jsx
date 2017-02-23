@@ -28,6 +28,7 @@ export default class EditBracket extends Component {
   }
 
   render() {
+    var event = Events.findOne();
     return (
       <div>
         <h4>Bracket Edit</h4>
@@ -36,7 +37,13 @@ export default class EditBracket extends Component {
         </div>
         <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
           <button style={{marginRight: 10}}>Save Bracket</button>
-          <button onClick={this.onRemove.bind(this)}>Delete Bracket</button>
+          {
+            event.league ? (
+              ""
+            ) : (
+              <button onClick={this.onRemove.bind(this)}>Delete Bracket</button>
+            )
+          }
         </div>
       </div>
     )

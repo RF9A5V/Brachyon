@@ -100,7 +100,7 @@ export default class CreateContainer extends Component {
                   width: 175
                 }}>
                   <FontAwesome name={item.icon} style={{marginRight: 10}} size="2x" />
-                  <span>{ item.name }</span>
+                  <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {
                     item.toggle ? (

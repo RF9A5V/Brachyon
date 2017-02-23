@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { createContainer } from "meteor/react-meteor-data";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
@@ -9,41 +10,21 @@ import LeagueDescription from "./modules/details/description.jsx";
 import LeagueLocation from "./modules/details/location.jsx";
 import LeagueImage from "./modules/details/image.jsx";
 
+import EditBracket from "./modules/brackets/edit.jsx";
+
+import EditEvent from "./modules/events/edit.jsx";
+
+import EditLeaderboard from "./modules/leaderboard/edit.jsx";
+
 import { BracketsPanel, LeagueBracketForm } from "./edit/brackets.jsx";
 import { EventsPanel, LeagueEvent } from "./edit/events.jsx";
 import LeaderboardPanel from "./edit/leaderboard.jsx";
 import SubmitPanel from "./edit/submit.jsx";
 
 import Leagues from "/imports/api/leagues/league.js";
+import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
-export default class EditLeagueScreen extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      league: Meteor.subscribe("league", props.params.slug, {
-        onReady: () => {
-          this.setState({ ready: true })
-        }
-      }),
-      ready: false,
-      changelog: {}
-    }
-  }
-
-  componentWillUnmount() {
-    this.state.league.stop();
-  }
-
-  componentWillReceiveProps(next) {
-    this.state.ready = false;
-    this.state.league.stop();
-    this.state.league = Meteor.subscribe("league", next.params.slug, {
-      onReady: () => {
-        this.setState({ ready: true, changelog: {} })
-      }
-    })
-  }
+class EditLeagueScreen extends Component {
 
   detailItems(league) {
     return {
@@ -53,6 +34,7 @@ export default class EditLeagueScreen extends Component {
       subItems: [
         {
           name: "Name",
+          key: "name",
           content: LeagueNameInput,
           args: {
             name: league.details.name,
@@ -61,6 +43,7 @@ export default class EditLeagueScreen extends Component {
         },
         {
           name: "Description",
+          key: "description",
           content: LeagueDescription,
           args: {
             description: league.details.description
@@ -68,6 +51,7 @@ export default class EditLeagueScreen extends Component {
         },
         {
           name: "Location",
+          key: "location",
           content: LeagueLocation,
           args: {
             location: league.details.location
@@ -75,6 +59,7 @@ export default class EditLeagueScreen extends Component {
         },
         {
           name: "Image",
+          key: "image",
           content: LeagueImage,
           args: {
             image: league.details.bannerUrl
@@ -85,107 +70,86 @@ export default class EditLeagueScreen extends Component {
   }
 
   bracketItems(league) {
+
+    var attrs = league.events.map(e => {
+      var event = Events.findOne({slug: e});
+      return {
+        eventId: event._id,
+        bracket: Instances.findOne(event.instances.pop()).brackets[0]
+      }
+    });
+    var subs = attrs.map((attr, i) => {
+      return {
+        name: Events.findOne(attr.eventId).details.name,
+        key: i,
+        content: EditBracket,
+        args: attr
+      }
+    })
+
     return {
       icon: "sitemap",
-      text: "Brackets",
-      subitems: [
-        {
-          text: "Overview",
-          component: BracketsPanel
-        },
-        {
-          text: "Bracket",
-          component: LeagueBracketForm,
-          args: {
-            bracket: league.brackets,
-            game: league.game,
-            changelog: this.state.changelog
-          }
-        }
-      ]
+      name: "Brackets",
+      key: "brackets",
+      subItems: subs
     }
   }
 
   eventItems(league) {
+    var subs = league.events.map((slug, i) => {
+      var event = Events.findOne({ slug });
+      return {
+        content: EditEvent,
+        name: event.details.name,
+        key: i,
+        args: {
+          id: event._id,
+          startsAt: i == 0 ? null : Events.findOne({ slug: league.events[i - 1] }).details.datetime,
+          update: this.forceUpdate.bind(this),
+          index: i
+        }
+      }
+    })
+
     return {
       icon: "cog",
-      text: "Events",
-      subitems: [
-        {
-          text: "Overview",
-          component: EventsPanel
-        }
-      ].concat(league.events.map((e, i) => {
-        var event = Events.findOne({ slug: e });
-        var beforeSlug = league.events[i - 1];
-        var startAt = i == 0 ? Date() : Events.findOne({ slug: beforeSlug }).details.datetime;
-        var check = this.state.changelog.events;
-        if(check && check[beforeSlug] && check[beforeSlug].date) {
-          startAt = check[beforeSlug].date;
-        }
-        if(moment(startAt).endOf("day").isAfter(moment(event.details.datetime))) {
-          if(!this.state.changelog.events) {
-            this.state.changelog.events = {};
-          }
-          if(!this.state.changelog.events[e]) {
-            this.state.changelog.events[e] = {};
-          }
-          if(!this.state.changelog.events[e].date || moment(this.state.changelog.events[e].date).isBefore(moment(startAt).startOf("day"))) {
-            this.state.changelog.events[e].date = moment(startAt).add(1, "day").toDate();
-          }
-        }
-        var name = league.details.name;
-        var log = this.state.changelog.league;
-        if(log && log.details && log.details.name) {
-          name = log.details.name;
-        }
-        return {
-          text: name + "." + league.details.season + " " + (i + 1),
-          component: LeagueEvent,
-          args: {
-            slug: event.slug,
-            name: name + "." + league.details.season + " " + (i + 1),
-            date: event.details.datetime,
-            changelog: this.state.changelog,
-            startAt,
-            forceUpdate: this.forceUpdate.bind(this)
-          }
-        }
-      }))
+      name: "Events",
+      key: "events",
+      subItems: subs
     }
   }
 
   leaderboardItems(league) {
+
+    var subs = league.leaderboard.map((l, i) => {
+
+      var event = Events.findOne({slug: league.events[i]});
+
+      return {
+        name: event.details.name,
+        key: i,
+        content: EditLeaderboard,
+        args: {
+          index: i
+        }
+      }
+    })
+
     return {
       icon: "cog",
-      text: "Leaderboard",
-      subitems: [
-        {
-          text: "Overview",
-          component: LeaderboardPanel
-        }
-      ]
-    }
-  }
-
-  submitItem(league) {
-    return {
-      text: "Submit",
-      subitems: [
-        {
-          component: SubmitPanel,
-          args: {
-            changelog: this.state.changelog
-          }
-        }
-      ]
+      name: "Leaderboard",
+      key: "leaderboard",
+      subItems: subs
     }
   }
 
   items() {
     var league = Leagues.findOne();
     return [
-      this.detailItems(league)
+      this.detailItems(league),
+      this.bracketItems(league),
+      this.eventItems(league),
+      this.leaderboardItems(league)
     ];
     // return [
     //   this.detailItems(league),
@@ -198,6 +162,7 @@ export default class EditLeagueScreen extends Component {
 
   save() {
     var attrs = this.refs.create.value();
+    var league = Leagues.findOne();
 
     var imgTemp;
     if(attrs.details.image) {
@@ -205,14 +170,22 @@ export default class EditLeagueScreen extends Component {
       imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
       imgTemp.image = file;
     }
+    delete attrs.events;
     delete attrs.details.image;
+
+    Object.keys(attrs.brackets).forEach(k => {
+      if(!attrs.brackets[k]) {
+        delete attrs.brackets[k];
+      }
+    });
+
+    if(Object.keys(attrs.brackets).length == 0) {
+      delete attrs.brackets;
+    }
 
     if(league.owner == attrs.creator.id) {
       delete attrs.creator;
     }
-
-    console.log(attrs);
-    return;
 
     Meteor.call("leagues.edit", Leagues.findOne()._id, attrs, (err) => {
       if(err) {
@@ -221,7 +194,20 @@ export default class EditLeagueScreen extends Component {
       else {
         toastr.success("Successfully updated league!");
       }
-    })
+    });
+
+    if(imgTemp) {
+      imgTemp.meta.slug = Leagues.findOne().slug;
+      LeagueBanners.insert({
+        file: imgTemp.image,
+        meta: imgTemp.meta,
+        onUploaded: (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+        }
+      })
+    }
 
   }
 
@@ -229,15 +215,13 @@ export default class EditLeagueScreen extends Component {
     return [
       {
         name: "Save All",
-        action: () => {
-          console.log(this.refs.create.value());
-        }
+        action: this.save.bind(this)
       }
     ]
   }
 
   render() {
-    if(!this.state.ready) {
+    if(!this.props.ready) {
       return (
         <div>
         </div>
@@ -250,3 +234,10 @@ export default class EditLeagueScreen extends Component {
     )
   }
 }
+
+export default createContainer(({params}) => {
+  const leagueHandle = Meteor.subscribe("league", params.slug);
+  return {
+    ready: leagueHandle.ready()
+  }
+}, EditLeagueScreen)

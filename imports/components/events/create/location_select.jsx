@@ -3,16 +3,20 @@ import GoogleMapsLoader from "google-maps";
 
 export default class LocationSelect extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      locationName: props.locationName || "",
+      streetAddress: props.streetAddress || "",
+      city: props.city || "",
+      state: props.state || "",
+      zip: props.zip || "",
+      coords: props.coords || [],
+      online: props.online || true
+    }
+  }
+
   componentWillMount() {
-    this.setState({
-      online: this.props.online === true,
-      coords: [],
-      locationName: this.props.locationName || "",
-      streetAddress: this.props.streetAddress || "",
-      city: this.props.city || "",
-      state: this.props.state || "",
-      zip: this.props.zip || ""
-    });
 
     var self = this;
 
