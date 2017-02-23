@@ -101,6 +101,7 @@ class EventAdminPage extends Component {
   }
 
   bracketItems() {
+    var event = Events.findOne();
     var instance = Instances.findOne();
     var subs;
     if(!instance.brackets) {
@@ -128,25 +129,28 @@ class EventAdminPage extends Component {
           }
         }
       });
-      subs.push({
-        content: AddBracket,
-        name: "Add Bracket",
-        key: "add",
-        args: {
-          update: this.forceUpdate.bind(this)
-        }
-      });
+      if(!event.league) {
+        subs.push({
+          content: AddBracket,
+          name: "Add Bracket",
+          key: "add",
+          args: {
+            update: this.forceUpdate.bind(this)
+          }
+        });
+      }
+
     }
     return {
       name: "Brackets",
       icon: "sitemap",
       key: "brackets",
       subItems: subs,
-      toggle: true,
+      toggle: !Events.findOne().league,
       initialToggleState: instance.brackets && instance.brackets.length > 0,
       toggleAction: (next) => {
         if(instance.brackets) {
-          Meteor.call("events.removeModule.brackets", Events.findOne()._id, (err) => {
+          Meteor.call("events.removeModule.brackets", event._id, (err) => {
             if(err) {
               return toastr.error(err.reason);
             }
@@ -154,7 +158,7 @@ class EventAdminPage extends Component {
           });
         }
         else {
-          Meteor.call("events.addModule.brackets", Events.findOne()._id, (err) => {
+          Meteor.call("events.addModule.brackets", event._id, (err) => {
             if(err) {
               return toastr.error(err.reason);
             }
