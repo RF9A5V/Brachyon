@@ -70,7 +70,7 @@ class BracketShowScreen extends Component {
         {
           content: ParticipantList,
           args: {
-            participants: bracket.participants
+            participants: bracket.participants || []
           }
         }
       ]
@@ -205,11 +205,56 @@ class BracketShowScreen extends Component {
     return defaultItems;
   }
 
+  actions() {
+    var index = this.props.params.bracketIndex || 0;
+    var instance = Instances.findOne();
+    var bracketMeta = instance.brackets[index];
+
+    var items = [];
+
+    if(!bracketMeta.id) {
+      var registered = (bracketMeta.participants || []).findIndex(p => {
+        return p.id == Meteor.userId();
+      })
+      if(registered >= 0) {
+        items.push({
+          name: "Unregister",
+          action: () => {
+            Meteor.call("events.removeParticipant", Events.findOne()._id, index, Meteor.userId(), (err) => {
+              if(err) {
+                toastr.error(err.reason);
+              }
+              else {
+                toastr.success("Unregistered for event!");
+              }
+            })
+          }
+        })
+      }
+      else {
+        items.push({
+          name: "Register",
+          action: () => {
+            Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
+              if(err) {
+                toastr.error(err.reason);
+              }
+              else {
+                toastr.success("Registered for event!");
+              }
+            })
+          }
+        })
+      }
+    }
+    return items;
+  }
+
   render() {
     if(this.props.ready) {
       return (
         <div style={{padding: 20}}>
-          <CreateContainer items={this.items()} />
+          <CreateContainer items={this.items()} actions={this.actions()} />
         </div>
       );
     }

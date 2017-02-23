@@ -169,7 +169,7 @@ Meteor.methods({
     // });
     if(event.league) {
       var league = Leagues.findOne(event.league);
-      var leaderboardIndex = league.events.indexOf(event.slug) + 1;
+      var leaderboardIndex = league.events.indexOf(event.slug);
       var setObj = {
         [`leaderboard.${leaderboardIndex}.${user._id}`]: {
           score: 0,
