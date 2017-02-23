@@ -49,6 +49,10 @@ export default class SlideMain extends Component {
     return elems;
   }
 
+  setMain(i) {
+    this.refs.slider.slickGoTo(i)
+  }
+
   setCurrent(i) {
     this.refs[this.state.activeSlide].setCurrent(i);
   }
@@ -66,7 +70,7 @@ export default class SlideMain extends Component {
             this.props.slides.map((item, i) => {
               return (
                 <div className="slide">
-                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={this.forceUpdate.bind(this)} backgroundImage={this.props.backgroundImage || null} />
+                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={this.forceUpdate.bind(this)} backgroundImage={this.props.backgroundImage || null} pages={this.props.pages} />
                 </div>
               )
             })
