@@ -20,7 +20,7 @@ export default class StartBracketAction extends Component {
           return toastr.error(err.reason, "Error!");
         }
         else {
-          this.props.onStart["func"]()
+          this.props.onStart()
           toastr.success("Successfully started bracket!", "Success!");
         }
       });
