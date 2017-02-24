@@ -9,6 +9,7 @@
     "bcrypt": "^0.8.7",
     "bootstrap": "^3.3.7",
     "bson-ext": "^0.1.13",
+    "deep-equal": "^1.0.1",
     "fast-crc32c": "^1.0.4",
     "flat": "^2.0.1",
     "font-awesome": "^4.6.3",

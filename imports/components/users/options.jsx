@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
+import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import SideTabs from "../public/side_tabs.jsx";
 import UserDetailsPanel from "./options/user_details.jsx";
@@ -29,53 +30,51 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
     });
   }
 
-  items() {
-
-    var defaultItems = [];
-
-    defaultItems.push({
-      text: "User Details",
+  detailsItem() {
+    return {
+      name: "Details",
       icon: "file-text",
-      subitems: [
+      key: "details",
+      subItems: [
         {
-          component: UserDetailsPanel
-
+          content: UserDetailsPanel
         }
       ]
-    })
-    defaultItems.push({
-      text: "Games Played",
-      icon: "gamepad",
-      subitems: [
-        {
-          component: GameOptionsPanel
-
-        }
-      ]
-    })
-    defaultItems.push({
-      text: "Connected Accounts",
-      icon: "users",
-      subitems: [
-        {
-          component: OAuthOptionsPanel
-
-        }
-      ]
-    })
-
-    return defaultItems;
-
+    }
   }
 
-  panels() {
-    return (
-      [
-        (<UserDetailsPanel refresh={this.refresh.bind(this)} />),
-        (<GameOptionsPanel />),
-        (<OAuthOptionsPanel />)
+  gamesItem() {
+    return {
+      name: "Games",
+      icon: "gamepad",
+      key: "games",
+      subItems: [
+        {
+          content: GameOptionsPanel
+        }
       ]
-    );
+    }
+  }
+
+  oauthItem() {
+    return {
+      name: "Accounts",
+      icon: "users",
+      key: "accounts",
+      subItems: [
+        {
+          content: OAuthOptionsPanel
+        }
+      ]
+    }
+  }
+
+  items() {
+    return [
+      this.detailsItem(),
+      this.gamesItem(),
+      this.oauthItem()
+    ]
   }
 
   render() {
@@ -85,8 +84,8 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       );
     }
     return (
-      <div className="box col">
-        <TabController items={this.items()} />
+      <div style={{padding: 20}}>
+        <CreateContainer items={this.items()} />
       </div>
     );
   }

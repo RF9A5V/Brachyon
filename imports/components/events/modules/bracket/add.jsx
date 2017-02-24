@@ -4,37 +4,32 @@ import BracketForm from "./form.jsx";
 
 export default class AddBracket extends Component {
 
-  constructor(props) {
-    super();
-    this.state = {
-      id: Events.findOne()._id
-    }
-  }
-
-  onBracketSave(){
-    var bracket = this.refs.form.value();
-    Meteor.call("events.brackets.add", this.state.id, bracket.game, bracket.format, (err) => {
+  onAdd() {
+    var val = this.refs.form.value();
+    Meteor.call("events.brackets.add", Events.findOne()._id, val.game, val.format, val.name || "", (err) => {
       if(err) {
-        return toastr.error(err.reason, "Error!");
+        return toastr.error(err.reason);
       }
-      else {
-        this.props.onItemSelect(this.props.activeItem, 0);
-        return toastr.success("Successfully added bracket!", "Success!");
+      toastr.success("Added bracket!");
+      if(this.props.update){
+        this.props.update();
       }
     })
+  }
+
+  value() {
+    return null;
   }
 
   render() {
     return (
       <div className="col">
-        <div className="submodule-bg" style={{width: "50%"}}>
-          <div className="row center">
-            <h3>Add Bracket</h3>
-          </div>
+        <h4>Add Bracket</h4>
+        <div className="submodule-bg submodule-overflow">
           <BracketForm ref="form" />
-          <div className="row center" style={{marginTop: 20}}>
-            <button onClick={() => { this.onBracketSave() }}>Save</button>
-          </div>
+        </div>
+        <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
+          <button onClick={this.onAdd.bind(this)}>Add Bracket</button>
         </div>
       </div>
     )

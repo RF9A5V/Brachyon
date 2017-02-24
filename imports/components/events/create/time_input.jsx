@@ -36,10 +36,7 @@ export default class TimeInput extends Component {
 
   onChange() {
     if(this.props.onChange){
-      var value = this.value();
-      var hour = parseInt(value.substring(0, 2));
-      var minutes = parseInt(value.substring(2, 4));
-      this.props.onChange({hour, minutes});
+      this.props.onChange(this.value());
     }
   }
 

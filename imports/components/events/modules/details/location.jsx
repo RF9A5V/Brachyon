@@ -11,15 +11,8 @@ export default class LocationPage extends Component {
     }
   }
 
-  onLocationSave() {
-    Meteor.call("events.details.saveLocation", this.state.id, this.refs.location.value(), (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        return toastr.success("Successfully updated location.", "Success!");
-      }
-    })
+  value() {
+    return this.refs.location.value();
   }
 
   render() {
@@ -31,7 +24,6 @@ export default class LocationPage extends Component {
           <div className="row">
             <LocationSelect ref="location" online={event.details.location.online} {...(event.details.location.online ? {} : event.details.location)} />
           </div>
-          <div style={{marginTop: 10}} className="row center"><button onClick={this.onLocationSave.bind(this)}>Save</button></div>
         </div>
       </div>
     )

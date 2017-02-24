@@ -9,7 +9,7 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 
 export default class DisplayPromotedEvent extends Component {
   imgOrDefault(event) {
-    
+
     if(event.details.bannerUrl) {
       return event.details.bannerUrl
     }
@@ -44,10 +44,10 @@ export default class DisplayPromotedEvent extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/events/${event.slug}/show`);
+          browserHistory.push(`/event/${event.slug}/show`);
         }
         else {
-          browserHistory.push(`/events/${event.slug}/edit`);
+          browserHistory.push(`/event/${event.slug}/edit`);
         }
       }
     )

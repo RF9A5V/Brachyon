@@ -62,6 +62,21 @@ class PreviewEventScreen extends Component {
     return tempDesc;
   }
 
+  pages() {
+    var event = this.event();
+    var instance = Instances.findOne();
+    var pages = ["Home"];
+    if(instance.brackets) {
+      pages.push("Brackets");
+    }
+    if(event.stream) {
+      pages.push("Stream");
+    }
+    return (key) => {
+      this.refs.slider.setMain(pages.indexOf(key));
+    }
+  }
+
   slides() {
     var event = this.event();
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
@@ -136,7 +151,7 @@ class PreviewEventScreen extends Component {
     var event = this.event();
     return (
       <div className="box col">
-        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} color="#00BDFF" ref="slider" backgroundImage={this.imgOrDefault()} />
+        <SlideMain slides={this.slides()} slide={this.props.params.slide || ""} baseUrl={"/event/" + event.slug + "/"} color="#00BDFF" ref="slider" backgroundImage={this.imgOrDefault()} pages={this.pages()} />
       </div>
     )
   }

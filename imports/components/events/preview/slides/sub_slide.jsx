@@ -30,14 +30,29 @@ export default class SubSlideContainer extends Component {
         (current) => {
           this.state.currentItem = current;
           this.props.onAnimDone();
+          setTimeout(() => {
+            this.state.swiping = false;
+          }, 500);
         }
-      } ref="slider" draggable={false}>
+      } ref="slider" draggable={false} slidesToScroll={1}>
       {
         this.props.items.map((item, i) => {
           return (
-            <div>
+            <div onWheel={(e) => {
+              if(this.state.swiping) {
+                return;
+              }
+              if(e.deltaY > 0) {
+                this.refs.slider.slickNext();
+                this.state.swiping = true;
+              }
+              if(e.deltaY < 0) {
+                this.refs.slider.slickPrev();
+                this.state.swiping = true;
+              }
+            }}>
               <div className="slide" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${this.backgroundImage()})`}}>
-                <item.component {...item.args} />
+                <item.component {...item.args} pages={this.props.pages} />
               </div>
             </div>
           )

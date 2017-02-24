@@ -13,11 +13,8 @@ export default class ImagePage extends Component {
     }
   }
 
-  onImageSave() {
-    this.refs.img.value(() => {
-      toastr.success("Successfully updated event banner.", "Success!");
-      this.props.onItemSelect(this.props.activeItem, 0);
-    });
+  value() {
+    return this.refs.img.value();
   }
 
   render() {
@@ -37,10 +34,7 @@ export default class ImagePage extends Component {
             )
           }
           <div className="row center">
-            <ImageForm ref="img" id={ event.details.image } aspectRatio={16/9} collection={Banners} onSelect={() => { this.setState({imgSelected: true}) }} meta={{eventSlug: event.slug}} />
-          </div>
-          <div className="row center">
-            <button onClick={this.onImageSave.bind(this)}>Save</button>
+            <ImageForm ref="img" aspectRatio={16/9} meta={{eventSlug: event.slug}} />
           </div>
         </div>
       </div>

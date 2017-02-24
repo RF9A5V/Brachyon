@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { createContainer } from "meteor/react-meteor-data"
 
-import LeaderboardPanel from "./admin_comps/leaderboard.jsx";
+import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
+
+import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
+import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
 import MatchList from "./show/matches.jsx";
@@ -12,6 +16,7 @@ import { formatter } from "/imports/decorators/formatter.js";
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
 
 import Brackets from "/imports/api/brackets/brackets.js"
+import CreateContainer from "/imports/components/public/create/create_container.jsx";
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
@@ -56,18 +61,120 @@ class BracketShowScreen extends Component {
     })
   }
 
+  participantsItem(bracket) {
+    return {
+      name: "Participants",
+      icon: "users",
+      key: "participants",
+      subItems: [
+        {
+          content: ParticipantList,
+          args: {
+            participants: bracket.participants || []
+          }
+        }
+      ]
+    }
+  }
+
+  bracketItem(bracket, index, rounds) {
+    var subs;
+    var args = {
+      id: bracket.id,
+      eid: this.props.params.eventId,
+      format: bracket.format.baseFormat,
+      rounds,
+      complete: bracket.isComplete
+    };
+    switch(bracket.format.baseFormat) {
+      case "single_elim":
+        subs = [
+          {
+            content: WinnersBracket,
+            args
+          }
+        ];
+        break;
+      case "double_elim":
+        subs = [
+          {
+            content: WinnersBracket,
+            name: "Winners",
+            args
+          },
+          {
+            content: LosersBracket,
+            name: "Losers",
+            args
+          }
+        ];
+        break;
+      default:
+        subs = [
+          {
+            content: BracketAction,
+            args
+          }
+        ];
+        break;
+    }
+    return {
+      name: "Bracket",
+      icon: "sitemap",
+      key: "bracket",
+      subItems: subs
+    }
+  }
+
+  leaderboardItem(bracket, index) {
+    return {
+      name: "Leaderboard",
+      icon: "trophy",
+      key: "leaderboard",
+      subItems: [
+        {
+          content: LeaderboardAction,
+          args: {
+            id: bracket.id,
+            index: index
+          }
+        }
+      ]
+    }
+  }
+
+  matchesItem(bracket) {
+    return {
+      name: "Matches",
+      key: "matches",
+      icon: "cubes",
+      subItems: [
+        {
+          content: MatchList,
+          args: {
+            id: bracket.id,
+            format: bracket.format.baseFormat
+          }
+        }
+      ]
+    }
+  }
+
   items() {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
     var bracketMeta = instance.brackets[this.props.params.bracketIndex || 0];
     var defaultItems = [];
     var id = bracketMeta.id;
+
+    defaultItems.push(this.participantsItem(bracketMeta));
+
     var rounds;
     if(bracketMeta.participants && bracketMeta.participants.length > 3) {
       if(!bracketMeta.id) {
         switch(bracketMeta.format.baseFormat) {
-          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants || []); break;
-          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants || []); break;
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
           default: break;
         }
         rounds = rounds.map(b => {
@@ -87,73 +194,68 @@ class BracketShowScreen extends Component {
       else {
         rounds = Brackets.findOne().rounds;
       }
+      defaultItems.push(this.bracketItem(bracketMeta, this.props.params.bracketIndex || 0, rounds));
     }
-    if(rounds) {
-      defaultItems.push({
-        text: "Bracket",
-        icon: "sitemap",
-        subitems: [
-          {
-            component: BracketPanel,
-            args: {
-              id: id,
-              format: instance.brackets[this.props.params.bracketIndex || 0].format.baseFormat,
-              rounds: bracket.rounds || rounds || []
-            }
-          }
-        ]
-      });
+    if(bracketMeta.isComplete) {
+      defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(!bracket.endedAt) {
-      defaultItems.push({
-        text: "Participants",
-        icon: "users",
-        subitems: [
-          {
-            component: ParticipantList,
-            args: {
-              participants: Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [],
-              bracketIndex: this.props.params.bracketIndex
-            }
-          }
-        ]
-      });
-    }
-    if(bracket.complete) {
-      defaultItems.push({
-        text: "Leaderboard",
-        icon: "trophy",
-        subitems: [
-          {
-            component: LeaderboardPanel,
-            args: {
-              id: Brackets.findOne()._id,
-              index: this.props.params.bracketIndex
-            }
-          }
-        ]
-      })
-    }
-    var bracketId = Instances.findOne().brackets[this.props.params.bracketIndex || 0].id;
-    if(bracketId) {
-      defaultItems.push({
-        text: "Matches",
-        icon: "cubes",
-        subitems: [
-          {
-            component: MatchList,
-            id: bracketId
-          }
-        ]
-      });
+    if(bracketMeta.id) {
+      defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
+  }
+
+  actions() {
+    var index = this.props.params.bracketIndex || 0;
+    var instance = Instances.findOne();
+    var bracketMeta = instance.brackets[index];
+
+    var items = [];
+
+    if(!bracketMeta.id) {
+      var registered = (bracketMeta.participants || []).findIndex(p => {
+        return p.id == Meteor.userId();
+      })
+      if(registered >= 0) {
+        items.push({
+          name: "Unregister",
+          action: () => {
+            Meteor.call("events.removeParticipant", Events.findOne()._id, index, Meteor.userId(), (err) => {
+              if(err) {
+                toastr.error(err.reason);
+              }
+              else {
+                toastr.success("Unregistered for event!");
+              }
+            })
+          }
+        })
+      }
+      else {
+        items.push({
+          name: "Register",
+          action: () => {
+            Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
+              if(err) {
+                toastr.error(err.reason);
+              }
+              else {
+                toastr.success("Registered for event!");
+              }
+            })
+          }
+        })
+      }
+    }
+    return items;
   }
 
   render() {
     if(this.props.ready) {
       return (
-        <TabController items={this.items()} />
+        <div style={{padding: 20}}>
+          <CreateContainer items={this.items()} actions={this.actions()} />
+        </div>
       );
     }
     else {

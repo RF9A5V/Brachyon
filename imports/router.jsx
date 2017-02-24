@@ -69,12 +69,10 @@ export const renderRoutes = () => (
       <Route path="event/:slug/publish" component={PublishEventScreen} />
       <Route path="discover" component={EventDiscoveryScreen} />
       <Route path="games/select" component={GameSelectScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
       <Route path="event/:slug/checkout" component={CheckoutScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
       <Route path="create" component={CreateRunnableScreen} />
-      <Route path="leagues/create" component={CreateLeagueScreen} />
       <Route path="brackets/create" component={CreateBracketScreen} />
       <Route path="bracket/:id/admin" component={BracketAdminScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
@@ -86,7 +84,9 @@ export const renderRoutes = () => (
       <Route path="event/:slug/admin" component={EventAdminScreen} />
       <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="event/:slug/:slide" component={PreviewEventScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
       <Route path="event/:slug/bracket/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="leagues/create" component={CreateLeagueScreen} />
       <Route path="league/:slug/edit" component={EditLeagueScreen} />
       <Route path="league/:slug/admin" component={EditLeagueScreen} />
       <Route path="league/:slug" component={ShowLeagueScreen} />

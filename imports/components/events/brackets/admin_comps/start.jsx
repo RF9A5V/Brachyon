@@ -20,7 +20,7 @@ export default class StartBracketAction extends Component {
           return toastr.error(err.reason, "Error!");
         }
         else {
-          this.props.onStart["func"]()
+          this.props.onStart()
           toastr.success("Successfully started bracket!", "Success!");
         }
       });
@@ -28,7 +28,7 @@ export default class StartBracketAction extends Component {
     if(!event) {
       startFunc();
     }
-    if(event.league) {
+    if(event && event.league) {
       Meteor.call("leagues.checkEventCanRun", event.league, event.slug, (err, data) => {
         if(err) {
           return toastr.error(err,reason, "Error!");

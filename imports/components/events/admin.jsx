@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
+import { withRouter } from "react-router"
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import Main from "./modules/main.jsx";
 
-import OverviewMain from "./admin/modules/overview/main.jsx";
+import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import CrowdfundingMain from "./admin/modules/crowdfunding/main.jsx";
-import TierBreakdown from "./admin/modules/crowdfunding/tiers.jsx";
+import { createContainer } from "meteor/react-meteor-data";
 
 // Details stuff
 import DescriptionPage from "./modules/details/description.jsx";
@@ -15,15 +15,15 @@ import LocationPage from "./modules/details/location.jsx";
 import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
 
+// Bracket Stuff
 import BracketsMain from "./admin/modules/brackets/main.jsx";
 import AddBracket from "./modules/bracket/add.jsx";
+import EditBracket from "./modules/bracket/edit.jsx";
+import BracketInfo from "./modules/bracket/details.jsx";
 
-import PromotionMain from "./admin/modules/promotion/main.jsx";
-import FeaturedList from "./admin/modules/promotion/featured.jsx";
-import SocialMedia from "./admin/modules/promotion/social_media.jsx";
-
-import Staff from "./modules/organize/staff.jsx";
-import Schedule from "./modules/organize/schedule.jsx";
+// Stream Stuff
+import StreamAdd from "./modules/stream/add.jsx";
+import StreamDetails from "./modules/stream/details.jsx";
 
 import Unpublish from "./admin/modules/unpublish.jsx";
 import EditModules from "./admin/modules/edit_modules.jsx";
@@ -31,175 +31,267 @@ import Close from "./admin/modules/close_event.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import Instances from "/imports/api/event/instance.js";
+import { Banners } from "/imports/api/event/banners.js"
 
-export default class EventAdminPage extends TrackerReact(Component) {
+class EventAdminPage extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      event: Meteor.subscribe("event", this.props.params.slug),
-      rewards: Meteor.subscribe("rewards", this.props.params.slug)
-    }
+  componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, () => {
+      var event = Events.findOne();
+      var instance = Instances.findOne();
+      if(instance.brackets && instance.brackets.length == 0) {
+        return "You have to add a bracket if you want the bracket module.";
+      }
+      if(event.stream && event.stream.twitchStream == "") {
+        return "You have to provide a twitch username for your twitch stream!";
+      }
+    })
   }
 
   componentWillUnmount() {
-    this.state.event.stop();
-    this.state.rewards.stop();
+    var event = Events.findOne();
+    var instance = Instances.findOne();
+    if(instance.brackets && instance.brackets.length == 0) {
+      Meteor.call("events.removeModule.brackets", event._id);
+    }
+    if(event.stream && event.stream.twitchStream == "") {
+      Meteor.call("events.removeModule.stream", event._id);
+    }
   }
-
 
   detailItems() {
     return {
-      text: "Details",
-      icon: "file-text",
-      subitems: [
+      name: "Details",
+      icon: "file",
+      key: "details",
+      subItems: [
         {
-          component: Main,
-          text: "Overview",
+          name: "Description",
+          key: "description",
+          content: (
+            DescriptionPage
+          )
+        },
+        {
+          name: "Location",
+          key: "location",
+          content: (
+            LocationPage
+          )
+        },
+        {
+          name: "Date",
+          key: "datetime",
+          content: (
+            DatetimePage
+          )
+        },
+        {
+          name: "Banner",
+          key: "image",
+          content: (
+            ImagePage
+          ),
           args: {
-            name: "Details"
+            aspectRatio: 16/9
           }
-        },
-        {
-          component: DescriptionPage,
-          text: "Description"
-        },
-        {
-          component: LocationPage,
-          text: "Location"
-        },
-        {
-          component: DatetimePage,
-          text: "Date & Time"
-        },
-        {
-          component: ImagePage,
-          text: "Event Image"
         }
       ]
+    }
+  }
+
+  bracketItems() {
+    var event = Events.findOne();
+    var instance = Instances.findOne();
+    var subs;
+    if(!instance.brackets) {
+      subs = [
+        {
+          content: BracketInfo,
+          name: "Main",
+          key: "main",
+          args: {
+            update: this.forceUpdate.bind(this)
+          }
+        }
+      ]
+    }
+    else {
+      subs = instance.brackets.map((b,i) => {
+        return {
+          name: b.name || `Bracket ${i + 1}`,
+          key: i,
+          content: EditBracket,
+          args: {
+            bracket: b,
+            index: i,
+            update: this.forceUpdate.bind(this)
+          }
+        }
+      });
+      if(!event.league) {
+        subs.push({
+          content: AddBracket,
+          name: "Add Bracket",
+          key: "add",
+          args: {
+            update: this.forceUpdate.bind(this)
+          }
+        });
+      }
+
+    }
+    return {
+      name: "Brackets",
+      icon: "sitemap",
+      key: "brackets",
+      subItems: subs,
+      toggle: !Events.findOne().league,
+      initialToggleState: instance.brackets && instance.brackets.length > 0,
+      toggleAction: (next) => {
+        if(instance.brackets) {
+          Meteor.call("events.removeModule.brackets", event._id, (err) => {
+            if(err) {
+              return toastr.error(err.reason);
+            }
+            this.forceUpdate();
+          });
+        }
+        else {
+          Meteor.call("events.addModule.brackets", event._id, (err) => {
+            if(err) {
+              return toastr.error(err.reason);
+            }
+            this.forceUpdate();
+          })
+        }
+      }
+    }
+  }
+
+  streamItems() {
+    var event = Events.findOne();
+
+    var subs = [];
+    if(event.stream) {
+      subs.push({
+        content: StreamAdd,
+        name: "Add Stream",
+        key: "stream"
+      });
+    }
+    else {
+      subs.push({
+        content: StreamDetails,
+        name: "Main",
+        key: "stream"
+      });
+    }
+
+    return {
+      name: "Stream",
+      icon: "video-camera",
+      key: "stream",
+      subItems: subs,
+      toggle: true,
+      initialToggleState: !!event.stream,
+      toggleAction: () => {
+        if(event.stream) {
+          Meteor.call("events.removeModule.stream", event._id, (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.forceUpdate();
+            }
+          });
+        }
+        else {
+          Meteor.call("events.addModule.stream", event._id, (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.forceUpdate();
+            }
+          });
+        }
+      }
     }
   }
 
   items() {
     var event = Events.findOne();
     var instance = Instances.findOne();
-    var items = [
-      // {
-      //   text: "Overview",
-      //   icon: "globe",
-      //   subitems: [
-      //     {
-      //       component: OverviewMain
-      //     }
-      //   ]
-      // }
-    ];
+    var items = [];
     items.push(this.detailItems());
-    if(event.crowdfunding) {
-      items.push({
-        text: "Crowdfunding",
-        icon: "usd",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Crowdfunding"
-            }
-          },
-          {
-            component: TierBreakdown,
-            text: "Tiers"
-          }
-        ]
-      });
-    }
-    if(instance.brackets) {
-      items.push({
-        text: "Brackets",
-        icon: "sitemap",
-        subitems: [
-          {
-            component: BracketsMain
-          },
-          {
-            component: AddBracket,
-            text: "Add Bracket"
-          }
-        ]
-      });
-    }
-    if(event.promotion){
-      items.push({
-        text: "Promotion",
-        icon: "arrow-up",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Promotion"
-            }
-          },
-          {
-            text: "Featured",
-            component: FeaturedList
-          },
-          {
-            text: "Social Media",
-            component: SocialMedia
-          }
-        ]
-      });
-    }
-    if(event.organize){
-      items.push({
-        text: "Organize",
-        icon: "bullhorn",
-        subitems: [
-          {
-            component: Main,
-            args: {
-              name: "Organize"
-            }
-          },
-          {
-            text: "Schedule",
-            component: Schedule
-          }
-        ]
-      })
-    }
-    items.push({
-      text: "Close",
-      subitems: [
-        {
-          component: Close
-        }
-      ]
-    })
-    if(!event.crowdfunding || !event.crowdfunding.sponsors || event.crowdfunding.sponsors.length == 0) {
-      items.push({
-        text: "Unpublish",
-        subitems: [
-          {
-            component: Unpublish
-          }
-        ]
-      });
-    }
-
-    items.push({
-      text: "+/- Modules",
-      subitems: [
-        {
-          component: EditModules
-        }
-      ]
-    });
+    items.push(this.bracketItems());
+    items.push(this.streamItems());
     return items;
   }
 
+  save() {
+    var attrs = this.refs.editor.value();
+    var event = Events.findOne();
+
+    var details = attrs.details;
+
+    // I know, but bear with me.
+    // This is getting refactored in like a month anyways.
+    details.name = details.description.name;
+    details.description = details.description.description;
+
+    // Temporarily disabling global bracket edit
+    delete attrs.brackets;
+
+    Object.keys(event.details).forEach(k => {
+      if(event.details[k] == details[k]) {
+        delete details[k];
+      }
+    });
+
+    var imgTemp;
+    if(details.image != null) {
+      var file = attrs.details.image.image;
+      imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
+      imgTemp.image = file;
+    }
+    delete attrs.details.image;
+
+    if(attrs.creator.id == event.owner) {
+      delete attrs.creator;
+    }
+
+    Meteor.call("events.edit", event._id, attrs, (err) => {
+      if(err) {
+        return toastr.error(err.reason);
+      }
+    });
+    if(imgTemp) {
+      imgTemp.meta.eventSlug = event.slug;
+      Banners.insert({
+        file: imgTemp.image,
+        meta: imgTemp.meta,
+        onUploaded: (err, data) => {
+          if(err) {
+            return toastr.error(err.reason, "Error!");
+          }
+        }
+      })
+    }
+  }
+
+  actions() {
+    return [
+      {
+        name: "Save All",
+        action: this.save.bind(this)
+      }
+    ]
+  }
+
   render() {
-    if(!this.state.event.ready() || !this.state.rewards.ready()){
+    if(!this.props.ready){
       return (
         <div>
           Loading...
@@ -207,9 +299,16 @@ export default class EventAdminPage extends TrackerReact(Component) {
       )
     }
     return (
-      <div className="box col">
-        <TabController items={this.items()} />
+      <div className="box col" style={{padding: 40}}>
+        <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
       </div>
     )
   }
 }
+
+export default withRouter(createContainer(props => {
+  const eventHandle = Meteor.subscribe("event", props.params.slug);
+  return {
+    ready: eventHandle.ready()
+  }
+}, EventAdminPage))

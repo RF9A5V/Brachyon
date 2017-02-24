@@ -13,16 +13,17 @@ export default class DatetimePage extends Component {
     }
   }
 
-  onDatetimeSave() {
-    var date = moment(this.refs.date.value() + "T" + this.refs.time.value()).toDate();
-    Meteor.call("events.details.datetimeSave", this.state.id, date, (err) => {
-      if(err){
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        return toastr.success("Successfully updated datetime for event!", "Success!");
-      }
+  value() {
+    var current = moment();
+    var date = this.refs.date.value();
+    var time = this.refs.time.value();
+    Object.keys(date).forEach(k => {
+      current.set(k, date[k]);
+    });
+    Object.keys(time).forEach(k => {
+      current.set(k, time[k]);
     })
+    return current.toDate();
   }
 
   render() {
@@ -40,7 +41,6 @@ export default class DatetimePage extends Component {
               <span className="section">This event will start on <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("MMMM Do, YYYY")}</span> @ <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("h:mmA")}</span>.</span>
             </div>
           </div>
-          <div style={{marginTop: 20}} className="row center"><button onClick={this.onDatetimeSave.bind(this)}>Save</button></div>
         </div>
       </div>
     )

@@ -38,7 +38,7 @@ export default class BracketPanel extends Component {
     });
   }
 
-  render() {
+  internalRender() {
     var rounds = this.props.rounds;
     var component = (
       <div></div>
@@ -121,6 +121,17 @@ export default class BracketPanel extends Component {
           )
         }
         { component }
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        <h4>Bracket</h4>
+        <div className="submodule-bg">
+          { this.internalRender() }
+        </div>
       </div>
     )
   }
