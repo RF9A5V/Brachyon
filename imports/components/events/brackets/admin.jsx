@@ -172,7 +172,7 @@ class BracketAdminScreen extends Component {
   }
 
   items() {
-    const { instance } = this.props;
+    const instance = Instances.findOne();
     var index = this.props.params.bracketIndex || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
@@ -241,17 +241,29 @@ class BracketAdminScreen extends Component {
 
 export default createContainer(({params}) => {
   const { slug, bracketIndex } = params;
-  const eventHandle = Meteor.subscribe("event", slug);
-  if(eventHandle && eventHandle.ready()) {
-    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+
+  if(slug) {
+    const eventHandle = Meteor.subscribe("event", slug);
+    if(eventHandle && eventHandle.ready()) {
+      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+      return {
+        ready: instanceHandle.ready(),
+        instance: Instances.findOne(),
+        bracket: Brackets.findOne(),
+        event: Events.findOne()
+      }
+    }
     return {
-      ready: instanceHandle.ready(),
-      instance: Instances.findOne(),
-      bracket: Brackets.findOne(),
-      event: Events.findOne()
+      ready: false
     }
   }
-  return {
-    ready: false
+  else {
+    const { id } = params;
+    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    return {
+      ready: instanceHandle.ready()
+    }
   }
+
+
 }, BracketAdminScreen);

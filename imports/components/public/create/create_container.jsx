@@ -97,7 +97,8 @@ export default class CreateContainer extends Component {
                   padding: 10,
                   backgroundColor: this.state.selected == i ? "#111" : "#666",
                   marginRight: 10,
-                  width: 175
+                  width: 175,
+                  cursor: "pointer"
                 }}>
                   <FontAwesome name={item.icon} style={{marginRight: 10}} size="2x" />
                   <span className="title">{ item.name }</span>
