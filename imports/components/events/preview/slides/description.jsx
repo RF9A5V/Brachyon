@@ -67,7 +67,6 @@ export default class Description extends Component {
                   ""
                 ) : (
                   <div className="slide-description col-3" style={{overflowY: "auto", textAlign: "left"}} onWheel={(e) => {
-                    e.preventDefault();
                     e.stopPropagation();
                   }}>
                     <div dangerouslySetInnerHTML={{__html: event.details.description}}>
