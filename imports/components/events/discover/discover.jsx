@@ -32,6 +32,23 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
     return Events.find({"promotion.active": true, league: null}, {sort: {"promotion.bid": -1}, limit: 5}).fetch();
   }
 
+  promotedCollections(){
+    var leagues = Leagues.find({"promotion.active":true}).map(obj=> {
+      obj.type="league";
+      return obj});
+    var events = Events.find({"promotion.active":true}).map(obj=>{
+      obj.type="event"
+      return obj});
+    var combo = leagues.concat(events);
+    combo.sort((a,b)=>{
+      return (a.promotion.bid-b.promotion.bid>0? -1:1)
+      });
+    if(combo.length>5)
+      combo.length=5;
+
+    return combo;
+  }
+
   setSubscription(params, query){
     this.state.events.stop();
     this.setState({
@@ -48,7 +65,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
       <div className="content col-1 x-center">
         {
           this.state.promotedEvents.ready() ? (
-            <DisplayDiscover events={this.promotedEvents()} />
+            <DisplayDiscover events={this.promotedCollections()} />
           ) : (
             ""
           )
