@@ -4,7 +4,7 @@ export default class BracketInformation extends Component {
   render() {
     return (
       <div>
-        <h4>Bracket Details</h4>
+        <h4 style={{marginTop: 0}}>Bracket Details</h4>
         <div className="submodule-bg col">
           <p>
             Choose from Single Elimination, Double Elimination, Round Robin and Swiss. After you publish your event, a bracket page will be generated where participants can be added manually and/or users can request to join (in which case you will receive notification.
