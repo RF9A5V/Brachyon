@@ -13,16 +13,11 @@ export default class DescriptionPage extends Component {
     }
   }
 
-  onDescriptionSave() {
-    Meteor.call("events.details.saveDescription", this.state.id, this.refs.name.value, this.state.content, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        this.props.onItemSelect(this.props.activeItem, 0);
-        return toastr.success("Successfully updated description.", "Success!");
-      }
-    })
+  value() {
+    return {
+      name: this.refs.name.value,
+      description: this.state.content
+    }
   }
 
   validateTitleInput() {
@@ -55,7 +50,6 @@ export default class DescriptionPage extends Component {
           <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
           <h5 style={{marginBottom: 20}}>Description</h5>
           <Editor value={event.details.description} ref="description" onChange={this.updateDescription.bind(this)} useInsert={true} usePara={true} useTable={true} />
-          <div style={{marginTop: 10}} className="row center"><button onClick={this.onDescriptionSave.bind(this)}>Save</button></div>
         </div>
       </div>
     )

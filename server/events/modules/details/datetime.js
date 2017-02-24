@@ -6,8 +6,8 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found.")
     }
-    var currentDate = moment().minute(0).second(0).millisecond(0);
-    var startDate = moment(dateObj).minute(0).second(0).millisecond(0);
+    var currentDate = moment().startOf("minute");
+    var startDate = moment(dateObj).startOf("minute");
     if(startDate.isBefore(currentDate) && !startDate.isSame(currentDate)) {
       throw new Meteor.Error(403, "Event start date cannot be before current date.");
     }

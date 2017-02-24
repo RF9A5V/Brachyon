@@ -66,7 +66,9 @@ export default class Description extends Component {
                 mq.matches ? (
                   ""
                 ) : (
-                  <div className="slide-description col-3" style={{overflowY: "auto", textAlign: "left"}}>
+                  <div className="slide-description col-3" style={{overflowY: "auto", textAlign: "left"}} onWheel={(e) => {
+                    e.stopPropagation();
+                  }}>
                     <div dangerouslySetInnerHTML={{__html: event.details.description}}>
                     </div>
                   </div>

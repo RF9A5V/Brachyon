@@ -59,11 +59,16 @@ export default class ImageForm extends Component {
     else if(this.state.type == "image/png") {
       type = ".png";
     }
-    return {
+    var content = {
       image: this.state.file,
       type,
       meta: boxData
     }
+    this.setState({
+      file: null,
+      url: null
+    })
+    return content;
   }
 
   updateImage(e){

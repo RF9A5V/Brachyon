@@ -13,7 +13,7 @@ export default class BracketForm extends Component {
   constructor(props) {
     super(props);
     var subFormat = null;
-    var format = this.props.format || {};
+    var format = props.format || {};
     if(format.hasOwnProperty("groupFormat")){
       subFormat = "GROUP";
     }
@@ -36,38 +36,38 @@ export default class BracketForm extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    var subFormat = null;
-    var format = this.props.format || {};
-    if(format.hasOwnProperty("groupFormat")){
-      subFormat = "GROUP";
-    }
-    else if(format.hasOwnProperty("poolFormat")) {
-      subFormat = "POOL";
-    }
-    var game = Games.findOne(props.game) || props.gameObj;
-    if(game) {
-      this.state = {
-        id: game._id,
-        name: game.name,
-        bannerUrl: game.bannerUrl,
-        format: subFormat || "NONE"
-      }
-    }
-    else {
-      this.state = {
-        format: "NONE"
-      };
-    }
-    for(var i in format){
-      this.state[i] = format[i];
-    }
-
-    if(props.format) {
-      // Only works for basic bracket formats.
-      this.refs.format.value = props.format.baseFormat;
-    }
-  }
+  // componentWillReceiveProps(props) {
+  //   var subFormat = null;
+  //   var format = props.format || {};
+  //   if(format.hasOwnProperty("groupFormat")){
+  //     subFormat = "GROUP";
+  //   }
+  //   else if(format.hasOwnProperty("poolFormat")) {
+  //     subFormat = "POOL";
+  //   }
+  //   var game = Games.findOne(props.game) || props.gameObj;
+  //   if(game) {
+  //     this.state = {
+  //       id: game._id,
+  //       name: game.name,
+  //       bannerUrl: game.bannerUrl,
+  //       format: subFormat || "NONE"
+  //     }
+  //   }
+  //   else {
+  //     this.state = {
+  //       format: "NONE"
+  //     };
+  //   }
+  //   for(var i in format){
+  //     this.state[i] = format[i];
+  //   }
+  //
+  //   if(props.format) {
+  //     // Only works for basic bracket formats.
+  //     this.refs.format.value = props.format.baseFormat;
+  //   }
+  // }
 
   onGameSelect(game) {
     if(this.props.onChange) {

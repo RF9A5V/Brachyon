@@ -46,11 +46,13 @@ export default class EventTitlePage extends Component {
                   }) || brackets.every(bracket => {
                     return bracket.isComplete;
                   }) ? (
-                    <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/event/${event.slug}/bracket/0`) }}>
+                    <button style={{marginRight: event.stream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/event/${event.slug}/bracket/0`) }}>
                       View Bracket
                     </button>
                   ) : (
-                    <button style={{marginRight: event.twitchStream ? 10 : 0, width: 140}} onClick={() => { this.props.nav(this.props.slides["Brackets"]) }}>
+                    <button style={{marginRight: event.stream ? 10 : 0, width: 140}} onClick={() => {
+                      this.props.pages("Brackets")
+                    }}>
                       Register
                     </button>
                   )
@@ -59,8 +61,8 @@ export default class EventTitlePage extends Component {
                 )
               }
               {
-                event.twitchStream ? (
-                  <button style={{width: 140}} onClick={() => { this.props.nav(this.props.slides["Streams"]) }}>Watch</button>
+                event.stream ? (
+                  <button style={{width: 140}} onClick={() => { this.props.pages("Stream") }}>Watch</button>
                 ) : (
                   ""
                 )

@@ -10,7 +10,7 @@ export default class CreateContainer extends Component {
     var modStatus = {};
     props.items.forEach(item => {
       if(item.toggle) {
-        modStatus[item.key] = false;
+        modStatus[item.key] = item.initialToggleState || false;
       }
     })
     this.state = {
@@ -48,16 +48,24 @@ export default class CreateContainer extends Component {
     return this.refs[key].value();
   }
 
+  defaultToggleAction(item) {
+    if(item.toggleAction) {
+      item.toggleAction();
+    }
+    this.state.modStatus[item.key] = !this.state.modStatus[item.key];
+    this.forceUpdate();
+  }
+
   render() {
     var eColor;
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league" >= 0)){
       eColor = "#FF6000";
     }
     return (
-      <div>
+      <div className="col col-1">
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
@@ -89,14 +97,15 @@ export default class CreateContainer extends Component {
                   padding: 10,
                   backgroundColor: this.state.selected == i ? "#111" : "#666",
                   marginRight: 10,
-                  width: 175
+                  width: 175,
+                  cursor: "pointer"
                 }}>
                   <FontAwesome name={item.icon} style={{marginRight: 10}} size="2x" />
-                  <span>{ item.name }</span>
+                  <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {
                     item.toggle ? (
-                      <div className="col mod-block-toggle" style={{justifyContent: this.state.modStatus[item.key] ? "flex-start" : "flex-end"}} onClick={() => { this.state.modStatus[item.key] = !this.state.modStatus[item.key]; this.forceUpdate(); }}>
+                      <div className="col mod-block-toggle" style={{justifyContent: this.state.modStatus[item.key] ? "flex-start" : "flex-end"}} onClick={() => { this.defaultToggleAction(item) }}>
                         <div className="mod-block-control" style={{backgroundColor: this.state.modStatus[item.key] ? eColor : "white"}}></div>
                       </div>
                     ) : (
@@ -121,6 +130,17 @@ export default class CreateContainer extends Component {
                     this.forceUpdate();
                   }} getRefValue={this._getRefValue.bind(this)} />
                 </div>
+              )
+            })
+          }
+        </div>
+        <div className="row center x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+          {
+            (this.props.actions || []).map(a => {
+              return (
+                <button className="signup-button" onClick={a.action}>
+                  { a.name }
+                </button>
               )
             })
           }

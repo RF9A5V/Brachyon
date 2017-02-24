@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import Title from "../events/create/title.jsx";
+import Title from "./create/title.jsx";
 import ImageForm from "../public/img_form.jsx";
 import Editor from "../public/editor.jsx";
 import DateTimeSelector from "../public/datetime_selector.jsx";
@@ -151,15 +151,19 @@ export default class EventCreate extends Component {
     ]
   }
 
+  actions() {
+    return [
+      {
+        name: "Publish",
+        action: this.create.bind(this)
+      }
+    ]
+  }
+
   render() {
     return (
-      <div className="col" style={{padding: 20}}>
-        <CreateContainer items={this.items()} ref="create" />
-        <div className="row center" style={{marginTop: 20}}>
-          <button onClick={this.create.bind(this)}>
-            Publish
-          </button>
-        </div>
+      <div className="col col-1" style={{padding: 20}}>
+        <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )
   }

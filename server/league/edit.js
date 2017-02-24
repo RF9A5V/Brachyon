@@ -3,60 +3,80 @@ import Instances from "/imports/api/event/instance.js"
 import { flatten } from "flat";
 
 Meteor.methods({
-  "leagues.edit"(slug, changelog) {
-    var attrs = {};
-    var league = Leagues.findOne({slug});
-    if(changelog.league) {
-      var attrs = flatten(changelog.league);
-      if(attrs["details.image"]) {
-        delete attrs["details.image"];
-      }
-      //attrs.slug = ((changelog.league.details || {}).name || league.details.name).replace(/\W/g, "") + "." + ((changelog.league.details || {}).season || league.details.season);
-      Leagues.update({slug}, {
-        $set: attrs
-      });
-      var dets = changelog.league.details || {}
-      if(dets.name || dets.season) {
-        var eSlugs = league.events.map((eSlug, i) => {
-          var season = dets.season || league.details.season;
-          var name = dets.name || league.details.name;
-          var event = Events.findOne({ slug: eSlug });
-          Events.update({ slug: eSlug }, {
-            $set: {
-              "details.name": name + "." + season + " " + (i + 1)
-            }
-          });
-          event = Events.findOne(event._id);
-          return event.slug;
-        });
-        Leagues.update(league._id, {
-          $set: {
-            events: eSlugs
-          }
-        });
-      }
+  "leagues.edit"(id, attrs) {
+    var league = Leagues.findOne(id);
 
+    var brackets;
+    if(attrs.brackets) {
+      brackets = JSON.parse(JSON.stringify(attrs.brackets));
+      delete attrs.brackets;
     }
-    if(changelog.events) {
-      Object.keys(changelog.events).forEach((key, i) => {
-        Events.update({ slug: key }, {
-          "$set": changelog.events[key].date
+
+    Leagues.update(id, {
+      $set: flatten(attrs)
+    });
+    if(brackets) {
+      Object.keys(brackets).forEach(k => {
+        var slug = league.events[k];
+        var instanceId = Events.findOne({ slug }).instances.pop();
+        var flattened = flatten(brackets[k]);
+        var nextAttrs = {};
+        Object.keys(flattened).forEach(k => { nextAttrs["brackets.0." + k] = flattened[k] });
+        Instances.update(instanceId, {
+          $set: nextAttrs
         });
-      });
-      var setObj = {};
-      if(changelog.league.game) {
-        setObj["game"] = changelog.league.game;
+      })
+    }
+  },
+  "leagues.addEvent"(id, date) {
+    var league = Leagues.findOne(id);
+    var event = Events.findOne({slug: league.events.pop()});
+    var obj = {};
+    obj.details = league.details;
+    obj.details.name = league.details.name.split(" ").slice(0, -1).join(" ") + ` ${league.events.length + 1}`
+    obj.details.datetime = date;
+    obj.creator = {
+      id: league.owner,
+      type: "user"
+    }
+    var brack = Instances.findOne(event.instances.pop()).brackets[0];
+    obj.brackets = [{
+      format: brack.format,
+      game: brack.game,
+      name: ""
+    }];
+    var slug = Meteor.call("events.create", obj, id);
+    Leagues.update(id, {
+      $push: {
+        "events": slug,
+        "leaderboard": {}
       }
-      if(changelog.brackets) {
-        setObj["brackets.0"] = changelog.league.brackets;
+    });
+    return slug;
+  },
+  "leagues.removeEvent"(id, index) {
+    var league = Leagues.findOne(id);
+    var event = Events.findOne({slug: league.events[index]});
+    if(event) {
+      var instance = Instances.findOne(event.instances.pop());
+      if(instance.brackets[0].id) {
+        throw new Meteor.error(403, "Can't remove already active event!");
       }
-      if(Object.keys(setObj).length > 0) {
-        var instances = Events.find({ slug: { $in: Object.keys(changelog.events) } }).map(e => { return e.instances.pop() });
-        Instances.update({ _id: { $in: instances } }, {
-          $set: flatten(setObj)
+      else {
+        Instances.remove(instance._id);
+        Leagues.update(id, {
+          $unset: {
+            [`leaderboard.${index}`]: 1
+          }
         })
+        Leagues.update(id, {
+          $pull: {
+            "events": event.slug,
+            leaderboard: null
+          }
+        })
+        Events.remove(event._id);
       }
     }
-    return Leagues.findOne(league._id).slug;
   }
 })

@@ -8,6 +8,14 @@ export default class SubContainer extends Component {
     };
   }
 
+  componentWillReceiveProps(next) {
+    if(next.items.length <= this.state.selected) {
+      this.setState({
+        selected: next.items.length - 1
+      })
+    }
+  }
+
   value() {
     var obj = {};
     this.props.items.forEach((item, i) => {
@@ -28,10 +36,10 @@ export default class SubContainer extends Component {
       style.padding = 0;
     }
     var selectedColor = "white";
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       selectedColor = "#00BDFF";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league") >= 0){
       selectedColor = "#FF6000";
     }
     return (
@@ -44,7 +52,8 @@ export default class SubContainer extends Component {
               {
                 this.props.items.map((item, i) => {
                   return (
-                    <div style={{padding: 10, textAlign: "center", width: 100, backgroundColor: "#111", marginRight: 10, color: this.state.selected == i ? selectedColor : "white", cursor: "pointer"}} onClick={() => {this.setState({selected: i})}}>
+                    <div className="title"
+                    style={{padding: 10, textAlign: "center", width: 120, backgroundColor: "#111", marginRight: 10, color: this.state.selected == i ? selectedColor : "white", cursor: "pointer"}} onClick={() => {this.setState({selected: i})}}>
                       { item.name }
                     </div>
                   )

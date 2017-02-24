@@ -10,7 +10,7 @@ export default class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ""
+      value: props.value || ""
     }
   }
 
@@ -46,7 +46,11 @@ export default class Editor extends Component {
         height: 350,
         toolbar: tools,
         disableDragAndDrop: !this.props.useInsert
-      }} onChange={(value) => { this.setState({ value }) }}/>
+      }} onChange={(value) => { this.setState({ value }) }} onPaste={(e) => {
+        var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData("Text");
+        e.preventDefault();
+        document.execCommand("insertText", false, bufferText);
+      }}/>
     )
   }
 }
