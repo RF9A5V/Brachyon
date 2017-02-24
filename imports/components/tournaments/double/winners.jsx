@@ -70,14 +70,14 @@ export default class DoubleElimWinnersBracket extends Component {
 
     var headers = this.props.rounds[0].map((_, i) => {
       return (
-        <h4 style={{width: i == 0 ? 220 : 240, marginRight: 5}}>
+        <h4 style={{width: i == 0 ? 220 : 235, marginRight: 10}}>
           Round { i + 1 }
         </h4>
       )
     });
     if(this.props.format == "double_elim") {
       headers.push(
-        <h4 style={{width: 240, marginRight: 5}}>
+        <h4 style={{width: 235, marginRight: 10}}>
           Grand Finals
         </h4>
       )
@@ -85,12 +85,12 @@ export default class DoubleElimWinnersBracket extends Component {
 
     return (
       <div className="col">
-        <div className="row">
+        <div className="row" style={{marginBottom: 20}}>
           {
             headers
           }
         </div>
-        <div className="row">
+        <div className="row" style={{paddingLeft: 10}}>
           <div className="row">
           {
             this.props.rounds[0].map((round, i) => {

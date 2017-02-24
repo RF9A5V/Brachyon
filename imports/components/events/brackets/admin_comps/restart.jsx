@@ -11,21 +11,27 @@ export default class RestartAction extends Component {
   }
 
   resetEventHandler() {
+    var id;
     var event = Events.findOne();
-    Meteor.call("events.start_event", event._id, this.props.index, (err) => {
+    if(!event) {
+      id = Instances.findOne()._id;
+    }
+    else {
+      id = event._id;
+    }
+    Meteor.call("events.start_event", id, this.props.index || 0, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
       else {
         this.setState({ open: false });
         toastr.success("Successfully reset bracket!", "Success!");
+        this.props.onStart();
       }
     });
   }
 
   render() {
-    var instance = Instances.findOne();
-    var bracket = instance.brackets[this.props.index];
     return (
       <div>
         <h4 style={{marginTop: 0}}>Restart the Bracket</h4>

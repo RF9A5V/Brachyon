@@ -24,19 +24,24 @@ export default class DoubleElimLosersBracket extends Component {
 
     var headers = this.props.rounds[1].map((_, i) => {
       return (
-        <h4 style={{width: i == 0 ? 220 : 240, marginRight: 5}}>
+        <h4 style={{width: i == 0 ? 220 : 235, marginRight: 10}}>
           Round { i + 1 }
         </h4>
       )
     });
-    headers.pop();
+    var hasInactiveFirstRound = this.props.rounds[1].every(m => {
+      return m == null;
+    })
+    if(hasInactiveFirstRound) {
+      headers.pop();
+    }
 
     return (
       <div className="col" style={{overflowX: "auto"}}>
-        <div className="row">
+        <div className="row" style={{marginBottom: 20}}>
           { headers }
         </div>
-        <div className="row">
+        <div className="row" style={{paddingLeft: 10}}>
           {
             this.props.rounds[1].map((round, i) => {
               if (i > 0 || this.props.rounds[1][0].filter((m) => { return m != null }).length > 0)

@@ -58,10 +58,6 @@ export default class MatchBlock extends Component {
         <div style={{height: blockHeight, marginBottom: blockMargin}}>
         </div>
       );
-      return (
-        <div style={{height: blockHeight, marginBottom: blockMargin}}>
-        </div>
-      );
     }
 
     var p1 = (match.players[0] || {});
@@ -81,99 +77,53 @@ export default class MatchBlock extends Component {
       prevMatchesNull = i == 0 || (i == 1 && bracket[j] == null);
     }
 
+    var isFunctionalFirstRound = (this.props.bracket == 0 && i == 0);
+    if(this.props.bracket == 1) {
+      var allr1Null = this.props.rounds[1][0].every(i => { return i == null });
+      isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
+    }
+
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: this.props.bracket == 0 && i == 1 && prevMatchesNull ? 20 : 0}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
         {
-          match.players[0] == null && match.players[1] == null && i == 0 ? (
-            <div style={{height: blockHeight}}>
-            </div>
-          ) : (
-            [
-              <div className="match" onClick={() => {
-                this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
-              }}>
-                <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                  <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                    { p1.alias || "TBD" }
-                  </div>
-                  <div className="score">
-                    { p1.score || 0 }
-                  </div>
+          [
+            <div className="match" onClick={() => {
+              this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
+            }}>
+              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
+                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                  { p1.alias || "TBD" }
                 </div>
-                <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+                <div className="score">
+                  { p1.score || 0 }
                 </div>
-                <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                  <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                    { p2.alias || "TBD" }
-                  </div>
-                  <div className="score">
-                    { p2.score || 0 }
-                  </div>
+              </div>
+              <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+              </div>
+              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
+                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                  { p2.alias || "TBD" }
                 </div>
+                <div className="score">
+                  { p2.score || 0 }
+                </div>
+              </div>
 
-              </div>,
-              (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
-                ""
-              ) : (
-                <div style={{
-                  width: lineHeight,
-                  height: vLineHeight,
-                  backgroundColor: this.props.isFutureLoser ? "#999" : "white",
-                  position: "relative",
-                  zIndex: this.props.isFutureLoser ? 0 : 1,
-                  top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
-                }}>
-                </div>
-              )
-            ]
-          )
-        }
-      </div>
-    )
-
-    return (
-      <div className="match-block col center spacing" style={{height: 50 * Math.pow(2, k)}}>
-        <div className="match-highlight">
-          {
-            (match.players[0] == match.players[1] && i == 0 && this.props.bracket == 0) ? (
+            </div>,
+            (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
               ""
             ) : (
-              match.players.map((p, index) => {
-
-                var isLoser = match.winner != null && match.winner.alias != p.alias;
-
-                return (
-                  <div key={index} className={match.winner == null && match.players[0] != null && match.players[1] != null ? ("match-participant match-active"):("match-participant")} onClick={
-                    match.players[0] != null && match.players[1] != null ? (
-                      () => {if(Meteor.user()){this.setState({open: true});} }
-                    ) : (
-                      () => {}
-                    )
-                  } style={{borderColor: this.props.isFutureLoser ? ("#999") : ("white")}}>
-                    <span>
-                      <div style={{color: isLoser || this.props.isFutureLoser ? "#999" : "white"}} className={p==null? (""): (this.getUsername(p).length < 19? "" : "marquee")} ref="matchOne">
-                        {
-                          this.getUsername(p)
-                        }
-                      </div>
-                    </span>
-                  </div>
-                )
-              })
+              <div style={{
+                width: lineHeight,
+                height: vLineHeight,
+                backgroundColor: this.props.isFutureLoser ? "#999" : "white",
+                position: "relative",
+                zIndex: this.props.isFutureLoser ? 0 : 1,
+                top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
+              }}>
+              </div>
             )
-          }
-        </div>
-        {
-          i == this.props.roundSize - 1 || (match.players[0] == match.players[1] && i == 0) || (this.props.bracket == 1 && (i%2 == 0)) || this.props.bracket == 2 ? (
-            ""
-          ) : (
-            j % 2 == 0 ? (
-              <div className="bracket-line-v" style={{height: this.bracketLines().height, top: this.bracketLines().top, left: 165, backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            ) : (
-              <div className="bracket-line-v" style={{height: this.bracketLines().height, top: -this.bracketLines().top , left: 165 ,backgroundColor: this.props.isFutureLoser ? ("#999") : ("white"), zIndex: this.props.isFutureLoser ? 0 : 1 }}></div>
-            )
-
-          )
+          ]
         }
       </div>
     )
