@@ -285,7 +285,12 @@ class BracketDetails extends Component {
               <span>View</span>
             </button>
             {
-              this._registrationButton(obj)
+              obj.id ? (
+                ""
+              ) : (
+                this._registrationButton(obj)
+              )
+
             }
           </div>
         </div>

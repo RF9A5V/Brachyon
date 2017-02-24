@@ -24,7 +24,7 @@ export default class AddBracket extends Component {
   render() {
     return (
       <div className="col">
-        <h4>Add Bracket</h4>
+        <h4 style={{marginTop: 0}}>Add Bracket</h4>
         <div className="submodule-bg submodule-overflow">
           <BracketForm ref="form" />
         </div>
