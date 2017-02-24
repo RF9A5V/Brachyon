@@ -3,11 +3,27 @@ import { browserHistory } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
+import RerunModal from "/imports/components/events/admin/rerun_modal.jsx";
+
 import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import Instances from "/imports/api/event/instance.js";
 
 export default class BlockContainer extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      subs: []
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.subs.forEach(s => {
+      s.stop();
+    })
+  }
 
   selectEvent(event) {
     return(
@@ -57,13 +73,9 @@ export default class BlockContainer extends Component {
   }
 
   onRefreshClick(event) {
-    Meteor.call("events.reinstantiate", event._id, (err) => {
-      if(err) {
-        return toastr.error(err.reason, "Error!");
-      }
-      else {
-        return toastr.success("Event is now set up to rerun!", "Success!");
-      }
+    this.setState({
+      open: true,
+      id: event._id
     })
   }
 
@@ -75,25 +87,18 @@ export default class BlockContainer extends Component {
           {
             (this.props.events || []).map((event, i) => {
               var e = Events.findOne(event._id);
-              var count = 0;
-              if(!e) {
-                count = event.leaderboard[0].length;
-              }
-              else {
-                var instance = Instances.findOne(event.instances.pop());
-                count = (() => {
-                  var count = 0;
-                  if(instance.brackets) {
-                    instance.brackets.forEach(bracket => {
-                      if(bracket.participants) {
-                        count += bracket.participants.length;
-                      }
-                    });
-                  }
-                  return count;
-                })()
-              }
-              var instance = Instances.findOne();
+              var instance = Instances.findOne(event.instances[event.instances.length - 1]) || {};
+              var count = (() => {
+                var count = 0;
+                if(instance.brackets) {
+                  instance.brackets.forEach(bracket => {
+                    if(bracket.participants) {
+                      count += bracket.participants.length;
+                    }
+                  });
+                }
+                return count;
+              })();
               var isOwner = false;
               if(event.orgEvent) {
                 var org = Organizations.findOne(event.owner);
@@ -120,7 +125,7 @@ export default class BlockContainer extends Component {
                             </span>
                           </div>
                           {
-                            event.isComplete && !event.league ? (
+                            !event.league ? (
                               <div className="event-block-admin-button" onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -172,6 +177,10 @@ export default class BlockContainer extends Component {
             })
           }
         </div>
+        <RerunModal {...this.state} onClose={() => { this.setState({ open: false, id: null }) }} onComplete={(sub) => {
+          this.state.subs.push(sub);
+          this.setState({ open: false, id: null });
+        }} />
       </div>
     );
   }
