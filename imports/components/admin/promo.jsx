@@ -1,24 +1,15 @@
 import React, { Component } from "react";
+import { createContainer } from "meteor/react-meteor-data";
 
-export default class Promo extends Component {
+class Promo extends Component {
 
   constructor() {
     super();
-    this.state = {
-      events: Meteor.subscribe('discoverEvents'),
-      promotedEvents: Meteor.subscribe("promotedEvents"),
-      query: {
-        league: null
-      },
-      sub: Meteor.subscribe("events.getByPromoted", {
-        onReady: () => { this.setState({ ready: true }) }
-      }),
-
-    }
+    this.state = {};
   }
 
   render() {
-    if(!this.state.ready) {
+    if(!this.props.ready) {
       return null;
     }
     return (
@@ -85,3 +76,12 @@ export default class Promo extends Component {
     )
   }
 }
+
+export default createContainer((props) => {
+  const eventHandle = Meteor.subscribe('discoverEvents');
+  const promotedHandle = Meteor.subscribe("promotedEvents");
+  const byPromoted = Meteor.subscribe("events.getByPromoted");
+  return {
+    ready: eventHandle.ready() && promotedHandle.ready() && byPromoted.ready()
+  }
+}, Promo)
