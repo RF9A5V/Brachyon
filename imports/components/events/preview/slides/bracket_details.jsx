@@ -264,7 +264,7 @@ class BracketDetails extends Component {
     var bracket = Brackets.findOne(obj.id);
     const game = Games.findOne(obj.game);
     return (
-      <div className="col col-1 x-center center" style={{padding: 30}}>
+      <div className="col col-1 x-center center" style={{padding: 30, height: "100%"}}>
         <img src={game.bannerUrl} style={{width: 300 * 3 / 4, height: 300}} />
         <div style={{padding: 20}}>
           <h5 style={{marginBottom: 10}}>{ obj.name || game.name }</h5>

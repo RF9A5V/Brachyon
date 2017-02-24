@@ -30,7 +30,9 @@ export default class SubSlideContainer extends Component {
         (current) => {
           this.state.currentItem = current;
           this.props.onAnimDone();
-          this.state.swiping = false;
+          setTimeout(() => {
+            this.state.swiping = false;
+          }, 500);
         }
       } ref="slider" draggable={false} slidesToScroll={1}>
       {

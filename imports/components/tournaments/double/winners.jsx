@@ -67,51 +67,74 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   mainBracket() {
+
+    var headers = this.props.rounds[0].map((_, i) => {
+      return (
+        <h4 style={{width: i == 0 ? 220 : 240, marginRight: 5}}>
+          Round { i + 1 }
+        </h4>
+      )
+    });
+    if(this.props.format == "double_elim") {
+      headers.push(
+        <h4 style={{width: 240, marginRight: 5}}>
+          Grand Finals
+        </h4>
+      )
+    }
+
     return (
-      <div className="row">
+      <div className="col">
         <div className="row">
-        {
-          this.props.rounds[0].map((round, i) => {
-            return (
-              <div className="col" style={{justifyContent: "space-around"}} key={i}>
-                {
-                  round.map((match, j) => {
-                    var isFutureLoser = false;
-                    if(match && match.id) {
-                      match = Matches.findOne(match.id);
-                    }
-                    if(match && match.id && match.players[0] != null && match.players[1] != null && i < this.props.rounds[0].length - 1){
-                      var nextMatch = this.props.rounds[0][i + 1][Math.floor(j / 2)];
-                      nextMatch = Matches.findOne(nextMatch.id);
-                      var rNum = i + 1;
-                      var mNum = Math.floor(j / 2);
-                      while(++rNum < this.props.rounds[0].length && nextMatch.winner != null) {
-                        if(nextMatch.winner.alias != match.players[0].alias && nextMatch.winner.alias != match.players[1].alias) {
-                          isFutureLoser = true;
-                          break;
-                        }
-                        mNum = Math.floor(mNum / 2);
-                        nextMatch = this.props.rounds[0][rNum][mNum];
-                        nextMatch = Matches.findOne(nextMatch.id);
-                      }
-                    }
-                    return (
-                      <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
-                    );
-                  })
-                }
-              </div>
-            );
-          })
-        }
+          {
+            headers
+          }
         </div>
-        {
-          this.props.format == "double_elim" ? (
-            this.finals()
-          ) : (
-            ""
-          )
-        }
+        <div className="row">
+          <div className="row">
+          {
+            this.props.rounds[0].map((round, i) => {
+              return (
+                <div className="col" style={{justifyContent: "space-around"}} key={i}>
+                  {
+                    round.map((match, j) => {
+                      var isFutureLoser = false;
+                      if(match && match.id) {
+                        match = Matches.findOne(match.id);
+                      }
+                      if(match && match.id && match.players[0] != null && match.players[1] != null && i < this.props.rounds[0].length - 1){
+                        var nextMatch = this.props.rounds[0][i + 1][Math.floor(j / 2)];
+                        nextMatch = Matches.findOne(nextMatch.id);
+                        var rNum = i + 1;
+                        var mNum = Math.floor(j / 2);
+                        while(++rNum < this.props.rounds[0].length && nextMatch.winner != null) {
+                          if(nextMatch.winner.alias != match.players[0].alias && nextMatch.winner.alias != match.players[1].alias) {
+                            isFutureLoser = true;
+                            break;
+                          }
+                          mNum = Math.floor(mNum / 2);
+                          nextMatch = this.props.rounds[0][rNum][mNum];
+                          nextMatch = Matches.findOne(nextMatch.id);
+                        }
+                      }
+                      return (
+                        <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                      );
+                    })
+                  }
+                </div>
+              );
+            })
+          }
+          </div>
+          {
+            this.props.format == "double_elim" ? (
+              this.finals()
+            ) : (
+              ""
+            )
+          }
+        </div>
       </div>
     )
   }
@@ -120,7 +143,7 @@ export default class DoubleElimWinnersBracket extends Component {
     return (
       <div>
         <h4 style={{marginTop: 0}}>Winner Bracket</h4>
-        <div className="submodule-bg">
+        <div className="submodule-bg" style={{overflowX: "auto"}}>
           { this.mainBracket() }
           {
             this.props.id && !this.props.complete ? (
