@@ -56,3 +56,20 @@ Meteor.publish("leagueByID", (id) => {
     Meteor.users.find({ _id: { $in: Object.keys(ids) } })
   ];
 })
+
+Meteor.methods({
+  "leaguePromotionValue": (_id, value) => {
+    Leagues.update(_id, {
+      $set: {
+        "promotion.bid": value
+      }
+    })
+  },
+  "leaguePromotionActive": (_id, active) => {
+    Leagues.update(_id, {
+      $set: {
+        "promotion.active": active
+      }
+    })
+  }
+})
