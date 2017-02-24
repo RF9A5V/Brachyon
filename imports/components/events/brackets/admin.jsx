@@ -54,9 +54,12 @@ class BracketAdminScreen extends Component {
             index: this.props.params.bracketIndex || 0,
             bracket,
             onStart: () => {
-              this.setState({
-                sub: Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), this.props.params.bracketIndex)
-              });
+              var instanceId = Instances.findOne()._id;
+              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
+                onReady: () => {
+                  this.forceUpdate();
+                }
+              })
             }
           }
         }
@@ -157,7 +160,18 @@ class BracketAdminScreen extends Component {
           content: Restart,
           name: "Restart",
           args: {
-            index
+            index,
+            onStart: () => {
+              var instanceId = Instances.findOne()._id;
+              if(this.state.sub) {
+                this.state.sub.stop();
+              }
+              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
+                onReady: () => {
+                  this.forceUpdate();
+                }
+              })
+            }
           }
         },
         {

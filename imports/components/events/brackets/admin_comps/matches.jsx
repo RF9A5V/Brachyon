@@ -13,10 +13,6 @@ export default class MatchList extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.state.sub.stop();
-  }
-
   profileImageOrDefault(id) {
     var user = Meteor.users.findOne(id);
     if(user && user.profile.imageUrl) {
