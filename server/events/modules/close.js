@@ -9,7 +9,7 @@ Meteor.methods({
     if(!event) {
       throw new Meteor.Error(404, "Event not found!");
     }
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
+    var instance = Instances.findOne(event.instances.pop());
     var brackets = instance.brackets;
     var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return bracket.endedAt == null });
     if(hasBracketsOutstanding) {
