@@ -65,7 +65,7 @@ export default class SlideMain extends Component {
           window.history.pushState(null, null, this.props.baseUrl + this.props.slides[current].name.toLowerCase());
           this.state.activeSlide = current;
           this.forceUpdate();
-        }} draggable={false}>
+        }} draggable={false} slidesToScroll={1}>
           {
             this.props.slides.map((item, i) => {
               return (
