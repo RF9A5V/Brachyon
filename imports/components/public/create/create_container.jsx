@@ -136,9 +136,9 @@ export default class CreateContainer extends Component {
         </div>
         <div className="row center x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
           {
-            (this.props.actions || []).map(a => {
+            (this.props.actions || []).map((a, i) => {
               return (
-                <button className="signup-button" onClick={a.action}>
+                <button className="signup-button" onClick={a.action} style={{marginRight: i == this.props.actions.length - 1 ? 0 : 10}}>
                   { a.name }
                 </button>
               )

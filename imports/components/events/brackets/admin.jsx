@@ -157,6 +157,13 @@ class BracketAdminScreen extends Component {
       icon: "edit",
       subItems: [
         {
+          content: Finalize,
+          name: "Finalize",
+          args: {
+            index
+          }
+        },
+        {
           content: Restart,
           name: "Restart",
           args: {
@@ -172,13 +179,6 @@ class BracketAdminScreen extends Component {
                 }
               })
             }
-          }
-        },
-        {
-          content: Finalize,
-          name: "Finalize",
-          args: {
-            index
           }
         }
       ]
@@ -225,7 +225,10 @@ class BracketAdminScreen extends Component {
 
     if(bracket.id) {
       defaultItems.push(this.matchesItem(bracket));
-      defaultItems.push(this.logisticsItem(bracket, index));
+      if(!bracket.isComplete) {
+        defaultItems.push(this.logisticsItem(bracket, index));
+      }
+
     }
     // defaultItems.push({
     //   text: "Back To Event",
@@ -234,6 +237,17 @@ class BracketAdminScreen extends Component {
     //   }
     // })
     return defaultItems;
+  }
+
+  actions() {
+    return [
+      {
+        name: "Back To Event",
+        action: () => {
+          browserHistory.push("/event/" + Events.findOne().slug);
+        }
+      }
+    ]
   }
 
   render() {
@@ -247,7 +261,7 @@ class BracketAdminScreen extends Component {
     }
     return (
       <div style={{padding: 20, height: "calc(100vh - 100px)", overflowY: "auto"}}>
-        <CreateContainer items={this.items()} />
+        <CreateContainer items={this.items()} actions={this.actions()} />
       </div>
     );
   }

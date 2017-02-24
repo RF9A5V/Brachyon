@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
-import { withRouter } from "react-router"
+import { withRouter, browserHistory } from "react-router"
 
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import Main from "./modules/main.jsx";
@@ -286,6 +286,20 @@ class EventAdminPage extends Component {
       {
         name: "Save All",
         action: this.save.bind(this)
+      },
+      {
+        name: "Close",
+        action: () => {
+          Meteor.call("events.close", Events.findOne()._id, (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              toastr.success("Closed event!");
+              browserHistory.push("/");
+            }
+          })
+        }
       }
     ]
   }
