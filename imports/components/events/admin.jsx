@@ -25,15 +25,20 @@ import BracketInfo from "./modules/bracket/details.jsx";
 import StreamAdd from "./modules/stream/add.jsx";
 import StreamDetails from "./modules/stream/details.jsx";
 
-import Unpublish from "./admin/modules/unpublish.jsx";
-import EditModules from "./admin/modules/edit_modules.jsx";
-import Close from "./admin/modules/close_event.jsx";
+import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import Instances from "/imports/api/event/instance.js";
 import { Banners } from "/imports/api/event/banners.js"
 
 class EventAdminPage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+  }
 
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, () => {
@@ -290,15 +295,9 @@ class EventAdminPage extends Component {
       {
         name: "Close",
         action: () => {
-          Meteor.call("events.close", Events.findOne()._id, (err) => {
-            if(err) {
-              toastr.error(err.reason);
-            }
-            else {
-              toastr.success("Closed event!");
-              browserHistory.push("/");
-            }
-          })
+          this.setState({
+            open: true
+          });
         }
       }
     ]
@@ -315,6 +314,7 @@ class EventAdminPage extends Component {
     return (
       <div className="box col" style={{padding: 40}}>
         <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
+        <CloseModal open={this.state.open} id={Events.findOne()._id} />
       </div>
     )
   }

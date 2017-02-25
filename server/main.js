@@ -105,6 +105,10 @@ Accounts.onEmailVerificationLink = (token, done) => {
   })
 }
 
+Accounts.urls.resetPassword = (token) => {
+  return Meteor.absoluteUrl(`reset_password/${token}`)
+}
+
 Meteor.startup(() => {
 
   var smtp = {

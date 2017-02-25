@@ -134,7 +134,7 @@ export default class CreateContainer extends Component {
             })
           }
         </div>
-        <div className="row center x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+        <div className="row x-center" style={{justifyContent: "flex-end", width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0, paddingRight: 20}}>
           {
             (this.props.actions || []).map((a, i) => {
               return (
