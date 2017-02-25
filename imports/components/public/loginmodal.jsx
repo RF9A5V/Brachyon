@@ -18,6 +18,7 @@ export default class LogInModal extends React.Component {
     }
 
     render () {
+      const borderHeight = 2.5;
       return (
         <div className="row">
           <button className="header-button-margin login-button" onClick={() => {
@@ -41,10 +42,31 @@ export default class LogInModal extends React.Component {
             <div className="row justify-end">
               <FontAwesome onClick={this.closeModal.bind(this)} name="times" size="2x" className="close-modal"/>
             </div>
-            <div className="row center">
-              <h5 onClick={() => { this.setState({ content: "login" }) }} style={{color: this.state.content == "login" ? "#00BDFF" : "white", cursor: "pointer"}}>LOG IN</h5>
-              <h5 style={{marginLeft: 10, marginRight: 10}}>/</h5>
-              <h5 onClick={() => { this.setState({ content: "signup" }) }} style={{color: this.state.content == "signup" ? "#00BDFF" : "white", cursor: "pointer"}}>SIGN UP</h5>
+            <div className="row x-center" style={{justifyContent: "space-around"}}>
+              <div className="col center" style={{width: 100}}>
+                <h5 className="title" onClick={() => { this.setState({ content: "login" }) }} style={{margin: 0, marginBottom: 5, cursor: "pointer"}}>LOG IN</h5>
+                {
+                  this.state.content == "signup" ? (
+                    <div style={{height: borderHeight}}>
+                    </div>
+                  ) : (
+                    <div style={{width: "100%", height: borderHeight, backgroundColor: "#00BDFF"}}>
+                    </div>
+                  )
+                }
+              </div>
+              <div className="col center" style={{width: 100}}>
+                <h5 className="title" onClick={() => { this.setState({ content: "signup" }) }} style={{margin: 0, marginBottom: 5, cursor: "pointer"}}>SIGN UP</h5>
+                {
+                  this.state.content == "login" ? (
+                    <div style={{height: borderHeight}}>
+                    </div>
+                  ) : (
+                    <div style={{width: "100%", height: borderHeight, backgroundColor: "#00BDFF"}}>
+                    </div>
+                  )
+                }
+              </div>
             </div>
             <div className="row col-1 x-center center">
               {

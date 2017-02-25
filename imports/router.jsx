@@ -32,6 +32,8 @@ import OrganizationShowScreen from "../imports/components/organizations/show.jsx
 import GameHubScreen from "../imports/components/games/hub.jsx";
 import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
 import PrivacyPolicyScreen from "../imports/components/public/privacy.jsx";
+import ForgotPassScreen from "../imports/components/public/forgot_pass.jsx";
+import ResetPassScreen from "../imports/components/public/reset_pass.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -77,10 +79,11 @@ export const renderRoutes = () => (
       <Route path="bracket/:id/admin" component={BracketAdminScreen} />
       <Route path="game/:slug" component={GameHubScreen} />
       <Route path="/privacy" component={PrivacyPolicyScreen} />
+      <Route path="forgot_pw" component={ForgotPassScreen} />
+      <Route path="reset_password/:token" component={ResetPassScreen} />
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
-      <Route path="event/:slug/edit" component={EditEventScreen} />
       <Route path="event/:slug/admin" component={EventAdminScreen} />
       <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="event/:slug/:slide" component={PreviewEventScreen} />

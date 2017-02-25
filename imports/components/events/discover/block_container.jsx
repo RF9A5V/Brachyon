@@ -62,14 +62,7 @@ export default class BlockContainer extends Component {
   }
 
   onEditClick(event) {
-    var url = "";
-    if(event.published) {
-      url = `/event/${event.slug}/admin`;
-    }
-    else {
-      url = `/event/${event.slug}/edit`;
-    }
-    browserHistory.push(url);
+    browserHistory.push(`/event/${event.slug}/admin`);
   }
 
   onRefreshClick(event) {
