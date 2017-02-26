@@ -28,7 +28,7 @@ import Instances from "/imports/api/event/instance.js";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
 
-class BracketAdminScreen extends TrackerReact(Component) {
+class BracketAdminScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -90,6 +90,7 @@ class BracketAdminScreen extends TrackerReact(Component) {
     var args = {
       id: bracket.id,
       eid: this.props.params.eventId,
+      update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,
       rounds,
       complete: bracket.isComplete

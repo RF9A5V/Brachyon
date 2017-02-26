@@ -222,7 +222,6 @@ Meteor.methods({
 
   "events.update_scoring"(eventID, index, score)
   {
-    console.log("Does it reach here?");
     var instance = Instances.findOne(eventID);
     if(!instance) {
       throw new Meteor.error(404, "Couldn't find this event!");
@@ -325,7 +324,10 @@ Meteor.methods({
         $set: {
           [`brackets.${index}.inProgress`]: true,
           [`brackets.${index}.id`]: br,
-          [`brackets.${index}.startedAt`]: new Date(),
+          [`brackets.${index}.startedAt`]: new Date()
+        },
+        $unset: {
+          [`brackets.${index}.score`]: ""
         }
       })
     }

@@ -9,23 +9,24 @@ import Brackets from "/imports/api/brackets/brackets.js"
 import Instances from "/imports/api/event/instance.js";
 
 //Called by: imports\components\events\show\bracket.jsx
-export default class SwissDisplay extends TrackerReact(Component) {
+export default class SwissDisplay extends Component {
   // Page = 0 Will access the leaderboard
   // Page > 0 Will access rounds[page - 1]
   constructor(props)
   {
     super(props);
-    var page = this.props.rounds.length - 1;
-    var num = 0;
-    for (var x = 0; x < this.props.rounds[page].matches.length; x++)
-    {
-      if (this.props.rounds[page].matches[x].played != false)
-        num++;
-    }
-    rec = Math.ceil(Math.log2(this.props.rounds[0].players.length));
-
     var bracket = Brackets.findOne();
     var instance = Instances.findOne();
+    var rounds = bracket.rounds;
+
+    var page = rounds.length - 1;
+    var num = 0;
+    for (var x = 0; x < rounds[page].matches.length; x++)
+    {
+      if (rounds[page].matches[x].played != false)
+        num++;
+    }
+    rec = Math.ceil(Math.log2(rounds[0].players.length));
 
     var aliasMap = {};
     instance.brackets[0].participants.forEach((player) => {
@@ -38,8 +39,16 @@ export default class SwissDisplay extends TrackerReact(Component) {
       wcount: num,
       recrounds: rec,
       brid: bracket._id,
-      aliasMap
+      aliasMap,
+      rounds
     }
+  }
+
+  updateBoard()
+  {
+    var rounds = Brackets.findOne().rounds;
+    this.setState({rounds});
+    this.forceUpdate();
   }
 
   finalizeMatch(matchnumber)
@@ -52,14 +61,15 @@ export default class SwissDisplay extends TrackerReact(Component) {
         toastr.success("Match finalized!", "Success!");
         this.setState({wcount: this.state.wcount + 1});
         this.props.update();
+        this.updateBoard();
       }
     });
 
 
   }
   newRound() {
-    if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
-      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
+    if (!(this.state.wcount == this.state.rounds[this.state.page - 1].matches.length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.state.rounds[this.state.page - 1].matches.length + "!", "Error!");
     Meteor.call("events.update_round", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
 
@@ -67,7 +77,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       }
       else {
         toastr.success("New Round!");
-        this.props.update();
+        this.updateBoard();
       }
     });
     this.setState({wcount: 0, page: this.state.page + 1});
@@ -145,7 +155,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
             Leaderboard
           </div>
           {
-            _.range(1, this.props.rounds.length + 1).map((val) => {
+            _.range(1, this.state.rounds.length + 1).map((val) => {
               return (
                 <div className={`swiss-tab-header ${this.state.page == val ? "active" : ""}`} onClick={() => { this.setState({ page: val }) }}>
                   Round {val}
@@ -173,7 +183,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
                     </div>
                   </div>
                   {
-                    this.props.rounds[this.props.rounds.length-1].players.sort((a, b) => {
+                    this.state.rounds[this.state.rounds.length-1].players.sort((a, b) => {
                       return b.score - a.score;
                       }).map((playerObj, i) => {
                       return (
@@ -188,7 +198,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
                             { playerObj.wins + " / " + playerObj.losses + " / " + playerObj.ties }
                           </div>
                           <div className="swiss-entry">
-                            { this.getBuchholz(this.props.rounds[this.props.rounds.length-1].players, i) }
+                            { this.getBuchholz(this.state.rounds[this.state.rounds.length-1].players, i) }
                           </div>
                         </div>
                       );
@@ -201,8 +211,8 @@ export default class SwissDisplay extends TrackerReact(Component) {
             }
           <div className="row" style={{flexWrap: "wrap"}} id="RoundDiv">
           {
-            this.state.page > 0 ? (
-              Brackets.findOne().rounds[this.state.page - 1].matches.map((match, i) => {
+            (this.state.page > 0 && this.state.rounds[this.state.page - 1]) ? (
+              this.state.rounds[this.state.page - 1].matches.map((match, i) => {
                 return (
                   <SwissMatchBlock key={i} match={match} onSelect={() => { this.onMatchClick(match, i) }} />
                 );
@@ -214,12 +224,12 @@ export default class SwissDisplay extends TrackerReact(Component) {
           </div>
           <div>
           {
-            this.state.page >= (this.state.recrounds) && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length && Instances.findOne().brackets[0].endedAt == null ? (
+            this.state.page >= (this.state.recrounds) && this.state.rounds[this.state.page - 1] && this.state.wcount == this.state.rounds[this.state.page - 1].matches.length && Instances.findOne().brackets[0].endedAt == null ? (
               <button onClick={ () => {this.endTourn()} }>
                 Finish Tournament
               </button>
             ) : (
-              this.state.page == this.props.rounds.length && this.state.wcount == this.props.rounds[this.state.page - 1].matches.length) && Instances.findOne().brackets[0].endedAt == null ? (
+              this.state.page == this.state.rounds.length && this.state.wcount == this.state.rounds[this.state.page - 1].matches.length) && Instances.findOne().brackets[0].endedAt == null ? (
                 <button onClick={ () => {this.newRound()} }>
                   Advance Round
                 </button>
@@ -231,7 +241,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
         </div>
         {
           this.state.open ? (
-            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} update={this.forceUpdate.bind(this)} />
+            <SwissModal onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} update={this.updateBoard.bind(this)} />
           ) : (
             ""
           )
