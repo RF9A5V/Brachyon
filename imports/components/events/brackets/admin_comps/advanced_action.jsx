@@ -21,6 +21,22 @@ export default class AddPartipantAction extends Component {
     }
   }
 
+  componentDidUpdate()
+  {
+    if (this.state.started != true && Instances.findOne().brackets[this.props.index].inProgress)
+    {
+      this.setState({started: true})
+    }
+    else if (this.didSwitchParentObject)
+    {
+      this.refs.win_score.value = this.state.score.wins;
+      this.refs.lose_score.value = this.state.score.loss;
+      this.refs.tie_score.value = this.state.score.ties;
+      this.refs.bye_score.value = this.state.score.byes;
+    }
+  }
+
+
   updateScore()
   {
     var wins = this.refs.win_score.value ? this.refs.win_score.value : this.state.score.wins;
@@ -36,22 +52,12 @@ export default class AddPartipantAction extends Component {
       }
       else
       {
+        toastr.success("Scores updated!", "Success!")
         this.setState({score: score});
         this.didSwitchParentObject = false;
         this.forceUpdate();
       }
     });
-  }
-
-  componentDidUpdate()
-  {
-    if (this.didSwitchParentObject)
-    {
-      this.refs.win_score.value = this.state.score.wins;
-      this.refs.lose_score.value = this.state.score.loss;
-      this.refs.tie_score.value = this.state.score.ties;
-      this.refs.bye_score.value = this.state.score.byes;
-    }
   }
 
   render()
