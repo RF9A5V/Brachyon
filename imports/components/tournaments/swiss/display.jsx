@@ -33,6 +33,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
     })
 
     this.state = {
+      iid: instance._id,
       page: page + 1,
       wcount: num,
       recrounds: rec,
@@ -54,8 +55,8 @@ export default class SwissDisplay extends TrackerReact(Component) {
       }
     });
 
-  }
 
+  }
   newRound() {
     if (!(this.state.wcount == this.props.rounds[this.state.page - 1].matches.length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + this.props.rounds[this.state.page - 1].matches.length + "!", "Error!");
@@ -80,7 +81,7 @@ export default class SwissDisplay extends TrackerReact(Component) {
       else {
         if (isNotTied)
         {
-          Meteor.call("events.endGroup", this.props.id, 0, (error) => {
+          Meteor.call("events.endGroup", this.state.iid, 0, (error) => {
             if(error) {
               toastr.error(error.reason, "Error!");
             }
@@ -162,11 +163,11 @@ export default class SwissDisplay extends TrackerReact(Component) {
                       Player
                     </div>
                     <div className="swiss-header">
-                      Wins / Losses / Ties
+                      Score
                     </div>
                     <div className="swiss-header">
-                      Score
-                    </div>                    
+                      Wins / Losses / Ties
+                    </div>
                     <div className="swiss-header">
                       Buchholz Rating
                     </div>
