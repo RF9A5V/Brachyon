@@ -37,8 +37,9 @@ Meteor.publish("bracketContainer", (_id, index) => {
   }
   var partIds = (instance.brackets[index].participants || []).map(b => { return b.id });
   var matches = [];
+  var format = instance.brackets[index].format.baseFormat;
   var bracket = Brackets.findOne(instance.brackets[index].id);
-  if(bracket) {
+  if(bracket && format != "swiss" && format != "round_robin") {
     bracket.rounds.forEach(b => {
       b.forEach(r => {
         r.forEach(m => {

@@ -8,6 +8,7 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import ParticipantAction from "./admin_comps/participants.jsx";
+import AdvancedAction from "./admin_comps/advanced_action.jsx";
 import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
@@ -150,6 +151,32 @@ class BracketAdminScreen extends Component {
     }
   }
 
+  advancedItem(bracket) {
+    return {
+      name: "Advanced Options",
+      key: "advanced",
+      icon: "cubes",
+      subItems: [
+        {
+          content: AdvancedAction,
+          args: {
+            index: this.props.params.bracketIndex || 0,
+            bracket,
+            onStart: () => {
+              var instanceId = Instances.findOne()._id;
+              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
+                onReady: () => {
+                  this.forceUpdate();
+                }
+              })
+            }
+          }
+        }
+      ]
+
+    }
+  }
+
   logisticsItem(bracket, index) {
     return {
       name: "Logistics",
@@ -191,6 +218,8 @@ class BracketAdminScreen extends Component {
     var bracket = instance.brackets[index];
     var defaultItems = [];
     defaultItems.push(this.participantItem(bracket));
+    if (bracket.format.baseFormat == "swiss")
+      defaultItems.push(this.advancedItem(bracket));
     if(bracket.isComplete) {
       defaultItems.push(this.leaderboardItem(bracket, index));
     }
@@ -223,7 +252,7 @@ class BracketAdminScreen extends Component {
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
 
-    if(bracket.id) {
+    if(bracket.id && bracket.format.baseFormat != "swiss") {
       defaultItems.push(this.matchesItem(bracket));
       if(!bracket.isComplete) {
         defaultItems.push(this.logisticsItem(bracket, index));
