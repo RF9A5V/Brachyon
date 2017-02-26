@@ -220,6 +220,19 @@ Meteor.methods({
     })
   },
 
+  "events.update_scoring"(eventID, index, score)
+  {
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.error(404, "Couldn't find this event!");
+    }
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.score`]: score
+      }
+    });
+  },
+
   "events.start_event"(eventID, index) {
     var event = Events.findOne(eventID);
     var instance;
@@ -293,15 +306,28 @@ Meteor.methods({
     }
 
     if(!instance.brackets[index].id) {
-      var br = Brackets.insert({
-        rounds: rounds
-      });
+      var br;
+      if (format == "swiss" || format == "round_robin")
+      {
+        br = Brackets.insert({
+          rounds: rounds,
+          score: organize.score
+        });
+      }
+      else
+        br = Brackets.insert({
+          rounds: rounds
+        });
+
 
       Instances.update(instance._id, {
         $set: {
           [`brackets.${index}.inProgress`]: true,
           [`brackets.${index}.id`]: br,
           [`brackets.${index}.startedAt`]: new Date()
+        },
+        $unset: {
+          [`brackets.${index}.score`]: ""
         }
       })
     }
@@ -583,6 +609,7 @@ Meteor.methods({
     var bracket = Brackets.findOne(bracketID);
     if (roundNumber > 0)
       var prevround = bracket.rounds[roundNumber-1];
+    var score = bracket.score;
     bracket = bracket.rounds[roundNumber];
     bracket.matches[matchNumber].p1score = winfirst;
     bracket.matches[matchNumber].p2score = winsecond;
@@ -609,7 +636,7 @@ Meteor.methods({
     {
       if (bracket.players[x].name == p1)
       {
-        bracket.players[x].score = prevmatch1.score + score*winfirst;
+        bracket.players[x].score = prevmatch1.score + score.wins * winfirst + score.loss * winsecond + score.ties * ties;
         bracket.players[x].wins = prevmatch1.wins + winfirst;
         bracket.players[x].losses = prevmatch1.losses + winsecond;
         bracket.players[x].ties = prevmatch1.ties + ties;
@@ -620,7 +647,7 @@ Meteor.methods({
       }
       if (bracket.players[x].name == p2)
       {
-        bracket.players[x].score = prevmatch2.score + score*winsecond;
+        bracket.players[x].score = prevmatch2.score + score.wins * winsecond + score.loss * winfirst + score.ties * ties;
         bracket.players[x].wins = prevmatch2.wins + winsecond;
         bracket.players[x].losses = prevmatch2.losses + winfirst;
         if(!bracket.players[x].playedagainst) {
@@ -700,6 +727,7 @@ Meteor.methods({
 
   "events.update_round"(bracketID, roundNumber, score) { //For swiss specifically
     var bracket = Brackets.findOne(bracketID);
+    score = bracket.score;
     rounds = bracket.rounds;
     bracket = bracket.rounds[roundNumber];
     var players = bracket.players;
@@ -761,7 +789,7 @@ Meteor.methods({
         }
       }
       extraplayer.bye = true;
-      extraplayer.score += score;
+      extraplayer.score += score.byes;
     }
 
     function swap(array, i, j)
@@ -1041,25 +1069,29 @@ Meteor.methods({
     // Pretty much find event by given ID, and if not found, try leagues.
     // For tiebreaker
     if(!event) {
+
       var incObj = {};
       var league = Leagues.findOne(eventID);
-      var bracket = Brackets.findOne(league.tiebreaker.id);
-      var numPlayers = bracket.rounds[0].players.length;
-      bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
-        return (b.score - a.score);
-      }).map((obj, i) => {
-        var user = Meteor.users.findOne({ username: obj.name });
-        var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
-          return entry.id == user._id;
+      if (league)
+      {
+        var bracket = Brackets.findOne(league.tiebreaker.id);
+        var numPlayers = bracket.rounds[0].players.length;
+        bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
+          return (b.score - a.score);
+        }).map((obj, i) => {
+          var user = Meteor.users.findOne({ username: obj.name });
+          var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
+            return entry.id == user._id;
+          });
+          incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
         });
-        incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
-      });
-      Leagues.update(eventID, {
-        $inc: incObj,
-        $set: {
-          complete: true
-        }
-      })
+        Leagues.update(eventID, {
+          $inc: incObj,
+          $set: {
+            complete: true
+          }
+        })
+      }
     }
     else {
       var instance = Instances.findOne(event.instances.pop());
