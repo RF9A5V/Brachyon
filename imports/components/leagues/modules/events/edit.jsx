@@ -95,11 +95,20 @@ export default class EditEvent extends Component {
               <DateInput startsAt={this.props.startsAt} init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
             </div>
             <TimeInput init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
-            <button style={{marginTop: 10}} onClick={() => {
-              if(league.events.length > 1) {
-                this.onEventRemove(this.props.index);
-              }
-            }}>Delete</button>
+            {
+              league.events.length > 1 ? (
+                <button style={{marginTop: 10}} onClick={() => {
+                  if(league.events.length > 1) {
+                    this.onEventRemove(this.props.index);
+                  }
+                }}>
+                  Delete
+                </button>
+              ) : (
+                ""
+              )
+            }
+
           </div>
         </div>
       </div>

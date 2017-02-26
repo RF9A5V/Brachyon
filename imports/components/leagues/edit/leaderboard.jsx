@@ -12,6 +12,10 @@ export default class LeaderboardPanel extends Component {
     }
   }
 
+  value() {
+    return null;
+  }
+
   leaderboardHeader() {
     var leaderboard = Leagues.findOne().leaderboard;
     return (
