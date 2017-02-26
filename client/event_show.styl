@@ -97,14 +97,17 @@
   width: calc(50% - 10px);
   margin-right: 20px !important;
   margin-bottom: 20px
-  opacity: 0.8
   +below(1200px)
     width 100%
     margin-right: 0 !important;
 
+.event-bar-desc
+  background-color rgba(48, 48, 48, 0.8);
+
 .event-bar:hover
-  opacity: 1
   cursor: pointer
+  & .event-bar-desc
+    background-color: #333
 
 +above(1200px)
   .event-bar:nth-child(2n)
