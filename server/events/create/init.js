@@ -118,7 +118,7 @@ Meteor.methods({
     return Events.findOne(event).slug;
   },
 
-  "events.reinstantiate"(id) {
+  "events.reinstantiate"(id, date) {
     var event = Events.findOne(id);
     if(event.league) {
       throw new Meteor.Error(403, "Can't reinstantiate a league event.");
@@ -132,24 +132,69 @@ Meteor.methods({
     };
     if(prevInstance.brackets) {
       prevInstance.brackets.forEach(bracket => {
-        var bracketObj = {};
-        bracketObj.game = bracket.game;
-        bracketObj.format = bracket.format;
+        var { name, game, format } = bracket;
+        var bracketObj = {
+          name, game, format
+        };
         obj.brackets.push(bracketObj);
+        if(bracket.id && !bracket.isComplete) {
+          Meteor.call("brackets.delete", bracket.id, bracket.format.baseFormat);
+        }
       })
     }
-    if(prevInstance.tickets) {
-      obj.tickets = prevInstance.tickets;
-    }
+    // if(prevInstance.tickets) {
+    //   obj.tickets = prevInstance.tickets;
+    // }
     var instance = Instances.insert(obj);
+    var indexFilter = [];
+    prevInstance.brackets.forEach((b, i) => {
+      if(!b.isComplete) {
+        indexFilter.push(b.id);
+      }
+    });
+    var removePrev = false;
+    if(indexFilter.length == prevInstance.brackets.length) {
+      Instances.remove(prevInstance._id);
+      removePrev = true;
+    }
+    else if(indexFilter.length > 0) {
+      Instances.update(prevInstance._id, {
+        $set: {
+          datetime: event.details.datetime
+        },
+        $pull: {
+          brackets: {
+            id: {
+              $in: indexFilter
+            }
+          }
+        }
+      });
+    }
+    else {
+      Instances.update(prevInstance._id, {
+        $set: {
+          datetime: event.details.datetime
+        }
+      });
+    }
+
+    if(removePrev) {
+      Events.update(id, {
+        $pull: {
+          instances: prevInstance
+        }
+      });
+    }
     Events.update(id, {
       $push: {
         instances: instance
       },
       $set: {
         isComplete: false,
-        published: true
+        published: true,
+        "details.datetime": date
       }
-    })
+    });
   }
 })

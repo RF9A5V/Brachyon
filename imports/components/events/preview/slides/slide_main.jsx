@@ -25,10 +25,10 @@ export default class SlideMain extends Component {
   }
 
   navElements() {
-    var slides = this.props.slides.map((slide, index) => {
+    return this.props.slides.map((slide, index) => {
       return (
-        <div className={`preview-nav ${this.state.activeSlide == index ? "active" : ""}`} style={{
-          color: this.state.activeSlide == index ? (this.props.color || "white") : "white"
+        <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""}`} style={{
+          backgroundColor: this.state.activeSlide == index ? (this.props.color || "transparent") : "transparent"
         }} onClick={() => {
           this.refs.slider.slickGoTo(index);
         }}>
@@ -36,17 +36,6 @@ export default class SlideMain extends Component {
         </div>
       )
     });
-    var elems = [];
-    slides.forEach(elem => {
-      elems.push(elem);
-      elems.push(
-        <div style={{fontSize: 16, fontWeight: "bold"}}>
-          -
-        </div>
-      )
-    });
-    elems.pop();
-    return elems;
   }
 
   setMain(i) {
@@ -116,7 +105,7 @@ export default class SlideMain extends Component {
             <div></div>
           )
         }
-        <div className="row x-center" style={{paddingLeft: 20, position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
+        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
           {
             this.navElements()
           }

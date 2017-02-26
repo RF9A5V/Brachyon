@@ -46,7 +46,7 @@ export default class BlockContainer extends Component {
         if(!instId) {
           return 0;
         }
-        var instance = Instances.findOne(instId);
+        var instance = Instances.findOne(instId) || {};
         var count = 0;
         if(instance.brackets) {
           instance.brackets.forEach(bracket => {

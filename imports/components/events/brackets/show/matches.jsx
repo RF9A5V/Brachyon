@@ -39,14 +39,12 @@ export default class UserMatches extends Component {
     }
 
     return (
-      <div className="col">
-        <div className="row center">
+      <div>
+        <h4 style={{marginTop: 0}}>Your Matches</h4>
+        <div className="row center submodule-bg">
           {
             match ? (
               <div>
-                <div className="row center" style={{marginBottom: 20}}>
-                  <h5>Your Next Match</h5>
-                </div>
                 <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
                   <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
                     <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
