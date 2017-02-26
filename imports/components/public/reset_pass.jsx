@@ -18,11 +18,12 @@ export default class ResetPassScreen extends Component {
 
   render() {
     return (
-      <div className="row center x-center col-1">
-        <form onSubmit={this.onSubmit.bind(this)}>
-          <input type="password" placeholder="Password" ref="pass" />
-          <input type="password" placeholder="Confirm Password" ref="passConf" />
-          <input type="submit" />
+      <div className="col center x-center col-1">
+        <span style={{marginBottom: 10}}>Enter in your password and confirm it!</span>
+        <form className="col center x-center" onSubmit={this.onSubmit.bind(this)}>
+          <input style={{margin: 0, marginBottom: 10}} type="password" placeholder="Password" ref="pass" />
+          <input style={{margin: 0, marginBottom: 10}} type="password" placeholder="Confirm Password" ref="passConf" />
+          <input style={{marginRight: 0}} type="submit" />
         </form>
       </div>
     )
