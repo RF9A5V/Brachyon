@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom"
 import { browserHistory } from "react-router";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
@@ -27,6 +28,25 @@ export default class GamesIndex extends Component {
     this.state.games.stop();
   }
 
+  componentDidMount() {
+    //console.log(this.refs)
+    //Object.keys(this.refs).forEach((reff)=>{
+    //  console.log(reff)//.className)
+      // console.log(reff.offsetWidth)
+      // console.log(reff.scrollWidth)
+    //})
+  }
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.refs)
+    Object.keys(this.refs).forEach((reffs)=>{
+      var node = ReactDOM.findDOMNode(this.refs[reffs])
+      if(node.offsetWidth<node.scrollWidth){
+        node.className = "game-title overflow"
+      }
+    })
+  }
+
+
   gameDisplay() {
     if(!this.state.ready) {
       return (
@@ -43,7 +63,7 @@ export default class GamesIndex extends Component {
               <div className="game" onClick={ () => { browserHistory.push("/game/" + game.slug) } }>
                 <img src={game.bannerUrl} />
                 <div className="col game-description">
-                  <span className="game-title">
+                  <span ref={game.name} className="game-title">
                     { game.name }
                   </span>
                   <div className="row center">
@@ -134,9 +154,9 @@ export default class GamesIndex extends Component {
     return (
       <div className="col" style={{marginTop: 20}}>
         <div className="row center">
-          <button onClick={() => { this.setState({open: true}) }}>Create Game</button>
+          <button className="createGame"style={{marginTop:20, marginBottom:20}}onClick={() => { this.setState({open: true}) }}>Create Game</button>
         </div>
-        <hr className="discover-divider" />
+        <hr style={{marginBottom:20}}className="discover-divider" />
         {
           this.gameDisplay()
         }
