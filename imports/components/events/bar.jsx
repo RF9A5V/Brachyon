@@ -33,7 +33,7 @@ export default class Bar extends Component {
       }}>
         <img className="event-bar-img" src={event.details.imageUrl || "/images/bg.jpg"} />
         <div className="col col-1">
-          <div className="col col-1" style={{backgroundColor: "#333", padding: 10}}>
+          <div className="col col-1 event-bar-desc" style={{padding: 10}}>
             <div className="row flex-pad" style={{alignItems: "flex-start"}}>
               <div className="col col-1">
                 <h2 style={{backgroundColor: "transparent", padding: 0, color: "white", margin: 0}}>{ event.details.name }</h2>
