@@ -16,7 +16,13 @@ Meteor.publish("organizer.unpublishedEvents", function(id, page) {
 })
 
 Meteor.publish("organizer.eventsUnderReview", function(id, page) {
-  var events = Events.find({ owner: id, underReview: true }, { limit: 6, skip: 6 * page });
+  var events = Events.find({
+    owner: id,
+    underReview: true,
+    league: {
+      $eq: null
+    }
+  }, { limit: 6, skip: 6 * page });
   var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
@@ -30,7 +36,13 @@ Meteor.publish("organizer.eventsUnderReview", function(id, page) {
 });
 
 Meteor.publish("organizer.publishedEvents", function(id, page) {
-  var events = Events.find({ owner: id, published: true }, { limit: 6, skip: 6 * page });
+  var events = Events.find({
+    owner: id,
+    published: true,
+    league: {
+      $eq: null
+    }
+  }, { limit: 6, skip: 6 * page });
   var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })
@@ -44,7 +56,13 @@ Meteor.publish("organizer.publishedEvents", function(id, page) {
 })
 
 Meteor.publish("organizer.completedEvents", function(id, page) {
-  var events = Events.find({ owner: id, isComplete: true }, { limit: 6, skip: 6 * page });
+  var events = Events.find({
+    owner: id,
+    isComplete: true,
+    league: {
+      $eq: null
+    } 
+  }, { limit: 6, skip: 6 * page });
   var imgs = Banners.find({
     _id: {
       $in: events.map((e) => { return e.details.banner })

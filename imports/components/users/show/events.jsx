@@ -119,20 +119,20 @@ export default class UserEvents extends TrackerReact(Component) {
     var organizer = {
       title: "Organizer",
       sections: [
-        {
-          name: "Unpublished",
-          subscription: "organizer.unpublishedEvents"
-        },
-        {
-          name: "Awaiting Approval",
-          subscription: "organizer.eventsUnderReview"
-        },
+        // {
+        //   name: "Unpublished",
+        //   subscription: "organizer.unpublishedEvents"
+        // },
+        // {
+        //   name: "Awaiting Approval",
+        //   subscription: "organizer.eventsUnderReview"
+        // },
         {
           name: "Published",
           subscription: "organizer.publishedEvents"
         },
         {
-          name: "Past Events",
+          name: "Complete",
           subscription: "organizer.completedEvents"
         }
       ]
