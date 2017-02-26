@@ -151,6 +151,15 @@
   overflow-x hidden
   white-space nowrap
   text-overflow ellipsis
+  
+.overflow:hover
+  animation marquee 5s linear infinite
+
+@keyframes marquee {
+  from  { text-indent:  0% }
+  to    { text-indent: -120% }
+}
+
 
 .game .game-description
   padding 10px
@@ -167,3 +176,10 @@
   padding-right 0
   border-right none
   margin-right 0
+  
+.createGame
+  color #FF6000
+  border-color #ff6000
+
+.createGame:not(.inactive):hover
+  box-shadow 0 0 10px #FF6000
