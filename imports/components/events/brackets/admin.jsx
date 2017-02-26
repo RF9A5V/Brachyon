@@ -28,7 +28,7 @@ import Instances from "/imports/api/event/instance.js";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
 
-class BracketAdminScreen extends Component {
+class BracketAdminScreen extends TrackerReact(Component) {
 
   constructor(props) {
     super(props);
@@ -162,14 +162,6 @@ class BracketAdminScreen extends Component {
           args: {
             index: this.props.params.bracketIndex || 0,
             bracket,
-            onStart: () => {
-              var instanceId = Instances.findOne()._id;
-              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
-                onReady: () => {
-                  this.forceUpdate();
-                }
-              })
-            }
           }
         }
       ]

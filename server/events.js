@@ -220,6 +220,20 @@ Meteor.methods({
     })
   },
 
+  "events.update_scoring"(eventID, index, score)
+  {
+    console.log("Does it reach here?");
+    var instance = Instances.findOne(eventID);
+    if(!instance) {
+      throw new Meteor.error(404, "Couldn't find this event!");
+    }
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${index}.score`]: score
+      }
+    });
+  },
+
   "events.start_event"(eventID, index) {
     var event = Events.findOne(eventID);
     var instance;
@@ -1053,25 +1067,29 @@ Meteor.methods({
     // Pretty much find event by given ID, and if not found, try leagues.
     // For tiebreaker
     if(!event) {
+
       var incObj = {};
       var league = Leagues.findOne(eventID);
-      var bracket = Brackets.findOne(league.tiebreaker.id);
-      var numPlayers = bracket.rounds[0].players.length;
-      bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
-        return (b.score - a.score);
-      }).map((obj, i) => {
-        var user = Meteor.users.findOne({ username: obj.name });
-        var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
-          return entry.id == user._id;
+      if (league)
+      {
+        var bracket = Brackets.findOne(league.tiebreaker.id);
+        var numPlayers = bracket.rounds[0].players.length;
+        bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
+          return (b.score - a.score);
+        }).map((obj, i) => {
+          var user = Meteor.users.findOne({ username: obj.name });
+          var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
+            return entry.id == user._id;
+          });
+          incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
         });
-        incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
-      });
-      Leagues.update(eventID, {
-        $inc: incObj,
-        $set: {
-          complete: true
-        }
-      })
+        Leagues.update(eventID, {
+          $inc: incObj,
+          $set: {
+            complete: true
+          }
+        })
+      }
     }
     else {
       var instance = Instances.findOne(event.instances.pop());

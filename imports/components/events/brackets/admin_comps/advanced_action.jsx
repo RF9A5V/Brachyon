@@ -10,12 +10,47 @@ export default class AddPartipantAction extends Component {
     var iid = instance._id;
     var bracket = instance.brackets[this.props.index];
     var started = instance.brackets[this.props.index].inProgress ? true:false;
-    var participants = bracket.participants || [];
+    var score = started ? Brackets.findOne().score : bracket.score;
+    if (!(started))
+      this.didSwitchParentObject = true;
     this.state = {
-      participants,
+      score,
       iid,
       started,
       index: this.props.index
+    }
+  }
+
+  updateScore()
+  {
+    var wins = this.refs.win_score.value ? this.refs.win_score.value : this.state.score.wins;
+    var loss = this.refs.lose_score.value ? this.refs.lose_score.value : this.state.score.loss;
+    var ties = this.refs.tie_score.value ? this.refs.tie_score.value : this.state.score.ties;
+    var byes = this.refs.bye_score.value ? this.refs.bye_score.value : this.state.score.byes;
+    var score = {wins, loss, ties, byes};
+    Meteor.call("events.update_scoring", this.state.iid, this.state.index, score, (err) => {
+      if (err)
+      {
+        toastr.error("Something went wrong saving the score!", "Error!");
+        return err;
+      }
+      else
+      {
+        this.setState({score: score});
+        this.didSwitchParentObject = false;
+        this.forceUpdate();
+      }
+    });
+  }
+
+  componentDidUpdate()
+  {
+    if (this.didSwitchParentObject)
+    {
+      this.refs.win_score.value = this.state.score.wins;
+      this.refs.lose_score.value = this.state.score.loss;
+      this.refs.tie_score.value = this.state.score.ties;
+      this.refs.bye_score.value = this.state.score.byes;
     }
   }
 
@@ -23,10 +58,42 @@ export default class AddPartipantAction extends Component {
   {
     return(
       <div>
-        <input type="number" placeholder="Win Score" ref="win_score" />
-        <input type="number" placeholder="Lose Score" ref="lose_score" />
-        <input type="number" placeholder="Tie Score" ref="tie_score" />
-        <input type="number" placeholder="Bye Score" ref="bye_score" />
+      {
+        this.state.started ? (
+          <div className="col">
+            <p>Win Score: {this.state.score.wins}</p>
+            <p>Loss Score: {this.state.score.loss}</p>
+            <p>Tie Score: {this.state.score.ties}</p>
+            <p>Bye Score: {this.state.score.byes}</p>
+          </div>
+         ) : (
+          <div>
+            <div className="row">
+              <div className="col">
+                <p>Win Score:</p>
+                <input type="number" ref="win_score" />
+              </div>
+              <div className="col">
+                <p>Loss Score:</p>
+                <input type="number" ref="lose_score" />
+              </div>
+              <div className="col">
+                <p>Tie Score:</p>
+                <input type="number" ref="tie_score" />
+              </div>
+              <div className="col">
+                <p>Bye Score:</p>
+                <input type="number" ref="bye_score" />
+              </div>
+            </div>
+            <div>
+              <button onClick={() => {this.updateScore()}}>
+                Save
+              </button>
+            </div>
+          </div>
+        )
+      }
       </div>
     );
   }
