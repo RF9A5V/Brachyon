@@ -16,14 +16,6 @@ import EditEvent from "./modules/events/edit.jsx";
 
 import EditLeaderboard from "./modules/leaderboard/edit.jsx";
 
-import { BracketsPanel, LeagueBracketForm } from "./edit/brackets.jsx";
-import { EventsPanel, LeagueEvent } from "./edit/events.jsx";
-import LeaderboardPanel from "./edit/leaderboard.jsx";
-import SubmitPanel from "./edit/submit.jsx";
-
-import Leagues from "/imports/api/leagues/league.js";
-import { LeagueBanners } from "/imports/api/leagues/banners.js";
-
 class EditLeagueScreen extends Component {
 
   detailItems(league) {
@@ -187,6 +179,9 @@ class EditLeagueScreen extends Component {
     if(league.owner == attrs.creator.id) {
       delete attrs.creator;
     }
+
+    delete attrs.events;
+    delete attrs.leaderboard;
 
     Meteor.call("leagues.edit", Leagues.findOne()._id, attrs, (err) => {
       if(err) {

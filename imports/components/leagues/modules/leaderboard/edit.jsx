@@ -4,6 +4,10 @@ import { sortPlacement } from "/imports/api/placement.js";
 
 export default class LeaderboardEdit extends Component {
 
+  value() {
+    return null;
+  }
+
   leaderboard() {
     var index = this.props.index;
     var leaderboard = Leagues.findOne().leaderboard;

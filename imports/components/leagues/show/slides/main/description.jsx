@@ -59,7 +59,9 @@ export default class Description extends Component {
               ),
               (
                 <div className="slide-description col-1" style={{overflowY: "auto"}}>
-                  <div dangerouslySetInnerHTML={{__html: league.details.description}}>
+                  <div dangerouslySetInnerHTML={{__html: league.details.description}} onWheel={(e) => {
+                    e.stopPropagation();
+                  }}>
                   </div>
                 </div>
               )
