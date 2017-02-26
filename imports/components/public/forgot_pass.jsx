@@ -19,7 +19,7 @@ export default class ForgotPassScreen extends Component {
   render() {
     return (
       <div className="col-1 col center x-center">
-        <span>Text goes here</span>
+        <span>Enter your email and check your inbox for your reset link!</span>
         <form onSubmit={this.onSubmit.bind(this)}>
           <input type="text" ref="email" placeholder="Email" />
           <input type="submit" />
