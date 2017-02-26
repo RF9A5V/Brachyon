@@ -11,19 +11,22 @@ export default class OverviewPanel extends Component {
           "details.datetime": {
             $gte: new Date(),
             $lte: moment().endOf("day").toDate()
-          }
+          },
+          "published": {$eq: true}
         }, { limit: 6 })} />
         <BlockContainer title="Events Within 7 Days" events={Events.find({
           "details.datetime": {
             $gte: moment().add(1, "day").startOf("day").toDate(),
             $lte: moment().add(7, "day").endOf("day").toDate()
-          }
+          },
+          "published": {$eq: true}
         }, { limit: 6 })} />
         <BlockContainer title="Events Within 30 Days" events={Events.find({
           "details.datetime": {
             $gte: moment().add(8, "day").startOf("day").toDate(),
             $lte: moment().add(30, "day").endOf("day").toDate()
-          }
+          },
+          "published": {$eq: true}
         }, { limit: 6 })} />
       </div>
     )
