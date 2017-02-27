@@ -27,11 +27,7 @@ export default class PrivacyPolicyScreen extends Component {
       {
         title: "Changes and Notifications",
         text: "Brachyon reserves the right to make changes to this privacy policy at the discretion of Brachyon Inc. Review this policy regularly to check for updates. For retroactive changes, you may receive notifications regarding the changes."
-      },
-      {
-        title: "Contact",
-        text: "Contact Here"
-      },
+      }
     ]
   }
 

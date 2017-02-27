@@ -26,10 +26,13 @@ export default class SlideMain extends Component {
 
   navElements() {
     return this.props.slides.map((slide, index) => {
+      var style = {
+        backgroundColor: this.state.activeSlide == index ? (this.props.color || "transparent") : "transparent",
+        fontWeight: "bold",
+        color: this.state.activeSlide == index ? "#111" : "white"
+      }
       return (
-        <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""}`} style={{
-          backgroundColor: this.state.activeSlide == index ? (this.props.color || "transparent") : "transparent"
-        }} onClick={() => {
+        <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""}`} style={style} onClick={() => {
           this.refs.slider.slickGoTo(index);
         }}>
           { slide.name.toUpperCase() }

@@ -11,7 +11,7 @@ export default class Bar extends Component {
     var bracket = instance.brackets[0];
     var [color, icon, text] = ["#FF6000", "circle", "Complete"];
     if(!bracket.id) {
-      [color, icon, text] = ["white", "circle", "Starts At: " + moment(event.details.datetime).format("MMM Do, h:mmA")];
+      [color, icon, text] = ["white", "circle", "Starts: " + moment(event.details.datetime).format("MMM Do, h:mmA")];
     }
     else if(!bracket.isComplete) {
       [color, icon, text] = ["#00BDFF", "circle", "Underway"];
@@ -31,7 +31,7 @@ export default class Bar extends Component {
       <div className="row event-bar" style={{alignItems: "stretch"}} onClick={() => {
         browserHistory.push("/event/" + event.slug);
       }}>
-        <img className="event-bar-img" src={event.details.imageUrl || "/images/bg.jpg"} />
+        <img className="event-bar-img" src={event.details.bannerUrl || "/images/bg.jpg"} />
         <div className="col col-1">
           <div className="col col-1 event-bar-desc" style={{padding: 10}}>
             <div className="row flex-pad" style={{alignItems: "flex-start"}}>
