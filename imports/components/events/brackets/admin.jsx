@@ -247,8 +247,9 @@ class BracketAdminScreen extends Component {
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
 
-    if(bracket.id && bracket.format.baseFormat != "swiss") {
-      defaultItems.push(this.matchesItem(bracket));
+    if(bracket.id) {
+      if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
+        defaultItems.push(this.matchesItem(bracket));
       if(!bracket.isComplete) {
         defaultItems.push(this.logisticsItem(bracket, index));
       }
