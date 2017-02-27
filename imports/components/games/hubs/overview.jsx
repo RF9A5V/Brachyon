@@ -6,7 +6,7 @@ import BlockContainer from "/imports/components/events/discover/block_container.
 export default class OverviewPanel extends Component {
   render() {
     return (
-      <div>
+      <div style={{padding: 10, maxHeight: "calc(100vh - 100px)", overflowY: "auto"}}>
         <BlockContainer title="Events Today" events={Events.find({
           "details.datetime": {
             $gte: new Date(),

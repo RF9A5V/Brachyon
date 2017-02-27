@@ -15,7 +15,7 @@ export default class LandingScreen extends React.Component {
         <div className="img-background"></div>
         <div className="main-content" id="main-content">
           <div className="row center">
-            <img src="/images/logo.png" style={{width: 150, height: 150}} />
+            <img src="/images/beta_logo.png" style={{width: 150, height: 150}} />
           </div>
           {
             // <h1>BRACHYON</h1>
