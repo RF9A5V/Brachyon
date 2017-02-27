@@ -40,17 +40,14 @@ export default class DescriptionPage extends Component {
   render() {
     var event = Events.findOne();
     return (
-      <div className="col">
-        <h4 style={{marginTop: 10}}>Event Details</h4>
-        <div style={{marginBottom: 10}} className="submodule-bg">
-          <div className="row x-center">
-            <h5 style={{marginRight: 20}}>Title</h5>
-            <span>{ this.state.titleLength } / 50</span>
-          </div>
-          <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
-          <h5 style={{marginBottom: 20}}>Description</h5>
-          <Editor value={event.details.description} ref="description" onChange={this.updateDescription.bind(this)} useInsert={true} usePara={true} useTable={true} />
+      <div>
+        <div className="row x-center">
+          <h5 style={{marginRight: 20}}>Title</h5>
+          <span>{ this.state.titleLength } / 50</span>
         </div>
+        <input ref="name" defaultValue={event.details.name} style={{width: "50%", minWidth: 280}} onChange={() => { this.validateTitleInput() }}/>
+        <h5 style={{marginBottom: 20}}>Description</h5>
+        <Editor value={event.details.description} ref="description" onChange={this.updateDescription.bind(this)} useInsert={true} usePara={true} useTable={true} />
       </div>
     )
   }

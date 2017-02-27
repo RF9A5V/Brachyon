@@ -66,7 +66,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
     return "/images/profile.png";
   }
 
-  internalRender() {
+  render() {
     var br = Meteor.subscribe("brackets", this.props.id, {
       onReady: () => {
         this.setState({
@@ -163,17 +163,6 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
         </div>
       )
     }
-  }
-
-  render() {
-    return (
-      <div>
-        <h4 style={{marginTop: 0}}>Leaderboard</h4>
-        <div className="submodule-bg">
-          { this.internalRender() }
-        </div>
-      </div>
-    )
   }
 
 }

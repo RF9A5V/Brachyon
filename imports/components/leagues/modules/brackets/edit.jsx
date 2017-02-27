@@ -19,12 +19,7 @@ export default class BracketEdit extends Component {
 
   render() {
     return (
-      <div>
-        <h4>Edit Bracket For { Events.findOne(this.props.eventId).details.name }</h4>
-        <div className="submodule-bg">
-          <BracketForm ref="form" {...this.props.bracket} />
-        </div>
-      </div>
+      <BracketForm ref="form" {...this.props.bracket} />
     )
   }
 }

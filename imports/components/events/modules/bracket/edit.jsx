@@ -31,10 +31,7 @@ export default class EditBracket extends Component {
     var event = Events.findOne();
     return (
       <div>
-        <h4>Bracket Edit</h4>
-        <div className="submodule-bg submodule-overflow">
-          <BracketForm ref="form" {...(this.props.bracket || {})} />
-        </div>
+        <BracketForm ref="form" {...(this.props.bracket || {})} />
         <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
           <button style={{marginRight: 10}}>Save Bracket</button>
           {

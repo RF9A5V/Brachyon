@@ -22,20 +22,17 @@ export default class ImagePage extends Component {
     var img = event.details.bannerUrl;
     return (
       <div>
-        <h4>Event Image</h4>
-        <div className="submodule-bg">
-          {
-            img ? (
-              <div style={{textAlign: "center"}}>
-                <img src={img} style={{width: "50%", margin: "20px 0", height: "auto"}} />
-              </div>
-            ) : (
-              ""
-            )
-          }
-          <div className="row center">
-            <ImageForm ref="img" aspectRatio={16/9} meta={{eventSlug: event.slug}} />
-          </div>
+        {
+          img ? (
+            <div style={{textAlign: "center"}}>
+              <img src={img} style={{width: "50%", margin: "20px 0", height: "auto"}} />
+            </div>
+          ) : (
+            ""
+          )
+        }
+        <div className="row center">
+          <ImageForm ref="img" aspectRatio={16/9} meta={{eventSlug: event.slug}} />
         </div>
       </div>
     )

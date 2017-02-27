@@ -18,14 +18,7 @@ export default class LocationPage extends Component {
   render() {
     var event = Events.findOne();
     return (
-      <div>
-        <h4>Location</h4>
-        <div style={{marginBottom: 10}} className="submodule-bg">
-          <div className="row">
-            <LocationSelect ref="location" online={event.details.location.online} {...(event.details.location.online ? {} : event.details.location)} />
-          </div>
-        </div>
-      </div>
+      <LocationSelect ref="location" online={event.details.location.online} {...(event.details.location.online ? {} : event.details.location)} />
     )
   }
 }

@@ -188,7 +188,7 @@ class EventAdminPage extends Component {
     else {
       subs.push({
         content: StreamDetails,
-        name: "Main",
+        name: "Stream Details",
         key: "stream"
       });
     }

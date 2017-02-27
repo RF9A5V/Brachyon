@@ -88,28 +88,25 @@ export default class EditEvent extends Component {
           <FontAwesome name="caret-right" size="3x" onClick={this.onEventAdd.bind(this)} />
         </div>
         <hr className="user-divider" />
-        <h4>Edit Event</h4>
-        <div className="submodule-bg">
-          <div className="col center x-center">
-            <div style={{marginBottom: 20}}>
-              <DateInput startsAt={this.props.startsAt} init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
-            </div>
-            <TimeInput init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
-            {
-              league.events.length > 1 ? (
-                <button style={{marginTop: 10}} onClick={() => {
-                  if(league.events.length > 1) {
-                    this.onEventRemove(this.props.index);
-                  }
-                }}>
-                  Delete
-                </button>
-              ) : (
-                ""
-              )
-            }
-
+        <div className="col center x-center">
+          <div style={{marginBottom: 20}}>
+            <DateInput startsAt={this.props.startsAt} init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
           </div>
+          <TimeInput init={event.details.datetime} onChange={this.onDateChange.bind(this)} />
+          {
+            league.events.length > 1 ? (
+              <button style={{marginTop: 10}} onClick={() => {
+                if(league.events.length > 1) {
+                  this.onEventRemove(this.props.index);
+                }
+              }}>
+                Delete
+              </button>
+            ) : (
+              ""
+            )
+          }
+
         </div>
       </div>
     )

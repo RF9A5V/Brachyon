@@ -85,13 +85,6 @@ export default class LeaderboardEdit extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <h4>Leaderboard for { this.props.name }</h4>
-        <div className="submodule-bg">
-          { this.leaderboard() }
-        </div>
-      </div>
-    )
+    return this.leaderboard()
   }
 }

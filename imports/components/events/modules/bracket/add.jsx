@@ -24,10 +24,7 @@ export default class AddBracket extends Component {
   render() {
     return (
       <div className="col">
-        <h4 style={{marginTop: 0}}>Add Bracket</h4>
-        <div className="submodule-bg submodule-overflow">
-          <BracketForm ref="form" />
-        </div>
+        <BracketForm ref="form" />
         <div className="row" style={{justifyContent: "flex-end", marginTop: 10}}>
           <button onClick={this.onAdd.bind(this)}>Add Bracket</button>
         </div>
