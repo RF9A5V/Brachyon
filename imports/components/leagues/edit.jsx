@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import LeagueNameInput from "./modules/details/name.jsx";

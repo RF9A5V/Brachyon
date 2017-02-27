@@ -11,16 +11,11 @@ export default class LeagueImage extends Component {
   render() {
     var league = Leagues.findOne();
     return (
-      <div>
-        <h4>League Image</h4>
-        <div className="submodule-bg">
-          <ImageForm
-            url={league.details.bannerUrl}
-            aspectRatio={16/9}
-            ref="img"
-          />
-        </div>
-      </div>
+      <ImageForm
+        url={league.details.bannerUrl}
+        aspectRatio={16/9}
+        ref="img"
+      />
     )
   }
 }

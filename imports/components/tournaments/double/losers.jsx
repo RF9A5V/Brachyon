@@ -90,26 +90,23 @@ export default class DoubleElimLosersBracket extends Component {
   render() {
     return (
       <div>
-        <h4 style={{marginTop: 0}}>Loser Bracket</h4>
-        <div className="submodule-bg">
-          { this.mainBracket() }
-          {
-            this.props.id && !this.props.complete ? (
-              <EventModal
-                id={this.state.id}
-                bracket={this.state.bracket}
-                round={this.state.round}
-                match={this.state.match}
-                open={this.state.open}
-                closeModal={() => { this.setState({open: false}) }}
-                update={this.forceUpdate.bind(this)}
-                format={this.props.format}
-              />
-            ) : (
-              ""
-            )
-          }
-        </div>
+        { this.mainBracket() }
+        {
+          this.props.id && !this.props.complete ? (
+            <EventModal
+              id={this.state.id}
+              bracket={this.state.bracket}
+              round={this.state.round}
+              match={this.state.match}
+              open={this.state.open}
+              closeModal={() => { this.setState({open: false}) }}
+              update={this.forceUpdate.bind(this)}
+              format={this.props.format}
+            />
+          ) : (
+            ""
+          )
+        }
       </div>
     );
   }

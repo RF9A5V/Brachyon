@@ -11,12 +11,7 @@ export default class LeagueLocation extends Component {
   render() {
     var league = Leagues.findOne();
     return (
-      <div>
-        <h4>League Location</h4>
-        <div className="submodule-bg">
-          <LocationSelect {...league.details.location} ref="location" />
-        </div>
-      </div>
+      <LocationSelect {...league.details.location} ref="location" />
     )
   }
 }

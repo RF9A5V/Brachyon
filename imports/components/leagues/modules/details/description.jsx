@@ -11,12 +11,7 @@ export default class LeagueDescription extends Component {
   render() {
     var league = Leagues.findOne();
     return (
-      <div>
-        <h4>League Details</h4>
-        <div className="submodule-bg">
-          <Editor ref="description" usePara={true} useInsert={true} useTable={true} value={league.details.description} />
-        </div>
-      </div>
+      <Editor ref="description" usePara={true} useInsert={true} useTable={true} value={league.details.description} />
     )
   }
 }

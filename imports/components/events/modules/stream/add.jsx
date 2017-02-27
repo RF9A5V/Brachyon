@@ -16,12 +16,9 @@ export default class AddStream extends Component {
   render(){
     return(
       <div className="col">
-        <h4>Stream</h4>
-        <div className="submodule-bg">
-          <div className="row center x-center">
-            <span>https://twitch.tv/</span>
-            <input ref="twitchStreamName" placeholder="Twitch Username" defaultValue={(Events.findOne().stream || {}).twitchStream} />
-          </div>
+        <div className="row center x-center">
+          <span>https://twitch.tv/</span>
+          <input ref="twitchStreamName" placeholder="Twitch Username" defaultValue={(Events.findOne().stream || {}).twitchStream} />
         </div>
       </div>
     )

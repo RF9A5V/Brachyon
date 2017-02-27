@@ -29,18 +29,13 @@ export default class DatetimePage extends Component {
   render() {
     var event = Events.findOne();
     return (
-      <div>
-        <h4>Date and Time</h4>
-        <div className="submodule-bg">
-          <div className="row">
-            <div className="submodule-section">
-              <DateSelect ref="date" init={event.details.datetime} />
-              <TimeSelect ref="time" init={event.details.datetime} style={{marginTop: 20}} />
-            </div>
-            <div className="submodule-section col-1 row center x-center">
-              <span className="section">This event will start on <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("MMMM Do, YYYY")}</span> @ <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("h:mmA")}</span>.</span>
-            </div>
-          </div>
+      <div className="row">
+        <div className="submodule-section">
+          <DateSelect ref="date" init={event.details.datetime} />
+          <TimeSelect ref="time" init={event.details.datetime} style={{marginTop: 20}} />
+        </div>
+        <div className="submodule-section col-1 row center x-center">
+          <span className="section">This event will start on <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("MMMM Do, YYYY")}</span> @ <span style={{color: "#00BDFF"}}>{moment(event.details.datetime).format("h:mmA")}</span>.</span>
         </div>
       </div>
     )

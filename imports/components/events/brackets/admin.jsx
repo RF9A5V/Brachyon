@@ -14,7 +14,6 @@ import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 
-import LogisticsPanel from "./admin_comps/logistics.jsx";
 import Restart from "./admin_comps/restart.jsx";
 import Finalize from "./admin_comps/finalize.jsx";
 
@@ -51,6 +50,7 @@ class BracketAdminScreen extends Component {
       subItems: [
         {
           content: ParticipantAction,
+          name: "Participants",
           args: {
             index: this.props.params.bracketIndex || 0,
             bracket,
@@ -76,6 +76,7 @@ class BracketAdminScreen extends Component {
       subItems: [
         {
           content: LeaderboardAction,
+          name: "Leaderboard",
           args: {
             id: bracket.id,
             index: index
@@ -143,6 +144,7 @@ class BracketAdminScreen extends Component {
       subItems: [
         {
           content: MatchList,
+          name: "Matches",
           args: {
             id: bracket.id,
             format: bracket.format.baseFormat
