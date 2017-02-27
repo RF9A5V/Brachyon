@@ -20,13 +20,13 @@ export default class SidebarMenu extends Component {
           browserHistory.push("/options")
         }
       },
-      {
-        icon: "envelope",
-        name: "Notifications",
-        action: () => {
-          // Do nothing for now.
-        }
-      },
+      // {
+      //   icon: "envelope",
+      //   name: "Notifications",
+      //   action: () => {
+      //     // Do nothing for now.
+      //   }
+      // },
       // {
       //   icon: "users",
       //   name: "Create Organizations",
