@@ -101,15 +101,15 @@ export default class AboutScreen extends TrackerReact(Component) {
       );
     }
     else {
-      createEvent = (           
-        <div className="col-to-row x-center col-1">             
+      createEvent = (
+        <div className="col-to-row x-center col-1">
           <div className="col center x-center about-blocks" onClick={() => {
             this.setState({
              open: true,
              content: "login"
-           }) }}>               
-            <FontAwesome name="plus" size="5x" className="about-icons" />             
-          </div> 
+           }) }}>
+            <FontAwesome name="plus" size="5x" className="about-icons" />
+          </div>
           <Modal
             className="create-modal"
             overlayClassName = "credential-overlay"
@@ -133,10 +133,10 @@ export default class AboutScreen extends TrackerReact(Component) {
                 )
               }
             </div>
-          </Modal>            
-          <div onClick={this.toggleCreate.bind(this)} className="col about-desc">               
-            <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>             
-          </div>           
+          </Modal>
+          <div onClick={this.toggleCreate.bind(this)} className="col about-desc">
+            <h3>Create</h3><div style={{marginTop: 10}}>Generate competitive events in seconds.</div>
+          </div>
         </div>
       );
     }
@@ -151,7 +151,7 @@ export default class AboutScreen extends TrackerReact(Component) {
             ground up.
           </div>
           <h4>Brachyon Lets You...</h4>
-          <div className="col" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
+          <div className="col about-what" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div className="row-to-col center x-center">
               <Link to="/discover" className="col-to-row x-center col-1">
                 <div className="col center x-center about-blocks">
@@ -181,7 +181,7 @@ export default class AboutScreen extends TrackerReact(Component) {
             </div>
           </div>
           <h4>Which Leads To...</h4>
-          <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
+          <div className="about-what" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <div style={{margin:10}}>
             {this.promotedEvents().length == 0?
               (this.events().length>0 ?
@@ -191,7 +191,7 @@ export default class AboutScreen extends TrackerReact(Component) {
             </div>
           </div>
           <h4>Why?</h4>
-          <div className="about-what center">
+          <div className="about-what center" style={{marginBottom: 0}}>
             <p>We love competitive gaming. Nothing catered to our needs
             as competitors, so we built it ourselves.</p>
             <p>Brachyon formed out of our pure love for the game.</p>
