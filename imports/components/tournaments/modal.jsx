@@ -39,6 +39,25 @@ export default class TournamentModal extends Component {
     })
   }
 
+  undoMatch() {
+    var func = "";
+    switch(this.props.format) {
+      case "single_elim": func="events.undo_single"; break;
+      case "double_elim": func="events.undo_double"; break;
+      default: break;
+    }
+    if(func.length == 0) {
+      toastr.error("Modal not set up for swiss and RR");
+      return;
+    }
+    Meteor.call(func, Brackets.findOne()._id, this.props.bracket, this.props.round, this.props.match, (err) => {
+      if(err) {
+        return toastr.error(err.reason);
+      }
+      this.props.closeModal();
+    })
+  }
+
   userScoreColumn(player, i) {
     var match = Matches.findOne(this.props.id);
     var maxScore = Math.max.apply(null, match.players.map(p => { return p.score }));
@@ -139,7 +158,7 @@ export default class TournamentModal extends Component {
           ):(
             <div className="col" style={{height: "100%"}}>
               <div className="row x-center">
-                <button style={{marginRight: 20}}>Undo</button>
+                <button style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
                 {
                   Events.findOne() ? (
                     <button onClick={ () => {

@@ -2,12 +2,25 @@ import React, { Component } from "react";
 
 import MatchBlock from './match.jsx';
 import EventModal from "../modal.jsx";
+import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
 export default class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    var event = Events.findOne();
+    var bracket = Brackets.findOne();
+    this.state = {
+      leagueOpen: event.league && bracket.complete
+    };
+  }
+
+  componentWillReceiveProps() {
+    var event = Events.findOne();
+    var bracket = Brackets.findOne();
+    this.setState({
+      leagueOpen: event.league && bracket.complete
+    })
   }
 
   toggleModal(id, b, r, i) {
@@ -141,6 +154,7 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   render() {
+    var event = Events.findOne();
     return (
       <div style={{overflowX: "auto"}}>
         { this.mainBracket() }
@@ -156,6 +170,13 @@ export default class DoubleElimWinnersBracket extends Component {
               update={this.forceUpdate.bind(this)}
               format={this.props.format}
             />
+          ) : (
+            ""
+          )
+        }
+        {
+          event.league ? (
+            <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} />
           ) : (
             ""
           )
