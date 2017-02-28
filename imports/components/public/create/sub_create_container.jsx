@@ -69,7 +69,7 @@ export default class SubContainer extends Component {
                 <div style={this.state.selected == i ? {} : { height: 0, overflowY: "hidden" }}>
                   <h4>{item.name}</h4>
                   <div className="submodule-bg" style={{maxHeight: this.props.items.length == 1 ? "calc(100vh - 270px)" : "calc(100vh - 320px)"}}>
-                    <item.content ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} />
+                    <item.content ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
                   </div>
                 </div>
               )

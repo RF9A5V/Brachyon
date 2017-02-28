@@ -11,15 +11,15 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.state = {
-      leagueOpen: event.league && bracket.complete
+      leagueOpen: event.league && bracket.complete && this.props.active
     };
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(next) {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.setState({
-      leagueOpen: event.league && bracket.complete
+      leagueOpen: event.league && bracket.complete && next.active
     })
   }
 
@@ -155,6 +155,7 @@ export default class DoubleElimWinnersBracket extends Component {
 
   render() {
     var event = Events.findOne();
+    var bracket = Brackets.findOne();
     return (
       <div style={{overflowX: "auto"}}>
         { this.mainBracket() }
@@ -176,7 +177,14 @@ export default class DoubleElimWinnersBracket extends Component {
         }
         {
           event.league ? (
-            <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} />
+            <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} id={event._id} />
+          ) : (
+            ""
+          )
+        }
+        {
+          event.league && bracket.complete ? (
+            <button style={{marginLeft: 10}} onClick={() => { this.setState({ leagueOpen: true }) }}>Close Bracket</button>
           ) : (
             ""
           )
