@@ -22,38 +22,39 @@ export default class OrganizationCreateScreen extends Component {
     e.preventDefault();
 
     var name = this.refs.organizationName.value;
-    var content = this.state.content;
+    var content = this.refs.description.value();
 
-    var profileRef = this.refs.profile;
-    var bannerRef = this.refs.banner;
+    var profileRef = this.refs.profile.value();
+    var bannerRef = this.refs.banner.value();
+
+    console.log(name, content, profileRef, bannerRef);
 
     Meteor.call("organizations.create", name, content, (err, organizations) => {
       if(err) {
         toastr.error(err.reason, "Error!");
       }
       else{
-        var href = `/org/${organizations}`
-        profileRef.setMeta("orgSlug", organizations);
-        bannerRef.setMeta("orgSlug", organizations);
+        var href = `/org/${organizations}`;
 
-        if(profileRef.hasValue()) {
-          profileRef.value(() => {
-            if(bannerRef.hasValue()) {
-              bannerRef.value(() => {
-                browserHistory.push(href);
-              });
-            }
-            else {
+        if(profileRef) {
+          profileRef.meta.orgSlug = organizations;
+          OrgImages.insert({
+            file: profileRef.image,
+            meta: profileRef.meta,
+            onUploaded: () => {
               browserHistory.push(href);
             }
-          });
+          })
         }
-        else {
-          if(bannerRef.hasValue()) {
-            bannerRef.value(() => {
+        if(bannerRef) {
+          bannerRef.meta.orgSlug = organizations;
+          OrgBanners.insert({
+            file: bannerRef.image,
+            meta: bannerRef.meta,
+            onUploaded: () => {
               browserHistory.push(href);
-            });
-          }
+            }
+          })
         }
       }
     });
@@ -66,18 +67,6 @@ export default class OrganizationCreateScreen extends Component {
     }
     this.setState({
       charCount: this.refs.name.value.length
-    })
-  }
-
-  setImage(base64) {
-    this.setState({
-      image: base64
-    })
-  }
-
-  setBanner(base64) {
-    this.setState({
-      banner: base64
     })
   }
 
@@ -97,15 +86,15 @@ export default class OrganizationCreateScreen extends Component {
           <div className="row">
             <div className="col col-1 x-center">
               <h5>Profile</h5>
-              <ImageForm ref="profile" collection={OrgImages} onImgSelected={this.setImage.bind(this)} defaultImage={this.state.image} />
+              <ImageForm ref="profile" defaultImage={this.state.image} />
             </div>
             <div className="col col-1 x-center">
               <h5>Banner</h5>
-              <ImageForm ref="banner" collection={OrgBanners} aspectRatio={16/9} onImgSelected={this.setBanner.bind(this)} defaultImage={this.state.banner} />
+              <ImageForm ref="banner" aspectRatio={16/9} defaultImage={this.state.banner} />
             </div>
           </div>
           <h5>Description</h5>
-          <Editor onChange={this.setDescriptionState.bind(this)} useInsert={true} usePara={true} useTable={true} />
+          <Editor ref="description" useInsert={true} usePara={true} useTable={true} />
           <div className="row center" style={{marginTop: 20}}>
             <button onClick={this.submit.bind(this)}>Create</button>
           </div>
