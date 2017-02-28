@@ -38,9 +38,6 @@ export default class DoubleElimLosersBracket extends Component {
 
     return (
       <div className="col" style={{overflowX: "auto"}}>
-        <div className="row" style={{marginBottom: 20}}>
-          { headers }
-        </div>
         <div className="row" style={{paddingLeft: 10}}>
           {
             this.props.rounds[1].map((round, i) => {
