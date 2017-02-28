@@ -1022,37 +1022,43 @@ Meteor.methods({
 
     var event = Events.findOne(eventID);
     var instance;
+    var bracket;
+    var players = {};
+    var roundobj;
     if(!event) {
       instance = Instances.findOne(eventID);
     }
     else {
       var instance = Instances.findOne(event.instances.pop());
     }
-    var bracket = instance.brackets[bracketIndex];
-    var players = {};
-    var roundobj = Brackets.findOne(bracket.id);
-    var brack = roundobj.rounds;
+    if(!instance) {
+      var league = Leagues.findOne(eventID);
+      roundobj = Brackets.findOne(league.tiebreaker.id);
+    }
+    else {
+      bracket = instance.brackets[bracketIndex];
+      roundobj = Brackets.findOne(bracket.id);
+      var brack = roundobj.rounds;
+      instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
 
-    instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
-
-    for (var x = 0 ; x < brack.length ;  x ++){
-      for (var j = 0 ; j < brack[x].matches.length ; j++){
-        match= brack[x].matches[j];
-        if (match.p1score>match.p2score){
-          players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1: 1;
-          players[match.playerTwo].losses = players[match.playerTwo].losses ? players[match.playerTwo].losses + 1: 1;
-        }
-        else if(match.p1score<match.p2score){
-          players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1: 1;
-          players[match.playerOne].losses = players[match.playerOne].losses ? players[match.playerOne].losses + 1: 1;
-        }
-        else{
-          players[match.playerTwo].ties = players[match.playerTwo].ties ? players[match.playerTwo].ties + 1: 1;
-          players[match.playerOne].ties = players[match.playerOne].ties ? players[match.playerOne].ties + 1: 1;
+      for (var x = 0 ; x < brack.length ;  x ++){
+        for (var j = 0 ; j < brack[x].matches.length ; j++){
+          match= brack[x].matches[j];
+          if (match.p1score>match.p2score){
+            players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1: 1;
+            players[match.playerTwo].losses = players[match.playerTwo].losses ? players[match.playerTwo].losses + 1: 1;
+          }
+          else if(match.p1score<match.p2score){
+            players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1: 1;
+            players[match.playerOne].losses = players[match.playerOne].losses ? players[match.playerOne].losses + 1: 1;
+          }
+          else{
+            players[match.playerTwo].ties = players[match.playerTwo].ties ? players[match.playerTwo].ties + 1: 1;
+            players[match.playerOne].ties = players[match.playerOne].ties ? players[match.playerOne].ties + 1: 1;
+          }
         }
       }
-    }
-    Object.keys(players).forEach(player=>{
+      Object.keys(players).forEach(player=>{
         var scoreObject = players[player];
         var updateObject = {
           [`stats.${bracket.game}.wins`]: scoreObject.wins,
@@ -1061,9 +1067,9 @@ Meteor.methods({
         };
         Meteor.users.update(scoreObject.id,{$inc:updateObject});
       })
+    }
 
 
-    var event = Events.findOne(eventID);
 
     // Weird, but works.
     // Pretty much find event by given ID, and if not found, try leagues.
@@ -1076,17 +1082,20 @@ Meteor.methods({
       {
         var bracket = Brackets.findOne(league.tiebreaker.id);
         var numPlayers = bracket.rounds[0].players.length;
+        var ldrboard = {};
         bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
           return (b.score - a.score);
         }).map((obj, i) => {
           var user = Meteor.users.findOne({ username: obj.name });
-          var ldrboardIndex = league.leaderboard[0].findIndex(entry => {
-            return entry.id == user._id;
-          });
-          incObj[`leaderboard.0.${ldrboardIndex}.score`] = numPlayers - i;
+          ldrboard[user._id] = {
+            score: numPlayers - i,
+            bonus: 0
+          };
         });
         Leagues.update(eventID, {
-          $inc: incObj,
+          $push: {
+            "leaderboard": ldrboard
+          },
           $set: {
             complete: true
           }

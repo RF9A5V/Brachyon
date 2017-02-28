@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import Modal from "react-modal"
 import { browserHistory } from "react-router";
+import { createContainer } from "meteor/react-meteor-data";
 
 import Matches from "/imports/api/event/matches.js";
 
-export default class LeagueModal extends Component {
+class LeagueModal extends Component {
 
   constructor(props) {
     super(props);
@@ -84,40 +85,6 @@ export default class LeagueModal extends Component {
                 </div>
               </div>
             )
-            // return users.map(user => {
-            //   return (
-            //     <div className="row x-center" style={{marginBottom: 10}}>
-            //       <div className="col-1">
-            //         { i + 1 }
-            //       </div>
-            //       <div className="col-1">
-            //         { user.alias }
-            //       </div>
-            //       <div className="col-1">
-            //         { participantCount - i  } +
-            //       </div>
-            //       <div className="col-1">
-            //         <input type="text" style={{width: "100%", margin: 0, fontSize: 12}} onChange={(e) => {
-            //           if(isNaN(e.target.value)) {
-            //             e.target.value = e.target.value.slice(0, e.target.value.length - 1)
-            //           } else {
-            //             this.forceUpdate();
-            //           } }} onKeyPress={(e) => {
-            //             if(e.key == "Enter") {
-            //               e.target.blur();
-            //             }
-            //           }} onBlur={(e) => {
-            //             Meteor.call("leagues.leaderboard.setBonus", Leagues.findOne()._id, eventIndex, user.id, parseInt(e.target.value), (err) => {
-            //               if(err) {
-            //                 toastr.error("Couldn\'t update bonus points!");
-            //               }
-            //             })
-            //           }} defaultValue={leaderboard[user.id].bonus}
-            //         />
-            //       </div>
-            //     </div>
-            //   )
-            // })
           })
         }
       </div>
@@ -192,7 +159,7 @@ export default class LeagueModal extends Component {
   }
 
   render() {
-    if(!this.state.ready) {
+    if(!this.props.ready) {
       return (
         <div>
         </div>
@@ -257,3 +224,11 @@ export default class LeagueModal extends Component {
     )
   }
 }
+
+export default createContainer((props) => {
+  var event = Events.findOne(props.id);
+  const leagueHandle = Meteor.subscribe("leagueByID", event.league);
+  return {
+    ready: leagueHandle.ready()
+  }
+}, LeagueModal)

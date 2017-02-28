@@ -23,13 +23,15 @@ Meteor.publish("league", (slug) => {
   var matches = [];
   brackets.forEach(b => {
     b.rounds.forEach(i => {
-      i.forEach(j => {
-        j.forEach(k => {
-          if(k) {
-            matches.push(k.id);
-          }
+      if(i.forEach) {
+        i.forEach(j => {
+          j.forEach(k => {
+            if(k) {
+              matches.push(k.id);
+            }
+          })
         })
-      })
+      }
     })
   });
   return [

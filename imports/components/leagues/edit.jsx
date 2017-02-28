@@ -112,9 +112,9 @@ class EditLeagueScreen extends Component {
 
   leaderboardItems(league) {
 
-    var subs = league.leaderboard.map((l, i) => {
+    var subs = league.events.map((l, i) => {
 
-      var event = Events.findOne({slug: league.events[i]});
+      var event = Events.findOne({slug: l});
 
       return {
         name: event.details.name,
