@@ -10,9 +10,9 @@ import Editor from "../public/editor.jsx";
 import DateTimeSelector from "../public/datetime_selector.jsx";
 import Location from "../events/create/location_select.jsx";
 
-import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
-
-import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
+import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
+import StreamPanel from "./create/module_dropdowns/stream.jsx";
+import TicketingPanel from "./create/module_dropdowns/ticketing.jsx";
 
 import { Banners } from "/imports/api/event/banners.js"
 
@@ -128,7 +128,17 @@ export default class EventCreate extends Component {
             key: "brackets",
             content: (
               BracketsPanel
-            )
+            ),
+            args: {
+              onBracketNumberChange: (n) => {
+                if(_.isEqual(n, this.state.brackets)) {
+                  return;
+                }
+                this.setState({
+                  brackets: n
+                })
+              }
+            }
           }
         ],
         toggle: true
@@ -144,6 +154,24 @@ export default class EventCreate extends Component {
             content: (
               StreamPanel
             )
+          }
+        ],
+        toggle: true
+      },
+      {
+        name: "Tickets",
+        icon: "ticket",
+        key: "tickets",
+        subItems: [
+          {
+            name: "Tickets",
+            key: "tickets",
+            content: (
+              TicketingPanel
+            ),
+            args: {
+              brackets: this.state.brackets || []
+            }
           }
         ],
         toggle: true
