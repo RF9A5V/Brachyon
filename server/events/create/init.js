@@ -69,7 +69,7 @@ Meteor.methods({
     var ticketObj = {};
     ticketObj.venue = {
       price: obj.venue,
-      payments: []
+      payments: {}
     };
     delete obj.venue;
     ticketObj.paymentType = obj.paymentType;
@@ -77,7 +77,7 @@ Meteor.methods({
     Object.keys(obj).forEach(k => {
       ticketObj[k] = {
         price: obj[k],
-        payments: []
+        payments: {}
       }
     });
     return ticketObj;
