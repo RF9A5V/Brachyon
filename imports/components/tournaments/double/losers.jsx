@@ -24,7 +24,7 @@ export default class DoubleElimLosersBracket extends Component {
 
     var headers = this.props.rounds[1].map((_, i) => {
       return (
-        <h4 style={{marginBottom: 20}}>
+        <h4 style={{marginBottom: 20, width: "100%"}}>
           Round { i + 1 }
         </h4>
       )

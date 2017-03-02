@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import UserTab from "/imports/components/users/user_tab.jsx";
+import TiebreakerModal from "./tiebreaker_modal.jsx";
 
 export default class LeaderboardSlide extends Component {
 
@@ -107,6 +108,7 @@ export default class LeaderboardSlide extends Component {
           }
           </div>
         </div>
+        <TiebreakerModal />
       </div>
     )
   }
