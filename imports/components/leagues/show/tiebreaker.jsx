@@ -6,7 +6,7 @@ export default class TiebreakerSlide extends Component {
     var league = Leagues.findOne();
     return (
       <div className="col-1" style={{padding: 20}}>
-        <RoundRobinDisplay bracketId={league.tiebreaker.id} id={Leagues.findOne()._id}/>
+        <RoundRobinDisplay bracketId={league.tiebreaker} id={Leagues.findOne()._id}/>
       </div>
     )
   }

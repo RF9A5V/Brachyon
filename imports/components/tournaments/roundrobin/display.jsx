@@ -6,7 +6,7 @@ import RoundMatchBlock from "./match.jsx"
 import RoundModal from "./modal.jsx";
 
 //Called by: imports\components\events\show\bracket.jsx
-export default class RoundDisplay extends TrackerReact(Component) {
+export default class RoundDisplay extends Component {
   // Page = 0 Will access the leaderboard
   // Page > 0 Will access rounds[page - 1]
   constructor(props)
@@ -36,6 +36,11 @@ export default class RoundDisplay extends TrackerReact(Component) {
         aliasMap[player.alias] = player.id;
       })
     }
+    else {
+      bracket.players.forEach(p => {
+        aliasMap[p.name] = Meteor.users.findOne({ username: p.name })._id;
+      })
+    }
 
 
     this.state = {
@@ -50,13 +55,6 @@ export default class RoundDisplay extends TrackerReact(Component) {
     }
   }
 
-  updateBoard()
-  {
-    var rounds = Brackets.findOne().rounds;
-    this.setState({rounds});
-    this.forceUpdate();
-  }
-
   finalizeMatch(matchnumber)
   {
     Meteor.call("events.complete_match", this.state.brid, this.state.page - 1, matchnumber, (err) => {
@@ -66,7 +64,6 @@ export default class RoundDisplay extends TrackerReact(Component) {
       else {
         toastr.success("Match finalized!", "Success!");
         this.setState({wcount: this.state.wcount + 1});
-        this.updateBoard();
         if(this.props.update) {
           this.props.update();
         }
@@ -86,13 +83,12 @@ export default class RoundDisplay extends TrackerReact(Component) {
       }
       else {
         toastr.success("New Round!");
-        this.updateBoard();
         if(this.props.update) {
           this.props.update();
         }
+        this.setState({wcount: 0, page: this.state.page + 1});
       }
     });
-    this.setState({wcount: 0, page: this.state.page + 1});
   }
 
   endTourn(){
@@ -240,7 +236,7 @@ export default class RoundDisplay extends TrackerReact(Component) {
         </div>
         {
           this.state.open ? (
-            <RoundModal id={this.props.bracketId} onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} update={this.updateBoard.bind(this)} aliasMap={this.state.aliasMap} />
+            <RoundModal id={this.props.bracketId} onRequestClose={this.closeModal.bind(this)} finalizeMatch={this.finalizeMatch.bind(this)} match={this.state.match} i={this.state.i} open={this.state.open} page={this.state.page - 1} aliasMap={this.state.aliasMap} />
           ) : (
             ""
           )
