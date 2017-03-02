@@ -53,7 +53,7 @@ export default class MatchBlock extends Component {
 
     var participantWidth = 200;
 
-    if(!match) {
+    if(!match || (match.players[0] == null && match.players[1] == null && this.props.roundNumber == 0 && this.props.bracket == 0)) {
       return (
         <div style={{height: blockHeight, marginBottom: blockMargin}}>
         </div>
