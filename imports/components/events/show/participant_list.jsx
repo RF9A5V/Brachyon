@@ -56,109 +56,49 @@ export default class ParticipantListPanel extends Component {
     }
   }
 
-  isEliminated(alias) {
-    return false;
-    var matchID = null;
-    var currentRound = 0;
-    if(this.props.rounds == null) {
-      return false;
-    }
-    if(this.props.rounds.length == 0 || !Events.findOne().active){
-      return false;
-    }
-    for(var i = 0; i < this.props.rounds[0].length; i ++){
-      var match = this.props.rounds[0][i];
-      if(alias == match.playerOne.alias || alias == match.alias){
-        matchID = i;
-        break;
-      }
-    }
-    if(matchID == null){
-      currentRound = 1;
-      for(var i = 0; i < this.props.rounds[1].length; i ++){
-        var match = this.props.rounds[1][i];
-        if(alias == match.playerOne || alias == match.playerTwo){
-          matchID = i;
-          break;
-        }
-      }
-    }
-    var match = this.props.rounds[currentRound][matchID];
-    while(this.props.rounds[currentRound] != null && match.winner != null){
-      if(match.winner != alias){
-        return true;
-      }
-      currentRound += 1;
-      if(currentRound == this.props.rounds.length) {
-        break;
-      }
-      matchID = Math.floor(matchID / 2);
-      match = this.props.rounds[currentRound][matchID];
-    }
-    return false;
-  }
-
   render() {
     return (
       <div>
-        <h4>Participants</h4>
-        <div className="submodule-bg">
-          {
-            (this.props.participants).map((obj, i) => {
-              var participant = null;
-              if(obj.id != null){
-                participant = Meteor.users.findOne(obj.id);
-              }
-              // var isElim = this.isEliminated(obj.alias);
-              var isElim = false;
-              return (
-                <div className="participant-panel" style={{opacity: isElim ? (0.3) : (1)}}>
-                  <div className="participant-panel-image">
-                    <div className="participant-panel-overlay">
-                      <div className="row x-center">
-                        <span style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}}>{i + 1}{this.numberDecorator(i+1)} Seed</span>
-                        <div className="col-1"></div>
-                        {
-                          isElim ? "" : (
-                            <div className="row">
-                              {
-                                this.props.isOwner ? (
-                                  <FontAwesome name="cog" style={{marginRight: 10, backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
-                                ) : (
-                                  ""
-                                )
-                              }
-                              {
-                                Meteor.userId() && (obj.id == Meteor.userId() || this.props.isOwner) ? (
-                                  <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
-                                ) : (
-                                  ""
-                                )
-                              }
-                            </div>
-                          )
-                        }
-                      </div>
+        {
+          (this.props.participants).map((obj, i) => {
+            var participant = null;
+            if(obj.id != null){
+              participant = Meteor.users.findOne(obj.id);
+            }
+            return (
+              <div className="participant-panel">
+                <div className="participant-panel-image">
+                  <div className="participant-panel-overlay">
+                    <div className="row x-center">
+                      <span style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}}>{i + 1}{this.numberDecorator(i+1)} Seed</span>
+                      <div className="col-1"></div>
+                      {
+                        Meteor.userId() && (obj.id == Meteor.userId() || this.props.isOwner) ? (
+                          <FontAwesome name="minus" onClick={this.removeParticipant(i).bind(this)}  style={{backgroundColor: "rgba(0, 0, 0, 0.7)", padding: 5}} />
+                        ) : (
+                          ""
+                        )
+                      }
                     </div>
-                    {
-                      participant != null ? (
-                        <img src={this.imgOrDefault(participant._id)} />
-                      ) : (
-                        <img src={this.imgOrDefault(null)} />
-                      )
-                    }
                   </div>
-                  <div className="participant-panel-desc">
-                    {
-                      obj.alias
-                    }
-                  </div>
-
+                  {
+                    participant != null ? (
+                      <img src={this.imgOrDefault(participant._id)} />
+                    ) : (
+                      <img src={this.imgOrDefault(null)} />
+                    )
+                  }
                 </div>
-              )
-            })
-          }
-        </div>
+                <div className="participant-panel-desc">
+                  {
+                    obj.alias
+                  }
+                </div>
+
+              </div>
+            )
+          })
+        }
       </div>
     )
   }

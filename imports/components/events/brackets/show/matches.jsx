@@ -26,44 +26,74 @@ export default class UserMatches extends Component {
     return "/images/profile.png";
   }
 
-  render() {
-    var match = null;
-    if(Meteor.userId()) {
-      match = Matches.findOne({
-        $or: [
-          {"players.0.id": Meteor.userId()},
-          {"players.1.id": Meteor.userId()}
-        ],
-        winner: null
-      });
-    }
+  unrunMatches() {
+    var bracket = Brackets.findOne();
+    var matches = [];
+    bracket.rounds.forEach((b, i) => {
+      b.forEach((r, j) => {
+        r.forEach(m => {
+          if(m) {
+            var match = Matches.findOne(m.id);
+            if(match.players[0] && match.players[1] && !match.winner) {
+              matches.push({
+                id: m.id,
+                bracket: i,
+                round: j
+              })
+            }
+          }
+        })
+      })
+    })
+    return matches;
+  }
 
+  render() {
+    var matches = this.unrunMatches();
+    var bracket = Brackets.findOne();
+    if(matches.length == 0) {
+      return (
+        <div>
+          This bracket has finished!
+        </div>
+      )
+    }
     return (
-      <div>
-        <h4 style={{marginTop: 0}}>Your Matches</h4>
-        <div className="row center submodule-bg">
-          {
-            match ? (
-              <div>
-                <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
-                  <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
-                    <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
-                    <div className="col-1 col x-center" style={{padding: 10}}>
-                      <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
-                      <h5 style={{margin: "10px 0"}}>VERSUS</h5>
-                      <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
-                    </div>
-                    <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
+      <div className="row" style={{flexWrap: "wrap"}}>
+        {
+          matches.map(m => {
+            var match = Matches.findOne(m.id);
+            console.log(match);
+            return (
+              <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
+                <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                  <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
+                  <div className="col-1 col x-center" style={{padding: 10}}>
+                    <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
+                    <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+                    <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
                   </div>
+                  <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
                 </div>
-              </div>
-            ) : (
-              <div className="row center">
-                <h5>You have no more matches for this bracket!</h5>
+                <span style={{padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
+                  switch(m.bracket) {
+                    case 0: return "Winner's Bracket";
+                    case 1: return "Loser's Bracket";
+                    default: return "Grand Finals";
+                  }
+                })()}, {(() => {
+                  var roundNum = (m.bracket == 1 && bracket.rounds[1][0].filter((ma) => { return ma != null }).length == 0 ? m.round : (m.round + 1));
+                  switch(bracket.rounds[m.bracket].length - roundNum) {
+                    case 2: return "Quarter Finals";
+                    case 1: return "Semi Finals";
+                    case 0: return "Finals";
+                    default: return "Round " + roundNum;
+                  }
+                })()}</span>
               </div>
             )
-          }
-        </div>
+          })
+        }
       </div>
     )
   }
