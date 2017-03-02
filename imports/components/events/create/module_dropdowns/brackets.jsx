@@ -18,11 +18,12 @@ export default class BracketsPanel extends Component {
   componentWillReceiveProps(next) {
     if(next.status && !this.state.brackets) {
       this.state.brackets = { 0: {} };
+      this.props.onBracketNumberChange(Object.keys(this.state.brackets));
     }
     else if(!next.status) {
       this.state.brackets = null;
+      this.props.onBracketNumberChange([]);
     }
-    this.forceUpdate();
   }
 
   value() {
@@ -52,13 +53,15 @@ export default class BracketsPanel extends Component {
     if(!this.state.brackets) {
       this.state.brackets = { }
     }
-    var bracketCount = Object.keys(this.state.brackets).length;
-    this.state.brackets[++bracketCount] = { };
+    var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));
+    this.state.brackets[++bracketIndex] = { };
     this.props.setStatus(true);
+    this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
   deleteBracket(key) {
     delete this.state.brackets[key];
+    this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
   itemDescriptions() {
