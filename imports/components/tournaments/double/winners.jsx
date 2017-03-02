@@ -146,14 +146,14 @@ export default class DoubleElimWinnersBracket extends Component {
           )
         }
         {
-          Meteor.userId() == event.owner && bracket && bracket.complete && event.league ? (
+          Meteor.userId() == event.owner && bracket && bracket.complete && event.league && !event.isComplete ? (
             <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} id={event._id} />
           ) : (
             ""
           )
         }
         {
-          Meteor.userId() == event.owner && event.league && bracket && bracket.complete ? (
+          Meteor.userId() == event.owner && event.league && bracket && bracket.complete && !event.isComplete ? (
             <button style={{marginLeft: 10}} onClick={() => { this.setState({ leagueOpen: true }) }}>Close Bracket</button>
           ) : (
             ""
