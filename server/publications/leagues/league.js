@@ -14,7 +14,7 @@ Meteor.publish("league", (slug) => {
   var bIds = instances.map(i => {
     return i.brackets[0].id;
   });
-  bIds.push((league.tiebreaker || {}).id);
+  bIds.push(league.tiebreaker);
   var brackets = Brackets.find({
     _id: {
       $in: bIds

@@ -69,6 +69,7 @@ class BracketShowScreen extends Component {
       subItems: [
         {
           content: ParticipantList,
+          name: "Participants",
           args: {
             participants: bracket.participants || []
           }
@@ -91,6 +92,7 @@ class BracketShowScreen extends Component {
         subs = [
           {
             content: WinnersBracket,
+            name: "Bracket",
             args
           }
         ];
@@ -134,6 +136,7 @@ class BracketShowScreen extends Component {
       subItems: [
         {
           content: LeaderboardAction,
+          name: "Leaderboard",
           args: {
             id: bracket.id,
             index: index
@@ -151,6 +154,7 @@ class BracketShowScreen extends Component {
       subItems: [
         {
           content: MatchList,
+          name: "Matches",
           args: {
             id: bracket.id,
             format: bracket.format.baseFormat

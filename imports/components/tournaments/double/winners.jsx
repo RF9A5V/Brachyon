@@ -11,7 +11,7 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.state = {
-      leagueOpen: event.league && bracket.complete && this.props.active
+      leagueOpen: event.league && bracket && bracket.complete && this.props.active
     };
   }
 
@@ -19,7 +19,7 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.setState({
-      leagueOpen: event.league && bracket.complete && next.active
+      leagueOpen: event.league && bracket && bracket.complete && next.active
     })
   }
 
@@ -42,7 +42,7 @@ export default class DoubleElimWinnersBracket extends Component {
             return (
               <div className="col">
                 { header[0] }
-                <div className="col finalr" id={finr} style={{justifyContent: "space-around"}} key={i}>
+                <div className="col col-1 finalr" id={finr} style={{justifyContent: "space-around"}} key={i}>
                   {
                     round.map((match, j) => {
                       if(match.id) {
@@ -53,22 +53,8 @@ export default class DoubleElimWinnersBracket extends Component {
                       }
                       if (match.players[0].alias != null && match.players[1] != null)
                       {
-                        var isFutureLoser = false;
-                        // if(i < this.props.rounds[2].length - 1){
-                        //   var nextMatch = this.props.rounds[2][i + 1][Math.floor(j / 2)];
-                        //   var rNum = i + 1;
-                        //   var mNum = Math.floor(j / 2);
-                        //   while(++rNum < this.props.rounds[2].length && nextMatch.winner != null) {
-                        //     if(nextMatch.winner != match.playerOne && nextMatch.winner != match.playerTwo) {
-                        //       isFutureLoser = true;
-                        //       break;
-                        //     }
-                        //     mNum = Math.floor(mNum / 2);
-                        //     nextMatch = this.props.rounds[2][rNum][mNum];
-                        //   }
-                        // }
                         return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
+                          <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
                         );
                       }
                     })
@@ -111,27 +97,11 @@ export default class DoubleElimWinnersBracket extends Component {
                   <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
                     {
                       round.map((match, j) => {
-                        var isFutureLoser = false;
                         if(match && match.id) {
                           match = Matches.findOne(match.id);
                         }
-                        if(match && match.id && match.players[0] != null && match.players[1] != null && i < this.props.rounds[0].length - 1){
-                          var nextMatch = this.props.rounds[0][i + 1][Math.floor(j / 2)];
-                          nextMatch = Matches.findOne(nextMatch.id);
-                          var rNum = i + 1;
-                          var mNum = Math.floor(j / 2);
-                          while(++rNum < this.props.rounds[0].length && nextMatch.winner != null) {
-                            if(nextMatch.winner.alias != match.players[0].alias && nextMatch.winner.alias != match.players[1].alias) {
-                              isFutureLoser = true;
-                              break;
-                            }
-                            mNum = Math.floor(mNum / 2);
-                            nextMatch = this.props.rounds[0][rNum][mNum];
-                            nextMatch = Matches.findOne(nextMatch.id);
-                          }
-                        }
                         return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
                         );
                       })
                     }
@@ -176,14 +146,14 @@ export default class DoubleElimWinnersBracket extends Component {
           )
         }
         {
-          event.league ? (
+          Meteor.userId() == event.owner && bracket && bracket.complete && event.league ? (
             <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} id={event._id} />
           ) : (
             ""
           )
         }
         {
-          event.league && bracket.complete ? (
+          Meteor.userId() == event.owner && event.league && bracket && bracket.complete ? (
             <button style={{marginLeft: 10}} onClick={() => { this.setState({ leagueOpen: true }) }}>Close Bracket</button>
           ) : (
             ""

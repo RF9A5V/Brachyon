@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { createContainer } from "meteor/react-meteor-data";
 
 import SlideMain from "/imports/components/events/preview/slides/slide_main.jsx";
 
@@ -14,20 +15,7 @@ import StreamSlide from "./show/stream.jsx";
 
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
 
-export default class LeagueShowPage extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      league: Meteor.subscribe("league", props.params.slug, {
-        onReady: () => {
-          this.setState({ ready: true });
-          this.populateMetaTags();
-        }
-      }),
-      ready: false
-    }
-  }
+class LeagueShowPage extends Component {
 
   imgOrDefault() {
     var league = Leagues.findOne();
@@ -63,7 +51,6 @@ export default class LeagueShowPage extends Component {
   }
 
   componentWillUnmount() {
-    this.state.league.stop();
     resetMetaTags();
   }
 
@@ -122,7 +109,7 @@ export default class LeagueShowPage extends Component {
   }
 
   render() {
-    if(!this.state.ready) {
+    if(!this.props.ready) {
       return (
         <div>
         </div>
@@ -135,3 +122,11 @@ export default class LeagueShowPage extends Component {
     )
   }
 }
+
+export default createContainer(props => {
+  const slug = props.params.slug;
+  const leagueHandle = Meteor.subscribe("league", slug);
+  return {
+    ready: leagueHandle.ready()
+  }
+}, LeagueShowPage)

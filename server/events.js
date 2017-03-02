@@ -944,8 +944,8 @@ Meteor.methods({
     if (roundNumber > 0)
       prevround = bracket.rounds[roundNumber-1];
     bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].p1score = winfirst;
-    bracket.matches[matchNumber].p2score = winsecond;
+    bracket.matches[matchNumber].scoreOne = winfirst;
+    bracket.matches[matchNumber].scoreTwo = winsecond;
     bracket.matches[matchNumber].ties = ties;
     var prevmatch1, prevmatch2;
     if (roundNumber < 1)
@@ -993,8 +993,8 @@ Meteor.methods({
           playerOne: participants[x],
           playerTwo: participants[participants.length - x - 1],
           played: false,
-          p1score: 0,
-          p2score: 0,
+          scoreOne: 0,
+          scoreTwo: 0,
           ties: 0
         };
         temp.push(matchObj);
@@ -1080,13 +1080,17 @@ Meteor.methods({
       var league = Leagues.findOne(eventID);
       if (league)
       {
-        var bracket = Brackets.findOne(league.tiebreaker.id);
+        var bracket = Brackets.findOne(league.tiebreaker);
         var numPlayers = bracket.rounds[0].players.length;
         var ldrboard = {};
         bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
           return (b.score - a.score);
         }).map((obj, i) => {
+          console.log(obj);
           var user = Meteor.users.findOne({ username: obj.name });
+          if(!user) {
+            return;
+          }
           ldrboard[user._id] = {
             score: numPlayers - i,
             bonus: 0

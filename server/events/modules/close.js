@@ -15,61 +15,6 @@ Meteor.methods({
     if(hasBracketsOutstanding) {
       throw new Meteor.Error(403, "Cannot close event with brackets outstanding!");
     }
-    if(event.league) {
-      var league = Leagues.findOne(event.league);
-      var eventIndex = league.events.indexOf(event.slug);
-      if(eventIndex == league.events.length - 1) {
-
-        var placements = {};
-        league.leaderboard.forEach(board => {
-          Object.keys(board).forEach(k => {
-            var entry = board[k];
-            if(!placements[k]) {
-              placements[k] = entry.score + entry.bonus;
-            }
-            else {
-              placements[k] += entry.score + entry.bonus;
-            }
-          })
-        });
-        var scores = {};
-        Object.keys(placements).forEach(k => {
-          if(!scores[placements[k]]) {
-            scores[placements[k]] = [k];
-          }
-          else {
-            scores[placements[k]].push(k);
-          }
-        })
-        var ldr = Object.keys(scores).sort((a, b) => {
-          return b - a;
-        });
-        if(scores[ldr[0]].length > 1) {
-          var usrs = Meteor.users.find({ _id: { $in: scores[ldr[0]] } });
-          var rounds = OrganizeSuite.roundRobin(usrs.map(function(participant) {
-            return participant.username;
-          }));
-          var br = Brackets.insert({
-            rounds: rounds
-          });
-          Leagues.update(event.league, {
-            $set: {
-              "tiebreaker": {
-                format: "round_robin",
-                id: br
-              }
-            }
-          })
-        }
-        else {
-          Leagues.update(event.league, {
-            $set: {
-              complete: true
-            }
-          });
-        }
-      }
-    }
     Events.update(id, {
       $set: {
         isComplete: true,
