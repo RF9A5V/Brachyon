@@ -8,7 +8,6 @@ export default class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props.rounds);
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.state = {

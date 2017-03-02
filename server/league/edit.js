@@ -2,6 +2,8 @@ import Leagues from "/imports/api/leagues/league.js";
 import Instances from "/imports/api/event/instance.js"
 import { flatten } from "flat";
 
+import OrganizeSuite from "/imports/decorators/organize.js";
+
 Meteor.methods({
   "leagues.edit"(id, attrs) {
     var league = Leagues.findOne(id);
@@ -78,5 +80,42 @@ Meteor.methods({
         Events.remove(event._id);
       }
     }
+  },
+  "leagues.generateTiebreaker"(id) {
+    var league = Leagues.findOne(id);
+    var global = {};
+    league.leaderboard.forEach(l => {
+      Object.keys(l).forEach(id => {
+        if(!global[id]) {
+          global[id] = l[id].score + l[id].bonus;
+        }
+        else {
+          global[id] += l[id].score + l[id].bonus;
+        }
+      })
+    });
+    var playersByScore = {};
+    Object.keys(global).forEach(pid => {
+      if(playersByScore[global[pid]]) {
+        playersByScore[global[pid]].push(pid);
+      }
+      else {
+        playersByScore[global[pid]] = [pid];
+      }
+    })
+    var max = Math.max.apply(null, Object.keys(playersByScore).map(score => { return parseInt(score) }));
+    var playersAtMax = playersByScore[max];
+
+    var rounds = OrganizeSuite.roundRobin(playersAtMax.map(p => {return Meteor.users.findOne(p).username}));
+
+    const bracket = Brackets.insert({
+      rounds
+    });
+
+    Leagues.update(league._id, {
+      $set: {
+        "tiebreaker": bracket
+      }
+    })
   }
 })
