@@ -11,7 +11,6 @@ import ParticipantAction from "./admin_comps/participants.jsx";
 import AdvancedAction from "./admin_comps/advanced_action.jsx";
 import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
-import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
 
 import Restart from "./admin_comps/restart.jsx";
