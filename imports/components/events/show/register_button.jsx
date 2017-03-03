@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
-import OnsiteModal from "./onsite_modal.jsx";
-import OnlineModal from "./online_modal.jsx";
+import TicketTypeModal from "./ticket_type_modal.jsx";
 import PaymentModal from "/imports/components/public/payment_form.jsx";
 
 export default class RegisterButton extends Component {
@@ -9,8 +8,7 @@ export default class RegisterButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      onsiteOpen: false,
-      onlineOpen: false,
+      typeOpen: false,
       paymentOpen: false
     }
   }
@@ -23,8 +21,7 @@ export default class RegisterButton extends Component {
       else {
         toastr.success("Successfully registered for bracket!");
         this.setState({
-          onsiteOpen: false,
-          onlineOpen: false,
+          typeOpen: false,
           paymentOpen: false
         })
       }
@@ -34,16 +31,9 @@ export default class RegisterButton extends Component {
   register() {
     var instance = Instances.findOne();
     if(instance.tickets) {
-      if(instance.tickets.paymentType == "onsite") {
-        this.setState({
-          onsiteOpen: true
-        })
-      }
-      else if(instance.tickets.paymentType == "online") {
-        this.setState({
-          onlineOpen: true
-        })
-      }
+      this.setState({
+        typeOpen: true
+      })
     }
     else {
       this.registerCB();
@@ -147,10 +137,9 @@ export default class RegisterButton extends Component {
         {
           instance.tickets ? (
             [
-              <OnsiteModal open={this.state.onsiteOpen} onClose={() => { this.setState({onsiteOpen: false}) }} index={this.props.metaIndex} onAccept={this.registerCB.bind(this)} />,
-              <OnlineModal open={this.state.onlineOpen} onClose={() => { this.setState({ onlineOpen: false }) }} index={this.props.metaIndex} onAccept={() => {
+              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={this.registerCB.bind(this)} onAcceptOnline={() => {
                 this.setState({
-                  onlineOpen: false,
+                  typeOpen: false,
                   paymentOpen: true
                 })
               }} />,
