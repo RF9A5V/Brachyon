@@ -42,6 +42,7 @@ export default class EventCreate extends Component {
       }
     }
     delete obj.details.image;
+
     Meteor.call("events.create", obj, (err, event) => {
       if(err) {
         toastr.error(err.reason, "Error!");

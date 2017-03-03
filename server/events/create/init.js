@@ -76,8 +76,12 @@ Meteor.methods({
     delete obj.paymentType;
     Object.keys(obj).forEach(k => {
       ticketObj[k] = {
-        price: obj[k],
-        payments: {}
+        price: obj[k].price,
+        payments: {},
+        discounts: (obj[k].discounts || []).map(d => {
+          d.qualifiers = {};
+          return d;
+        })
       }
     });
     return ticketObj;
