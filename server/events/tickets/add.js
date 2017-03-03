@@ -10,5 +10,19 @@ Meteor.methods({
         }
       }
     })
+  },
+  "tickets.addOnline"(userId, instanceId, index, token) {
+    Instances.update(instanceId, {
+      $set: {
+        [`tickets.venue.payments.${userId}`]: {
+          method: "online",
+          token
+        },
+        [`tickets.${index}.payments.${userId}`]: {
+          method: "online",
+          token
+        }
+      }
+    })
   }
 });
