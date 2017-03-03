@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import OnsiteModal from "./onsite_modal.jsx";
+import OnlineModal from "./online_modal.jsx";
+import PaymentModal from "/imports/components/public/payment_form.jsx";
 
 export default class RegisterButton extends Component {
 
@@ -22,7 +24,7 @@ export default class RegisterButton extends Component {
         toastr.success("Successfully registered for bracket!");
         this.setState({
           onsiteOpen: false,
-          onlineOpne: false,
+          onlineOpen: false,
           paymentOpen: false
         })
       }
@@ -35,6 +37,11 @@ export default class RegisterButton extends Component {
       if(instance.tickets.paymentType == "onsite") {
         this.setState({
           onsiteOpen: true
+        })
+      }
+      else if(instance.tickets.paymentType == "online") {
+        this.setState({
+          onlineOpen: true
         })
       }
     }
@@ -70,7 +77,53 @@ export default class RegisterButton extends Component {
     else {
       this.unregisterCB();
     }
+  }
 
+  paymentItems() {
+    var instance = Instances.findOne();
+    return [
+      {
+        name: "Venue Fee",
+        price: instance.tickets.venue.price
+      },
+      {
+        name: "Entry to Bracket " + this.props.metaIndex,
+        price: instance.tickets[this.props.metaIndex].price
+      }
+    ]
+  }
+
+  processPayment(value, amount, cb) {
+
+    const setPayable = (token) => {
+      Meteor.call("tickets.addOnline", Meteor.userId(), Instances.findOne()._id, this.props.metaIndex, token, (err) => {
+        if(err) {
+          return toastr.error(err.reason);
+        }
+        else {
+          this.registerCB();
+        }
+      })
+    }
+
+    if(!value.id) {
+      Meteor.call("users.addStripeSource", Meteor.userId(), value, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            paymentOpen: false
+          });
+          setPayable(data);
+        }
+        cb();
+      })
+    }
+    else {
+      setPayable(value.id);
+      cb();
+    }
   }
 
   render() {
@@ -94,7 +147,14 @@ export default class RegisterButton extends Component {
         {
           instance.tickets ? (
             [
-              <OnsiteModal open={this.state.onsiteOpen} onClose={() => { this.setState({onsiteOpen: false}) }} index={this.props.metaIndex} onAccept={this.registerCB.bind(this)} />
+              <OnsiteModal open={this.state.onsiteOpen} onClose={() => { this.setState({onsiteOpen: false}) }} index={this.props.metaIndex} onAccept={this.registerCB.bind(this)} />,
+              <OnlineModal open={this.state.onlineOpen} onClose={() => { this.setState({ onlineOpen: false }) }} index={this.props.metaIndex} onAccept={() => {
+                this.setState({
+                  onlineOpen: false,
+                  paymentOpen: true
+                })
+              }} />,
+              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} />
             ]
           ) : (
             ""
