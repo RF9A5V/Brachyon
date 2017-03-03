@@ -100,7 +100,7 @@ export default class CreateContainer extends Component {
                   width: 175,
                   cursor: "pointer"
                 }}>
-                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? "#00BDFF" : "white"}} size="2x" />
+                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white"}} size="2x" />
                   <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {

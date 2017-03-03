@@ -137,7 +137,16 @@ export default class RegisterButton extends Component {
         {
           instance.tickets ? (
             [
-              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={this.registerCB.bind(this)} onAcceptOnline={() => {
+              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={() => {
+                Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, this.props.metaIndex, (err) => {
+                  if(err) {
+                    return toastr.error(err.reason);
+                  }
+                  else {
+                    this.registerCB();
+                  }
+                })
+              }} onAcceptOnline={() => {
                 this.setState({
                   typeOpen: false,
                   paymentOpen: true
