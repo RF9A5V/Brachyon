@@ -8,7 +8,7 @@ export default class ParticipantAddField extends Component {
     super(props);
     this.state = {
       query: "",
-      showUsers: true,
+      showUsers: false,
       users: null,
       subs: []
     };
@@ -155,7 +155,7 @@ export default class ParticipantAddField extends Component {
         <div className="row" style={{marginBottom: 10}}>
           <input className="col-1" ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} />
         </div>
-        <div style={{backgroundColor: "#111", minHeight: 300, maxHeight: 500, overflowY: "auto", width: "100%", marginBottom: 10}}>
+        <div style={{backgroundColor: "#111", height: 300, overflowY: "auto", width: "100%", marginBottom: 10}}>
           {
             this.state.query.length >= 3 ? (
               <div className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>

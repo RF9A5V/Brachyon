@@ -126,14 +126,20 @@ export default class AddPartipantAction extends Component {
                     }
                   </div>
                   <div className="col-1" style={{textAlign: "right"}}>
-                    <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => { this.setState({ optionsOpen: true }) }} />
+                    <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
                   </div>
                 </div>
               )
             })
           }
         </div>
-        <TicketDiscountModal open={this.state.discountOpen} onClose={() => { this.setState({ discountOpen: false }) }} participant={this.state.participant} index={this.props.index} onCheckIn={this.onUserCheckIn.bind(this)} />
+        {
+          instance.tickets ? (
+            <TicketDiscountModal open={this.state.discountOpen} onClose={() => { this.setState({ discountOpen: false }) }} participant={this.state.participant} index={this.props.index} onCheckIn={this.onUserCheckIn.bind(this)} />
+          ) : (
+            ""
+          )
+        }
         <OptionsModal open={this.state.optionsOpen} onClose={() => { this.setState({ optionsOpen: false }) }} participant={this.state.participant} index={this.props.index} />
       </div>
     )
