@@ -14,6 +14,9 @@ Meteor.methods({
     if(regCount == 1) {
       unsetObj[`tickets.venue.payments.${userId}`] = 1
     }
+    instance.tickets[index].discounts.forEach((d, i) => {
+      unsetObj[`tickets.${index}.discounts.${i}.qualifiers.${userId}`] = 1;
+    })
     Instances.update(instanceId, {
       $unset: unsetObj
     });

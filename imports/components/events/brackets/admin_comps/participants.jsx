@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
 import ParticipantAddField from "../participant_add_field.jsx";
+import TicketDiscountModal from "../ticket_discount_modal.jsx";
+import OptionsModal from "./options.jsx";
 
 import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
@@ -22,7 +24,9 @@ export default class AddPartipantAction extends Component {
       participants,
       iid,
       started,
-      index: this.props.index
+      index: this.props.index,
+      discountOpen: false,
+      optionsOpen: false
     }
   }
 
@@ -42,8 +46,20 @@ export default class AddPartipantAction extends Component {
     })
   }
 
+  onUserCheckIn(participant) {
+    Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully checked in user!");
+      }
+    })
+  }
+
   render() {
-    var participants = Instances.findOne().brackets[this.props.index].participants;
+    const instance = Instances.findOne();
+    const participants = instance.brackets[this.props.index].participants;
     return (
       <div className="row">
         {
@@ -51,7 +67,12 @@ export default class AddPartipantAction extends Component {
             ""
           ) : (
             <div className="col col-1" style={{marginRight: 20}}>
-              <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={this.props.onStart} />
+              <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={this.props.onStart} onParticipantAdd={(p) => {
+                this.setState({
+                  participant: p,
+                  discountOpen: true
+                })
+              }} />
 
             </div>
           )
@@ -89,16 +110,31 @@ export default class AddPartipantAction extends Component {
                     <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
                   </div>
                   <div>
-                    <button>Check In</button>
+                    {
+                      participant.checkedIn ? (
+                        <span>Checked In</span>
+                      ) : (
+                        <button onClick={() => {
+                          if(instance.tickets) {
+                            this.setState({ discountOpen: true, participant })
+                          }
+                          else {
+                            this.onUserCheckIn(participant);
+                          }
+                        }}>Check In</button>
+                      )
+                    }
                   </div>
                   <div className="col-1" style={{textAlign: "right"}}>
-                    <FontAwesome name="cog" size="2x" />
+                    <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => { this.setState({ optionsOpen: true }) }} />
                   </div>
                 </div>
               )
             })
           }
         </div>
+        <TicketDiscountModal open={this.state.discountOpen} onClose={() => { this.setState({ discountOpen: false }) }} participant={this.state.participant} index={this.props.index} onCheckIn={this.onUserCheckIn.bind(this)} />
+        <OptionsModal open={this.state.optionsOpen} onClose={() => { this.setState({ optionsOpen: false }) }} participant={this.state.participant} index={this.props.index} />
       </div>
     )
   }

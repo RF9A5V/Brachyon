@@ -115,7 +115,7 @@ export default class ParticipantAddField extends Component {
   addParticipant(alias, id) {
 
     const cb = () => {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.index, id, alias, (e) => {
+      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.index, id, alias, true, (e) => {
         if(e) {
           toastr.error(e.reason);
         }
@@ -126,6 +126,12 @@ export default class ParticipantAddField extends Component {
             showUsers: false
           });
           this.refs.userValue.value = "";
+          if(id) {
+            this.props.onParticipantAdd({
+              id,
+              alias
+            })
+          }
         }
       })
     }

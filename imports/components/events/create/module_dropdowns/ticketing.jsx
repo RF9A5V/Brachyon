@@ -140,19 +140,13 @@ export default class TicketingPanel extends Component {
               <input type="radio" name="type" checked={this.state.paymentType == "onsite"} onClick={() => { this.setState({
                 paymentType: "onsite"
               })}} />
-              <span>On Site Only</span>
-            </div>
-            <div className="row">
-              <input name="type" type="radio" checked={this.state.paymentType == "online"} onClick={() => { this.setState({
-                paymentType: "online"
-              })}} />
-              <span>Online Only</span>
+              <span>Cash Only</span>
             </div>
             <div className="row">
               <input name="type" type="radio" checked={this.state.paymentType == "both"} onClick={() => { this.setState({
                 paymentType: "both"
               })}} />
-              <span>Both</span>
+              <span>Cash And Credit</span>
             </div>
           </form>
         </div>
