@@ -34,18 +34,6 @@ export default class AddPartipantAction extends Component {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
-  onUserDelete(alias, index) {
-    var eventId = Instances.findOne()._id;
-    Meteor.call("events.brackets.removeParticipant", eventId, this.props.index, alias, (err) => {
-      if(err){
-        return toastr.error(err.reason, "Error!");
-      }
-      this.state.participants.splice(index, 1);
-      this.forceUpdate();
-      return toastr.success("Successfully removed participant from event!", "Success!");
-    })
-  }
-
   onUserCheckIn(participant) {
     Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
       if(err) {

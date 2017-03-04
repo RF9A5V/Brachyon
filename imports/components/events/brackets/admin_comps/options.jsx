@@ -65,10 +65,35 @@ export default class OptionsModal extends Component {
     )
   }
 
+  removeTab() {
+    const onRemove = () => {
+      Meteor.call("events.brackets.removeParticipant", Instances.findOne()._id, this.props.index, this.props.participant.alias, (err) => {
+        if(err){
+          return toastr.error(err.reason, "Error!");
+        }
+        this.props.onClose();
+        return toastr.success("Successfully removed participant from event!", "Success!");
+      })
+    }
+
+    return (
+      <div className="col">
+        <span>Warning: Tom write a warning for this.</span>
+        <div className="row center">
+          <button onClick={onRemove}>
+            Remove Participant
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   activeTab() {
     switch(this.state.tab) {
       case 0:
         return this.aliasTab()
+      case 1:
+        return this.removeTab()
       default:
         return null
     }
