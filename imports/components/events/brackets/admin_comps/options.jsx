@@ -6,7 +6,7 @@ export default class OptionsModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tab: 0
+      tab: "Alias"
     }
   }
 
@@ -16,16 +16,16 @@ export default class OptionsModal extends Component {
       "Alias",
       "Remove"
     ];
-    if(instance.tickets) {
+    if(instance.tickets && this.props.participant.id) {
       tabs.push("Discounts");
     }
 
     return (
       <div className="row">
         {
-          tabs.map((t, i) => {
+          tabs.map((t) => {
             return (
-              <div style={{padding: 5, borderBottom: this.state.tab == i ? "solid 2px #FF6000" : "solid 2px transparent", cursor: "pointer"}} onClick={() => { this.setState({ tab: i }) }}>
+              <div style={{padding: 5, borderBottom: this.state.tab == t ? "solid 2px #FF6000" : "solid 2px transparent", cursor: "pointer"}} onClick={() => { this.setState({ tab: t }) }}>
                 { t }
               </div>
             )
@@ -66,14 +66,33 @@ export default class OptionsModal extends Component {
   }
 
   removeTab() {
+
+    const instance = Instances.findOne();
+
     const onRemove = () => {
-      Meteor.call("events.brackets.removeParticipant", Instances.findOne()._id, this.props.index, this.props.participant.alias, (err) => {
-        if(err){
-          return toastr.error(err.reason, "Error!");
-        }
-        this.props.onClose();
-        return toastr.success("Successfully removed participant from event!", "Success!");
-      })
+      const cb = () => {
+        Meteor.call("events.brackets.removeParticipant", instance._id, this.props.index, this.props.participant.alias, (err) => {
+          if(err){
+            return toastr.error(err.reason, "Error!");
+          }
+          this.props.onClose();
+          return toastr.success("Successfully removed participant from event!", "Success!");
+        })
+      }
+
+      if(instance.tickets && this.props.participant.id) {
+        Meteor.call("tickets.removePayment", instance._id, this.props.index, this.props.participant.id, (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            cb();
+          }
+        });
+      }
+      else {
+        cb();
+      }
     }
 
     return (
@@ -88,12 +107,64 @@ export default class OptionsModal extends Component {
     )
   }
 
+  discountTab() {
+    const instance = Instances.findOne();
+    const discounts = instance.tickets[this.props.index].discounts;
+
+    const toggleDiscount = (d, i) => {
+      if(d.qualifiers[this.props.participant.id]) {
+        Meteor.call("tickets.deactivateDiscount", instance._id, this.props.index, i, this.props.participant.id, (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+        })
+      }
+      else {
+        Meteor.call("tickets.activateDiscount", instance._id, this.props.index, i, this.props.participant.id, (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+        })
+      }
+    }
+
+    return (
+      <div className="col">
+        {
+          discounts.map((d, i) => {
+            return (
+              <div className="row center x-center">
+                <div className="col-1">
+                  <span>{ d.name }</span>
+                </div>
+                <div className="col-1">
+                  <button onClick={() => { toggleDiscount(d, i) }}>
+                    {
+                      d.qualifiers[this.props.participant.id] ? (
+                        "Apply Discount"
+                      ) : (
+                        "Remove Discount"
+                      )
+                    }
+                  </button>
+                </div>
+              </div>
+            )
+          })
+        }
+
+      </div>
+    )
+  }
+
   activeTab() {
     switch(this.state.tab) {
-      case 0:
+      case "Alias":
         return this.aliasTab()
-      case 1:
+      case "Remove":
         return this.removeTab()
+      case "Discounts":
+        return this.discountTab()
       default:
         return null
     }
