@@ -137,7 +137,7 @@ export default class RegisterButton extends Component {
         {
           instance.tickets ? (
             [
-              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={() => {
+              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={(discounts) => {
                 Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, this.props.metaIndex, (err) => {
                   if(err) {
                     return toastr.error(err.reason);
@@ -146,13 +146,16 @@ export default class RegisterButton extends Component {
                     this.registerCB();
                   }
                 })
-              }} onAcceptOnline={() => {
+              }} onAcceptOnline={(discounts) => {
                 this.setState({
                   typeOpen: false,
-                  paymentOpen: true
+                  paymentOpen: true,
+                  discounts
                 })
               }} />,
-              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} />
+              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} discounts={(this.state.discounts || []).map(d => {
+                return instance.tickets[this.props.metaIndex].discounts[d];
+              })} />
             ]
           ) : (
             ""

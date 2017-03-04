@@ -79,7 +79,8 @@ Meteor.methods({
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userID,
-          alias: alias
+          alias: alias,
+          checkedIn: true
         }
       }
     });
@@ -125,6 +126,19 @@ Meteor.methods({
         }
       }
     })
+  },
+
+  "events.checkInUser"(eventId, bracketIndex, alias) {
+    const event = Events.findOne(eventId);
+    const instance = Instances.findOne(event.instances.pop());
+    const userIndex = instance.brackets[bracketIndex].participants.findIndex(i => {
+      return i.alias == alias;
+    })
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${bracketIndex}.participants.${userIndex}.checkedIn`]: true
+      }
+    });
   },
 
   "events.registerUser"(eventID, bracketIndex) {
@@ -184,7 +198,8 @@ Meteor.methods({
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
           id: user._id,
-          alias
+          alias,
+          checkedIn: false
         }
       }
     })
