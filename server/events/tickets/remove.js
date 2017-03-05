@@ -12,7 +12,8 @@ Meteor.methods({
       [`tickets.${index}.payments.${userId}`]: 1
     };
     if(regCount == 1) {
-      unsetObj[`tickets.venue.payments.${userId}`] = 1
+      unsetObj[`tickets.venue.payments.${userId}`] = 1;
+      unsetObj[`tickets.payables.${userId}`] = 1;
     }
     instance.tickets[index].discounts.forEach((d, i) => {
       unsetObj[`tickets.${index}.discounts.${i}.qualifiers.${userId}`] = 1;

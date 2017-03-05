@@ -127,9 +127,16 @@ export default class ParticipantAddField extends Component {
           });
           this.refs.userValue.value = "";
           if(id) {
-            this.props.onParticipantAdd({
-              id,
-              alias
+            Meteor.call("tickets.addOnsite", id, Instances.findOne()._id, this.props.index, (err) => {
+              if(err) {
+                return toastr.error(err.reason);
+              }
+              else {
+                this.props.onParticipantAdd({
+                  id,
+                  alias
+                })
+              }
             })
           }
         }
@@ -150,7 +157,7 @@ export default class ParticipantAddField extends Component {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="row center">
-          <label>Add A Participant</label>
+          <label style={{margin: 0}}>Add A Participant</label>
         </div>
         <div className="row" style={{marginBottom: 10}}>
           <input className="col-1" ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} />
@@ -188,7 +195,7 @@ export default class ParticipantAddField extends Component {
           <div className = { ((this.props.bracket.id != null)) ?
             ("start-button-hide") :
             (this.props.bracket.participants.length < 3 ? ("start-button-hide"):("")) }>
-            <StartBracketAction index={this.props.index} onStart={this.props.onStart} />
+            <button onClick={this.props.onStart}>Start Bracket</button>
           </div>
         </div>
       </div>

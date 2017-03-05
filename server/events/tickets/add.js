@@ -2,10 +2,9 @@ Meteor.methods({
   "tickets.addOnsite"(userId, instanceId, index) {
 
     const updateObj = {
-      [`tickets.venue.payments.${userId}`]: {
-        method: "onsite"
-      },
-      [`tickets.${index}.payments.${userId}`]: {
+      [`tickets.venue.payments.${userId}`]: false,
+      [`tickets.${index}.payments.${userId}`]: false,
+      [`tickets.payables.${userId}`]: {
         method: "onsite"
       }
     }
@@ -17,11 +16,9 @@ Meteor.methods({
   "tickets.addOnline"(userId, instanceId, index, token) {
 
     const updateObj = {
-      [`tickets.venue.payments.${userId}`]: {
-        method: "online",
-        token
-      },
-      [`tickets.${index}.payments.${userId}`]: {
+      [`tickets.venue.payments.${userId}`]: false,
+      [`tickets.${index}.payments.${userId}`]: false,
+      [`tickets.payables.${userId}`]: {
         method: "online",
         token
       }
