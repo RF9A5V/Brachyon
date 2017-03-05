@@ -27,5 +27,15 @@ Meteor.methods({
     Instances.update(instanceId, {
       $set: updateObj
     })
+  },
+  "tickets.switchToOnsite"(userId, instanceId, index) {
+    const updateObj = {
+      [`tickets.payables.${userId}`]: {
+        method: "onsite"
+      }
+    }
+    Instances.update(instanceId, {
+      $set: updateObj
+    })
   }
 });

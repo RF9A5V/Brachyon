@@ -9,15 +9,15 @@ export default class StartModal extends Component {
       if(e) {
         return toastr.error(e.reason);
       }
+      this.props.onStart();
+      this.props.onClose();
       toastr.success("Successfully started bracket!");
     })
   }
 
   render() {
     const participants = Instances.findOne().brackets[this.props.index].participants || [];
-
     const nonChecked = participants.filter(p => { return !p.checkedIn });
-
     return (
       <Modal isOpen={this.props.open} onRequestClose={this.props.onClose}>
         {

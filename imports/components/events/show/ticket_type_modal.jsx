@@ -7,7 +7,8 @@ export default class OnlineModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      appliedDiscounts: {}
+      appliedDiscounts: {},
+      failedState: false
     }
   }
 
