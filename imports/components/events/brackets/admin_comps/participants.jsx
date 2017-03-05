@@ -4,6 +4,7 @@ import FontAwesome from "react-fontawesome";
 import ParticipantAddField from "../participant_add_field.jsx";
 import TicketDiscountModal from "../ticket_discount_modal.jsx";
 import OptionsModal from "./options.jsx";
+import StartModal from "./start_modal.jsx";
 
 import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
@@ -26,7 +27,8 @@ export default class AddPartipantAction extends Component {
       started,
       index: this.props.index,
       discountOpen: false,
-      optionsOpen: false
+      optionsOpen: false,
+      startOpen: false
     }
   }
 
@@ -35,14 +37,29 @@ export default class AddPartipantAction extends Component {
   }
 
   onUserCheckIn(participant) {
-    Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
-      if(err) {
-        toastr.error(err.reason);
-      }
-      else {
-        toastr.success("Successfully checked in user!");
-      }
-    })
+    const cb = () => {
+      Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          toastr.success("Successfully checked in user!");
+        }
+      })
+    }
+    if(participant.id) {
+      Meteor.call("tickets.charge", Instances.findOne()._id, this.props.index, participant.id, (err) => {
+        if(err) {
+          return toastr.error(err.reason);
+        }
+        else {
+          cb()
+        }
+      })
+    }
+    else {
+      cb();
+    }
   }
 
   render() {
@@ -55,10 +72,14 @@ export default class AddPartipantAction extends Component {
             ""
           ) : (
             <div className="col col-1" style={{marginRight: 20}}>
-              <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={this.props.onStart} onParticipantAdd={(p) => {
+              <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
                   discountOpen: true
+                })
+              }} onBracketStart={() => {
+                this.setState({
+                  startOpen: true
                 })
               }} />
 
@@ -68,22 +89,7 @@ export default class AddPartipantAction extends Component {
         <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
           {
             participants.map((participant, index) => {
-              var user = Meteor.users.findOne(participant.id);
-
-              // <div className="col-1">
-              // {
-              //   this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
-              // }
-              // </div>
-              // <div className="col-1">
-              //   { participant.alias }
-              // </div>
-              // <div className="col-1">
-              //   { user ? user.username : "" }
-              // </div>
-              // <div className="col-1 row" style={{justifyContent: "flex-end"}}>
-              //   <FontAwesome name="times" size="2x" onClick={() => { this.onUserDelete(participant.alias, index) }} />
-              // </div>
+              const user = Meteor.users.findOne(participant.id);
 
               return (
                 <div className="participant-row row x-center" key={index}>
@@ -129,6 +135,7 @@ export default class AddPartipantAction extends Component {
           )
         }
         <OptionsModal open={this.state.optionsOpen} onClose={() => { this.setState({ optionsOpen: false }) }} participant={this.state.participant} index={this.props.index} />
+        <StartModal open={this.state.startOpen} onClose={() => { this.setState({ startOpen: false }) }} index={this.props.index} />
       </div>
     )
   }
