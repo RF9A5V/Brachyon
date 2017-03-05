@@ -36,7 +36,7 @@ export default class AddPartipantAction extends Component {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
-  onUserCheckIn(participant) {
+  onUserCheckIn(participant, onCheckedIn) {
     const cb = () => {
       Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
         if(err) {
@@ -44,12 +44,14 @@ export default class AddPartipantAction extends Component {
         }
         else {
           toastr.success("Successfully checked in user!");
+          onCheckedIn(true);
         }
       })
     }
     if(participant.id) {
       Meteor.call("tickets.charge", Instances.findOne()._id, this.props.index, participant.id, (err) => {
         if(err) {
+          onCheckedIn(false);
           return toastr.error(err.reason);
         }
         else {
@@ -135,7 +137,7 @@ export default class AddPartipantAction extends Component {
           )
         }
         <OptionsModal open={this.state.optionsOpen} onClose={() => { this.setState({ optionsOpen: false }) }} participant={this.state.participant} index={this.props.index} />
-        <StartModal open={this.state.startOpen} onClose={() => { this.setState({ startOpen: false }) }} index={this.props.index} />
+        <StartModal open={this.state.startOpen} onClose={() => { this.setState({ startOpen: false }) }} index={this.props.index} onStart={this.props.onStart} />
       </div>
     )
   }
