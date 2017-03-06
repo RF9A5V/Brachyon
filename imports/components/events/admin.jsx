@@ -25,6 +25,9 @@ import BracketInfo from "./modules/bracket/details.jsx";
 import StreamAdd from "./modules/stream/add.jsx";
 import StreamDetails from "./modules/stream/details.jsx";
 
+// Ticket Stuff
+import TicketDetails from "./modules/tickets/details.jsx";
+
 import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js"
@@ -225,6 +228,32 @@ class EventAdminPage extends Component {
     }
   }
 
+  ticketItems() {
+    var subs = [];
+    const tickets = Instances.findOne().tickets;
+    Object.keys(tickets).forEach(k => {
+      if(k == "payables" || k == "paymentType") {
+        return;
+      }
+      const title = isNaN(k) ? "Venue" : `Bracket ${parseInt(k) + 1}`;
+      subs.push({
+        content: TicketDetails,
+        name: title,
+        key: k,
+        args: {
+          ticket: tickets[k]
+        }
+      });
+    });
+    return {
+      name: "Tickets",
+      icon: "ticket",
+      key: "tickets",
+      subItems: subs,
+      toggle: false
+    }
+  }
+
   items() {
     var event = Events.findOne();
     var instance = Instances.findOne();
@@ -232,6 +261,7 @@ class EventAdminPage extends Component {
     items.push(this.detailItems());
     items.push(this.bracketItems());
     items.push(this.streamItems());
+    items.push(this.ticketItems());
     return items;
   }
 
@@ -322,6 +352,7 @@ class EventAdminPage extends Component {
 
 export default withRouter(createContainer(props => {
   const eventHandle = Meteor.subscribe("event", props.params.slug);
+  const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
   return {
     ready: eventHandle.ready()
   }
