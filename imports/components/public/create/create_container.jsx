@@ -138,7 +138,7 @@ export default class CreateContainer extends Component {
           {
             (this.props.actions || []).map((a, i) => {
               return (
-                <div className="create-container-option" onClick={a.action}>
+                <div className="create-container-option col-1" onClick={a.action}>
                   { a.name }
                 </div>
               )
