@@ -7,79 +7,114 @@ export default class OnlineModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      appliedDiscounts: {},
-      failedState: false
+      appliedTickets: {
+        venue: {}
+      }
     }
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      appliedTickets: {
+        venue: {}
+      }
+    })
   }
 
   render() {
     const instance = Instances.findOne();
     const ticketObj = instance.tickets;
-    const venuePrice = (ticketObj.venue.price / 100);
-    const entryTick = ticketObj[this.props.index];
-    const entryPrice = (entryTick.price / 100);
 
     const isOnsite = ticketObj.paymentType == "onsite" || ticketObj.paymentType == "both";
     const isOnline = ticketObj.paymentType == "online" || ticketObj.paymentType == "both";
 
-    const totalDiscounts = Object.keys(this.state.appliedDiscounts).map(i => {
-      return entryTick.discounts[i].price
-    }).reduce((a, b) => { return a + b }, 0) / 100;
+    const currentTotal = Object.keys(this.state.appliedTickets).reduce((a, b) => {
+      const tick = ticketObj[b];
+      return a + tick.price - Object.keys(this.state.appliedTickets[b]).reduce((ac, d) => {
+        return ac + tick.discounts[d].price;
+      }, 0)
+    }, 0);
+
+    const userId = Meteor.userId();
 
     return (
       <Modal isOpen={this.props.open} onRequestClose={this.props.onClose}>
-        <div className="col center x-center" style={{height: "100%"}}>
-          <p style={{margin: 10}}>
-            The venue fee is ${venuePrice.toFixed(2)}. The entry fee is ${entryPrice.toFixed(2)}. Your total is ${(venuePrice + entryPrice).toFixed(2)}.
-          </p>
-          {
-            entryTick.discounts.map((discount, i) => {
-              return (
-                <div className="row center x-center" style={{marginBottom: 10}}>
-                  <input type="checkbox" style={{margin: 0, marginRight: 10}} onChange={e => {
-                    if(e.target.checked) {
-                      this.state.appliedDiscounts[i] = 1;
+        <div className="row" style={{height: "100%", margin: "0 auto"}}>
+          <div className="col col-1">
+            {
+              Object.keys(instance.tickets).map(k => {
+                if(k == "payables" || k == "paymentType") {
+                  return null;
+                }
+                let tick = instance.tickets[k];
+                return (
+                  <div className="col">
+                    <div className="row x-center" style={{marginBottom: 10}}>
+                      <input type="checkbox" style={{margin: 0, marginRight: 10}} checked={this.state.appliedTickets[k] != null || tick.payments[userId] != null} onClick={() => {
+                        if(k == "venue") return;
+                        if(tick.payments[userId] != null) return;
+                        if(this.state.appliedTickets[k]) {
+                          delete this.state.appliedTickets[k];
+                        }
+                        else {
+                          this.state.appliedTickets[k] = {};
+                        }
+                        this.forceUpdate();
+                      }} />
+                      <span className="col-1" style={{textAlign: "left"}}>{isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1)} (${(tick.price / 100).toFixed(2)})</span>
+                    </div>
+                    {
+                      (instance.tickets[k].discounts || []).map((d, i) => {
+                        return (
+                          <div className="row x-center" style={{marginLeft: 20, marginBottom: 10}}>
+                            <input type="checkbox" style={{margin: 0, marginRight: 10}} checked={(this.state.appliedTickets[k] && this.state.appliedTickets[k][i]) || d.qualifiers[userId] != null} onClick={() => {
+                              if(d.qualifiers[userId] != null) return;
+                              if(!this.state.appliedTickets[k]) {
+                                this.state.appliedTickets[k] = {
+                                  [i]: true
+                                }
+                              }
+                              else {
+                                if(this.state.appliedTickets[k][i]) {
+                                  delete this.state.appliedTickets[k][i];
+                                }
+                                else {
+                                  this.state.appliedTickets[k][i] = true
+                                }
+                              }
+                              this.forceUpdate();
+                            }} />
+                            <span>{ d.name } (${(d.price / 100).toFixed(2)})</span>
+                          </div>
+                        )
+                      })
                     }
-                    else {
-                      delete this.state.appliedDiscounts[i];
-                    }
-                    this.forceUpdate();
-                  }} />
-                  <span>{ discount.name } Discount At ${(discount.price / 100).toFixed(2)} off</span>
-                </div>
-              )
-            })
-          }
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="col col-1">
+            <h1>Total Price</h1>
+            <span>${ (currentTotal / 100).toFixed(2) }</span>
+          </div>
+        </div>
+        <div className="row center">
           {
-            Object.keys(this.state.appliedDiscounts).length > 0 ? (
-              <div style={{marginBottom: 10}}>
-                <span>
-                  Total of ${
-                    (totalDiscounts).toFixed(2)
-                  } in discounts. New total is ${(venuePrice + entryPrice - totalDiscounts).toFixed(2)}
-                </span>
-              </div>
+            isOnsite ? (
+              <button style={{marginRight: 10}} onClick={() => { this.props.onAcceptOnsite(this.state.appliedTickets) }}>Pay On Site</button>
             ) : (
               null
             )
           }
-          <div className="row center">
-            {
-              isOnsite ? (
-                <button style={{marginRight: 10}} onClick={() => { this.props.onAcceptOnsite(Object.keys(this.state.appliedDiscounts)) }}>Pay On Site</button>
-              ) : (
-                null
-              )
-            }
-            {
-              isOnline ? (
-                <button style={{marginRight: 10}} onClick={() => { this.props.onAcceptOnline(Object.keys(this.state.appliedDiscounts)) }}>Pay Online</button>
-              ) : (
-                null
-              )
-            }
-            <button onClick={this.props.onClose}>Cancel</button>
-          </div>
+          {
+            isOnline ? (
+              <button style={{marginRight: 10}} onClick={() => { this.props.onAcceptOnline(this.state.appliedTickets) }}>Pay Online</button>
+            ) : (
+              null
+            )
+          }
+          <button onClick={this.props.onClose}>Cancel</button>
         </div>
       </Modal>
     )

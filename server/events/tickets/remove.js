@@ -4,7 +4,7 @@ Meteor.methods({
     var bracketLen = instance.brackets.length;
     var regCount = 0;
     for(var i = 0; i < bracketLen; i ++) {
-      if(instance.tickets[i + ""].payments[userId]) {
+      if(instance.tickets[i].payments[userId] != null) {
         regCount ++;
       }
     }
