@@ -27,6 +27,7 @@ import StreamDetails from "./modules/stream/details.jsx";
 
 // Ticket Stuff
 import TicketDetails from "./modules/tickets/details.jsx";
+import TicketEdit from "./modules/tickets/edit.jsx";
 
 import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 
@@ -204,26 +205,15 @@ class EventAdminPage extends Component {
       toggle: true,
       initialToggleState: !!event.stream,
       toggleAction: () => {
-        if(event.stream) {
-          Meteor.call("events.removeModule.stream", event._id, (err) => {
-            if(err) {
-              toastr.error(err.reason);
-            }
-            else {
-              this.forceUpdate();
-            }
-          });
-        }
-        else {
-          Meteor.call("events.addModule.stream", event._id, (err) => {
-            if(err) {
-              toastr.error(err.reason);
-            }
-            else {
-              this.forceUpdate();
-            }
-          });
-        }
+        const action = event.stream ? "removeModule" : "addModule"
+        Meteor.call(`events.${action}.stream`, event._id, (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            this.forceUpdate();
+          }
+        });
       }
     }
   }
@@ -231,26 +221,51 @@ class EventAdminPage extends Component {
   ticketItems() {
     var subs = [];
     const tickets = Instances.findOne().tickets;
-    Object.keys(tickets).forEach(k => {
-      if(k == "payables" || k == "paymentType") {
-        return;
-      }
-      const title = isNaN(k) ? "Venue" : `Bracket ${parseInt(k) + 1}`;
-      subs.push({
-        content: TicketDetails,
-        name: title,
-        key: k,
-        args: {
-          ticket: tickets[k]
+    const canToggle = !tickets || !tickets.payables || Object.keys(tickets.payables).length == 0
+    if(canToggle) {
+      subs = [
+        {
+          content: TicketEdit,
+          name: "Edit",
+          key: "tickets"
         }
+      ];
+    }
+    else {
+      Object.keys(tickets).forEach(k => {
+        if(k == "payables" || k == "paymentType") {
+          return;
+        }
+        const title = isNaN(k) ? "Venue" : `Bracket ${parseInt(k) + 1}`;
+        subs.push({
+          content: TicketDetails,
+          name: title,
+          key: k,
+          args: {
+            ticket: tickets[k]
+          }
+        });
       });
-    });
+    }
     return {
       name: "Tickets",
       icon: "ticket",
       key: "tickets",
       subItems: subs,
-      toggle: false
+      toggle: canToggle,
+      initialToggleState: !!tickets,
+      toggleAction: () => {
+        const subAction = tickets ? "removeModule" : "addModule";
+        Meteor.call(`events.${subAction}.tickets`, Events.findOne()._id, (e) => {
+          if(e) {
+            toastr.error(e.reason);
+          }
+          else {
+            toastr.success("Successfully toggled ticket module.");
+            this.forceUpdate();
+          }
+        })
+      }
     }
   }
 

@@ -16,7 +16,7 @@ export default class OptionsModal extends Component {
       "Alias",
       "Remove"
     ];
-    if(instance.tickets && this.props.participant.id) {
+    if(instance.tickets && this.props.participant.id && !this.props.participant.checkedIn) {
       tabs.push("Discounts");
     }
 

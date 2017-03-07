@@ -194,7 +194,7 @@ export default class ParticipantAddField extends Component {
           }
           <div className = { ((this.props.bracket.id != null)) ?
             ("start-button-hide") :
-            (this.props.bracket.participants.length < 3 ? ("start-button-hide"):("")) }>
+            ((this.props.bracket.participants || []).length < 3 ? ("start-button-hide"):("")) }>
             <button onClick={this.props.onStart}>Start Bracket</button>
           </div>
         </div>
