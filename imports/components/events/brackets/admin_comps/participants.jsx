@@ -66,7 +66,7 @@ export default class AddPartipantAction extends Component {
 
   render() {
     const instance = Instances.findOne();
-    const participants = instance.brackets[this.props.index].participants;
+    const participants = instance.brackets[this.props.index].participants || [];
     return (
       <div className="row">
         {

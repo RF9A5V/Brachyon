@@ -8,10 +8,10 @@ Meteor.methods({
       throw new Meteor.Error(404, "Event not found.");
     }
     var event = Events.findOne({instances: id});
+    var user = Meteor.users.findOne({username: alias});
     if(event.league) {
       var league = Leagues.findOne(event.league);
       var eventIndex = league.events.indexOf(event.slug);
-      var user = Meteor.users.findOne({username: alias});
       Leagues.update(event.league, {
         $unset: {
           [`leaderboard.${eventIndex}.${user._id}`]: 1
@@ -23,6 +23,9 @@ Meteor.methods({
         [`brackets.${index}.participants`]: {
           alias
         }
+      },
+      $unset: {
+        [`tickets.payables.${user._id}`]: 1
       }
     })
   },

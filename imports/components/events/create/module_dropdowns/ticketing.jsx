@@ -16,24 +16,23 @@ export default class TicketingPanel extends Component {
     var obj = {};
     obj["venue"] = parseInt(parseFloat(this.refs.venue.value) * 100);
     this.props.brackets.forEach((b, i) => {
-      if(this.state.free[b]) {
+      if(this.state.free[i]) {
         obj[i] = {
           price: 0
         }
       }
       else {
         obj[i] = {
-          price: parseInt(parseFloat(this.refs[b].value) * 100),
-          discounts: (this.state.discounts[b] || []).map(j => {
+          price: parseInt(parseFloat(this.refs[i].value) * 100),
+          discounts: (this.state.discounts[i] || []).map(j => {
             return {
-              name: this.refs[b + "_discountName_" + j].value,
-              price: parseInt(parseFloat(this.refs[b + "_discountPrice_" + j].value) * 100)
+              name: this.refs[i + "_discountName_" + j].value,
+              price: parseInt(parseFloat(this.refs[i + "_discountPrice_" + j].value) * 100)
             }
           })
         }
       }
     });
-    obj.paymentType = this.state.paymentType;
     return obj;
   }
 

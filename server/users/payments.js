@@ -30,7 +30,10 @@ Meteor.methods({
     }
     var user = Meteor.users.findOne(userId);
     var call = Meteor.wrapAsync(stripe.customers.retrieve, stripe.customers);
-    var res = call(user.stripeCustomerId);
+    var res;
+    if(user.stripeCustomerId) {
+      res = call(user.stripeCustomerId);
+    }
     if(!res) {
       return [];
     }
