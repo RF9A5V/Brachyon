@@ -1,13 +1,16 @@
 Meteor.methods({
-  "tickets.addOnsite"(userId, instanceId, index) {
+  "tickets.addOnsite"(userId, instanceId, tickets) {
 
-    const updateObj = {
-      [`tickets.venue.payments.${userId}`]: false,
-      [`tickets.${index}.payments.${userId}`]: false,
-      [`tickets.payables.${userId}`]: {
-        method: "onsite"
-      }
-    }
+    var updateObj = {};
+    Object.keys(tickets).forEach(k => {
+      updateObj[`tickets.${k}.payments.${userId}`] = false;
+      Object.keys(tickets[k]).forEach(j => {
+        updateObj[`tickets.${k}.discounts.${j}.qualifiers.${userId}`] = true;
+      })
+    });
+    updateObj[`tickets.payables.${userId}`] = {
+      method: "onsite"
+    };
 
     Instances.update(instanceId, {
       $set: updateObj

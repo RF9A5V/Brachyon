@@ -13,8 +13,8 @@ export default class RegisterButton extends Component {
     }
   }
 
-  registerCB() {
-    Meteor.call("events.registerUser", Events.findOne()._id, this.props.metaIndex, Meteor.userId(), (e) => {
+  registerCB(index) {
+    Meteor.call("events.registerUser", Events.findOne()._id, index, Meteor.userId(), (e) => {
       if(e) {
         toastr.error(e.reason);
       }
@@ -137,19 +137,26 @@ export default class RegisterButton extends Component {
         {
           instance.tickets ? (
             [
-              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={(discounts) => {
-                Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, this.props.metaIndex, (err) => {
+              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={(tickets) => {
+                Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, tickets, (err) => {
                   if(err) {
                     return toastr.error(err.reason);
                   }
                   else {
-                    this.registerCB();
+                    const instance = Instances.findOne();
+                    Object.keys(tickets).forEach(k => {
+                      if(!isNaN(k) && pIndex < 0) {
+                        this.registerCB(parseInt(k))
+                      }
+                    });
+                    this.forceUpdate();
                   }
                 })
-              }} onAcceptOnline={(discounts) => {
+              }} onAcceptOnline={(tickets, discounts) => {
                 this.setState({
                   typeOpen: false,
                   paymentOpen: true,
+                  tickets,
                   discounts
                 })
               }} />,
