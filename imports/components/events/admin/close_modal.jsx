@@ -30,7 +30,7 @@ export default class CloseModal extends Component {
     if(!instance) {
       return null;
     }
-    var allBracketsClosed = instance.brackets.every(b => {
+    var allBracketsClosed = !instance.brackets || instance.brackets.every(b => {
       return b.isComplete;
     })
     return (
