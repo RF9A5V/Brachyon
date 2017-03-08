@@ -13,7 +13,10 @@ export default class CloseModal extends Component {
       }
       else {
         toastr.success("Successfully closed event!");
-        browserHistory.push("/");
+        if(this.props.onComplete) {
+          this.props.onComplete();
+        }
+        this.props.onClose();
       }
     })
   }
@@ -43,7 +46,7 @@ export default class CloseModal extends Component {
                 <div style={{padding: "0 80px"}}>
                   <h1 style={{textAlign: "center"}}>Close Event</h1>
                   <p style={{textAlign: "center", margin: "20px 0"}}>
-                    The event you are attempting to rerun has open bracket. Close them here in order to save the results and generate stats. Rerunning the event now will delete your open bracket.
+                    The event you are attempting to rerun has an open bracket. Close them here in order to save the results and generate stats. Closing the event now will delete your open bracket.
                   </p>
                   <div>
                     {
@@ -54,7 +57,7 @@ export default class CloseModal extends Component {
                         return (
                           <div className="row x-center flex-pad table-row">
                             <span>
-                              { b.name ? b.name : Games.findOne(b.game).name + " " + (i + 1) }
+                              { b.name || "Bracket " + (i + 1) }
                             </span>
                             <button onClick={() => {
                               browserHistory.push(`/event/${event.slug}/bracket/${i}/admin`)
@@ -73,7 +76,7 @@ export default class CloseModal extends Component {
             }
             <div className="row center" style={{marginTop: 10}}>
               <button style={{marginRight: 10}} className="login-button" onClick={this.props.onClose}>Cancel</button>
-              <button className="signup-button" onClick={this.onClose.bind(this)}>Rerun</button>
+              <button className="signup-button" onClick={this.onClose.bind(this)}>Close</button>
             </div>
         </div>
       </Modal>

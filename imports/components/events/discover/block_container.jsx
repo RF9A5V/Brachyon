@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 
 import RerunModal from "/imports/components/events/admin/rerun_modal.jsx";
+import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 
 import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
@@ -15,6 +16,7 @@ export default class BlockContainer extends Component {
     super(props);
     this.state = {
       open: false,
+      closeOpen: false,
       subs: []
     }
   }
@@ -68,6 +70,13 @@ export default class BlockContainer extends Component {
   onRefreshClick(event) {
     this.setState({
       open: true,
+      id: event._id
+    })
+  }
+
+  onCloseClick(event) {
+    this.setState({
+      closeOpen: true,
       id: event._id
     })
   }
@@ -132,6 +141,15 @@ export default class BlockContainer extends Component {
                               ""
                             )
                           }
+                          <div className="event-block-admin-button" onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.onCloseClick(event);
+                          }} >
+                            <span>
+                              CLOSE
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         ""
@@ -174,6 +192,7 @@ export default class BlockContainer extends Component {
           this.state.subs.push(sub);
           this.setState({ open: false, id: null });
         }} />
+        <CloseModal open={this.state.closeOpen} onClose={() => { this.setState({ closeOpen: false, id: null }) }} id={this.state.id} />
       </div>
     );
   }
