@@ -100,7 +100,7 @@ export default class CreateContainer extends Component {
                   width: 175,
                   cursor: "pointer"
                 }}>
-                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? "#00BDFF" : "white"}} size="2x" />
+                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? (eColor) : "white"}} size="2x" />
                   <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {
@@ -138,8 +138,8 @@ export default class CreateContainer extends Component {
           {
             (this.props.actions || []).map((a, i) => {
               return (
-                <div className="create-container-option" onClick={a.action}>
-                  { a.name }
+                <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
+                  { a.name.toUpperCase() }
                 </div>
               )
             })
