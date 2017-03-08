@@ -62,7 +62,7 @@ export default class BlockContainer extends Component {
   }
 
   onEditClick(event) {
-    browserHistory.push(`/event/${event.slug}/admin`);
+    browserHistory.push(`/event/${event.slug}/edit`);
   }
 
   onRefreshClick(event) {
