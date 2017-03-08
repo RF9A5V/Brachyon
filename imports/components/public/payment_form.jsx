@@ -12,6 +12,7 @@ export default class PaymentForm extends Component {
       ready: false,
       activeCard: -1
     }
+    console.log(this.props);
     Meteor.call("users.getStripeSources", Meteor.userId(), (err, data) => {
       if(err) {
         toastr.error(err.reason);
@@ -188,17 +189,17 @@ export default class PaymentForm extends Component {
 
   render() {
 
-    var total = this.props.items.reduce((tot, item) => { return tot + item.price }, 0);
-
-    var totalAfterDiscount = total - this.props.discounts.map(d => {
-      return d.price
-    }).reduce((a, b) => { return a + b }, 0);
-
-    const stripeFee = Math.round((totalAfterDiscount + 30) / (1 - 0.029)) - totalAfterDiscount;
-
     if(!this.state.ready) {
       return null;
     }
+
+    const total = (this.props.breakdown || []).reduce((a, b) => {
+      return a + b.price - b.discounts.reduce((ac, d) => {
+        return ac + d.price;
+      }, 0)
+    }, 0)
+
+    const stripeFee = Math.round((total + 30) / (1 - 0.029)) - total;
 
     return (
 
@@ -207,38 +208,32 @@ export default class PaymentForm extends Component {
           <div className="row col-1">
             <div className="col-1" style={{padding: 20}}>
               {
-                this.props.items.map(i => {
+                this.props.breakdown.map(i => {
                   return (
-                    <div className="row x-center flex-pad">
-                      <span>{ i.name }</span>
-                      <span>${ (i.price / 100).toFixed(2) }</span>
+                    <div>
+                      <div className="row x-center flex-pad">
+                        <span>{ i.name }</span>
+                        <span>${ (i.price / 100).toFixed(2) }</span>
+                      </div>
+
+                      {
+                        i.discounts.map(d => {
+                          return (
+                            <div className="row x-center flex-pad" style={{marginLeft: 10}}>
+                              <span>{ d.name }</span>
+                              <span>- ${ (d.price / 100).toFixed(2) }</span>
+                            </div>
+                          )
+                        })
+                      }
+                      <hr className="user-divider" />
                     </div>
                   )
                 })
               }
-              <hr className="user-divider" />
-              {
-                this.props.discounts.length > 0 ? (
-                  <div>
-                    {
-                      this.props.discounts.map(d => {
-                        return (
-                          <div className="row x-center flex-pad">
-                            <span>{ d.name }</span>
-                            <span>- ${ (d.price / 100).toFixed(2) }</span>
-                          </div>
-                        )
-                      })
-                    }
-                    <hr className="user-divider" />
-                  </div>
-                ) : (
-                  null
-                )
-              }
               <div className="row x-center flex-pad">
                 <span>Before Fees</span>
-                <span>${ (totalAfterDiscount / 100).toFixed(2) }</span>
+                <span>${ (total / 100).toFixed(2) }</span>
               </div>
               <div className="row x-center flex-pad">
                 <span>Transaction Fee</span>
@@ -247,7 +242,7 @@ export default class PaymentForm extends Component {
               <hr className="user-divider" />
               <div className="row x-center flex-pad">
                 <b>Total</b>
-                <span>${ ((totalAfterDiscount + stripeFee) / 100).toFixed(2) }</span>
+                <span>${ ((total + stripeFee) / 100).toFixed(2) }</span>
               </div>
             </div>
             <div className="col-2">
@@ -267,7 +262,7 @@ export default class PaymentForm extends Component {
                 return;
               }
               this.state.active = true;
-              this.props.submit(this.value(), totalAfterDiscount + stripeFee, () => { this.setState({ active: false, focus: 0 }) });
+              this.props.submit(this.value(), total + stripeFee, () => { this.setState({ active: false, focus: 0 }) });
             }}>Submit</button>
           </div>
         </div>

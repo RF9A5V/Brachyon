@@ -86,12 +86,18 @@ export default class RegisterButton extends Component {
   processPayment(value, amount, cb) {
 
     const setPayable = (token) => {
-      Meteor.call("tickets.addOnline", Meteor.userId(), Instances.findOne()._id, this.props.metaIndex, token, (err) => {
+      Meteor.call("tickets.addOnline", Meteor.userId(), Instances.findOne()._id, this.state.tickets, token, (err) => {
         if(err) {
           return toastr.error(err.reason);
         }
         else {
-          this.registerCB();
+          Object.keys(this.state.tickets).forEach(k => {
+            const temp = parseInt(k);
+            if(isNaN(k)) return;
+            if(Instances.findOne().brackets[temp].participants.findIndex(p => { return p.id == Meteor.userId() }) >= 0) return;
+            this.registerCB(temp);
+          })
+
         }
       })
     }
@@ -152,17 +158,35 @@ export default class RegisterButton extends Component {
                     this.forceUpdate();
                   }
                 })
-              }} onAcceptOnline={(tickets, discounts) => {
+              }} onAcceptOnline={(tickets) => {
                 this.setState({
                   typeOpen: false,
                   paymentOpen: true,
-                  tickets,
-                  discounts
+                  tickets
                 })
               }} />,
-              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} discounts={(this.state.discounts || []).map(d => {
-                return instance.tickets[this.props.metaIndex].discounts[d];
-              })} />
+              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} breakdown={(() => {
+                var costs = [];
+                if(!this.state.tickets) {
+                  return costs;
+                }
+                Object.keys(this.state.tickets).forEach(k => {
+                  const tickObj = instance.tickets[k];
+                  const discounts = Object.keys(this.state.tickets[k]).map(j => {
+                    const d = tickObj.discounts[j];
+                    return {
+                      name: d.name,
+                      price: d.price
+                    }
+                  });
+                  costs.push({
+                    name: isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1),
+                    price: tickObj.price,
+                    discounts
+                  });
+                })
+                return costs;
+              })()} />
             ]
           ) : (
             ""
