@@ -16,15 +16,18 @@ Meteor.methods({
       $set: updateObj
     })
   },
-  "tickets.addOnline"(userId, instanceId, index, token) {
+  "tickets.addOnline"(userId, instanceId, tickets, token) {
 
-    const updateObj = {
-      [`tickets.venue.payments.${userId}`]: false,
-      [`tickets.${index}.payments.${userId}`]: false,
-      [`tickets.payables.${userId}`]: {
-        method: "online",
-        token
-      }
+    var updateObj = {};
+    Object.keys(tickets).forEach(k => {
+      updateObj[`tickets.${k}.payments.${userId}`] = false;
+      Object.keys(tickets[k]).forEach(j => {
+        updateObj[`tickets.${k}.discounts.${j}.qualifiers.${userId}`] = true;
+      })
+    });
+    updateObj[`tickets.payables.${userId}`] = {
+      method: "online",
+      token
     };
 
     Instances.update(instanceId, {
