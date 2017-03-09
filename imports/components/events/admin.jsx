@@ -30,6 +30,7 @@ import TicketDetails from "./modules/tickets/details.jsx";
 import TicketEdit from "./modules/tickets/edit.jsx";
 
 import CloseModal from "/imports/components/events/admin/close_modal.jsx";
+import RerunModal from "/imports/components/events/admin/rerun_modal.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import Instances from "/imports/api/event/instance.js";
@@ -45,9 +46,13 @@ class EventAdminPage extends Component {
   }
 
   componentDidMount() {
+    const event = Events.findOne();
+    const instance = Instances.findOne();
+    if(!event || !instance) {
+      toastr.error("Event not found.");
+      return browserHistory.push("/");
+    }
     this.props.router.setRouteLeaveHook(this.props.route, () => {
-      var event = Events.findOne();
-      var instance = Instances.findOne();
       if(instance.brackets && instance.brackets.length == 0) {
         return "You have to add a bracket if you want the bracket module.";
       }
@@ -58,8 +63,11 @@ class EventAdminPage extends Component {
   }
 
   componentWillUnmount() {
-    var event = Events.findOne();
-    var instance = Instances.findOne();
+    const event = Events.findOne();
+    const instance = Instances.findOne();
+    if(!event || !instance) {
+      return;
+    }
     if(instance.brackets && instance.brackets.length == 0) {
       Meteor.call("events.removeModule.brackets", event._id);
     }
@@ -338,6 +346,14 @@ class EventAdminPage extends Component {
         action: this.save.bind(this)
       },
       {
+        name: "Rerun",
+        action: () => {
+          this.setState({
+            rerunOpen: true
+          })
+        }
+      },
+      {
         name: "Close",
         action: () => {
           this.setState({
@@ -359,7 +375,10 @@ class EventAdminPage extends Component {
     return (
       <div className="box col" style={{padding: 40}}>
         <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
-        <CloseModal open={this.state.open} id={Events.findOne()._id} />
+        <CloseModal open={this.state.open} id={Events.findOne()._id} onClose={() => { this.setState({ open: false }) }} onComplete={() => {
+          browserHistory.push("/");
+        }} />
+        <RerunModal open={this.state.rerunOpen} id={Events.findOne()._id} onClose={() => { this.setState({ rerunOpen: false }) }} />
       </div>
     )
   }
