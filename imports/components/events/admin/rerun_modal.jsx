@@ -44,7 +44,7 @@ export default class RerunModal extends Component {
     if(!instance) {
       return null;
     }
-    var allBracketsClosed = instance.brackets.every(b => {
+    var allBracketsClosed = !instance.brackets || instance.brackets.every(b => {
       return b.isComplete;
     })
     return (
@@ -71,7 +71,7 @@ export default class RerunModal extends Component {
                         return (
                           <div className="row x-center flex-pad table-row">
                             <span>
-                              { b.name ? b.name : Games.findOne(b.game).name + " " + (i + 1) }
+                              { b.name || "Bracket " + (i + 1) }
                             </span>
                             <button onClick={() => {
                               browserHistory.push(`/event/${event.slug}/bracket/${i}/admin`)
