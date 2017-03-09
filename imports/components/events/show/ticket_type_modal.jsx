@@ -2,22 +2,18 @@ import React, { Component } from "react";
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 
-export default class OnlineModal extends Component {
+export default class TicketTypeModal extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      appliedTickets: {
-        venue: {}
-      }
+      appliedFees: {}
     }
   }
 
   componentWillReceiveProps() {
     this.setState({
-      appliedTickets: {
-        venue: {}
-      }
+      appliedFees: {}
     })
   }
 

@@ -138,13 +138,8 @@ export default class CreateContainer extends Component {
           {
             (this.props.actions || []).map((a, i) => {
               return (
-<<<<<<< HEAD
-                <div className="create-container-option col-1" onClick={a.action}>
-                  { a.name }
-=======
                 <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
                   { a.name.toUpperCase() }
->>>>>>> 34ee434db3460edcbe5bcae08a848de9770bb828
                 </div>
               )
             })
