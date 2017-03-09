@@ -74,17 +74,16 @@ export default class RegisterButton extends Component {
     return [
       {
         name: "Venue Fee",
-        price: instance.tickets.venue.price
+        price: instance.tickets.fees.venue.price
       },
       {
         name: "Entry to Bracket " + this.props.metaIndex,
-        price: instance.tickets[this.props.metaIndex].price
+        price: instance.tickets.fees[this.props.metaIndex].price
       }
     ]
   }
 
   processPayment(value, amount, cb) {
-
     const setPayable = (token) => {
       Meteor.call("tickets.addOnline", Meteor.userId(), Instances.findOne()._id, this.state.tickets, token, (err) => {
         if(err) {
@@ -192,7 +191,6 @@ export default class RegisterButton extends Component {
             ""
           )
         }
-
       </div>
     )
   }
