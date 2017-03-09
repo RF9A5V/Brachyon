@@ -153,8 +153,8 @@ export default class TicketingPanel extends Component {
     }
 
     return (
-      <div>
-        Ticket Descriptions go here!
+      <div className="text-description border-blue">
+        Ticketing allows your event to track payments, accept debit/credit payment and offer/track discounts. In order to use this module you will need a stripe account. For more information on how refunds and other issues work see Brachyon's <a target="_blank" href="/faq">Tournament Organizer Faq</a>.    
       </div>
     )
   }
