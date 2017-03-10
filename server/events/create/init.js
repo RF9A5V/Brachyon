@@ -69,7 +69,10 @@ Meteor.methods({
     var ticketObj = {};
     ticketObj.paymentType = obj.paymentType;
     delete obj.paymentType;
-    ticketObj.discounts = obj.discounts;
+    ticketObj.discounts = obj.discounts.map(d => {
+      d["qualifiers"] = {};
+      return d;
+    });
     ticketObj.fees = obj.fees;
     return ticketObj;
   },
