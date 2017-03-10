@@ -93,7 +93,7 @@ export default class RegisterButton extends Component {
           Object.keys(this.state.tickets).forEach(k => {
             const temp = parseInt(k);
             if(isNaN(k)) return;
-            if(Instances.findOne().brackets[temp].participants.findIndex(p => { return p.id == Meteor.userId() }) >= 0) return;
+            if((Instances.findOne().brackets[temp].participants || []).findIndex(p => { return p.id == Meteor.userId() }) >= 0) return;
             this.registerCB(temp);
           })
 
