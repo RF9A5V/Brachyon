@@ -12,7 +12,6 @@ export default class PaymentForm extends Component {
       ready: false,
       activeCard: -1
     }
-    console.log(this.props);
     Meteor.call("users.getStripeSources", Meteor.userId(), (err, data) => {
       if(err) {
         toastr.error(err.reason);
@@ -194,7 +193,7 @@ export default class PaymentForm extends Component {
     }
 
     const total = (this.props.breakdown || []).reduce((a, b) => {
-      return a + b.price - b.discounts.reduce((ac, d) => {
+      return a + b.price - (b.discounts || []).reduce((ac, d) => {
         return ac + d.price;
       }, 0)
     }, 0)
@@ -217,7 +216,7 @@ export default class PaymentForm extends Component {
                       </div>
 
                       {
-                        i.discounts.map(d => {
+                        (i.discounts || []).map(d => {
                           return (
                             <div className="row x-center flex-pad" style={{marginLeft: 10}}>
                               <span>{ d.name }</span>

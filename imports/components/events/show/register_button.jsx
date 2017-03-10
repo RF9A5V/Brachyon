@@ -169,21 +169,13 @@ export default class RegisterButton extends Component {
                 if(!this.state.tickets) {
                   return costs;
                 }
-                Object.keys(this.state.tickets).forEach(k => {
-                  const tickObj = instance.tickets[k];
-                  const discounts = Object.keys(this.state.tickets[k]).map(j => {
-                    const d = tickObj.discounts[j];
-                    return {
-                      name: d.name,
-                      price: d.price
-                    }
-                  });
+                this.state.tickets.forEach(k => {
+                  const tickObj = instance.tickets.fees[k];
                   costs.push({
                     name: isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1),
-                    price: tickObj.price,
-                    discounts
+                    price: tickObj.price
                   });
-                })
+                });
                 return costs;
               })()} />
             ]

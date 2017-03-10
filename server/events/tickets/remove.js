@@ -4,20 +4,18 @@ Meteor.methods({
     var bracketLen = instance.brackets.length;
     var regCount = 0;
     for(var i = 0; i < bracketLen; i ++) {
-      if(instance.tickets[i].payments[userId] != null) {
+      const payments = instance.tickets.fees[i].payments;
+      if(payments && payments[userId] != null) {
         regCount ++;
       }
     }
     var unsetObj = {
-      [`tickets.${index}.payments.${userId}`]: 1
+      [`tickets.fees.${index}.payments.${userId}`]: 1
     };
     if(regCount == 1) {
-      unsetObj[`tickets.venue.payments.${userId}`] = 1;
+      unsetObj[`tickets.fees.venue.payments.${userId}`] = 1;
       unsetObj[`tickets.payables.${userId}`] = 1;
     }
-    instance.tickets[index].discounts.forEach((d, i) => {
-      unsetObj[`tickets.${index}.discounts.${i}.qualifiers.${userId}`] = 1;
-    })
     Instances.update(instanceId, {
       $unset: unsetObj
     });
