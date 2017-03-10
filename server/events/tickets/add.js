@@ -2,11 +2,8 @@ Meteor.methods({
   "tickets.addOnsite"(userId, instanceId, tickets) {
 
     var updateObj = {};
-    Object.keys(tickets).forEach(k => {
-      updateObj[`tickets.${k}.payments.${userId}`] = false;
-      Object.keys(tickets[k]).forEach(j => {
-        updateObj[`tickets.${k}.discounts.${j}.qualifiers.${userId}`] = true;
-      })
+    tickets.forEach(k => {
+      updateObj[`tickets.fees.${k}.payments.${userId}`] = false;
     });
     updateObj[`tickets.payables.${userId}`] = {
       method: "onsite"
@@ -19,11 +16,8 @@ Meteor.methods({
   "tickets.addOnline"(userId, instanceId, tickets, token) {
 
     var updateObj = {};
-    Object.keys(tickets).forEach(k => {
-      updateObj[`tickets.${k}.payments.${userId}`] = false;
-      Object.keys(tickets[k]).forEach(j => {
-        updateObj[`tickets.${k}.discounts.${j}.qualifiers.${userId}`] = true;
-      })
+    tickets.forEach(k => {
+      updateObj[`tickets.fees.${k}.payments.${userId}`] = false;
     });
     updateObj[`tickets.payables.${userId}`] = {
       method: "online",
