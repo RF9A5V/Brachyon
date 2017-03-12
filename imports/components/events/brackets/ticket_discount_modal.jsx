@@ -100,7 +100,7 @@ export default class TicketDiscountModal extends Component {
                   <label>Discounts Applicable</label>
                 </div>
                 {
-                  ticketObj.discounts.map((d, i) => {
+                  instance.tickets.discounts.map((d, i) => {
                     return (
                       <div className="row x-center center" style={{marginBottom: 10}}>
                         <span className="col-1" style={{marginRight: 20}}>{ d.name }</span>

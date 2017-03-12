@@ -74,17 +74,16 @@ export default class RegisterButton extends Component {
     return [
       {
         name: "Venue Fee",
-        price: instance.tickets.venue.price
+        price: instance.tickets.fees.venue.price
       },
       {
         name: "Entry to Bracket " + this.props.metaIndex,
-        price: instance.tickets[this.props.metaIndex].price
+        price: instance.tickets.fees[this.props.metaIndex].price
       }
     ]
   }
 
   processPayment(value, amount, cb) {
-
     const setPayable = (token) => {
       Meteor.call("tickets.addOnline", Meteor.userId(), Instances.findOne()._id, this.state.tickets, token, (err) => {
         if(err) {
@@ -94,7 +93,7 @@ export default class RegisterButton extends Component {
           Object.keys(this.state.tickets).forEach(k => {
             const temp = parseInt(k);
             if(isNaN(k)) return;
-            if(Instances.findOne().brackets[temp].participants.findIndex(p => { return p.id == Meteor.userId() }) >= 0) return;
+            if((Instances.findOne().brackets[temp].participants || []).findIndex(p => { return p.id == Meteor.userId() }) >= 0) return;
             this.registerCB(temp);
           })
 
@@ -170,21 +169,13 @@ export default class RegisterButton extends Component {
                 if(!this.state.tickets) {
                   return costs;
                 }
-                Object.keys(this.state.tickets).forEach(k => {
-                  const tickObj = instance.tickets[k];
-                  const discounts = Object.keys(this.state.tickets[k]).map(j => {
-                    const d = tickObj.discounts[j];
-                    return {
-                      name: d.name,
-                      price: d.price
-                    }
-                  });
+                this.state.tickets.forEach(k => {
+                  const tickObj = instance.tickets.fees[k];
                   costs.push({
                     name: isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1),
-                    price: tickObj.price,
-                    discounts
+                    price: tickObj.price
                   });
-                })
+                });
                 return costs;
               })()} />
             ]
@@ -192,7 +183,6 @@ export default class RegisterButton extends Component {
             ""
           )
         }
-
       </div>
     )
   }
