@@ -109,7 +109,7 @@ export default class OptionsModal extends Component {
 
   discountTab() {
     const instance = Instances.findOne();
-    const discounts = instance.tickets[this.props.index].discounts;
+    const discounts = instance.tickets.discounts;
 
     const toggleDiscount = (d, i) => {
       if(d.qualifiers[this.props.participant.id]) {
@@ -140,7 +140,7 @@ export default class OptionsModal extends Component {
                 <div className="col-1">
                   <button onClick={() => { toggleDiscount(d, i) }}>
                     {
-                      d.qualifiers[this.props.participant.id] ? (
+                      d.qualifiers[this.props.participant.id] == null ? (
                         "Apply Discount"
                       ) : (
                         "Remove Discount"
