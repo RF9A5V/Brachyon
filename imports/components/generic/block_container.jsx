@@ -94,7 +94,7 @@ export default class BlockContainer extends Component {
           {
             Meteor.userId() == obj.owner ? (
               <div className="event-block-admin-row">
-                <div className="event-block-admin-button col center x-center" onClick={action("admin")}>
+                <div className="event-block-admin-button col center x-center" onClick={action("edit")}>
                   EDIT
                 </div>
               </div>

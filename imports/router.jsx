@@ -84,7 +84,7 @@ export const renderRoutes = () => (
     </Route>
     <Route path="/" component={NoFooter}>
       <Route path="events/create" component={EventCreateScreen} />
-      <Route path="event/:slug/admin" component={EventAdminScreen} />
+      <Route path="event/:slug/edit" component={EventAdminScreen} />
       <Route path="event/:slug" component={PreviewEventScreen} />
       <Route path="event/:slug/:slide" component={PreviewEventScreen} />
       <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
