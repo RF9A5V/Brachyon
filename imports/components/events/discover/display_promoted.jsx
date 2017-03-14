@@ -44,10 +44,10 @@ export default class DisplayPromotedEvent extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/event/${event.slug}/show`);
+          browserHistory.push(`/${this.props.event.type}/${event.slug}/show`);
         }
         else {
-          browserHistory.push(`/event/${event.slug}/edit`);
+          browserHistory.push(`/${this.props.event.type}/${event.slug}/show`);
         }
       }
     )
@@ -74,7 +74,7 @@ export default class DisplayPromotedEvent extends Component {
     return (
       <div className="row center col-1" style={{width: "60vw", padding: 10}}>
         <div className="promoted-event-block">
-          <div className="event-block" style={{width: "100%", margin: 0}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
+          <div className={`event-block ${this.props.event.type}`} style={{width: "100%", margin: 0}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
             <div style={{border: "solid 2px #666"}}>
               <h2 className="event-block-title">{ event.details.name }</h2>
             </div>

@@ -4,6 +4,8 @@ import MatchBlock from './match.jsx';
 import EventModal from "../modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
+import DragScroll from "react-dragscroll"
+
 export default class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
@@ -86,40 +88,40 @@ export default class DoubleElimWinnersBracket extends Component {
     }
 
     return (
-      <div className="col">
-        <div className="row" style={{paddingLeft: 10}}>
-          <div className="row">
-          {
-            this.props.rounds[0].map((round, i) => {
-              return (
-                <div className="col">
-                  {headers[i]}
-                  <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
-                    {
-                      round.map((match, j) => {
-                        if(match && match.id) {
-                          match = Matches.findOne(match.id);
-                        }
-                        return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
-                        );
-                      })
-                    }
+        <div className="col">
+          <div className="row" style={{paddingLeft: 10}}>
+            <div className="row">
+            {
+              this.props.rounds[0].map((round, i) => {
+                return (
+                  <div className="col">
+                    {headers[i]}
+                    <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
+                      {
+                        round.map((match, j) => {
+                          if(match && match.id) {
+                            match = Matches.findOne(match.id);
+                          }
+                          return (
+                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                          );
+                        })
+                      }
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          }
+                );
+              })
+            }
+            </div>
+            {
+              this.props.format == "double_elim" ? (
+                this.finals(headers.slice(this.props.rounds[0].length))
+              ) : (
+                ""
+              )
+            }
           </div>
-          {
-            this.props.format == "double_elim" ? (
-              this.finals(headers.slice(this.props.rounds[0].length))
-            ) : (
-              ""
-            )
-          }
         </div>
-      </div>
     )
   }
 
@@ -127,8 +129,15 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     return (
-      <div style={{overflowX: "auto"}}>
-        { this.mainBracket() }
+      <div style={{overflow:"auto"}}>
+      {this.props.page == "brack"?
+        (<DragScroll width={"89vw"} height={"63vh"}>
+          { this.mainBracket() } 
+        </DragScroll>):
+        (<DragScroll width={"91vw"} height={"63vh"}>
+          { this.mainBracket() } 
+        </DragScroll>)
+      }
         {
           this.props.id && !this.props.complete ? (
             <EventModal
