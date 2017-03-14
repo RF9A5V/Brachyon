@@ -49,7 +49,7 @@ export default class EventsPanel extends Component {
     var decrementIcon = events.length <= 1 ? (
       <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" style={{opacity: 0.3}} />
     ) : (
-      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" onClick={() => { events.pop(); this.forceUpdate(); }} />
+      <FontAwesome style={{cursor: "pointer"}} name="caret-left" size="3x" onClick={() => { events.pop(); if(this.state.option >= events.length) { this.state.option = events.length - 1 } this.forceUpdate(); }} />
     );
     var incrementIcon = events.length >= 30 ? (
       <FontAwesome style={{cursor: "pointer"}} name="caret-right" size="3x" style={{opacity: 0.3}} />
@@ -104,6 +104,7 @@ export default class EventsPanel extends Component {
 
   form() {
     var event = this.state.events[this.state.option];
+    console.log(this.state.events, this.state.option);
     return (
       <div className="col">
         <div className="row">

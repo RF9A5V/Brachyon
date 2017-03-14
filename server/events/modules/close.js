@@ -11,21 +11,43 @@ Meteor.methods({
     }
     var instance = Instances.findOne(event.instances.pop());
     var brackets = instance.brackets;
-    var hasBracketsOutstanding = brackets && brackets.length > 0 && brackets.some(bracket => { return bracket.endedAt == null });
-    if(hasBracketsOutstanding) {
-      throw new Meteor.Error(403, "Cannot close event with brackets outstanding!");
+
+    var instanceGone = false;
+    var eventGone = false;
+
+    if(brackets) {
+      const unfinishedBrackets = brackets.filter(b => {
+        return !b.isComplete;
+      });
+      if(brackets.length == unfinishedBrackets.length) {
+        Instances.remove(instance._id);
+        instanceGone = true;
+        if(event.instances.length == 0) {
+          Events.remove(id);
+          eventGone = true;
+        }
+      }
+      Brackets.remove({
+        _id: {
+          $in: unfinishedBrackets.map(b => { return b.id })
+        }
+      });
     }
-    Events.update(id, {
-      $set: {
-        isComplete: true,
-        underReview: false,
-        published: false
-      }
-    });
-    Instances.update(instance._id, {
-      $set: {
-        completedAt: new Date()
-      }
-    })
+    if(!eventGone) {
+      Events.update(id, {
+        $set: {
+          isComplete: true,
+          underReview: false,
+          published: false
+        }
+      });
+    }
+    if(!instanceGone) {
+      Instances.update(instance._id, {
+        $set: {
+          completedAt: new Date()
+        }
+      })
+    }
   }
 })
