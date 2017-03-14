@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import EventModal from "../modal.jsx";
 import MatchBlock from './match.jsx';
 
+import DragScroll from "react-dragscroll"
+
 export default class DoubleElimLosersBracket extends Component {
 
   constructor(props) {
@@ -21,14 +23,24 @@ export default class DoubleElimLosersBracket extends Component {
   }
 
   mainBracket() {
-
-    var headers = this.props.rounds[1].map((_, i) => {
-      return (
-        <h4 style={{marginBottom: 20, width: "100%"}}>
-          Round { i + 1 }
-        </h4>
-      )
-    });
+    if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{marginBottom: 20, width: "100%"}}>
+            Round { i }
+          </h4>
+        )
+      });
+    }
+    else {
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{marginBottom: 20, width: "100%"}}>
+            Round { i + 1 }
+          </h4>
+        )
+      });
+    }
     var hasInactiveFirstRound = this.props.rounds[1].every(m => {
       return m == null;
     })
@@ -37,7 +49,7 @@ export default class DoubleElimLosersBracket extends Component {
     }
 
     return (
-      <div className="col" style={{overflowX: "auto"}}>
+      <div className="col" >
         <div className="row" style={{paddingLeft: 10}}>
           {
             this.props.rounds[1].map((round, i) => {
@@ -86,8 +98,15 @@ export default class DoubleElimLosersBracket extends Component {
 
   render() {
     return (
-      <div>
-        { this.mainBracket() }
+      <div style={{overflowX: "auto"}}>
+        {this.props.page == "brack"?
+        (<DragScroll width={"89vw"} height={"63vh"}>
+          { this.mainBracket() } 
+        </DragScroll>):
+        (<DragScroll width={"91vw"} height={"63vh"}>
+          { this.mainBracket() } 
+        </DragScroll>)
+      }
         {
           this.props.id && !this.props.complete ? (
             <EventModal

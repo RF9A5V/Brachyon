@@ -212,7 +212,6 @@ class BracketAdminScreen extends Component {
     var index = this.props.params.bracketIndex || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
-    defaultItems.push(this.participantItem(bracket));
     if (bracket.format.baseFormat == "swiss")
       defaultItems.push(this.advancedItem(bracket));
     if(bracket.isComplete) {
@@ -246,6 +245,7 @@ class BracketAdminScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
+    defaultItems.push(this.participantItem(bracket));
 
     if(bracket.id) {
       if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
@@ -285,7 +285,7 @@ class BracketAdminScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20, height: "calc(100vh - 100px)", overflowY: "auto"}}>
+      <div style={{padding: 20, height: "100vh"}}>
         <CreateContainer items={this.items()} actions={this.actions()} />
       </div>
     );
