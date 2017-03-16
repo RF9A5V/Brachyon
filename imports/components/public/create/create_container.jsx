@@ -58,7 +58,7 @@ export default class CreateContainer extends Component {
   }
 
   buttonShow(){
-    return (<button style={{ float: "right"}}onClick={()=>{ browserHistory.push("/event/" + Events.findOne().slug)} }> back to bracket </button>)
+    return (<button style={{ float: "right"}}onClick={()=>{ browserHistory.push("/event/" + Events.findOne().slug)} }> Back to Bracket </button>)
 
   }
 
