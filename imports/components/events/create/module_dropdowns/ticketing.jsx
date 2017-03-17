@@ -52,8 +52,6 @@ export default class TicketingPanel extends Component {
       })
     };
     obj.paymentType = this.state.paymentType;
-    console.log(this.state.paymentType)
-    throw new Error();
     return obj;
   }
 
@@ -160,27 +158,38 @@ export default class TicketingPanel extends Component {
   }
 
   render() {
-    if(this.props.status) {
-      return (
-        <div className="col">
-          <div className="row" style={{marginBottom: 20}}>
-            {
-              ["Fees", "Discounts"].map((a, b) => {
-                return (
-                  <div style={{borderBottom: this.state.active == b ? "solid 2px #FF6000" : "none", padding: 5, cursor: "pointer"}} onClick={() => { this.setState({
-                    active: b
-                  }) }}>
-                    { a }
-                  </div>
-                )
-              })
-            }
-          </div>
+    const active = this.props.status;
+    if(window.location.pathname == "/events/create"){
+      var eColor = "#00BDFF";
+      var fColor = "#333";
+    }
+    else if(window.location.pathname == "/leagues/create"){
+      var eColor = "#FF6000";
+      var fColor = "#FFF";
+    }
+    const content = active ? (
+      <div className="col">
+        <div className="row" style={{marginBottom: 20}}>
           {
-            this.currentPanel()
+            ["Fees", "Discounts"].map((a, b) => {
+              return (
+                <div className={`panel-tab ${this.state.active == b ? "active" : ""}`} style={{width: 100, borderColor: eColor}} onClick={() => { this.setState({
+                  active: b
+                }) }}>
+                  { a }
+                </div>
+              )
+            })
           }
-          <span>Payment Options</span>
-          <select ref="paymentType" defaultValue={"cash"} onChange={(e) => {
+        </div>
+        {
+          this.currentPanel()
+        }
+        <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
+          <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
+            <h5 style={{backgroundColor: "#333", padding: "0 20px"}}>Payment Type</h5>
+          </div>
+          <select style={{width: "100%"}} ref="paymentType" defaultValue={"cash"} onChange={(e) => {
             this.setState({
               paymentType: e.target.value
             })
@@ -190,12 +199,34 @@ export default class TicketingPanel extends Component {
             <option value="both">Cash and Credit</option>
           </select>
         </div>
-      )
-    }
+
+      </div>
+    ) : (
+      <div className="text-description border-blue">
+        Ticketing allows your event to track payments, accept debit/credit payment and offer/track discounts. In order to use this module you will need a stripe account. For more information on how refunds and other issues work see Brachyon's <a target="_blank" href="/faq">Tournament Organizer Faq</a>.
+      </div>
+    )
 
     return (
-      <div className="text-description border-blue">
-        Ticketing allows your event to track payments, accept debit/credit payment and offer/track discounts. In order to use this module you will need a stripe account. For more information on how refunds and other issues work see Brachyon's <a target="_blank" href="/faq">Tournament Organizer Faq</a>.    
+      <div>
+        <div className="row flex-pad" style={{marginBottom: 10}}>
+          <div>
+          </div>
+          <div className="row x-center module-toggle" onClick={() => { this.props.setStatus(!active) }}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
+                {
+                  active ? (
+                    "ON"
+                  ) : (
+                    "OFF"
+                  )
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+        { content }
       </div>
     )
   }

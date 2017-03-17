@@ -24,11 +24,11 @@ export default class StreamPanel extends Component {
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <p>
+        <div className="text-description border-blue">
           {
             item
           }
-        </p>
+        </div>
       )
     });
   }
@@ -43,14 +43,13 @@ export default class StreamPanel extends Component {
       var eColor = "#FF6000";
       var fColor = "#FFF";
     }
-    else{}
     var active = this.props.status;
     return (
       <div>
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => { this.props.setStatus(!active) }}>
+          <div className="row x-center module-toggle" onClick={() => { this.props.setStatus(!active) }}>
             <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
               <span style={{color: active ? fColor : "#333", fontSize: 12}}>
                 {
@@ -73,20 +72,7 @@ export default class StreamPanel extends Component {
               </div>
             </div>
           ) : (
-            <div className="row">
-            <div className="col col-1 info-description">
-              <div className="row center">
-              <h3>{ tabs[this.state.item] }</h3>
-              </div>
-              <div style={{margin: "20px 25vw"}} className="row center">
-                {
-                  this.itemDescriptions()
-                }
-              </div>
-              <div className="row col-1"></div>
-              <button style={{margin: "0 auto"}} onClick={() => { this.props.setStatus(true) }}>Create a Stream</button>
-            </div>
-          </div>
+            this.itemDescriptions()
           )
         }
       </div>

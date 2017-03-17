@@ -376,7 +376,7 @@ a:hover, a:focus
 
 
 select
-  background #333
+  background #222
   border none
   padding 5px
 
@@ -515,7 +515,23 @@ label
   width 100vw
   height 50
   position fixed
-  backgroundColor #111
+  background-color #111
   bottom 0
   left 0
   right 0
+
+.panel-tab
+  border-bottom-width 0;
+  border-bottom-style solid;
+  padding 5px;
+  cursor pointer;
+  letter-spacing 1px;
+  text-transform uppercase;
+  text-align center;
+  margin-right 10px
+
+.panel-tab:last-child
+  margin-right 0
+
+.panel-tab.active
+  border-bottom solid 2px
