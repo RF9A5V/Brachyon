@@ -52,6 +52,8 @@ export default class TicketingPanel extends Component {
       })
     };
     obj.paymentType = this.state.paymentType;
+    console.log(this.state.paymentType)
+    throw new Error();
     return obj;
   }
 
@@ -178,26 +180,15 @@ export default class TicketingPanel extends Component {
             this.currentPanel()
           }
           <span>Payment Options</span>
-          <form ref="paymentOption">
-            <div className="row">
-              <input type="radio" name="type" checked={this.state.paymentType == "cash"} onClick={() => { this.setState({
-                paymentType: "cash"
-              })}} />
-              <span style={{marginLeft: 5}}>Cash Only</span>
-            </div>
-            <div className="row">
-              <input type="radio" name="type" checked={this.state.paymentType == "credit"} onClick={() => { this.setState({
-                paymentType: "credit"
-              })}} />
-              <span style={{marginLeft: 5}}>Credit Only</span>
-            </div>
-            <div className="row">
-              <input name="type" type="radio" checked={this.state.paymentType == "both"} onClick={() => { this.setState({
-                paymentType: "both"
-              })}} />
-              <span style={{marginLeft: 5}}>Cash And Credit</span>
-            </div>
-          </form>
+          <select ref="paymentType" defaultValue={"cash"} onChange={(e) => {
+            this.setState({
+              paymentType: e.target.value
+            })
+          }}>
+            <option value="cash">Cash Only</option>
+            <option value="credit">Credit Only</option>
+            <option value="both">Cash and Credit</option>
+          </select>
         </div>
       )
     }
