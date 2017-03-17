@@ -258,7 +258,7 @@ Meteor.methods({
       rounds = OrganizeSuite.swiss(organize.participants.map(p => { return p.alias }));
     }
     else {
-      rounds = OrganizeSuite.roundRobin(organize.participants.map(p => {return p.alias}));
+      rounds = OrganizeSuite.roundRobin(organize.participants);
     }
     if(format == "single_elim" || format == "double_elim") {
       if(instance.brackets[index].id) {
@@ -303,6 +303,17 @@ Meteor.methods({
           })
         })
       })
+    }
+    if (format == "round_robin")
+    {
+      rounds.matches[0].map((m, i) =>
+        var players = [];
+        players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0, ties: 0});
+        players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0, ties: 0});
+        obj.played = false;
+        obj.id = Matches.insert({ players });
+        return obj;
+      )
     }
 
     if(!instance.brackets[index].id) {
@@ -936,6 +947,12 @@ Meteor.methods({
       }
     })
   },
+
+//Round Robin Bracket Architecture is as follows:
+//Bracket.rounds contains 4 parts to it, matches, players, score, and pdic
+//Matches contain all the match collection ids we need to pull from the backend and whether they've been played or not
+//Players contain the most up to date player objects, containing their wins, losses, ties, and so forth
+//PDIC contains a dictionary of all player index ids. pdic["player_name"] will return the index of said player. Separated for sorting reasons
 
   "events.update_roundmatch"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
