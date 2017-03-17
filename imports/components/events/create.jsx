@@ -125,7 +125,7 @@ export default class EventCreate extends Component {
         key: "brackets",
         subItems: [
           {
-            name: "Name",
+            name: "Brackets",
             key: "brackets",
             content: (
               BracketsPanel
@@ -150,7 +150,7 @@ export default class EventCreate extends Component {
         key: "stream",
         subItems: [
           {
-            name: "Name",
+            name: "Stream",
             key: "stream",
             content: (
               StreamPanel
