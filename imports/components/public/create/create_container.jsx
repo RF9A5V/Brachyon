@@ -134,11 +134,11 @@ export default class CreateContainer extends Component {
             })
           }
         </div>
-        <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+        <div className="row x-center footer-buttons">
           {
             (this.props.actions || []).map((a, i) => {
               return (
-                <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
+                <div className={`create-container-option col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} onClick={a.action}>
                   { a.name.toUpperCase() }
                 </div>
               )
