@@ -344,8 +344,8 @@ var OrganizeSuite = {
     if (length%2 == 1)
     {
       participants.push("");
+      length++;
     }
-    length++;
     for (var x = 0; x < Math.floor(length/2); x++)
     {
       if (participants[length-1-x] != "")
