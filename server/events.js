@@ -307,13 +307,14 @@ Meteor.methods({
     if (format == "round_robin")
     {
       rounds.matches[0].map((m, i) =>
+      {
         var players = [];
         players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0, ties: 0});
         players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0, ties: 0});
         obj.played = false;
         obj.id = Matches.insert({ players });
         return obj;
-      )
+      });
     }
 
     if(!instance.brackets[index].id) {
