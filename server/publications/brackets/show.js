@@ -50,6 +50,16 @@ Meteor.publish("bracketContainer", (_id, index) => {
       })
     })
   }
+  else if (bracket)
+  {
+    bracket.rounds.forEach(r => {
+      r.forEach(m => {
+        if(m) {
+          matches.push(m.id);
+        }
+      })
+    })
+  }
   return [
     Instances.find({_id}),
     Brackets.find({ _id: instance.brackets[index].id }),
