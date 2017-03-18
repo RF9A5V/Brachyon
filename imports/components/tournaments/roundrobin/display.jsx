@@ -16,15 +16,15 @@ export default class RoundDisplay extends Component {
     var instance = Instances.findOne();
     var rounds = bracket.rounds;
 
-    var page = rounds.matches.length - 1;
+    var page = rounds.length - 1;
     var num = 0;
-    for (var x = 0; x < rounds.matches[page].length; x++)
+    for (var x = 0; x < rounds.length; x++)
     {
-      if (rounds[page].matches[x].played != false)
+      if (rounds[page][x].played != false)
         num++;
     }
-    rec = rounds.players.length;
-    if (rounds.players.length%2 == 1)
+    rec = bracket.players.length;
+    if (bracket.players.length%2 == 1)
       rec--;
 
     var bracket = Brackets.findOne(props.bracketId);
@@ -74,8 +74,8 @@ export default class RoundDisplay extends Component {
 
   newRound() {
     var rounds = Brackets.findOne(this.props.bracketId).rounds;
-    if (!(this.state.wcount == rounds.matches[this.state.page - 1].length))
-      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + rounds.matches[this.state.page - 1].length + "!", "Error!");
+    if (!(this.state.wcount == rounds[this.state.page - 1].length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + rounds[this.state.page - 1].length + "!", "Error!");
     Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
 
@@ -119,7 +119,7 @@ export default class RoundDisplay extends Component {
   }
 
   onMatchClick(match, i) {
-    if(!match.played && this.state.page == this.state.rounds.matches.length) {
+    if(!match.played && this.state.page == this.state.rounds.length) {
       this.setState({
         open: true,
         match,
@@ -131,7 +131,7 @@ export default class RoundDisplay extends Component {
   render() {
     var bracket = Brackets.findOne(this.props.bracketId);
     var rounds = bracket.rounds;
-    var sortedplayers = rounds.players;
+    var sortedplayers = bracket.players;
     sortedplayers.sort(function(a, b) {
       return b.score - a.score;
     })
@@ -145,7 +145,7 @@ export default class RoundDisplay extends Component {
             Leaderboard
           </div>
           {
-            _.range(1, rounds.matches.length + 1).map((val) => {
+            _.range(1, rounds.length + 1).map((val) => {
               return (
                 <div className={`swiss-tab-header ${this.state.page == val ? "active" : ""}`} onClick={() => { this.setState({ page: val }) }}>
                   Round {val}
@@ -203,7 +203,7 @@ export default class RoundDisplay extends Component {
           <div className="row" style={{flexWrap: "wrap"}} id="RoundDiv">
           {
             this.state.page > 0 ? (
-              rounds.matches[this.state.page - 1].map((match, i) => {
+              rounds[this.state.page - 1].map((match, i) => {
                 return (
                   <RoundMatchBlock match={match} onSelect={() => { this.onMatchClick(match, i) }} />
                 );
@@ -216,7 +216,7 @@ export default class RoundDisplay extends Component {
           <div>
           {
             this.state.page >= (this.state.recrounds-1) ? (
-              (this.state.page == rounds.matches.length && this.state.wcount == rounds.matches[this.state.page - 1].length) ? (
+              (this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
                 <button onClick={ () => {this.endTourn()} }>
                   Finish Tournament
                 </button>
@@ -224,7 +224,7 @@ export default class RoundDisplay extends Component {
                 ""
               )
             ) : (
-              this.state.page == rounds.matches.length && this.state.wcount == rounds.matches[this.state.page - 1].length) ? (
+              this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
                 <button onClick={ () => {this.newRound()} }>
                   Advance Round
                 </button>

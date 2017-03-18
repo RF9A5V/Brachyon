@@ -306,15 +306,19 @@ Meteor.methods({
     }
     if (format == "round_robin")
     {
-      rounds.matches[0].map((m, i) =>
+      rounds.matches[0] = rounds.matches[0].map((m, i) =>
       {
         var players = [];
         players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0, ties: 0});
         players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0, ties: 0});
+        var obj = {};
         obj.played = false;
         obj.id = Matches.insert({ players });
         return obj;
       });
+      var pl = rounds.players;
+      var pdic = rounds.pdic;
+      var rounds = rounds.matches;
     }
 
     if(!instance.brackets[index].id) {
@@ -322,7 +326,9 @@ Meteor.methods({
       if (format == "swiss" || format == "round_robin")
       {
         br = Brackets.insert({
-          rounds: rounds,
+          rounds,
+          players: pl,
+          pdic,
           score: organize.score
         });
       }
