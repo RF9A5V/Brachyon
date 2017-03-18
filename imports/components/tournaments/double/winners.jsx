@@ -11,7 +11,7 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.state = {
-      leagueOpen: event.league && bracket && bracket.complete && this.props.active
+      leagueOpen: event && event.league && bracket && bracket.complete && this.props.active
     };
   }
 
@@ -19,7 +19,7 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.setState({
-      leagueOpen: event.league && bracket && bracket.complete && next.active
+      leagueOpen: event && event.league && bracket && bracket.complete && next.active
     })
   }
 
@@ -146,14 +146,14 @@ export default class DoubleElimWinnersBracket extends Component {
           )
         }
         {
-          Meteor.userId() == event.owner && bracket && bracket.complete && event.league && !event.isComplete ? (
+          event && Meteor.userId() == event.owner && bracket && bracket.complete && event.league && !event.isComplete ? (
             <LeagueModal open={this.state.leagueOpen} close={() => { this.setState({ leagueOpen: false }) }} id={event._id} />
           ) : (
             ""
           )
         }
         {
-          Meteor.userId() == event.owner && event.league && bracket && bracket.complete && !event.isComplete ? (
+          event && Meteor.userId() == event.owner && event.league && bracket && bracket.complete && !event.isComplete ? (
             <button style={{marginLeft: 10}} onClick={() => { this.setState({ leagueOpen: true }) }}>Close Bracket</button>
           ) : (
             ""
