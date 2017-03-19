@@ -49,6 +49,13 @@ class BracketShowScreen extends Component {
     var event = Events.findOne();
     var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
 
+    if(!event) {
+      this.setState({
+        hasLoaded: true
+      });
+      return;
+    }
+
     var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
@@ -273,17 +280,27 @@ class BracketShowScreen extends Component {
 
 export default createContainer(({params}) => {
   const { slug, bracketIndex } = params;
-  const eventHandle = Meteor.subscribe("event", slug);
-  if(eventHandle && eventHandle.ready()) {
-    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+
+  if(slug) {
+    const eventHandle = Meteor.subscribe("event", slug);
+    if(eventHandle && eventHandle.ready()) {
+      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+      return {
+        ready: instanceHandle.ready(),
+        instance: Instances.findOne(),
+        bracket: Brackets.findOne(),
+        event: Events.findOne()
+      }
+    }
     return {
-      ready: instanceHandle.ready(),
-      instance: Instances.findOne(),
-      bracket: Brackets.findOne(),
-      event: Events.findOne()
+      ready: false
     }
   }
-  return {
-    ready: false
+  else {
+    const { id } = params;
+    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    return {
+      ready: instanceHandle.ready()
+    }
   }
 }, BracketShowScreen);
