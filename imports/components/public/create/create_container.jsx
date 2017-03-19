@@ -70,28 +70,6 @@ export default class CreateContainer extends Component {
     this.forceUpdate();
   }
 
-  buttonShow(){
-    return (<button style={{ float: "right"}}onClick={()=>{ browserHistory.push("/event/" + Events.findOne().slug)} }> Back to Bracket </button>)
-
-  }
-
-  backButton(){
-    if ( Organizations.find().fetch().length == 0 ){
-      if (this.props.actions.length==0){
-        return(this.buttonShow());
-      }
-      else if(this.props.actions.length==1){
-        if (this.props.actions[0].name == "Back To Event"){
-          return (this.buttonShow());
-        }
-        else
-          return "";
-      }
-      else return "";
-    }
-    else return "";
-  }
-
   foot(){
     var eColor;
     if(window.location.pathname.indexOf("event") >= 0){
@@ -115,20 +93,21 @@ export default class CreateContainer extends Component {
   }
 
   footer(){
-    if ( Organizations.find().fetch().length == 0 ){
-      if (this.props.actions.length==0){
-        return("");
-      }
-      else if(this.props.actions.length==1){
-        if (this.props.actions[0].name == "Back To Event"){
-          return "";
-        }
-        else
-          return (this.foot());
-      }
-      else return (this.foot());
-    }
-    else return (this.foot());
+    return this.foot();
+    // if ( Organizations.find().fetch().length == 0 ){
+    //   if (this.props.actions.length==0){
+    //     return("");
+    //   }
+    //   else if(this.props.actions.length==1){
+    //     if (this.props.actions[0].name == "Back To Event"){
+    //       return "";
+    //     }
+    //     else
+    //       return (this.foot());
+    //   }
+    //   else return (this.foot());
+    // }
+    // else return (this.foot());
   }
 
   render() {
@@ -165,7 +144,6 @@ export default class CreateContainer extends Component {
           }
         </div>
         <div className="" style={{marginBottom: 10}}>
-        {this.backButton()}
         <div className="row">
           {
             this.props.items.map((item, i) => {
@@ -206,7 +184,7 @@ export default class CreateContainer extends Component {
                     }
                     this.state.modStatus[item.key] = val;
                     this.forceUpdate();
-                  }} getRefValue={this._getRefValue.bind(this)} />
+                  }} getRefValue={this._getRefValue.bind(this)} ignoreHeader={item.ignoreHeader || false} />
                 </div>
               )
             })
