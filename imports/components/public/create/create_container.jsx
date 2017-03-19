@@ -24,6 +24,19 @@ export default class CreateContainer extends Component {
     };
   }
 
+  componentWillReceiveProps(next) {
+    if(this.props.items.length < next.items.length) {
+      this.setState({
+        selected: next.items.length - this.state.selected - 1
+      })
+    }
+    else if(this.props.items.length > next.items.length) {
+      this.setState({
+        selected: Math.min(this.state.selected, next.items.length - 1)
+      })
+    }
+  }
+
   value() {
     var obj = {};
     this.props.items.forEach((item, i) => {
@@ -71,7 +84,7 @@ export default class CreateContainer extends Component {
         if (this.props.actions[0].name == "Back To Event"){
           return (this.buttonShow());
         }
-        else 
+        else
           return "";
       }
       else return "";
@@ -110,7 +123,7 @@ export default class CreateContainer extends Component {
         if (this.props.actions[0].name == "Back To Event"){
           return "";
         }
-        else 
+        else
           return (this.foot());
       }
       else return (this.foot());
