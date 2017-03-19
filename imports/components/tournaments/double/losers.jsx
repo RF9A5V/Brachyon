@@ -9,7 +9,29 @@ export default class DoubleElimLosersBracket extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      dragging: false
+    };
+  }
+
+  onDrag(e) {
+    this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
+    const isDragging = this.refs.dragger.state.dragging;
+    if(this.state.dragging != isDragging) {
+      this.setState({
+        dragging: isDragging
+      })
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener("mouseup", this.onDrag.bind(this));
+    window.addEventListener("mousemove", this.onDrag.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mouseup", this.onDrag.bind(this));
+    window.removeEventListener("mousemove", this.onDrag.bind(this));
   }
 
   toggleModal(id, b, r, i) {
@@ -23,24 +45,6 @@ export default class DoubleElimLosersBracket extends Component {
   }
 
   mainBracket() {
-    if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
-      var headers = this.props.rounds[1].map((_, i) => {
-        return (
-          <h4 style={{marginBottom: 20, width: "100%"}}>
-            Round { i }
-          </h4>
-        )
-      });
-    }
-    else {
-      var headers = this.props.rounds[1].map((_, i) => {
-        return (
-          <h4 style={{marginBottom: 20, width: "100%"}}>
-            Round { i + 1 }
-          </h4>
-        )
-      });
-    }
     var hasInactiveFirstRound = this.props.rounds[1].every(m => {
       return m == null;
     })
@@ -57,7 +61,6 @@ export default class DoubleElimLosersBracket extends Component {
               {
                   return (
                     <div className="col x-center">
-                      { headers[i] }
                       <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
                         {
                           round.map((match, j) => {
@@ -97,16 +100,36 @@ export default class DoubleElimLosersBracket extends Component {
   }
 
   render() {
+
+    if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{marginBottom: 20, width: i == 0 ? 225 : 245, display: "inline-block"}}>
+            Round { i }
+          </h4>
+        )
+      });
+    }
+    else {
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+            Round { i + 1 }
+          </h4>
+        )
+      });
+    }
+
     return (
-      <div style={{overflowX: "auto"}}>
-        {this.props.page == "brack"?
-        (<DragScroll width={"89vw"} height={"63vh"}>
-          { this.mainBracket() } 
-        </DragScroll>):
-        (<DragScroll width={"91vw"} height={"63vh"}>
-          { this.mainBracket() } 
-        </DragScroll>)
-      }
+      <div style={{height: "100%"}}>
+        <div style={{overflowX: "hidden", margin: -20, marginBottom: 0, whiteSpace: "nowrap", backgroundColor: "#222"}} ref="headers">
+          { headers }
+        </div>
+        <div className={this.state.dragging ? "grabbing" : "grab"} style={{margin: -20, marginTop: 0}}>
+          <DragScroll width={"100%"} height={"100%"} ref="dragger">
+            { this.mainBracket() }
+          </DragScroll>
+        </div>
         {
           this.props.id && !this.props.complete ? (
             <EventModal

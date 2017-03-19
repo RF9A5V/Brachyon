@@ -94,7 +94,8 @@ class BracketAdminScreen extends Component {
       update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -110,11 +111,13 @@ class BracketAdminScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreHeader: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreHeader: true,
             args
           }
         ];
@@ -285,7 +288,7 @@ class BracketAdminScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20, height: "100vh"}}>
+      <div style={{padding: 20, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} />
       </div>
     );
