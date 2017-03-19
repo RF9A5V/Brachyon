@@ -129,13 +129,13 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     return (
-      <div style={{overflow:"auto"}}>
+      <div style={{overflow:"auto", height: "100%"}}>
       {this.props.page == "brack"?
-        (<DragScroll width={"89vw"} height={"63vh"}>
-          { this.mainBracket() } 
+        (<DragScroll width={"100%"} height={"100%"}>
+          { this.mainBracket() }
         </DragScroll>):
-        (<DragScroll width={"91vw"} height={"63vh"}>
-          { this.mainBracket() } 
+        (<DragScroll width={"100%"} height={"80%"}>
+          { this.mainBracket() }
         </DragScroll>)
       }
         {

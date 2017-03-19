@@ -312,7 +312,7 @@ class BracketDetails extends Component {
     var rounds = bracket.rounds
     var bracketMeta = Instances.findOne().brackets[this.props.index]
     if (this.state.win == true){
-      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} page={"brack"}/> 
+      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} page={"brack"}/>
     }
     else{
       return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} page={"brack"}/>
@@ -321,21 +321,19 @@ class BracketDetails extends Component {
 
   winnersBracket(obj){
     var bracketMeta = Instances.findOne().brackets[this.props.index]
-    return(
-      <div>
-        {bracketMeta.format.baseFormat != "single_elim" ?
-        (<div>
-          <button style={{width:150, marginRight:15, backgroundColor: this.state.win==true? "#FF6000":""}}onClick={() => { this.setState({ win: true }) }}>WINNERS</button>
-          <button style={{width:150, backgroundColor: this.state.win==false? "#FF6000":""}}onClick={() => { this.setState({ win: false }) }}>LOSERS</button>
-        </div>):
-        ("")
-      }
-        <div>
-          {this.chooseBracket(obj)}
-        </div>
-      </div>
-      );
-
+    return (
+      [
+        bracketMeta.format.baseFormat != "single_elim" ? (
+          <div style={{padding: 10}}>
+            <button style={{width:150, marginRight:15, backgroundColor: this.state.win==true? "#FF6000":""}}onClick={() => { this.setState({ win: true }) }}>WINNERS</button>
+            <button style={{width:150, backgroundColor: this.state.win==false? "#FF6000":""}}onClick={() => { this.setState({ win: false }) }}>LOSERS</button>
+          </div>
+        ) : (
+          null
+        ),
+        this.chooseBracket(obj)
+      ]
+    );
   }
 
 
