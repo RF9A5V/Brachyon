@@ -92,14 +92,14 @@ class BracketShowScreen extends Component {
       eid: this.props.params.eventId,
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
         subs = [
           {
             content: WinnersBracket,
-            name: "Bracket",
             args
           }
         ];
@@ -109,11 +109,13 @@ class BracketShowScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreName: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreName: true,
             args
           }
         ];
@@ -178,8 +180,6 @@ class BracketShowScreen extends Component {
     var defaultItems = [];
     var id = bracketMeta.id;
 
-    defaultItems.push(this.participantsItem(bracketMeta));
-
     var rounds;
     if(bracketMeta.participants && bracketMeta.participants.length > 3) {
       if(!bracketMeta.id) {
@@ -207,6 +207,7 @@ class BracketShowScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracketMeta, this.props.params.bracketIndex || 0, rounds));
     }
+    defaultItems.push(this.participantsItem(bracketMeta));
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
