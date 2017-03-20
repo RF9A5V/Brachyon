@@ -122,14 +122,24 @@ export default class DoubleElimLosersBracket extends Component {
 
     return (
       <div style={{height: "100%"}}>
-        <div style={{overflowX: "hidden", margin: -20, marginBottom: 0, whiteSpace: "nowrap", backgroundColor: "#222", width: "100%"}} ref="headers">
+        <div style={{overflowX: "hidden", margin: -20, marginBottom: 10, whiteSpace: "nowrap", backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
           { headers }
         </div>
-        <div className={this.state.dragging ? "grabbing" : "grab"} style={{margin: -20, marginTop: 0, overflow: "hidden"}}>
-          <DragScroll width={"100%"} height={"100%"} ref="dragger">
-            { this.mainBracket() }
-          </DragScroll>
-        </div>
+        {
+          this.props.page == "admin" ? (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "50vh", margin: -20, marginTop: 0}}>
+              <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          ) : (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "70vh"}}>
+              <DragScroll width="100%" height="100%" ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          )
+        }
         {
           this.props.id && !this.props.complete ? (
             <EventModal
