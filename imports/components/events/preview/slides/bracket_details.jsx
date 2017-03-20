@@ -76,7 +76,7 @@ class BracketDetails extends Component {
             })
           }
         </div>
-        <div className="col-1" style={{overflowY: tabs[this.state.index] == "Bracket" ? "hidden" : "auto"}}>
+        <div className="col-1" style={{overflow: tabs[this.state.index] == "Bracket" ? "hidden" : "auto"}}>
         {
           this._content(tabs, bracket)
         }

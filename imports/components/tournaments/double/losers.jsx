@@ -104,8 +104,8 @@ export default class DoubleElimLosersBracket extends Component {
     if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
       var headers = this.props.rounds[1].map((_, i) => {
         return (
-          <h4 style={{marginBottom: 20, width: i == 0 ? 225 : 245, display: "inline-block"}}>
-            Round { i }
+          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+            Round { i + 1 }
           </h4>
         )
       });
@@ -121,19 +121,21 @@ export default class DoubleElimLosersBracket extends Component {
     }
 
     return (
-      <div style={{height: "100%"}}>
+      <div onWheel={(e) => {
+        e.stopPropagation();
+      }}>
         <div style={{overflowX: "hidden", margin: -20, marginBottom: 10, whiteSpace: "nowrap", backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
           { headers }
         </div>
         {
           this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "50vh", margin: -20, marginTop: 0}}>
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
               <DragScroll width={"100%"} height={"100%"} ref="dragger">
                 { this.mainBracket() }
               </DragScroll>
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "70vh"}}>
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
               <DragScroll width="100%" height="100%" ref="dragger">
                 { this.mainBracket() }
               </DragScroll>
