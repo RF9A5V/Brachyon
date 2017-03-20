@@ -23,11 +23,11 @@ export default class RoundModal extends Component {
     var match = this.getMatch();
     var score = 3;
     var multi = inc === true ? 1 : -1;
-    var scoreOne = Math.max(match.scoreOne + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
-    var scoreTwo = Math.max(match.scoreTwo + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
+    var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
+    var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
-  Meteor.call("events.update_roundmatch", this.props.id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
+  Meteor.call("events.update_roundmatch", this.props.id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
       this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
@@ -58,6 +58,7 @@ export default class RoundModal extends Component {
 
   render() {
     var match = this.getMatch();
+    console.log(this.props.aliasMap);
     var playerOneID = this.props.aliasMap[match.playerOne];
     var playerTwoID = this.props.aliasMap[match.playerTwo];
     return (
@@ -81,7 +82,7 @@ export default class RoundModal extends Component {
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p1", false)}} />
                     <div className="row center x-center button-score">
-                    { match.scoreOne }
+                    { match.p1score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p1", true)}} />
                   </div>
@@ -97,7 +98,7 @@ export default class RoundModal extends Component {
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p2", false)}} />
                     <div className="row center x-center button-score">
-                      { match.scoreTwo }
+                      { match.p2score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p2", true)}} />
                   </div>
