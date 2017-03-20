@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { browserHistory } from "react-router";
 
 import SubContainer from "./sub_create_container.jsx";
 
@@ -21,6 +22,19 @@ export default class CreateContainer extends Component {
         id: Meteor.userId()
       }
     };
+  }
+
+  componentWillReceiveProps(next) {
+    if(this.props.items.length < next.items.length) {
+      this.setState({
+        selected: next.items.length - this.state.selected - 1
+      })
+    }
+    else if(this.props.items.length > next.items.length) {
+      this.setState({
+        selected: Math.min(this.state.selected, next.items.length - 1)
+      })
+    }
   }
 
   value() {
@@ -56,6 +70,46 @@ export default class CreateContainer extends Component {
     this.forceUpdate();
   }
 
+  foot(){
+    var eColor;
+    if(window.location.pathname.indexOf("event") >= 0){
+      eColor = "#00BDFF";
+    }
+    else if(window.location.pathname.indexOf("league" >= 0)){
+      eColor = "#FF6000";
+    }
+    return (
+      <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+          {
+            (this.props.actions || []).map((a, i) => {
+              return (
+                <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
+                  { a.name.toUpperCase() }
+                </div>
+              )
+            })
+          }
+        </div>)
+  }
+
+  footer(){
+    return this.foot();
+    // if ( Organizations.find().fetch().length == 0 ){
+    //   if (this.props.actions.length==0){
+    //     return("");
+    //   }
+    //   else if(this.props.actions.length==1){
+    //     if (this.props.actions[0].name == "Back To Event"){
+    //       return "";
+    //     }
+    //     else
+    //       return (this.foot());
+    //   }
+    //   else return (this.foot());
+    // }
+    // else return (this.foot());
+  }
+
   render() {
     var eColor;
     if(window.location.pathname.indexOf("event") >= 0){
@@ -89,7 +143,8 @@ export default class CreateContainer extends Component {
             )
           }
         </div>
-        <div className="row" style={{marginBottom: 10}}>
+        <div className="" style={{marginBottom: 10}}>
+        <div className="row">
           {
             this.props.items.map((item, i) => {
               return (
@@ -116,6 +171,7 @@ export default class CreateContainer extends Component {
               )
             })
           }
+          </div>
         </div>
         <div>
           {
@@ -128,23 +184,13 @@ export default class CreateContainer extends Component {
                     }
                     this.state.modStatus[item.key] = val;
                     this.forceUpdate();
-                  }} getRefValue={this._getRefValue.bind(this)} />
+                  }} getRefValue={this._getRefValue.bind(this)} ignoreHeader={item.ignoreHeader || false} />
                 </div>
               )
             })
           }
         </div>
-        <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
-          {
-            (this.props.actions || []).map((a, i) => {
-              return (
-                <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
-                  { a.name.toUpperCase() }
-                </div>
-              )
-            })
-          }
-        </div>
+        {this.footer()}
       </div>
     )
   }

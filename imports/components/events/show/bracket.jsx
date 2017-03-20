@@ -4,6 +4,8 @@ import DoubleDisplay from "../../tournaments/double/display.jsx";
 import SwissDisplay from "../../tournaments/swiss/display.jsx";
 import RoundDisplay from "../../tournaments/roundrobin/display.jsx";
 
+import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
+
 import EventModal from "../../tournaments/modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 import TrackerReact from "meteor/ultimatejs:tracker-react"
@@ -43,9 +45,10 @@ export default class BracketPanel extends Component {
     var component = (
       <div></div>
     );
+    const id = Brackets.findOne()._id;
     if(this.props.format == "single_elim") {
       component =  (
-        <SingleDisplay rounds={rounds} id={this.props.id} update={this.forceUpdate.bind(this)} onMatchClick={this.toggleModal.bind(this)} />
+        <WinnersBracket rounds={rounds} id={this.props.id} update={this.forceUpdate.bind(this)} onMatchClick={this.toggleModal.bind(this)} />
       )
     }
     else if (this.props.format == "double_elim"){
@@ -60,7 +63,7 @@ export default class BracketPanel extends Component {
     }
     else {
       component = (
-        <RoundDisplay rounds={rounds} id={this.props.id} update={this.forceUpdate.bind(this)} />
+        <RoundDisplay rounds={rounds} bracketId={id} update={this.forceUpdate.bind(this)} />
       )
     }
     var bracketComplete;

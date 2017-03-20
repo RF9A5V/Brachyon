@@ -8,12 +8,17 @@ import Games from "/imports/api/games/games.js";
 import { getSuffix } from "/imports/decorators/placement_suffix.js";
 import { formatter } from "/imports/decorators/formatter.js";
 
+import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
+import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+import BracketPanel from "/imports/components/events/show/bracket.jsx";
+
 class BracketDetails extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      index: 0
+      index: 0,
+      win:true
     }
   }
 
@@ -45,6 +50,9 @@ class BracketDetails extends Component {
       "Details",
       "Participants"
     ];
+    if(bracket.startedAt != null){
+      tabs.push("Bracket");
+    }
     if(bracket.id && !bracket.isComplete) {
       tabs.push("Matches");
     }
@@ -68,7 +76,7 @@ class BracketDetails extends Component {
             })
           }
         </div>
-        <div className="col-1" style={{overflowY: "auto"}}>
+        <div className="col-1" style={{overflowY: tabs[this.state.index] == "Bracket" ? "hidden" : "auto"}}>
         {
           this._content(tabs, bracket)
         }
@@ -298,11 +306,44 @@ class BracketDetails extends Component {
     )
   }
 
+  chooseBracket(obj){
+    var bracket = Brackets.findOne(obj.id);
+    var event = Events.findOne();
+    var rounds = bracket.rounds
+    var bracketMeta = Instances.findOne().brackets[this.props.index]
+    if (this.state.win == true){
+      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} />
+    }
+    else{
+      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} />
+    }
+  }
+
+  winnersBracket(obj){
+    var bracketMeta = Instances.findOne().brackets[this.props.index]
+    return (
+      [
+        bracketMeta.format.baseFormat != "single_elim" ? (
+          <div style={{marginBottom: 30}}>
+            <button style={{width:150, marginRight:15, backgroundColor: this.state.win==true? "#FF6000":""}}onClick={() => { this.setState({ win: true }) }}>WINNERS</button>
+            <button style={{width:150, backgroundColor: this.state.win==false? "#FF6000":""}}onClick={() => { this.setState({ win: false }) }}>LOSERS</button>
+          </div>
+        ) : (
+          <div style={{padding: 20}}></div>
+        ),
+        <div style={{paddingLeft: 20}}>
+          { this.chooseBracket(obj) }
+        </div>
+      ]
+    );
+  }
+
+
   _content(tabs, obj) {
     switch(tabs[this.state.index]) {
       case "Participants": return this.participants(obj.participants);
       case "Leaderboard": return this.leaderboard(obj);
-      case "Bracket": return null;
+      case "Bracket": return this.winnersBracket(obj);
       case "Matches": return this.matches(obj.id);
       case "Details": return this.details(obj);
       default: return null;
@@ -323,7 +364,7 @@ class BracketDetails extends Component {
     const game = Games.findOne(bracketMeta.game);
     return (
       <div className="row" style={{padding: 10}}>
-        <div className="col col-1" style={{padding: "20px 60px"}}>
+        <div className="col col-1" style={{overflow:"hidden",padding: "20px 60px"}}>
           { this.content(bracketMeta) }
         </div>
       </div>

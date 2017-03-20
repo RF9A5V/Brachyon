@@ -94,7 +94,8 @@ class BracketAdminScreen extends Component {
       update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -110,11 +111,13 @@ class BracketAdminScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreHeader: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreHeader: true,
             args
           }
         ];
@@ -212,7 +215,6 @@ class BracketAdminScreen extends Component {
     var index = this.props.params.bracketIndex || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
-    defaultItems.push(this.participantItem(bracket));
     if (bracket.format.baseFormat == "swiss")
       defaultItems.push(this.advancedItem(bracket));
     if(bracket.isComplete) {
@@ -246,6 +248,7 @@ class BracketAdminScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
+    defaultItems.push(this.participantItem(bracket));
 
     if(bracket.id) {
       if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
@@ -285,7 +288,7 @@ class BracketAdminScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20, height: "calc(100vh - 100px)", overflowY: "auto"}}>
+      <div style={{padding: 20, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} />
       </div>
     );

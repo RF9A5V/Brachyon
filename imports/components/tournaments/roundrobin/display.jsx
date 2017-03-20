@@ -27,7 +27,6 @@ export default class RoundDisplay extends Component {
     if (rounds[0].players.length%2 == 1)
       rec--;
 
-    var bracket = Brackets.findOne(props.bracketId);
     var event = Events.findOne();
     var aliasMap = {};
     if(event) {
@@ -37,8 +36,9 @@ export default class RoundDisplay extends Component {
       })
     }
     else {
-      bracket.players.forEach(p => {
-        aliasMap[p.name] = Meteor.users.findOne({ username: p.name })._id;
+      bracket.rounds[0].players.forEach(p => {
+        const user = Meteor.users.findOne({ username: p.name });
+        aliasMap[p.name] = user ? user._id : null
       })
     }
 
@@ -48,7 +48,7 @@ export default class RoundDisplay extends Component {
       wcount: num,
       recrounds: rec,
       brid: bracket._id,
-      id: props.id || Events.findOne()._id,
+      id: props.bracketId || Events.findOne()._id,
       iid: instance._id,
       aliasMap,
       rounds

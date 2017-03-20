@@ -4,6 +4,8 @@ import MatchBlock from './match.jsx';
 import EventModal from "../modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
+import DragScroll from "react-dragscroll"
+
 export default class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
@@ -11,8 +13,29 @@ export default class DoubleElimWinnersBracket extends Component {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
     this.state = {
-      leagueOpen: event && event.league && bracket && bracket.complete && this.props.active
+      leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
+      dragging: false
     };
+  }
+
+  onDrag(e) {
+    this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
+    const isDragging = this.refs.dragger.state.dragging;
+    if(this.state.dragging != isDragging) {
+      this.setState({
+        dragging: isDragging
+      })
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener("mouseup", this.onDrag.bind(this));
+    window.addEventListener("mousemove", this.onDrag.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mouseup", this.onDrag.bind(this));
+    window.removeEventListener("mousemove", this.onDrag.bind(this));
   }
 
   componentWillReceiveProps(next) {
@@ -69,66 +92,77 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   mainBracket() {
-
-    var headers = this.props.rounds[0].map((_, i) => {
-      return (
-        <h4 style={{marginBottom: 20}}>
-          Round { i + 1 }
-        </h4>
-      )
-    });
-    if(this.props.format == "double_elim") {
-      headers.push(
-        <h4 style={{marginBottom: 20, minWidth: 220}}>
-          Grand Finals
-        </h4>
-      )
-    }
-
     return (
-      <div className="col">
-        <div className="row" style={{paddingLeft: 10}}>
-          <div className="row">
-          {
-            this.props.rounds[0].map((round, i) => {
-              return (
-                <div className="col">
-                  {headers[i]}
-                  <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
-                    {
-                      round.map((match, j) => {
-                        if(match && match.id) {
-                          match = Matches.findOne(match.id);
-                        }
-                        return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
-                        );
-                      })
-                    }
+        <div className="col">
+          <div className="row" style={{paddingLeft: 10}}>
+            <div className="row">
+            {
+              this.props.rounds[0].map((round, i) => {
+                return (
+                  <div className="col">
+                    <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
+                      {
+                        round.map((match, j) => {
+                          if(match && match.id) {
+                            match = Matches.findOne(match.id);
+                          }
+                          return (
+                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                          );
+                        })
+                      }
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          }
+                );
+              })
+            }
+            </div>
           </div>
-          {
-            this.props.format == "double_elim" ? (
-              this.finals(headers.slice(this.props.rounds[0].length))
-            ) : (
-              ""
-            )
-          }
         </div>
-      </div>
     )
   }
 
   render() {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
+
+    var headers = this.props.rounds[0].map((_, i) => {
+      return (
+        <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+          Round { i + 1 }
+        </h4>
+      )
+    });
+    if(this.props.format == "double_elim") {
+      headers.push(
+        <h4 style={{minWidth: 220, display: "inline-block"}}>
+          Grand Finals
+        </h4>
+      )
+    }
+
     return (
-      <div style={{overflowX: "auto"}}>
-        { this.mainBracket() }
+      <div onWheel={(e) => {
+        e.stopPropagation();
+      }}>
+        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "100%"}} ref="headers">
+          { headers }
+        </div>
+        {
+          this.props.page == "admin" ? (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "50vh", margin: -20, marginTop: 0}}>
+              <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          ) : (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "70vh"}}>
+              <DragScroll width="100%" height="100%" ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          )
+        }
         {
           this.props.id && !this.props.complete ? (
             <EventModal
