@@ -122,10 +122,10 @@ export default class DoubleElimLosersBracket extends Component {
 
     return (
       <div style={{height: "100%"}}>
-        <div style={{overflowX: "hidden", margin: -20, marginBottom: 0, whiteSpace: "nowrap", backgroundColor: "#222"}} ref="headers">
+        <div style={{overflowX: "hidden", margin: -20, marginBottom: 0, whiteSpace: "nowrap", backgroundColor: "#222", width: "100%"}} ref="headers">
           { headers }
         </div>
-        <div className={this.state.dragging ? "grabbing" : "grab"} style={{margin: -20, marginTop: 0}}>
+        <div className={this.state.dragging ? "grabbing" : "grab"} style={{margin: -20, marginTop: 0, overflow: "hidden"}}>
           <DragScroll width={"100%"} height={"100%"} ref="dragger">
             { this.mainBracket() }
           </DragScroll>

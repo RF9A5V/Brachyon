@@ -76,7 +76,7 @@ class BracketDetails extends Component {
             })
           }
         </div>
-        <div className="col-1" style={{overflowY: "auto"}}>
+        <div className="col-1" style={{overflowY: tabs[this.state.index] == "Bracket" ? "hidden" : "auto"}}>
         {
           this._content(tabs, bracket)
         }
@@ -329,7 +329,7 @@ class BracketDetails extends Component {
             <button style={{width:150, backgroundColor: this.state.win==false? "#FF6000":""}}onClick={() => { this.setState({ win: false }) }}>LOSERS</button>
           </div>
         ) : (
-          null
+          <div style={{padding: 20}}></div>
         ),
         this.chooseBracket(obj)
       ]
