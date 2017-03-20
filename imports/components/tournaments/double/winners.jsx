@@ -56,7 +56,7 @@ export default class DoubleElimWinnersBracket extends Component {
     });
   }
 
-  finals(header) {
+  finals() {
     return (
       <div className="row">
         {
@@ -64,7 +64,6 @@ export default class DoubleElimWinnersBracket extends Component {
             var finr = "finalround" + i
             return (
               <div className="col">
-                { header[0] }
                 <div className="col col-1 finalr" id={finr} style={{justifyContent: "space-around"}} key={i}>
                   {
                     round.map((match, j) => {
@@ -117,6 +116,9 @@ export default class DoubleElimWinnersBracket extends Component {
               })
             }
             </div>
+            {
+              this.finals()
+            }
           </div>
         </div>
     )
@@ -145,7 +147,7 @@ export default class DoubleElimWinnersBracket extends Component {
       <div onWheel={(e) => {
         e.stopPropagation();
       }}>
-        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "100%"}} ref="headers">
+        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
           { headers }
         </div>
         {

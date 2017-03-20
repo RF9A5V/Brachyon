@@ -109,13 +109,13 @@ class BracketShowScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
-            ignoreName: true,
+            ignoreHeader: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
-            ignoreName: true,
+            ignoreHeader: true,
             args
           }
         ];
