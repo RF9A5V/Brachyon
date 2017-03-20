@@ -47,12 +47,15 @@ export default class EventCreate extends Component {
         toastr.error(err.reason, "Error!");
       }
       else {
-        var href = `/event/${event}`;
+        var href = `/event/${event.slug}`;
         if(imgRef) {
-          imgRef.meta.eventSlug = event;
+          imgRef.meta.eventSlug = event.slug;
+          const fileType = imgRef.file.type;
+          console.log(fileType);
           Banners.insert({
             file: imgRef.file,
             meta: imgRef.meta,
+            fileName: event.id + "." + fileType.slice(fileType.indexOf("/") + 1),
             onUploaded: (err, data) => {
               if(err) {
                 return toastr.error(err.reason, "Error!");
