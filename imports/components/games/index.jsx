@@ -64,7 +64,7 @@ export default class GamesIndex extends Component {
                       { game.playerCount || 0 }
                     </span>
                     <span className="game-count col-1">
-                      <FontAwesome name="gamepad" style={{marginRight: 10}} />
+                      <FontAwesome name="clone" style={{marginRight: 10}} />
                       { game.eventCount || 0 }
                     </span>
                   </div>
@@ -92,6 +92,7 @@ export default class GamesIndex extends Component {
       }
       else {
         meta.gameId = game;
+        console.log(game + "." + type)
         GameBanners.insert({
           file: image,
           meta,
