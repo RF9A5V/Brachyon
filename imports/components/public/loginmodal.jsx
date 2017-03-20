@@ -74,9 +74,9 @@ export default class LogInModal extends React.Component {
             <div className="row col-1 x-center center">
               {
                 this.state.content == "login" ? (
-                  <LogInScreen />
+                  <LogInScreen onClose={this.closeModal.bind(this)} />
                 ) : (
-                  <SignUpScreen />
+                  <SignUpScreen onClose={this.closeModal.bind(this)} />
                 )
               }
             </div>

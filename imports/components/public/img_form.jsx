@@ -52,13 +52,8 @@ export default class ImageForm extends Component {
     catch(e) {
       return null;
     }
-    var type = "";
-    if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
-      type = ".jpg";
-    }
-    else if(this.state.type == "image/png") {
-      type = ".png";
-    }
+    const mimeType = this.state.file.type;
+    const type = mimeType.slice(mimeType.indexOf("/") + 1);
     var content = {
       image: this.state.file,
       type,
