@@ -142,8 +142,10 @@ export default class DoubleElimWinnersBracket extends Component {
     }
 
     return (
-      <div style={{height: "100%"}}>
-        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222"}} ref="headers">
+      <div onWheel={(e) => {
+        e.stopPropagation();
+      }}>
+        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "100%"}} ref="headers">
           { headers }
         </div>
         {
@@ -154,8 +156,8 @@ export default class DoubleElimWinnersBracket extends Component {
               </DragScroll>
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "70vh"}}>
+              <DragScroll width="100%" height="100%" ref="dragger">
                 { this.mainBracket() }
               </DragScroll>
             </div>
