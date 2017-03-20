@@ -944,8 +944,8 @@ Meteor.methods({
     if (roundNumber > 0)
       prevround = bracket.rounds[roundNumber-1];
     bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].scoreOne = winfirst;
-    bracket.matches[matchNumber].scoreTwo = winsecond;
+    bracket.matches[matchNumber].p1score = winfirst;
+    bracket.matches[matchNumber].p2score = winsecond;
     bracket.matches[matchNumber].ties = ties;
     var prevmatch1, prevmatch2;
     if (roundNumber < 1)
@@ -993,8 +993,8 @@ Meteor.methods({
           playerOne: participants[x],
           playerTwo: participants[participants.length - x - 1],
           played: false,
-          scoreOne: 0,
-          scoreTwo: 0,
+          p1score: 0,
+          p2score: 0,
           ties: 0
         };
         temp.push(matchObj);
