@@ -331,7 +331,9 @@ class BracketDetails extends Component {
         ) : (
           <div style={{padding: 20}}></div>
         ),
-        this.chooseBracket(obj)
+        <div style={{paddingLeft: 20}}>
+          { this.chooseBracket(obj) }
+        </div>
       ]
     );
   }
