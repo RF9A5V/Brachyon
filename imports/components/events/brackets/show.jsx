@@ -92,14 +92,14 @@ class BracketShowScreen extends Component {
       eid: this.props.params.eventId,
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
         subs = [
           {
             content: WinnersBracket,
-            name: "Bracket",
             args
           }
         ];
@@ -109,11 +109,13 @@ class BracketShowScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreName: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreName: true,
             args
           }
         ];
