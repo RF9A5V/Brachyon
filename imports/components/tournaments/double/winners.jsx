@@ -117,7 +117,11 @@ export default class DoubleElimWinnersBracket extends Component {
             }
             </div>
             {
-              this.finals()
+              this.props.rounds[2] ? (
+                this.finals()
+              ) : (
+                null
+              )
             }
           </div>
         </div>
@@ -152,13 +156,13 @@ export default class DoubleElimWinnersBracket extends Component {
         </div>
         {
           this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "50vh", margin: -20, marginTop: 0}}>
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
               <DragScroll width={"100%"} height={"100%"} ref="dragger">
                 { this.mainBracket() }
               </DragScroll>
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "70vh"}}>
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
               <DragScroll width="100%" height="100%" ref="dragger">
                 { this.mainBracket() }
               </DragScroll>
