@@ -7,12 +7,14 @@ import { GameBanners } from "/imports/api/games/game_banner.js";
 
 Meteor.publish('event', (slug) => {
   var event = Events.findOne({slug: slug});
+  console.log(slug);
   if(!event) {
     return [];
   }
   var _id = event._id;
   var instanceIndex = event.instances.length - 1;
-  var instance = Instances.findOne(event.instances.pop());
+  var instance = Instances.findOne(event.instances[instanceIndex]);
+  console.log(instance);
   var gameIDs = [];
   var userIDs = [];
   if(instance.brackets) {
