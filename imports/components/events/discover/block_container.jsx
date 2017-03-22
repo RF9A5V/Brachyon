@@ -190,7 +190,9 @@ export default class BlockContainer extends Component {
         </div>
         <RerunModal {...this.state} onClose={() => { this.setState({ open: false, id: null }) }} onComplete={(sub) => {
           this.state.subs.push(sub);
+          browserHistory.push(`/event/${Events.findOne(this.state.id).slug}`);
           this.setState({ open: false, id: null });
+
         }} />
         <CloseModal open={this.state.closeOpen} onClose={() => { this.setState({ closeOpen: false, id: null }) }} id={this.state.id} />
       </div>
