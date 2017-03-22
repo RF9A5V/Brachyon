@@ -361,7 +361,7 @@ var OrganizeSuite = {
     var tempc = [];
     for (var x = 0; x < participants.length; x++)
     {
-      tempc[participants[x]] = x;
+      tempc[participants[x].alias] = x;
       var playerObj = {
         name: participants[x].alias,
         id: participants[x].id,

@@ -264,9 +264,9 @@ Meteor.methods({
       if(instance.brackets[index].id) {
         var bracket = Brackets.findOne(instance.brackets[index].id);
         var matches = [];
-        bracket.rounds.forEach(b => {
           b.map(r => {
             r.map(m => {
+              bracket.rounds.forEach(b => {
               if(m) {
                 matches.push(m.id);
               }
@@ -317,7 +317,7 @@ Meteor.methods({
         return obj;
       });
       var pl = rounds.players;
-      var pdic = rounds.pdic;
+      var pdiclist = rounds.pdic;
       var rounds = rounds.matches;
     }
 
@@ -325,10 +325,11 @@ Meteor.methods({
       var br;
       if (format == "swiss" || format == "round_robin")
       {
+        console.log(pdiclist);
         br = Brackets.insert({
           rounds,
           players: pl,
-          pdic,
+          pdic: pdiclist,
           score: organize.score
         });
       }
@@ -684,11 +685,9 @@ Meteor.methods({
   "events.complete_match"(bracketID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
     var bracket = Brackets.findOne(bracketID);
-    bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].played = true;
     Brackets.update(bracketID, {
       $set: {
-        [`rounds.${roundNumber}`]: bracket
+        [`rounds.${roundNumber}.${matchNumber}.played`]: true
       }
     })
   },
@@ -715,7 +714,7 @@ Meteor.methods({
     if (tied == false)
       return true;
 
-    var p1 = bracket.pdic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
+    var p1 = bracket.pd.ic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
     //TODO: Make system dynamic array for 3+ tied players
     var bnum1 = 0, bnum2 = 0;
 
@@ -964,39 +963,22 @@ Meteor.methods({
   "events.update_roundmatch"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
     var bracket = Brackets.findOne(bracketID);
-    var prevround;
-    if (roundNumber > 0)
-      prevround = bracket.rounds[roundNumber-1];
-    bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].scoreOne = winfirst;
-    bracket.matches[matchNumber].scoreTwo = winsecond;
-    bracket.matches[matchNumber].ties = ties;
-    var prevmatch1, prevmatch2;
-    if (roundNumber < 1)
-    {
-      prevmatch1 = {score: 0, wins: 0, losses: 0};
-      prevmatch2 = {score: 0, wins: 0, losses: 0};
-    }
-    else
-    {
-      var prep1 = prevround.pdic[ bracket.matches[matchNumber].playerOne ];
-      var prep2 = prevround.pdic[ bracket.matches[matchNumber].playerTwo ];
-      prevmatch1 = prevround.players[prep1];
-      prevmatch2 = prevround.players[prep2];
-    }
-    var p1 = bracket.pdic[bracket.matches[matchNumber].playerOne];
-    var p2 = bracket.pdic[bracket.matches[matchNumber].playerTwo];
-    bracket.players[p1].score = prevmatch1.score + score*winfirst;
-    bracket.players[p1].wins = prevmatch1.wins + winfirst;
-    bracket.players[p1].losses = prevmatch1.losses + winsecond;
-    bracket.players[p2].score = prevmatch2.score + score*winsecond;
-    bracket.players[p2].wins = prevmatch2.wins + winsecond;
-    bracket.players[p2].losses = prevmatch2.losses + winfirst;
+    var match = Matches.findOne(bracket.rounds[roundNumber][matchNumber].id);
+    match.players[0].score = winfirst;
+    match.players[1].score = winsecond;
+    match.players[0].ties = match.players[1].ties = ties;
 
-    Brackets.update(bracketID, {
-      $set: {
-        [`rounds.${roundNumber}`]: bracket
-      }
+    var p1 = bracket.pdic[match.players[0].alias];
+    var p2 = bracket.pdic[match.players[1].alias];
+    bracket.players[p1].score += score*winfirst;
+    bracket.players[p1].wins += winfirst;
+    bracket.players[p1].losses += winsecond;
+    bracket.players[p2].score += score*winsecond;
+    bracket.players[p2].wins += winsecond;
+    bracket.players[p2].losses += winfirst;
+
+    Matches.update(match._id, {
+      $set: match
     })
   },
 
