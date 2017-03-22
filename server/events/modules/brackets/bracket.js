@@ -31,22 +31,6 @@ Meteor.methods({
     }
     Instances.update(instance._id, cmd);
   },
-  "events.brackets.edit"(id, index, game, format) {
-    var event = Events.findOne(id);
-    if(!event) {
-      throw new Meteor.Error(404, "Couldn't find event.");
-    }
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
-    if(!instance.brackets || !instance.brackets[index]) {
-      throw new Meteor.Error(404, "Bracket not found.");
-    }
-    Instances.update(instance._id, {
-      $set: {
-        [`brackets.${index}.game`]: game,
-        [`brackets.${index}.format`]: format
-      }
-    })
-  },
   "events.brackets.remove"(id, index) {
     var event = Events.findOne(id);
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);

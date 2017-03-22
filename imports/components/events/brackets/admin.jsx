@@ -13,6 +13,7 @@ import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
+import BracketOptions from "./admin_comps/options.jsx";
 
 import Restart from "./admin_comps/restart.jsx";
 import Finalize from "./admin_comps/finalize.jsx";
@@ -210,6 +211,34 @@ class BracketAdminScreen extends Component {
     }
   }
 
+  optionItem(bracket, index) {
+    return {
+      name: "Options",
+      key: "options",
+      icon: "cog",
+      subItems: [
+        {
+          content: BracketOptions,
+          args: {
+            bracket,
+            index,
+            onStart: () => {
+              var instanceId = Instances.findOne()._id;
+              if(this.state.sub) {
+                this.state.sub.stop();
+              }
+              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, index, {
+                onReady: () => {
+                  this.forceUpdate();
+                }
+              })
+            }
+          }
+        }
+      ]
+    }
+  }
+
   items() {
     const instance = Instances.findOne();
     var index = this.props.params.bracketIndex || 0;
@@ -256,8 +285,8 @@ class BracketAdminScreen extends Component {
       if(!bracket.isComplete) {
         defaultItems.push(this.logisticsItem(bracket, index));
       }
-
     }
+    defaultItems.push(this.optionItem(bracket, index))
     // defaultItems.push({
     //   text: "Back To Event",
     //   action: () => {

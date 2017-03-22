@@ -19,23 +19,27 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   onDrag(e) {
-    this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
-    const isDragging = this.refs.dragger.state.dragging;
-    if(this.state.dragging != isDragging) {
-      this.setState({
-        dragging: isDragging
-      })
+    if(this.refs.headers && this.refs.dragger) {
+      this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
+      const isDragging = this.refs.dragger.state.dragging;
+      if(this.state.dragging != isDragging) {
+        this.setState({
+          dragging: isDragging
+        })
+      }
     }
   }
 
   componentDidMount() {
-    window.addEventListener("mouseup", this.onDrag.bind(this));
-    window.addEventListener("mousemove", this.onDrag.bind(this));
+    const func = this.onDrag.bind(this);
+    window.addEventListener("mouseup", func);
+    window.addEventListener("mousemove", func);
+    this.state.func = func;
   }
 
   componentWillUnmount() {
-    window.removeEventListener("mouseup", this.onDrag.bind(this));
-    window.removeEventListener("mousemove", this.onDrag.bind(this));
+    window.removeEventListener("mouseup", this.state.func);
+    window.removeEventListener("mousemove", this.state.func);
   }
 
   componentWillReceiveProps(next) {

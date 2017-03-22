@@ -25,16 +25,12 @@ export default class CreateContainer extends Component {
   }
 
   componentWillReceiveProps(next) {
-    if(this.props.items.length < next.items.length) {
-      this.setState({
-        selected: next.items.length - this.state.selected - 1
-      })
-    }
-    else if(this.props.items.length > next.items.length) {
-      this.setState({
-        selected: Math.min(this.state.selected, next.items.length - 1)
-      })
-    }
+    const index = next.items.findIndex(o => {
+      return o.key == this.props.items[this.state.selected].key
+    })
+    this.setState({
+      selected: index || 0
+    });
   }
 
   value() {
