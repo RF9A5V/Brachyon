@@ -12,13 +12,12 @@ export default class RoundDisplay extends Component {
   constructor(props)
   {
     super(props);
-    console.log(props.bracketId);
     var bracket = Brackets.findOne();
     var instance = Instances.findOne();
     var rounds = bracket.rounds;
     var page = rounds.length - 1;
     var num = 0;
-    for (var x = 0; x < rounds.length; x++)
+    for (var x = 0; x < rounds[page].length; x++)
     {
       if (rounds[page][x].played != false)
         num++;
@@ -50,7 +49,9 @@ export default class RoundDisplay extends Component {
       id: props.id || Events.findOne()._id,
       iid: instance._id,
       aliasMap,
-      rounds
+      rounds,
+      updateMatch: false,
+      sub: false
     }
   }
 
@@ -72,7 +73,7 @@ export default class RoundDisplay extends Component {
   }
 
   newRound() {
-    var rounds = Brackets.findOne(this.props.bracketId).rounds;
+    var rounds = Brackets.findOne().rounds;
     if (!(this.state.wcount == rounds[this.state.page - 1].length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + rounds[this.state.page - 1].length + "!", "Error!");
     Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
@@ -85,7 +86,7 @@ export default class RoundDisplay extends Component {
         if(this.props.update) {
           this.props.update();
         }
-        this.setState({wcount: 0, page: this.state.page + 1});
+        this.setState({updateMatch: true});
       }
     });
   }
@@ -130,6 +131,17 @@ export default class RoundDisplay extends Component {
   render() {
     var bracket = Brackets.findOne();
     var rounds = bracket.rounds;
+
+    if (this.state.updateMatch)
+    {
+      var sub = Meteor.subscribe("Matches", rounds, {
+        onReady: () => {
+          this.setState({updateMatch: false, sub, wcount: 0, page: this.state.page + 1, rounds})
+          this.forceUpdate();
+        }
+      });
+    }
+
     var sortedplayers = bracket.players;
     sortedplayers.sort(function(a, b) {
       return b.score - a.score;

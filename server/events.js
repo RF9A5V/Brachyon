@@ -325,7 +325,6 @@ Meteor.methods({
       var br;
       if (format == "swiss" || format == "round_robin")
       {
-        console.log(pdiclist);
         br = Brackets.insert({
           rounds,
           players: pl,
@@ -967,7 +966,6 @@ Meteor.methods({
     match.players[0].score = winfirst;
     match.players[1].score = winsecond;
     match.players[0].ties = match.players[1].ties = ties;
-
     var p1 = bracket.pdic[match.players[0].alias];
     var p2 = bracket.pdic[match.players[1].alias];
     bracket.players[p1].score += score*winfirst;
@@ -985,41 +983,38 @@ Meteor.methods({
   "events.update_roundrobin"(bracketID, roundNumber, score) { //For swiss specifically
     var bracket = Brackets.findOne(bracketID);
     var rounds = bracket.rounds;
-    var playerarr = bracket.rounds[0].players;
-    bracket = bracket.rounds[roundNumber];
+    var playerarr = bracket.players;
     var lastp = playerarr.pop();
     playerarr.splice(1, 0, lastp);
     var participants = playerarr.map(function(x) { return x.name })
     var temp = [];
-    for (var x = 0; x < Math.floor(participants.length/2); x++)
+    for (var x = 0; x < Math.floor(playerarr.length/2); x++)
     {
-      if (participants[participants.length - x - 1] != "" && participants[x] != "")
+      if (participants[playerarr.length - x - 1] != "" && participants[x] != "")
       {
-        var matchObj = {
-          playerOne: participants[x],
-          playerTwo: participants[participants.length - x - 1],
-          played: false,
-          scoreOne: 0,
-          scoreTwo: 0,
-          ties: 0
-        };
-        temp.push(matchObj);
+        var obj = {};
+        var players = [];
+
+        players.push({alias: playerarr[x].name, id: playerarr[x].id, score: 0, ties: 0});
+        players.push({alias: playerarr[participants.length - x - 1].name, id: playerarr[participants.length - x - 1].id, score: 0, ties: 0});
+
+        obj.id = Matches.insert({ players });
+        obj.played = false;
+
+        temp.push(obj);
       }
     }
     var tempb = JSON.parse(JSON.stringify(playerarr));
     var pdic = {};
     for (var x = 0; x < tempb.length; x++)
       pdic[tempb[x].name] = x;
-    var roundObj = {
-      matches: temp,
-      players: tempb,
-      score: score,
-      pdic: pdic
-    };
-    rounds.push(roundObj);
+    rounds.push(temp);
+    var players = playerarr;
     Brackets.update(bracketID, {
       $set: {
-        [`rounds`]: rounds
+        [`rounds`]: rounds,
+        [`players`]: players,
+        [`pdic`]: pdic
       }
     });
   },
@@ -1039,7 +1034,8 @@ Meteor.methods({
     }
     if(!instance) {
       var league = Leagues.findOne(eventID);
-      roundobj = Brackets.findOne(league.tiebreaker.id);
+      if (league)
+        roundobj = Brackets.findOne(league.tiebreaker.id);
     }
     else {
       bracket = instance.brackets[bracketIndex];
@@ -1092,7 +1088,6 @@ Meteor.methods({
         bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
           return (b.score - a.score);
         }).map((obj, i) => {
-          console.log(obj);
           var user = Meteor.users.findOne({ username: obj.name });
           if(!user) {
             return;

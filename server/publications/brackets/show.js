@@ -68,4 +68,20 @@ Meteor.publish("bracketContainer", (_id, index) => {
       $in: matches
     } })
   ]
-})
+});
+
+Meteor.publish("Matches", (ids) => {
+  var matches = [];
+  ids.forEach(b => {
+    b.forEach(m => {
+      if(m) {
+        matches.push(m.id);
+      }
+    })
+  })
+  return [
+    Matches.find({ _id: {
+      $in: matches
+    } })
+  ]
+});

@@ -83,7 +83,7 @@ export default class BracketPanel extends Component {
       else {
         rec = bracket.players.length - (bracket.players.length % 2) - 1;
       }
-      bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
+      bracketComplete = rounds.length >= rec && rounds.pop().every(match => { return match.played });
     }
     var event = Events.findOne();
     var showModal = event && event.league != null && bracketComplete && event.owner == Meteor.userId() && !event.isComplete;
