@@ -77,15 +77,16 @@ export default class BracketPanel extends Component {
       }
     }
     else {
-      var rounds = Brackets.findOne().rounds;
+      var bracket = Brackets.findOne();
+      var rounds = bracket.rounds;
       var rec;
       if(this.props.format == "swiss") {
         rec = Math.ceil(Math.log2(rounds[0].players.length));
       }
       else {
-        rec = rounds[0].players.length - (rounds[0].players.length % 2) - 1;
+        rec = bracket.players.length - (bracket.players.length % 2) - 1;
       }
-      bracketComplete = rounds.length >= rec && rounds.pop().matches.every(match => { return match.played });
+      bracketComplete = rounds.length >= rec && rounds.pop().every(match => { return match.played });
     }
     var event = Events.findOne();
     var showModal = event && event.league != null && bracketComplete && event.owner == Meteor.userId() && !event.isComplete;
