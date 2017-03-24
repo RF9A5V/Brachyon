@@ -3,11 +3,39 @@ import React, { Component } from "react";
 import EventModal from "../modal.jsx";
 import MatchBlock from './match.jsx';
 
+import DragScroll from "react-dragscroll"
+
 export default class DoubleElimLosersBracket extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      dragging: false
+    };
+  }
+
+  onDrag(e) {
+    if(this.refs.headers && this.refs.dragger) {
+      this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
+      const isDragging = this.refs.dragger.state.dragging;
+      if(this.state.dragging != isDragging) {
+        this.setState({
+          dragging: isDragging
+        })
+      }
+    }
+  }
+
+  componentDidMount() {
+    const func = this.onDrag.bind(this);
+    window.addEventListener("mouseup", func);
+    window.addEventListener("mousemove", func);
+    this.state.func = func;
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mouseup", this.state.func);
+    window.removeEventListener("mousemove", this.state.func);
   }
 
   toggleModal(id, b, r, i) {
@@ -21,14 +49,6 @@ export default class DoubleElimLosersBracket extends Component {
   }
 
   mainBracket() {
-
-    var headers = this.props.rounds[1].map((_, i) => {
-      return (
-        <h4 style={{marginBottom: 20, width: "100%"}}>
-          Round { i + 1 }
-        </h4>
-      )
-    });
     var hasInactiveFirstRound = this.props.rounds[1].every(m => {
       return m == null;
     })
@@ -37,7 +57,7 @@ export default class DoubleElimLosersBracket extends Component {
     }
 
     return (
-      <div className="col" style={{overflowX: "auto"}}>
+      <div className="col" >
         <div className="row" style={{paddingLeft: 10}}>
           {
             this.props.rounds[1].map((round, i) => {
@@ -45,7 +65,6 @@ export default class DoubleElimLosersBracket extends Component {
               {
                   return (
                     <div className="col x-center">
-                      { headers[i] }
                       <div className="col col-1" style={{justifyContent: "space-around"}} key={i}>
                         {
                           round.map((match, j) => {
@@ -85,9 +104,48 @@ export default class DoubleElimLosersBracket extends Component {
   }
 
   render() {
+
+    if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+            Round { i + 1 }
+          </h4>
+        )
+      });
+    }
+    else {
+      var headers = this.props.rounds[1].map((_, i) => {
+        return (
+          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+            Round { i + 1 }
+          </h4>
+        )
+      });
+    }
+
     return (
-      <div>
-        { this.mainBracket() }
+      <div onWheel={(e) => {
+        e.stopPropagation();
+      }}>
+        <div style={{overflowX: "hidden", margin: -20, marginBottom: 10, whiteSpace: "nowrap", backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
+          { headers }
+        </div>
+        {
+          this.props.page == "admin" ? (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
+              <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          ) : (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
+              <DragScroll width="100%" height="100%" ref="dragger">
+                { this.mainBracket() }
+              </DragScroll>
+            </div>
+          )
+        }
         {
           this.props.id && !this.props.complete ? (
             <EventModal

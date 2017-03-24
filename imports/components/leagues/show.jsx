@@ -17,6 +17,10 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 class LeagueShowPage extends Component {
 
+  componentWillMount() {
+    this.populateMetaTags();
+  }
+
   imgOrDefault() {
     var league = Leagues.findOne();
     if(league.details.bannerUrl) {

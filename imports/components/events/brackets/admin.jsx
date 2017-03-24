@@ -13,6 +13,7 @@ import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import StartBracketAction from "./admin_comps/start.jsx";
 import BracketAction from "../show/bracket.jsx";
+import BracketOptions from "./admin_comps/options.jsx";
 
 import Restart from "./admin_comps/restart.jsx";
 import Finalize from "./admin_comps/finalize.jsx";
@@ -94,7 +95,8 @@ class BracketAdminScreen extends Component {
       update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -110,11 +112,13 @@ class BracketAdminScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreHeader: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreHeader: true,
             args
           }
         ];
@@ -207,12 +211,39 @@ class BracketAdminScreen extends Component {
     }
   }
 
+  optionItem(bracket, index) {
+    return {
+      name: "Options",
+      key: "options",
+      icon: "cog",
+      subItems: [
+        {
+          content: BracketOptions,
+          args: {
+            bracket,
+            index,
+            onStart: () => {
+              var instanceId = Instances.findOne()._id;
+              if(this.state.sub) {
+                this.state.sub.stop();
+              }
+              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, index, {
+                onReady: () => {
+                  this.forceUpdate();
+                }
+              })
+            }
+          }
+        }
+      ]
+    }
+  }
+
   items() {
     const instance = Instances.findOne();
     var index = this.props.params.bracketIndex || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
-    defaultItems.push(this.participantItem(bracket));
     if (bracket.format.baseFormat == "swiss")
       defaultItems.push(this.advancedItem(bracket));
     if(bracket.isComplete) {
@@ -246,6 +277,7 @@ class BracketAdminScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
+    defaultItems.push(this.participantItem(bracket));
 
     if(bracket.id) {
       if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
@@ -253,8 +285,8 @@ class BracketAdminScreen extends Component {
       if(!bracket.isComplete) {
         defaultItems.push(this.logisticsItem(bracket, index));
       }
-
     }
+    defaultItems.push(this.optionItem(bracket, index))
     // defaultItems.push({
     //   text: "Back To Event",
     //   action: () => {
@@ -285,7 +317,7 @@ class BracketAdminScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20, height: "calc(100vh - 100px)", overflowY: "auto"}}>
+      <div style={{padding: 20, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} />
       </div>
     );

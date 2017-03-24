@@ -46,7 +46,7 @@ export default class RoundDisplay extends Component {
       wcount: num,
       recrounds: rec,
       brid: bracket._id,
-      id: props.id || Events.findOne()._id,
+      id: props.bracketId || Events.findOne()._id,
       iid: instance._id,
       aliasMap,
       rounds,

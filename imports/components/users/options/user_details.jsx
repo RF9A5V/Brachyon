@@ -17,23 +17,19 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
     }
   }
 
-  onRequestImageSave(type) {
-    var ref = type == "image" ? this.refs.profileImage : this.refs.profileBanner;
-    this.saveImage(ref);
-    return toastr.success("Successfully updated profile " + type + "!");
-  }
-
-  saveImage(ref) {
-    if(!ref.hasValue()) {
-      return toastr.error("You have to supply an image for this!", "Error!");
-    }
-    var self = this;
-    ref.value((err, data) => {
-      if(err) {
-        return toastr.error(err);
+  onRequestImageSave(imgType) {
+    const collection = imgType == "image" ? ProfileImages : ProfileBanners;
+    const ref = imgType == "image" ? this.refs.profileImage : this.refs.profileBanner;
+    var { image, type, meta } = ref.value();
+    meta.userId = Meteor.userId();
+    collection.insert({
+      file: image,
+      fileName: Meteor.userId() + `${imgType == "image" ? "_profile" : "_banner"}.${type}`,
+      meta,
+      onUploaded: () => {
+        toastr.success("Successfully uploaded image!");
       }
-      ref.reset();
-    });
+    })
   }
 
   saveAlias(e) {
@@ -63,7 +59,7 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
           <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={() => { this.onRequestImageSave("image") }}>Save</button>
           </div>
-          <ImageForm aspectRatio={1} collection={ProfileImages} ref="profileImage" url={user.profile.imageUrl} meta={{userId: Meteor.userId()}}/>
+          <ImageForm aspectRatio={1} ref="profileImage" url={user.profile.imageUrl}/>
 
         </div>
         <h4>Profile Banner</h4>
@@ -71,7 +67,7 @@ export default class UserDetailsPanel extends TrackerReact(Component) {
           <div style={{display:"flex", justifyContent:"flex-end"}}>
             <button onClick={() => { this.onRequestImageSave("banner") }}>Save</button>
           </div>
-          <ImageForm aspectRatio={16/4.5} ref="profileBanner" url={user.profile.bannerUrl} meta={{userId: Meteor.userId()}} />
+          <ImageForm aspectRatio={16/4.5} ref="profileBanner" url={user.profile.bannerUrl}/>
         </div>
 
         <h4 className="col-1">Alias</h4>

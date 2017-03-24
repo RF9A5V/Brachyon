@@ -66,7 +66,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
     ProfileImages.insert({
       file: image,
       meta,
-      fileName: Meteor.userId() + "." + type,
+      fileName: Meteor.userId() + "_profile." + type,
       onUploaded: (err) => {
         if(err) {
           toastr.error(err.reason);
@@ -150,7 +150,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
               </div>
               <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
                 <div className="col center x-center" style={{width: "100%", height: "100%"}}>
-                  <ImageForm ref="img" collection={ProfileImages} meta={{userId: Meteor.userId()}} />
+                  <ImageForm ref="img" meta={{userId: Meteor.userId()}} />
                   <button onClick={this.updateProfileImage.bind(this)}>Submit</button>
                 </div>
               </Modal>
