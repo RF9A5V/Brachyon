@@ -309,11 +309,11 @@ Meteor.methods({
       rounds.matches[0] = rounds.matches[0].map((m, i) =>
       {
         var players = [];
-        players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0, ties: 0});
-        players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0, ties: 0});
+        players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0});
+        players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0});
         var obj = {};
         obj.played = false;
-        obj.id = Matches.insert({ players });
+        obj.id = Matches.insert({ players, ties: 0 });
         return obj;
       });
       var pl = rounds.players;
@@ -965,7 +965,7 @@ Meteor.methods({
     var match = Matches.findOne(bracket.rounds[roundNumber][matchNumber].id);
     match.players[0].score = winfirst;
     match.players[1].score = winsecond;
-    match.players[0].ties = match.players[1].ties = ties;
+    match.ties = ties;
     var p1 = bracket.pdic[match.players[0].alias];
     var p2 = bracket.pdic[match.players[1].alias];
     bracket.players[p1].score += score*winfirst;
@@ -977,6 +977,9 @@ Meteor.methods({
 
     Matches.update(match._id, {
       $set: match
+    })
+    Brackets.update(bracketID, {
+      $set: bracket
     })
   },
 
@@ -995,10 +998,10 @@ Meteor.methods({
         var obj = {};
         var players = [];
 
-        players.push({alias: playerarr[x].name, id: playerarr[x].id, score: 0, ties: 0});
-        players.push({alias: playerarr[participants.length - x - 1].name, id: playerarr[participants.length - x - 1].id, score: 0, ties: 0});
+        players.push({alias: playerarr[x].name, id: playerarr[x].id, score: 0});
+        players.push({alias: playerarr[participants.length - x - 1].name, id: playerarr[participants.length - x - 1].id, score: 0});
 
-        obj.id = Matches.insert({ players });
+        obj.id = Matches.insert({ players, ties: 0 });
         obj.played = false;
 
         temp.push(obj);

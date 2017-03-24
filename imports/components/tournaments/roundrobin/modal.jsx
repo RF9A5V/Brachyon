@@ -25,7 +25,7 @@ export default class RoundModal extends Component {
     var multi = inc === true ? 1 : -1;
     var scoreOne = Math.max(match.players[0].score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
     var scoreTwo = Math.max(match.players[1].score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
-    var ties = Math.max(match.players[0].ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
+    var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
     Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
 
@@ -111,7 +111,7 @@ export default class RoundModal extends Component {
                 <div className="row center x-center">
                   <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("ties", false)}} />
                   <div className="row center x-center button-score">
-                    { match.players[0].ties }
+                    { match.ties }
                   </div>
                   <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("ties", true)}}  />
                 </div>

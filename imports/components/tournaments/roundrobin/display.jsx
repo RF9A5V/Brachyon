@@ -55,6 +55,23 @@ export default class RoundDisplay extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.state.sub)
+      this.state.sub.stop();
+  }
+
+  componentDidUpdate() {
+    if (this.state.updateMatch)
+    {
+      var rounds = Brackets.findOne().rounds;
+      var sub = Meteor.subscribe("Matches", rounds, {
+        onReady: () => {
+          this.setState({updateMatch: false, sub, wcount: 0, page: rounds.length})
+        }
+      });
+    }
+  }
+
   finalizeMatch(matchnumber)
   {
     Meteor.call("events.complete_match", this.state.brid, this.state.page - 1, matchnumber, (err) => {
@@ -73,9 +90,9 @@ export default class RoundDisplay extends Component {
   }
 
   newRound() {
-    var rounds = Brackets.findOne().rounds;
-    if (!(this.state.wcount == rounds[this.state.page - 1].length))
-      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + rounds[this.state.page - 1].length + "!", "Error!");
+    var oldrounds = Brackets.findOne().rounds;
+    if (!(this.state.wcount == oldrounds[this.state.page - 1].length))
+      toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + oldrounds[this.state.page - 1].length + "!", "Error!");
     Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
       if(err){
 
@@ -86,7 +103,10 @@ export default class RoundDisplay extends Component {
         if(this.props.update) {
           this.props.update();
         }
-        this.setState({updateMatch: true});
+        var newrounds = Brackets.findOne().rounds;
+        console.log(oldrounds.length + " " + newrounds.length);
+        this.setState({updateMatch: true, rounds: newrounds});
+        this.forceUpdate();
       }
     });
   }
@@ -131,16 +151,6 @@ export default class RoundDisplay extends Component {
   render() {
     var bracket = Brackets.findOne();
     var rounds = bracket.rounds;
-
-    if (this.state.updateMatch)
-    {
-      var sub = Meteor.subscribe("Matches", rounds, {
-        onReady: () => {
-          this.setState({updateMatch: false, sub, wcount: 0, page: this.state.page + 1, rounds})
-          this.forceUpdate();
-        }
-      });
-    }
 
     var sortedplayers = bracket.players;
     sortedplayers.sort(function(a, b) {
