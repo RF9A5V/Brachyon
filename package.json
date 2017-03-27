@@ -26,6 +26,7 @@
     "react-cropper": "^0.8.0",
     "react-datetime": "^2.1.0",
     "react-dom": "^15.4.0",
+    "react-dragscroll": "^1.0.21",
     "react-dropzone": "^3.4.0",
     "react-fontawesome": "^1.1.0",
     "react-google-maps": "^4.10.1",

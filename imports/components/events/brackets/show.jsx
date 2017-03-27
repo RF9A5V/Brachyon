@@ -49,6 +49,13 @@ class BracketShowScreen extends Component {
     var event = Events.findOne();
     var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
 
+    if(!event) {
+      this.setState({
+        hasLoaded: true
+      });
+      return;
+    }
+
     var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
@@ -85,14 +92,14 @@ class BracketShowScreen extends Component {
       eid: this.props.params.eventId,
       format: bracket.format.baseFormat,
       rounds,
-      complete: bracket.isComplete
+      complete: bracket.isComplete,
+      page: "admin"
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
         subs = [
           {
             content: WinnersBracket,
-            name: "Bracket",
             args
           }
         ];
@@ -102,11 +109,13 @@ class BracketShowScreen extends Component {
           {
             content: WinnersBracket,
             name: "Winners",
+            ignoreHeader: true,
             args
           },
           {
             content: LosersBracket,
             name: "Losers",
+            ignoreHeader: true,
             args
           }
         ];
@@ -171,8 +180,6 @@ class BracketShowScreen extends Component {
     var defaultItems = [];
     var id = bracketMeta.id;
 
-    defaultItems.push(this.participantsItem(bracketMeta));
-
     var rounds;
     if(bracketMeta.participants && bracketMeta.participants.length > 3) {
       if(!bracketMeta.id) {
@@ -200,6 +207,7 @@ class BracketShowScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracketMeta, this.props.params.bracketIndex || 0, rounds));
     }
+    defaultItems.push(this.participantsItem(bracketMeta));
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
@@ -274,17 +282,27 @@ class BracketShowScreen extends Component {
 
 export default createContainer(({params}) => {
   const { slug, bracketIndex } = params;
-  const eventHandle = Meteor.subscribe("event", slug);
-  if(eventHandle && eventHandle.ready()) {
-    const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+
+  if(slug) {
+    const eventHandle = Meteor.subscribe("event", slug);
+    if(eventHandle && eventHandle.ready()) {
+      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+      return {
+        ready: instanceHandle.ready(),
+        instance: Instances.findOne(),
+        bracket: Brackets.findOne(),
+        event: Events.findOne()
+      }
+    }
     return {
-      ready: instanceHandle.ready(),
-      instance: Instances.findOne(),
-      bracket: Brackets.findOne(),
-      event: Events.findOne()
+      ready: false
     }
   }
-  return {
-    ready: false
+  else {
+    const { id } = params;
+    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    return {
+      ready: instanceHandle.ready()
+    }
   }
 }, BracketShowScreen);

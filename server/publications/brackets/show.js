@@ -50,6 +50,16 @@ Meteor.publish("bracketContainer", (_id, index) => {
       })
     })
   }
+  else if (bracket)
+  {
+    bracket.rounds.forEach(r => {
+      r.forEach(m => {
+        if(m) {
+          matches.push(m.id);
+        }
+      })
+    })
+  }
   return [
     Instances.find({_id}),
     Brackets.find({ _id: instance.brackets[index].id }),
@@ -58,4 +68,20 @@ Meteor.publish("bracketContainer", (_id, index) => {
       $in: matches
     } })
   ]
-})
+});
+
+Meteor.publish("Matches", (ids) => {
+  var matches = [];
+  ids.forEach(b => {
+    b.forEach(m => {
+      if(m) {
+        matches.push(m.id);
+      }
+    })
+  })
+  return [
+    Matches.find({ _id: {
+      $in: matches
+    } })
+  ]
+});

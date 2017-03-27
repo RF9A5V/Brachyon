@@ -13,7 +13,7 @@ export default class RoundModal extends Component {
   }
 
   getMatch() {
-    return Brackets.findOne(this.props.id).rounds[this.props.page].matches[this.props.i];
+    return Matches.findOne(Brackets.findOne().rounds[this.props.page][this.props.i].id);
   }
 
   updateMatch(fieldToUpdate, inc) {
@@ -23,11 +23,12 @@ export default class RoundModal extends Component {
     var match = this.getMatch();
     var score = 3;
     var multi = inc === true ? 1 : -1;
-    var scoreOne = Math.max(match.scoreOne + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
-    var scoreTwo = Math.max(match.scoreTwo + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
+    var scoreOne = Math.max(match.players[0].score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
+    var scoreTwo = Math.max(match.players[1].score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
-  Meteor.call("events.update_roundmatch", this.props.id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
+    Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
+
       this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
@@ -58,8 +59,8 @@ export default class RoundModal extends Component {
 
   render() {
     var match = this.getMatch();
-    var playerOneID = this.props.aliasMap[match.playerOne];
-    var playerTwoID = this.props.aliasMap[match.playerTwo];
+    var playerOneID = match.players[0].id;
+    var playerTwoID = match.players[1].id;
     return (
       <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
         {
@@ -73,15 +74,15 @@ export default class RoundModal extends Component {
               <div className="row flex-padaround col-1">
                 <div className="col center x-center">
                   <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 className={(match.playerOne)==null?(""):
-                      ((match.playerOne).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerOne }
+                  <h5 className={(match.players[0].alias)==null?(""):
+                      ((match.players[0].alias).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.players[0].alias }
                   </h5>
 
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p1", false)}} />
                     <div className="row center x-center button-score">
-                    { match.scoreOne }
+                    { match.players[0].score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p1", true)}} />
                   </div>
@@ -89,15 +90,15 @@ export default class RoundModal extends Component {
                 </div>
                 <div className="col x-center center">
                   <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 className={(match.playerTwo)==null?(""):
-                      ((match.playerTwo).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerTwo}
+                  <h5 className={(match.players[1].alias)==null?(""):
+                      ((match.players[1].alias).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.players[1].alias}
                   </h5>
 
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p2", false)}} />
                     <div className="row center x-center button-score">
-                      { match.scoreTwo }
+                      { match.players[1].score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p2", true)}} />
                   </div>

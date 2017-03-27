@@ -18,7 +18,7 @@ export default class AddStream extends Component {
       <div className="col">
         <div className="row center x-center">
           <span>https://twitch.tv/</span>
-          <input ref="twitchStreamName" placeholder="Twitch Username" defaultValue={(Events.findOne().stream || {}).twitchStream} />
+          <input ref="twitchStreamName" placeholder="Twitch Username" defaultValue={(Events.findOne().stream || {}).twitchStream.name} />
         </div>
       </div>
     )
