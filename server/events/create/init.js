@@ -112,7 +112,7 @@ Meteor.methods({
     delete(endObj.brackets);
     delete(endObj.tickets);
     endObj.instances = [instance];
-    var event = Events.insert(endObj);
+    var eventId = Events.insert(endObj);
     if(endObj.brackets) {
       endObj.brackets.forEach((bracket) => {
         Games.update(bracket.game, {
@@ -124,9 +124,12 @@ Meteor.methods({
           }
         })
       })
-
     }
-    return Events.findOne(event).slug;
+    const event = Events.findOne(eventId);
+    return {
+      id: eventId,
+      slug: event.slug
+    };
   },
 
   "events.reinstantiate"(id, date) {

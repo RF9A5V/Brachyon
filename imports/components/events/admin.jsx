@@ -378,7 +378,12 @@ class EventAdminPage extends Component {
         <CloseModal open={this.state.open} id={Events.findOne()._id} onClose={() => { this.setState({ open: false }) }} onComplete={() => {
           browserHistory.push("/");
         }} />
-        <RerunModal open={this.state.rerunOpen} id={Events.findOne()._id} onClose={() => { this.setState({ rerunOpen: false }) }} />
+        <RerunModal open={this.state.rerunOpen} id={Events.findOne()._id} onClose={() => {
+          this.setState({ rerunOpen: false });
+        }} onComplete={(sub) => {
+          // Hacky, but dunno how to fix
+          location.href = `/event/${Events.findOne().slug}`;
+        }} />
       </div>
     )
   }

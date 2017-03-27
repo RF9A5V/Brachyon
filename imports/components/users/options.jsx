@@ -10,6 +10,10 @@ import EventOptionsPanel from "./options/event_options.jsx";
 import GameOptionsPanel from "./options/games_played.jsx";
 import OAuthOptionsPanel from "./options/oauth.jsx";
 
+import ProfileImageSelect from "./options/details/profile_image.jsx";
+import ProfileBannerSelect from "./options/details/profile_banner.jsx";
+import AliasSelect from "./options/details/alias.jsx";
+
 export default class UserOptionsScreen extends TrackerReact(Component) {
 
   constructor(props) {
@@ -37,7 +41,16 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       key: "details",
       subItems: [
         {
-          content: UserDetailsPanel
+          content: ProfileImageSelect,
+          name: "Image"
+        },
+        {
+          content: ProfileBannerSelect,
+          name: "Banner"
+        },
+        {
+          content: AliasSelect,
+          name: "Alias"
         }
       ]
     }

@@ -9,7 +9,9 @@ Meteor.methods({
     }
     else {
       attrs.stream = {
-        twitchStream: attrs.stream
+        twitchStream: {
+          name: attrs.stream
+        }
       };
     }
 

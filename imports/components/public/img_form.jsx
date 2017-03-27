@@ -52,13 +52,8 @@ export default class ImageForm extends Component {
     catch(e) {
       return null;
     }
-    var type = "";
-    if(this.state.type == "image/jpeg" || this.state.type == "image/jpg") {
-      type = ".jpg";
-    }
-    else if(this.state.type == "image/png") {
-      type = ".png";
-    }
+    const mimeType = this.state.file.type;
+    const type = mimeType.slice(mimeType.indexOf("/") + 1);
     var content = {
       image: this.state.file,
       type,
@@ -98,7 +93,8 @@ export default class ImageForm extends Component {
 
   reset() {
     this.setState({
-      url: null
+      url: null,
+      file: null
     })
   }
 
@@ -111,12 +107,12 @@ export default class ImageForm extends Component {
 
   render() {
     var value = "";
-    if(this.state.url || this.props.defaultImage){
+    if(this.state.url){
       value = (
         <div className="row">
           <Cropper
             aspectRatio={this.props.aspectRatio || 1}
-            src={this.state.url || this.props.defaultImage}
+            src={this.state.url}
             style={{width: "100%", maxWidth: 500, height: 300}}
             ref="cropper"
             zoomable={false}
@@ -126,7 +122,7 @@ export default class ImageForm extends Component {
       );
     }
     else if(this.props.url != null) {
-      value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
+      value = (<img src={this.props.url}  style={{height: "auto"}}/>);
     }
     else {
       value = (
@@ -135,7 +131,7 @@ export default class ImageForm extends Component {
     }
     return (
       <div className="col">
-        <div className="row">
+        <div className="row center">
           { value }
         </div>
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />

@@ -268,15 +268,15 @@ Meteor.methods({
       rounds = OrganizeSuite.swiss(organize.participants.map(p => { return p.alias }));
     }
     else {
-      rounds = OrganizeSuite.roundRobin(organize.participants.map(p => {return p.alias}));
+      rounds = OrganizeSuite.roundRobin(organize.participants);
     }
     if(format == "single_elim" || format == "double_elim") {
       if(instance.brackets[index].id) {
         var bracket = Brackets.findOne(instance.brackets[index].id);
         var matches = [];
-        bracket.rounds.forEach(b => {
           b.map(r => {
             r.map(m => {
+              bracket.rounds.forEach(b => {
               if(m) {
                 matches.push(m.id);
               }
@@ -314,13 +314,31 @@ Meteor.methods({
         })
       })
     }
+    if (format == "round_robin")
+    {
+      rounds.matches[0] = rounds.matches[0].map((m, i) =>
+      {
+        var players = [];
+        players.push({alias: m.playerOne.alias, id: m.playerOne.id, score: 0});
+        players.push({alias: m.playerTwo.alias, id: m.playerTwo.id, score: 0});
+        var obj = {};
+        obj.played = false;
+        obj.id = Matches.insert({ players, ties: 0 });
+        return obj;
+      });
+      var pl = rounds.players;
+      var pdiclist = rounds.pdic;
+      var rounds = rounds.matches;
+    }
 
     if(!instance.brackets[index].id) {
       var br;
       if (format == "swiss" || format == "round_robin")
       {
         br = Brackets.insert({
-          rounds: rounds,
+          rounds,
+          players: pl,
+          pdic: pdiclist,
           score: organize.score
         });
       }
@@ -676,11 +694,9 @@ Meteor.methods({
   "events.complete_match"(bracketID, roundNumber, matchNumber) //Also used for round robin because of how stupidly simple this is of a function.
   {
     var bracket = Brackets.findOne(bracketID);
-    bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].played = true;
     Brackets.update(bracketID, {
       $set: {
-        [`rounds.${roundNumber}`]: bracket
+        [`rounds.${roundNumber}.${matchNumber}.played`]: true
       }
     })
   },
@@ -707,7 +723,7 @@ Meteor.methods({
     if (tied == false)
       return true;
 
-    var p1 = bracket.pdic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
+    var p1 = bracket.pd.ic[tiedplayers[0]], p2 = bracket.pdic[tiedplayers[1]]; //pdic contains their index in this rounds' player array.
     //TODO: Make system dynamic array for 3+ tied players
     var bnum1 = 0, bnum2 = 0;
 
@@ -947,83 +963,71 @@ Meteor.methods({
     })
   },
 
+//Round Robin Bracket Architecture is as follows:
+//Bracket.rounds contains 4 parts to it, matches, players, score, and pdic
+//Matches contain all the match collection ids we need to pull from the backend and whether they've been played or not
+//Players contain the most up to date player objects, containing their wins, losses, ties, and so forth
+//PDIC contains a dictionary of all player index ids. pdic["player_name"] will return the index of said player. Separated for sorting reasons
+
   "events.update_roundmatch"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
   {
     var bracket = Brackets.findOne(bracketID);
-    var prevround;
-    if (roundNumber > 0)
-      prevround = bracket.rounds[roundNumber-1];
-    bracket = bracket.rounds[roundNumber];
-    bracket.matches[matchNumber].scoreOne = winfirst;
-    bracket.matches[matchNumber].scoreTwo = winsecond;
-    bracket.matches[matchNumber].ties = ties;
-    var prevmatch1, prevmatch2;
-    if (roundNumber < 1)
-    {
-      prevmatch1 = {score: 0, wins: 0, losses: 0};
-      prevmatch2 = {score: 0, wins: 0, losses: 0};
-    }
-    else
-    {
-      var prep1 = prevround.pdic[ bracket.matches[matchNumber].playerOne ];
-      var prep2 = prevround.pdic[ bracket.matches[matchNumber].playerTwo ];
-      prevmatch1 = prevround.players[prep1];
-      prevmatch2 = prevround.players[prep2];
-    }
-    var p1 = bracket.pdic[bracket.matches[matchNumber].playerOne];
-    var p2 = bracket.pdic[bracket.matches[matchNumber].playerTwo];
-    bracket.players[p1].score = prevmatch1.score + score*winfirst;
-    bracket.players[p1].wins = prevmatch1.wins + winfirst;
-    bracket.players[p1].losses = prevmatch1.losses + winsecond;
-    bracket.players[p2].score = prevmatch2.score + score*winsecond;
-    bracket.players[p2].wins = prevmatch2.wins + winsecond;
-    bracket.players[p2].losses = prevmatch2.losses + winfirst;
+    var match = Matches.findOne(bracket.rounds[roundNumber][matchNumber].id);
+    match.players[0].score = winfirst;
+    match.players[1].score = winsecond;
+    match.ties = ties;
+    var p1 = bracket.pdic[match.players[0].alias];
+    var p2 = bracket.pdic[match.players[1].alias];
+    bracket.players[p1].score += score*winfirst;
+    bracket.players[p1].wins += winfirst;
+    bracket.players[p1].losses += winsecond;
+    bracket.players[p2].score += score*winsecond;
+    bracket.players[p2].wins += winsecond;
+    bracket.players[p2].losses += winfirst;
 
+    Matches.update(match._id, {
+      $set: match
+    })
     Brackets.update(bracketID, {
-      $set: {
-        [`rounds.${roundNumber}`]: bracket
-      }
+      $set: bracket
     })
   },
 
   "events.update_roundrobin"(bracketID, roundNumber, score) { //For swiss specifically
     var bracket = Brackets.findOne(bracketID);
     var rounds = bracket.rounds;
-    var playerarr = bracket.rounds[0].players;
-    bracket = bracket.rounds[roundNumber];
+    var playerarr = bracket.players;
     var lastp = playerarr.pop();
     playerarr.splice(1, 0, lastp);
     var participants = playerarr.map(function(x) { return x.name })
     var temp = [];
-    for (var x = 0; x < Math.floor(participants.length/2); x++)
+    for (var x = 0; x < Math.floor(playerarr.length/2); x++)
     {
-      if (participants[participants.length - x - 1] != "" && participants[x] != "")
+      if (participants[playerarr.length - x - 1] != "" && participants[x] != "")
       {
-        var matchObj = {
-          playerOne: participants[x],
-          playerTwo: participants[participants.length - x - 1],
-          played: false,
-          scoreOne: 0,
-          scoreTwo: 0,
-          ties: 0
-        };
-        temp.push(matchObj);
+        var obj = {};
+        var players = [];
+
+        players.push({alias: playerarr[x].name, id: playerarr[x].id, score: 0});
+        players.push({alias: playerarr[participants.length - x - 1].name, id: playerarr[participants.length - x - 1].id, score: 0});
+
+        obj.id = Matches.insert({ players, ties: 0 });
+        obj.played = false;
+
+        temp.push(obj);
       }
     }
     var tempb = JSON.parse(JSON.stringify(playerarr));
     var pdic = {};
     for (var x = 0; x < tempb.length; x++)
       pdic[tempb[x].name] = x;
-    var roundObj = {
-      matches: temp,
-      players: tempb,
-      score: score,
-      pdic: pdic
-    };
-    rounds.push(roundObj);
+    rounds.push(temp);
+    var players = playerarr;
     Brackets.update(bracketID, {
       $set: {
-        [`rounds`]: rounds
+        [`rounds`]: rounds,
+        [`players`]: players,
+        [`pdic`]: pdic
       }
     });
   },
@@ -1043,7 +1047,8 @@ Meteor.methods({
     }
     if(!instance) {
       var league = Leagues.findOne(eventID);
-      roundobj = Brackets.findOne(league.tiebreaker.id);
+      if (league)
+        roundobj = Brackets.findOne(league.tiebreaker.id);
     }
     else {
       bracket = instance.brackets[bracketIndex];
@@ -1096,7 +1101,6 @@ Meteor.methods({
         bracket.rounds[bracket.rounds.length - 1].players.sort((a, b) => {
           return (b.score - a.score);
         }).map((obj, i) => {
-          console.log(obj);
           var user = Meteor.users.findOne({ username: obj.name });
           if(!user) {
             return;
