@@ -197,8 +197,21 @@ ul.error-container
 .user-tab
   padding 5px
   font-size 24px
-  border-bottom solid 2px white
   margin-right 10px
+  border-color rgba(255,96,0,0.1)
+
+  
+.user-tab:hover
+  cursor pointer
+  -webkit-transition border-bottom 0.5s ease-out
+  -moz-transition border-bottom 0.5s ease-out
+  -o-transition border-bottom 0.5s ease-out
+  transition border-bottom 0.5s ease-out
+  border-bottom rgba(255,96,0,0.5) 2px solid
+  color white
+   
+.user-tab:focus
+   color white
 
 .category-header
   width: 200px
