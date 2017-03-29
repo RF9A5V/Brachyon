@@ -294,25 +294,23 @@ var OrganizeSuite = {
     {
       var matchObj = {
         playerOne: participants[x],
-        playerTwo: participants[x+length/2],
-        played: false,
-        p1score: 0,
-        p2score: 0,
-        ties: 0
+        playerTwo: participants[x+length/2]
       };
       temp.push(matchObj);
     }
     var tempb = [];
-    var tempc = {};
+    var tempc = [];
     for (var x = 0; x < participants.length; x++)
     {
+      tempc[participants.name] = x;
       var playarr = [];
       for (var y = 0; y < participants.length; y++)
       {
-        playarr[participants[y]] = false;
+        playarr[participants[y].name] = false;
       }
       var playerObj = {
-        name: participants[x],
+        name: participants[x].name,
+        id: participants[x].id,
         score: 0,
         bnum: 0,
         wins: 0,
@@ -330,12 +328,11 @@ var OrganizeSuite = {
     }
     var frounds = [];
     var round = {
-      matches: temp,
+      matches: [temp],
       players: tempb,
       pdic: tempc
     }
-    frounds.push(round);
-    return frounds;
+    return round;
   },
   roundRobin: function(participants) {
     var score = 3, bye = false;
