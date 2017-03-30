@@ -94,7 +94,7 @@ export default class DisplayPromotedEvent extends Component {
     ) : (
       (() => {
         var keys = {};
-        event.leaderboard.forEach(board => {
+        (event.leaderboard || []).forEach(board => {
           Object.keys(board).forEach(k => {
             keys[k] = 1;
           })
