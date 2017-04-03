@@ -6,7 +6,7 @@ export default class CreateRunnableScreen extends Component {
   render() {
     return (
       <div className="box col center">
-        <div className="row col-1 center x-center">
+        <div className="row-to-col col-1 center x-center">
           <div className="create-sel sel-quick" onClick={ () => { browserHistory.push("/brackets/create") } }>
             <FontAwesome  size="3x" name="sitemap" />
             <h5 style={{margin: 10}}>Quick Bracket</h5>
