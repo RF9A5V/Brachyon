@@ -96,6 +96,20 @@ Meteor.methods({
         }
       });
     }
+
+    console.log("testing placementss");
+    var ranking = {};
+    var place = 0;
+    var placement = sortPlacement(bracket.format.baseFormat, roundobj.rounds);
+    for (var i = 0 ; i < placement.length ; i++){
+      place+=1;
+      for (var j=0 ; j < placement[i].length; j++){
+        ranking[placement[i][j].alias] = place;
+      }
+      place+=placement[i].length-1;
+    }
+
+
     Object.keys(obj).forEach(score => {
       var [wins, loss] = score.split("-").map(i => parseInt(i));
       var updateObject = {
@@ -105,6 +119,9 @@ Meteor.methods({
       };
       obj[score].forEach(player => {
         Meteor.users.update(player.id,{$inc:updateObject});
+        var r = wins+"-"+loss
+        var rank = ranking[player.alias];
+        Meteor.users.update(player.id,{$push: {tournaments:{ eventName:Events.findOne(eventID).slug,game:bracket.game,record:r, ranking:rank }}});
       })
     });
 
