@@ -65,17 +65,22 @@ export default class UserMatches extends Component {
             var match = Matches.findOne(m.id);
             console.log(match);
             return (
-              <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
+              <div className="col" style={{margin: "20px 10px 20px 0", width: 400}}>
+                <div className="row match-names">
+                  <span>{ match.players[0].alias }</span>
+                </div>
                 <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
                   <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
                   <div className="col-1 col x-center" style={{padding: 10}}>
-                    <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
                     <h5 style={{margin: "10px 0"}}>VERSUS</h5>
-                    <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
                   </div>
                   <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
                 </div>
-                <span style={{padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
+                <div className="row match-names justify-end">
+                  <span>{ match.players[1].alias }</span>
+                </div>
+                
+                <span style={{marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
                   switch(m.bracket) {
                     case 0: return "Winner's Bracket";
                     case 1: return "Loser's Bracket";
