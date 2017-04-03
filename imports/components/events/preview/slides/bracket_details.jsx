@@ -142,14 +142,20 @@ class BracketDetails extends Component {
                     toRender.map(match => {
                       var [p1, p2] = match.players.map(p => { return Meteor.users.findOne(p.id) })
                       return (
-                        <div className="row" style={{width: 350, marginRight: 10, marginBottom: 10}}>
-                          <img src={p1 && p1.profile.imageUrl ? p1.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
-                          <div className="col center col-1" style={{padding: 10, backgroundColor: "#666"}}>
-                            <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
-                            <span style={{alignSelf: "center"}}>VERSUS</span>
-                            <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
+                        <div className="col" style={{margin: "20px 10px 20px 0", width: 350}}>
+                          <div className="row match-names">
+                            <span>{ match.players[0].alias }</span>
                           </div>
-                          <img src={p2 && p2.profile.imageUrl ? p2.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
+                          <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                            <img src={p1 && p1.profile.imageUrl ? p1.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
+                            <div className="col-1 col x-center" style={{padding: 10, backgroundColor: "#666"}}>
+                              <span style={{alignSelf: "center"}}>VERSUS</span>
+                            </div>
+                            <img src={p2 && p2.profile.imageUrl ? p2.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
+                          </div>
+                          <div className="row match-names justify-end">
+                            <span>{ match.players[1].alias }</span>
+                          </div>
                         </div>
                       )
                     })
