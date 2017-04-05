@@ -65,10 +65,21 @@ Meteor.methods({
     }
   },
 
-  "events.create"(obj, leagueID) {
+  "events.validate_tickets"(obj) {
+    var ticketObj = {};
+    ticketObj.paymentType = obj.paymentType;
+    delete obj.paymentType;
+    ticketObj.discounts = obj.discounts.map(d => {
+      d["qualifiers"] = {};
+      return d;
+    });
+    ticketObj.fees = obj.fees;
+    return ticketObj;
+  },
 
+  "events.create"(obj, leagueID) {
     var endObj = {};
-    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream"];
+    var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
     var requiresReview = false;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {

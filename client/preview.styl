@@ -47,12 +47,23 @@
   opacity 1
 
 .preview-nav
-  width 100px
-  height 100%
-  letter-spacing: 0.5px;
-  display flex
-  justify-content center
-  align-items center
+  margin 0 20px
+  font-size 14px
+  letter-spacing: 1px;
+  flex 1 0 0
+  align-self stretch;
+  display flex;
+  justify-content center;
+  align-items: center;
+
+.preview-nav.active
+  color #FF6000
+
+.preview-nav:first-child
+  margin-left 0
+
+.preview-nav:last-child
+  margin-right 0
 
 .preview-nav:hover
   cursor pointer
