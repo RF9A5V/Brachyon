@@ -5,7 +5,7 @@ import { browserHistory } from "react-router";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 
-export default class RoundModal extends Component {
+export default class SwissModal extends Component {
 
   constructor(props) {
     super(props);
