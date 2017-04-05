@@ -5,30 +5,37 @@ import { browserHistory } from "react-router";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 
-export default class SwissModal extends Component {
+export default class RoundModal extends Component {
 
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  getMatch() {
+    return Matches.findOne(Brackets.findOne().rounds[this.props.page][this.props.i].id);
+  }
+
   updateMatch(fieldToUpdate, inc) {
     if(this.state.active) {
       return false;
     }
-    var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
+    var match = this.getMatch();
     var score = 3;
     var multi = inc === true ? 1 : -1;
-    var p1score = Math.max(match.p1score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
-    var p2score = Math.max(match.p2score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
+    var scoreOne = Math.max(match.players[0].score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
+    var scoreTwo = Math.max(match.players[1].score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
-    Meteor.call("events.update_match", Brackets.findOne()._id, this.props.page, this.props.i, score, p1score, p2score, ties, (err) => {
+    this.state.active = true;
+    Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
+
+      this.state.active = false;
       if(err){
         toastr.error("Couldn't advance this match.", "Error!");
         return err;
       }
       else {
-        this.props.update();
+        this.forceUpdate();
       }
     });
   }
@@ -42,25 +49,18 @@ export default class SwissModal extends Component {
     this.closeModal();
   }
 
-  imgOrDefault(alias) {
-    var players = Brackets.findOne().rounds[this.props.page].players;
-    var pIndex = players.findIndex(o => { return o.alias == alias });
-    if(pIndex < 0) {
-      return "/images/profile.png";
-    }
-    else {
-      var user = Meteor.users.findOne(players[pIndex].id);
-      if(user && user.profile.imageUrl) {
-        return user.profile.imageUrl;
-      }
+  imgOrDefault(id) {
+    var user = Meteor.users.findOne(id);
+    if(user && user.profile.imageUrl) {
+      return user.profile.imageUrl;
     }
     return "/images/profile.png";
   }
 
   render() {
-    var match = Brackets.findOne().rounds[this.props.page].matches[this.props.i];
-    //var match.players[0].id = this.props.aliasMap[match.players[0].alias];
-    //var match.players[1].id = this.props.aliasMap[match.players[1].alias];
+    var match = this.getMatch();
+    var playerOneID = match.players[0].id;
+    var playerTwoID = match.players[1].id;
     return (
       <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
         {
@@ -73,43 +73,42 @@ export default class SwissModal extends Component {
               </div>
               <div className="row flex-padaround col-1">
                 <div className="col center x-center">
-                  <img src={this.imgOrDefault(match.playerOne)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 className={(match.playerOne)==null?(""):
-                      ((match.playerOne).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerOne }
+                  <img src={this.imgOrDefault(playerOneID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <h5 className={(match.players[0].alias)==null?(""):
+                      ((match.players[0].alias).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.players[0].alias }
                   </h5>
 
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p1", false)}} />
                     <div className="row center x-center button-score">
-                    { match.p1score }
+                    { match.players[0].score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p1", true)}} />
                   </div>
 
                 </div>
                 <div className="col x-center center">
-                  <img src={this.imgOrDefault(match.playerTwo)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
-                  <h5 className={(match.playerTwo)==null?(""):
-                      ((match.playerTwo).length<15)?(""):("marquee")}
-                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.playerTwo}
+                  <img src={this.imgOrDefault(playerTwoID)} style={{width: 100, height: "auto", borderRadius: "100%", marginBottom: 20}} />
+                  <h5 className={(match.players[1].alias)==null?(""):
+                      ((match.players[1].alias).length<15)?(""):("marquee")}
+                      style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ match.players[1].alias}
                   </h5>
 
                   <div className="row center x-center" style={{marginTop:10}}>
                     <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("p2", false)}} />
                     <div className="row center x-center button-score">
-                    { match.p2score }
+                      { match.players[1].score }
                     </div>
                     <FontAwesome name="caret-right" style={{fontSize: 40, marginLeft:10}} onClick={() => {this.updateMatch("p2", true)}} />
                   </div>
-
                 </div>
               </div>
               <div className="col">
-                <div className="row center" >
+                <div className="row center">
                   <h5>Ties</h5>
                 </div>
-                <div className="row center x-center" >
+                <div className="row center x-center">
                   <FontAwesome name="caret-left" style={{fontSize: 40, marginRight:10}} onClick={() => {this.updateMatch("ties", false)}} />
                   <div className="row center x-center button-score">
                     { match.ties }

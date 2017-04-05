@@ -302,14 +302,14 @@ var OrganizeSuite = {
     var tempc = [];
     for (var x = 0; x < participants.length; x++)
     {
-      tempc[participants.name] = x;
+      tempc[participants[x].alias] = x;
       var playarr = [];
       for (var y = 0; y < participants.length; y++)
       {
-        playarr[participants[y].name] = false;
+        playarr[participants[y].alias] = false;
       }
       var playerObj = {
-        name: participants[x].name,
+        name: participants[x].alias,
         id: participants[x].id,
         score: 0,
         bnum: 0,

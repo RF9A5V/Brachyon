@@ -26,7 +26,7 @@ export default class SwissDisplay extends Component {
       if (rounds[page][x].played != false)
         num++;
     }
-    rec = Math.ceil(Math.log2(rounds.players.length));
+    rec = Math.ceil(Math.log2(bracket.players.length));
 
     var aliasMap = {};
     instance.brackets[0].participants.forEach((player) => {
@@ -165,6 +165,7 @@ export default class SwissDisplay extends Component {
   }
 
   render() {
+    let players = Brackets.findOne().players;
     return (
       <div className="col">
         <div className="row center x-center">
@@ -203,7 +204,7 @@ export default class SwissDisplay extends Component {
                     </div>
                   </div>
                   {
-                    this.state.rounds.players.sort((a, b) => {
+                    players.sort((a, b) => {
                       return b.score - a.score;
                       }).map((playerObj, i) => {
                       return (
@@ -218,7 +219,7 @@ export default class SwissDisplay extends Component {
                             { playerObj.wins + " / " + playerObj.losses + " / " + playerObj.ties }
                           </div>
                           <div className="swiss-entry">
-                            { this.getBuchholz(this.state.rounds.players, i) }
+                            { this.getBuchholz(players, i) }
                           </div>
                         </div>
                       );
