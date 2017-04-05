@@ -425,9 +425,9 @@ Meteor.methods({
         $set: {
           winner: {
             alias: players[0].alias,
-          }
             id: players[0].id
           }
+        }
       });
     })
   },
@@ -707,12 +707,10 @@ Meteor.methods({
   "events.update_round"(bracketID, roundNumber, score) { //For swiss specifically
     var bracket = Brackets.findOne(bracketID);
     var rounds = bracket.rounds;
-    bracket = bracket.rounds[roundNumber];
     var players = bracket.players;
     var scores = [];
     var max = 0;
 
-    //
 
     for (var x = 0; x < players.length; x++)
     {
@@ -884,8 +882,9 @@ Meteor.methods({
       {
         var opponent = scores[y][z].name;
         var players = [];
-        players.push({alias: scores[y][z].name, id: score[y][z].id, score: 0});
+        players.push({alias: scores[y][z].name, id: scores[y][z].id, score: 0});
         players.push({alias: scores[y][z+scores[y].length/2].name, id: scores[y][z+scores[y].length/2].id, score: 0})
+        var obj = {};
 
         obj.id = Matches.insert({ players, ties: 0 });
         obj.played = false;
@@ -1001,36 +1000,39 @@ Meteor.methods({
     }
     else {
       bracket = instance.brackets[bracketIndex];
-      roundobj = Brackets.findOne(bracket.id);
-      var brack = roundobj.rounds;
-      instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
+      if (bracket.format.baseFormat != "swiss")
+      {
+        roundobj = Brackets.findOne(bracket.id);
+        var brack = roundobj.rounds;
+        instance.brackets[bracketIndex].participants.forEach(participant=>{players[participant.alias]={id:participant.id, losses:0, wins:0, ties:0}});
 
-      for (var x = 0 ; x < brack.length ;  x ++){
-        for (var j = 0 ; j < brack[x].matches.length ; j++){
-          match= brack[x].matches[j];
-          if (match.p1score>match.p2score){
-            players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1: 1;
-            players[match.playerTwo].losses = players[match.playerTwo].losses ? players[match.playerTwo].losses + 1: 1;
-          }
-          else if(match.p1score<match.p2score){
-            players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1: 1;
-            players[match.playerOne].losses = players[match.playerOne].losses ? players[match.playerOne].losses + 1: 1;
-          }
-          else{
-            players[match.playerTwo].ties = players[match.playerTwo].ties ? players[match.playerTwo].ties + 1: 1;
-            players[match.playerOne].ties = players[match.playerOne].ties ? players[match.playerOne].ties + 1: 1;
+        for (var x = 0 ; x < brack.length ;  x ++){
+          for (var j = 0 ; j < brack[x].matches.length ; j++){
+            match= brack[x].matches[j];
+            if (match.p1score>match.p2score){
+              players[match.playerOne].wins = players[match.playerOne].wins ? players[match.playerOne].wins + 1: 1;
+              players[match.playerTwo].losses = players[match.playerTwo].losses ? players[match.playerTwo].losses + 1: 1;
+            }
+            else if(match.p1score<match.p2score){
+              players[match.playerTwo].wins = players[match.playerTwo].wins ? players[match.playerTwo].wins + 1: 1;
+              players[match.playerOne].losses = players[match.playerOne].losses ? players[match.playerOne].losses + 1: 1;
+            }
+            else{
+              players[match.playerTwo].ties = players[match.playerTwo].ties ? players[match.playerTwo].ties + 1: 1;
+              players[match.playerOne].ties = players[match.playerOne].ties ? players[match.playerOne].ties + 1: 1;
+            }
           }
         }
+        Object.keys(players).forEach(player=>{
+          var scoreObject = players[player];
+          var updateObject = {
+            [`stats.${bracket.game}.wins`]: scoreObject.wins,
+            [`stats.${bracket.game}.losses`]: scoreObject.losses,
+            [`stats.${bracket.game}.ties`]: scoreObject.ties
+          };
+          Meteor.users.update(scoreObject.id,{$inc:updateObject});
+        })
       }
-      Object.keys(players).forEach(player=>{
-        var scoreObject = players[player];
-        var updateObject = {
-          [`stats.${bracket.game}.wins`]: scoreObject.wins,
-          [`stats.${bracket.game}.losses`]: scoreObject.losses,
-          [`stats.${bracket.game}.ties`]: scoreObject.ties
-        };
-        Meteor.users.update(scoreObject.id,{$inc:updateObject});
-      })
     }
 
 
