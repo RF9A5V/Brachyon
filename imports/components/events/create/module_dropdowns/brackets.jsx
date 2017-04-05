@@ -18,11 +18,12 @@ export default class BracketsPanel extends Component {
   componentWillReceiveProps(next) {
     if(next.status && !this.state.brackets) {
       this.state.brackets = { 0: {} };
+      this.props.onBracketNumberChange(Object.keys(this.state.brackets));
     }
     else if(!next.status) {
       this.state.brackets = null;
+      this.props.onBracketNumberChange([]);
     }
-    this.forceUpdate();
   }
 
   value() {
@@ -52,13 +53,15 @@ export default class BracketsPanel extends Component {
     if(!this.state.brackets) {
       this.state.brackets = { }
     }
-    var bracketCount = Object.keys(this.state.brackets).length;
-    this.state.brackets[++bracketCount] = { };
+    var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));
+    this.state.brackets[++bracketIndex] = { };
     this.props.setStatus(true);
+    this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
   deleteBracket(key) {
     delete this.state.brackets[key];
+    this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
   itemDescriptions() {
@@ -67,11 +70,11 @@ export default class BracketsPanel extends Component {
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <p>
+        <div className="text-description border-blue">
           {
             item
           }
-        </p>
+        </div>
       )
     });
   }
@@ -94,7 +97,7 @@ export default class BracketsPanel extends Component {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center" style={{cursor: "pointer", backgroundColor: "#333", width: 100, height: 30}} onClick={() => {
+          <div className="row x-center module-toggle" onClick={() => {
             if(!active) {
               this.addBracket();
             }
@@ -167,21 +170,8 @@ export default class BracketsPanel extends Component {
               </div>
             </div>
           ) : (
-          <div className="row">
-            <div className="col col-1 info-description">
-              <div className="row center">
-              <h3>{ tabs[this.state.item] }</h3>
-              </div>
-              <div style={{margin: "20px 15vw"}} className="row center">
-                {
-                  this.itemDescriptions()
-                }
-              </div>
-              <div className="row col-1"></div>
-              <button style={{margin: "0 auto"}} onClick={this.addBracket.bind(this)}>Create a Bracket</button>
-            </div>
-          </div>
-        )
+            this.itemDescriptions()
+          )
       }
     </div>
     );

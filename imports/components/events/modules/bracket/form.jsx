@@ -231,19 +231,18 @@ export default class BracketForm extends Component {
           )
         }
         <div className="col col-1" style={{padding: 20}}>
-          <div style={{textAlign: "left"}}>
-            <h5>Bracket Name</h5>
-          </div>
-          <input ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0}} />
           <div className="row flex-pad">
-            <h5>Game</h5>
+            <h5>Bracket Name</h5>
             {
               this.props.deletable ? (
-                <FontAwesome name="minus" onClick={() => {this.props.delfunc()}} />
+                <FontAwesome name="times" onClick={() => {this.props.delfunc()}} />
               ) : ( "" )
             }
           </div>
-
+          <input ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0}} />
+          <div className="row">
+            <h5>Game</h5>
+          </div>
           <AutocompleteForm ref="game" publications={["game_search"]} types={[
             {
               type: Games,

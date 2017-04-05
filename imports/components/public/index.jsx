@@ -17,10 +17,6 @@ export default class LandingScreen extends React.Component {
           <div className="row center">
             <img src="/images/beta_logo.png" style={{width: 150, height: 150}} />
           </div>
-          {
-            // <h1>BRACHYON</h1>
-            // <h3 className="row center">Beyond The Brackets</h3>
-          }
           <div className="row x-center center">
             <LogInModal />
             <SignUpModal />
@@ -30,6 +26,11 @@ export default class LandingScreen extends React.Component {
               <span className="fa fa-compass fa-2x compass" ></span>
               <span className="discover-text">Discover Competitive Events</span>
             </Link>
+          </div>
+        </div>
+        <div className="row x-center footer-buttons" style={{backgroundColor: "rgba(0,0,0,0.5"}}>
+          <div className="create-container-option col-1 orange title">
+            WHAT IS THIS PLACE?
           </div>
         </div>
       </div>

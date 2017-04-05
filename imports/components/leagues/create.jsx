@@ -10,6 +10,7 @@ import LocationForm from "/imports/components/events/create/location_select.jsx"
 import BracketsPanel from "/imports/components/leagues/create/brackets_panel.jsx";
 import EventsPanel from "/imports/components/leagues/create/events_panel.jsx";
 import StreamPanel from "/imports/components/leagues/create/stream_panel.jsx";
+import TicketsPanel from "/imports/components/leagues/create/tickets_panel.jsx";
 
 import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
@@ -130,6 +131,19 @@ export default class Sandbox extends Component {
             name: "Stream",
             key: "stream",
             content: StreamPanel
+          }
+        ],
+        toggle: true
+      },
+      {
+        name: "Tickets",
+        key: "tickets",
+        icon: "ticket",
+        subItems: [
+          {
+            name: "Main",
+            key: "tickets",
+            content: TicketsPanel
           }
         ],
         toggle: true

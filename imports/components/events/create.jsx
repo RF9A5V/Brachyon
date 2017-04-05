@@ -10,9 +10,9 @@ import Editor from "../public/editor.jsx";
 import DateTimeSelector from "../public/datetime_selector.jsx";
 import Location from "../events/create/location_select.jsx";
 
-import BracketsPanel from "../events/create/module_dropdowns/brackets.jsx";
-
-import StreamPanel from "../events/create/module_dropdowns/stream.jsx";
+import BracketsPanel from "./create/module_dropdowns/brackets.jsx";
+import StreamPanel from "./create/module_dropdowns/stream.jsx";
+import TicketingPanel from "./create/module_dropdowns/ticketing.jsx";
 
 import { Banners } from "/imports/api/event/banners.js"
 
@@ -42,6 +42,7 @@ export default class EventCreate extends Component {
       }
     }
     delete obj.details.image;
+
     Meteor.call("events.create", obj, (err, event) => {
       if(err) {
         toastr.error(err.reason, "Error!");
@@ -127,11 +128,21 @@ export default class EventCreate extends Component {
         key: "brackets",
         subItems: [
           {
-            name: "Name",
+            name: "Brackets",
             key: "brackets",
             content: (
               BracketsPanel
-            )
+            ),
+            args: {
+              onBracketNumberChange: (n) => {
+                if(_.isEqual(n, this.state.brackets)) {
+                  return;
+                }
+                this.setState({
+                  brackets: n
+                })
+              }
+            }
           }
         ],
         toggle: true
@@ -142,11 +153,29 @@ export default class EventCreate extends Component {
         key: "stream",
         subItems: [
           {
-            name: "Name",
+            name: "Stream",
             key: "stream",
             content: (
               StreamPanel
             )
+          }
+        ],
+        toggle: true
+      },
+      {
+        name: "Tickets",
+        icon: "ticket",
+        key: "tickets",
+        subItems: [
+          {
+            name: "Tickets",
+            key: "tickets",
+            content: (
+              TicketingPanel
+            ),
+            args: {
+              brackets: this.state.brackets || []
+            }
           }
         ],
         toggle: true

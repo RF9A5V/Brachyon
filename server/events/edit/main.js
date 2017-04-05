@@ -15,6 +15,26 @@ Meteor.methods({
       };
     }
 
+    if(attrs.tickets) {
+      var updateObj = {};
+      Object.keys(attrs.tickets).forEach(k => {
+        if(k == "payables" || k == "paymentType") {
+          return;
+        }
+        if(k == "venue") {
+          updateObj["tickets.venue.price"] = attrs.tickets[k];
+          return;
+        }
+        var tick = attrs.tickets[k];
+        updateObj["tickets." + k + ".price"] = tick.price;
+        updateObj["tickets." + k + ".discounts"] = tick.discounts;
+      });
+      Instances.update(event.instances[event.instances.length - 1], {
+        $set: updateObj
+      });
+    }
+    delete attrs.tickets;
+
     updateObj = flatten(attrs);
     Events.update(id, {
       $set: updateObj

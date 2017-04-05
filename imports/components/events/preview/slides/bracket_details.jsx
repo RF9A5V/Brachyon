@@ -4,6 +4,8 @@ import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
 import UserTab from "/imports/components/users/user_tab.jsx";
+import RegisterButton from "/imports/components/events/show/register_button.jsx";
+
 import Games from "/imports/api/games/games.js";
 import { getSuffix } from "/imports/decorators/placement_suffix.js";
 import { formatter } from "/imports/decorators/formatter.js";
@@ -256,21 +258,19 @@ class BracketDetails extends Component {
     if(!Meteor.userId()) {
       return "";
     }
-    var pIndex = (obj.participants || []).findIndex((p) => {
-      return p.id == Meteor.userId();
-    });
-    var eventId = Events.findOne()._id;
-    var func = pIndex >= 0 ? "events.removeParticipant" : "events.registerUser";
     return (
-      <button style={{marginLeft: 10, borderColor: "#FF6000", width: 100}} onClick={() => {
-        Meteor.call(func, eventId, this.props.index, Meteor.userId(), (err) => {
-          if(err) toastr.error(err.reason);
-          else toastr.success("Success!");
-        })
-      }}>
-        { pIndex >= 0 ? "Unregister" : "Register" }
-      </button>
+      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", width: 100}} bracketMeta={obj} metaIndex={this.props.index} />
     );
+    // return (
+    //   <button style={} onClick={() => {
+    //     Meteor.call(func, eventId, this.props.index, Meteor.userId(), (err) => {
+    //       if(err) toastr.error(err.reason);
+    //       else toastr.success("Success!");
+    //     })
+    //   }}>
+    //     { pIndex >= 0 ? "Unregister" : "Register" }
+    //   </button>
+    // );
   }
 
   details(obj) {
