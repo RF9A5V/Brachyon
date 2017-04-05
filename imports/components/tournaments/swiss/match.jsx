@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Modal from "react-modal";
 
-export default class RoundMatchBlock extends Component {
+export default class SwissMatchBlock extends Component {
 
   constructor(props) {
     super(props);
