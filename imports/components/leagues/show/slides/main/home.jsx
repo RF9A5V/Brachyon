@@ -9,7 +9,9 @@ export default class MainSlide extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      shortLink: null
+    };
   }
 
   render() {
@@ -18,7 +20,31 @@ export default class MainSlide extends Component {
     return (
       <div className="col-1 col">
         <div className="row col-1">
-          <div className="col-1">
+          <div className="col col-1">
+            <div className="col-1">
+            </div>
+            <div style={{padding: 20}}>
+              {
+                this.state.shortLink ? (
+                  <div>
+                    { window.location.origin }/!{ this.state.shortLink }
+                  </div>
+                ) : (
+                  <button onClick={() => {
+                    Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+                      if(err) {
+                        toastr.error(err.reason);
+                      }
+                      else {
+                        this.setState({
+                          shortLink: data
+                        })
+                      }
+                    });
+                  }}>Generate Short Link</button>
+                )
+              }
+            </div>
           </div>
           <div className="col-2 row center x-center">
             <h2 className="sponsor-event-header" style={{color: "#FF6000"}}>{league.details.name}</h2>
