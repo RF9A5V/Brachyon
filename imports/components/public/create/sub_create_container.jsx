@@ -29,7 +29,7 @@ export default class SubContainer extends Component {
   }
 
   render() {
-    var style = { padding: 20, backgroundColor: "#666" };
+    var style = { };
     if(!this.props.active) {
       style.height = 0;
       style.overflowY = "hidden";
