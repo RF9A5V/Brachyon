@@ -37,6 +37,8 @@ Meteor.methods({
       // if(!bracket.name || bracket.name.length < 3) {
       //   throw new Meteor.Error(403, "Bracket at " + i + " has to have a name longer than three characters.");
       // }
+      if (bracket.format.baseFormat == "swiss" || bracket.format.baseFormat == "round_robin")
+        bracket.score = {wins: 3, loss: 0, byes: 3, ties: 1};
       if(!bracket.game) {
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }

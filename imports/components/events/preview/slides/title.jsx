@@ -15,9 +15,7 @@ export default class EventTitlePage extends Component {
   constructor() {
     super();
     this.state = {
-      pageIndex: 0,
-      isAnimating: false,
-      scrollAmount: 0
+      shortLink: null
     }
   }
 
@@ -31,7 +29,31 @@ export default class EventTitlePage extends Component {
     var brackets = Instances.findOne().brackets;
     return (
       <div className="row">
-        <div className="col-1">
+        <div className="col col-1">
+          <div className="col-1">
+          </div>
+          <div style={{padding: 20}}>
+            {
+              this.state.shortLink ? (
+                <div>
+                  { window.location.origin }/!{ this.state.shortLink }
+                </div>
+              ) : (
+                <button onClick={() => {
+                  Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+                    if(err) {
+                      toastr.error(err.reason);
+                    }
+                    else {
+                      this.setState({
+                        shortLink: data
+                      })
+                    }
+                  });
+                }}>Generate Short Link</button>
+              )
+            }
+          </div>
         </div>
         <div className="col col-3 center x-center">
           <div className="col center x-center col-2">
@@ -110,7 +132,6 @@ export default class EventTitlePage extends Component {
                 </div>
               )
             }
-
 
           </div>
         </div>

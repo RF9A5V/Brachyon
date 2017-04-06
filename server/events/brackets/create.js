@@ -14,12 +14,7 @@ Meteor.methods({
     }
     if (format.baseFormat == "swiss" || format.baseFormat == "round_robin")
     {
-      var score = {};
-      score.wins = 3;
-      score.loss = 0;
-      score.byes = 3;
-      score.ties = 1;
-      brackets[0].score = score;
+      brackets.forEach( (bracket) => {bracket.score = {wins: 3, loss: 0, byes: 3, ties: 1}} );
     }
     return Instances.insert({
       brackets,

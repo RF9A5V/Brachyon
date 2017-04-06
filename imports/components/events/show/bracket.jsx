@@ -81,7 +81,7 @@ export default class BracketPanel extends Component {
       var rounds = bracket.rounds;
       var rec;
       if(this.props.format == "swiss") {
-        rec = Math.ceil(Math.log2(rounds[0].players.length));
+        rec = Math.ceil(Math.log2(bracket.players.length));
       }
       else {
         rec = bracket.players.length - (bracket.players.length % 2) - 1;
