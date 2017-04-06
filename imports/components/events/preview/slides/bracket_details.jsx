@@ -50,15 +50,18 @@ class BracketDetails extends Component {
       "Details",
       "Participants"
     ];
-    if(bracket.startedAt != null){
-      tabs.push("Bracket");
-    }
-    if(bracket.id && !bracket.isComplete) {
-      tabs.push("Matches");
-    }
-    if(bracket.id) {
-      tabs.push("Leaderboard");
-      // tabs.push("Bracket");
+    if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
+    {
+      if(bracket.startedAt != null){
+        tabs.push("Bracket");
+      }
+      if(bracket.id && !bracket.isComplete) {
+        tabs.push("Matches");
+      }
+      if(bracket.id) {
+        tabs.push("Leaderboard");
+        // tabs.push("Bracket");
+      }
     }
     return (
       <div className="col col-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, height: "100%"}}>
