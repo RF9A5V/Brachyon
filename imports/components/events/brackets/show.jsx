@@ -308,7 +308,7 @@ class BracketShowScreen extends Component {
             }
           }}>
             <div className="col center x-center" style={{width: "100%", height: "100%"}}>
-              <input value={this.state.url} style={{fontSize: 12, width: "100%", margin: 0, textAlign: "center"}} onFocus={(e) => {
+              <input value={this.state.url} style={{fontSize: 12, width: "100%", margin: 0, textAlign: "center", backgroundColor: "black"}} onFocus={(e) => {
                 e.target.select();
               }} />
             </div>
