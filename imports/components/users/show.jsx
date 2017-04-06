@@ -16,6 +16,7 @@ import CreditCardForm from '../public/credit_card.jsx';
 import ProfileImage from './profile_image.jsx';
 import ImageForm from "/imports/components/public/img_form.jsx";
 import UserSections from "./show/sections.jsx";
+import UserStat from "./show/stat.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
 export default class ShowUserScreen extends TrackerReact(Component) {
@@ -34,7 +35,8 @@ export default class ShowUserScreen extends TrackerReact(Component) {
       }),
       open: false,
       ready: false,
-      tab: "events"
+      tab: "events",
+      game:"overview"
     });
   }
 
@@ -83,37 +85,7 @@ export default class ShowUserScreen extends TrackerReact(Component) {
       return (<UserSections/>)
     }
     else if (this.state.tab=="stats"){
-      return(
-        <div>
-          <div className="center" style={{float:"left", padding:"10", marginLeft: 25, border:"solid", width:"170px", borderColor:"#ff6000", fontSize:18}}>
-            Stats
-          </div>
-          <div className="center" >
-            <table  style={{justifyContent:"center", margin:"0 auto"}}>
-              <tr style={{fontSize:18}}>
-                <th className="center">Game</th>
-                <th className="center">Wins</th>
-                <th className="center">Losses</th>
-                <th className="center">Ties</th>
-                <th className="center">Win%</th>
-              </tr>
-              {
-                Object.keys(Meteor.user().stats).map(game =>{
-                  return(
-                    <tr>
-                      <td className="center">{Games.findOne(game).name}</td>
-                      <td className="center">{Meteor.user().stats[game].wins}</td>
-                      <td className="center">{Meteor.user().stats[game].losses}</td>
-                      <td className="center">{Meteor.user().stats[game].ties}</td>
-                      <td className="center">{((Meteor.user().stats[game].wins/(Meteor.user().stats[game].losses + Meteor.user().stats[game].wins))*100).toFixed(2)}%</td>
-                    </tr>
-                  );
-                })
-              }
-            </table>
-          </div>
-        </div>
-      )
+      return(<UserStat/>)
     }
   }
 
@@ -161,15 +133,14 @@ export default class ShowUserScreen extends TrackerReact(Component) {
           <button onClick={() => { browserHistory.push("/create") }} style={{marginTop: 100}}>Create an Event</button>
         </div>
         {
-          // <div className="row" style={{padding:"0 30px"}}>
-          //   {
-          //     ["events","stats"].map((tab)=>{
-          //       var style = {padding:5, fontSize:24, borderBottom:`solid 2px ${this.state.tab==tab?"#ff6000":"white"}`, marginRight:10}
-          //       return (
-          //         <div className="user-tab" style={{borderColor:`${this.state.tab==tab?"#ff6000":"white"}`}} onClick={()=>{this.setState({tab})}}>{tab.slice(0,1).toUpperCase() + tab.slice(1)}</div>
-          //       )})
-          //   }
-          // </div>
+          <div className="row center" style={{padding:"0 30px"}}>
+            {
+              ["events","stats"].map((tab)=>{
+                return (
+                  <div className="user-tab" style={{borderBottom:`${this.state.tab==tab?"solid 2px":""}`, borderColor:`${this.state.tab==tab?"#ff6000":""}`}} onClick={()=>{this.setState({tab})}}>{tab.slice(0,1).toUpperCase() + tab.slice(1)}</div>
+                )})
+            }
+          </div>
         }
         <div className="row col-1"><hr className="user-divider"></hr></div>
         <div className="col">
