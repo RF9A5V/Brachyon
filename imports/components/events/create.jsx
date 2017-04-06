@@ -162,24 +162,24 @@ export default class EventCreate extends Component {
         ],
         toggle: true
       },
-      {
-        name: "Tickets",
-        icon: "ticket",
-        key: "tickets",
-        subItems: [
-          {
-            name: "Tickets",
-            key: "tickets",
-            content: (
-              TicketingPanel
-            ),
-            args: {
-              brackets: this.state.brackets || []
-            }
-          }
-        ],
-        toggle: true
-      }
+      // {
+      //   name: "Tickets",
+      //   icon: "ticket",
+      //   key: "tickets",
+      //   subItems: [
+      //     {
+      //       name: "Tickets",
+      //       key: "tickets",
+      //       content: (
+      //         TicketingPanel
+      //       ),
+      //       args: {
+      //         brackets: this.state.brackets || []
+      //       }
+      //     }
+      //   ],
+      //   toggle: true
+      // }
     ]
   }
 

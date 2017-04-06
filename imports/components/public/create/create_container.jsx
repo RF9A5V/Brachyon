@@ -74,18 +74,19 @@ export default class CreateContainer extends Component {
     else if(window.location.pathname.indexOf("league" >= 0)){
       eColor = "#FF6000";
     }
+    console.log(this.props.actions);
     return (
       <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
-          {
-            (this.props.actions || []).map((a, i) => {
-              return (
-                <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
-                  { a.name.toUpperCase() }
-                </div>
-              )
-            })
-          }
-        </div>)
+        {
+          (this.props.actions || []).map((a, i) => {
+            return (
+              <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
+                { a.name.toUpperCase() }
+              </div>
+            )
+          })
+        }
+      </div>)
   }
 
   footer(){
@@ -188,16 +189,16 @@ export default class CreateContainer extends Component {
         </div>
         <div className="row x-center footer-buttons">
           {
-            (this.props.actions || []).map((a, i) => {
-              return (
-                <div className={`create-container-option col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} onClick={a.action}>
-                  { a.name.toUpperCase() }
-                </div>
-              )
-            })
+            // (this.props.actions || []).map((a, i) => {
+            //   return (
+            //     <div className={`create-container-option col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} onClick={a.action}>
+            //       { a.name.toUpperCase() }
+            //     </div>
+            //   )
+            // })
           }
+          { this.foot() }
         </div>
-        {this.footer()}
       </div>
     )
   }
