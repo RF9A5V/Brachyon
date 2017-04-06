@@ -145,11 +145,13 @@ export default class SwissDisplay extends Component {
   }
 
   onMatchClick(match, i) {
-    this.setState({
-      match,
-      open: true,
-      i
-    });
+    if(!match.played && this.state.page == this.state.rounds.length) {
+      this.setState({
+        match,
+        open: true,
+        i
+      });
+    }
   }
 
   getBuchholz(players, pnum)

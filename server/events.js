@@ -686,12 +686,12 @@ Meteor.methods({
       }
     }
 
-    tiebreaker.sort(function(a, b) {
+    tiedplayers.sort(function(a, b) {
       return b.score - a.score;
     });
 
-    if (tiebreaker[0].score > tiebreaker[1].score)
-      bracket.players[bracket.pdic[tiebreaker[0].name]].score += 1;
+    if (tiedplayers[0].score > tiedplayers[1].score)
+      bracket.players[bracket.pdic[tiedplayers[0].name]].score += 1;
     else
       return false;
 
@@ -917,19 +917,21 @@ Meteor.methods({
 //Players contain the most up to date player objects, containing their wins, losses, ties, and so forth
 //PDIC contains a dictionary of all player index ids. pdic["player_name"] will return the index of said player. Separated for sorting reasons
 
-  "events.update_roundmatch"(bracketID, roundNumber, matchNumber, score, winfirst, winsecond, ties)
+  "events.update_roundmatch"(bracketID, roundNumber, matchNumber, winfirst, winsecond, ties)
   {
     var bracket = Brackets.findOne(bracketID);
     var match = Matches.findOne(bracket.rounds[roundNumber][matchNumber].id);
-    match.players[0].score = winfirst;
-    match.players[1].score = winsecond;
+    if ( (match.players[0].score <= 0 && winfirst < 0) || (match.players[1].score <= 0 && winsecond < 0) )
+      return;
+    match.players[0].score += winfirst;
+    match.players[1].score += winsecond;
     match.ties = ties;
     var p1 = bracket.pdic[match.players[0].alias];
     var p2 = bracket.pdic[match.players[1].alias];
-    bracket.players[p1].score += score*winfirst;
+    bracket.players[p1].score += bracket.score.wins*winfirst + bracket.score.loss*winsecond + bracket.score.ties*ties;
     bracket.players[p1].wins += winfirst;
     bracket.players[p1].losses += winsecond;
-    bracket.players[p2].score += score*winsecond;
+    bracket.players[p2].score += bracket.score.wins*winsecond + bracket.score.loss*winfirst + bracket.score.ties*ties;
     bracket.players[p2].wins += winsecond;
     bracket.players[p2].losses += winfirst;
 

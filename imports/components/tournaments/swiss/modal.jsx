@@ -21,13 +21,12 @@ export default class RoundModal extends Component {
       return false;
     }
     var match = this.getMatch();
-    var score = 3;
     var multi = inc === true ? 1 : -1;
-    var scoreOne = Math.max(match.players[0].score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
-    var scoreTwo = Math.max(match.players[1].score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
+    var p1s = fieldToUpdate == "p1" ? 1 * multi : 0;
+    var p2s = fieldToUpdate == "p2" ? 1 * multi : 0;
     var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
     this.state.active = true;
-    Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, score, scoreOne, scoreTwo, ties, (err) => {
+    Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, p1s, p2s, ties, (err) => {
 
       this.state.active = false;
       if(err){
