@@ -17,12 +17,15 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 class LeagueShowPage extends Component {
 
-  componentWillMount() {
-    this.populateMetaTags();
+  constructor(props) {
+    super(props);
+    this.state = {
+      loaded: false
+    }
   }
 
   imgOrDefault() {
-    var league = Leagues.findOne();
+    const league = Leagues.findOne();
     if(league.details.bannerUrl) {
       return league.details.bannerUrl;
     }
@@ -30,8 +33,8 @@ class LeagueShowPage extends Component {
   }
 
   populateMetaTags() {
-    var league = Leagues.findOne();
-
+    const league = Leagues.findOne();
+    console.log(league);
     var title = league.details.name;
     var desc = this.fbDescriptionParser(league.details.description);
     var img = this.imgOrDefault();
@@ -110,6 +113,12 @@ class LeagueShowPage extends Component {
       })
     }
     return pages;
+  }
+
+  componentWillReceiveProps(next) {
+    if(next.ready && !this.props.ready) {
+      this.populateMetaTags();
+    }
   }
 
   render() {

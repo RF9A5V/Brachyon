@@ -77,7 +77,8 @@ export const renderRoutes = () => (
       <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
-      <Route path="u/:id" component={ShortLinkScreen} />
+      <Route path="admin" component={AdminFunctionScreen} />
+      <Route path="/!:id" component={ShortLinkScreen} />
     </Route>
 
     <Route path="/" component={MainLayout}>

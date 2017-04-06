@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import TrackerReact from "meteor/ultimatejs:tracker-react";
+import { browserHistory } from "react-router";
 import { createContainer } from "meteor/react-meteor-data"
+import Modal from "react-modal";
 
 import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import BracketPanel from "../show/bracket.jsx";
@@ -23,6 +24,13 @@ import OrganizeSuite from "/imports/decorators/organize.js";
 
 class BracketShowScreen extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    }
+  }
+
   componentWillReceiveProps() {
     this.populateMetaTags();
   }
@@ -33,6 +41,9 @@ class BracketShowScreen extends Component {
     }
     if(this.state.bracket) {
       this.state.bracket.stop();
+    }
+    if(this.refs.hiddenLink) {
+      this.refs.hiddenLink.removeEventListener("click");
     }
     resetMetaTags();
   }
@@ -259,6 +270,29 @@ class BracketShowScreen extends Component {
         })
       }
     }
+    items.push({
+      name: "Back to Event",
+      action: () => {
+        browserHistory.push("/event/" + Events.findOne().slug);
+      }
+    });
+    items.push({
+      name: "Generate Short URL",
+      action: (e) => {
+
+        Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            this.setState({
+              open: true,
+              url: window.location.origin + "/!" + data
+            })
+          }
+        });
+      }
+    })
     return items;
   }
 
@@ -267,6 +301,18 @@ class BracketShowScreen extends Component {
       return (
         <div style={{padding: 20}}>
           <CreateContainer items={this.items()} actions={this.actions()} />
+          <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} style={{
+            content: {
+              width: 300,
+              height: 100
+            }
+          }}>
+            <div className="col center x-center" style={{width: "100%", height: "100%"}}>
+              <input value={this.state.url} style={{fontSize: 12, width: "100%", margin: 0, textAlign: "center"}} onFocus={(e) => {
+                e.target.select();
+              }} />
+            </div>
+          </Modal>
         </div>
       );
     }
