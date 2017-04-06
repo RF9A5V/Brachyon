@@ -34,6 +34,7 @@ import MatchShowScreen from "../imports/components/events/brackets/match/show.js
 import PrivacyPolicyScreen from "../imports/components/public/privacy.jsx";
 import ForgotPassScreen from "../imports/components/public/forgot_pass.jsx";
 import ResetPassScreen from "../imports/components/public/reset_pass.jsx";
+import ShortLinkScreen from "../imports/components/public/short_link.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -76,6 +77,8 @@ export const renderRoutes = () => (
       <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
+      <Route path="admin" component={AdminFunctionScreen} />
+      <Route path="/!:id" component={ShortLinkScreen} />
     </Route>
 
     <Route path="/" component={MainLayout}>
