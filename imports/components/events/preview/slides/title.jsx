@@ -36,7 +36,7 @@ export default class EventTitlePage extends Component {
             {
               this.state.shortLink ? (
                 <div>
-                  { window.location.origin }/u/{ this.state.shortLink }
+                  { window.location.origin }/!{ this.state.shortLink }
                 </div>
               ) : (
                 <button onClick={() => {
