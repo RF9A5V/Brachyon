@@ -47,7 +47,7 @@ export default class Bar extends Component {
                   <div className="event-block-admin-button" onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    browserHistory.push("/event/" + event.slug + "/edit")
+                    browserHistory.push("/event/" + event.slug + "/admin")
                   }}>Edit</div>
                 ) : (
                   <div></div>

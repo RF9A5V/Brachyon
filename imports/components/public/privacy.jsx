@@ -35,7 +35,7 @@ export default class PrivacyPolicyScreen extends Component {
     return (
       <div className="row center">
         <div className="col side-tab-panel">
-          <h2>Privacy Policy</h2>
+          <h2 style={{margin: "0 0 20px 0"}}>Privacy Policy</h2>
           {
             this.text().map(val => {
               return (

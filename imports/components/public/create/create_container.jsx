@@ -151,7 +151,7 @@ export default class CreateContainer extends Component {
                   width: 175,
                   cursor: "pointer"
                 }}>
-                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? (eColor) : "white"}} size="2x" />
+                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white"}} size="2x" />
                   <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {
@@ -180,7 +180,18 @@ export default class CreateContainer extends Component {
                     }
                     this.state.modStatus[item.key] = val;
                     this.forceUpdate();
-                  }} getRefValue={this._getRefValue.bind(this)} ignoreHeader={item.ignoreHeader || false} />
+                  }} getRefValue={this._getRefValue.bind(this)} />
+                </div>
+              )
+            })
+          }
+        </div>
+        <div className="row x-center footer-buttons">
+          {
+            (this.props.actions || []).map((a, i) => {
+              return (
+                <div className={`create-container-option col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} onClick={a.action}>
+                  { a.name.toUpperCase() }
                 </div>
               )
             })

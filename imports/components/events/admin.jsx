@@ -25,6 +25,10 @@ import BracketInfo from "./modules/bracket/details.jsx";
 import StreamAdd from "./modules/stream/add.jsx";
 import StreamDetails from "./modules/stream/details.jsx";
 
+// Ticket Stuff
+import TicketDetails from "./modules/tickets/details.jsx";
+import TicketEdit from "./modules/tickets/edit.jsx";
+
 import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 import RerunModal from "/imports/components/events/admin/rerun_modal.jsx";
 
@@ -209,26 +213,66 @@ class EventAdminPage extends Component {
       toggle: true,
       initialToggleState: !!event.stream,
       toggleAction: () => {
-        if(event.stream) {
-          Meteor.call("events.removeModule.stream", event._id, (err) => {
-            if(err) {
-              toastr.error(err.reason);
-            }
-            else {
-              this.forceUpdate();
-            }
-          });
+        const action = event.stream ? "removeModule" : "addModule"
+        Meteor.call(`events.${action}.stream`, event._id, (err) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            this.forceUpdate();
+          }
+        });
+      }
+    }
+  }
+
+  ticketItems() {
+    var subs = [];
+    const tickets = Instances.findOne().tickets;
+    const canToggle = !tickets || !tickets.payables || Object.keys(tickets.payables).length == 0
+    if(canToggle) {
+      subs = [
+        {
+          content: TicketEdit,
+          name: "Edit",
+          key: "tickets"
         }
-        else {
-          Meteor.call("events.addModule.stream", event._id, (err) => {
-            if(err) {
-              toastr.error(err.reason);
-            }
-            else {
-              this.forceUpdate();
-            }
-          });
+      ];
+    }
+    else {
+      Object.keys(tickets).forEach(k => {
+        if(k == "payables" || k == "paymentType") {
+          return;
         }
+        const title = isNaN(k) ? "Venue" : `Bracket ${parseInt(k) + 1}`;
+        subs.push({
+          content: TicketDetails,
+          name: title,
+          key: k,
+          args: {
+            ticket: tickets[k]
+          }
+        });
+      });
+    }
+    return {
+      name: "Tickets",
+      icon: "ticket",
+      key: "tickets",
+      subItems: subs,
+      toggle: canToggle,
+      initialToggleState: !!tickets,
+      toggleAction: () => {
+        const subAction = tickets ? "removeModule" : "addModule";
+        Meteor.call(`events.${subAction}.tickets`, Events.findOne()._id, (e) => {
+          if(e) {
+            toastr.error(e.reason);
+          }
+          else {
+            toastr.success("Successfully toggled ticket module.");
+            this.forceUpdate();
+          }
+        })
       }
     }
   }
@@ -240,6 +284,7 @@ class EventAdminPage extends Component {
     items.push(this.detailItems());
     items.push(this.bracketItems());
     items.push(this.streamItems());
+    items.push(this.ticketItems());
     return items;
   }
 
@@ -346,6 +391,7 @@ class EventAdminPage extends Component {
 
 export default withRouter(createContainer(props => {
   const eventHandle = Meteor.subscribe("event", props.params.slug);
+  const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
   return {
     ready: eventHandle.ready()
   }
