@@ -8,22 +8,35 @@ Meteor.publish('brackets', (_id) => {
   if(!bracket) {
     return Brackets.find({_id});
   }
-  bracket.rounds.forEach(b => {
-    if(Array.isArray(b)) {
-      b.forEach(r => {
-        r.forEach(m => {
-          if(m) {
-            matches.push(m.id);
-          }
+  if(!(bracket.pdic)) {
+    bracket.rounds.forEach(b => {
+      if(Array.isArray(b)) {
+        b.forEach(r => {
+          r.forEach(m => {
+            if(m) {
+              matches.push(m.id);
+            }
+          })
         })
+      }
+      else {
+        b.matches.forEach(m => {
+          matches.push(m);
+        })
+      }
+    })
+  }
+  else
+  {
+    bracket.rounds.forEach(r => {
+      r.forEach(m => {
+        if(m) {
+          matches.push(m.id);
+        }
       })
-    }
-    else {
-      b.matches.forEach(m => {
-        matches.push(m);
-      })
-    }
-  })
+    })
+  }
+
   return [
     Brackets.find({_id}),
     Matches.find({ _id: { $in: matches } })
