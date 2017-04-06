@@ -8,13 +8,14 @@ export default class SwissMatchBlock extends Component {
   }
 
   render(){
+    var match = Matches.findOne(this.props.match.id)
     return (
       <div className={`swiss-match ${this.props.match.played ? "complete" : ""} row center x-center`} onClick={ this.props.onSelect }style={{width:"300px", marginRight:"20px"}}>
-        <div className={`swiss-player ${(this.props.match.scoreOne > this.props.match.scoreTwo && this.props.match.played) ? ("winner") : ("")} ${this.props.match.playerOne.length > 15?("marquee"):("")}`}>
-          {this.props.match.playerOne}</div>
+        <div className={`swiss-player ${(match.players[0].score>match.players[1].score&&this.props.match.played)?("winner"):("")} ${match.players[0].alias.length > 15?("marquee"):("")}`}>
+          {match.players[0].alias}</div>
         <div style={{fontSize: 30}}>VS</div>
-        <div className={`swiss-player ${(this.props.match.scoreOne < this.props.match.scoreTwo && this.props.match.played) ? ("winner") : ("")} ${this.props.match.playerTwo.length > 15?("marquee"):("")}`}>
-          {this.props.match.playerTwo}</div>
+        <div className={`swiss-player ${(match.players[0].score<match.players[1].score&&this.props.match.played)?("winner"):("")} ${match.players[1].alias.length > 15?("marquee"):("")}`}>
+          {match.players[1].alias}</div>
       </div>
     );
   }
