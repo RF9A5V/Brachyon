@@ -24,6 +24,11 @@ Meteor.methods({
     crObj.type = attrs.creator.type;
     delete attrs.creator;
     var eventSlugs = [];
+    var tickObj;
+    if(attrs.tickets) {
+      tickObj = JSON.parse(JSON.stringify(attrs.tickets));
+      delete attrs.tickets;
+    }
     var league = Leagues.insert(attrs);
     events.forEach((e) => {
       var createObj = {};
@@ -31,6 +36,9 @@ Meteor.methods({
       createObj.details.datetime = e;
       createObj.brackets = [bracket];
       createObj.creator = crObj;
+      if(tickObj) {
+        createObj.tickets = tickObj;
+      }
       if(attrs.stream) {
         createObj.stream = attrs.stream;
       }

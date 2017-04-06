@@ -58,8 +58,27 @@ function verifyUser(nextState, replace) {
 
 export const renderRoutes = () => (
   <Router history={browserHistory}>
-    <Route path="/" component={MainLayout}>
+    <Route path="/" component={NoFooter}>
       <IndexRoute component={LandingScreen} onEnter={isLoggedIn} />
+      <Route path="events/create" component={EventCreateScreen} />
+      <Route path="event/:slug/edit" component={EventAdminScreen} />
+      <Route path="event/:slug" component={PreviewEventScreen} />
+      <Route path="event/:slug/:slide" component={PreviewEventScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex/admin" component={BracketAdminScreen} />
+      <Route path="leagues/create" component={CreateLeagueScreen} />
+      <Route path="league/:slug/edit" component={EditLeagueScreen} />
+      <Route path="league/:slug/admin" component={EditLeagueScreen} />
+      <Route path="league/:slug" component={ShowLeagueScreen} />
+      <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
+      <Route path="bracket/:id" component={BracketShowScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
+      <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
+      <Route path="orgs/create" component={OrganizationCreateScreen} />
+      <Route path="org/:slug" component={OrganizationShowScreen} />
+    </Route>
+
+    <Route path="/" component={MainLayout}>
       <Route path="dashboard" component={ShowUserScreen} onEnter={verifyUser} />
       <Route path="options" component={UserOptionsScreen} onEnter={verifyUser} />
       <Route path="about" component={AboutScreen} />
@@ -78,26 +97,6 @@ export const renderRoutes = () => (
       <Route path="/privacy" component={PrivacyPolicyScreen} />
       <Route path="forgot_pw" component={ForgotPassScreen} />
       <Route path="reset_password/:token" component={ResetPassScreen} />
-    </Route>
-    <Route path="/" component={NoFooter}>
-      <Route path="events/create" component={EventCreateScreen} />
-      <Route path="event/:slug/edit" component={EventAdminScreen} />
-      <Route path="event/:slug" component={PreviewEventScreen} />
-      <Route path="event/:slug/:slide" component={PreviewEventScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex" component={BracketShowScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex/admin" component={BracketAdminScreen} />
-      <Route path="leagues/create" component={CreateLeagueScreen} />
-      <Route path="league/:slug/edit" component={EditLeagueScreen} />
-      <Route path="league/:slug/admin" component={EditLeagueScreen} />
-      <Route path="league/:slug" component={ShowLeagueScreen} />
-      <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
-      <Route path="bracket/:id" component={BracketShowScreen} />
-      <Route path="bracket/:id/admin" component={BracketAdminScreen} />
-      <Route path="admin" component={AdminFunctionScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
-      <Route path="orgs/create" component={OrganizationCreateScreen} />
-      <Route path="org/:slug" component={OrganizationShowScreen} />
     </Route>
   </Router>
 )

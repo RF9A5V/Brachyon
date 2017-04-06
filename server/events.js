@@ -79,7 +79,8 @@ Meteor.methods({
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
           id: userID,
-          alias: alias
+          alias: alias,
+          checkedIn: true
         }
       }
     });
@@ -125,6 +126,19 @@ Meteor.methods({
         }
       }
     })
+  },
+
+  "events.checkInUser"(eventId, bracketIndex, alias) {
+    const event = Events.findOne(eventId);
+    const instance = Instances.findOne(event.instances.pop());
+    const userIndex = instance.brackets[bracketIndex].participants.findIndex(i => {
+      return i.alias == alias;
+    })
+    Instances.update(instance._id, {
+      $set: {
+        [`brackets.${bracketIndex}.participants.${userIndex}.checkedIn`]: true
+      }
+    });
   },
 
   "events.registerUser"(eventID, bracketIndex) {
@@ -184,7 +198,8 @@ Meteor.methods({
       $push: {
         [`brackets.${bracketIndex}.participants`]: {
           id: user._id,
-          alias
+          alias,
+          checkedIn: false
         }
       }
     })
@@ -233,17 +248,12 @@ Meteor.methods({
     });
   },
 
-  "events.start_event"(eventID, index) {
-    var event = Events.findOne(eventID);
-    var instance;
-    if(!event) {
-      var instance = Instances.findOne(eventID);
+  "events.start_event"(id, index) {
+    const instance = Instances.findOne(id);
+    if(!instance) {
       if(!instance) {
         throw new Meteor.Error(404, "Couldn't find this event!");
       }
-    }
-    else {
-      instance = Instances.findOne(event.instances.pop());
     }
     var organize = instance.brackets[index];
     var format = instance.brackets[index].format.baseFormat;

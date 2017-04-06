@@ -76,7 +76,7 @@ figure
 .footer-button
   width 100px
   height 100%
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   display flex
   justify-content center
   align-items center
@@ -376,7 +376,7 @@ a:hover, a:focus
 
 
 select
-  background #333
+  background #222
   border none
   padding 5px
 
@@ -493,9 +493,48 @@ label
   background-color: #FF6000;
   cursor: pointer;
 
+.hover-lg:hover
+  background-color: #666;
+  cursor: pointer;
+
 .title
-  letter-spacing: 0.5px
+  letter-spacing: 1px
   text-transform: uppercase
+
+.text-description
+  border-left 1px white solid
+  width 50%
+  min-width 300px
+  padding 10px 20px
+  margin 10px auto
+
+.border-blue
+  border-color #00BDFF
+
+.footer-buttons
+  width 100vw
+  height 50
+  position fixed
+  background-color #111
+  bottom 0
+  left 0
+  right 0
+
+.panel-tab
+  border-bottom-width 0;
+  border-bottom-style solid;
+  padding 5px;
+  cursor pointer;
+  letter-spacing 1px;
+  text-transform uppercase;
+  text-align center;
+  margin-right 10px
+
+.panel-tab:last-child
+  margin-right 0
+
+.panel-tab.active
+  border-bottom solid 2px
 
 .grabbing
   cursor -webkit-grabbing
@@ -504,3 +543,4 @@ label
 .grab
   cursor -webkit-grab
   cursor grab
+
