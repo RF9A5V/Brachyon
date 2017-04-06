@@ -100,7 +100,12 @@ export default class EventCreate extends Component {
             key: "description",
             content: (
               Editor
-            )
+            ),
+            args: {
+              useInsert: true,
+              usePara: true,
+              useTable: true
+            }
           },
           {
             name: "Date",
@@ -194,7 +199,7 @@ export default class EventCreate extends Component {
 
   render() {
     return (
-      <div className="col col-1" style={{padding: 20}}>
+      <div className="col col-1" style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )
