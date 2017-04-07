@@ -146,22 +146,22 @@ export default class LocationSelect extends Component {
           </div>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
-          <h5>Location Name</h5>
-          <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName}/>
-          <h5>Address</h5>
-          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" defaultValue={this.state.streetAddress} />
+          <label className="input-label">Location Name</label>
+          <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName} style={{marginTop: 0}}/>
+          <label className="input-label">Street Address</label>
+          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" defaultValue={this.state.streetAddress} style={{marginTop: 0}} />
           <div className="row">
-            <div className="col" style={{width: "50%"}}>
-              <h5>City</h5>
-              <input  type="text" ref="city" defaultValue={this.state.city} />
+            <div className="col" style={{width: "50%", marginRight: 10}}>
+              <label className="input-label">City</label>
+              <input type="text" ref="city" defaultValue={this.state.city} style={{margin: 0}} />
+            </div>
+            <div className="col" style={{width: "25%", marginRight: 10}}>
+              <label className="input-label">State</label>
+              <input type="text" ref="state" defaultValue={this.state.state} style={{margin: 0}} />
             </div>
             <div className="col" style={{width: "25%"}}>
-              <h5>State</h5>
-              <input  type="text" ref="state" defaultValue={this.state.state} />
-            </div>
-            <div className="col" style={{width: "25%"}}>
-              <h5>Zip</h5>
-              <input  type="text" ref="zip" defaultValue={this.state.zip} />
+              <label className="input-label">Zip</label>
+              <input type="text" ref="zip" defaultValue={this.state.zip} style={{margin: 0}} />
             </div>
           </div>
         </div>
