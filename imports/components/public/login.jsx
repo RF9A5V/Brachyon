@@ -1,7 +1,9 @@
-import React, {Component} from "react";
+import React from "react";
 import { browserHistory, Link } from 'react-router';
 
-export default class LogInScreen extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class LogInScreen extends ResponsiveComponent {
 
   onSubmit(e) {
     e.preventDefault();
@@ -19,20 +21,37 @@ export default class LogInScreen extends Component {
     })
   }
 
-  render(){
+  renderBase(ops) {
     return (
       <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
-          <input type="text" name="email" placeholder="Email or Username" ref="token" />
-          <input type="password" name="password" placeholder="Password" ref="password" />
-          <a href="/forgot_pw" style={{fontSize: 12, marginTop: 10}} onClick={(e) => {
+          <input className={ops.inputClassName} type="text" name="email" placeholder="Email or Username" ref="token" />
+          <input className={ops.inputClassName} type="password" name="password" placeholder="Password" ref="password" />
+          <a href="/forgot_pw" style={{fontSize: ops.fontSize, marginTop: ops.marginTop}} onClick={(e) => {
             e.preventDefault();
             this.props.onClose();
             browserHistory.push("/forgot_pw")
           }}>Forgot Password?</a>
-          <input type="submit" value="Log In" style={{marginTop: 10}} />
+          <input className={ops.inputClassName} type="submit" value="Log In" style={{marginTop: ops.marginTop}} />
         </form>
       </div>
-    );
+    )
   }
+
+  renderMobile(){
+    return this.renderBase({
+      inputClassName: "large-input",
+      fontSize: "3rem",
+      marginTop: "2rem"
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      inputClassName: "",
+      fontSize: "12px",
+      marginTop: 10
+    });
+  }
+
 }
