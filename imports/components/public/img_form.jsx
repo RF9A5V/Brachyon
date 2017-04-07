@@ -122,7 +122,7 @@ export default class ImageForm extends Component {
       );
     }
     else if(this.props.url != null) {
-      value = (<img src={this.props.url}  style={{height: "auto"}}/>);
+      value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
     }
     else {
       value = (
@@ -131,7 +131,7 @@ export default class ImageForm extends Component {
     }
     return (
       <div className="col">
-        <div className="row center">
+        <div className="row center x-center">
           { value }
         </div>
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
