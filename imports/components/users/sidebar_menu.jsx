@@ -54,14 +54,16 @@ export default class SidebarMenu extends ResponsiveComponent {
     ];
     return items.map(i => {
       return (
-        <div className="row x-center hover-orange" style={{padding: ops.padding, width: "100%"}} onClick={() => {
+        <div className="row hover-orange x-center" style={{padding: ops.padding, width: "100%"}} onClick={() => {
           (i.action)();
           this.props.onRedirect();
         }}>
-          <FontAwesome name={i.icon} style={{width: 50, marginRight: ops.marginRight, fontSize: ops.fontSize}} />
-          <div className="col-3">
-            <span style={{fontSize: ops.fontSize}}>{ i.name }</span>
+          <div className="col-1"></div>
+          <div className="col-1">
+            <FontAwesome name={i.icon} style={{width: 50, marginRight: ops.marginRight, fontSize: ops.fontSize}} />
           </div>
+          <span className="col-3" style={{fontSize: ops.fontSize}}>{ i.name }</span>
+          <div className="col-1"></div>
         </div>
       )
     })
@@ -73,14 +75,20 @@ export default class SidebarMenu extends ResponsiveComponent {
       return null;
     }
     return (
-      <div className="col x-center" style={{height: "100vh", backgroundColor: "black", width: ops.width}}>
-        <div className="col col-1 center x-center">
+      <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width, padding: 20}}>
+        <div className="col-1">
+          <div className="row" style={{justifyContent: "flex-end"}}>
+            <FontAwesome name="times" style={{fontSize: ops.fontSize}}/>
+          </div>
           <div className="col x-center" style={{padding: ops.padding}}>
             <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: ops.imgSize, height: ops.imgSize, borderRadius: "100%", marginBottom: 10}}/>
             <span style={{fontSize: ops.fontSize}}>{ user.username }</span>
           </div>
+        </div>
+        <div className="col center x-center">
           { this.options(ops) }
         </div>
+        <div className="col-1"></div>
       </div>
     )
   }
@@ -88,10 +96,10 @@ export default class SidebarMenu extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       width: "75vw",
-      imgSize: "20em",
-      fontSize: "4em",
+      imgSize: "30vw",
+      fontSize: "6rem",
       padding: "5em",
-      marginRight: "1em"
+      marginRight: 30
     })
   }
 
