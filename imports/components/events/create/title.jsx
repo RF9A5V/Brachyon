@@ -25,7 +25,7 @@ export default class Title extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div className="col" style={{maxWidth: 300, width: "80%"}}>
         <label className="input-label">Title { this.refs.title ? this.refs.title.value.length : 0 } / 50</label>
         <input ref="title" type="text" onChange={this.onChange.bind(this)} style={{margin: 0}}/>
       </div>

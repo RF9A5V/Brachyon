@@ -93,7 +93,10 @@ export default class EventCreate extends Component {
             key: "location",
             content: (
               Location
-            )
+            ),
+            args: {
+              online: false
+            }
           },
           {
             name: "Description",
