@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
-export default class SidebarMenu extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-  options() {
+export default class SidebarMenu extends ResponsiveComponent {
+
+  options(ops) {
     var items = [
       {
         icon: "user",
@@ -52,34 +54,54 @@ export default class SidebarMenu extends Component {
     ];
     return items.map(i => {
       return (
-        <div className="row x-center hover-orange" style={{alignSelf: "stretch", padding: 20}} onClick={() => {
+        <div className="row x-center hover-orange" style={{padding: ops.padding, width: "100%"}} onClick={() => {
           (i.action)();
           this.props.onRedirect();
         }}>
-          <FontAwesome name={i.icon} size="2x" style={{width: 50, marginRight: 10}} />
+          <FontAwesome name={i.icon} style={{width: 50, marginRight: ops.marginRight, fontSize: ops.fontSize}} />
           <div className="col-3">
-            <span style={{fontSize: 18}}>{ i.name }</span>
+            <span style={{fontSize: ops.fontSize}}>{ i.name }</span>
           </div>
         </div>
       )
     })
   }
 
-  render() {
+  renderBase(ops) {
     var user = Meteor.user();
     if(!user) {
       return null;
     }
     return (
-      <div style={{height: "100vh", backgroundColor: "#111", width: 250}}>
-        <div className="col x-center">
-          <div className="col x-center" style={{padding: 20}}>
-            <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100, borderRadius: "100%", marginBottom: 10}}/>
-            <span style={{fontSize: 18}}>{ user.username }</span>
+      <div className="col x-center" style={{height: "100vh", backgroundColor: "black", width: ops.width}}>
+        <div className="col col-1 center x-center">
+          <div className="col x-center" style={{padding: ops.padding}}>
+            <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: ops.imgSize, height: ops.imgSize, borderRadius: "100%", marginBottom: 10}}/>
+            <span style={{fontSize: ops.fontSize}}>{ user.username }</span>
           </div>
-          { this.options() }
+          { this.options(ops) }
         </div>
       </div>
     )
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      width: "75vw",
+      imgSize: "20em",
+      fontSize: "4em",
+      padding: "5em",
+      marginRight: "1em"
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      width: 250,
+      imgSize: 100,
+      fontSize: 18,
+      padding: 20,
+      marginRight: 10
+    })
   }
 }
