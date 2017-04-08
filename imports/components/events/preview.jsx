@@ -84,6 +84,7 @@ class PreviewEventScreen extends Component {
     var pages = [
       {
         name: "Home",
+        icon: "home",
         slides: [
           {
             component: TitlePage
@@ -116,12 +117,14 @@ class PreviewEventScreen extends Component {
       }))
       pages.push({
         name: "Brackets",
+        icon: "sitemap",
         slides
       });
     }
     if(event.stream) {
       pages.push({
         name: "Stream",
+        icon: "video-camera",
         slides: [
           {
             component: StreamPage

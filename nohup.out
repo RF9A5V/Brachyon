@@ -1,0 +1,38 @@
+[3990:3990:0407/195814.286819:ERROR:configuration_policy_handler_list.cc(92)] Unknown policy: NTPContentSuggestionsEnabled
+[4065:4065:0407/195814.355547:ERROR:child_thread_impl.cc(762)] Request for unknown Channel-associated interface: ui::mojom::GpuMain
+[3990:3990:0407/195814.370425:ERROR:content_settings_pref.cc(469)] Invalid pattern strings: ,http://www.w3schools.com:80
+[3990:3990:0407/195814.371599:ERROR:content_settings_pref.cc(295)] Invalid pattern strings: ,http://www.w3schools.com:80
+[3990:4032:0407/195842.790565:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:4032:0407/195934.412924:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:4032:0407/200052.646123:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:3990:0407/200131.634612:ERROR:account_tracker.cc(356)] OnGetTokenFailure: Connection failed (-137).
+[3990:3990:0407/200131.634664:ERROR:account_tracker.cc(356)] OnGetTokenFailure: Connection failed (-137).
+[3990:4032:0407/200244.437704:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:3990:0407/200400.485890:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[3990:3990:0407/200452.560020:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[3990:4032:0407/200554.577168:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:3990:0407/200606.049433:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[3990:3990:0407/200755.682236:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[3990:3990:0407/201112.618666:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[3990:4032:0407/201314.041491:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -137
+[3990:3990:0407/201413.514374:ERROR:navigation_entry_screenshot_manager.cc(137)] Invalid entry with unique id: 34
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+[3990:3990:0407/201742.995625:ERROR:CONSOLE(57)] "Uncaught TypeError: Cannot read property 'addExtensions' of undefined", source: chrome-devtools://devtools/bundled/devtools_compatibility.js (57)
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, https://ajax.cloudflare.com/cdn-cgi/nexp/dok3v=f2befc48d1/cloudflare.min.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, https://ajax.cloudflare.com/cdn-cgi/nexp/dok3v=f2befc48d1/cloudflare.min.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+A Parser-blocking, cross site (i.e. different eTLD+1) script, http://service.maxymiser.net/cdn/economist/js/mmcore.js, is invoked via document.write. This MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message.See https://www.chromestatus.com/feature/5718547946799104 for more details.
+[1:19:0407/210512.870864:ERROR:render_media_log.cc(30)] MediaEvent: MEDIA_ERROR_LOG_ENTRY {"error":"FFmpegDemuxer: failed creating video stream"}
+[1:1:0407/210905.989107:ERROR:KeyboardEventManager.cpp(427)] Not implemented reached in static bool blink::KeyboardEventManager::currentCapsLockState()
+[3990:4032:0407/211111.140282:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -21
+[3990:4032:0407/211112.012126:ERROR:connection_factory_impl.cc(386)] Failed to connect to MCS endpoint with error -21
+[1:1:0407/212041.557025:ERROR:KeyboardEventManager.cpp(427)] Not implemented reached in static bool blink::KeyboardEventManager::currentCapsLockState()
+[3990:3990:0407/223004.588003:ERROR:chrome_browser_main_extra_parts_x11.cc(62)] X IO error received (X server probably went away)
+[4065:4065:0407/223004.613766:ERROR:x11_util.cc(88)] X IO error received (X server probably went away)
+[3990:3990:0407/223004.707982:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
+[3990:3990:0407/223004.709584:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
+[3990:3990:0407/223004.718231:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
+[3990:3990:0407/223004.738686:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
