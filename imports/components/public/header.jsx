@@ -2,17 +2,15 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Link, browserHistory } from 'react-router';
 import FontAwesome from "react-fontawesome";
+import Sidebar from "react-sidebar";
+import Headroom from 'react-headroom';
 
 import { ProfileImages } from "/imports/api/users/profile_images.js";
-import Sidebar from "react-sidebar";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
-import Headroom from 'react-headroom';
-import UserDropdown from "../users/user_dropdown.jsx";
-import NotyDropdown from "../users/noty_dropdown.jsx";
 import SidebarMenu from "../users/sidebar_menu.jsx";
 
 class Header extends ResponsiveComponent {
