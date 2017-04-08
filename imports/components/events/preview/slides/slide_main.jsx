@@ -5,8 +5,9 @@ import { browserHistory } from "react-router";
 import Slider from "react-slick";
 
 import SubSlideContainer from "./sub_slide.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class SlideMain extends Component {
+export default class SlideMain extends ResponsiveComponent {
 
   constructor(props){
     super(props);
@@ -24,18 +25,30 @@ export default class SlideMain extends Component {
     });
   }
 
-  navElements() {
+  navElements(opts) {
     return this.props.slides.map((slide, index) => {
       var style = {
         backgroundColor: this.state.activeSlide == index ? (this.props.color || "transparent") : "transparent",
         fontWeight: "bold",
-        color: this.state.activeSlide == index ? "#111" : "white"
+        color: this.state.activeSlide == index ? "#111" : "white",
+        fontSize: opts.navSize,
+        padding: opts.navPad
       }
       return (
         <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""}`} style={style} onClick={() => {
           this.refs.slider.slickGoTo(index);
         }}>
-          { slide.name.toUpperCase() }
+          {
+            opts.useIcons ? (
+              <FontAwesome name={slide.icon} />
+            ) : (
+              <span>
+                {
+                  slide.name.toUpperCase()
+                }
+              </span>
+            )
+          }
         </div>
       )
     });
@@ -49,7 +62,7 @@ export default class SlideMain extends Component {
     this.refs[this.state.activeSlide].setCurrent(i);
   }
 
-  render() {
+  renderBase(opts) {
     var current = this.props.slides[this.state.activeSlide];
     return (
       <div>
@@ -70,7 +83,7 @@ export default class SlideMain extends Component {
         </Slider>
         {
           current.slides.length > 1 ? (
-            <div className="slide-controller">
+            <div className="slide-controller" style={{top: opts.sideNavTop}}>
               {
                 current.slides.map((item, i) => {
                   var icon;
@@ -85,6 +98,9 @@ export default class SlideMain extends Component {
                     icon = (
                       <div className={`slide-controller-tab icon`} onClick={() => {
                         this.refs[this.state.activeSlide].setCurrent(i)
+                      }} style={{
+                        width: opts.sideNavSize,
+                        height: opts.sideNavSize
                       }}>
                         <div className={`content ${i == currentRef ? "active" : ""}`} style={{
                           backgroundColor: this.props.color || "white"
@@ -108,12 +124,32 @@ export default class SlideMain extends Component {
             <div></div>
           )
         }
-        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", height: 50, zIndex: 4}}>
+        <div className="row x-center" style={{position: "fixed", bottom: 0, width: "100%", backgroundColor: "#111", zIndex: 4}}>
           {
-            this.navElements()
+            this.navElements(opts)
           }
         </div>
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      navSize: "1.2em",
+      navPad: 13.5,
+      useIcons: false,
+      sideNavSize: "1em",
+      sideNavTop: "calc(50vh - 50px)"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      navSize: "7rem",
+      navPad: 30,
+      useIcons: true,
+      sideNavSize: "3em",
+      sideNavTop: "calc(100vh - 256px)"
+    });
   }
 }
