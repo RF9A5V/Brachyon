@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import Slider from "react-slick";
 
-export default class SubSlideContainer extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class SubSlideContainer extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ export default class SubSlideContainer extends Component {
     return this.state.currentItem;
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <Slider arrows={false} autoplay={false} dots={false} vertical={true} verticalSwiping={true} infinite={false} afterChange={
         (current) => {
@@ -51,7 +53,7 @@ export default class SubSlideContainer extends Component {
                 this.state.swiping = true;
               }
             }}>
-              <div className="slide" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${this.backgroundImage()})`}}>
+              <div className="slide" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${this.backgroundImage()})`, height: opts.slideHeight}}>
                 <item.component {...item.args} pages={this.props.pages} />
               </div>
             </div>
@@ -60,5 +62,17 @@ export default class SubSlideContainer extends Component {
       }
       </Slider>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      slideHeight: "calc(100vh - 93px)"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      slideHeight: "calc(100vh - 230px)"
+    });
   }
 }
