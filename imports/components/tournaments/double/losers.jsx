@@ -9,8 +9,69 @@ export default class DoubleElimLosersBracket extends Component {
 
   constructor(props) {
     super(props);
+    var matchMap = {};
+    const bracket = Brackets.findOne();
+    var count = 1;
+    bracket.rounds[0].forEach(r => {
+      r.forEach(m => {
+        if(m) {
+          var losId = bracket.rounds[1][m.losr][m.losm].id;
+          if(matchMap[losId]) {
+            matchMap[losId].sources.push({
+              id: m.id,
+              lost: true
+            })
+          }
+          else {
+            matchMap[losId] = {
+              sources: [{
+                id: m.id,
+                lost: true
+              }]
+            }
+          }
+          matchMap[m.id] = {
+            number: count++
+          }
+        }
+      })
+    })
+    bracket.rounds[1].forEach((r, i) => {
+      r.forEach((m, j) => {
+        if(m) {
+          if(i < bracket.rounds[1].length - 1) {
+            var advId;
+            if(r.length == bracket.rounds[1][i + 1].length) {
+              advId = bracket.rounds[1][i + 1][j].id;
+            }
+            else {
+              advId = bracket.rounds[1][i + 1][parseInt(j / 2)].id
+            }
+            if(matchMap[advId]) {
+              matchMap[advId].sources.push({
+                id: m.id,
+                lost: false
+              });
+            }
+            else {
+              matchMap[advId] = {
+                sources: [{
+                  id: m.id,
+                  lost: false
+                }]
+              }
+            }
+          }
+          if(matchMap[m.id].number == null) {
+            matchMap[m.id].number = count++;
+          }
+        }
+      })
+    });
+    console.log(matchMap);
     this.state = {
-      dragging: false
+      dragging: false,
+      matchMap
     };
   }
 
@@ -88,7 +149,7 @@ export default class DoubleElimLosersBracket extends Component {
                               }
                             }
                             return (
-                              <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
+                              <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap}/>
                             );
                           })
                         }
