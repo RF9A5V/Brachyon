@@ -83,7 +83,7 @@ export default class SlideMain extends ResponsiveComponent {
         </Slider>
         {
           current.slides.length > 1 ? (
-            <div className="slide-controller" style={{top: opts.sideNavTop}}>
+            <div className="slide-controller" style={{top: opts.sideNavTop, bottom: opts.sideNavBottom}}>
               {
                 current.slides.map((item, i) => {
                   var icon;
@@ -139,7 +139,8 @@ export default class SlideMain extends ResponsiveComponent {
       navPad: 13.5,
       useIcons: false,
       sideNavSize: "1em",
-      sideNavTop: "calc(50vh - 50px)"
+      sideNavTop: "calc(50vh - 50px)",
+      sideNavBottom: null
     });
   }
 
@@ -149,7 +150,8 @@ export default class SlideMain extends ResponsiveComponent {
       navPad: 30,
       useIcons: true,
       sideNavSize: "3em",
-      sideNavTop: "calc(100vh - 256px)"
+      sideNavTop: null,
+      sideNavBottom: "140px"
     });
   }
 }
