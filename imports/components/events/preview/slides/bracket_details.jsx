@@ -3,6 +3,8 @@ import { createContainer } from "meteor/react-meteor-data";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
 import UserTab from "/imports/components/users/user_tab.jsx";
 import RegisterButton from "/imports/components/events/show/register_button.jsx";
 
@@ -14,7 +16,7 @@ import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
 import BracketPanel from "/imports/components/events/show/bracket.jsx";
 
-class BracketDetails extends Component {
+class BracketDetails extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ class BracketDetails extends Component {
     }
   }
 
-  status(bracket) {
+  status(bracket, opts) {
     var text = "";
     var icon = "circle";
     if(!bracket.id) {
@@ -40,7 +42,7 @@ class BracketDetails extends Component {
       icon = "check";
     }
     return (
-      <div className="row x-center center" style={{marginBottom: 10}}>
+      <div className="row x-center center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
         <FontAwesome name={icon} style={{marginRight: 10}} />
         <span>{ text }</span>
       </div>
@@ -257,12 +259,12 @@ class BracketDetails extends Component {
     )
   }
 
-  _registrationButton(obj) {
+  _registrationButton(obj, opts) {
     if(!Meteor.userId()) {
       return "";
     }
     return (
-      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", width: 100}} bracketMeta={obj} metaIndex={this.props.index} />
+      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} />
     );
     // return (
     //   <button style={} onClick={() => {
@@ -276,22 +278,22 @@ class BracketDetails extends Component {
     // );
   }
 
-  details(obj) {
+  details(obj, opts) {
     var event = Events.findOne();
     var bracket = Brackets.findOne(obj.id);
     const game = Games.findOne(obj.game);
     return (
       <div className="col col-1 x-center center" style={{padding: 30, height: "100%"}}>
-        <img src={game.bannerUrl} style={{width: 300 * 3 / 4, height: 300}} />
+        <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
         <div style={{padding: 20}}>
-          <h5 style={{marginBottom: 10}}>{ obj.name || game.name }</h5>
-          <div className="row center x-center" style={{marginBottom: 10}}>
+          <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
+          <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
             <FontAwesome name="sitemap" style={{marginRight: 10}} />
             <span>{ formatter(obj.format.baseFormat) }</span>
           </div>
-          { this.status(obj) }
+          { this.status(obj, opts) }
           <div className="row center">
-            <button style={{width: 100}} onClick={() => {
+            <button style={{fontSize: opts.fontSize}} onClick={() => {
               if(event.owner == Meteor.userId()) {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
               }
@@ -299,13 +301,13 @@ class BracketDetails extends Component {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
               }
             }}>
-              <span>View</span>
+              <span style={{fontSize: opts.fontSize}}>View</span>
             </button>
             {
               obj.id ? (
                 ""
               ) : (
-                this._registrationButton(obj)
+                this._registrationButton(obj, opts)
               )
 
             }
@@ -354,12 +356,15 @@ class BracketDetails extends Component {
       case "Leaderboard": return this.leaderboard(obj);
       case "Bracket": return this.winnersBracket(obj);
       case "Matches": return this.matches(obj.id);
-      case "Details": return this.details(obj);
+      case "Details": return this.details(obj, {
+        imgHeight: "300px",
+        fontSize: "1em"
+      });
       default: return null;
     }
   }
 
-  render() {
+  renderDesktop() {
     if(!this.props.ready) {
       return (
         <div>
@@ -376,6 +381,20 @@ class BracketDetails extends Component {
         <div className="col col-1" style={{overflow:"hidden",padding: "20px 60px"}}>
           { this.content(bracketMeta) }
         </div>
+      </div>
+    )
+  }
+
+  renderMobile() {
+    const bracketMeta = Instances.findOne().brackets[this.props.index];
+    return (
+      <div>
+        {
+          this.details(bracketMeta, {
+            imgHeight: "50vh",
+            fontSize: "4rem"
+          })
+        }
       </div>
     )
   }

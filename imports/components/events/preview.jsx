@@ -9,7 +9,6 @@ import SlideMain from "./preview/slides/slide_main.jsx";
 import TitlePage from "./preview/slides/title.jsx";
 import DescriptionPage from "./preview/slides/description.jsx";
 
-import BracketPage from "./preview/slides/brackets.jsx";
 import BracketOverview from "./preview/slides/bracket_overview.jsx";
 import BracketDetails from "./preview/slides/bracket_details.jsx";
 
