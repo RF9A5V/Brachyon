@@ -12,9 +12,44 @@ export default class DoubleElimWinnersBracket extends Component {
     super(props);
     var event = Events.findOne();
     var bracket = Brackets.findOne();
+    var matchMap = {};
+    var count = 1;
+    const setSource = (i, j, m) => {
+      const advId = bracket.rounds[0][i + 1][parseInt(j / 2)].id;
+      if(matchMap[advId]) {
+        matchMap[advId].source.push(m.id)
+      }
+      else {
+        matchMap[advId] = {
+          source: [m.id]
+        }
+      }
+    }
+    bracket.rounds[0].forEach((r, i) => {
+      r.forEach((m, j) => {
+        if(m) {
+          if(matchMap[m.id]) {
+            matchMap[m.id].number = count ++;
+          }
+          else {
+            matchMap[m.id] = {
+              number: count++
+            };
+          }
+          if(i < bracket.rounds[0].length - 1) {
+            setSource(i, j, m)
+          }
+        }
+        else {
+          setSource(i, j, {id: null})
+        }
+      })
+    });
+    console.log(matchMap);
     this.state = {
       leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
-      dragging: false
+      dragging: false,
+      matchMap
     };
   }
 
@@ -111,7 +146,8 @@ export default class DoubleElimWinnersBracket extends Component {
                             match = Matches.findOne(match.id);
                           }
                           return (
-                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} />
+                            <MatchBlock key={i + " " + j}
+                              match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} />
                           );
                         })
                       }
