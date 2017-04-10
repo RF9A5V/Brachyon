@@ -38,26 +38,15 @@ export default class MatchBlock extends Component {
     const bracket = Brackets.findOne();
     let matchCount = 0;
     if(this.props.bracket == 0) {
-      var emptyIndex = bracket.rounds[0][this.props.roundNumber].slice(0, this.props.matchNumber + 1).reduce((acc, m, i) => {
-        const match = Matches.findOne(m.id);
-        var players = match.players;
-        if(i == this.props.matchNumber) {
-          players = players.slice(0, playerIndex + 1);
-        }
-        var playerCount = players.filter(p => { return p == null }).length;
-        return acc + playerCount;
-      }, -1);
-      const preRoundMatches = bracket.rounds[0][this.props.roundNumber - 1].filter(m => {
-        return m != null;
-      }).map((_, i) => {
-        return i + 1;
-      });
-      const preMatches = bracket.rounds[0].slice(0, this.props.roundNumber - 1);
-      for(let i = 0; i < preMatches.length; i ++) {
-        matchCount += preMatches[i].filter(m => { return m != null }).length;
-      }
-      console.log(matchCount, preMatches, this.props.roundNumber);
-      return "Winner of " + (matchCount + preRoundMatches[emptyIndex]);
+      const data = this.props.matchMap[this.props.match._id];
+      const number = this.props.matchMap[data.source[playerIndex]].number;
+      return "Winner of " + number;
+    }
+    if(this.props.bracket == 1) {
+      const data = this.props.matchMap[this.props.match._id];
+      const source = data.sources[playerIndex];
+      const number = this.props.matchMap[source.id].number;
+      return (source.lost ? "Loser" : "Winner") + " of " + number;
     }
   }
 
