@@ -57,12 +57,12 @@ export default class CreateContainerMenu extends Component {
     return (
       <div className="col x-center" style={{
         width: this.state.maxed ? "75vw" : "10vw",
-        height: "calc(100% - 111px)",
+        height: "calc(100vh - 217px)",
         backgroundColor: "#111",
         padding: 20,
-        position: "absolute",
+        position: "fixed",
         left: 0,
-        top: 0,
+        top: 126,
         zIndex: 1
       }}>
         {
