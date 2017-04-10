@@ -115,7 +115,7 @@ export default class CreateContainer extends ResponsiveComponent {
             })
           }
         </div>
-        <div className="row x-center footer-buttons">
+        <div className="row x-center footer-buttons" style={{zIndex: 5}}>
           {
             (this.props.actions || []).map((a, i) => {
               return (
@@ -203,7 +203,7 @@ export default class CreateContainer extends ResponsiveComponent {
       navComp,
       paddingLeft: "10vw",
       eColor,
-      fontSize: "5rem"
+      fontSize: "4rem"
     });
   }
 

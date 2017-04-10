@@ -31,6 +31,36 @@ export default class MatchBlock extends Component {
     return { height, top }
   }
 
+  matchPlaceholder(alias, playerIndex) {
+    if(alias) {
+      return alias;
+    }
+    const bracket = Brackets.findOne();
+    let matchCount = 0;
+    if(this.props.bracket == 0) {
+      var emptyIndex = bracket.rounds[0][this.props.roundNumber].slice(0, this.props.matchNumber + 1).reduce((acc, m, i) => {
+        const match = Matches.findOne(m.id);
+        var players = match.players;
+        if(i == this.props.matchNumber) {
+          players = players.slice(0, playerIndex + 1);
+        }
+        var playerCount = players.filter(p => { return p == null }).length;
+        return acc + playerCount;
+      }, -1);
+      const preRoundMatches = bracket.rounds[0][this.props.roundNumber - 1].filter(m => {
+        return m != null;
+      }).map((_, i) => {
+        return i + 1;
+      });
+      const preMatches = bracket.rounds[0].slice(0, this.props.roundNumber - 1);
+      for(let i = 0; i < preMatches.length; i ++) {
+        matchCount += preMatches[i].filter(m => { return m != null }).length;
+      }
+      console.log(matchCount, preMatches, this.props.roundNumber);
+      return "Winner of " + (matchCount + preRoundMatches[emptyIndex]);
+    }
+  }
+
   render() {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
@@ -92,7 +122,7 @@ export default class MatchBlock extends Component {
             }}>
               <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                 <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p1.alias || "TBD" }
+                  { this.matchPlaceholder(p1.alias, 0) }
                 </div>
                 <div className="score">
                   { p1.score || 0 }
@@ -102,7 +132,7 @@ export default class MatchBlock extends Component {
               </div>
               <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
                 <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p2.alias || "TBD" }
+                  { this.matchPlaceholder(p2.alias, 1) }
                 </div>
                 <div className="score">
                   { p2.score || 0 }
