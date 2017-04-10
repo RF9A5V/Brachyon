@@ -95,6 +95,7 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   mainBracket() {
+    var count = 1;
     return (
         <div className="col">
           <div className="row" style={{paddingLeft: 10}}>
@@ -110,7 +111,7 @@ export default class DoubleElimWinnersBracket extends Component {
                             match = Matches.findOne(match.id);
                           }
                           return (
-                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} />
                           );
                         })
                       }
