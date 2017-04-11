@@ -88,6 +88,11 @@ class BracketAdminScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    var partMap = {};
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    })
     var args = {
       id: bracket.id,
       eid: this.props.params.eventId,
@@ -95,7 +100,8 @@ class BracketAdminScreen extends Component {
       format: bracket.format.baseFormat,
       rounds,
       complete: bracket.isComplete,
-      page: "admin"
+      page: "admin",
+      partMap
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
