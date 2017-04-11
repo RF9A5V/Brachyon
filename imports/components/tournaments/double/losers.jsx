@@ -10,7 +10,9 @@ export default class DoubleElimLosersBracket extends Component {
   constructor(props) {
     super(props);
     var matchMap = {};
-    const bracket = Brackets.findOne();
+    const bracket = {
+      rounds: props.rounds
+    };
     var count = 1;
     bracket.rounds[0].forEach(r => {
       r.forEach(m => {

@@ -4,6 +4,8 @@ import { browserHistory } from "react-router";
 
 import Matches from "/imports/api/event/matches.js";
 
+import { numToAlpha } from "/imports/decorators/num_to_alpha.js";
+
 export default class MatchBlock extends Component {
   bracketLines() {
     var i = this.props.roundNumber;
@@ -35,18 +37,16 @@ export default class MatchBlock extends Component {
     if(alias) {
       return alias;
     }
-    const bracket = Brackets.findOne();
-    let matchCount = 0;
+    const id = this.props.match._id || this.props.match.id;
+    const data = this.props.matchMap[id];
+    const source = data.source[playerIndex];
     if(this.props.bracket == 0) {
-      const data = this.props.matchMap[this.props.match._id];
-      const number = this.props.matchMap[data.source[playerIndex]].number;
-      return "Winner of " + number;
+      const number = this.props.matchMap[source].number;
+      return "Winner of " + numToAlpha(number);
     }
     if(this.props.bracket == 1) {
-      const data = this.props.matchMap[this.props.match._id];
-      const source = data.sources[playerIndex];
       const number = this.props.matchMap[source.id].number;
-      return (source.lost ? "Loser" : "Winner") + " of " + number;
+      return (source.lost ? "Loser" : "Winner") + " of " + numToAlpha(number);
     }
   }
 
@@ -104,6 +104,9 @@ export default class MatchBlock extends Component {
 
     return (
       <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
+        <div className="row center x-center" style={{padding: 5, margin: 5, fontSize: 12, width: 15, height: 15}}>
+          { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number) }
+        </div>
         {
           [
             <div className="match" onClick={() => {
