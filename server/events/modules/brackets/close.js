@@ -97,7 +97,6 @@ Meteor.methods({
       });
     }
 
-    console.log("testing placementss");
     var ranking = {};
     var place = 0;
     var placement = sortPlacement(bracket.format.baseFormat, roundobj.rounds);
