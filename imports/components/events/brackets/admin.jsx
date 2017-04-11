@@ -255,13 +255,17 @@ class BracketAdminScreen extends Component {
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
           default: break;
         }
+        var count = 1;
         rounds = rounds.map(b => {
-          return b.map(r => {
+          return b.map((r, i) => {
             return r.map(m => {
               if(m) {
-                return {
-                  players: [m.playerOne, m.playerTwo],
-                  winner: null
+                if(m.id || m.playerOne || m.playerTwo || i > 0) {
+                  return {
+                    players: [m.playerOne, m.playerTwo],
+                    winner: null,
+                    _id: count ++
+                  }
                 }
               }
               return null;
