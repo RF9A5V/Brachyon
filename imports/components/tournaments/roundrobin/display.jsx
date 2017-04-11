@@ -104,7 +104,6 @@ export default class RoundDisplay extends Component {
           this.props.update();
         }
         var newrounds = Brackets.findOne().rounds;
-        console.log(oldrounds.length + " " + newrounds.length);
         this.setState({updateMatch: true, rounds: newrounds});
         this.forceUpdate();
       }

@@ -52,7 +52,6 @@ export default class EventCreate extends Component {
         if(imgRef) {
           imgRef.meta.eventSlug = event.slug;
           const fileType = imgRef.file.type;
-          console.log(fileType);
           Banners.insert({
             file: imgRef.file,
             meta: imgRef.meta,

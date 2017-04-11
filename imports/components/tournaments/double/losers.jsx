@@ -70,7 +70,6 @@ export default class DoubleElimLosersBracket extends Component {
         }
       })
     });
-    console.log(matchMap);
     this.state = {
       dragging: false,
       matchMap
