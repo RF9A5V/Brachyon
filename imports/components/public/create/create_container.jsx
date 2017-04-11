@@ -115,7 +115,7 @@ export default class CreateContainer extends ResponsiveComponent {
             })
           }
         </div>
-        <div className="row x-center footer-buttons" style={{zIndex: 5}}>
+        <div className="row x-center footer-buttons">
           {
             (this.props.actions || []).map((a, i) => {
               return (
@@ -139,7 +139,11 @@ export default class CreateContainer extends ResponsiveComponent {
       eColor = "#FF6000";
     }
     const navComp = (
-      <div className="" style={{marginBottom: 10}}>
+      <div className="" style={{
+        width: "80%",
+        maxWidth: 1000,
+        margin: "10px auto"
+      }}>
         <div className="row">
           {
             this.props.items.map((item, i) => {
@@ -197,6 +201,7 @@ export default class CreateContainer extends ResponsiveComponent {
             selected: i
           })
         }}
+        selected={this.state.selected}
       />
     )
     return this.renderBase({

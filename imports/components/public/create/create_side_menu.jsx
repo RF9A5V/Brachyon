@@ -75,12 +75,12 @@ export default class CreateContainerMenu extends Component {
                 })
               }}>
                 <div className="col-1">
-                  <FontAwesome name={item.icon} style={{fontSize: "6rem"}} />
+                  <FontAwesome name={item.icon} style={{fontSize: "6rem", color: this.props.selected == i ? eColor : "white"}} />
                 </div>
                 {
                   this.state.maxed ? (
                     [
-                      <span className="col-3" style={spanStyle}>
+                      <span className="col-3" style={{...spanStyle, color: this.props.selected == i ? eColor : "white"}}>
                         { item.name }
                       </span>,
                       <div className="col-2"></div>,
