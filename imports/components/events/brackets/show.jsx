@@ -205,7 +205,8 @@ class BracketShowScreen extends Component {
               if(m) {
                 return {
                   players: [m.playerOne, m.playerTwo],
-                  winner: null
+                  winner: null,
+                  _id: parseInt(new Date().getTime() / 1000) + parseInt(Math.random() * 1000)
                 }
               }
               return null;

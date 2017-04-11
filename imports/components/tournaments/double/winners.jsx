@@ -11,46 +11,63 @@ export default class DoubleElimWinnersBracket extends Component {
   constructor(props) {
     super(props);
     var event = Events.findOne();
-    var bracket = Brackets.findOne();
+
+    this.state = {
+      leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
+      dragging: false
+    };
+  }
+
+  setMatchMap(rounds) {
+    var bracket = {
+      rounds
+    };
     var matchMap = {};
     var count = 1;
-    const setSource = (i, j, m) => {
-      const advId = bracket.rounds[0][i + 1][parseInt(j / 2)].id;
+    const setSource = (i, j, id) => {
+      const obj = bracket.rounds[0][i + 1][parseInt(j / 2)];
+      const advId = obj.id || obj._id;
       if(matchMap[advId]) {
-        matchMap[advId].source.push(m.id)
+        matchMap[advId].source.push(id)
       }
       else {
         matchMap[advId] = {
-          source: [m.id]
+          source: [id]
         }
       }
     }
     bracket.rounds[0].forEach((r, i) => {
       r.forEach((m, j) => {
         if(m) {
-          if(matchMap[m.id]) {
-            matchMap[m.id].number = count ++;
+          const id = m.id || m._id;
+          if(matchMap[id]) {
+            matchMap[id].number = count ++;
           }
           else {
-            matchMap[m.id] = {
+            matchMap[id] = {
               number: count++
             };
           }
           if(i < bracket.rounds[0].length - 1) {
-            setSource(i, j, m)
+            setSource(i, j, id)
           }
         }
         else {
-          setSource(i, j, {id: null})
+          setSource(i, j, null)
         }
       })
     });
-    console.log(matchMap);
-    this.state = {
-      leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
-      dragging: false,
+    this.setState({
       matchMap
-    };
+    });
+  }
+
+  componentWillMount() {
+    this.setMatchMap(this.props.rounds);
+  }
+
+  componentWillReceiveProps(next) {
+    this.setMatchMap(next.rounds);
   }
 
   onDrag(e) {
