@@ -140,7 +140,7 @@ export default class ImageForm extends Component {
             this.state.url || this.props.defaultImage ? (
               <button onClick={() => { this.refs.file.click() }}>Change</button>
             ) : (
-              <button onClick={() => { this.refs.file.click() }}>Choose Image</button>
+              <button onClick={() => { this.refs.file.click() }}>{ this.props.buttonText || "Choose Image" }</button>
             )
           }
         </div>
