@@ -12,6 +12,7 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import SidebarMenu from "../users/sidebar_menu.jsx";
+import GlobalMenu from "/imports/components/public/global_side_nav.jsx";
 
 class Header extends ResponsiveComponent {
 
@@ -91,84 +92,7 @@ class Header extends ResponsiveComponent {
         </Headroom>
         <Sidebar sidebar={<SidebarMenu onRedirect={this.toggleUserMenu.bind(this)} />} open={this.state.userMenuOpen} onSetOpen={this.toggleUserMenu.bind(this)} pullRight={true} sidebarClassName="sidebar"></Sidebar>
         <Sidebar sidebar={
-          (() => {
-            const style = {
-              fontSize: "4em",
-              padding: "1em",
-              width: "100%"
-            }
-            const closeMenu = () => {
-              this.setState({
-                navMenuOpen: false
-              })
-            }
-            return (
-              <div className="col" style={{width: "75vw", height: "100vh", backgroundColor: "black"}}>
-                <div style={{paddingTop: 30, paddingLeft: 20}}>
-                  <FontAwesome name="times" style={{fontSize: "5em"}} onClick={() => {
-                    closeMenu()
-                  }} />
-                </div>
-                <div className="row x-center" style={style} onClick={() => {
-                  browserHistory.push("/discover");
-                  closeMenu();
-                }}>
-                  <div className="row x-center col-1" style={{marginRight: "0.5em"}}>
-                    <FontAwesome className="col-1" name="compass" style={{fontSize: "1.42em"}} />
-                  </div>
-                  <span className="col-3">DISCOVER</span>
-                  <div className="col-1"></div>
-                </div>
-                <div className="row x-center" style={style} onClick={() => {
-                  browserHistory.push("/create");
-                  closeMenu();
-                }}>
-                  <div className="row x-center col-1" style={{marginRight: "0.5em"}}>
-                    <FontAwesome className="col-1" name="plus" style={{fontSize: "1.42em"}} />
-                  </div>
-                  <span className="col-3">CREATE</span>
-                  <div className="col-1"></div>
-                </div>
-                <div className="row x-center" style={style} onClick={() => {
-                  browserHistory.push("/games/index");
-                  closeMenu();
-                }}>
-                  <div className="row x-center col-1" style={{marginRight: "0.5em"}}>
-                    <FontAwesome className="col-1" name="gamepad" style={{fontSize: "1.42em"}} />
-                  </div>
-                  <span className="col-3">GAMES</span>
-                  <div className="col-1"></div>
-                </div>
-                <div className="col-1"></div>
-                {
-                  user ? (
-                    null
-                  ) : (
-                    [
-                      (
-                        <div className="row x-center" style={style}>
-                          <div className="row x-center col-1" style={{marginRight: "0.5em"}}>
-                            <FontAwesome className="col-1" name="sign-in" style={{fontSize: "1.42em"}} />
-                          </div>
-                          <span className="col-3">LOG IN</span>
-                          <div className="col-1"></div>
-                        </div>
-                      ),
-                      (
-                        <div className="row x-center" style={style}>
-                          <div className="row x-center col-1" style={{marginRight: "0.5em"}}>
-                            <FontAwesome className="col-1" name="user-plus" style={{fontSize: "1.42em"}} />
-                          </div>
-                          <span className="col-3">SIGN UP</span>
-                          <div className="col-1"></div>
-                        </div>
-                      )
-                    ]
-                  )
-                }
-              </div>
-            )
-          })()
+          <GlobalMenu closeMenu={() => { this.setState({navMenuOpen: false}) }} />
         } open={this.state.navMenuOpen} onSetOpen={() => {
           this.setState({ navMenuOpen: !this.state.navMenuOpen })
         }} pullRight={false} sidebarClassName="sidebar">

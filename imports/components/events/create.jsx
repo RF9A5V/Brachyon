@@ -124,7 +124,8 @@ export default class EventCreate extends Component {
               ImageForm
             ),
             args: {
-              aspectRatio: 16/9
+              aspectRatio: 16/9,
+              buttonText: "Choose Event Banner"
             }
           }
         ],
