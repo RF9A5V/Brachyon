@@ -2,13 +2,16 @@
 // Not sure why I would explain about the English alphabet part, should be kinda self explanatory.
 // Unless we're doing Cyrillic conversion in the future. In which case, kill me now.
 
-const numToAlpha = (num) => {
+const numToAlpha = (num, zeroIndex) => {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   var str = ""
-  while(num > 0) {
-    str += alphabet[num % 26];
-    num = parseInt(num / 26);
+  if(!zeroIndex) {
+    num --;
   }
+  do {
+    str = alphabet[num % 26] + str;
+    num = parseInt(num / 26) - 1;
+  } while(num >= 0);
   return str;
 }
 

@@ -132,7 +132,8 @@ export default class DoubleElimWinnersBracket extends Component {
                       if (match.players[0].alias != null && match.players[1] != null)
                       {
                         return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
+                          <MatchBlock
+                            key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap}/>
                         );
                       }
                     })
@@ -162,9 +163,12 @@ export default class DoubleElimWinnersBracket extends Component {
                           if(match && match.id) {
                             match = Matches.findOne(match.id);
                           }
+                          // Jesus these params
                           return (
                             <MatchBlock key={i + " " + j}
-                              match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} />
+                              match={match}
+                              bracket={0}
+                              roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} partMap={this.props.partMap} />
                           );
                         })
                       }
