@@ -29,7 +29,6 @@ export default class GamesIndex extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.refs)
     Object.keys(this.refs).forEach((reffs)=>{
       var node = ReactDOM.findDOMNode(this.refs[reffs])
       if(node.offsetWidth<node.scrollWidth){
@@ -92,7 +91,6 @@ export default class GamesIndex extends Component {
       }
       else {
         meta.gameId = game;
-        console.log(game + "." + type)
         GameBanners.insert({
           file: image,
           meta,

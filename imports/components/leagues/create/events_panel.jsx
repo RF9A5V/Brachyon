@@ -104,7 +104,6 @@ export default class EventsPanel extends Component {
 
   form() {
     var event = this.state.events[this.state.option];
-    console.log(this.state.events, this.state.option);
     return (
       <div className="col">
         <div className="row">

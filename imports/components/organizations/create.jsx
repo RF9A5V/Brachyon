@@ -27,8 +27,6 @@ export default class OrganizationCreateScreen extends Component {
     var profileRef = this.refs.profile.value();
     var bannerRef = this.refs.banner.value();
 
-    console.log(name, content, profileRef, bannerRef);
-
     Meteor.call("organizations.create", name, content, (err, organizations) => {
       if(err) {
         toastr.error(err.reason, "Error!");
