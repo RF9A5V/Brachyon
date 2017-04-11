@@ -19,14 +19,14 @@ export default class DoubleElimLosersBracket extends Component {
         if(m) {
           var losId = bracket.rounds[1][m.losr][m.losm].id;
           if(matchMap[losId]) {
-            matchMap[losId].sources.push({
+            matchMap[losId].source.push({
               id: m.id,
               lost: true
             })
           }
           else {
             matchMap[losId] = {
-              sources: [{
+              source: [{
                 id: m.id,
                 lost: true
               }]
@@ -50,14 +50,14 @@ export default class DoubleElimLosersBracket extends Component {
               advId = bracket.rounds[1][i + 1][parseInt(j / 2)].id
             }
             if(matchMap[advId]) {
-              matchMap[advId].sources.push({
+              matchMap[advId].source.push({
                 id: m.id,
                 lost: false
               });
             }
             else {
               matchMap[advId] = {
-                sources: [{
+                source: [{
                   id: m.id,
                   lost: false
                 }]
