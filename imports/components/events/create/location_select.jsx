@@ -12,7 +12,7 @@ export default class LocationSelect extends Component {
       state: props.state || "",
       zip: props.zip || "",
       coords: props.coords || [],
-      online: props.online || true
+      online: props.online == null ? true : props.online
     }
   }
 
@@ -147,9 +147,9 @@ export default class LocationSelect extends Component {
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
           <label className="input-label">Location Name</label>
-          <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName} style={{marginTop: 0}}/>
+          <input onChange={this.onLocChange.bind(this)} ref="locationName" type="text" placeholder="(Optional) Building your event is held in." defaultValue={this.state.locationName} style={{marginTop: 0, marginRight: 0}}/>
           <label className="input-label">Street Address</label>
-          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" defaultValue={this.state.streetAddress} style={{marginTop: 0}} />
+          <input type="text" id="streetAddress" ref="streetAddress" placeholder="Enter your location" defaultValue={this.state.streetAddress} style={{marginTop: 0, marginRight: 0}} />
           <div className="row">
             <div className="col" style={{width: "50%", marginRight: 10}}>
               <label className="input-label">City</label>

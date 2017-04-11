@@ -33,7 +33,7 @@ export default class DatetimeSelector extends Component {
 
   render() {
     return (
-      <div style={{padding: 20}}>
+      <div className="col center x-center" style={{padding: 20}}>
         <div style={{marginBottom: 10, display: "inline-block"}}>
           <DateInput init={this.state.currentTime} ref="date" startsAt={this.props.startsAt} />
         </div>

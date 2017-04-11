@@ -26,13 +26,7 @@ export default class LogInScreen extends ResponsiveComponent {
       <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
           <input className={ops.inputClassName} type="text" name="email" placeholder="Email or Username" ref="token" />
-          {
-            ops.inputClassName == "large-input" ? (
-              <div style={{height: 20}}></div>
-            ) : (
-              null
-            )
-          }
+          <div style={{height: 20}}></div>
           <input className={ops.inputClassName} type="password" name="password" placeholder="Password" ref="password" />
           <a href="/forgot_pw" style={{fontSize: ops.fontSize, marginTop: ops.marginTop}} onClick={(e) => {
             e.preventDefault();
@@ -55,9 +49,9 @@ export default class LogInScreen extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      inputClassName: "",
+      inputClassName: "std-input",
       fontSize: "12px",
-      marginTop: 10
+      marginTop: "10px"
     });
   }
 

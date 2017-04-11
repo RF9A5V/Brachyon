@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
-export default class SubContainer extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class SubContainer extends ResponsiveComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,9 +30,12 @@ export default class SubContainer extends Component {
     return this.refs[key].value();
   }
 
-  render() {
+  renderBase(opts) {
     var style = {
-      paddingBottom: 50
+      paddingBottom: 50,
+      width: "80%",
+      maxWidth: 1000,
+      margin: "0 auto"
     };
     if(!this.props.active) {
       style.height = 0;
@@ -46,30 +51,13 @@ export default class SubContainer extends Component {
     }
     return (
       <div style={style}>
-        {
-          this.props.items.length < 2 ? (
-            null
-          ) : (
-            <div className="row" style={{marginBottom: 10}}>
-              {
-                this.props.items.map((item, i) => {
-                  return (
-                    <div className="title"
-                    style={{padding: 10, textAlign: "center", width: 120, backgroundColor: "#111", marginRight: 10, color: this.state.selected == i ? selectedColor : "white", cursor: "pointer"}} onClick={() => {this.setState({selected: i})}}>
-                      { item.name }
-                    </div>
-                  )
-                })
-              }
-            </div>
-          )
-        }
         <div>
           {
             this.props.items.map((item, i) => {
               return (
                 <div style={{marginBottom: 20}}>
                   <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
+                  <hr style={{width: "95%"}} className="user-divider" />
                 </div>
               )
             })
@@ -78,4 +66,13 @@ export default class SubContainer extends Component {
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase()
+  }
+
+  renderMobile() {
+    return this.renderBase()
+  }
+
 }

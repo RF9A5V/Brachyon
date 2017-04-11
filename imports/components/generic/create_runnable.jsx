@@ -5,6 +5,15 @@ import { browserHistory } from "react-router";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class CreateRunnableScreen extends ResponsiveComponent {
+
+  constructor(props) {
+    super(props);
+    if(!Meteor.user()) {
+      browserHistory.push("/");
+      toastr.warning("You need to be logged in for this.");
+    }
+  }
+
   renderBase(opts) {
     return (
       <div className="row-to-col col-1 center x-center">
