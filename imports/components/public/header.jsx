@@ -69,7 +69,6 @@ class Header extends ResponsiveComponent {
           <div className="row x-center" style={{backgroundColor: "black", height: "9em", width: "100vw", padding: 20, zIndex: 5}}>
             <div className="col-1">
               <FontAwesome name="bars" style={{fontSize: "5em"}} onClick={() => {
-                console.log("one")
                 this.setState({ navMenuOpen: true })
               }}/>
             </div>
@@ -80,7 +79,6 @@ class Header extends ResponsiveComponent {
               {
                 user ? (
                   <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: "7.5em", height: "7.5em", borderRadius: "100%"}} onClick={() => {
-                    console.log("two")
                     this.setState({ userMenuOpen: true })
                   }} />
                 ) : (

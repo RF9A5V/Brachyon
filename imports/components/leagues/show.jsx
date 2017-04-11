@@ -34,7 +34,6 @@ class LeagueShowPage extends Component {
 
   populateMetaTags() {
     const league = Leagues.findOne();
-    console.log(league);
     var title = league.details.name;
     var desc = this.fbDescriptionParser(league.details.description);
     var img = this.imgOrDefault();

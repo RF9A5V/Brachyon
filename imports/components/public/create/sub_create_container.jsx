@@ -54,7 +54,6 @@ export default class SubContainer extends ResponsiveComponent {
         <div>
           {
             this.props.items.map((item, i) => {
-              console.log(item.args);
               return (
                 <div style={{...style, maxWidth: item.args.stretch ? "80%" : 1000}}>
                   <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
