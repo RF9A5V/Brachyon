@@ -50,14 +50,22 @@ export default class SubContainer extends ResponsiveComponent {
       selectedColor = "#FF6000";
     }
     return (
-      <div style={style}>
+      <div>
         <div>
           {
             this.props.items.map((item, i) => {
+              console.log(item.args);
               return (
-                <div style={{marginBottom: 20}}>
+                <div style={{...style, maxWidth: item.args.stretch ? "80%" : 1000}}>
                   <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
-                  <hr style={{width: "95%"}} className="user-divider" />
+                  {
+                    i < this.props.items.length - 1 ? (
+                      <hr style={{width: "95%"}} className="user-divider" />
+                    ) : (
+                      null
+                    )
+                  }
+
                 </div>
               )
             })

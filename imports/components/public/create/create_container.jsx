@@ -142,7 +142,7 @@ export default class CreateContainer extends ResponsiveComponent {
       <div className="" style={{
         width: "80%",
         maxWidth: 1000,
-        margin: "10px auto"
+        margin: "10px auto 30px"
       }}>
         <div className="row">
           {
