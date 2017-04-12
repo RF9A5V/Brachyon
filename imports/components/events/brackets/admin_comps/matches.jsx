@@ -4,7 +4,9 @@ import FontAwesome from "react-fontawesome";
 
 import Brackets from "/imports/api/brackets/brackets.js";
 
-export default class MatchList extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class MatchList extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -69,8 +71,11 @@ export default class MatchList extends Component {
     )
   }
 
-  render() {
+  renderBase(opts) {
     var bracket = Brackets.findOne();
+    const textStyle = {
+      fontSize: opts.fontSize
+    }
     return (
       <div>
         <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
@@ -79,7 +84,7 @@ export default class MatchList extends Component {
           }
         </Modal>
         <div className="row center" style={{marginBottom: 20}}>
-          <h5>Pending Matches</h5>
+          <h5 style={textStyle}>Pending Matches</h5>
         </div>
         <div className="row" style={{flexWrap: "wrap", marginBottom: 20}}>
           {
@@ -95,22 +100,22 @@ export default class MatchList extends Component {
                       return "";
                     }
                     return (
-                      <div className="col" style={{margin: "20px 10px 20px 0", width: 400}} onClick={() => { this.setState({ id: m.id, open: true, bracket: i, round: j, match: k }) }}>
+                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width}} onClick={() => { this.setState({ id: m.id, open: true, bracket: i, round: j, match: k }) }}>
                         <div className="row match-names">
-                          <span>{ match.players[0].alias }</span>
+                          <span style={textStyle}>{ match.players[0].alias }</span>
                         </div>
                         <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
-                          <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
+                          <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                           <div className="col-1 col x-center" style={{padding: 10}}>
-                            <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+                            <h5 style={{...textStyle, margin: "10px 0"}}>VERSUS</h5>
                           </div>
-                          <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
+                          <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                         </div>
                         <div className="row match-names justify-end">
-                          <span>{ match.players[1].alias }</span>
+                          <span style={textStyle}>{ match.players[1].alias }</span>
                         </div>
 
-                        <span style={{marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
+                        <span style={{...textStyle, marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
                           switch(i) {
                             case 0: return "Winner's Bracket";
                             case 1: return "Loser's Bracket";
@@ -134,7 +139,7 @@ export default class MatchList extends Component {
                 return content;
               }
               return (
-                <div className="row center">
+                <div className="row center" style={textStyle}>
                   No more matches pending. This bracket has finished!
                 </div>
               )
@@ -143,7 +148,7 @@ export default class MatchList extends Component {
           }
         </div>
         <div className="row center" style={{marginBottom: 20}}>
-          <h5>Completed Matches</h5>
+          <h5 style={textStyle}>Completed Matches</h5>
         </div>
         {
           bracket.rounds.map((b, i) => {
@@ -168,7 +173,7 @@ export default class MatchList extends Component {
                       this.setState({ bTab: i, rTab: j })
                     }
                   }}>
-                    <span>
+                    <span style={textStyle}>
                       {header}, {(() => {
                         var roundNum = j + 1;
                         switch(b.length - roundNum) {
@@ -179,7 +184,7 @@ export default class MatchList extends Component {
                         }
                       })()}
                     </span>
-                    <FontAwesome name={this.state.bTab == i && this.state.rTab == j ? "caret-up" : "caret-down"} size="2x" />
+                    <FontAwesome name={this.state.bTab == i && this.state.rTab == j ? "caret-up" : "caret-down"} style={{fontSize: `calc(${opts.fontSize} * 2)`}} />
                   </div>
                   <div className="accordion-content" style={{display: this.state.bTab == i && this.state.rTab == j ? "inherit" : "none"}}>
                     <div className="row" style={{flexWrap: "wrap"}}>
@@ -195,19 +200,19 @@ export default class MatchList extends Component {
                           }
                           var winnerIndex = match.players[0].alias == match.winner.alias ? 0 : 1;
                           return (
-                            <div className="col" style={{marginBottom: 10, width: 400, marginRight: 10}}>
+                            <div className="col" style={{marginBottom: 10, width: opts.width, marginRight: 10}}>
                               <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
-                                <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
+                                <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                                 <div className="col-1 col x-center" style={{padding: 10}}>
-                                  <span style={{alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
-                                  <h5 style={{margin: "10px 0"}}>VERSUS</h5>
-                                  <span style={{alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
+                                  <span style={{...textStyle, alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
+                                  <h5 style={{...textStyle, margin: "10px 0"}}>VERSUS</h5>
+                                  <span style={{...textStyle, alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
                                 </div>
-                                <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
+                                <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                               </div>
                               <div className="row">
-                                <span className="col-1" style={{backgroundColor: winnerIndex == 0 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 0 ? "Winner" : "" }</span>
-                                <span className="col-1" style={{textAlign: "right", backgroundColor: winnerIndex == 1 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 1 ? "Winner" : "" }</span>
+                                <span className="col-1" style={{...textStyle, backgroundColor: winnerIndex == 0 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 0 ? "Winner" : "" }</span>
+                                <span className="col-1" style={{...textStyle, textAlign: "right", backgroundColor: winnerIndex == 1 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 1 ? "Winner" : "" }</span>
                               </div>
                             </div>
                           )
@@ -228,4 +233,21 @@ export default class MatchList extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      width: "100%",
+      imgDim: 200
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      width: 400,
+      imgDim: 100
+    });
+  }
+
 }

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
-export default class OptionsModal extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class OptionsModal extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -10,7 +13,7 @@ export default class OptionsModal extends Component {
     }
   }
 
-  tabs() {
+  tabs(opts) {
     const instance = Instances.findOne();
     var tabs = [
       "Alias",
@@ -25,7 +28,7 @@ export default class OptionsModal extends Component {
         {
           tabs.map((t) => {
             return (
-              <div style={{padding: 5, borderBottom: this.state.tab == t ? "solid 2px #FF6000" : "solid 2px transparent", cursor: "pointer"}} onClick={() => { this.setState({ tab: t }) }}>
+              <div style={{padding: 5, borderBottom: this.state.tab == t ? "solid 2px #FF6000" : "solid 2px transparent", cursor: "pointer", fontSize: opts.fontSize}} onClick={() => { this.setState({ tab: t }) }}>
                 { t }
               </div>
             )
@@ -35,7 +38,7 @@ export default class OptionsModal extends Component {
     )
   }
 
-  aliasTab() {
+  aliasTab(opts) {
 
     const setAlias = () => {
       const value = this.refs.alias.value;
@@ -54,10 +57,10 @@ export default class OptionsModal extends Component {
 
     return (
       <div className="col">
-        <label>Alias</label>
-        <input type="text" defaultValue={this.props.participant.alias} ref="alias" style={{marginTop: 0, marginRight: 0}} />
+        <label className="input-label" style={{fontSize: opts.fontSize}}>Alias</label>
+        <input className={opts.inputClass} type="text" defaultValue={this.props.participant.alias} ref="alias" style={{marginTop: 0, marginRight: 0}} />
         <div className="row center">
-          <button onClick={setAlias}>
+          <button className={opts.buttonClass} onClick={setAlias}>
             Change Alias
           </button>
         </div>
@@ -65,7 +68,7 @@ export default class OptionsModal extends Component {
     )
   }
 
-  removeTab() {
+  removeTab(opts) {
 
     const instance = Instances.findOne();
 
@@ -97,9 +100,9 @@ export default class OptionsModal extends Component {
 
     return (
       <div className="col">
-        <span>Warning: Tom write a warning for this.</span>
+        <span style={{fontSize: opts.fontSize}}>Warning: This action will remove the participant from your bracket. They can be added again at a later date, but seed information will not be retained.</span>
         <div className="row center">
-          <button onClick={onRemove}>
+          <button className={opts.buttonClass} onClick={onRemove}>
             Remove Participant
           </button>
         </div>
@@ -157,30 +160,54 @@ export default class OptionsModal extends Component {
     )
   }
 
-  activeTab() {
+  activeTab(opts) {
     switch(this.state.tab) {
       case "Alias":
-        return this.aliasTab()
+        return this.aliasTab(opts)
       case "Remove":
-        return this.removeTab()
+        return this.removeTab(opts)
       case "Discounts":
-        return this.discountTab()
+        return this.discountTab(opts)
       default:
         return null
     }
   }
 
-  render() {
+  renderBase(opts) {
     if(!this.props.participant) {
       return null;
     }
     return (
-      <Modal isOpen={this.props.open} onRequestClose={this.props.onClose}>
-        { this.tabs() }
+      <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={this.props.onClose}>
+        <div className="row" style={{justifyContent: "flex-end"}}>
+          <FontAwesome name="times" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={this.props.onClose} />
+        </div>
+        { this.tabs(opts) }
         <div style={{marginTop: 20}}>
-          { this.activeTab() }
+          { this.activeTab(opts) }
         </div>
       </Modal>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      modalClass: "overlay-only-modal",
+      overlayClass: "overlay-only",
+      inputClass: "large-input",
+      buttonClass: "large-button"
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      modalClass: "",
+      overlayClass: "",
+      inputClass: "",
+      buttonClass: ""
+    });
+  }
+
 }
