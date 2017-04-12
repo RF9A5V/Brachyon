@@ -13,6 +13,7 @@ import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import BracketAction from "../show/bracket.jsx";
 import BracketOptions from "./admin_comps/options.jsx";
+import BracketEdit from "./admin_comps/bracket.jsx";
 
 import Restart from "./admin_comps/restart.jsx";
 import Finalize from "./admin_comps/finalize.jsx";
@@ -224,7 +225,7 @@ class BracketAdminScreen extends Component {
       icon: "cog",
       subItems: [
         {
-          content: BracketOptions,
+          content: BracketEdit,
           args: {
             bracket,
             index,
