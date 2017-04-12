@@ -5,7 +5,9 @@ import BracketForm from "/imports/components/events/modules/bracket/form.jsx";
 
 import Games from "/imports/api/games/games.js";
 
-export default class BracketsPanel extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class BracketsPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -54,7 +56,11 @@ export default class BracketsPanel extends Component {
       this.state.brackets = { }
     }
     var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));
+    if(bracketIndex < 0) {
+      bracketIndex = 0;
+    }
     this.state.brackets[++bracketIndex] = { };
+    console.log(this.state.brackets);
     this.props.setStatus(true);
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
@@ -64,13 +70,13 @@ export default class BracketsPanel extends Component {
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
-  itemDescriptions() {
+  itemDescriptions(opts) {
     var descriptions = [
       "Choose from Single Elimination, Double Elimination, Round Robin and Swiss. After you publish your event, a bracket page will be generated where participants can be added manually and/or users can request to join (in which case you will receive notification."
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <div className="text-description border-blue">
+        <div className="text-description border-blue" style={{fontSize: opts.fontSize, width: opts.fontWidth}}>
           {
             item
           }
@@ -79,7 +85,7 @@ export default class BracketsPanel extends Component {
     });
   }
 
-  render() {
+  renderBase(opts) {
     var tabs = ["Bracket"];
     var active = this.props.status;
     var eColor, fColor;
@@ -170,10 +176,25 @@ export default class BracketsPanel extends Component {
               </div>
             </div>
           ) : (
-            this.itemDescriptions()
+            this.itemDescriptions(opts)
           )
       }
     </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "3em",
+      fontWidth: "100%"
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      fontWidth: "50%"
+    });
+  }
+
 }

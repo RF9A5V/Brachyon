@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
-export default class StreamPanel extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class StreamPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -18,13 +20,13 @@ export default class StreamPanel extends Component {
     return this.refs.stream.value;
   }
 
-  itemDescriptions() {
+  itemDescriptions(opts) {
     var descriptions = [
       "Simply enter your Twitch name and we will generate a page on your event for your stream."
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <div className="text-description border-blue">
+        <div className="text-description border-blue" style={{fontSize: opts.fontSize, width: opts.fontWidth}}>
           {
             item
           }
@@ -33,7 +35,7 @@ export default class StreamPanel extends Component {
     });
   }
 
-  render() {
+  renderBase(opts) {
     var tabs = ["Stream"];
     if(window.location.pathname == "/events/create"){
       var eColor = "#00BDFF";
@@ -72,10 +74,24 @@ export default class StreamPanel extends Component {
               </div>
             </div>
           ) : (
-            this.itemDescriptions()
+            this.itemDescriptions(opts)
           )
         }
       </div>
     );
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      fontWidth: "50%"
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "3em",
+      fontWidth: "100%"
+    })
   }
 }
