@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-export default class TimeInput extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class TimeInput extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -60,7 +62,7 @@ export default class TimeInput extends Component {
     };
   }
 
-  render() {
+  renderBase(opts) {
     var [hours, minutes] = [[], []];
     for(var i = 1; i <= 12; i ++){
       hours.push(i);
@@ -69,9 +71,9 @@ export default class TimeInput extends Component {
       minutes.push(i);
     }
     return (
-      <div style={this.props.style || {}}>
+      <div style={this.props.style || { marginTop: opts.margin }}>
         <div className="time-input row center x-center">
-          <select ref="hours" defaultValue={this.state.hour} onChange={this.onChange.bind(this)}>
+          <select ref="hours" defaultValue={this.state.hour} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               hours.map((hour) => {
                 return (
@@ -85,7 +87,7 @@ export default class TimeInput extends Component {
           <span style={{margin: "0 10px"}}>
             :
           </span>
-          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onChange.bind(this)}>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               minutes.map((value) => {
                 return (
@@ -96,7 +98,7 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half" defaultValue={this.state.half} onChange={this.onChange.bind(this)}>
+          <select ref="half" defaultValue={this.state.half} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, padding: opts.padding}}>
             <option value={"AM"}>AM</option>
             <option value={"PM"}>PM</option>
           </select>
@@ -104,4 +106,21 @@ export default class TimeInput extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "3em",
+      margin: 30,
+      padding: 20
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      margin: 10,
+      padding: 10
+    });
+  }
+
 }

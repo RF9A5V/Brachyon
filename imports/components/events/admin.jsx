@@ -15,6 +15,12 @@ import LocationPage from "./modules/details/location.jsx";
 import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
 
+import Title from "./create/title.jsx";
+import ImageForm from "../public/img_form.jsx";
+import Editor from "../public/editor.jsx";
+import DateTimeSelector from "../public/datetime_selector.jsx";
+import Location from "../events/create/location_select.jsx";
+
 // Bracket Stuff
 import BracketsMain from "./admin/modules/brackets/main.jsx";
 import AddBracket from "./modules/bracket/add.jsx";
@@ -46,13 +52,13 @@ class EventAdminPage extends Component {
   }
 
   componentDidMount() {
-    const event = Events.findOne();
-    const instance = Instances.findOne();
-    if(!event || !instance) {
-      toastr.error("Event not found.");
-      return browserHistory.push("/");
-    }
+    // if(!event || !instance) {
+    //   toastr.error("Event not found.");
+    //   return browserHistory.push("/");
+    // }
     this.props.router.setRouteLeaveHook(this.props.route, () => {
+      const event = Events.findOne();
+      const instance = Instances.findOne();
       if(instance.brackets && instance.brackets.length == 0) {
         return "You have to add a bracket if you want the bracket module.";
       }
@@ -77,6 +83,7 @@ class EventAdminPage extends Component {
   }
 
   detailItems() {
+    const event = Events.findOne();
     return {
       name: "Details",
       icon: "file",
@@ -86,31 +93,41 @@ class EventAdminPage extends Component {
           name: "Description",
           key: "description",
           content: (
-            DescriptionPage
-          )
+            Title
+          ),
+          args: {
+            title: event.details.name
+          }
         },
         {
           name: "Location",
           key: "location",
           content: (
-            LocationPage
-          )
+            Location
+          ),
+          args: {
+            ...event.details.location
+          }
         },
         {
           name: "Date",
           key: "datetime",
           content: (
-            DatetimePage
-          )
+            DateTimeSelector
+          ),
+          args: {
+            init: event.details.datetime
+          }
         },
         {
           name: "Banner",
           key: "image",
           content: (
-            ImagePage
+            ImageForm
           ),
           args: {
-            aspectRatio: 16/9
+            aspectRatio: 16/9,
+            url: event.details.bannerUrl
           }
         }
       ]
@@ -284,7 +301,7 @@ class EventAdminPage extends Component {
     items.push(this.detailItems());
     items.push(this.bracketItems());
     items.push(this.streamItems());
-    items.push(this.ticketItems());
+    // items.push(this.ticketItems());
     return items;
   }
 
@@ -324,9 +341,13 @@ class EventAdminPage extends Component {
       if(err) {
         return toastr.error(err.reason);
       }
+      else {
+        return toastr.success("Saved event info!");
+      }
     });
     if(imgTemp) {
       imgTemp.meta.eventSlug = event.slug;
+      toastr.warning("Uploading event image...");
       Banners.insert({
         file: imgTemp.image,
         meta: imgTemp.meta,
@@ -334,6 +355,7 @@ class EventAdminPage extends Component {
           if(err) {
             return toastr.error(err.reason, "Error!");
           }
+          toastr.success("Updated event banner!");
         }
       })
     }
@@ -373,7 +395,7 @@ class EventAdminPage extends Component {
       )
     }
     return (
-      <div className="box col" style={{padding: 40}}>
+      <div className="box col" style={{padding: 20}}>
         <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
         <CloseModal open={this.state.open} id={Events.findOne()._id} onClose={() => { this.setState({ open: false }) }} onComplete={() => {
           browserHistory.push("/");

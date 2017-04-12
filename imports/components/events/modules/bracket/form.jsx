@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-import Games from "/imports/api/games/games.js";
+import FontAwesome from "react-fontawesome";
 
+import Games from "/imports/api/games/games.js";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
-import FontAwesome from "react-fontawesome";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class BracketForm extends Component {
+export default class BracketForm extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -87,7 +88,7 @@ export default class BracketForm extends Component {
     }
   }
 
-  formatForm() {
+  formatForm(opts) {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
@@ -100,7 +101,7 @@ export default class BracketForm extends Component {
               }
               this.props.onChange(game, { baseFormat: e.target.value })
             }
-          }}>
+          }} style={{fontSize: opts.fontSize}}>
             <option value="single_elim">
               Single Elimination
             </option>
@@ -216,13 +217,14 @@ export default class BracketForm extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
+    const imgHeight = "340px";
     return (
-      <div className="row" style={{backgroundColor: "#111"}}>
+      <div className={opts.direction} style={{backgroundColor: "#111"}}>
         {
           this.state.bannerUrl ? (
             <div style={{textAlign: "center", position: "relative"}}>
-              <img style={{width: "auto", height: 340, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.bannerUrl} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
               </div>
             </div>
@@ -238,9 +240,9 @@ export default class BracketForm extends Component {
               ) : ( "" )
             }
           </div>
-          <label className="input-label">Bracket Name</label>
-          <input ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} />
-          <label className="input-label">Game</label>
+          <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
+          <input className={opts.inputClass} ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+          <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
           <AutocompleteForm ref="game" publications={["game_search"]} types={[
             {
               type: Games,
@@ -248,9 +250,9 @@ export default class BracketForm extends Component {
               name: "Game"
             }
           ]} onChange={this.onGameSelect.bind(this)} value={(this.state.name || "")} id={this.state.id}/>
-          <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
-            <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
-              <h5 style={{backgroundColor: "#111", padding: "0 20px"}}>Bracket Format</h5>
+          <div style={{border: "solid 2px white", padding: opts.borderPad, position: "relative", marginTop: 20}}>
+            <div className="row center" style={{position: "absolute", left: 0, top: opts.top, width: "100%"}}>
+              <h5 style={{backgroundColor: "#111", padding: "0 20px", fontSize: opts.fontSize}}>Bracket Format</h5>
             </div>
             {
 
@@ -263,11 +265,32 @@ export default class BracketForm extends Component {
               // </div>
             }
             {
-              this.formatForm()
+              this.formatForm(opts)
             }
           </div>
         </div>
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      inputClass: "",
+      fontSize: "1em",
+      direction: "row",
+      borderPad: 20,
+      top: -12.5
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      inputClass: "large-input",
+      fontSize: "2.5em",
+      direction: "col",
+      borderPad: 40,
+      top: -19.5
+    });
+  }
+
 }

@@ -32,7 +32,6 @@ export default class SubContainer extends ResponsiveComponent {
 
   renderBase(opts) {
     var style = {
-      paddingBottom: 50,
       width: "80%",
       maxWidth: 1000,
       margin: "0 auto"
@@ -51,11 +50,11 @@ export default class SubContainer extends ResponsiveComponent {
     }
     return (
       <div>
-        <div>
+        <div style={{paddingBottom: 20}}>
           {
             this.props.items.map((item, i) => {
               return (
-                <div style={{...style, maxWidth: item.args.stretch ? "80%" : 1000}}>
+                <div style={{...style, maxWidth: item.args && item.args.stretch ? "80%" : 1000}}>
                   <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
                   {
                     i < this.props.items.length - 1 ? (

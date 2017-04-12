@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Cropper from 'react-cropper';
 
-export default class ImageForm extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class ImageForm extends ResponsiveComponent {
 
   componentWillMount() {
     this.setState({
@@ -105,7 +107,7 @@ export default class ImageForm extends Component {
     return null;
   }
 
-  render() {
+  renderBase(opts) {
     var value = "";
     if(this.state.url){
       value = (
@@ -138,13 +140,25 @@ export default class ImageForm extends Component {
         <div className="row center" style={{marginTop: 20}}>
           {
             this.state.url || this.props.defaultImage ? (
-              <button onClick={() => { this.refs.file.click() }}>Change</button>
+              <button className={opts.buttonClass} onClick={() => { this.refs.file.click() }}>Change</button>
             ) : (
-              <button onClick={() => { this.refs.file.click() }}>{ this.props.buttonText || "Choose Image" }</button>
+              <button className={opts.buttonClass} onClick={() => { this.refs.file.click() }}>{ this.props.buttonText || "Choose Image" }</button>
             )
           }
         </div>
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      buttonClass: ""
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      buttonClass: "large-button"
+    })
   }
 }
