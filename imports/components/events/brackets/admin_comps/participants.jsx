@@ -12,7 +12,9 @@ import Brackets from "/imports/api/brackets/brackets.js";
 import StartBracketAction from "./start.jsx";
 import SeedDropDown from "./seeddropdown.jsx";
 
-export default class AddPartipantAction extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class AddPartipantAction extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -64,16 +66,16 @@ export default class AddPartipantAction extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     const instance = Instances.findOne();
     const participants = instance.brackets[this.props.index].participants || [];
     return (
-      <div className="row">
+      <div className={opts.direction}>
         {
           this.props.bracket.isComplete ? (
             ""
           ) : (
-            <div className="col col-1" style={{marginRight: 20}}>
+            <div className="col col-1" style={{marginRight: opts.direction == "col" ? 0 : 20, marginBottom: opts.direction == "col" ? 30 : 0}}>
               <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
@@ -88,41 +90,62 @@ export default class AddPartipantAction extends Component {
             </div>
           )
         }
-        <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
+        <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
           {
             participants.map((participant, index) => {
               const user = Meteor.users.findOne(participant.id);
 
               return (
                 <div className="participant-row row x-center" key={index}>
-                  <div style={{width: "10%"}}>
-                    {
-                      this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
-                    }
+                  {
+                    opts.mobile ? (
+                      null
+                    ) : (
+                      <div style={{width: "10%"}}>
+                        {
+                          this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
+                        }
+                      </div>
+                    )
+                  }
+                  <img src={this.imgOrDefault(user)} style={{width: opts.imgDim, height: opts.imgDim, borderRadius: "100%", marginRight: 20}} />
+                  <div className="col" style={{width: opts.mobile ? "25%" : "15%"}}>
+                    <span style={{fontSize: opts.fontSize}}>{ participant.alias }</span>
+                    <span style={{fontSize: `calc(${opts.fontSize} * 3 / 4)`}}>{ user ? user.username : "Anonymous" }</span>
                   </div>
-                  <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
-                  <div className="col" style={{width: "15%"}}>
-                    <span style={{fontSize: 16}}>{ participant.alias }</span>
-                    <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
-                  </div>
-                  <div>
+                  <div className="col-1" style={{textAlign: "center"}}>
                     {
                       participant.checkedIn ? (
-                        <span>Checked In</span>
+                        opts.mobile ? (
+                          <FontAwesome name="check" style={{fontSize: `calc(${opts.fontSize} * 2)`, color: "#FF6000"}} />
+                        ) : (
+                          <span>Checked In</span>
+                        )
                       ) : (
-                        <button onClick={() => {
-                          if(instance.tickets) {
-                            this.setState({ discountOpen: true, participant })
-                          }
-                          else {
-                            this.onUserCheckIn(participant);
-                          }
-                        }}>Check In</button>
+                        opts.mobile ? (
+                          <FontAwesome name="sign-in" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={() => {
+                            if(instance.tickets) {
+                              this.setState({ discountOpen: true, participant })
+                            }
+                            else {
+                              this.onUserCheckIn(participant);
+                            }
+                          }}/>
+                        ) : (
+                          <button className={opts.buttonClass} onClick={() => {
+                            if(instance.tickets) {
+                              this.setState({ discountOpen: true, participant })
+                            }
+                            else {
+                              this.onUserCheckIn(participant);
+                            }
+                          }}>Check In</button>
+                        )
                       )
                     }
                   </div>
-                  <div className="col-1" style={{textAlign: "right"}}>
-                    <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
+                  <div style={{textAlign: "right"}}>
+                    <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${opts.fontSize} * 2)`}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
                   </div>
                 </div>
               )
@@ -141,4 +164,27 @@ export default class AddPartipantAction extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      direction: "col",
+      mobile: true,
+      fontSize: "2.5em",
+      imgDim: 150,
+      maxHeight: 750,
+      buttonClass: "large-button"
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      direction: "row",
+      mobile: false,
+      fontSize: "16px",
+      imgDim: 50,
+      maxHeight: 500,
+      buttonClass: ""
+    })
+  }
+
 }

@@ -43,17 +43,17 @@ export default class TimeInput extends ResponsiveComponent {
   }
 
   value() {
-    var hour = parseInt(this.refs.hours.value);
-    if(hour == 12 && this.refs.half.value == "AM") {
+    var hour = parseInt(this.state.hour);
+    if(hour == 12 && this.state.half == "AM") {
       hour = 0;
     }
-    else if(hour < 12 && this.refs.half.value == "PM") {
+    else if(hour < 12 && this.state.half == "PM") {
       hour += 12;
     }
     if(hour < 10) {
       hour = "0" + hour;
     }
-    var minutes = parseInt(this.refs.minutes.value);
+    var minutes = parseInt(this.state.minute);
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
@@ -73,7 +73,10 @@ export default class TimeInput extends ResponsiveComponent {
     return (
       <div style={this.props.style || { marginTop: opts.margin }}>
         <div className="time-input row center x-center">
-          <select ref="hours" defaultValue={this.state.hour} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
+          <select ref="hours" defaultValue={this.state.hour} onChange={(e) => {
+            this.state.hour = e.target.value;
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               hours.map((hour) => {
                 return (
@@ -87,7 +90,10 @@ export default class TimeInput extends ResponsiveComponent {
           <span style={{margin: "0 10px"}}>
             :
           </span>
-          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={(e) => {
+            this.state.minute = e.target.value()
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               minutes.map((value) => {
                 return (
@@ -98,7 +104,10 @@ export default class TimeInput extends ResponsiveComponent {
               })
             }
           </select>
-          <select ref="half" defaultValue={this.state.half} onChange={this.onChange.bind(this)} style={{fontSize: opts.fontSize, padding: opts.padding}}>
+          <select ref="half" defaultValue={this.state.half} onChange={(e) => {
+            this.state.half = e.target.value;
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, padding: opts.padding}}>
             <option value={"AM"}>AM</option>
             <option value={"PM"}>PM</option>
           </select>
