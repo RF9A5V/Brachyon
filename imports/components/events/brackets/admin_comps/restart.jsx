@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 
-export default class RestartAction extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class RestartAction extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -31,25 +33,30 @@ export default class RestartAction extends Component {
     });
   }
 
-  render() {
+  renderBase(opts) {
+
+    const textStyle = {
+      fontSize: opts.fontSize
+    }
+
     return (
       <div>
-        <p>
+        <p style={textStyle}>
           Warning! This will regenerate your bracket from scratch, throwing everything back to round one. This is not recommended for large events or for events that have already played well into the bracket.
         </p>
         <div className="row center">
-          <button onClick={() => { this.setState({ open: true }) }} style={{width:"100px"}}> Reset </button>
+          <button className={opts.buttonClass} onClick={() => { this.setState({ open: true }) }}> Reset </button>
         </div>
-        <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} >
+        <Modal className="create-modal" overlayClassName={opts.overlayClass} classname={opts.modalClass} isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} >
           <div className="col x-center center">
-            <h3>DANGER</h3>
-            <p><br></br>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
+            <h3 style={textStyle}>DANGER</h3>
+            <p style={textStyle}><br></br>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
             <div style={{display:"inline-block"}}>
               <div className="inline-button">
-                <button onClick={() => { this.setState({open: false}) }} style={{width:"100px", marginRight:"15px"}}>Cancel</button>
+                <button className={opts.buttonClass} onClick={() => { this.setState({open: false}) }} style={{width:"100px", marginRight:"15px"}}>Cancel</button>
               </div>
               <div className="inline-button">
-                <button className="reset-highlight" onClick={this.resetEventHandler.bind(this)} style={{margin:"0", width: "100px"}}>Reset</button>
+                <button className={"reset-highlight " + opts.buttonClass} onClick={this.resetEventHandler.bind(this)} style={{margin:"0"}}>Reset</button>
               </div>
             </div>
           </div>
@@ -57,4 +64,23 @@ export default class RestartAction extends Component {
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      buttonClass: "",
+      modalClass: "",
+      overlayClass: "overlay-class"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      buttonClass: "large-button",
+      modalClass: "overlay-only-modal",
+      overlayClass: "overlay-only"
+    });
+  }
+
 }
