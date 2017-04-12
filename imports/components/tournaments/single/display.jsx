@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 import Matches from "/imports/api/event/matches.js";
 
 import MatchBlock from './match.jsx';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
+@DragDropContext(HTML5Backend)
 export default class SingleDisplay extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      rounds: this.props.rounds;
+    }
+  }
+
+  switchMatch(dragIndex, hoverIndex) {
+    const dragRound = this.state.rounds[0][0][dragIndex];
+    let rounds = this.state.rounds;
+    rounds[0][0][dragIndex] = rounds[0][0][hoverIndex];
+    rounds[0][0][hoverIndex] = dragRound;
+    this.setState({rounds});
   }
 
   render() {
