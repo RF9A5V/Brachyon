@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 
-export default class Title extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class Title extends ResponsiveComponent {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.title || ""
+    }
+  }
 
   value() {
     if(this.refs.title.value.length < 3) {
@@ -19,16 +28,36 @@ export default class Title extends Component {
     if(value.length > 50) {
       value = value.slice(0, 50);
     }
-    e.target.value = value;
-    this.forceUpdate();
+    this.setState({
+      value
+    });
   }
 
-  render() {
+  renderBase(opts) {
     return (
-      <div className="col" style={{maxWidth: 300, width: "80%"}}>
-        <label className="input-label">Title { this.refs.title ? this.refs.title.value.length : 0 } / 50</label>
-        <input ref="title" type="text" onChange={this.onChange.bind(this)} style={{margin: 0}}/>
+      <div className="col" style={{width: opts.width}}>
+        <label style={{fontSize: opts.fontSize, padding: opts.labelPad}} className="input-label">Title { this.refs.title ? this.refs.title.value.length : 0 } / 50</label>
+        <input className={opts.inputClass} ref="title" value={this.state.value} type="text" onChange={this.onChange.bind(this)} style={{margin: 0}}/>
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      inputClass: "",
+      width: 300,
+      labelPad: 5
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      inputClass: "large-input",
+      width: "100%",
+      labelPad: 10
+    })
+  }
+
 }
