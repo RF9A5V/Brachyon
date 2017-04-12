@@ -98,7 +98,7 @@ export default class CreateContainer extends ResponsiveComponent {
         {
           ops.navComp
         }
-        <div style={{paddingLeft: ops.paddingLeft}}>
+        <div style={{paddingLeft: ops.paddingLeft, marginBottom: 120}}>
           {
             this.props.items.map((item, i) => {
               return (
