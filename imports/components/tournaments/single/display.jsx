@@ -10,17 +10,6 @@ export default class SingleDisplay extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      rounds: this.props.rounds;
-    }
-  }
-
-  switchMatch(dragIndex, hoverIndex) {
-    const dragRound = this.state.rounds[0][0][dragIndex];
-    let rounds = this.state.rounds;
-    rounds[0][0][dragIndex] = rounds[0][0][hoverIndex];
-    rounds[0][0][hoverIndex] = dragRound;
-    this.setState({rounds});
   }
 
   render() {
