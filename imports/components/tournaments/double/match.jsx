@@ -1,10 +1,86 @@
 import React, { Component } from 'react';
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
+import { findDOMnode } from 'react-dom';
+import { DragSource, DropTarget } from 'react-dnd'
+
 
 import Matches from "/imports/api/event/matches.js";
 
-export default class MatchBlock extends Component {
+//Drag and Drop Logic
+const matchSource = {
+  beginDrag(props) {
+    console.log("Heh");
+    return {
+      index: props.index
+    }
+  }
+};
+
+const matchTarget = {
+  hover(props, monitor, component) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Determine rectangle on screen
+    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    // Time to actually perform the action
+    props.switchMatch(dragIndex, hoverIndex);
+
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    monitor.getItem().index = hoverIndex;
+  }
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
+  };
+}
+
+function collect2(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+class MatchBlock extends Component {
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -32,6 +108,7 @@ export default class MatchBlock extends Component {
   }
 
   render() {
+    const {connectDragSource, connectDropTarget, isDragging} = this.props;
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
     var [i, j] = [this.props.roundNumber, this.props.matchNumber];
@@ -82,9 +159,10 @@ export default class MatchBlock extends Component {
       var allr1Null = this.props.rounds[1][0].every(i => { return i == null });
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
+    var draggedMatch = isDragging ? "draggedMatch" : "";
 
-    return (
-      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
+    return connectDragSource(connectDropTarget (
+      <div className={`row x-center ${draggedMatch  }`} style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
         {
           [
             <div className="match" onClick={() => {
@@ -126,6 +204,9 @@ export default class MatchBlock extends Component {
           ]
         }
       </div>
-    )
+    ));
   }
-}
+};
+
+const x = DropTarget('match', matchTarget, collect)(MatchBlock)
+export default DragSource('match', matchSource, collect2)( x )

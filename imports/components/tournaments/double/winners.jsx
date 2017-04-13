@@ -5,8 +5,10 @@ import EventModal from "../modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
 import DragScroll from "react-dragscroll"
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
-export default class DoubleElimWinnersBracket extends Component {
+class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
     super(props);
@@ -16,6 +18,14 @@ export default class DoubleElimWinnersBracket extends Component {
       leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
       dragging: false
     };
+  }
+
+  switchMatch(dragIndex, hoverIndex) {
+    const dragRound = this.state.rounds[0][0][dragIndex];
+    let rounds = this.state.rounds;
+    rounds[0][0][dragIndex] = rounds[0][0][hoverIndex];
+    rounds[0][0][hoverIndex] = dragRound;
+    this.setState({rounds});
   }
 
   onDrag(e) {
@@ -80,7 +90,7 @@ export default class DoubleElimWinnersBracket extends Component {
                       if (match.players[0].alias != null && match.players[1] != null)
                       {
                         return (
-                          <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
+                          <MatchBlock key={i + " " + j} match={match} swapMatch={this.swapMatch.bind(this)} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
                         );
                       }
                     })
@@ -160,16 +170,12 @@ export default class DoubleElimWinnersBracket extends Component {
         </div>
         {
           this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
+            <div style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
+              { this.mainBracket() }
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
-              <DragScroll width="100%" height="100%" ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
+            <div style={{height: "calc(97vh - 300px)"}}>
+              { this.mainBracket() }
             </div>
           )
         }
@@ -207,3 +213,4 @@ export default class DoubleElimWinnersBracket extends Component {
     );
   }
 }
+export default DragDropContext(HTML5Backend)(DoubleElimWinnersBracket)
