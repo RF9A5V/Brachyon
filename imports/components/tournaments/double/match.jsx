@@ -10,18 +10,16 @@ import Matches from "/imports/api/event/matches.js";
 //Drag and Drop Logic
 const matchSource = {
   beginDrag(props) {
-    console.log("Heh");
     return {
-      index: props.index
+      matchNumber: props.matchNumber
     }
   }
 };
 
 const matchTarget = {
   hover(props, monitor, component) {
-    const dragIndex = monitor.getItem().index;
-    const hoverIndex = props.index;
-
+    const dragIndex = monitor.getItem().matchNumber;
+    const hoverIndex = props.matchNumber;
     // Don't replace items with themselves
     if (dragIndex === hoverIndex) {
       return;
