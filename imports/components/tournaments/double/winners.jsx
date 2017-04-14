@@ -159,23 +159,29 @@ export default class DoubleElimWinnersBracket extends Component {
       )
     }
 
-    let draggableDiv = Brackets.findOne() ? (
-        <DragScroll width={"100%"} height={"100%"} ref="dragger">
-          { this.mainBracket() }
-        </DragScroll>
-    ) : (
+    let draggableDiv, draggable;
+    if (Brackets.findOne()) {
+      draggableDiv = (
+          <DragScroll width={"100%"} height={"100%"} ref="dragger">
+            { this.mainBracket() }
+          </DragScroll>
+      )
+      draggable = this.state.dragging ? "grabbing" : "grab"
+    }
+    else {
+      draggableDiv = (
         this.mainBracket()
-    )
+      )
+      draggable = "";
+    }
 
     let bracketDiv = this.props.page == "admin" ? (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
+      <div className={draggable} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
         { draggableDiv }
       </div>
     ) : (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
-        <DragScroll width="100%" height="100%" ref="dragger">
+      <div className={draggable} style={{height: "calc(97vh - 300px)"}}>
           { draggableDiv }
-        </DragScroll>
       </div>
     );
 

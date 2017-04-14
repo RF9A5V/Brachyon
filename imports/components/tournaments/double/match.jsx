@@ -92,24 +92,10 @@ class MatchBlock extends Component {
             <div className="match" onClick={() => {
               this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
             }}>
-              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p1.alias || "TBD" }
-                </div>
-                <div className="score">
-                  { p1.score || 0 }
-                </div>
-              </div>
+              <Participant height={height} participantWidth={participantWidth} isFutureLoser={this.props.isFutureLoser} player={p1} prevMatchesNull={prevMatchesNull} isLoser={isLoser(p1)} />
               <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
-              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p2.alias || "TBD" }
-                </div>
-                <div className="score">
-                  { p2.score || 0 }
-                </div>
-              </div>
+              <Participant height={height} participantWidth={participantWidth} isFutureLoser={this.props.isFutureLoser} player={p2} prevMatchesNull={prevMatchesNull} isLoser={isLoser(p2)} />
 
             </div>,
             (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
