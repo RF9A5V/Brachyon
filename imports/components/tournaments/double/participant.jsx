@@ -6,15 +6,17 @@ import { findDOMnode } from 'react-dom';
 const participantSource = {
   beginDrag(props) {
     return {
-      participantNumber: props.participantNumber
+      alias: props.player.alias
     }
   }
 };
 
 const participantTarget = {
   hover(props, monitor, component) {
-    const dragIndex = monitor.getItem().participantNumber;
-    const hoverIndex = props.participantNumber;
+    const dragIndex = monitor.getItem().alias;
+    const hoverIndex = props.player.alias;
+
+    return;
     // Don't replace items with themselves
     if (dragIndex === hoverIndex) {
       return;
@@ -46,6 +48,8 @@ const participantTarget = {
       return;
     }
 
+    //TODO: Create hover effect here
+
     // Time to actually perform the action
     props.switchparticipant(dragIndex, hoverIndex);
 
@@ -54,6 +58,16 @@ const participantTarget = {
     // but it's good here for the sake of performance
     // to avoid expensive index searches.
     monitor.getItem().index = hoverIndex;
+  },
+
+  drop(props, monitor, connect) {
+    const dragIndex = monitor.getItem().alias;
+    const hoverIndex = props.player.alias;
+    if (dragIndex == hoverIndex)
+      return;
+
+    
+
   }
 };
 
@@ -75,9 +89,18 @@ function collect2(connect, monitor) {
 
 class Participant extends Component {
   render() {
-    const {connectDragSource, connectDropTarget, isDragging} = this.props;
+    const {connectDragSource, connectDropTarget, isDragging, height, participantWidth, prevMatchesNull} = this.props;
+    let p1 = this.props.player;
+
     return connectDragSource(connectDropTarget(
-      
+      <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || this.props.isLoser ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
+        <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+          { p1.alias || "TBD" }
+        </div>
+        <div className="score">
+          { p1.score || 0 }
+        </div>
+      </div>
     ));
   }
 }
