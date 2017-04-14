@@ -22,18 +22,11 @@ export default class BracketForm extends ResponsiveComponent {
       subFormat = "POOL";
     }
     var game = Games.findOne(props.game) || props.gameObj;
-    if(game) {
-      this.state = {
-        id: game._id,
-        name: game.name,
-        bannerUrl: game.bannerUrl,
-        format: subFormat || "NONE"
-      }
+    this.state = {
+      format: subFormat || "NONE"
     }
-    else {
-      this.state = {
-        format: "NONE"
-      };
+    if(game) {
+      this.state.game = game;
     }
   }
 
@@ -211,9 +204,33 @@ export default class BracketForm extends ResponsiveComponent {
       }
     }
     return {
-      game: this.state.id,
+      game: (this.state.game || {})._id,
       format,
       name: this.refs.name.value
+    }
+  }
+
+  loadGames(value, opts) {
+    if(this.state.game && this.state.game.name != value) {
+      this.state.game = {
+        name: value
+      }
+    }
+    clearTimeout(this.state.to);
+    if(value.length >= 3) {
+      this.state.to = setTimeout(() => {
+        Meteor.call("games.search", value, (err, data) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            console.log(data);
+            this.setState({
+              gameList: data
+            })
+          }
+        });
+      }, 500);
     }
   }
 
@@ -242,14 +259,38 @@ export default class BracketForm extends ResponsiveComponent {
           </div>
           <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
           <input className={opts.inputClass} ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
-          <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
-          <AutocompleteForm ref="game" publications={["game_search"]} types={[
+          <div className="col" style={{position: "relative"}}>
+            <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
+            <input type="text" className={opts.inputClass} onChange={(e) => {
+              const value = e.target.value;
+              this.loadGames(value, opts.limit);
+            }} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
-              type: Games,
-              template: GameTemplate,
-              name: "Game"
+              this.state.gameList ? (
+                <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
+                {
+                  this.state.gameList.map(g => {
+                    return (
+                      <GameTemplate {...g} onClick={() => {
+                        const game = {
+                          _id: g._id,
+                          name: g.name
+                        }
+                        this.setState({
+                          game,
+                          gameList: null
+                        });
+                        this.refs.game.value = g.name;
+                      }} />
+                    )
+                  })
+                }
+                </div>
+              ) : (
+                null
+              )
             }
-          ]} onChange={this.onGameSelect.bind(this)} value={(this.state.name || "")} id={this.state.id}/>
+          </div>
           <div style={{border: "solid 2px white", padding: opts.borderPad, position: "relative", marginTop: 20}}>
             <div className="row center" style={{position: "absolute", left: 0, top: opts.top, width: "100%"}}>
               <h5 style={{backgroundColor: "#111", padding: "0 20px", fontSize: opts.fontSize}}>Bracket Format</h5>
@@ -279,7 +320,8 @@ export default class BracketForm extends ResponsiveComponent {
       fontSize: "1em",
       direction: "row",
       borderPad: 20,
-      top: -12.5
+      top: -12.5,
+      limit: 3
     });
   }
 
@@ -289,7 +331,8 @@ export default class BracketForm extends ResponsiveComponent {
       fontSize: "2.5em",
       direction: "col",
       borderPad: 40,
-      top: -19.5
+      top: -19.5,
+      limit: 5
     });
   }
 

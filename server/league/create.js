@@ -3,14 +3,10 @@ import Leagues from "/imports/api/leagues/league.js";
 Meteor.methods({
   "leagues.create"(attrs) {
     var events = attrs.events;
-    var bracket = {
-      game: attrs.brackets.gameObj._id,
-      format: attrs.brackets.format,
-      name: attrs.brackets.name || ""
-    };
+    var bracket = JSON.parse(JSON.stringify(attrs.brackets));
+    delete attrs.brackets;
     attrs.leaderboard = [];
-    attrs.game = attrs.brackets.gameObj._id;
-    delete attrs.brackets.gameObj;
+    attrs.game = bracket.game;
     if(attrs.creator.type == "user") {
       attrs.owner = Meteor.userId();
       attrs.orgEvent = false;

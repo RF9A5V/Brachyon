@@ -1,35 +1,28 @@
 import React, { Component } from "react";
 
+// Note that if you're calling componentWillMount or any of the lifecycle methods, be sure to explicitly call super.method
+// Spent a while chasing down some bugs related to that
+
+// Also, avoid setting this.state directly in inherited classes, otherwise the render field in this wrapper gets overwritten
+
 export default class ResponsiveComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      render: "desktop"
-    };
+  }
+
+  componentWillMount() {
+    const mql = window.matchMedia("(max-device-width: 480px)");
+    this.setState({
+      render: mql.matches ? "mobile" : "desktop"
+    })
   }
 
   setRenderSize() {
     const mql = window.matchMedia("(max-device-width: 480px)");
-    if(mql.matches) {
-      this.setState({
-        render: "mobile"
-      })
-    }
-    // else if(window.matchMedia("only screen and (min-width: 400px and max-width: 800px)")) {
-    //   this.setState({
-    //     render: "desktop" // Should be tablet in future
-    //   })
-    // }
-    else {
-      this.setState({
-        render: "desktop"
-      })
-    }
-  }
-
-  componentWillMount() {
-    this.setRenderSize();
+    this.setState({
+      render: mql.matches ? "mobile" : "desktop"
+    })
   }
 
   componentWillUnmount() {
@@ -57,6 +50,9 @@ export default class ResponsiveComponent extends Component {
   }
 
   render() {
+    if(!this.state.render) {
+      console.log(this);
+    }
     switch(this.state.render) {
       case "mobile":
         return this.renderMobile();

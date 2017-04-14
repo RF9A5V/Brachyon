@@ -12,6 +12,9 @@ export default class TimeInput extends ResponsiveComponent {
       minute: "00",
       half: "AM"
     }
+    if(!this.state) {
+      this.state = {};
+    }
     if(props.init) {
       var current = moment(props.init);
       obj = {
@@ -20,7 +23,9 @@ export default class TimeInput extends ResponsiveComponent {
         half: current.format("A")
       }
     }
-    this.state = obj;
+    Object.keys(obj).forEach(k => {
+      this.state[k] = obj[k];
+    })
   }
 
   componentWillReceiveProps(next) {
@@ -31,7 +36,7 @@ export default class TimeInput extends ResponsiveComponent {
         minute: parseInt(current.format("mm")),
         half: current.format("A")
       }
-      this.state = obj;
+      this.setState(obj);
       this.forceUpdate();
     }
   }

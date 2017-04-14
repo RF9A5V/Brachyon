@@ -6,6 +6,7 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 export default class ImageForm extends ResponsiveComponent {
 
   componentWillMount() {
+    super.componentWillMount();
     this.setState({
       id: this.props.id,
       uploader: null,
@@ -75,14 +76,11 @@ export default class ImageForm extends ResponsiveComponent {
     var file = e.target.files[0];
     var type = file.type;
     reader.onload = () => {
-      this.state = {
+      this.setState({
         url: reader.result,
         file,
         type
-      }
-      setTimeout(() => {
-        this.forceUpdate();
-      }, 250)
+      })
     }
     reader.readAsDataURL(file);
   }
@@ -115,7 +113,7 @@ export default class ImageForm extends ResponsiveComponent {
           <Cropper
             aspectRatio={this.props.aspectRatio || 1}
             src={this.state.url}
-            style={{width: "100%", maxWidth: 500, height: 300}}
+            style={{width: opts.width, height: opts.height}}
             ref="cropper"
             zoomable={false}
             zoomOnWheel={false}
@@ -152,13 +150,17 @@ export default class ImageForm extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      buttonClass: ""
+      buttonClass: "",
+      width: 500,
+      height: 300
     })
   }
 
   renderMobile() {
     return this.renderBase({
-      buttonClass: "large-button"
+      buttonClass: "large-button",
+      width: 800,
+      height: 500
     })
   }
 }

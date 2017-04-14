@@ -2,7 +2,7 @@ import Games from "/imports/api/games/games.js";
 
 Meteor.publish("league", (slug) => {
   var league = Leagues.findOne({slug});
-  var events = Events.find({ slug: { $in: league.events } });
+  var events = Events.find({ slug: { $in: league.events.map(e => { return e.slug; }) } });
   var instances = Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } });
   var ids = {};
   league.leaderboard.forEach(board => {
@@ -36,7 +36,7 @@ Meteor.publish("league", (slug) => {
   });
   return [
     Leagues.find({ slug }),
-    Events.find({ slug: { $in: league.events } }),
+    events,
     Games.find({_id: league.game}),
     instances,
     Meteor.users.find({ _id: { $in: Object.keys(ids) } }, { username: 1, "profile.imageUrl": 1 }),
