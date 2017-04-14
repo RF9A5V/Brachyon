@@ -5,10 +5,8 @@ import EventModal from "../modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
 import DragScroll from "react-dragscroll"
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 
-class DoubleElimWinnersBracket extends Component {
+export default class DoubleElimWinnersBracket extends Component {
 
   constructor(props) {
     super(props);
@@ -161,6 +159,27 @@ class DoubleElimWinnersBracket extends Component {
       )
     }
 
+    let draggableDiv = Brackets.findOne() ? (
+        <DragScroll width={"100%"} height={"100%"} ref="dragger">
+          { this.mainBracket() }
+        </DragScroll>
+    ) : (
+        this.mainBracket()
+    )
+
+    let bracketDiv = this.props.page == "admin" ? (
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
+        { draggableDiv }
+      </div>
+    ) : (
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
+        <DragScroll width="100%" height="100%" ref="dragger">
+          { draggableDiv }
+        </DragScroll>
+      </div>
+    );
+
+
     return (
       <div onWheel={(e) => {
         e.stopPropagation();
@@ -168,17 +187,9 @@ class DoubleElimWinnersBracket extends Component {
         <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
           { headers }
         </div>
-        {
-          this.props.page == "admin" ? (
-            <div style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
-              { this.mainBracket() }
-            </div>
-          ) : (
-            <div style={{height: "calc(97vh - 300px)"}}>
-              { this.mainBracket() }
-            </div>
-          )
-        }
+        { bracketDiv }
+
+
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -213,4 +224,3 @@ class DoubleElimWinnersBracket extends Component {
     );
   }
 }
-export default DragDropContext(HTML5Backend)(DoubleElimWinnersBracket)
