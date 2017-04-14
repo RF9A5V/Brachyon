@@ -1,6 +1,16 @@
 import React, { Component } from "react";
 
-export default class Title extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class Title extends ResponsiveComponent {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: props.title || "",
+      season: props.season || ""
+    }
+  }
 
   value() {
     return {
@@ -9,33 +19,47 @@ export default class Title extends Component {
     }
   }
 
-  onChange(e) {
+  onChange(e, field) {
     var { value } = e.target;
     if(value.length > 50) {
       value = value.slice(0, 50);
     }
-    e.target.value = value;
+    this.state[field] = value;
     this.forceUpdate();
   }
 
-  render() {
+  renderBase(opts) {
     return (
-      <div className="row">
+      <div className={opts.orientation}>
         <div className="col col-1">
-          <div className="row">
-            <h5 style={{marginRight: 10}}>Title</h5>
-            <span>{ this.refs.title ? this.refs.title.value.length : 0 } / 50</span>
-          </div>
-          <input type="text" ref="title" onChange={this.onChange.bind(this)} />
+          <label style={{fontSize: opts.fontSize}} className="input-label">Title { this.state.title.length } / 50</label>
+          <input className={opts.inputClass} type="text" ref="title" onChange={(e) => {
+            this.onChange(e, "title")
+          }} value={this.state.title} style={{marginTop: 0, marginRight: 0}} />
         </div>
         <div className="col col-1">
-          <div className="row">
-            <h5 style={{marginRight: 10}}>Season</h5>
-            <span>{ this.refs.season ? this.refs.season.value.length : 0 } / 50</span>
-          </div>
-          <input type="text" ref="season" onChange={this.onChange.bind(this)} />
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Season { this.state.season.length } / 50</label>
+          <input className={opts.inputClass} type="text" ref="season" onChange={(e) => {
+            this.onChange(e, "season")
+          }} value={this.state.season} style={{marginTop: 0, marginRight: 0}} />
         </div>
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      orientation: "row",
+      fontSize: "1em",
+      inputClass: ""
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      orientation: "col",
+      fontSize: "2.5em",
+      inputClass: "large-input"
+    })
   }
 }

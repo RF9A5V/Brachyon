@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import moment from "moment";
 
-export default class MainSlide extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class MainSlide extends ResponsiveComponent {
 
   // Even though the prop is called event, it's actually the league.
   // Yes, I know it's dumb but I'll put this fire out when there are like 100 less fires to deal with.
@@ -14,9 +16,9 @@ export default class MainSlide extends Component {
     };
   }
 
-  render() {
+  renderDesktop() {
     var league = Leagues.findOne();
-    var event = Events.findOne({ slug: { $in: league.events }, isComplete: false }, { sort: { "details.datetime": -1 } });
+    var event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
     return (
       <div className="col-1 col">
         <div className="row col-1">
@@ -102,4 +104,38 @@ export default class MainSlide extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    var league = Leagues.findOne();
+    var event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
+    return (
+      <div className="col" style={{padding: 40}}>
+        <div className="col-1 row flex-pad" style={{alignItems: "flex-start"}}>
+          <FontAwesome name="share-alt" style={{fontSize: "7em"}} />
+          <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
+            <span style={{fontSize: "3em"}}>
+              {
+                event.details.location.online ? (
+                  "Online"
+                ) : (
+                  event.details.location.streetAddress + " " + event.details.location.city + ", " + event.details.location.state
+                )
+              }
+            </span>
+            <span style={{fontSize: "3em"}}>
+              {
+                moment(event.details.datetime).format("MMMM Do, YYYY")
+              }
+            </span>
+          </div>
+        </div>
+        <div className="col center x-center">
+          <h2 style={{fontSize: "6em", color: "#FF6000"}}>{ league.details.name }</h2>
+        </div>
+        <div className="row col-1">
+        </div>
+      </div>
+    )
+  }
+
 }

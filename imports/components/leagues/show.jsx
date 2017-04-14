@@ -65,6 +65,7 @@ class LeagueShowPage extends Component {
     var pages = [
       {
         name: "Home",
+        icon: "home",
         slides: [
           {
             component: HomeSlide
@@ -76,6 +77,7 @@ class LeagueShowPage extends Component {
       },
       {
         name: "Events",
+        icon: "clone",
         slides: [
           {
             component: EventSlide
@@ -84,6 +86,7 @@ class LeagueShowPage extends Component {
       },
       {
         name: "Leaderboard",
+        icon: "trophy",
         slides: [
           {
             component: LeaderboardSlide
@@ -94,6 +97,7 @@ class LeagueShowPage extends Component {
     if(league.tiebreaker && !league.complete) {
       pages.push({
         name: "Tiebreaker",
+        icon: "refresh",
         slides: [
           {
             component: TiebreakerSlide
@@ -104,6 +108,7 @@ class LeagueShowPage extends Component {
     if(league.stream) {
       pages.push({
         name: "Stream",
+        icon: "video-camera",
         slides: [
           {
             component: StreamSlide
