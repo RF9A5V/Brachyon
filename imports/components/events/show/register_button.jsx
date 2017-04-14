@@ -14,6 +14,7 @@ export default class RegisterButton extends Component {
   }
 
   registerCB(index) {
+    console.log(index);
     Meteor.call("events.registerUser", Events.findOne()._id, index, Meteor.userId(), (e) => {
       if(e) {
         toastr.error(e.reason);
@@ -36,7 +37,7 @@ export default class RegisterButton extends Component {
       })
     }
     else {
-      this.registerCB();
+      this.registerCB(this.props.metaIndex);
     }
   }
 

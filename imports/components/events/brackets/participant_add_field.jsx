@@ -216,7 +216,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
     return this.renderBase({
       fontSize: "1em",
       inputClass: "",
-      buttonClass: "large-button",
+      buttonClass: "",
       imgDim: 50
     });
   }

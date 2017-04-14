@@ -144,7 +144,7 @@ export default class LocationSelect extends ResponsiveComponent {
             <h5 style={{fontSize: opts.fontSize}}>
               Is this event online?
             </h5>
-            <input type="checkbox" onChange={this.updateValue.bind(this)} defaultChecked={this.state.online} />
+            <input type="checkbox" onChange={this.updateValue.bind(this)} defaultChecked={this.state.online} style={{width: opts.checkboxDims, height: opts.checkboxDims}} />
           </div>
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
@@ -174,14 +174,16 @@ export default class LocationSelect extends ResponsiveComponent {
   renderMobile(opts) {
     return this.renderBase({
       fontSize: "2.5em",
-      inputClass: "large-input"
+      inputClass: "large-input",
+      checkboxDims: 25
     })
   }
 
   renderDesktop(opts) {
     return this.renderBase({
       fontSize: "1em",
-      inputClass: ""
+      inputClass: "",
+      checkboxDims: 10
     })
   }
 

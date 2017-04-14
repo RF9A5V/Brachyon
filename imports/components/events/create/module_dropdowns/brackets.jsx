@@ -34,18 +34,14 @@ export default class BracketsPanel extends ResponsiveComponent {
     }
     var brackets = [];
     Object.keys(this.state.brackets).forEach(key => {
-      var bracket = this.state.brackets[key];
-      var gameObj = bracket.gameObj;
-      if(!gameObj || !bracket.format) {
+      const brackObj = this.refs[key].value();
+      console.log(brackObj);
+      if(!brackObj.game) {
         toastr.error("Each bracket given requires a game!");
         throw new Error("Bracket at key " + key + " requires a game.");
       }
       else {
-        var temp = {
-          format: bracket.format,
-          game: bracket.gameObj._id
-        }
-        brackets.push(temp);
+        brackets.push(brackObj);
       }
     })
     return brackets;

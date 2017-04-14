@@ -329,8 +329,8 @@ class BracketAdminScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20, height: "100%"}}>
-        <CreateContainer items={this.items()} actions={this.actions()} />
+      <div style={{padding: 10, height: "100%"}}>
+        <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
       </div>
     );
   }

@@ -6,7 +6,9 @@ import Matches from "/imports/api/event/matches.js";
 
 import { numToAlpha } from "/imports/decorators/num_to_alpha.js";
 
-export default class MatchBlock extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class MatchBlock extends ResponsiveComponent {
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -50,19 +52,19 @@ export default class MatchBlock extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
     var [i, j] = [this.props.roundNumber, this.props.matchNumber];
     var k = this.props.bracket ? Math.floor(i/2):i;
 
-    var height = 35;
+    var height = opts.height;
     var margin = 0;
 
-    var lineHeight = 5;
+    var lineHeight = opts.lineHeight;
 
     var blockHeight = height * 2 + margin * 2 + lineHeight;
-    var blockMargin = 20;
+    var blockMargin = opts.blockMargin;
 
     var vLineBase = blockHeight + blockMargin;
     var vLineHeight = Math.pow(2, i - 1) * vLineBase + lineHeight;
@@ -70,7 +72,7 @@ export default class MatchBlock extends Component {
       vLineHeight = Math.pow(2, parseInt(i / 2) - 1) * vLineBase + lineHeight
     }
 
-    var participantWidth = 200;
+    var participantWidth = opts.pWidth;
 
     if(!match || (match.players[0] == null && match.players[1] == null && this.props.roundNumber == 0 && this.props.bracket == 0)) {
       return (
@@ -108,14 +110,14 @@ export default class MatchBlock extends Component {
           prevMatchesNull ? (
             null
           ) : (
-            <div style={{width: 15, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+            <div style={{width: blockMargin, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
             </div>
           )
         }
-        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: 20, height: 75, backgroundColor: "black", border: "solid 2px white", borderRight: "none"}}>
+        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: "black", border: "solid 2px white", borderRight: "none"}}>
           { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
             return (
-              <span>
+              <span style={{fontSize: opts.fontSize}}>
                 { c }
               </span>
             )
@@ -129,36 +131,36 @@ export default class MatchBlock extends Component {
               <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none"}}>
                 {
                   p1.alias ? (
-                    <div className="seed row center x-center">
+                    <div className="seed row center x-center" style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
                       { this.props.partMap[p1.alias] }
                     </div>
                   ) : (
                     null
                   )
                 }
-                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
                   { this.matchPlaceholder(p1.alias, 0) }
                 </div>
-                <div className="score">
+                <div className="score" style={{fontSize: opts.fontSize}}>
                   { p1.score || 0 }
                 </div>
               </div>
-              <div style={{width: participantWidth + 20, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+              <div style={{width: participantWidth + blockMargin, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
               <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none"}}>
                 {
                   p2.alias ? (
-                    <div className="seed row center x-center">
+                    <div className="seed row center x-center" style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
                       { this.props.partMap[p2.alias] }
                     </div>
                   ) : (
                     null
                   )
                 }
-                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
                   { this.matchPlaceholder(p2.alias, 1) }
                 </div>
-                <div className="score">
+                <div className="score" style={{fontSize: opts.fontSize}}>
                   { p2.score || 0 }
                 </div>
               </div>
@@ -181,5 +183,25 @@ export default class MatchBlock extends Component {
         }
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      height: 35,
+      lineHeight: 5,
+      blockMargin: 20,
+      fontSize: "1em",
+      pWidth: 200
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      height: 70,
+      lineHeight: 10,
+      blockMargin: 40,
+      fontSize: "2em",
+      pWidth: 350
+    })
   }
 }
