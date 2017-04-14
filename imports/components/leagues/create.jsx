@@ -16,9 +16,7 @@ import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-// Emulation of implementation of a create container.
-
-export default class Sandbox extends Component {
+export default class LeagueCreate extends Component {
 
   constructor(props) {
     super(props);
@@ -135,19 +133,19 @@ export default class Sandbox extends Component {
         ],
         toggle: true
       },
-      {
-        name: "Tickets",
-        key: "tickets",
-        icon: "ticket",
-        subItems: [
-          {
-            name: "Main",
-            key: "tickets",
-            content: TicketsPanel
-          }
-        ],
-        toggle: true
-      }
+      // {
+      //   name: "Tickets",
+      //   key: "tickets",
+      //   icon: "ticket",
+      //   subItems: [
+      //     {
+      //       name: "Main",
+      //       key: "tickets",
+      //       content: TicketsPanel
+      //     }
+      //   ],
+      //   toggle: true
+      // }
     ]
   }
 

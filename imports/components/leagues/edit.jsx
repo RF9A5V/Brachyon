@@ -63,7 +63,7 @@ class EditLeagueScreen extends Component {
   bracketItems(league) {
 
     var attrs = league.events.map(e => {
-      var event = Events.findOne({slug: e});
+      var event = Events.findOne({slug: e.slug});
       return {
         eventId: event._id,
         bracket: Instances.findOne(event.instances.pop()).brackets[0]

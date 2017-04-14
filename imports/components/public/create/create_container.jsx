@@ -98,11 +98,11 @@ export default class CreateContainer extends ResponsiveComponent {
         {
           ops.navComp
         }
-        <div style={{paddingLeft: ops.paddingLeft, marginBottom: 120}}>
+        <div style={{paddingLeft: ops.paddingLeft, marginBottom: 10, width: this.props.stretch ? "100%" : "1000px"}}>
           {
             this.props.items.map((item, i) => {
               return (
-                <div style={{width: "100%"}}>
+                <div style={{width: "90%"}}>
                   <SubContainer key={item.key} ref={item.key} items={item.subItems} active={i == this.state.selected} update={this.setState.bind(this)} status={this.state.modStatus[item.key]} setStatus={(val) => {
                     if(this.state.modStatus[item.key] === undefined) {
                       return;
@@ -138,12 +138,18 @@ export default class CreateContainer extends ResponsiveComponent {
     else if(window.location.pathname.indexOf("league" >= 0)){
       eColor = "#FF6000";
     }
+
+    var style = {
+      margin: "10px auto 30px",
+      width: "100%"
+    }
+
+    if(!this.props.stretch) {
+      style.maxWidth = "1000px";
+    }
+
     const navComp = (
-      <div className="" style={{
-        width: "80%",
-        maxWidth: 1000,
-        margin: "10px auto 30px"
-      }}>
+      <div className="" style={style}>
         <div className="row">
           {
             this.props.items.map((item, i) => {

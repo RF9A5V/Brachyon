@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import DragScroll from "react-dragscroll";
 
 import MatchBlock from './match.jsx';
 import EventModal from "../modal.jsx";
 import LeagueModal from "/imports/components/tournaments/public_comps/league_modal.jsx";
 
-import DragScroll from "react-dragscroll"
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class DoubleElimWinnersBracket extends Component {
+export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -63,6 +64,7 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   componentWillMount() {
+    super.componentWillMount();
     this.setMatchMap(this.props.rounds);
   }
 
@@ -147,7 +149,7 @@ export default class DoubleElimWinnersBracket extends Component {
     )
   }
 
-  mainBracket() {
+  mainBracket(opts) {
     var count = 1;
     return (
         <div className="col">
@@ -190,20 +192,20 @@ export default class DoubleElimWinnersBracket extends Component {
     )
   }
 
-  render() {
+  renderBase(opts) {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
 
     var headers = this.props.rounds[0].map((_, i) => {
       return (
-        <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+        <h4 style={{width: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
           Round { i + 1 }
         </h4>
       )
     });
     if(this.props.format == "double_elim") {
       headers.push(
-        <h4 style={{minWidth: 220, display: "inline-block"}}>
+        <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
           Grand Finals
         </h4>
       )
@@ -213,22 +215,25 @@ export default class DoubleElimWinnersBracket extends Component {
       <div onWheel={(e) => {
         e.stopPropagation();
       }}>
-        <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
-          { headers }
-        </div>
         {
-          this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
+          opts.mobile ? (
+            <div style={{overflow: "auto", height: "calc(100vh - 202px)"}}>
+              <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222"}} ref="headers">
+                { headers }
+              </div>
+              { this.mainBracket(opts) }
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
-              <DragScroll width="100%" height="100%" ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
-            </div>
+            [
+              <div style={{whiteSpace: "nowrap", overflowX: "hidden", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
+                { headers }
+              </div>,
+              <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
+                <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                  { this.mainBracket(opts) }
+                </DragScroll>
+              </div>
+            ]
           )
         }
         {
@@ -264,4 +269,23 @@ export default class DoubleElimWinnersBracket extends Component {
       </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      dragHeight: "calc(100vh - 202px)",
+      headerWidth: "460px",
+      fontSize: "3em",
+      mobile: true
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      dragHeight: "calc(97vh - 300px)",
+      headerWidth: "265px",
+      fontSize: "1em",
+      mobile: false
+    });
+  }
+
 }
