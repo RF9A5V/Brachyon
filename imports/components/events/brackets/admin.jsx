@@ -90,6 +90,7 @@ class BracketAdminScreen extends Component {
     var subs;
     var args = {
       id: bracket.id,
+      index,
       eid: this.props.params.eventId,
       update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,

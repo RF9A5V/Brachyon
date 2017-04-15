@@ -19,7 +19,8 @@ export default class DoubleElimWinnersBracket extends Component {
   }
 
   swapParticipant(dragIndex, hoverIndex) {
-    console.log(dragIndex, hoverIndex);
+    Meteor.call("participants.swapPlayers", Instances.findOne()._id, this.props.index, dragIndex, hoverIndex);
+    this.props.update();
   }
 
   onDrag(e) {
