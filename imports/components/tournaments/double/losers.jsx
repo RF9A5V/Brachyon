@@ -4,8 +4,9 @@ import EventModal from "../modal.jsx";
 import MatchBlock from './match.jsx';
 
 import DragScroll from "react-dragscroll"
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class DoubleElimLosersBracket extends Component {
+export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -17,7 +18,12 @@ export default class DoubleElimLosersBracket extends Component {
     bracket.rounds[0].forEach(r => {
       r.forEach(m => {
         if(m) {
-          var losId = bracket.rounds[1][m.losr][m.losm].id;
+          console.log(m);
+          const losM = bracket.rounds[1][m.losr][m.losm];
+          if(!losM) {
+            return;
+          }
+          var losId = losM.id;
           if(matchMap[losId]) {
             matchMap[losId].source.push({
               id: m.id,
@@ -132,7 +138,7 @@ export default class DoubleElimLosersBracket extends Component {
                           round.map((match, j) => {
                             var isFutureLoser = false;
                             if(match && match.id) {
-                              match = Matches.findOne((match || {}).id)
+                              match = Matches.findOne(match.id) || match;
                             }
                             if(match && match.id && match.players[0] != null && match.players[1] != null && i < this.props.rounds[1].length - 1){
                               var nextMatch = i%2==0 ? this.props.rounds[1][i+1][j]:this.props.rounds[1][i + 1][Math.floor(j / 2)];
@@ -165,12 +171,12 @@ export default class DoubleElimLosersBracket extends Component {
     )
   }
 
-  render() {
+  renderBase(opts) {
 
     if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
       var headers = this.props.rounds[1].map((_, i) => {
         return (
-          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+          <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
             Round { i + 1 }
           </h4>
         )
@@ -179,7 +185,7 @@ export default class DoubleElimLosersBracket extends Component {
     else {
       var headers = this.props.rounds[1].map((_, i) => {
         return (
-          <h4 style={{width: i == 0 ? 225 : 245, display: "inline-block"}}>
+          <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
             Round { i + 1 }
           </h4>
         )
@@ -190,22 +196,25 @@ export default class DoubleElimLosersBracket extends Component {
       <div onWheel={(e) => {
         e.stopPropagation();
       }}>
-        <div style={{overflowX: "hidden", margin: -20, marginBottom: 10, whiteSpace: "nowrap", backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
-          { headers }
-        </div>
         {
-          this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
+          opts.mobile ? (
+            <div style={{overflow: "auto", height: "calc(100vh - 202px)"}}>
+              <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222"}} ref="headers">
+                { headers }
+              </div>
+              { this.mainBracket(opts) }
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
-              <DragScroll width="100%" height="100%" ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
-            </div>
+            [
+              <div style={{whiteSpace: "nowrap", overflowX: "hidden", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
+                { headers }
+              </div>,
+              <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
+                <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                  { this.mainBracket(opts) }
+                </DragScroll>
+              </div>
+            ]
           )
         }
         {
@@ -227,4 +236,23 @@ export default class DoubleElimLosersBracket extends Component {
       </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      dragHeight: "calc(100vh - 202px)",
+      headerWidth: "460px",
+      fontSize: "3em",
+      mobile: true
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      dragHeight: "calc(97vh - 300px)",
+      headerWidth: "265px",
+      fontSize: "1em",
+      mobile: false
+    });
+  }
+
 }

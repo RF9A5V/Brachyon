@@ -13,6 +13,9 @@ export default class BracketForm extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    if(!this.state) {
+      this.state = {};
+    }
     var subFormat = null;
     var format = props.format || {};
     if(format.hasOwnProperty("groupFormat")){
@@ -22,46 +25,38 @@ export default class BracketForm extends ResponsiveComponent {
       subFormat = "POOL";
     }
     var game = Games.findOne(props.game) || props.gameObj;
-    this.state = {
-      format: subFormat || "NONE"
-    }
     if(game) {
-      this.state.game = game;
+      this.state = {
+        id: game._id,
+        gameName: game.name,
+        bannerUrl: game.bannerUrl
+      }
     }
+    this.state.format = subFormat || "NONE"
   }
 
-  // componentWillReceiveProps(props) {
-  //   var subFormat = null;
-  //   var format = props.format || {};
-  //   if(format.hasOwnProperty("groupFormat")){
-  //     subFormat = "GROUP";
-  //   }
-  //   else if(format.hasOwnProperty("poolFormat")) {
-  //     subFormat = "POOL";
-  //   }
-  //   var game = Games.findOne(props.game) || props.gameObj;
-  //   if(game) {
-  //     this.state = {
-  //       id: game._id,
-  //       name: game.name,
-  //       bannerUrl: game.bannerUrl,
-  //       format: subFormat || "NONE"
-  //     }
-  //   }
-  //   else {
-  //     this.state = {
-  //       format: "NONE"
-  //     };
-  //   }
-  //   for(var i in format){
-  //     this.state[i] = format[i];
-  //   }
-  //
-  //   if(props.format) {
-  //     // Only works for basic bracket formats.
-  //     this.refs.format.value = props.format.baseFormat;
-  //   }
-  // }
+  componentWillReceiveProps(props) {
+    var subFormat = null;
+    var format = props.format || {};
+    if(format.hasOwnProperty("groupFormat")){
+      subFormat = "GROUP";
+    }
+    else if(format.hasOwnProperty("poolFormat")) {
+      subFormat = "POOL";
+    }
+    this.state.format = subFormat || "NONE"
+    var game = Games.findOne(props.game) || props.gameObj;
+    if(game) {
+      this.state.id = game._id;
+      this.state.gameName = game.name;
+      this.state.bannerUrl = game.bannerUrl;
+    }
+
+    if(props.format) {
+      // Only works for basic bracket formats.
+      this.refs.format.value = props.format.baseFormat;
+    }
+  }
 
   onGameSelect(game) {
     if(this.props.onChange) {
@@ -69,7 +64,7 @@ export default class BracketForm extends ResponsiveComponent {
     }
     this.setState({
       id: game._id,
-      name: game.name,
+      gameName: game.gameName,
       bannerUrl: game.bannerUrl
     })
   }
@@ -235,6 +230,7 @@ export default class BracketForm extends ResponsiveComponent {
   }
 
   renderBase(opts) {
+    console.log(this.state);
     const imgHeight = "340px";
     return (
       <div className={opts.direction} style={{backgroundColor: "#111"}}>
@@ -264,7 +260,7 @@ export default class BracketForm extends ResponsiveComponent {
             <input type="text" className={opts.inputClass} onChange={(e) => {
               const value = e.target.value;
               this.loadGames(value, opts.limit);
-            }} style={{marginRight: 0, marginTop: 0}} ref="game" />
+            }} defaultValue={this.state.gameName} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
               this.state.gameList ? (
                 <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>

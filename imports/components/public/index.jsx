@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import RegModal from "/imports/components/public/reg_modal.jsx";
+import Loader from "/imports/components/public/loader.jsx";
 
 export default class LandingScreen extends ResponsiveComponent {
 
@@ -14,17 +15,17 @@ export default class LandingScreen extends ResponsiveComponent {
     }
   }
 
-  renderBase(ops) {
+  renderBase(opts) {
     return (
       <div className="landing-screen">
         <div className="img-background"></div>
         <div className="main-content" id="main-content">
-          <div className="row center x-center" style={{marginBottom: ops.buttonPadding}}>
-            <img src="/images/brachyon_logo_trans.png" style={{width: ops.imgDim, height: "auto"}} />
+          <div className="row center x-center" style={{marginBottom: opts.buttonPadding}}>
+            <Loader width={opts.imgDim} animate={false} />
           </div>
-          <div className="col" style={{width: ops.btnContainerSize}}>
-            <div className="row x-center center" style={{marginBottom: `calc(${ops.btnContainerSize} / 20)`}}>
-              <button className="col-1" style={{marginRight: "5%", padding: ops.buttonPadding, fontSize: ops.fontSize, marginBottom: 0}} onClick={() => {
+          <div className="col" style={{width: opts.btnContainerSize}}>
+            <div className="row x-center center" style={{marginBottom: `calc(${opts.btnContainerSize} / 20)`}}>
+              <button className="col-1" style={{marginRight: "5%", padding: opts.buttonPadding, fontSize: opts.fontSize, marginBottom: 0}} onClick={() => {
                 this.setState({
                   open: true,
                   content: "login"
@@ -32,7 +33,7 @@ export default class LandingScreen extends ResponsiveComponent {
               }}>
                 Log In
               </button>
-              <button className="col-1" style={{padding: ops.buttonPadding, fontSize: ops.fontSize, borderColor: "#FF6000", marginBottom: 0}} onClick={() => {
+              <button className="col-1" style={{padding: opts.buttonPadding, fontSize: opts.fontSize, borderColor: "#FF6000", marginBottom: 0}} onClick={() => {
                 this.setState({
                   open: true,
                   content: "signup"
@@ -45,14 +46,14 @@ export default class LandingScreen extends ResponsiveComponent {
               // <SignUpModal />
               }
             </div>
-            <Link to="/discover" className="discover row center x-center" style={{width: "100%", padding: ops.buttonPadding, marginTop: 0}}>
-              <span className="fa fa-compass compass" style={{fontSize: ops.fontSize}}></span>
-              <span className="discover-text" style={{fontSize: ops.fontSize}}>Discover Competitive Events</span>
+            <Link to="/discover" className="discover row center x-center" style={{width: "100%", padding: `calc(${opts.buttonPadding} / ${opts.mobile ? 1 : 2})`, marginTop: 0}}>
+              <span className="fa fa-compass compass" style={{fontSize: opts.fontSize}}></span>
+              <span className="discover-text" style={{fontSize: opts.fontSize}}>Discover Competitive Events</span>
             </Link>
           </div>
         </div>
         <div className="row x-center footer-buttons" style={{backgroundColor: "rgba(0,0,0,0.5"}}>
-          <div className="create-container-option col-1 orange title" style={{fontSize: ops.fontSize}}>
+          <div className={`create-container-option col-1 orange title footer-bar ${opts.mobile ? "mobile" : "desktop"}`} style={{fontSize: opts.fontSize}}>
             WHAT IS THIS PLACE?
           </div>
         </div>
@@ -67,10 +68,11 @@ export default class LandingScreen extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      imgDim: "40vw",
+      imgDim: 400,
       fontSize: "2.5em",
       btnContainerSize: "60vw",
-      buttonPadding: "2rem"
+      buttonPadding: "2rem",
+      mobile: true
     });
   }
 
@@ -79,7 +81,8 @@ export default class LandingScreen extends ResponsiveComponent {
       imgDim: 200,
       fontSize: "1em",
       btnContainerSize: "300px",
-      buttonPadding: 10
+      buttonPadding: 10,
+      mobile: false
     });
   }
 }

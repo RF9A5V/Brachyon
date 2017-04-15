@@ -98,13 +98,19 @@ class BracketShowScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
+    var partMap = {};
+    const participantList = Instances.findOne().brackets[index].participants || [];
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    });
     var args = {
       id: bracket.id,
       eid: this.props.params.eventId,
       format: bracket.format.baseFormat,
       rounds,
       complete: bracket.isComplete,
-      page: "admin"
+      page: "admin",
+      partMap
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
