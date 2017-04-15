@@ -321,12 +321,17 @@ class BracketDetails extends ResponsiveComponent {
     var bracket = Brackets.findOne(obj.id);
     var event = Events.findOne();
     var rounds = bracket.rounds
-    var bracketMeta = Instances.findOne().brackets[this.props.index]
+    var bracketMeta = Instances.findOne().brackets[this.props.index];
+    const participantList = bracketMeta.participants || [];
+    var partMap = {};
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    })
     if (this.state.win == true){
-      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} />
+      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
     }
     else{
-      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} />
+      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
     }
   }
 

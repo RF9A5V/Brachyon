@@ -50,8 +50,9 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
       })
     }
-    if(participant.id) {
-      Meteor.call("tickets.charge", Instances.findOne()._id, this.props.index, participant.id, (err) => {
+    const instance = Instances.findOne();
+    if(participant.id && instance.tickets) {
+      Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
         if(err) {
           onCheckedIn(false);
           return toastr.error(err.reason);

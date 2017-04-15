@@ -2,7 +2,7 @@ Meteor.methods({
   "events.addModule.stream"(id) {
     Events.update(id, {
       $set: {
-        "stream.twitchStream": ""
+        "stream.twitchStream": {}
       }
     })
   },

@@ -27,9 +27,13 @@ import AddBracket from "./modules/bracket/add.jsx";
 import EditBracket from "./modules/bracket/edit.jsx";
 import BracketInfo from "./modules/bracket/details.jsx";
 
+import BracketPanel from "./create/module_dropdowns/brackets.jsx";
+
 // Stream Stuff
 import StreamAdd from "./modules/stream/add.jsx";
 import StreamDetails from "./modules/stream/details.jsx";
+
+import StreamPanel from "./create/module_dropdowns/stream.jsx";
 
 // Ticket Stuff
 import TicketDetails from "./modules/tickets/details.jsx";
@@ -138,43 +142,15 @@ class EventAdminPage extends Component {
     var event = Events.findOne();
     var instance = Instances.findOne();
     var subs;
-    if(!instance.brackets) {
-      subs = [
-        {
-          content: BracketInfo,
-          name: "Main",
-          key: "main",
-          args: {
-            update: this.forceUpdate.bind(this)
-          }
-        }
-      ]
-    }
-    else {
-      subs = instance.brackets.map((b,i) => {
-        return {
-          name: b.name || `Bracket ${i + 1}`,
-          key: i,
-          content: EditBracket,
-          args: {
-            bracket: b,
-            index: i,
-            update: this.forceUpdate.bind(this)
-          }
-        }
-      });
-      if(!event.league) {
-        subs.push({
-          content: AddBracket,
-          name: "Add Bracket",
-          key: "add",
-          args: {
-            update: this.forceUpdate.bind(this)
-          }
-        });
+    subs = [{
+      name: "Brackets",
+      key: "brackets",
+      content: BracketPanel,
+      args: {
+        brackets: instance.brackets || null,
+        isLeague: event.league != null
       }
-
-    }
+    }];
     return {
       name: "Brackets",
       icon: "sitemap",
@@ -183,22 +159,13 @@ class EventAdminPage extends Component {
       toggle: !Events.findOne().league,
       initialToggleState: instance.brackets && instance.brackets.length > 0,
       toggleAction: (next) => {
-        if(instance.brackets) {
-          Meteor.call("events.removeModule.brackets", event._id, (err) => {
-            if(err) {
-              return toastr.error(err.reason);
-            }
-            this.forceUpdate();
-          });
-        }
-        else {
-          Meteor.call("events.addModule.brackets", event._id, (err) => {
-            if(err) {
-              return toastr.error(err.reason);
-            }
-            this.forceUpdate();
-          })
-        }
+        const action = instance.brackets ? "removeModule" : "addModule";
+        Meteor.call(`events.${action}.brackets`, event._id, (err) => {
+          if(err) {
+            return toastr.error(err.reason);
+          }
+          this.forceUpdate();
+        });
       }
     }
   }
@@ -206,21 +173,14 @@ class EventAdminPage extends Component {
   streamItems() {
     var event = Events.findOne();
 
-    var subs = [];
-    if(event.stream) {
-      subs.push({
-        content: StreamAdd,
-        name: "Add Stream",
-        key: "stream"
-      });
-    }
-    else {
-      subs.push({
-        content: StreamDetails,
-        name: "Stream Details",
-        key: "stream"
-      });
-    }
+    var subs = [{
+      content: StreamPanel,
+      name: "",
+      key: "stream",
+      args: {
+        stream: event.stream.name
+      }
+    }];
 
     return {
       name: "Stream",
@@ -413,7 +373,7 @@ class EventAdminPage extends Component {
 
 export default withRouter(createContainer(props => {
   const eventHandle = Meteor.subscribe("event", props.params.slug);
-  const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
+  //const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
   return {
     ready: eventHandle.ready()
   }

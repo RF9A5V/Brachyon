@@ -90,12 +90,16 @@ export default class Description extends ResponsiveComponent {
         <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 40}}>
           <span style={{fontSize: "3em"}}>{ moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") }</span>
         </div>
-        <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", maxHeight: "30vh", marginBottom: 40, overflowY: "hidden"}}>
-          <div style={{fontSize: "3em"}} dangerouslySetInnerHTML={{__html: event.details.description}} onClick={() => {
-            this.setState({
-              open: true
-            })
-          }}>
+        <div style={{padding: 40, marginBottom: 40, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
+          this.setState({
+            open: true
+          })
+        }}>
+          <div style={{fontSize: "3em", maxHeight: "30vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
+          </div>
+          <div className="row center x-center">
+            <span style={{fontSize: "2.5em", color: "#00BDFF", marginRight: 15}}>Show More</span>
+            <FontAwesome name="caret-down" style={{fontSize: "4em", color: "#00BDFF"}} />
           </div>
         </div>
 

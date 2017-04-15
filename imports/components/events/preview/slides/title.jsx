@@ -158,10 +158,19 @@ export default class EventTitlePage extends ResponsiveComponent {
                 event.details.location.online ? (
                   "Online"
                 ) : (
-                  event.details.location.streetAddress + " " + event.details.location.city + ", " + event.details.location.state
+                  event.details.location.streetAddress
                 )
               }
             </span>
+            {
+              event.details.location.online ? (
+                null
+              ) : (
+                <span style={{fontSize: "3em"}}>
+                  { event.details.location.city + ", " + event.details.location.state }
+                </span>
+              )
+            }
             <span style={{fontSize: "3em"}}>
               {
                 moment(event.details.datetime).format("MMMM Do, YYYY")

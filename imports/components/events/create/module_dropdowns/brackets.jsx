@@ -11,8 +11,20 @@ export default class BracketsPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    var brackets = null;
+    if(props.brackets) {
+      brackets = {};
+      props.brackets.forEach((b, i) => {
+        console.log(b);
+        brackets[i] = {
+          name: b.name,
+          game: b.game,
+          format: b.format
+        };
+      })
+    }
     this.state = {
-      brackets: null,
+      brackets,
       item: 0
     }
   }
@@ -51,6 +63,9 @@ export default class BracketsPanel extends ResponsiveComponent {
     if(!this.state.brackets) {
       this.state.brackets = { }
     }
+    if(props.isLeague) {
+      return;
+    }
     var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));
     if(bracketIndex < 0) {
       bracketIndex = 0;
@@ -85,11 +100,11 @@ export default class BracketsPanel extends ResponsiveComponent {
     var tabs = ["Bracket"];
     var active = this.props.status;
     var eColor, fColor;
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
       fColor = "#333";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league") >= 0){
       eColor = "#FF6000";
       fColor = "#FFF";
     }
@@ -99,7 +114,7 @@ export default class BracketsPanel extends ResponsiveComponent {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center module-toggle" onClick={() => {
+          <div className="row x-center module-toggle" style={{width: opts.toggleWidth, height: opts.toggleWidth / 3}} onClick={() => {
             if(!active) {
               this.addBracket();
             }
@@ -110,8 +125,8 @@ export default class BracketsPanel extends ResponsiveComponent {
               this.props.setStatus(false);
             }
           }}>
-            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
-              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: opts.fontSize}}>
                 {
                   active ? (
                     "ON"
@@ -152,6 +167,7 @@ export default class BracketsPanel extends ResponsiveComponent {
                   if(bracket == null){
                     return "";
                   }
+                  console.log(bracket);
                   if(Object.keys(this.state.brackets).length > 1){
                     return (
                       <div className="game-bracket-container">
@@ -182,14 +198,16 @@ export default class BracketsPanel extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       fontSize: "3em",
-      fontWidth: "100%"
+      fontWidth: "100%",
+      toggleWidth: 200
     });
   }
 
   renderDesktop() {
     return this.renderBase({
       fontSize: "1em",
-      fontWidth: "50%"
+      fontWidth: "50%",
+      toggleWidth: 100
     });
   }
 
