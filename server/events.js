@@ -1118,6 +1118,14 @@ Meteor.methods({
         })
       }
     }
+  },
+
+  "participants.swapPlayers"(instanceID, bracketNum, playerOne, playerTwo) {
+    let participants = Instances.findOne(instanceID).brackets[bracketNum].participants;
+    p1index = participants.findIndex( (participant) => {
+      return participant == playerOne;
+    })
+
   }
 
 })

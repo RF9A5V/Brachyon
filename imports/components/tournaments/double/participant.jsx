@@ -48,7 +48,8 @@ const participantTarget = {
       return;
     }
 
-    //TODO: Create hover effect here
+    //TODO: Create hover effect here. All you need to do is send in a function from the winners.jsx file, pass it through match and pass it through here
+    //And then send it the hoverIndex to send the alias.
 
     // Time to actually perform the action
     props.switchparticipant(dragIndex, hoverIndex);
@@ -66,8 +67,7 @@ const participantTarget = {
     if (dragIndex == hoverIndex)
       return;
 
-
-
+    props.swapParticipant(dragIndex, hoverIndex);
   }
 };
 

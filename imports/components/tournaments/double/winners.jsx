@@ -18,12 +18,8 @@ export default class DoubleElimWinnersBracket extends Component {
     };
   }
 
-  switchMatch(dragIndex, hoverIndex) {
-    const dragRound = this.state.rounds[0][0][dragIndex];
-    let rounds = this.state.rounds;
-    rounds[0][0][dragIndex] = rounds[0][0][hoverIndex];
-    rounds[0][0][hoverIndex] = dragRound;
-    this.setState({rounds});
+  swapParticipant(dragIndex, hoverIndex) {
+    console.log(dragIndex, hoverIndex);
   }
 
   onDrag(e) {
@@ -72,7 +68,7 @@ export default class DoubleElimWinnersBracket extends Component {
     return (
       <div className="row">
         {
-          this.props.rounds[2].map((round, i) => {
+          this.props.rofunds[2].map((round, i) => {
             var finr = "finalround" + i
             return (
               <div className="col">
@@ -88,7 +84,7 @@ export default class DoubleElimWinnersBracket extends Component {
                       if (match.players[0].alias != null && match.players[1] != null)
                       {
                         return (
-                          <MatchBlock key={i + " " + j} match={match} swapMatch={this.swapMatch.bind(this)} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
+                          <MatchBlock key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}/>
                         );
                       }
                     })
@@ -118,7 +114,7 @@ export default class DoubleElimWinnersBracket extends Component {
                             match = Matches.findOne(match.id);
                           }
                           return (
-                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                            <MatchBlock key={i + " " + j} match={match} swapParticipant={this.swapParticipant.bind(this)} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
                           );
                         })
                       }
