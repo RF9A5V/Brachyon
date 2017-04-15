@@ -66,7 +66,7 @@ const participantTarget = {
     if (dragIndex == hoverIndex)
       return;
 
-    
+
 
   }
 };
@@ -93,7 +93,7 @@ class Participant extends Component {
     let p1 = this.props.player;
 
     return connectDragSource(connectDropTarget(
-      <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || this.props.isLoser ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
+      <div className="participant" style={this.props.parStyle}>
         <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
           { p1.alias || "TBD" }
         </div>
