@@ -52,7 +52,7 @@ export default class StreamPanel extends ResponsiveComponent {
           <div>
           </div>
           <div className="row x-center module-toggle" style={{width: opts.toggleWidth, height: opts.toggleWidth / 3}} onClick={() => { this.props.setStatus(!active) }}>
-            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 : 5}}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 - 2.5 : 5}}>
               <span style={{color: active ? fColor : "#333", fontSize: opts.fontSize}}>
                 {
                   active ? (

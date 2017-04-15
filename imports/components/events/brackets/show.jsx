@@ -20,6 +20,8 @@ import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+
 import OrganizeSuite from "/imports/decorators/organize.js";
 
 class BracketShowScreen extends Component {
@@ -286,18 +288,24 @@ class BracketShowScreen extends Component {
     items.push({
       name: "Generate Short URL",
       action: (e) => {
-
-        Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
-          if(err) {
-            toastr.error(err.reason);
-          }
-          else {
-            this.setState({
-              open: true,
-              url: window.location.origin + "/!" + data
-            })
-          }
-        });
+        if(!this.state.url) {
+          Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.setState({
+                open: true,
+                url: window.location.origin + "/!" + data
+              })
+            }
+          });
+        }
+        else {
+          this.setState({
+            open: true
+          })
+        }
       }
     })
     return items;
@@ -307,19 +315,8 @@ class BracketShowScreen extends Component {
     if(this.props.ready) {
       return (
         <div style={{padding: 20}}>
-          <CreateContainer items={this.items()} actions={this.actions()} />
-          <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} style={{
-            content: {
-              width: 300,
-              height: 100
-            }
-          }}>
-            <div className="col center x-center" style={{width: "100%", height: "100%"}}>
-              <input value={this.state.url} style={{fontSize: 12, width: "100%", margin: 0, textAlign: "center", backgroundColor: "black"}} onFocus={(e) => {
-                e.target.select();
-              }} />
-            </div>
-          </Modal>
+          <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+          <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
         </div>
       );
     }

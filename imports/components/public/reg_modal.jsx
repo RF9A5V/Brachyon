@@ -70,9 +70,9 @@ export default class RegModal extends ResponsiveComponent {
             <div className="row x-center center">
               {
                 this.state.content == "login" ? (
-                  <LogInScreen onClose={this.props.onClose} />
+                  <LogInScreen onClose={this.props.onClose} onSuccess={this.props.onSuccess} />
                 ) : (
-                  <SignUpScreen onClose={this.props.onClose} />
+                  <SignUpScreen onClose={this.props.onClose} onSuccess={this.props.onSuccess} />
                 )
               }
             </div>
