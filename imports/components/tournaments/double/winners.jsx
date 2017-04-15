@@ -225,16 +225,14 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
               { this.mainBracket(opts) }
             </div>
           ) : (
-            [
-              <div style={{whiteSpace: "nowrap", overflowX: "hidden", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
-                { headers }
-              </div>,
-              <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
-                <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                  { this.mainBracket(opts) }
-                </DragScroll>
-              </div>
-            ]
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
+              <DragScroll width={"100%"} height={"100%"} ref="dragger">
+                <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
+                  { headers }
+                </div>
+                { this.mainBracket(opts) }
+              </DragScroll>
+            </div>
           )
         }
         {
@@ -283,7 +281,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       dragHeight: "calc(97vh - 300px)",
-      headerWidth: "265px",
+      headerWidth: "255px",
       fontSize: "1em",
       mobile: false
     });

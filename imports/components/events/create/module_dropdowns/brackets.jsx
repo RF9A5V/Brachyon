@@ -125,7 +125,7 @@ export default class BracketsPanel extends ResponsiveComponent {
               this.props.setStatus(false);
             }
           }}>
-            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 : 5}}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 - 2.5 : 5}}>
               <span style={{color: active ? fColor : "#333", fontSize: opts.fontSize}}>
                 {
                   active ? (

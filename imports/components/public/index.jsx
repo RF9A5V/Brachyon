@@ -33,7 +33,7 @@ export default class LandingScreen extends ResponsiveComponent {
               }}>
                 Log In
               </button>
-              <button className="col-1" style={{padding: opts.buttonPadding, fontSize: opts.fontSize, borderColor: "#FF6000", marginBottom: 0}} onClick={() => {
+              <button className="col-1 signup-button" style={{padding: opts.buttonPadding, fontSize: opts.fontSize, borderColor: "#FF6000", marginBottom: 0}} onClick={() => {
                 this.setState({
                   open: true,
                   content: "signup"

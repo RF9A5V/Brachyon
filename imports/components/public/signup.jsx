@@ -21,7 +21,7 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
     if(this.refs.password.value != this.refs.confirmPassword.value) {
       return toastr.error("Passwords must match!", "Error!");
     }
-    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, function(err, rez) {
+    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, (err, rez) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -29,9 +29,16 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
         toastr.error("Issue generating login token.", "Call an Admin!");
       }
       else {
-        Meteor.loginWithToken(rez.token);
-        toastr.success("Successfully created your account!", "Success!");
-        browserHistory.push('/discover');
+        Meteor.loginWithToken(rez.token, (err, data) => {
+          toastr.success("Successfully created your account!", "Success!");
+          if(this.props.onSuccess) {
+            this.props.onSuccess();
+          }
+          else {
+            browserHistory.push('/discover');
+          }
+        });
+
       }
     });
   }

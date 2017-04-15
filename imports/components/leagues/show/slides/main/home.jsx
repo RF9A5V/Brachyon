@@ -3,6 +3,7 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 export default class MainSlide extends ResponsiveComponent {
 
@@ -14,6 +15,27 @@ export default class MainSlide extends ResponsiveComponent {
     this.state = {
       shortLink: null
     };
+  }
+
+  loadShortLink() {
+    if(this.state.shortLink) {
+      this.setState({
+        shareOpen: true
+      })
+    }
+    else {
+      Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            shortLink: data,
+            shareOpen: true
+          })
+        }
+      });
+    }
   }
 
   renderDesktop() {
@@ -33,16 +55,7 @@ export default class MainSlide extends ResponsiveComponent {
                   </div>
                 ) : (
                   <button onClick={() => {
-                    Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
-                      if(err) {
-                        toastr.error(err.reason);
-                      }
-                      else {
-                        this.setState({
-                          shortLink: data
-                        })
-                      }
-                    });
+                    this.loadShortLink()
                   }}>Generate Short Link</button>
                 )
               }
@@ -101,6 +114,7 @@ export default class MainSlide extends ResponsiveComponent {
             </div>
           </div>
         </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
       </div>
     )
   }
@@ -111,7 +125,9 @@ export default class MainSlide extends ResponsiveComponent {
     return (
       <div className="col" style={{padding: 40}}>
         <div className="col-1 row flex-pad" style={{alignItems: "flex-start"}}>
-          <FontAwesome name="share-alt" style={{fontSize: "7em"}} />
+          <FontAwesome name="share-alt" style={{fontSize: "7em"}} onClick={() => {
+            this.loadShortLink()
+          }} />
           <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
             <span style={{fontSize: "3em"}}>
               {
@@ -143,6 +159,7 @@ export default class MainSlide extends ResponsiveComponent {
         </div>
         <div className="row col-1">
         </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
       </div>
     )
   }

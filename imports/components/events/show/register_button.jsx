@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import TicketTypeModal from "./ticket_type_modal.jsx";
 import PaymentModal from "/imports/components/public/payment_form.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
 export default class RegisterButton extends Component {
 
@@ -9,7 +10,8 @@ export default class RegisterButton extends Component {
     super(props);
     this.state = {
       typeOpen: false,
-      paymentOpen: false
+      paymentOpen: false,
+      regOpen: false
     }
   }
 
@@ -23,13 +25,20 @@ export default class RegisterButton extends Component {
         toastr.success("Successfully registered for bracket!");
         this.setState({
           typeOpen: false,
-          paymentOpen: false
+          paymentOpen: false,
+          regOpen: false
         })
       }
     })
   }
 
   register() {
+    if(!Meteor.userId()) {
+      this.setState({
+        regOpen: true
+      })
+      return;
+    }
     var instance = Instances.findOne();
     if(instance.tickets) {
       this.setState({
@@ -184,6 +193,7 @@ export default class RegisterButton extends Component {
             ""
           )
         }
+        <RegModal open={this.state.regOpen} onClose={() => { this.setState({ regOpen: false }) }} onSuccess={this.register.bind(this)} />
       </div>
     )
   }
