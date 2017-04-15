@@ -183,7 +183,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
             })
           }
         </div>
-        <div className={`${opts.direction} x-center`}>
+        <div className="row x-center">
           {
             this.props.bracket.isComplete ? (
               ""

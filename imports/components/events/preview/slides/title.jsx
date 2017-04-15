@@ -6,6 +6,7 @@ import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 import { Banners } from "/imports/api/event/banners.js";
 import Games from "/imports/api/games/games.js";
@@ -24,6 +25,27 @@ export default class EventTitlePage extends ResponsiveComponent {
     return img == null ? "/images/profile.png" : img;
   }
 
+  loadShortLink() {
+    if(this.state.shortLink) {
+      this.setState({
+        shareOpen: true
+      })
+    }
+    else {
+      Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            shortLink: data,
+            shareOpen: true
+          })
+        }
+      });
+    }
+  }
+
   renderDesktop() {
     var event = Events.findOne();
     var tickets = false;
@@ -34,26 +56,9 @@ export default class EventTitlePage extends ResponsiveComponent {
           <div className="col-1">
           </div>
           <div style={{padding: 20}}>
-            {
-              this.state.shortLink ? (
-                <div>
-                  { window.location.origin }/!{ this.state.shortLink }
-                </div>
-              ) : (
-                <button onClick={() => {
-                  Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
-                    if(err) {
-                      toastr.error(err.reason);
-                    }
-                    else {
-                      this.setState({
-                        shortLink: data
-                      })
-                    }
-                  });
-                }}>Generate Short Link</button>
-              )
-            }
+            <button onClick={() => {
+              this.loadShortLink();
+            }}>Generate Short Link</button>
           </div>
         </div>
         <div className="col col-3 center x-center">
@@ -141,6 +146,7 @@ export default class EventTitlePage extends ResponsiveComponent {
 
           </div>
         </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
       </div>
     )
   }
@@ -151,7 +157,9 @@ export default class EventTitlePage extends ResponsiveComponent {
     return (
       <div className="col" style={{padding: 40}}>
         <div className="row col-1 flex-pad" style={{alignItems: "flex-start"}}>
-          <FontAwesome name="share-alt" style={{fontSize: "7em"}} />
+          <FontAwesome name="share-alt" style={{fontSize: "7em"}} onClick={() => {
+            this.loadShortLink()
+          }} />
           <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
             <span style={{fontSize: "3em"}}>
               {
@@ -203,6 +211,7 @@ export default class EventTitlePage extends ResponsiveComponent {
         </div>
         <div className="row col-1">
         </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
       </div>
     )
   }

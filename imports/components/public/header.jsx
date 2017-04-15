@@ -13,6 +13,7 @@ import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
 import SidebarMenu from "../users/sidebar_menu.jsx";
 import GlobalMenu from "/imports/components/public/global_side_nav.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
 class Header extends ResponsiveComponent {
 
@@ -123,11 +124,14 @@ class Header extends ResponsiveComponent {
       );
     }
     else {
-      userCred = (
-        <div className="head-credentials">
-          <LogInModal />
-        </div>
-      )
+      userCred = [
+        <button className="login-button" style={{marginRight: 10}} onClick={() => {
+          this.setState({ regOpen: true, content: "login" })
+        }}>Log In</button>,
+        <button className="signup-button" onClick={() => {
+          this.setState({ regOpen: true, content: "signup" })
+        }}>Sign Up</button>
+      ]
     }
     var createPath = ["/create","/events/create","/leagues/create","/brackets/create"];
     return (
@@ -175,7 +179,9 @@ class Header extends ResponsiveComponent {
         </Headroom>
         <Sidebar sidebar={<SidebarMenu onRedirect={this.toggleUserMenu.bind(this)} />} open={this.state.userMenuOpen} onSetOpen={this.toggleUserMenu.bind(this)} pullRight={true} sidebarClassName="sidebar">
         </Sidebar>
-
+        <RegModal open={this.state.regOpen} content={this.state.content} onClose={() => {
+          this.setState({ regOpen: false })
+        }} />
       </div>
     )
   }
