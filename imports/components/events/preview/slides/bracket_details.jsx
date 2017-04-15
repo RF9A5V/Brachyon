@@ -260,9 +260,6 @@ class BracketDetails extends ResponsiveComponent {
   }
 
   _registrationButton(obj, opts) {
-    if(!Meteor.userId()) {
-      return "";
-    }
     return (
       <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} />
     );

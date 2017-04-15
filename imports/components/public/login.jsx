@@ -9,14 +9,18 @@ export default class LogInScreen extends ResponsiveComponent {
     e.preventDefault();
     self = this;
     [token, password] = Object.keys(this.refs).map((value) => { return this.refs[value].value });
-    Meteor.loginWithPassword(token, password, function(err){
+    Meteor.loginWithPassword(token, password, (err, data) => {
       if(err){
-
         toastr.error("Username and password combination not found!", "Error!");
       }
       else {
         toastr.success("Successfully logged in!", "Success!");
-        browserHistory.push("/discover");
+        if(this.props.onSuccess) {
+          this.props.onSuccess();
+        }
+        else {
+          browserHistory.push("/discover");
+        }
       }
     })
   }
