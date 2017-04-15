@@ -272,7 +272,9 @@ class BracketAdminScreen extends Component {
                   return {
                     players: [m.playerOne, m.playerTwo],
                     winner: null,
-                    _id: count ++
+                    id: count ++,
+                    losm: m.losm,
+                    losr: m.losr
                   }
                 }
               }

@@ -37,11 +37,11 @@ export default class StreamPanel extends ResponsiveComponent {
 
   renderBase(opts) {
     var tabs = ["Stream"];
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("events" >= 0)){
       var eColor = "#00BDFF";
       var fColor = "#333";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("leagues") >= 0){
       var eColor = "#FF6000";
       var fColor = "#FFF";
     }
@@ -51,9 +51,9 @@ export default class StreamPanel extends ResponsiveComponent {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center module-toggle" onClick={() => { this.props.setStatus(!active) }}>
-            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
-              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
+          <div className="row x-center module-toggle" style={{width: opts.toggleWidth, height: opts.toggleWidth / 3}} onClick={() => { this.props.setStatus(!active) }}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: opts.fontSize}}>
                 {
                   active ? (
                     "ON"
@@ -69,8 +69,8 @@ export default class StreamPanel extends ResponsiveComponent {
           active ? (
             <div>
               <div className="row center x-center">
-                <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" defaultValue={this.state.stream} />
+                <span style={{marginRight: 2, fontSize: opts.fontSize}}>https://twitch.tv/</span>
+                <input defaultValue={this.props.stream} className={opts.inputClass} type="text" placeholder="Stream Name" ref="stream" defaultValue={this.state.stream} />
               </div>
             </div>
           ) : (
@@ -84,14 +84,18 @@ export default class StreamPanel extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       fontSize: "1em",
-      fontWidth: "50%"
+      fontWidth: "50%",
+      toggleWidth: 100,
+      inputClass: ""
     })
   }
 
   renderMobile() {
     return this.renderBase({
       fontSize: "3em",
-      fontWidth: "100%"
+      fontWidth: "100%",
+      toggleWidth: 200,
+      inputClass: "large-input"
     })
   }
 }

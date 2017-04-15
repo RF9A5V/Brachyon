@@ -5,7 +5,7 @@ import FontAwesome from "react-fontawesome";
 import Sidebar from "react-sidebar";
 import Headroom from 'react-headroom';
 
-import { ProfileImages } from "/imports/api/users/profile_images.js";
+import Loader from "/imports/components/public/loader.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
@@ -72,9 +72,11 @@ class Header extends ResponsiveComponent {
                 this.setState({ navMenuOpen: true })
               }}/>
             </div>
-            <img src="/images/brachyon_logo_trans.png" style={{width: "8em", height: "auto"}} onClick={() => {
+            <div onClick={() => {
               browserHistory.push("/");
-            }} />
+            }}>
+              <Loader width={100} />
+            </div>
             <div className="col-1 row" style={{justifyContent: "flex-end"}}>
               {
                 user ? (
@@ -161,10 +163,10 @@ class Header extends ResponsiveComponent {
                 </Link>*/}
               </div>
             </div>
-            <div className="col-1 row center">
-              <div>
-                <img style={{width: 40, height: "auto"}} src="/images/brachyon_logo_trans.png" onClick={() => {browserHistory.push("/")}}></img>
-              </div>
+            <div className="row center x-center" onClick={() => {
+              browserHistory.push("/");
+            }} style={{cursor: "pointer"}}>
+              <Loader width={40} />
             </div>
             <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
               {userCred}

@@ -27,7 +27,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     var count = 1;
     const setSource = (i, j, id) => {
       const obj = bracket.rounds[0][i + 1][parseInt(j / 2)];
-      const advId = obj.id || obj._id;
+      const advId = obj.id;
       if(matchMap[advId]) {
         matchMap[advId].source.push(id)
       }
@@ -40,7 +40,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     bracket.rounds[0].forEach((r, i) => {
       r.forEach((m, j) => {
         if(m) {
-          const id = m.id || m._id;
+          const id = m.id;
           if(matchMap[id]) {
             matchMap[id].number = count ++;
           }
@@ -125,7 +125,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                 <div className="col col-1 finalr" id={finr} style={{justifyContent: "space-around"}} key={i}>
                   {
                     round.map((match, j) => {
-                      if(match.id) {
+                      if(match && match.id) {
                         match = Matches.findOne(match.id);
                       }
                       if(!match || match.players[0] == null || match.players[1] == null) {
@@ -135,7 +135,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                       {
                         return (
                           <MatchBlock
-                            key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap}/>
+                            key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}
+                            onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}/>
                         );
                       }
                     })
@@ -163,7 +164,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                       {
                         round.map((match, j) => {
                           if(match && match.id) {
-                            match = Matches.findOne(match.id);
+                            match = Matches.findOne(match.id) || match;
                           }
                           // Jesus these params
                           return (

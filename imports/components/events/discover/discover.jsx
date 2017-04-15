@@ -6,10 +6,12 @@ import DiscoverSearch from './search.jsx';
 import BlockContainer from './block_container.jsx';
 import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 
-export default class EventDiscoveryScreen extends TrackerReact(Component) {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class EventDiscoveryScreen extends TrackerReact(ResponsiveComponent) {
 
   componentWillMount() {
-    var self = this;
+    super.componentWillMount();
     this.setState({
       events: Meteor.subscribe('discoverEvents'),
       promotedEvents: Meteor.subscribe("promotedEvents"),
@@ -20,6 +22,7 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
   }
 
   componentWillUnmount(){
+    super.componentWillUnmount();
     this.state.events.stop();
     this.state.promotedEvents.stop();
   }
@@ -57,12 +60,12 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
     });
   }
 
-  render() {
+  renderBase(opts) {
     if(!this.state.events.ready()) {
       return (<div></div>)
     }
     return (
-      <div className="content col-1 x-center">
+      <div className="col-1 x-center" style={{marginBottom: opts.marginBottom}}>
         {
           this.state.promotedEvents.ready() ? (
             <DisplayDiscover events={this.promotedCollections()} />
@@ -83,5 +86,17 @@ export default class EventDiscoveryScreen extends TrackerReact(Component) {
         </div>
       </div>
     )
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      marginBottom: 200
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      marginBottom: 200
+    })
   }
 }

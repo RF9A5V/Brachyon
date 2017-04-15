@@ -9,6 +9,12 @@ import { numToAlpha } from "/imports/decorators/num_to_alpha.js";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class MatchBlock extends ResponsiveComponent {
+
+  // componentWillReceiveProps(next) {
+  //   console.log(next);
+  //   this.forceUpdate();
+  // }
+
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -42,6 +48,9 @@ export default class MatchBlock extends ResponsiveComponent {
     const id = this.props.match._id || this.props.match.id;
     const data = this.props.matchMap[id];
     const source = data.source[playerIndex];
+    if(!source) {
+      return "Unknown";
+    }
     if(this.props.bracket == 0) {
       const number = this.props.matchMap[source].number;
       return "Winner of " + numToAlpha(number);
@@ -105,7 +114,7 @@ export default class MatchBlock extends ResponsiveComponent {
     }
 
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? 15 : 0}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}>
         {
           prevMatchesNull ? (
             null
