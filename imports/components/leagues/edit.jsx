@@ -87,15 +87,16 @@ class EditLeagueScreen extends Component {
   }
 
   eventItems(league) {
-    var subs = league.events.map((slug, i) => {
-      var event = Events.findOne({ slug });
+    var subs = league.events.map((e, i) => {
+      var event = Events.findOne({ slug: e.slug });
+      console.log(event);
       return {
         content: EditEvent,
         name: event.details.name,
         key: i,
         args: {
           id: event._id,
-          startsAt: i == 0 ? null : Events.findOne({ slug: league.events[i - 1] }).details.datetime,
+          startsAt: i == 0 ? null : Events.findOne({ slug: league.events[i - 1].slug }).details.datetime,
           update: this.forceUpdate.bind(this),
           index: i
         }
@@ -114,7 +115,7 @@ class EditLeagueScreen extends Component {
 
     var subs = league.events.map((l, i) => {
 
-      var event = Events.findOne({slug: l});
+      var event = Events.findOne({slug: l.slug});
 
       return {
         name: event.details.name,
