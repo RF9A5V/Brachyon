@@ -100,8 +100,8 @@ class MatchBlock extends Component {
 
     let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}
     let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}
-    var p1participant = Brackets.findOne() ? ( this.participant(p1) ) : (<Participant player={p1} parStyle={parStyle1} />)
-    var p2participant = Brackets.findOne() ? ( this.participant(p2) ) : (<Participant player={p2} parStyle={parStyle2} />)
+    var p1participant = Brackets.findOne() ? ( this.participant(p1, parStyle1) ) : (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} />)
+    var p2participant = Brackets.findOne() ? ( this.participant(p2, parStyle2) ) : (<Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} />)
 
     return (
       <div className={`row x-center`} style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
