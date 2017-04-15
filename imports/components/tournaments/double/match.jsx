@@ -33,6 +33,19 @@ class MatchBlock extends Component {
     return { height, top }
   }
 
+  participant(p, s) {
+    return (
+      <div className="participant" style={s}>
+        <div className={((p.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+          { p.alias || "TBD" }
+        </div>
+        <div className="score">
+          { p.score || 0 }
+        </div>
+      </div>
+    )
+  }
+
   render() {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
@@ -85,6 +98,11 @@ class MatchBlock extends Component {
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
 
+    let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}
+    let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}
+    var p1participant = Brackets.findOne() ? ( this.participant(p1) ) : (<Participant player={p1} parStyle={parStyle1} />)
+    var p2participant = Brackets.findOne() ? ( this.participant(p2) ) : (<Participant player={p2} parStyle={parStyle2} />)
+
     return (
       <div className={`row x-center`} style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
         {
@@ -92,10 +110,10 @@ class MatchBlock extends Component {
             <div className="match" onClick={() => {
               this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
             }}>
-              <Participant height={height} participantWidth={participantWidth} isFutureLoser={this.props.isFutureLoser} player={p1} prevMatchesNull={prevMatchesNull} isLoser={isLoser(p1)} />
+              { p1participant }
               <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
-              <Participant height={height} participantWidth={participantWidth} isFutureLoser={this.props.isFutureLoser} player={p2} prevMatchesNull={prevMatchesNull} isLoser={isLoser(p2)} />
+              { p2participant }
 
             </div>,
             (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
