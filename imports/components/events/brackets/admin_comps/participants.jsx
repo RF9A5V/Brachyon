@@ -113,7 +113,8 @@ class AddParticipantAction extends Component {
                 this.setState({
                   participant: p,
                   discountOpen: true
-                })
+                }
+              )
               }} onBracketStart={() => {
                 this.setState({
                   startOpen: true
