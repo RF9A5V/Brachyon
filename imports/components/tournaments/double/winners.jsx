@@ -65,7 +65,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         }
       })
     });
-    if(bracket.rounds[2]) {
+    const bObj = Brackets.findOne();
+    if(bracket.rounds[2] && bObj) {
       const loserCount = bracket.rounds[1].reduce((acc, r) => {
         return acc + r.filter(m => { return m != null }).length;
       }, -1);
@@ -112,24 +113,12 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         }
       })
     }
-    console.log(matchMap);
-    this.setState({
-      matchMap
-    });
-  }
-
-  componentWillMount() {
-    super.componentWillMount();
-    this.setMatchMap(this.props.rounds);
-  }
-
-  componentWillReceiveProps(next) {
-    this.setMatchMap(next.rounds);
+    this.state.matchMap = matchMap;
   }
 
   onDrag(e) {
     if(this.refs.headers && this.refs.dragger) {
-      this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
+      // this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
       const isDragging = this.refs.dragger.state.dragging;
       if(this.state.dragging != isDragging) {
         this.setState({
@@ -207,6 +196,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
   }
 
   mainBracket(opts) {
+    this.setMatchMap(this.props.rounds);
     var count = 1;
     return (
         <div className="col">
