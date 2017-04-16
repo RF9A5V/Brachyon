@@ -11,10 +11,7 @@ import Brackets from "/imports/api/brackets/brackets.js";
 import StartBracketAction from "./start.jsx";
 import SingleParticipant from "./single_participant.jsx";
 
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
-
-class AddParticipantAction extends Component {
+export default class AddParticipantAction extends Component {
 
   constructor(props) {
     super(props);
@@ -24,6 +21,7 @@ class AddParticipantAction extends Component {
     let completed = bracket.isComplete;
     var participants = bracket.participants || [];
     this.state = {
+      invisibleIndex: -1,
       participants,
       iid,
       completed,
@@ -49,6 +47,8 @@ class AddParticipantAction extends Component {
 
   onHoverEffect(dragIndex, hoverIndex)
   {
+    if (this.state.invisibleIndex != hoverIndex)
+      this.setState({invisibleIndex: hoverIndex});
     var { participants } = this.state;
     const dragParticipant = participants[dragIndex];
 
@@ -60,6 +60,7 @@ class AddParticipantAction extends Component {
 
   onDropEffect()
   {
+    this.setState({invisibleIndex: -1});
     Meteor.call("participants.updateParticipants", Instances.findOne()._id, this.props.index, this.state.participants, (err) => {
       if(err) {
         toastr.error(err.reason);
@@ -131,7 +132,7 @@ class AddParticipantAction extends Component {
         <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
           {
             this.state.participants.map((participant, index) => {
-              return(<SingleParticipant participant={participant} index={index} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
+              return(<SingleParticipant participant={participant} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
             })
           }
         </div>
@@ -148,5 +149,3 @@ class AddParticipantAction extends Component {
     )
   }
 }
-
-export default DragDropContext(HTML5Backend)(AddParticipantAction)
