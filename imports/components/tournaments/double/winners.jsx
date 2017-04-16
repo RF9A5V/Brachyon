@@ -73,14 +73,16 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
       matchMap[loserFinal] = {
         number: count + loserCount
       }
-      console.log(matchMap[loserFinal].number);
       bracket.rounds[2].forEach((finals, index) => {
         // If double elim, final match will always exist
+        const m = finals[0];
+        if(!m) {
+          return;
+        }
         const mId = finals[0].id;
         matchMap[mId] = {
           number: count + loserCount + index + 1
         }
-        console.log(matchMap[mId].number);
         if(index == 0) {
           const winSource = bracket.rounds[0][bracket.rounds[0].length - 1][0].id;
           const loseSource = bracket.rounds[1][bracket.rounds[1].length - 1][0].id;
@@ -110,6 +112,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         }
       })
     }
+    console.log(matchMap);
     this.setState({
       matchMap
     });
@@ -186,6 +189,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                       })) {
                         return null
                       }
+                      console.log(match);
                       return (
                         <MatchBlock
                           key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}

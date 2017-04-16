@@ -106,7 +106,6 @@ class BracketAdminScreen extends Component {
       partMap,
       stretch: true
     };
-    console.log(rounds);
     switch(bracket.format.baseFormat) {
       case "single_elim":
         subs = [
@@ -271,24 +270,54 @@ class BracketAdminScreen extends Component {
           default: break;
         }
         var count = 1;
-        rounds = rounds.map(b => {
-          return b.map((r, i) => {
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              if(!isNaN(m.losm) && !isNaN(m.losr)) {
+                rounds[1][m.losr][m.losm].touched = true;
+              }
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
+              }
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
             return r.map(m => {
-              if(m) {
-                if(m.id || m.playerOne || m.playerTwo || i > 0) {
-                  return {
-                    players: [m.playerOne, m.playerTwo],
-                    winner: null,
-                    id: count ++,
-                    losm: m.losm,
-                    losr: m.losr
-                  }
+              if(m.touched || i >= 1) {
+                return {
+                  players: [null, null],
+                  winner: null,
+                  id: count ++
                 }
               }
-              return null;
+              else {
+                return null;
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         var rounds = Brackets.findOne().rounds;
