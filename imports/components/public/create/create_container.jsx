@@ -102,7 +102,7 @@ export default class CreateContainer extends ResponsiveComponent {
           {
             this.props.items.map((item, i) => {
               return (
-                <div style={{width: opts.mobile ? "calc(90vw - 20px)" : "100%", marginLeft: opts.mobile ? "10vw" : 0}}>
+                <div style={{width: opts.mobile ? "calc(80vw - 20px)" : "100%", marginLeft: opts.mobile ? "calc(10vw + 20px)" : 0}}>
                   <SubContainer key={item.key} ref={item.key} items={item.subItems} active={i == this.state.selected} update={this.setState.bind(this)} status={this.state.modStatus[item.key]} setStatus={(val) => {
                     if(this.state.modStatus[item.key] === undefined) {
                       return;
@@ -140,7 +140,7 @@ export default class CreateContainer extends ResponsiveComponent {
     }
 
     var style = {
-      margin: "10px auto 30px",
+      margin: "0px auto 30px",
       width: "100%"
     }
 
@@ -161,7 +161,7 @@ export default class CreateContainer extends ResponsiveComponent {
                   width: 175,
                   cursor: "pointer"
                 }}>
-                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white"}} size="2x" />
+                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white", fontSize: "1.5em"}} />
                   <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {

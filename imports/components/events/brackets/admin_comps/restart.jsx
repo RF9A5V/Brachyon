@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
+import FontAwesome from "react-fontawesome";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
@@ -47,19 +48,23 @@ export default class RestartAction extends ResponsiveComponent {
         <div className="row center">
           <button className={opts.buttonClass} onClick={() => { this.setState({ open: true }) }}> Reset </button>
         </div>
-        <Modal className="create-modal" overlayClassName={opts.overlayClass} classname={opts.modalClass} isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} >
-          <div className="col x-center center">
-            <h3 style={textStyle}>DANGER</h3>
-            <p style={textStyle}><br></br>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
-            <div style={{display:"inline-block"}}>
-              <div className="inline-button">
-                <button className={opts.buttonClass} onClick={() => { this.setState({open: false}) }} style={{width:"100px", marginRight:"15px"}}>Cancel</button>
-              </div>
-              <div className="inline-button">
+        <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} >
+          <div className="col col-1" style={{height: "100%"}}>
+            <div className="row" style={{justifyContent: "flex-end"}}>
+              <FontAwesome name="times" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={() => {
+                this.setState({open: false})
+              }}/>
+            </div>
+            <div className="col x-center center col-1">
+              <h3 style={textStyle}>DANGER</h3>
+              <p style={textStyle}><br></br>This action will be irreversible. You will not be able to roll back the bracket to a previous state except through manual input. Confirm this action.</p>
+              <div className="row center x-center">
+                <button className={opts.buttonClass} onClick={() => { this.setState({open: false}) }} style={{marginRight:"15px"}}>Cancel</button>
                 <button className={"reset-highlight " + opts.buttonClass} onClick={this.resetEventHandler.bind(this)} style={{margin:"0"}}>Reset</button>
               </div>
             </div>
           </div>
+
         </Modal>
       </div>
     )
@@ -70,7 +75,7 @@ export default class RestartAction extends ResponsiveComponent {
       fontSize: "1em",
       buttonClass: "",
       modalClass: "",
-      overlayClass: "overlay-class"
+      overlayClass: ""
     });
   }
 

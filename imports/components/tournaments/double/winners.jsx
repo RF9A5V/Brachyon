@@ -154,7 +154,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     var count = 1;
     return (
         <div className="col">
-          <div className="row" style={{paddingLeft: 10}}>
+          <div className="row">
             <div className="row">
             {
               this.props.rounds[0].map((round, i) => {
@@ -166,7 +166,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                           if(match && match.id) {
                             match = Matches.findOne(match.id) || match;
                           }
-                          // Jesus these params
+                          // TODO: Not pass like a billion params to the match object
                           return (
                             <MatchBlock key={i + " " + j}
                               match={match}
@@ -197,10 +197,29 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     var event = Events.findOne();
     var bracket = Brackets.findOne();
 
-    var headers = this.props.rounds[0].map((_, i) => {
+    var headers = this.props.rounds[0].map((r, i) => {
+      const matchCount = r.filter(m => {
+        return m != null;
+      }).length;
+      var text;
+      if(i == 0) {
+        text = "Top " + Object.keys(this.props.partMap).length;
+      }
+      else if(matchCount == 1) {
+        text = "Finals";
+      }
+      else if(matchCount <= 2) {
+        text = "Semi-Finals";
+      }
+      else if(matchCount <= 4) {
+        text = "Quarter-Finals";
+      }
+      else {
+        text = "Top " + (matchCount * 2)
+      }
       return (
-        <h4 style={{width: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
-          Round { i + 1 }
+        <h4 style={{width: opts.headerWidth + (i == 0 ? 0 : opts.headerSpacing), display: "inline-block", fontSize: opts.fontSize}}>
+          { text }
         </h4>
       )
     });
@@ -213,28 +232,33 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     }
 
     return (
-      <div onWheel={(e) => {
+      <div id="winners" onWheel={(e) => {
         e.stopPropagation();
       }}>
-        {
-          opts.mobile ? (
-            <div style={{overflow: "auto", height: "calc(100vh - 202px)"}}>
-              <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222"}} ref="headers">
-                { headers }
-              </div>
+        <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight}}>
+
+          <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
+            const node = document.getElementById("winner-header");
+            var top = node.style.top;
+            top -= dy;
+            node.style.top = Math.max(node.style.top, 0);
+            node.scrollLeft -= dx;
+          }}>
+            <div style={{
+              backgroundColor: "#222",
+              position: "absolute",
+              zIndex: 2, top: 0, left: 0,
+              width: opts.headerWidth + (opts.headerWidth + opts.headerSpacing) * (headers.length - 1),
+              maxWidth: "100%",
+              overflowX: "hidden"
+            }} id="winner-header">
+              { headers }
+            </div>
+            <div style={{marginTop: 20}}>
               { this.mainBracket(opts) }
             </div>
-          ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
-                  { headers }
-                </div>
-                { this.mainBracket(opts) }
-              </DragScroll>
-            </div>
-          )
-        }
+          </DragScroll>
+        </div>
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -271,8 +295,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      dragHeight: "calc(100vh - 202px)",
-      headerWidth: "460px",
+      dragHeight: "calc(100vh - 252px)",
+      headerWidth: 460,
       fontSize: "3em",
       mobile: true
     });
@@ -280,8 +304,9 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      dragHeight: "calc(97vh - 300px)",
-      headerWidth: "255px",
+      dragHeight: "calc(97vh - 150px)",
+      headerWidth: 245,
+      headerSpacing: 20,
       fontSize: "1em",
       mobile: false
     });
