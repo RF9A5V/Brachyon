@@ -69,7 +69,7 @@ export default class DoubleElimWinnersBracket extends Component {
     return (
       <div className="row">
         {
-          this.props.rofunds[2].map((round, i) => {
+          this.props.rounds[2].map((round, i) => {
             var finr = "finalround" + i
             return (
               <div className="col">

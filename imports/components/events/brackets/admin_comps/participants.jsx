@@ -132,7 +132,7 @@ export default class AddParticipantAction extends Component {
         <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
           {
             this.state.participants.map((participant, index) => {
-              return(<SingleParticipant participant={participant} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
+              return(<SingleParticipant participant={participant} completed={this.state.completed} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
             })
           }
         </div>
