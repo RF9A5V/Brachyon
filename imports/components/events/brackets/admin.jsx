@@ -106,6 +106,7 @@ class BracketAdminScreen extends Component {
       partMap,
       stretch: true
     };
+    console.log(rounds);
     switch(bracket.format.baseFormat) {
       case "single_elim":
         subs = [
