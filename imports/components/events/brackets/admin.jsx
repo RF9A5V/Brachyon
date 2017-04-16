@@ -21,6 +21,7 @@ import Finalize from "./admin_comps/finalize.jsx";
 import MatchList from "./admin_comps/matches.jsx";
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js";
 
@@ -127,6 +128,11 @@ class BracketAdminScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
+          },
+          {
+            content: Toggle,
+            name: "",
+            ignoreHeader: true
           }
         ];
         break;
