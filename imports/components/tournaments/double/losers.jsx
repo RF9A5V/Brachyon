@@ -114,6 +114,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     window.removeEventListener("mouseup", this.state.func);
     window.removeEventListener("mousemove", this.state.func);
   }
@@ -184,11 +185,6 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-    if(!Brackets.findOne()) {
-      return (
-        <i>Preview Disabled For Loser's Bracket Until Bracket Start.</i>
-      );
-    }
     const firstRoundNull = this.props.rounds[1][1].every(m => {
       return m == null;
     });
