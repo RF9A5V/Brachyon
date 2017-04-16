@@ -313,7 +313,6 @@ class BracketAdminScreen extends Component {
           })
         }
         rounds = tempRounds;
-        console.log(rounds);
       }
       else {
         var rounds = Brackets.findOne().rounds;

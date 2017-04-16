@@ -207,20 +207,50 @@ class BracketShowScreen extends Component {
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
           default: break;
         }
-        rounds = rounds.map(b => {
-          return b.map(r => {
-            return r.map(m => {
-              if(m) {
-                return {
-                  players: [m.playerOne, m.playerTwo],
-                  winner: null,
-                  _id: parseInt(new Date().getTime() / 1000) + parseInt(Math.random() * 1000)
-                }
+        var count = 1;
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
               }
-              return null;
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
+            return r.map(m => {
+              if(!m.truebye && i <= 1) {
+                return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         rounds = Brackets.findOne().rounds;
