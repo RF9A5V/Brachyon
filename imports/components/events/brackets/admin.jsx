@@ -277,9 +277,6 @@ class BracketAdminScreen extends Component {
           return r.map((m, j) => {
             const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
             if(isFirstRound || i > 0) {
-              if(!isNaN(m.losm) && !isNaN(m.losr)) {
-                rounds[1][m.losr][m.losm].touched = true;
-              }
               return {
                 players: [m.playerOne, m.playerTwo],
                 winner: null,
@@ -295,15 +292,13 @@ class BracketAdminScreen extends Component {
         if(rounds[1]) {
           tempRounds[1] = rounds[1].map((r, i) => {
             return r.map(m => {
-              if(m.touched || i >= 1) {
-                return {
-                  players: [null, null],
-                  winner: null,
-                  id: count ++
-                }
-              }
-              else {
+              if(!m.truebye && i <= 1) {
                 return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
               }
             })
           })
@@ -318,6 +313,7 @@ class BracketAdminScreen extends Component {
           })
         }
         rounds = tempRounds;
+        console.log(rounds);
       }
       else {
         var rounds = Brackets.findOne().rounds;
