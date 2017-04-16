@@ -19,12 +19,12 @@ export default class AddPartipantAction extends Component {
     var instance = Instances.findOne();
     var iid = instance._id;
     var bracket = instance.brackets[this.props.index];
-    var started = instance.brackets[this.props.index].inProgress ? true:false;
+    let completed = bracket.isComplete;
     var participants = bracket.participants || [];
     this.state = {
       participants,
       iid,
-      started,
+      completed,
       index: this.props.index,
       discountOpen: false,
       optionsOpen: false,
@@ -97,7 +97,7 @@ export default class AddPartipantAction extends Component {
                 <div className="participant-row row x-center" key={index}>
                   <div style={{width: "10%"}}>
                     {
-                      this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
+                      this.state.completed ? ( <div>{index+1}</div> ) : (<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
                     }
                   </div>
                   <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
