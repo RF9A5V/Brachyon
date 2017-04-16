@@ -66,7 +66,49 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
       })
     });
     if(bracket.rounds[2]) {
-      
+      const loserCount = bracket.rounds[1].reduce((acc, r) => {
+        return acc + r.filter(m => { return m != null }).length;
+      }, -1);
+      const loserFinal = bracket.rounds[1][bracket.rounds[1].length - 1][0].id;
+      matchMap[loserFinal] = {
+        number: count + loserCount
+      }
+      console.log(matchMap[loserFinal].number);
+      bracket.rounds[2].forEach((finals, index) => {
+        // If double elim, final match will always exist
+        const mId = finals[0].id;
+        matchMap[mId] = {
+          number: count + loserCount + index + 1
+        }
+        console.log(matchMap[mId].number);
+        if(index == 0) {
+          const winSource = bracket.rounds[0][bracket.rounds[0].length - 1][0].id;
+          const loseSource = bracket.rounds[1][bracket.rounds[1].length - 1][0].id;
+          matchMap[mId].source = [
+            {
+              id: winSource,
+              lost: false
+            },
+            {
+              id: loseSource,
+              lost: false
+            }
+          ]
+        }
+        else {
+          const prevMatch = bracket.rounds[2][index - 1][0].id;
+          matchMap[mId].source = [
+            {
+              id: prevMatch,
+              lost: false
+            },
+            {
+              id: prevMatch,
+              lost: true
+            }
+          ]
+        }
+      })
     }
     this.setState({
       matchMap
@@ -136,19 +178,19 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                   {
                     round.map((match, j) => {
                       if(match && match.id) {
-                        match = Matches.findOne(match.id);
+                        var temp = Matches.findOne(match.id);
+                        match = temp || match;
                       }
-                      if(!match || match.players[0] == null || match.players[1] == null) {
-                        return "";
+                      if(match.players.every(p => {
+                        return p == null
+                      })) {
+                        return null
                       }
-                      if (match.players[0].alias != null && match.players[1] != null)
-                      {
-                        return (
-                          <MatchBlock
-                            key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}
-                            onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}/>
-                        );
-                      }
+                      return (
+                        <MatchBlock
+                          key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}
+                          onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}/>
+                      );
                     })
                   }
                 </div>
@@ -317,7 +359,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
               match={this.state.match}
               open={this.state.open}
               closeModal={() => { this.setState({open: false}) }}
-              update={this.forceUpdate.bind(this)}
+              update={this.props.update}
               format={this.props.format}
             />
           ) : (
