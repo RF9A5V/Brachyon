@@ -84,15 +84,20 @@ function collect2(connect, monitor) {
 }
 
 class SingleParticipant extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   imgOrDefault(user) {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
   participant() {
-    const {index, participant} = this.props;
+    const {index, participant, isDragging, hoverIndex, invisibleIndex} = this.props;
+    const opacity = ( (index == invisibleIndex) || (isDragging && invisibleIndex == -1) ) ? 0 : 1;
     const user = Meteor.users.findOne(participant.id);
     return (
-      <div className="participant-row row x-center" key={index}>
+      <div className="participant-row row x-center" style={{opacity}} key={index}>
         <div style={{width: "10%"}}>
           <div>{index+1}</div>
         </div>
@@ -118,8 +123,7 @@ class SingleParticipant extends Component {
   }
 
   render() {
-    const {connectDragSource, connectDropTarget, isDragging} = this.props;
-    //const display = isDragging ? "none":"flex";
+    const {connectDragSource, connectDropTarget} = this.props;
     if (Instances.findOne().isComplete)
       return( this.participant() );
     else

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import FontAwesome from "react-fontawesome";
 import Participant from "./participant.jsx";
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 
 import Matches from "/imports/api/event/matches.js";
 
-class MatchBlock extends Component {
+export default class MatchBlock extends Component {
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -135,5 +133,3 @@ class MatchBlock extends Component {
     );
   }
 };
-
-export default DragDropContext(HTML5Backend)(MatchBlock)
