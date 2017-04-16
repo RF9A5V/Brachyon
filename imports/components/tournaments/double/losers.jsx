@@ -126,7 +126,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
     return (
       <div className="col" >
-        <div className="row" style={{paddingLeft: 10}}>
+        <div className="row">
           {
             this.props.rounds[1].map((round, i) => {
               if (i > 0 || this.props.rounds[1][0].filter((m) => { return m != null }).length > 0)
@@ -173,50 +173,63 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   renderBase(opts) {
 
-    if (this.props.rounds[1][0].filter((m) => { return m != null }).length == 0){
-      var headers = this.props.rounds[1].map((_, i) => {
-        return (
-          <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
-            Round { i + 1 }
-          </h4>
-        )
-      });
-    }
-    else {
-      var headers = this.props.rounds[1].map((_, i) => {
-        return (
-          <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
-            Round { i + 1 }
-          </h4>
-        )
-      });
-    }
+    const firstRoundNull = this.props.rounds[1][1].every(m => {
+      return m == null;
+    });
+    const funcFirst = firstRoundNull ? 1 : 0;
+    var headers = this.props.rounds[1].map((r, i) => {
+      const matchCount = r.filter(m => {
+        return m != null;
+      }).length;
+      var text;
+      if(i == 0) {
+        text = "Top " + Object.keys(this.props.partMap).length;
+      }
+      else if(i == this.props.rounds[1].length - 1) {
+        text = "Finals";
+      }
+      else if(i == this.props.rounds[1].length - 2) {
+        text = "Semi-Finals";
+      }
+      else if(i == this.props.rounds[1].length - 3) {
+        text = "Quarter-Finals";
+      }
+      else {
+        text = "Top " + (matchCount * 2)
+      }
+      return (
+        <h4 style={{width: opts.headerWidth + (i == funcFirst ? 0 : opts.headerSpacing), display: "inline-block", fontSize: opts.fontSize}}>
+          Losers { text }
+        </h4>
+      )
+    });
 
     return (
-      <div onWheel={(e) => {
+      <div id="losers" onWheel={(e) => {
         e.stopPropagation();
       }}>
-        {
-          opts.mobile ? (
-            <div style={{overflow: "auto", height: "calc(100vh - 202px)"}}>
-              <div style={{whiteSpace: "nowrap", marginBottom: 20, backgroundColor: "#222"}} ref="headers">
-                { headers }
-              </div>
+        <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative"}}>
+          <div style={{
+            backgroundColor: "#222",
+            position: "absolute",
+            zIndex: 2, top: 0, left: 0,
+            width: opts.headerWidth + (opts.headerWidth + opts.headerSpacing) * (headers.length - 1)
+          }} id="loser-header">
+            { headers }
+          </div>
+          <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
+            const node = document.getElementById("loser-header");
+            var top = node.style.top;
+            top -= dy;
+            node.style.top = Math.max(node.style.top, 0);
+            node.scrollLeft += dx;
+            console.log(node.scrollLeft, dx);
+          }}>
+            <div style={{marginTop: 40}}>
               { this.mainBracket(opts) }
             </div>
-          ) : (
-            [
-              <div style={{whiteSpace: "nowrap", overflowX: "hidden", marginBottom: 20, backgroundColor: "#222", display: "inline-block"}} ref="headers">
-                { headers }
-              </div>,
-              <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight}}>
-                <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                  { this.mainBracket(opts) }
-                </DragScroll>
-              </div>
-            ]
-          )
-        }
+          </DragScroll>
+        </div>
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -239,8 +252,8 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      dragHeight: "calc(100vh - 202px)",
-      headerWidth: "460px",
+      dragHeight: "calc(100vh - 252px)",
+      headerWidth: 460,
       fontSize: "3em",
       mobile: true
     });
@@ -248,8 +261,9 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      dragHeight: "calc(97vh - 300px)",
-      headerWidth: "265px",
+      dragHeight: "calc(97vh - 150px)",
+      headerWidth: 245,
+      headerSpacing: 15,
       fontSize: "1em",
       mobile: false
     });
