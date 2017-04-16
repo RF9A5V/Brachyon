@@ -257,7 +257,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
                 const el = document.getElementById("loser-header");
                 el.scrollLeft -= dx;
               }}>
-                <div style={{paddingTop: 40}} ref="content">
+                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
                   { this.mainBracket(opts) }
                 </div>
               </DragScroll>

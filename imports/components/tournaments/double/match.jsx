@@ -116,6 +116,8 @@ export default class MatchBlock extends ResponsiveComponent {
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
 
+    console.log(this.props.matchMap, this.props.match, this.props.matchMap[this.props.match.id]);
+
     return (
       <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}>
         {
@@ -127,7 +129,7 @@ export default class MatchBlock extends ResponsiveComponent {
           )
         }
         <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: "black", border: "solid 2px white", borderRight: "none"}}>
-          { numToAlpha(this.props.matchMap[this.props.match.id].number).split("").map(c => {
+          { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
             return (
               <span style={{fontSize: opts.fontSize}}>
                 { c }
