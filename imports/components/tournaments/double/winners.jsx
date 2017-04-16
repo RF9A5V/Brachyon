@@ -15,7 +15,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
     this.state = {
       leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
-      dragging: false
+      dragging: false,
+      headerTop: 0
     };
   }
 
@@ -29,11 +30,17 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
       const obj = bracket.rounds[0][i + 1][parseInt(j / 2)];
       const advId = obj.id;
       if(matchMap[advId]) {
-        matchMap[advId].source.push(id)
+        matchMap[advId].source.push({
+          id,
+          lost: false
+        })
       }
       else {
         matchMap[advId] = {
-          source: [id]
+          source: [{
+            id,
+            lost: false
+          }]
         }
       }
     }
@@ -58,6 +65,9 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         }
       })
     });
+    if(bracket.rounds[2]) {
+      
+    }
     this.setState({
       matchMap
     });
@@ -224,41 +234,80 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
       )
     });
     if(this.props.format == "double_elim") {
-      headers.push(
-        <h4 style={{minWidth: opts.headerWidth, display: "inline-block", fontSize: opts.fontSize}}>
-          Grand Finals
-        </h4>
-      )
+      this.props.rounds[2].forEach(r => {
+        const m = r[0];
+        if(m && m.id) {
+          const match = Matches.findOne(m.id);
+          if(!match) {
+            return null;
+          }
+          if(match.players.some(p => { return p != null })) {
+            headers.push(
+              <h4 style={{minWidth: opts.headerWidth + opts.headerSpacing, display: "inline-block", fontSize: opts.fontSize}}>
+                Grand Finals
+              </h4>
+            )
+          }
+        }
+      })
     }
+
+    const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
 
     return (
       <div id="winners" onWheel={(e) => {
         e.stopPropagation();
       }}>
-        <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight}}>
-
-          <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
-            const node = document.getElementById("winner-header");
-            var top = node.style.top;
-            top -= dy;
-            node.style.top = Math.max(node.style.top, 0);
-            node.scrollLeft -= dx;
-          }}>
-            <div style={{
-              backgroundColor: "#222",
-              position: "absolute",
-              zIndex: 2, top: 0, left: 0,
-              width: opts.headerWidth + (opts.headerWidth + opts.headerSpacing) * (headers.length - 1),
-              maxWidth: "100%",
-              overflowX: "hidden"
-            }} id="winner-header">
-              { headers }
+        {
+          opts.mobile ? (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
+              const node = document.getElementById("winner-header");
+              this.setState({
+                headerTop: e.target.scrollTop
+              })
+            }} onWheel={(e) => {
+              const node = document.getElementById("winner-header");
+              this.setState({
+                headerTop: e.target.scrollTop
+              })
+            }}>
+              <div style={{width}}>
+                <div style={{
+                  backgroundColor: "#222",
+                  position: "absolute",
+                  zIndex: 1, top: this.state.headerTop, left: 0,
+                  width,
+                  whiteSpace: "nowrap",
+                  maxWidth: "100%"
+                }} id="winner-header">
+                  { headers }
+                </div>
+                { this.mainBracket(opts) }
+              </div>
             </div>
-            <div style={{marginTop: 20}}>
-              { this.mainBracket(opts) }
+          ) : (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative", marginBottom: 20}}>
+              <div style={{
+                backgroundColor: "#222",
+                position: "absolute",
+                zIndex: 1, top: 0, left: 0,
+                width,
+                whiteSpace: "nowrap",
+                maxWidth: "100%"
+              }} id="winner-header">
+                { headers }
+              </div>
+              <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
+                const el = document.getElementById("winner-header");
+                el.scrollLeft -= dx;
+              }}>
+                <div style={{paddingTop: 40}} ref="content">
+                  { this.mainBracket(opts) }
+                </div>
+              </DragScroll>
             </div>
-          </DragScroll>
-        </div>
+          )
+        }
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -296,7 +345,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       dragHeight: "calc(100vh - 252px)",
-      headerWidth: 460,
+      headerWidth: 440,
+      headerSpacing: 40,
       fontSize: "3em",
       mobile: true
     });

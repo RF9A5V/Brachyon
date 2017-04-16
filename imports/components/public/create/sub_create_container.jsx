@@ -54,7 +54,7 @@ export default class SubContainer extends ResponsiveComponent {
             this.props.items.map((item, i) => {
               return (
                 <div style={{...style}}>
-                  <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.state.selected == i && this.props.active} />
+                  <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.props.active} />
                   {
                     i < this.props.items.length - 1 ? (
                       <hr style={{width: "95%"}} className="user-divider" />
