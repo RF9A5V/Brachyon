@@ -286,7 +286,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
               match={this.state.match}
               open={this.state.open}
               closeModal={() => { this.setState({open: false}) }}
-              update={this.forceUpdate.bind(this)}
+              update={this.props.update}
               format={this.props.format}
             />
           ) : (

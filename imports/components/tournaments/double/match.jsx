@@ -47,18 +47,27 @@ export default class MatchBlock extends ResponsiveComponent {
     }
     const id = this.props.match._id || this.props.match.id;
     const data = this.props.matchMap[id];
-    const source = data.source[playerIndex];
-    if(!source) {
+    const source = data.source.slice().sort((a, b) => {
+      if(a.lost && !b.lost) {
+        return -1;
+      }
+      else if(!a.lost && b.lost) {
+        return 1;
+      }
+      else if(a.lost && b.lost) {
+        return (a.number - b.number) / Math.abs(a.number - b.number) * -1;
+      }
+      else {
+        return (a.number - b.number) / Math.abs(a.number - b.number);
+      }
+    })
+    var dataSource = source[playerIndex];
+    console.log(dataSource);
+    if(!dataSource) {
       return "Unknown";
     }
-    if(this.props.bracket == 0) {
-      const number = this.props.matchMap[source].number;
-      return "Winner of " + numToAlpha(number);
-    }
-    if(this.props.bracket == 1) {
-      const number = this.props.matchMap[source.id].number;
-      return (source.lost ? "Loser" : "Winner") + " of " + numToAlpha(number);
-    }
+    const number = this.props.matchMap[dataSource.id].number;
+    return (dataSource.lost ? "Loser" : "Winner") + " of " + numToAlpha(number);
   }
 
   renderBase(opts) {
