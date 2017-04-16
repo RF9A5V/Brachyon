@@ -1137,6 +1137,14 @@ Meteor.methods({
         [`brackets.${bracketIndex}.participants`]: participants
       }
     })
+  },
+
+  "participants.updateParticipants"(instanceID, bracketIndex, participants) {
+    Instances.update(instanceID, {
+      $set: {
+        [`brackets.${bracketIndex}.participants`]: participants
+      }
+    })
   }
 
 })
