@@ -184,8 +184,8 @@ export default class TournamentModal extends ResponsiveComponent {
     return this.renderBase({
       modalClass: "create-modal",
       overlayClass: "overlay-class",
-      fontSize: "2.5em",
-      iconSize: "1em",
+      fontSize: "1em",
+      iconSize: "2.5em",
       buttonClass: "",
       imgDim: 150
     });
