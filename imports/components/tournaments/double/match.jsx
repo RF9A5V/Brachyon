@@ -147,7 +147,7 @@ export default class MatchBlock extends ResponsiveComponent {
                     null
                   )
                 }
-                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
+                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`, paddingLeft: !p1.alias ? "calc(10% + 5px)" : 5, fontStyle: p1.alias ? "normal" : "italic"}}>
                   { this.matchPlaceholder(p1.alias, 0) }
                 </div>
                 <div className="score" style={{fontSize: opts.fontSize}}>
@@ -166,7 +166,7 @@ export default class MatchBlock extends ResponsiveComponent {
                     null
                   )
                 }
-                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
+                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"} style={{fontSize: `calc(${opts.fontSize} * 0.8)`, paddingLeft: !p2.alias ? "calc(10% + 5px)" : 5, fontStyle: p2.alias ? "normal" : "italic"}}>
                   { this.matchPlaceholder(p2.alias, 1) }
                 </div>
                 <div className="score" style={{fontSize: opts.fontSize}}>
@@ -183,7 +183,7 @@ export default class MatchBlock extends ResponsiveComponent {
                 height: vLineHeight,
                 backgroundColor: this.props.isFutureLoser ? "#999" : "white",
                 position: "relative",
-                zIndex: this.props.isFutureLoser ? 0 : 1,
+                zIndex: this.props.isFutureLoser ? 0 : 0,
                 top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
               }}>
               </div>

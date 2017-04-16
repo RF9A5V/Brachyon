@@ -25,7 +25,7 @@ export default class StartModal extends ResponsiveComponent {
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={this.props.onClose}>
         <div className="col" style={{height: "100%"}}>
           <div className="row" style={{justifyContent: "flex-end"}}>
-            <FontAwesome name="times" style={{fontSize: `calc(${opts.fontSize} * 2)`}} />
+            <FontAwesome name="times" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center x-center">
           {

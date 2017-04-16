@@ -10,15 +10,21 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    this.state = {
+      dragging: false,
+      headerTop: 0
+    };
+  }
+
+  setMatchMap(rounds) {
     var matchMap = {};
     const bracket = {
-      rounds: props.rounds
+      rounds
     };
     var count = 1;
     bracket.rounds[0].forEach(r => {
       r.forEach(m => {
         if(m) {
-          console.log(m);
           const losM = bracket.rounds[1][m.losr][m.losm];
           if(!losM) {
             return;
@@ -76,10 +82,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         }
       })
     });
-    this.state = {
-      dragging: false,
-      matchMap
-    };
+    this.setState({ matchMap })
   }
 
   onDrag(e) {
@@ -92,6 +95,15 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         })
       }
     }
+  }
+
+  componentWillMount() {
+    super.componentWillMount();
+    this.setMatchMap(this.props.rounds);
+  }
+
+  componentWillReceiveProps(next) {
+    this.setMatchMap(next.rounds)
   }
 
   componentDidMount() {
@@ -172,20 +184,24 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-
+    if(!Brackets.findOne()) {
+      return (
+        <i>Preview Disabled For Loser's Bracket Until Bracket Start.</i>
+      );
+    }
     const firstRoundNull = this.props.rounds[1][1].every(m => {
       return m == null;
     });
     const funcFirst = firstRoundNull ? 1 : 0;
     var headers = this.props.rounds[1].map((r, i) => {
+      if(i <= funcFirst) {
+        return null;
+      }
       const matchCount = r.filter(m => {
         return m != null;
       }).length;
       var text;
-      if(i == 0) {
-        text = "Top " + Object.keys(this.props.partMap).length;
-      }
-      else if(i == this.props.rounds[1].length - 1) {
+      if(i == this.props.rounds[1].length - 1) {
         text = "Finals";
       }
       else if(i == this.props.rounds[1].length - 2) {
@@ -195,7 +211,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         text = "Quarter-Finals";
       }
       else {
-        text = "Top " + (matchCount * 2)
+        text = "Round " + (i - funcFirst);
       }
       return (
         <h4 style={{width: opts.headerWidth + (i == funcFirst ? 0 : opts.headerSpacing), display: "inline-block", fontSize: opts.fontSize}}>
@@ -204,32 +220,63 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
       )
     });
 
+    const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
+
     return (
       <div id="losers" onWheel={(e) => {
         e.stopPropagation();
       }}>
-        <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative"}}>
-          <div style={{
-            backgroundColor: "#222",
-            position: "absolute",
-            zIndex: 2, top: 0, left: 0,
-            width: opts.headerWidth + (opts.headerWidth + opts.headerSpacing) * (headers.length - 1)
-          }} id="loser-header">
-            { headers }
-          </div>
-          <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
-            const node = document.getElementById("loser-header");
-            var top = node.style.top;
-            top -= dy;
-            node.style.top = Math.max(node.style.top, 0);
-            node.scrollLeft += dx;
-            console.log(node.scrollLeft, dx);
-          }}>
-            <div style={{marginTop: 40}}>
-              { this.mainBracket(opts) }
+        {
+          opts.mobile ? (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
+              const node = document.getElementById("loser-header");
+              this.setState({
+                headerTop: e.target.scrollTop
+              })
+            }} onWheel={(e) => {
+              const node = document.getElementById("loser-header");
+              this.setState({
+                headerTop: e.target.scrollTop
+              })
+            }}>
+              <div style={{width, paddingTop: 40, paddingBottom: 80}}>
+                <div style={{
+                  backgroundColor: "#222",
+                  position: "absolute",
+                  zIndex: 1, top: this.state.headerTop, left: 0,
+                  width,
+                  whiteSpace: "nowrap",
+                  maxWidth: "100%"
+                }} id="loser-header">
+                  { headers }
+                </div>
+                { this.mainBracket(opts) }
+              </div>
             </div>
-          </DragScroll>
-        </div>
+          ) : (
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative", marginBottom: 20}}>
+              <div style={{
+                backgroundColor: "#222",
+                position: "absolute",
+                zIndex: 1, top: 0, left: 0,
+                width,
+                whiteSpace: "nowrap",
+                maxWidth: "100%"
+              }} id="loser-header">
+                { headers }
+              </div>
+              <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
+                const el = document.getElementById("loser-header");
+                el.scrollLeft -= dx;
+              }}>
+                <div style={{paddingTop: 40}} ref="content">
+                  { this.mainBracket(opts) }
+                </div>
+              </DragScroll>
+            </div>
+          )
+        }
+
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -253,7 +300,8 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       dragHeight: "calc(100vh - 252px)",
-      headerWidth: 460,
+      headerWidth: 440,
+      headerSpacing: 30,
       fontSize: "3em",
       mobile: true
     });
