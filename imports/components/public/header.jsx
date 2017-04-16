@@ -181,7 +181,7 @@ class Header extends ResponsiveComponent {
         </Sidebar>
         <RegModal open={this.state.regOpen} content={this.state.content} onClose={() => {
           this.setState({ regOpen: false })
-        }} />
+        }} onSuccess={() => {}} />
       </div>
     )
   }

@@ -554,10 +554,18 @@ label
 .grabbing
   cursor -webkit-grabbing
   cursor grabbing
+  > *
+    overflow: hidden !important
 
 .grab
   cursor -webkit-grab
   cursor grab
+  > *
+    overflow: hidden !important
+
++below(480px)
+  .grabbing > *, .grab > *
+    overflow: auto !important
 
 .sidebar
   z-index 5 !important
