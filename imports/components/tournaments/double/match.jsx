@@ -10,11 +10,6 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 
 export default class MatchBlock extends ResponsiveComponent {
 
-  // componentWillReceiveProps(next) {
-  //   console.log(next);
-  //   this.forceUpdate();
-  // }
-
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -62,7 +57,6 @@ export default class MatchBlock extends ResponsiveComponent {
       }
     })
     var dataSource = source[playerIndex];
-    console.log(dataSource);
     if(!dataSource) {
       return "Unknown";
     }

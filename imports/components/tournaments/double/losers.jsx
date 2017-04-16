@@ -82,7 +82,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         }
       })
     });
-    this.setState({ matchMap })
+    this.state.matchMap = matchMap;
   }
 
   onDrag(e) {
@@ -95,15 +95,6 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         })
       }
     }
-  }
-
-  componentWillMount() {
-    super.componentWillMount();
-    this.setMatchMap(this.props.rounds);
-  }
-
-  componentWillReceiveProps(next) {
-    this.setMatchMap(next.rounds)
   }
 
   componentDidMount() {
@@ -130,6 +121,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   mainBracket() {
+    this.setMatchMap(this.props.rounds);
     var hasInactiveFirstRound = this.props.rounds[1].every(m => {
       return m == null;
     })
