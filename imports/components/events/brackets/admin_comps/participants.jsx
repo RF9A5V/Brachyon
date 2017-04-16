@@ -100,6 +100,12 @@ class AddParticipantAction extends Component {
     }
   }
 
+  updateParticipants() {
+    this.setState({
+      participants: Instances.findOne().brackets[this.props.index].participants
+    })
+  }
+
   render() {
     const instance = Instances.findOne();
     return (
@@ -113,14 +119,12 @@ class AddParticipantAction extends Component {
                 this.setState({
                   participant: p,
                   discountOpen: true
-                }
-              )
+                })
               }} onBracketStart={() => {
                 this.setState({
                   startOpen: true
                 })
-              }} />
-
+              }} onUpdateParticipants={this.updateParticipants.bind(this)} />
             </div>
           )
         }

@@ -139,6 +139,7 @@ export default class ParticipantAddField extends Component {
               }
             })
           }
+          this.props.onUpdateParticipants();          
         }
       })
     }

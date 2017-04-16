@@ -91,7 +91,6 @@ class SingleParticipant extends Component {
   participant() {
     const {index, participant} = this.props;
     const user = Meteor.users.findOne(participant.id);
-    console.log(participant);
     return (
       <div className="participant-row row x-center" key={index}>
         <div style={{width: "10%"}}>
