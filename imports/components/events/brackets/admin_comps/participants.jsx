@@ -9,7 +9,7 @@ import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import StartBracketAction from "./start.jsx";
-import SingleParticipant from "./participant.jsx";
+import SingleParticipant from "./single_participant.jsx";
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
