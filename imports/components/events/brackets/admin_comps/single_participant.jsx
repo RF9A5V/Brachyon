@@ -88,12 +88,11 @@ class SingleParticipant extends Component {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
-  render() {
-    const {connectDragSource, connectDropTarget, isDragging, index, participant} = this.props;
+  participant() {
+    const {index, participant} = this.props;
     const user = Meteor.users.findOne(participant.id);
-    //const display = isDragging ? "none":"flex";
-
-    return connectDragSource(connectDropTarget(
+    console.log(participant);
+    return (
       <div className="participant-row row x-center" key={index}>
         <div style={{width: "10%"}}>
           <div>{index+1}</div>
@@ -116,7 +115,16 @@ class SingleParticipant extends Component {
           <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => {this.props.openOptions(participant)} } />
         </div>
       </div>
-    ));
+    )
+  }
+
+  render() {
+    const {connectDragSource, connectDropTarget, isDragging} = this.props;
+    //const display = isDragging ? "none":"flex";
+    if (Instances.findOne().isComplete)
+      return( this.participant()
+    else
+      return connectDragSource(connectDropTarget( this.participant() ));
   }
 }
 
