@@ -1,29 +1,30 @@
 import React, { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import { browserHistory } from "react-router";
-import { findDOMnode } from 'react-dom';
+import ReactDOM from 'react-dom';
+import FontAwesome from "react-fontawesome";
 
 const participantSource = {
   beginDrag(props) {
     return {
-      alias: props.player.alias
+      index: props.index,
+      participant: props.participant
     }
   }
 };
 
 const participantTarget = {
   hover(props, monitor, component) {
-    const dragIndex = monitor.getItem().alias;
-    const hoverIndex = props.player.alias;
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
 
-    return;
     // Don't replace items with themselves
     if (dragIndex === hoverIndex) {
       return;
     }
 
     // Determine rectangle on screen
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+    const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
 
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -52,22 +53,17 @@ const participantTarget = {
     //And then send it the hoverIndex to send the alias.
 
     // Time to actually perform the action
-    props.switchparticipant(dragIndex, hoverIndex);
-
+    props.onHoverEffect(dragIndex, hoverIndex);
     // Note: we're mutating the monitor item here!
     // Generally it's better to avoid mutations,
+
     // but it's good here for the sake of performance
     // to avoid expensive index searches.
     monitor.getItem().index = hoverIndex;
   },
 
   drop(props, monitor, connect) {
-    const dragIndex = monitor.getItem().alias;
-    const hoverIndex = props.player.alias;
-    if (dragIndex == hoverIndex)
-      return;
-
-    props.swapParticipant(dragIndex, hoverIndex);
+    props.onDropEffect();
   }
 };
 
@@ -87,23 +83,42 @@ function collect2(connect, monitor) {
   };
 }
 
-class Participant extends Component {
+class SingleParticipant extends Component {
+  imgOrDefault(user) {
+    return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
+  }
+
   render() {
-    const {connectDragSource, connectDropTarget, isDragging} = this.props;
-    let p1 = this.props.player;
+    const {connectDragSource, connectDropTarget, isDragging, index, participant} = this.props;
+    const user = Meteor.users.findOne(participant.id);
+    //const display = isDragging ? "none":"flex";
 
     return connectDragSource(connectDropTarget(
-      <div className="participant" style={this.props.parStyle}>
-        <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-          { p1.alias || "TBD" }
+      <div className="participant-row row x-center" key={index}>
+        <div style={{width: "10%"}}>
+          <div>{index+1}</div>
         </div>
-        <div className="score">
-          { p1.score || 0 }
+        <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
+        <div className="col" style={{width: "15%"}}>
+          <span style={{fontSize: 16}}>{ participant.alias }</span>
+          <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
+        </div>
+        <div>
+          {
+            participant.checkedIn ? (
+              <span>Checked In</span>
+            ) : (
+              <button onClick={() => {this.props.openDiscount(participant)} }>Check In</button>
+            )
+          }
+        </div>
+        <div className="col-1" style={{textAlign: "right"}}>
+          <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => {this.props.openOptions(participant)} } />
         </div>
       </div>
     ));
   }
 }
 
-const x = DropTarget('participant', participantTarget, collect)(Participant)
+const x = DropTarget('participant', participantTarget, collect)(SingleParticipant)
 export default DragSource('participant', participantSource, collect2)( x )

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import FontAwesome from "react-fontawesome";
 
 import ParticipantAddField from "../participant_add_field.jsx";
 import TicketDiscountModal from "../ticket_discount_modal.jsx";
@@ -10,9 +9,12 @@ import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import StartBracketAction from "./start.jsx";
-import SeedDropDown from "./seeddropdown.jsx";
+import SingleParticipant from "./participant.jsx";
 
-export default class AddPartipantAction extends Component {
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+
+class AddParticipantAction extends Component {
 
   constructor(props) {
     super(props);
@@ -35,6 +37,40 @@ export default class AddPartipantAction extends Component {
   imgOrDefault(user) {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
+
+  openDiscount(participant) {
+    if(instance.tickets) {
+      this.setState({ discountOpen: true, participant })
+    }
+    else {
+      this.onUserCheckIn(participant);
+    }
+  }
+
+  onHoverEffect(dragIndex, hoverIndex)
+  {
+    var { participants } = this.state;
+    const dragParticipant = participants[dragIndex];
+
+    participants.splice(dragIndex, 1);
+    participants.splice(hoverIndex, 0, dragParticipant);
+
+    this.setState({participants});
+  }
+
+  onDropEffect()
+  {
+    Meteor.call("participants.updateParticipants", Instances.findOne()._id, this.props.index, this.state.participants, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully switched seeding!");
+      }
+    })
+  }
+
+  openOptions(participant) { this.setState({ optionsOpen: true, participant }) }
 
   onUserCheckIn(participant, onCheckedIn) {
     const cb = () => {
@@ -66,7 +102,6 @@ export default class AddPartipantAction extends Component {
 
   render() {
     const instance = Instances.findOne();
-    const participants = instance.brackets[this.props.index].participants || [];
     return (
       <div className="row">
         {
@@ -90,42 +125,8 @@ export default class AddPartipantAction extends Component {
         }
         <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
           {
-            participants.map((participant, index) => {
-              const user = Meteor.users.findOne(participant.id);
-
-              return (
-                <div className="participant-row row x-center" key={index}>
-                  <div style={{width: "10%"}}>
-                    {
-                      this.state.completed ? ( <div>{index+1}</div> ) : (<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
-                    }
-                  </div>
-                  <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
-                  <div className="col" style={{width: "15%"}}>
-                    <span style={{fontSize: 16}}>{ participant.alias }</span>
-                    <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
-                  </div>
-                  <div>
-                    {
-                      participant.checkedIn ? (
-                        <span>Checked In</span>
-                      ) : (
-                        <button onClick={() => {
-                          if(instance.tickets) {
-                            this.setState({ discountOpen: true, participant })
-                          }
-                          else {
-                            this.onUserCheckIn(participant);
-                          }
-                        }}>Check In</button>
-                      )
-                    }
-                  </div>
-                  <div className="col-1" style={{textAlign: "right"}}>
-                    <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
-                  </div>
-                </div>
-              )
+            this.state.participants.map((participant, index) => {
+              return(<SingleParticipant participant={participant} index={index} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
             })
           }
         </div>
@@ -142,3 +143,5 @@ export default class AddPartipantAction extends Component {
     )
   }
 }
+
+export default DragDropContext(HTML5Backend)(AddParticipantAction)
