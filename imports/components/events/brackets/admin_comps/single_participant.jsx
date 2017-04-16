@@ -122,7 +122,7 @@ class SingleParticipant extends Component {
     const {connectDragSource, connectDropTarget, isDragging} = this.props;
     //const display = isDragging ? "none":"flex";
     if (Instances.findOne().isComplete)
-      return( this.participant()
+      return( this.participant() );
     else
       return connectDragSource(connectDropTarget( this.participant() ));
   }
