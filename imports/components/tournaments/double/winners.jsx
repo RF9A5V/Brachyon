@@ -197,6 +197,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   mainBracket(opts) {
     this.setMatchMap(this.props.rounds);
+    console.log(this.state.matchMap);
     var count = 1;
     return (
         <div className="col">
@@ -337,7 +338,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                 const el = document.getElementById("winner-header");
                 el.scrollLeft -= dx;
               }}>
-                <div style={{paddingTop: 40}} ref="content">
+                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
                   { this.mainBracket(opts) }
                 </div>
               </DragScroll>

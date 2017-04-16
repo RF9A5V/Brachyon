@@ -325,10 +325,10 @@ class BracketDetails extends ResponsiveComponent {
       partMap[p.alias] = i + 1;
     })
     if (this.state.win == true){
-      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
+      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
     }
     else{
-      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
+      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
     }
   }
 
