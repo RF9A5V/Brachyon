@@ -63,7 +63,7 @@ export default class BracketsPanel extends ResponsiveComponent {
     if(!this.state.brackets) {
       this.state.brackets = { }
     }
-    if(props.isLeague) {
+    if(this.props.isLeague) {
       return;
     }
     var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));

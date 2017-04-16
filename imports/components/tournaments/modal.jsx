@@ -67,7 +67,7 @@ export default class TournamentModal extends ResponsiveComponent {
       <div className="col x-center col-1">
         <img src={this.getProfileImage(player.id)} style={{borderRadius: "100%", width: opts.imgDim, height: "auto", marginBottom: 20}} />
         <h5 className={player.alias.length < 15 ? "" : "marquee"}
-          style={{color: "#FF6000", width: "125px", textAlign:"center", fontSize: opts.fontSize}}>{ player.alias }
+          style={{color: "#FF6000", textAlign:"center", fontSize: opts.fontSize}}>{ player.alias }
         </h5>
         <div className="col center x-center col-1">
           <div className="row center x-center" style={{marginTop:10}}>
@@ -184,7 +184,7 @@ export default class TournamentModal extends ResponsiveComponent {
     return this.renderBase({
       modalClass: "create-modal",
       overlayClass: "overlay-class",
-      fontSize: "1em",
+      fontSize: "2.5em",
       iconSize: "1em",
       buttonClass: "",
       imgDim: 150

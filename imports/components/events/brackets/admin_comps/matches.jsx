@@ -4,6 +4,7 @@ import FontAwesome from "react-fontawesome";
 
 import Brackets from "/imports/api/brackets/brackets.js";
 
+import ScoreModal from "/imports/components/tournaments/modal.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class MatchList extends ResponsiveComponent {
@@ -78,11 +79,7 @@ export default class MatchList extends ResponsiveComponent {
     }
     return (
       <div>
-        <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }}>
-          {
-            this.scoreModalContent()
-          }
-        </Modal>
+        <ScoreModal open={this.state.open} closeModal={() => { this.setState({ open: false }) }} id={this.state.id} />
         <div className="row center" style={{marginBottom: 20}}>
           <h5 style={textStyle}>Pending Matches</h5>
         </div>
@@ -100,7 +97,7 @@ export default class MatchList extends ResponsiveComponent {
                       return "";
                     }
                     return (
-                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width}} onClick={() => { this.setState({ id: m.id, open: true, bracket: i, round: j, match: k }) }}>
+                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width}} onClick={() => { this.setState({ id: m.id, open: true }) }}>
                         <div className="row match-names">
                           <span style={textStyle}>{ match.players[0].alias }</span>
                         </div>
