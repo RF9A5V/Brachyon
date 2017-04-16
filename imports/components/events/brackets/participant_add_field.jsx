@@ -92,7 +92,7 @@ export default class ParticipantAddField extends Component {
       }
       else {
         toastr.success("Successfully shuffled seeding.", "Success!");
-        this.forceUpdate();
+        this.props.onUpdateParticipants();
       }
     });
   }

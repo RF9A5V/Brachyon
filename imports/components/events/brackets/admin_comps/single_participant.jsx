@@ -123,8 +123,8 @@ class SingleParticipant extends Component {
   }
 
   render() {
-    const {connectDragSource, connectDropTarget} = this.props;
-    if (Instances.findOne().isComplete)
+    const {connectDragSource, connectDropTarget, completed} = this.props;
+    if (completed)
       return( this.participant() );
     else
       return connectDragSource(connectDropTarget( this.participant() ));
