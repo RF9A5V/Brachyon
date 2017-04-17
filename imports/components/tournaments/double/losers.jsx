@@ -288,8 +288,8 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       dragHeight: "calc(100vh - 252px)",
-      headerWidth: 440,
-      headerSpacing: 30,
+      headerWidth: 410,
+      headerSpacing: 70,
       fontSize: "3em",
       mobile: true
     });

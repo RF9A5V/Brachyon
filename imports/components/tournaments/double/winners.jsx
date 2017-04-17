@@ -116,6 +116,11 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     this.state.matchMap = matchMap;
   }
 
+  swapParticipant(dragIndex, hoverIndex) {
+    Meteor.call("participants.swapPlayers", Instances.findOne()._id, this.props.index, dragIndex, hoverIndex);
+    this.props.update();
+  }
+
   onDrag(e) {
     if(this.refs.headers && this.refs.dragger) {
       // this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
@@ -197,7 +202,6 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   mainBracket(opts) {
     this.setMatchMap(this.props.rounds);
-    console.log(this.state.matchMap);
     var count = 1;
     return (
         <div className="col">
@@ -218,7 +222,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                             <MatchBlock key={i + " " + j}
                               match={match}
                               bracket={0}
-                              roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} partMap={this.props.partMap} />
+                              roundNumber={i} matchNumber={j}
+                              roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} partMap={this.props.partMap} swapParticipant={this.swapParticipant.bind(this)} />
                           );
                         })
                       }
@@ -288,63 +293,77 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         }
       })
     }
-
     const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
+
+    let draggableDiv, draggable;
+    if (Brackets.findOne()) {
+      draggableDiv = (
+        <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
+          const el = document.getElementById("winner-header");
+          el.scrollLeft -= dx;
+        }}>
+          <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
+            { this.mainBracket(opts) }
+          </div>
+        </DragScroll>
+      )
+      draggable = this.state.dragging ? "grabbing" : "grab"
+    }
+    else {
+      draggableDiv = (
+        this.mainBracket()
+      )
+      draggable = "";
+    }
+
+    let bracketDiv = opts.mobile ? (
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
+        const node = document.getElementById("winner-header");
+        this.setState({
+          headerTop: e.target.scrollTop
+        })
+      }} onWheel={(e) => {
+        const node = document.getElementById("winner-header");
+        this.setState({
+          headerTop: e.target.scrollTop
+        })
+      }}>
+        <div style={{width}}>
+          <div style={{
+            backgroundColor: "#222",
+            position: "absolute",
+            zIndex: 1, top: this.state.headerTop, left: 0,
+            width,
+            whiteSpace: "nowrap",
+            maxWidth: "100%"
+          }} id="winner-header">
+            { headers }
+          </div>
+          { this.mainBracket(opts) }
+        </div>
+      </div>
+    ) : (
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", marginBottom: 20}}>
+        <div style={{
+          backgroundColor: "#222",
+          position: "absolute",
+          zIndex: 1, top: 0, left: 0,
+          width,
+          whiteSpace: "nowrap",
+          maxWidth: "100%"
+        }} id="winner-header">
+          { headers }
+        </div>
+        { draggableDiv }
+      </div>
+    );
+
 
     return (
       <div id="winners" onWheel={(e) => {
         e.stopPropagation();
       }}>
-        {
-          opts.mobile ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
-              const node = document.getElementById("winner-header");
-              this.setState({
-                headerTop: e.target.scrollTop
-              })
-            }} onWheel={(e) => {
-              const node = document.getElementById("winner-header");
-              this.setState({
-                headerTop: e.target.scrollTop
-              })
-            }}>
-              <div style={{width}}>
-                <div style={{
-                  backgroundColor: "#222",
-                  position: "absolute",
-                  zIndex: 1, top: this.state.headerTop, left: 0,
-                  width,
-                  whiteSpace: "nowrap",
-                  maxWidth: "100%"
-                }} id="winner-header">
-                  { headers }
-                </div>
-                { this.mainBracket(opts) }
-              </div>
-            </div>
-          ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative", marginBottom: 20}}>
-              <div style={{
-                backgroundColor: "#222",
-                position: "absolute",
-                zIndex: 1, top: 0, left: 0,
-                width,
-                whiteSpace: "nowrap",
-                maxWidth: "100%"
-              }} id="winner-header">
-                { headers }
-              </div>
-              <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
-                const el = document.getElementById("winner-header");
-                el.scrollLeft -= dx;
-              }}>
-                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
-                  { this.mainBracket(opts) }
-                </div>
-              </DragScroll>
-            </div>
-          )
-        }
+        { bracketDiv }
         {
           this.props.id && !this.props.complete ? (
             <EventModal
@@ -382,8 +401,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       dragHeight: "calc(100vh - 252px)",
-      headerWidth: 440,
-      headerSpacing: 40,
+      headerWidth: 420,
+      headerSpacing: 60,
       fontSize: "3em",
       mobile: true
     });
