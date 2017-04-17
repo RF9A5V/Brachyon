@@ -325,15 +325,11 @@ class BracketDetails extends ResponsiveComponent {
       partMap[p.alias] = i + 1;
     });
     const comp = this.state.win ? (
-      <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
+      <WinnersBracket height={"calc(100vh - 350px)"} rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
     ) : (
       <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
     )
-    return (
-      <div style={{height: "calc(100vh - 350px)", overflow: "auto"}}>
-        { comp }
-      </div>
-    )
+    return comp;
   }
 
   winnersBracket(obj){

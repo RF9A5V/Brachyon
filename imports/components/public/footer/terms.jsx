@@ -1,9 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router';
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class TermsScreen extends React.Component {
 
+  constructor() {
+    super();
+    this.state = {
+      initReady: true,
+      ready: false
+    }
+  }
+
   render() {
+
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
+
     return(
       <div className="row center">
         <div className="col side-tab-panel">

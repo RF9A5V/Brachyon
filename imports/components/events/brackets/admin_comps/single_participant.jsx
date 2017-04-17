@@ -4,6 +4,8 @@ import { browserHistory } from "react-router";
 import ReactDOM from 'react-dom';
 import FontAwesome from "react-fontawesome";
 
+import SeedDropdown from "./seeddropdown.jsx";
+
 const participantSource = {
   beginDrag(props) {
     return {
@@ -86,6 +88,9 @@ function collect2(connect, monitor) {
 class SingleParticipant extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      id: Instances.findOne()._id
+    }
   }
 
   imgOrDefault(user) {
@@ -98,12 +103,15 @@ class SingleParticipant extends Component {
     const user = Meteor.users.findOne(participant.id);
     return (
       <div className="participant-row row x-center" key={index}>
+        <div className="row center x-center" style={{width: "10%"}}>
+          <SeedDropdown seedIndex={this.props.index} pSize={this.props.pSize} index={this.props.bIndex} id={this.state.id} updateList={this.props.onUpdate} />
+        </div>
         <img src={this.imgOrDefault(user)} style={{width: this.props.opts.imgDim, height: this.props.opts.imgDim, borderRadius: "100%", marginRight: 20}} />
         <div className="col" style={{width: this.props.opts.mobile ? "25%" : "15%"}}>
           <span style={{fontSize: this.props.opts.fontSize}}>{ participant.alias }</span>
           <span style={{fontSize: `calc(${this.props.opts.fontSize} * 3 / 4)`}}>{ user ? user.username : "Anonymous" }</span>
         </div>
-        <div className="col-1" style={{textAlign: "center"}} style={{opacity}} key={index}>
+        <div className="row center x-center col-1" style={{opacity}} key={index}>
           {
             participant.checkedIn ? (
               this.props.opts.mobile ? (
@@ -134,8 +142,8 @@ class SingleParticipant extends Component {
             )
           }
         </div>
-        <div style={{textAlign: "right"}}>
-          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
+        <div style={{marginLeft: 20, textAlign: "right"}}>
+          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
         </div>
       </div>
     )

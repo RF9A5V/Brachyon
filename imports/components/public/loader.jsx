@@ -6,7 +6,7 @@ export default class Loader extends Component {
     return (
       <svg
        className={this.props.animate ? "animate" : ""}
-       viewBox={this.props.animate ? `70 30 410 420` : "0, 0, 350, 280"}
+       viewBox={this.props.animate ? `70 30 410 420` : "0 0 350 280"}
        width={this.props.width}>
 
       <defs

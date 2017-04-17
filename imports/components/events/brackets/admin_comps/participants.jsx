@@ -112,12 +112,12 @@ export default class AddPartipantAction extends ResponsiveComponent {
   renderBase(opts) {
     const instance = Instances.findOne();
     return (
-      <div className={opts.direction}>
+      <div className="col">
         {
           this.props.bracket.isComplete ? (
             ""
           ) : (
-            <div className="col col-1" style={{marginRight: opts.direction == "col" ? 0 : 20, marginBottom: opts.direction == "col" ? 30 : 0}}>
+            <div className="col col-1 center" style={{width: opts.mobile ? "100%" : "50%", margin: "0 auto 20px"}}>
               <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
@@ -134,7 +134,11 @@ export default class AddPartipantAction extends ResponsiveComponent {
         <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
           {
             this.state.participants.map((participant, index) => {
-              return(<SingleParticipant participant={participant} completed={this.state.completed} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)} opts={opts}/>);
+              return(<SingleParticipant
+                participant={participant}
+                completed={this.state.completed} index={index}
+                invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)}
+                openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)} opts={opts} pSize={this.state.participants.length} onUpdate={this.updateParticipants.bind(this)} bIndex={this.props.index}/>);
             })
           }
         </div>
@@ -153,23 +157,23 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      direction: "col",
       mobile: true,
       fontSize: "2.5em",
-      imgDim: 150,
+      imgDim: 100,
       maxHeight: 750,
-      buttonClass: "large-button"
+      buttonClass: "large-button",
+      mobile: true
     })
   }
 
   renderDesktop() {
     return this.renderBase({
-      direction: "row",
       mobile: false,
       fontSize: "16px",
       imgDim: 50,
       maxHeight: 500,
-      buttonClass: ""
+      buttonClass: "",
+      mobile: false
     })
   }
 

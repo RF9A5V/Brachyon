@@ -251,11 +251,16 @@ Meteor.methods({
   },
 
   "events.start_event"(id, index) {
-    const instance = Instances.findOne(id);
+    const event = Events.findOne(id);
+    var instance;
+    if(!event) {
+      instance = Instances.findOne(id);
+    }
+    else {
+      instance = Instances.findOne(event.instances.pop());
+    }
     if(!instance) {
-      if(!instance) {
-        throw new Meteor.Error(404, "Couldn't find this event!");
-      }
+      throw new Meteor.Error(404, "Couldn't find this event!");
     }
     var organize = instance.brackets[index];
     var format = instance.brackets[index].format.baseFormat;
@@ -276,9 +281,9 @@ Meteor.methods({
       if(instance.brackets[index].id) {
         var bracket = Brackets.findOne(instance.brackets[index].id);
         var matches = [];
+        bracket.rounds.map(b => {
           b.map(r => {
             r.map(m => {
-              bracket.rounds.forEach(b => {
               if(m) {
                 matches.push(m.id);
               }

@@ -102,11 +102,11 @@ export default class BracketsPanel extends ResponsiveComponent {
     var eColor, fColor;
     if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
-      fColor = "#333";
+      fColor = "#111";
     }
     else if(window.location.pathname.indexOf("league") >= 0){
       eColor = "#FF6000";
-      fColor = "#FFF";
+      fColor = "#111";
     }
     else{}
     return (
@@ -197,8 +197,8 @@ export default class BracketsPanel extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "3em",
-      fontWidth: "100%",
+      fontSize: "2em",
+      fontWidth: "90%",
       toggleWidth: 200
     });
   }

@@ -71,7 +71,7 @@ export default class CreateContainer extends ResponsiveComponent {
 
   renderBase(opts) {
     return (
-      <div className="col x-center col-1">
+      <div className="col x-center col-1" style={{paddingBottom: opts.mobile ? 146 : 0}}>
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
@@ -98,11 +98,11 @@ export default class CreateContainer extends ResponsiveComponent {
         {
           opts.navComp
         }
-        <div style={{paddingLeft: opts.paddingLeft, marginBottom: 10, width: this.props.stretch ? "100%" : "1000px"}}>
+        <div style={{marginBottom: 10, width: "100%", maxWidth: this.props.stretch ? "100%" : "1000px"}}>
           {
             this.props.items.map((item, i) => {
               return (
-                <div style={{width: opts.mobile ? "calc(80vw - 20px)" : "100%", marginLeft: opts.mobile ? "calc(10vw + 20px)" : 0}}>
+                <div style={{width: opts.mobile ? "calc(90vw - 40px)" : "100%", marginLeft: opts.mobile ? ("calc(10vw + 10px)") : 0}}>
                   <SubContainer key={item.key} ref={item.key} items={item.subItems} active={i == this.state.selected} update={this.setState.bind(this)} status={this.state.modStatus[item.key]} setStatus={(val) => {
                     if(this.state.modStatus[item.key] === undefined) {
                       return;
@@ -118,9 +118,17 @@ export default class CreateContainer extends ResponsiveComponent {
         <div className={`row x-center footer-buttons footer-bar ${opts.mobile ? "mobile" : ""}`}>
           {
             (this.props.actions || []).map((a, i) => {
+              const shouldShowText = (opts.mobile && this.props.actions.length <= 2) || !opts.mobile;
               return (
-                <div className={`create-container-option foot-button col-1 ${opts.eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action} style={{fontSize: opts.fontSize}}>
-                  { a.name.toUpperCase() }
+                <div className={`row x-center center create-container-option foot-button col-1 ${opts.eColor == "#FF6000" ? "orange" : "blue"} noselect`} style={{fontWeight: "bold"}} onClick={a.action}>
+                  <FontAwesome name={a.icon} style={{fontSize: opts.fontSize, marginRight: shouldShowText ? 10 : 0}} />
+                  {
+                    shouldShowText ? (
+                      <span style={{fontSize: opts.fontSize}}>{ a.name.toUpperCase() }</span>
+                    ) : (
+                      null
+                    )
+                  }
                 </div>
               )
             })
@@ -140,7 +148,7 @@ export default class CreateContainer extends ResponsiveComponent {
     }
 
     var style = {
-      margin: "0px auto 30px",
+      margin: "0px auto 10px",
       width: "100%"
     }
 
@@ -182,7 +190,6 @@ export default class CreateContainer extends ResponsiveComponent {
     )
     return this.renderBase({
       navComp,
-      paddingLeft: 0,
       eColor,
       fontSize: "1em",
       mobile: false
@@ -213,7 +220,6 @@ export default class CreateContainer extends ResponsiveComponent {
     )
     return this.renderBase({
       navComp,
-      paddingLeft: 0,
       eColor,
       fontSize: "4rem",
       mobile: true

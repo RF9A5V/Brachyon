@@ -39,11 +39,11 @@ export default class StreamPanel extends ResponsiveComponent {
     var tabs = ["Stream"];
     if(window.location.pathname.indexOf("events" >= 0)){
       var eColor = "#00BDFF";
-      var fColor = "#333";
+      var fColor = "#111";
     }
     else if(window.location.pathname.indexOf("leagues") >= 0){
       var eColor = "#FF6000";
-      var fColor = "#FFF";
+      var fColor = "#111";
     }
     var active = this.props.status;
     return (
@@ -92,7 +92,7 @@ export default class StreamPanel extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "3em",
+      fontSize: "2em",
       fontWidth: "100%",
       toggleWidth: 200,
       inputClass: "large-input"
