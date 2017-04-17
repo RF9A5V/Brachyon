@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Modal from "react-modal";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
+import { findDOMnode } from 'react-dom';
+import { DragSource, DropTarget } from 'react-dnd'
 
 export default class MatchBlock extends Component {
 

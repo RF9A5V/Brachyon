@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import FontAwesome from "react-fontawesome";
 
 import ParticipantAddField from "../participant_add_field.jsx";
 import TicketDiscountModal from "../ticket_discount_modal.jsx";
@@ -10,23 +9,22 @@ import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import StartBracketAction from "./start.jsx";
-import SeedDropDown from "./seeddropdown.jsx";
+import SingleParticipant from "./single_participant.jsx";
 
-import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
-
-export default class AddPartipantAction extends ResponsiveComponent {
+export default class AddParticipantAction extends Component {
 
   constructor(props) {
     super(props);
     var instance = Instances.findOne();
     var iid = instance._id;
     var bracket = instance.brackets[this.props.index];
-    var started = instance.brackets[this.props.index].inProgress ? true:false;
+    let completed = bracket.isComplete;
     var participants = bracket.participants || [];
     this.state = {
+      invisibleIndex: -1,
       participants,
       iid,
-      started,
+      completed,
       index: this.props.index,
       discountOpen: false,
       optionsOpen: false,
@@ -37,6 +35,43 @@ export default class AddPartipantAction extends ResponsiveComponent {
   imgOrDefault(user) {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
+
+  openDiscount(participant) {
+    if(instance.tickets) {
+      this.setState({ discountOpen: true, participant })
+    }
+    else {
+      this.onUserCheckIn(participant);
+    }
+  }
+
+  onHoverEffect(dragIndex, hoverIndex)
+  {
+    if (this.state.invisibleIndex != hoverIndex)
+      this.setState({invisibleIndex: hoverIndex});
+    var { participants } = this.state;
+    const dragParticipant = participants[dragIndex];
+
+    participants.splice(dragIndex, 1);
+    participants.splice(hoverIndex, 0, dragParticipant);
+
+    this.setState({participants});
+  }
+
+  onDropEffect()
+  {
+    this.setState({invisibleIndex: -1});
+    Meteor.call("participants.updateParticipants", Instances.findOne()._id, this.props.index, this.state.participants, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully switched seeding!");
+      }
+    })
+  }
+
+  openOptions(participant) { this.setState({ optionsOpen: true, participant }) }
 
   onUserCheckIn(participant, onCheckedIn) {
     const cb = () => {
@@ -50,9 +85,8 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
       })
     }
-    const instance = Instances.findOne();
-    if(participant.id && instance.tickets) {
-      Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
+    if(participant.id) {
+      Meteor.call("tickets.charge", Instances.findOne()._id, this.props.index, participant.id, (err) => {
         if(err) {
           onCheckedIn(false);
           return toastr.error(err.reason);
@@ -67,16 +101,21 @@ export default class AddPartipantAction extends ResponsiveComponent {
     }
   }
 
-  renderBase(opts) {
+  updateParticipants() {
+    this.setState({
+      participants: Instances.findOne().brackets[this.props.index].participants
+    })
+  }
+
+  render() {
     const instance = Instances.findOne();
-    const participants = instance.brackets[this.props.index].participants || [];
     return (
-      <div className={opts.direction}>
+      <div className="row">
         {
           this.props.bracket.isComplete ? (
             ""
           ) : (
-            <div className="col col-1" style={{marginRight: opts.direction == "col" ? 0 : 20, marginBottom: opts.direction == "col" ? 30 : 0}}>
+            <div className="col col-1" style={{marginRight: 20}}>
               <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
@@ -86,70 +125,14 @@ export default class AddPartipantAction extends ResponsiveComponent {
                 this.setState({
                   startOpen: true
                 })
-              }} />
-
+              }} onUpdateParticipants={this.updateParticipants.bind(this)} />
             </div>
           )
         }
-        <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
+        <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
           {
-            participants.map((participant, index) => {
-              const user = Meteor.users.findOne(participant.id);
-
-              return (
-                <div className="participant-row row x-center" key={index}>
-                  {
-                    opts.mobile ? (
-                      null
-                    ) : (
-                      <div style={{width: "10%"}}>
-                        {
-                          this.state.started ? ( <div>{index+1}</div> ) :(<SeedDropDown seedIndex={index} pSize={participants.length} index={this.state.index} id={this.state.iid} updateList={this.forceUpdate.bind(this)} /> )
-                        }
-                      </div>
-                    )
-                  }
-                  <img src={this.imgOrDefault(user)} style={{width: opts.imgDim, height: opts.imgDim, borderRadius: "100%", marginRight: 20}} />
-                  <div className="col" style={{width: opts.mobile ? "25%" : "15%"}}>
-                    <span style={{fontSize: opts.fontSize}}>{ participant.alias }</span>
-                    <span style={{fontSize: `calc(${opts.fontSize} * 3 / 4)`}}>{ user ? user.username : "Anonymous" }</span>
-                  </div>
-                  <div className="col-1" style={{textAlign: "center"}}>
-                    {
-                      participant.checkedIn ? (
-                        opts.mobile ? (
-                          <FontAwesome name="check" style={{fontSize: `calc(${opts.fontSize} * 2)`, color: "#FF6000"}} />
-                        ) : (
-                          <span>Checked In</span>
-                        )
-                      ) : (
-                        opts.mobile ? (
-                          <FontAwesome name="sign-in" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={() => {
-                            if(instance.tickets) {
-                              this.setState({ discountOpen: true, participant })
-                            }
-                            else {
-                              this.onUserCheckIn(participant);
-                            }
-                          }}/>
-                        ) : (
-                          <button className={opts.buttonClass} onClick={() => {
-                            if(instance.tickets) {
-                              this.setState({ discountOpen: true, participant })
-                            }
-                            else {
-                              this.onUserCheckIn(participant);
-                            }
-                          }}>Check In</button>
-                        )
-                      )
-                    }
-                  </div>
-                  <div style={{textAlign: "right"}}>
-                    <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${opts.fontSize} * 2)`}} onClick={() => { this.setState({ optionsOpen: true, participant }) }} />
-                  </div>
-                </div>
-              )
+            this.state.participants.map((participant, index) => {
+              return(<SingleParticipant participant={participant} completed={this.state.completed} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
             })
           }
         </div>
@@ -165,27 +148,4 @@ export default class AddPartipantAction extends ResponsiveComponent {
       </div>
     )
   }
-
-  renderMobile() {
-    return this.renderBase({
-      direction: "col",
-      mobile: true,
-      fontSize: "2.5em",
-      imgDim: 150,
-      maxHeight: 750,
-      buttonClass: "large-button"
-    })
-  }
-
-  renderDesktop() {
-    return this.renderBase({
-      direction: "row",
-      mobile: false,
-      fontSize: "16px",
-      imgDim: 50,
-      maxHeight: 500,
-      buttonClass: ""
-    })
-  }
-
 }

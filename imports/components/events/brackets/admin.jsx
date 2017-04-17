@@ -28,6 +28,8 @@ import Brackets from "/imports/api/brackets/brackets.js";
 import Instances from "/imports/api/event/instance.js";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 class BracketAdminScreen extends Component {
 
@@ -97,6 +99,7 @@ class BracketAdminScreen extends Component {
     })
     var args = {
       id: bracket.id,
+      index,
       eid: this.props.params.eventId,
       update: this.forceUpdate.bind(this),
       format: bracket.format.baseFormat,
@@ -344,7 +347,7 @@ class BracketAdminScreen extends Component {
   }
 }
 
-export default createContainer(({params}) => {
+const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
@@ -372,3 +375,5 @@ export default createContainer(({params}) => {
 
 
 }, BracketAdminScreen);
+
+export default DragDropContext(HTML5Backend)(x)

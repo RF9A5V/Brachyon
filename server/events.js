@@ -1120,6 +1120,33 @@ Meteor.methods({
         })
       }
     }
+  },
+
+  "participants.swapPlayers"(instanceID, bracketIndex, playerOne, playerTwo) {
+    let participants = Instances.findOne(instanceID).brackets[bracketIndex].participants;
+    let p1index = participants.findIndex( (participant) => {
+      return participant.alias == playerOne;
+    });
+    let p2index = participants.findIndex( (participant) => {
+      return participant.alias == playerTwo;
+    });
+
+    var temp = participants[p1index];
+    participants[p1index] = participants[p2index];
+    participants[p2index] = temp;
+    Instances.update(instanceID, {
+      $set: {
+        [`brackets.${bracketIndex}.participants`]: participants
+      }
+    })
+  },
+
+  "participants.updateParticipants"(instanceID, bracketIndex, participants) {
+    Instances.update(instanceID, {
+      $set: {
+        [`brackets.${bracketIndex}.participants`]: participants
+      }
+    })
   }
 
 })
