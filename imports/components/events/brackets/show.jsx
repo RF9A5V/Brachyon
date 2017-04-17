@@ -8,6 +8,7 @@ import BracketPanel from "../show/bracket.jsx";
 
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
@@ -135,6 +136,11 @@ class BracketShowScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
+          },
+          {
+            content: Toggle,
+            name: "toggle",
+            ignoreHeader: true
           }
         ];
         break;
@@ -319,7 +325,7 @@ class BracketShowScreen extends Component {
       }
     }
     items.push({
-      name: "Generate Short URL",
+      name: "Short URL",
       icon: "link",
       action: (e) => {
         if(!this.state.url) {
