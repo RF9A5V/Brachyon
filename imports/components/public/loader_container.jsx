@@ -13,7 +13,7 @@ export default class LoaderContainer extends Component {
     if(this.props.ready) {
       setTimeout(() => {
         this.props.onReady()
-      }, 1000);
+      }, 0);
     }
   }
 
@@ -21,7 +21,7 @@ export default class LoaderContainer extends Component {
     if(next.ready) {
       setTimeout(() => {
         this.props.onReady()
-      }, 1000);
+      }, 0);
     }
   }
 
