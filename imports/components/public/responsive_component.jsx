@@ -50,9 +50,6 @@ export default class ResponsiveComponent extends Component {
   }
 
   render() {
-    if(!this.state.render) {
-      console.log(this);
-    }
     switch(this.state.render) {
       case "mobile":
         return this.renderMobile();

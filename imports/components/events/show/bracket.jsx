@@ -52,7 +52,6 @@ export default class BracketPanel extends Component {
       )
     }
     else if (this.props.format == "double_elim"){
-      console.log("hello!")
       component = (
         <DoubleDisplay rounds={rounds} id={this.props.id} update={this.forceUpdate.bind(this)} onMatchClick={this.toggleModal.bind(this)} />
       )

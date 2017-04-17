@@ -29,9 +29,9 @@ export default class ToggleBracket extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      top: 126,
+      top: 180,
       padding: 20,
-      buttonClass: "large-button"
+      buttonClass: "mid-button"
     });
   }
 

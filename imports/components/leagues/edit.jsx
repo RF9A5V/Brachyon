@@ -97,7 +97,6 @@ class EditLeagueScreen extends Component {
   eventItems(league) {
     var subs = league.events.map((e, i) => {
       var event = Events.findOne({ slug: e.slug });
-      console.log(event);
       return {
         content: EditEvent,
         name: event.details.name,

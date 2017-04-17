@@ -29,7 +29,6 @@ export default class ShortLinkScreen extends Component {
     if(!this.state.ready) {
       return (
         <LoaderContainer ready={this.state.initReady} onReady={() => {
-          console.log(this.state.url)
           browserHistory.push(this.state.url)
         }} />
       )
