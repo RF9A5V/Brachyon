@@ -87,7 +87,7 @@ export default class BlockContainer extends Component {
         <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
-            (this.props.events || []).map((event, i) => {
+            (this.props.events.reverse() || []).map((event, i) => {
               var e = Events.findOne(event._id);
               var instance = Instances.findOne(event.instances[event.instances.length - 1]) || {};
               var count = (() => {
