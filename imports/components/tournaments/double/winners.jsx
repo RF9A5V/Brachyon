@@ -183,7 +183,6 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                       })) {
                         return null
                       }
-                      console.log(match);
                       return (
                         <MatchBlock
                           key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}
