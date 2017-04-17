@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FontAwesome from "react-fontawesome";
 import Participant from "./participant.jsx";
+import { browserHistory } from "react-router";
 
 import Matches from "/imports/api/event/matches.js";
 
