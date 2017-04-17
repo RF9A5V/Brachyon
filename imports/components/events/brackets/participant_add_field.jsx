@@ -95,7 +95,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
       }
       else {
         toastr.success("Successfully shuffled seeding.", "Success!");
-        this.forceUpdate();
+        this.props.onUpdateParticipants();
       }
     });
   }
@@ -142,6 +142,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
             //   }
             // })
           }
+          this.props.onUpdateParticipants();
         }
       })
     }
