@@ -23,6 +23,8 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 class BracketShowScreen extends Component {
 
@@ -360,7 +362,7 @@ class BracketShowScreen extends Component {
   }
 }
 
-export default createContainer(({params}) => {
+const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
@@ -386,3 +388,5 @@ export default createContainer(({params}) => {
     }
   }
 }, BracketShowScreen);
+
+export default DragDropContext(HTML5Backend)(x)

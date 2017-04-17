@@ -247,7 +247,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
   renderBase(opts) {
     var event = Events.findOne();
-    var bracket = Brackets.findOne();
+
+    const bracket = Brackets.findOne();
 
     var headers = this.props.rounds[0].map((r, i) => {
       const matchCount = r.filter(m => {
@@ -294,9 +295,8 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
       })
     }
     const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
-
     let draggableDiv, draggable;
-    if (Brackets.findOne()) {
+    if (!bracket || this.props.useDrag) {
       draggableDiv = (
         <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
           const el = document.getElementById("winner-header");
