@@ -14,7 +14,6 @@ import SingleParticipant from "./single_participant.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class AddPartipantAction extends ResponsiveComponent {
-
   constructor(props) {
     super(props);
     var instance = Instances.findOne();
