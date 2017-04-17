@@ -15,6 +15,7 @@ import StreamPanel from "./create/module_dropdowns/stream.jsx";
 import TicketingPanel from "./create/module_dropdowns/ticketing.jsx";
 
 import { Banners } from "/imports/api/event/banners.js"
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 // Emulation of implementation of a create container.
 
@@ -22,7 +23,10 @@ export default class EventCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      ready: false,
+      initReady: true
+    };
   }
 
   create() {
@@ -52,7 +56,6 @@ export default class EventCreate extends Component {
         if(imgRef) {
           imgRef.meta.eventSlug = event.slug;
           const fileType = imgRef.file.type;
-          console.log(fileType);
           Banners.insert({
             file: imgRef.file,
             meta: imgRef.meta,
@@ -93,14 +96,22 @@ export default class EventCreate extends Component {
             key: "location",
             content: (
               Location
-            )
+            ),
+            args: {
+              online: false
+            }
           },
           {
             name: "Description",
             key: "description",
             content: (
               Editor
-            )
+            ),
+            args: {
+              useInsert: true,
+              usePara: true,
+              useTable: true
+            }
           },
           {
             name: "Date",
@@ -116,7 +127,8 @@ export default class EventCreate extends Component {
               ImageForm
             ),
             args: {
-              aspectRatio: 16/9
+              aspectRatio: 16/9,
+              buttonText: "Choose Event Banner"
             }
           }
         ],
@@ -187,14 +199,20 @@ export default class EventCreate extends Component {
     return [
       {
         name: "Publish",
+        icon: "check",
         action: this.create.bind(this)
       }
     ]
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
     return (
-      <div className="col col-1" style={{padding: 20}}>
+      <div className="col col-1" style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )

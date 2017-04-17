@@ -9,11 +9,19 @@ import CreateContainer from "/imports/components/public/create/create_container.
 
 import { createContainer } from "meteor/react-meteor-data";
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 // Details stuff
 import DescriptionPage from "./modules/details/description.jsx";
 import LocationPage from "./modules/details/location.jsx";
 import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
+
+import Title from "./create/title.jsx";
+import ImageForm from "../public/img_form.jsx";
+import Editor from "../public/editor.jsx";
+import DateTimeSelector from "../public/datetime_selector.jsx";
+import Location from "../events/create/location_select.jsx";
 
 // Bracket Stuff
 import BracketsMain from "./admin/modules/brackets/main.jsx";
@@ -21,9 +29,13 @@ import AddBracket from "./modules/bracket/add.jsx";
 import EditBracket from "./modules/bracket/edit.jsx";
 import BracketInfo from "./modules/bracket/details.jsx";
 
+import BracketPanel from "./create/module_dropdowns/brackets.jsx";
+
 // Stream Stuff
 import StreamAdd from "./modules/stream/add.jsx";
 import StreamDetails from "./modules/stream/details.jsx";
+
+import StreamPanel from "./create/module_dropdowns/stream.jsx";
 
 // Ticket Stuff
 import TicketDetails from "./modules/tickets/details.jsx";
@@ -41,18 +53,19 @@ class EventAdminPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      ready: false
     };
   }
 
   componentDidMount() {
-    const event = Events.findOne();
-    const instance = Instances.findOne();
-    if(!event || !instance) {
-      toastr.error("Event not found.");
-      return browserHistory.push("/");
-    }
+    // if(!event || !instance) {
+    //   toastr.error("Event not found.");
+    //   return browserHistory.push("/");
+    // }
     this.props.router.setRouteLeaveHook(this.props.route, () => {
+      const event = Events.findOne();
+      const instance = Instances.findOne();
       if(instance.brackets && instance.brackets.length == 0) {
         return "You have to add a bracket if you want the bracket module.";
       }
@@ -77,6 +90,7 @@ class EventAdminPage extends Component {
   }
 
   detailItems() {
+    const event = Events.findOne();
     return {
       name: "Details",
       icon: "file",
@@ -86,31 +100,41 @@ class EventAdminPage extends Component {
           name: "Description",
           key: "description",
           content: (
-            DescriptionPage
-          )
+            Title
+          ),
+          args: {
+            title: event.details.name
+          }
         },
         {
           name: "Location",
           key: "location",
           content: (
-            LocationPage
-          )
+            Location
+          ),
+          args: {
+            ...event.details.location
+          }
         },
         {
           name: "Date",
           key: "datetime",
           content: (
-            DatetimePage
-          )
+            DateTimeSelector
+          ),
+          args: {
+            init: event.details.datetime
+          }
         },
         {
           name: "Banner",
           key: "image",
           content: (
-            ImagePage
+            ImageForm
           ),
           args: {
-            aspectRatio: 16/9
+            aspectRatio: 16/9,
+            url: event.details.bannerUrl
           }
         }
       ]
@@ -121,43 +145,15 @@ class EventAdminPage extends Component {
     var event = Events.findOne();
     var instance = Instances.findOne();
     var subs;
-    if(!instance.brackets) {
-      subs = [
-        {
-          content: BracketInfo,
-          name: "Main",
-          key: "main",
-          args: {
-            update: this.forceUpdate.bind(this)
-          }
-        }
-      ]
-    }
-    else {
-      subs = instance.brackets.map((b,i) => {
-        return {
-          name: b.name || `Bracket ${i + 1}`,
-          key: i,
-          content: EditBracket,
-          args: {
-            bracket: b,
-            index: i,
-            update: this.forceUpdate.bind(this)
-          }
-        }
-      });
-      if(!event.league) {
-        subs.push({
-          content: AddBracket,
-          name: "Add Bracket",
-          key: "add",
-          args: {
-            update: this.forceUpdate.bind(this)
-          }
-        });
+    subs = [{
+      name: "Brackets",
+      key: "brackets",
+      content: BracketPanel,
+      args: {
+        brackets: instance.brackets || null,
+        isLeague: event.league != null
       }
-
-    }
+    }];
     return {
       name: "Brackets",
       icon: "sitemap",
@@ -166,22 +162,13 @@ class EventAdminPage extends Component {
       toggle: !Events.findOne().league,
       initialToggleState: instance.brackets && instance.brackets.length > 0,
       toggleAction: (next) => {
-        if(instance.brackets) {
-          Meteor.call("events.removeModule.brackets", event._id, (err) => {
-            if(err) {
-              return toastr.error(err.reason);
-            }
-            this.forceUpdate();
-          });
-        }
-        else {
-          Meteor.call("events.addModule.brackets", event._id, (err) => {
-            if(err) {
-              return toastr.error(err.reason);
-            }
-            this.forceUpdate();
-          })
-        }
+        const action = instance.brackets ? "removeModule" : "addModule";
+        Meteor.call(`events.${action}.brackets`, event._id, (err) => {
+          if(err) {
+            return toastr.error(err.reason);
+          }
+          this.forceUpdate();
+        });
       }
     }
   }
@@ -189,21 +176,14 @@ class EventAdminPage extends Component {
   streamItems() {
     var event = Events.findOne();
 
-    var subs = [];
-    if(event.stream) {
-      subs.push({
-        content: StreamAdd,
-        name: "Add Stream",
-        key: "stream"
-      });
-    }
-    else {
-      subs.push({
-        content: StreamDetails,
-        name: "Stream Details",
-        key: "stream"
-      });
-    }
+    var subs = [{
+      content: StreamPanel,
+      name: "",
+      key: "stream",
+      args: {
+        stream: (event.stream || {}).name
+      }
+    }];
 
     return {
       name: "Stream",
@@ -284,7 +264,7 @@ class EventAdminPage extends Component {
     items.push(this.detailItems());
     items.push(this.bracketItems());
     items.push(this.streamItems());
-    items.push(this.ticketItems());
+    // items.push(this.ticketItems());
     return items;
   }
 
@@ -324,9 +304,13 @@ class EventAdminPage extends Component {
       if(err) {
         return toastr.error(err.reason);
       }
+      else {
+        return toastr.success("Saved event info!");
+      }
     });
     if(imgTemp) {
       imgTemp.meta.eventSlug = event.slug;
+      toastr.warning("Uploading event image...");
       Banners.insert({
         file: imgTemp.image,
         meta: imgTemp.meta,
@@ -334,6 +318,7 @@ class EventAdminPage extends Component {
           if(err) {
             return toastr.error(err.reason, "Error!");
           }
+          toastr.success("Updated event banner!");
         }
       })
     }
@@ -343,10 +328,12 @@ class EventAdminPage extends Component {
     return [
       {
         name: "Save All",
+        icon: "floppy-o",
         action: this.save.bind(this)
       },
       {
         name: "Rerun",
+        icon: "refresh",
         action: () => {
           this.setState({
             rerunOpen: true
@@ -355,6 +342,7 @@ class EventAdminPage extends Component {
       },
       {
         name: "Close",
+        icon: "times",
         action: () => {
           this.setState({
             open: true
@@ -365,15 +353,15 @@ class EventAdminPage extends Component {
   }
 
   render() {
-    if(!this.props.ready){
+    if(!this.state.ready){
       return (
-        <div>
-          Loading...
+        <div className="col center x-center" style={{width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.8)", position: "fixed"}}>
+          <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ ready: true }) }} />
         </div>
       )
     }
     return (
-      <div className="box col" style={{padding: 40}}>
+      <div className="box col" style={{padding: 10}}>
         <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
         <CloseModal open={this.state.open} id={Events.findOne()._id} onClose={() => { this.setState({ open: false }) }} onComplete={() => {
           browserHistory.push("/");
@@ -391,7 +379,7 @@ class EventAdminPage extends Component {
 
 export default withRouter(createContainer(props => {
   const eventHandle = Meteor.subscribe("event", props.params.slug);
-  const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
+  //const paymentHandle = Meteor.subscribe("ticketHolders", props.params.slug);
   return {
     ready: eventHandle.ready()
   }

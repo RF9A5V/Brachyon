@@ -19,9 +19,14 @@ import UserSections from "./show/sections.jsx";
 import UserStat from "./show/stat.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
-export default class ShowUserScreen extends TrackerReact(Component) {
+import LoaderContainer from "/imports/components/public/loader_container.jsx"
+
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class ShowUserScreen extends TrackerReact(ResponsiveComponent) {
 
   componentWillMount() {
+    super.componentWillMount()
     self = this;
     this.setState({
       user: Meteor.subscribe("user", Meteor.userId(), {
@@ -29,18 +34,20 @@ export default class ShowUserScreen extends TrackerReact(Component) {
 
           this.setState({
 
-            ready: true
+            initReady: true
           })
         }
       }),
       open: false,
       ready: false,
+      initReady: false,
       tab: "events",
       game:"overview"
     });
   }
 
   componentWillUnmount(){
+    super.componentWillUnmount();
     this.state.user.stop();
   }
 
@@ -89,19 +96,17 @@ export default class ShowUserScreen extends TrackerReact(Component) {
     }
   }
 
-  render() {
+  renderBase(opts) {
     var self = this;
 
     if(!this.state.ready){
       return (
-        <div className="row center x-center" style={{width: "100%", height: "100%"}}>
-          <Loading />
-        </div>
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ ready: true }) }} />
       )
     }
 
     return (
-      <div>
+      <div style={{marginBottom: opts.marginBottom}}>
         <div className="user-banner" style={{backgroundImage: `url(${this.profileBannerURL()})`}}>
           <div className="user-img-line row flex-pad x-center">
             <div className="row col-1">
@@ -145,6 +150,18 @@ export default class ShowUserScreen extends TrackerReact(Component) {
         </div>
       </div>
     )
-
   }
+
+  renderMobile() {
+    return this.renderBase({
+      marginBottom: 200
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      marginBottom: 0
+    })
+  }
+
 }

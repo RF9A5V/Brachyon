@@ -4,32 +4,13 @@ import Headroom from 'react-headroom';
 import { Link } from 'react-router';
 
 import SnapModal from './snap_modal.jsx';
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class Footer extends React.Component {
+export default class Footer extends ResponsiveComponent {
 
   constructor() {
     super();
-    this.state = {
-      useDefaultHeader: window.location.pathname.indexOf("preview") >= 0 ? false : true,
-      useSmall: window.innerWidth <= 740,
-      cb: () => {
-        if(window.innerWidth <= 740 && !this.state.useSmall) {
-          this.setState({
-            useSmall: true
-          })
-        }
-        else if(window.innerWidth > 740 && this.state.useSmall) {
-          this.setState({
-            useSmall: false
-          })
-        }
-      }
-    }
-    window.addEventListener("resize", this.state.cb);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.state.cb);
+    this.state = {};
   }
 
   socialLinks() {
@@ -70,23 +51,42 @@ export default class Footer extends React.Component {
     )
   }
 
-  render() {
+  renderBase(opts) {
     return(
       <Headroom id="footer" disableInlineStyles={true} downTolerance={document.body.clientHeight - 50}>
-        <div className="row footer x-center center">
-          { this.socialLinks() }
+        <div className="row footer x-center center" style={{height: opts.height}}>
+          { opts.useSocial ? this.socialLinks() : null }
           <div className="col-1">
-            <div className="row footer-hub" style={{margin: '0 10px 0 0'}}>
-              <Link to="/about"><div className="footer-hub-bg col x-center center">About</div></Link>
+            <div className="row" style={{margin: '0 10px 0 0', justifyContent: opts.justify}}>
+              <Link to="/about"><div className="footer-hub-bg col x-center center" style={{fontSize: opts.fontSize}}>About</div></Link>
               {/*<Link to="/advertise" className="footer-hub-pad col x-center">Advertise</Link>*/}
-              <Link to="/terms"><div className="footer-hub-bg col x-center center">Terms</div></Link>
-              <Link to="/privacy"><div className="footer-hub-bg col x-center center">Privacy</div></Link>
+              <Link to="/terms"><div className="footer-hub-bg col x-center center" style={{fontSize: opts.fontSize}}>Terms</div></Link>
+              <Link to="/privacy"><div className="footer-hub-bg col x-center center" style={{fontSize: opts.fontSize}}>Privacy</div></Link>
               {/*<a href="#" className="footer-hub-pad col x-center">Privacy</a>*/}
-              <div className="footer-hub-bg col x-center center" style={{cursor: "default", backgroundColor: "transparent", color: "white"}}>&copy; Brachyon 2016</div>
+              <div className="footer-hub-bg col x-center center" style={{cursor: "default", backgroundColor: "transparent", color: "white", fontSize: opts.fontSize}}>&copy; Brachyon 2017</div>
             </div>
           </div>
         </div>
       </Headroom>
     );
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      useSocial: true,
+      fontSize: "1rem",
+      justify: "flex-end",
+      height: "50px"
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      useSocial: false,
+      fontSize: "3rem",
+      justify: "center",
+      height: "126px"
+    })
+  }
+
 }

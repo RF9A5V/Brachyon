@@ -7,6 +7,9 @@ import GroupFormat from "./group_format.jsx";
 
 import Matches from "/imports/api/event/matches.js";
 
+
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 export default class MatchShowScreen extends Component {
 
   constructor(props) {
@@ -18,14 +21,15 @@ export default class MatchShowScreen extends Component {
             bracket: Meteor.subscribe("brackets", Instances.findOne().brackets[props.params.bracketIndex].id, {
               onReady: () => {
                 this.setState({
-                  isReady: true
+                  initReady: true
                 })
               }
             })
           })
         }
       }),
-      isReady: false
+      ready: false,
+      initReady: false
     }
   }
 
@@ -66,9 +70,9 @@ export default class MatchShowScreen extends Component {
   }
 
   render() {
-    if(!this.state.isReady) {
+    if(!this.state.ready) {
       return (
-        <div></div>
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     var comps = [];

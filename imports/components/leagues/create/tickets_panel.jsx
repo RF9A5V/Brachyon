@@ -19,7 +19,6 @@ export default class TicketsPanel extends Component {
         price: parseInt(parseFloat(this.refs[`price${k}`].value) * 100)
       })
     });
-    console.log(discounts);
     return {
       venue: parseInt(parseFloat(this.refs.venuePrice.value) * 100),
       "0": {

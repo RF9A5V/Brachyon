@@ -53,5 +53,17 @@ Meteor.methods({
   },
   "games.reject"(gameID) {
     Games.remove(gameID);
+  },
+  "games.search"(queryString, amount = 3) {
+    console.log(queryString);
+    const games = Games.find({
+      name: {
+        $regex: `^${queryString}`,
+        $options: "ims"
+      }
+    }, {
+      limit: amount
+    });
+    return games.fetch();
   }
 })

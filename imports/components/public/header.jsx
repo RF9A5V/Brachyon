@@ -1,18 +1,21 @@
-import React, { Component } from 'react';
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import React from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
 import { Link, browserHistory } from 'react-router';
-import { ProfileImages } from "/imports/api/users/profile_images.js";
+import FontAwesome from "react-fontawesome";
 import Sidebar from "react-sidebar";
+import Headroom from 'react-headroom';
+
+import Loader from "/imports/components/public/loader.jsx";
+
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import SignUpModal from './signupmodal.jsx';
 import LogInModal from './loginmodal.jsx';
-import Headroom from 'react-headroom';
-import FontAwesome from 'react-fontawesome';
-import UserDropdown from "../users/user_dropdown.jsx";
-import NotyDropdown from "../users/noty_dropdown.jsx";
 import SidebarMenu from "../users/sidebar_menu.jsx";
+import GlobalMenu from "/imports/components/public/global_side_nav.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
-export default class Header extends TrackerReact(Component) {
+class Header extends ResponsiveComponent {
 
   onClick(e) {
     e.preventDefault();
@@ -35,7 +38,7 @@ export default class Header extends TrackerReact(Component) {
         }
       }),
       userMenuOpen: false,
-      notificationsMenuOpen: false
+      navMenuOpen: false
     }
   }
 
@@ -53,8 +56,54 @@ export default class Header extends TrackerReact(Component) {
     });
   }
 
-  render() {
-    if(!this.state.user.ready()){
+  renderMobile() {
+    if(!this.props.ready){
+      return (
+        <div>
+        </div>
+      )
+    }
+    const user = Meteor.user();
+    return (
+      <div>
+        <Headroom id="header" disableInlineStyles={true}>
+          <div className="row x-center" style={{backgroundColor: "black", height: "9em", width: "100vw", padding: 20, zIndex: 5}}>
+            <div className="col-1">
+              <FontAwesome name="bars" style={{fontSize: "5em"}} onClick={() => {
+                this.setState({ navMenuOpen: true })
+              }}/>
+            </div>
+            <div onClick={() => {
+              browserHistory.push("/");
+            }}>
+              <Loader width={100} />
+            </div>
+            <div className="col-1 row" style={{justifyContent: "flex-end"}}>
+              {
+                user ? (
+                  <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: "7.5em", height: "7.5em", borderRadius: "100%"}} onClick={() => {
+                    this.setState({ userMenuOpen: true })
+                  }} />
+                ) : (
+                  null
+                )
+              }
+            </div>
+          </div>
+        </Headroom>
+        <Sidebar sidebar={<SidebarMenu onRedirect={this.toggleUserMenu.bind(this)} />} open={this.state.userMenuOpen} onSetOpen={this.toggleUserMenu.bind(this)} pullRight={true} sidebarClassName="sidebar"></Sidebar>
+        <Sidebar sidebar={
+          <GlobalMenu closeMenu={() => { this.setState({navMenuOpen: false}) }} />
+        } open={this.state.navMenuOpen} onSetOpen={() => {
+          this.setState({ navMenuOpen: !this.state.navMenuOpen })
+        }} pullRight={false} sidebarClassName="sidebar">
+        </Sidebar>
+      </div>
+    )
+  }
+
+  renderDesktop() {
+    if(!this.props.ready){
       return (
         <div>
         </div>
@@ -75,11 +124,14 @@ export default class Header extends TrackerReact(Component) {
       );
     }
     else {
-      userCred = (
-        <div className="head-credentials">
-          <LogInModal />
-        </div>
-      )
+      userCred = [
+        <button className="login-button" style={{marginRight: 10}} onClick={() => {
+          this.setState({ regOpen: true, content: "login" })
+        }}>Log In</button>,
+        <button className="signup-button" onClick={() => {
+          this.setState({ regOpen: true, content: "signup" })
+        }}>Sign Up</button>
+      ]
     }
     var createPath = ["/create","/events/create","/leagues/create","/brackets/create"];
     return (
@@ -115,10 +167,10 @@ export default class Header extends TrackerReact(Component) {
                 </Link>*/}
               </div>
             </div>
-            <div className="col-1 row center">
-              <div>
-                <img style={{width: 40, height: "auto"}} src="/images/brachyon_logo_trans.png" onClick={() => {browserHistory.push("/")}}></img>
-              </div>
+            <div className="row center x-center" onClick={() => {
+              browserHistory.push("/");
+            }} style={{cursor: "pointer"}}>
+              <Loader width={40} />
             </div>
             <div style={{justifyContent: "flex-end"}} className="col-1 row x-center">
               {userCred}
@@ -127,7 +179,17 @@ export default class Header extends TrackerReact(Component) {
         </Headroom>
         <Sidebar sidebar={<SidebarMenu onRedirect={this.toggleUserMenu.bind(this)} />} open={this.state.userMenuOpen} onSetOpen={this.toggleUserMenu.bind(this)} pullRight={true} sidebarClassName="sidebar">
         </Sidebar>
+        <RegModal open={this.state.regOpen} content={this.state.content} onClose={() => {
+          this.setState({ regOpen: false })
+        }} onSuccess={() => {}} />
       </div>
     )
   }
 }
+
+export default createContainer((props) => {
+  const sub = Meteor.subscribe("user", Meteor.userId())
+  return {
+    ready: sub.ready()
+  }
+}, Header)

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-export default class TimeInput extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class TimeInput extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -9,6 +11,9 @@ export default class TimeInput extends Component {
       hour: "12",
       minute: "00",
       half: "AM"
+    }
+    if(!this.state) {
+      this.state = {};
     }
     if(props.init) {
       var current = moment(props.init);
@@ -18,7 +23,9 @@ export default class TimeInput extends Component {
         half: current.format("A")
       }
     }
-    this.state = obj;
+    Object.keys(obj).forEach(k => {
+      this.state[k] = obj[k];
+    })
   }
 
   componentWillReceiveProps(next) {
@@ -29,7 +36,7 @@ export default class TimeInput extends Component {
         minute: parseInt(current.format("mm")),
         half: current.format("A")
       }
-      this.state = obj;
+      this.setState(obj);
       this.forceUpdate();
     }
   }
@@ -41,17 +48,17 @@ export default class TimeInput extends Component {
   }
 
   value() {
-    var hour = parseInt(this.refs.hours.value);
-    if(hour == 12 && this.refs.half.value == "AM") {
+    var hour = parseInt(this.state.hour);
+    if(hour == 12 && this.state.half == "AM") {
       hour = 0;
     }
-    else if(hour < 12 && this.refs.half.value == "PM") {
+    else if(hour < 12 && this.state.half == "PM") {
       hour += 12;
     }
     if(hour < 10) {
       hour = "0" + hour;
     }
-    var minutes = parseInt(this.refs.minutes.value);
+    var minutes = parseInt(this.state.minute);
     if(minutes < 10) {
       minutes = "0" + minutes;
     }
@@ -60,7 +67,7 @@ export default class TimeInput extends Component {
     };
   }
 
-  render() {
+  renderBase(opts) {
     var [hours, minutes] = [[], []];
     for(var i = 1; i <= 12; i ++){
       hours.push(i);
@@ -69,9 +76,12 @@ export default class TimeInput extends Component {
       minutes.push(i);
     }
     return (
-      <div style={this.props.style || {}}>
+      <div style={this.props.style || { marginTop: opts.margin }}>
         <div className="time-input row center x-center">
-          <select ref="hours" defaultValue={this.state.hour} onChange={this.onChange.bind(this)}>
+          <select ref="hours" defaultValue={this.state.hour} onChange={(e) => {
+            this.state.hour = e.target.value;
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               hours.map((hour) => {
                 return (
@@ -85,7 +95,10 @@ export default class TimeInput extends Component {
           <span style={{margin: "0 10px"}}>
             :
           </span>
-          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={this.onChange.bind(this)}>
+          <select ref="minutes" style={{marginRight: 10}} defaultValue={this.state.minute} onChange={(e) => {
+            this.state.minute = e.target.value()
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, marginRight: opts.margin, padding: opts.padding}}>
             {
               minutes.map((value) => {
                 return (
@@ -96,7 +109,10 @@ export default class TimeInput extends Component {
               })
             }
           </select>
-          <select ref="half" defaultValue={this.state.half} onChange={this.onChange.bind(this)}>
+          <select ref="half" defaultValue={this.state.half} onChange={(e) => {
+            this.state.half = e.target.value;
+            this.onChange();
+          }} style={{fontSize: opts.fontSize, padding: opts.padding}}>
             <option value={"AM"}>AM</option>
             <option value={"PM"}>PM</option>
           </select>
@@ -104,4 +120,21 @@ export default class TimeInput extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "3em",
+      margin: 30,
+      padding: 20
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      margin: 10,
+      padding: 10
+    });
+  }
+
 }

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Cropper from 'react-cropper';
 
-export default class ImageForm extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class ImageForm extends ResponsiveComponent {
 
   componentWillMount() {
+    super.componentWillMount();
     this.setState({
       id: this.props.id,
       uploader: null,
@@ -73,14 +76,11 @@ export default class ImageForm extends Component {
     var file = e.target.files[0];
     var type = file.type;
     reader.onload = () => {
-      this.state = {
+      this.setState({
         url: reader.result,
         file,
         type
-      }
-      setTimeout(() => {
-        this.forceUpdate();
-      }, 250)
+      })
     }
     reader.readAsDataURL(file);
   }
@@ -105,7 +105,7 @@ export default class ImageForm extends Component {
     return null;
   }
 
-  render() {
+  renderBase(opts) {
     var value = "";
     if(this.state.url){
       value = (
@@ -113,7 +113,7 @@ export default class ImageForm extends Component {
           <Cropper
             aspectRatio={this.props.aspectRatio || 1}
             src={this.state.url}
-            style={{width: "100%", maxWidth: 500, height: 300}}
+            style={{width: opts.width, height: opts.height}}
             ref="cropper"
             zoomable={false}
             zoomOnWheel={false}
@@ -122,7 +122,7 @@ export default class ImageForm extends Component {
       );
     }
     else if(this.props.url != null) {
-      value = (<img src={this.props.url}  style={{height: "auto"}}/>);
+      value = (<img src={this.props.url}  style={{width: "100%", height: "auto"}}/>);
     }
     else {
       value = (
@@ -131,20 +131,36 @@ export default class ImageForm extends Component {
     }
     return (
       <div className="col">
-        <div className="row center">
+        <div className="row center x-center">
           { value }
         </div>
         <input type="file" ref="file" accept="image/*" style={{display: "none"}} onChange={this.updateImage.bind(this)} />
         <div className="row center" style={{marginTop: 20}}>
           {
             this.state.url || this.props.defaultImage ? (
-              <button onClick={() => { this.refs.file.click() }}>Change</button>
+              <button className={opts.buttonClass} onClick={() => { this.refs.file.click() }}>Change</button>
             ) : (
-              <button onClick={() => { this.refs.file.click() }}>Choose Image</button>
+              <button className={opts.buttonClass} onClick={() => { this.refs.file.click() }}>{ this.props.buttonText || "Choose Image" }</button>
             )
           }
         </div>
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      buttonClass: "",
+      width: 500,
+      height: 300
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      buttonClass: "large-button",
+      width: 800,
+      height: 500
+    })
   }
 }

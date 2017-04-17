@@ -3,9 +3,12 @@ import FontAwesome from "react-fontawesome";
 import moment from "moment";
 
 import PreviewMap from "/imports/components/public/map.jsx";
+import DescriptionOverlay from "/imports/components/events/preview/slides/description_overlay.jsx";
 
-export default class Description extends Component {
-  render() {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class Description extends ResponsiveComponent {
+  renderDesktop() {
     var league = Leagues.findOne();
     var event = Events.findOne({ slug: { $in: league.events }, isComplete: false }, { sort: { "details.datetime": -1 } })
     return (
@@ -73,4 +76,48 @@ export default class Description extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    const league = Leagues.findOne();
+    const event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
+    return (
+      <div className="col" style={{width: "100%", padding: 40}}>
+        <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 40}}>
+          <span style={{fontSize: "3em"}}>{ moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") }</span>
+        </div>
+        <div style={{padding: 40, marginBottom: 40, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
+          this.setState({
+            open: true
+          })
+        }}>
+          <div style={{fontSize: "3em", maxHeight: "30vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
+          </div>
+          <div className="row center x-center">
+            <span style={{fontSize: "2.5em", color: "#FF6000", marginRight: 15}}>Show More</span>
+            <FontAwesome name="caret-down" style={{fontSize: "4em", color: "#FF6000"}} />
+          </div>
+        </div>
+        {
+          event.details.location.online ? (
+            <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)"}}>
+              <span style={{fontSize: "3em"}}>Online</span>
+            </div>
+          ) : (
+            [
+              <div className="col" style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", fontSize: "3em", marginBottom: 40}}>
+                <span>{ event.details.location.streetAddress }</span>
+                <span>{ event.details.location.city } { event.details.location.state }</span>
+              </div>,
+              <div className="col" style={{width: "100%", height: "25vh"}}>
+                <PreviewMap center={event.details.location.coords.reverse()} />
+              </div>
+            ]
+
+          )
+        }
+        <DescriptionOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} description={league.details.description} />
+      </div>
+    )
+  }
+
 }

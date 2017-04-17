@@ -81,6 +81,9 @@ figure
   justify-content center
   align-items center
 
+.footer-bar.mobile
+  height 126px
+
 .pointerChange
   cursor:pointer
 
@@ -276,6 +279,13 @@ button, input[type="submit"], .custom-file-upload
   margin-top 5px
   margin-bottom 5px
 
+input.large-input[type="text"], input.large-input[type="password"], input.large-input[type="submit"]
+  font-size 4rem
+  padding 2rem
+
+button.large-button
+  font-size 3.5rem
+  padding 2rem
 
 button.inactive, input[type="submit"].inactive
   border solid 2px #666
@@ -508,17 +518,22 @@ label
   padding 10px 20px
   margin 10px auto
 
+.input-label
+  background-color #111
+  padding: 5px
+  margin: 0
+
 .border-blue
   border-color #00BDFF
 
 .footer-buttons
   width 100vw
-  height 50
   position fixed
   background-color #111
   bottom 0
   left 0
   right 0
+  z-index 3
 
 .panel-tab
   border-bottom-width 0;
@@ -539,8 +554,18 @@ label
 .grabbing
   cursor -webkit-grabbing
   cursor grabbing
+  > *
+    overflow: hidden !important
 
 .grab
   cursor -webkit-grab
   cursor grab
+  > *
+    overflow: hidden !important
 
++below(480px)
+  .grabbing > *, .grab > *
+    overflow: auto !important
+
+.sidebar
+  z-index 5 !important

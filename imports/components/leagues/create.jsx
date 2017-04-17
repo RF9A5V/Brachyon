@@ -15,14 +15,16 @@ import TicketsPanel from "/imports/components/leagues/create/tickets_panel.jsx";
 import { LeagueBanners } from "/imports/api/leagues/banners.js";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
-// Emulation of implementation of a create container.
-
-export default class Sandbox extends Component {
+export default class LeagueCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      ready: false,
+      initReady: true
+    };
   }
 
   create() {
@@ -86,7 +88,10 @@ export default class Sandbox extends Component {
           {
             name: "Location",
             key: "location",
-            content: LocationForm
+            content: LocationForm,
+            args: {
+              online: false
+            }
           },
           {
             name: "Banner",
@@ -135,19 +140,19 @@ export default class Sandbox extends Component {
         ],
         toggle: true
       },
-      {
-        name: "Tickets",
-        key: "tickets",
-        icon: "ticket",
-        subItems: [
-          {
-            name: "Main",
-            key: "tickets",
-            content: TicketsPanel
-          }
-        ],
-        toggle: true
-      }
+      // {
+      //   name: "Tickets",
+      //   key: "tickets",
+      //   icon: "ticket",
+      //   subItems: [
+      //     {
+      //       name: "Main",
+      //       key: "tickets",
+      //       content: TicketsPanel
+      //     }
+      //   ],
+      //   toggle: true
+      // }
     ]
   }
 
@@ -155,14 +160,20 @@ export default class Sandbox extends Component {
     return [
       {
         name: "Publish",
+        icon: "check",
         action: this.create.bind(this)
       }
     ]
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
     return (
-      <div className="col" style={{padding: 20}}>
+      <div className="col" style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )

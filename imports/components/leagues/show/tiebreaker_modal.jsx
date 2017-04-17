@@ -6,11 +6,7 @@ export default class TiebreakerModal extends Component {
   constructor(props) {
     super(props);
     const league = Leagues.findOne();
-    const events = Events.find({
-      slug: {
-        $in: league.events
-      }
-    }).fetch();
+    const events = Events.find().fetch();
     const isOwner = Meteor.userId() == league.owner;
     this.state = {
       open: events.every(e => { return e.isComplete }) && !league.tiebreaker && isOwner

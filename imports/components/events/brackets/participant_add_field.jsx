@@ -1,8 +1,12 @@
 import React, { Component } from "react";
+import FontAwesome from "react-fontawesome";
 
 import StartBracketAction from "./admin_comps/start.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class ParticipantAddField extends Component {
+import ResetModal from "./admin_comps/reset_modal.jsx";
+
+export default class ParticipantAddField extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -25,11 +29,13 @@ export default class ParticipantAddField extends Component {
     }
   }
 
-  userTemplate(user, index) {
+  userTemplate(user, index, opts) {
     return (
       <div className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
-        <img style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
-        { user.username }
+        <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
+        <span style={{fontSize: opts.fontSize, textAlign: "left"}}>
+          { user.username }
+        </span>
       </div>
     )
   }
@@ -127,17 +133,17 @@ export default class ParticipantAddField extends Component {
           });
           this.refs.userValue.value = "";
           if(id) {
-            Meteor.call("tickets.addOnsite", id, Instances.findOne()._id, this.props.index, (err) => {
-              if(err) {
-                return toastr.error(err.reason);
-              }
-              else {
-                this.props.onParticipantAdd({
-                  id,
-                  alias
-                })
-              }
-            })
+            // Meteor.call("tickets.addOnsite", id, Instances.findOne()._id, this.props.index, (err) => {
+            //   if(err) {
+            //     return toastr.error(err.reason);
+            //   }
+            //   else {
+            //     this.props.onParticipantAdd({
+            //       id,
+            //       alias
+            //     })
+            //   }
+            // })
           }
           this.props.onUpdateParticipants();
         }
@@ -154,23 +160,25 @@ export default class ParticipantAddField extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
-        <div className="row center">
-          <label style={{margin: 0}}>Add A Participant</label>
+        <div className="col" style={{marginBottom: 10}}>
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant</label>
+          <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
+            if(e.key == "Enter") {
+              this.addParticipant(this.state.query, null);
+            }
+          }} />
         </div>
-        <div className="row" style={{marginBottom: 10}}>
-          <input className="col-1" ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} />
-        </div>
-        <div style={{backgroundColor: "#111", height: 300, overflowY: "auto", width: "100%", marginBottom: 10}}>
+        <div style={{backgroundColor: "#111", height: 150, overflowY: "auto", width: "100%", marginBottom: 10}}>
           {
             this.state.query.length >= 3 ? (
-              <div className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
-                <img style={{width: 50, height: 50, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
+              <div ref="anon" className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
+                <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
                 <div className="col">
-                  <span>{ this.state.query }</span>
-                  <span>Add As Anonymous User</span>
+                  <span style={{fontSize: opts.fontSize, textAlign: "left"}}>{ this.state.query }</span>
+                  <span style={{fontSize: opts.fontSize, textAlign: "left"}}>Add As Anonymous User</span>
                 </div>
               </div>
             ) : (
@@ -179,7 +187,7 @@ export default class ParticipantAddField extends Component {
           }
           {
             this.getUsers().map((user, i) => {
-              return this.userTemplate(user, i)
+              return this.userTemplate(user, i, opts)
             })
           }
         </div>
@@ -188,18 +196,56 @@ export default class ParticipantAddField extends Component {
             this.props.bracket.isComplete ? (
               ""
             ) : (
-              <button style={{marginRight: 10}} onClick={this.randomizeSeeding.bind(this)}>
-                Randomize Seeding
+              <button className={opts.buttonClass + " col-1"} style={{marginRight: 10}} onClick={this.randomizeSeeding.bind(this)}>
+                <FontAwesome name="random" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                Randomize
               </button>
             )
           }
-          <div className = { ((this.props.bracket.id != null)) ?
-            ("start-button-hide") :
-            ((this.props.bracket.participants || []).length < 3 ? ("start-button-hide"):("")) }>
-            <button onClick={this.props.onStart}>Start Bracket</button>
-          </div>
+          {
+            this.props.bracket.id ? (
+              <button className={opts.buttonClass + " col-1"} onClick={() => { this.setState({ resetOpen: true }) }}>
+                <FontAwesome name="refresh" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                Reset Bracket
+              </button>
+            ) : (
+              this.props.bracket.participants.length > 3 ? (
+                <button className={opts.buttonClass + " col-1"} onClick={this.props.onStart}>
+                  <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                  Start
+                </button>
+              ) : (
+                null
+              )
+
+            )
+          }
         </div>
+        <ResetModal open={this.state.resetOpen} onClose={() => { this.setState({ resetOpen: false }) }} onStart={() => {
+          location.reload();
+        }} index={this.props.index} />
       </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      inputClass: "large-input",
+      buttonClass: "large-button",
+      imgDim: 100,
+      fontSize: "2.5em"
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      inputClass: "",
+      buttonClass: "",
+      imgDim: 50,
+      fontSize: "1em"
+    });
+  }
+
 }
