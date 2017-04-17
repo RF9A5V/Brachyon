@@ -33,6 +33,12 @@ export default class AddPartipantAction extends ResponsiveComponent {
     }
   }
 
+  componentWillReceiveProps(next) {
+    this.setState({
+      participants: Instances.findOne().brackets[this.props.index].participants
+    })
+  }
+
   imgOrDefault(user) {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
