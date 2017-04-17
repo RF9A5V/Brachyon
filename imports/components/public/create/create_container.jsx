@@ -3,10 +3,8 @@ import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
 import SubContainer from "./sub_create_container.jsx";
-import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
-import CreateContainerMenu from "./create_side_menu.jsx";
 
-export default class CreateContainer extends ResponsiveComponent {
+export default class CreateContainer extends Component {
 
   constructor(props) {
     super(props);
@@ -22,8 +20,7 @@ export default class CreateContainer extends ResponsiveComponent {
       creator: {
         type: "user",
         id: Meteor.userId()
-      },
-      open: false
+      }
     };
   }
 
@@ -69,9 +66,56 @@ export default class CreateContainer extends ResponsiveComponent {
     this.forceUpdate();
   }
 
-  renderBase(opts) {
+  foot(){
+    var eColor;
+    if(window.location.pathname.indexOf("event") >= 0){
+      eColor = "#00BDFF";
+    }
+    else if(window.location.pathname.indexOf("league" >= 0)){
+      eColor = "#FF6000";
+    }
     return (
-      <div className="col x-center col-1">
+      <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
+        {
+          (this.props.actions || []).map((a, i) => {
+            return (
+              <div className={`create-container-option foot-button col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action}>
+                { a.name.toUpperCase() }
+              </div>
+            )
+          })
+        }
+      </div>)
+  }
+
+  footer(){
+    return this.foot();
+    // if ( Organizations.find().fetch().length == 0 ){
+    //   if (this.props.actions.length==0){
+    //     return("");
+    //   }
+    //   else if(this.props.actions.length==1){
+    //     if (this.props.actions[0].name == "Back To Event"){
+    //       return "";
+    //     }
+    //     else
+    //       return (this.foot());
+    //   }
+    //   else return (this.foot());
+    // }
+    // else return (this.foot());
+  }
+
+  render() {
+    var eColor;
+    if(window.location.pathname.indexOf("event") >= 0){
+      eColor = "#00BDFF";
+    }
+    else if(window.location.pathname.indexOf("league" >= 0)){
+      eColor = "#FF6000";
+    }
+    return (
+      <div className="col col-1">
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
@@ -95,61 +139,7 @@ export default class CreateContainer extends ResponsiveComponent {
             )
           }
         </div>
-        {
-          opts.navComp
-        }
-        <div style={{paddingLeft: opts.paddingLeft, marginBottom: 10, width: this.props.stretch ? "100%" : "1000px"}}>
-          {
-            this.props.items.map((item, i) => {
-              return (
-                <div style={{width: opts.mobile ? "calc(80vw - 20px)" : "100%", marginLeft: opts.mobile ? "calc(10vw + 20px)" : 0}}>
-                  <SubContainer key={item.key} ref={item.key} items={item.subItems} active={i == this.state.selected} update={this.setState.bind(this)} status={this.state.modStatus[item.key]} setStatus={(val) => {
-                    if(this.state.modStatus[item.key] === undefined) {
-                      return;
-                    }
-                    this.state.modStatus[item.key] = val;
-                    this.forceUpdate();
-                  }} getRefValue={this._getRefValue.bind(this)} />
-                </div>
-              )
-            })
-          }
-        </div>
-        <div className={`row x-center footer-buttons footer-bar ${opts.mobile ? "mobile" : ""}`}>
-          {
-            (this.props.actions || []).map((a, i) => {
-              return (
-                <div className={`create-container-option foot-button col-1 ${opts.eColor == "#FF6000" ? "orange" : "blue"}`} style={{fontWeight: "bold"}} onClick={a.action} style={{fontSize: opts.fontSize}}>
-                  { a.name.toUpperCase() }
-                </div>
-              )
-            })
-          }
-        </div>
-      </div>
-    )
-  }
-
-  renderDesktop() {
-    var eColor;
-    if(window.location.pathname.indexOf("event") >= 0){
-      eColor = "#00BDFF";
-    }
-    else if(window.location.pathname.indexOf("league" >= 0)){
-      eColor = "#FF6000";
-    }
-
-    var style = {
-      margin: "0px auto 30px",
-      width: "100%"
-    }
-
-    if(!this.props.stretch) {
-      style.maxWidth = "1000px";
-    }
-
-    const navComp = (
-      <div className="" style={style}>
+        <div className="" style={{marginBottom: 10}}>
         <div className="row">
           {
             this.props.items.map((item, i) => {
@@ -161,7 +151,7 @@ export default class CreateContainer extends ResponsiveComponent {
                   width: 175,
                   cursor: "pointer"
                 }}>
-                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white", fontSize: "1.5em"}} />
+                  <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white"}} size="2x" />
                   <span className="title">{ item.name }</span>
                   <div className="col-1"></div>
                   {
@@ -177,47 +167,38 @@ export default class CreateContainer extends ResponsiveComponent {
               )
             })
           }
+          </div>
+        </div>
+        <div>
+          {
+            this.props.items.map((item, i) => {
+              return (
+                <div style={{width: "100%"}}>
+                  <SubContainer key={item.key} ref={item.key} items={item.subItems} active={i == this.state.selected} update={this.setState.bind(this)} status={this.state.modStatus[item.key]} setStatus={(val) => {
+                    if(this.state.modStatus[item.key] === undefined) {
+                      return;
+                    }
+                    this.state.modStatus[item.key] = val;
+                    this.forceUpdate();
+                  }} getRefValue={this._getRefValue.bind(this)} />
+                </div>
+              )
+            })
+          }
+        </div>
+        <div className="row x-center footer-buttons">
+          {
+            // (this.props.actions || []).map((a, i) => {
+            //   return (
+            //     <div className={`create-container-option col-1 ${eColor == "#FF6000" ? "orange" : "blue"}`} onClick={a.action}>
+            //       { a.name.toUpperCase() }
+            //     </div>
+            //   )
+            // })
+          }
+          { this.foot() }
         </div>
       </div>
     )
-    return this.renderBase({
-      navComp,
-      paddingLeft: 0,
-      eColor,
-      fontSize: "1em",
-      mobile: false
-    });
   }
-
-  renderMobile() {
-    var eColor;
-    if(window.location.pathname.indexOf("event") >= 0){
-      eColor = "#00BDFF";
-    }
-    else if(window.location.pathname.indexOf("league" >= 0)){
-      eColor = "#FF6000";
-    }
-    const navComp = (
-      <CreateContainerMenu
-        ref="menu"
-        items={this.props.items}
-        toggle={this.defaultToggleAction.bind(this)}
-        modStatus={this.state.modStatus}
-        onItemSelect={(i) => {
-          this.setState({
-            selected: i
-          })
-        }}
-        selected={this.state.selected}
-      />
-    )
-    return this.renderBase({
-      navComp,
-      paddingLeft: 0,
-      eColor,
-      fontSize: "4rem",
-      mobile: true
-    });
-  }
-
 }
