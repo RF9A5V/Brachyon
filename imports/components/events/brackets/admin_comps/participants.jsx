@@ -74,7 +74,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   openOptions(participant) { this.setState({ optionsOpen: true, participant }) }
 
-  onUserCheckIn(participant, onCheckedIn) {
+  onUserCheckIn(participant, index) {
     const cb = () => {
       Meteor.call("events.checkInUser", Events.findOne()._id, this.props.index, participant.alias, (err) => {
         if(err) {
@@ -82,25 +82,27 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
         else {
           toastr.success("Successfully checked in user!");
-          onCheckedIn(true);
+          this.state.participants[index].checkedIn = true;
+          this.forceUpdate();
         }
       })
     }
     const instance = Instances.findOne();
-    if(participant.id && instance.tickets) {
-      Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
-        if(err) {
-          onCheckedIn(false);
-          return toastr.error(err.reason);
-        }
-        else {
-          cb()
-        }
-      })
-    }
-    else {
-      cb();
-    }
+    // if(participant.id && instance.tickets) {
+    //   Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
+    //     if(err) {
+    //       onCheckedIn(false);
+    //       return toastr.error(err.reason);
+    //     }
+    //     else {
+    //       cb()
+    //     }
+    //   })
+    // }
+    // else {
+    //   cb();
+    // }
+    cb();
   }
 
   updateParticipants() {
@@ -136,7 +138,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
             this.state.participants.map((participant, index) => {
               return(<SingleParticipant
                 participant={participant}
-                completed={this.state.completed} index={index}
+                completed={this.state.completed} index={index} onCheckIn={this.onUserCheckIn.bind(this)}
                 invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)}
                 openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)} opts={opts} pSize={this.state.participants.length} onUpdate={this.updateParticipants.bind(this)} bIndex={this.props.index}/>);
             })

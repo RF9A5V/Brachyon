@@ -43,9 +43,6 @@ class BracketShowScreen extends Component {
     if(this.state.event) {
       this.state.event.stop();
     }
-    if(this.state.bracket) {
-      this.state.bracket.stop();
-    }
     if(this.refs.hiddenLink) {
       this.refs.hiddenLink.removeEventListener("click");
     }

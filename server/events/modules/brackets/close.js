@@ -139,7 +139,7 @@ Meteor.methods({
       var league = Leagues.findOne(event.league);
       var totalScore = bracket.participants.length;
 
-      var leaderboardIndex = league.events.indexOf(event.slug);
+      var leaderboardIndex = league.events.findIndex(e => {return e.slug == event.slug});
       var leaderboard = league.leaderboard[leaderboardIndex];
       Object.keys(leaderboard).forEach(id => {
         var negIndex = placement.findIndex(rank => {

@@ -131,7 +131,9 @@ export default class ParticipantAddField extends ResponsiveComponent {
             query: "",
             showUsers: false
           });
-          this.refs.userValue.value = "";
+          if(this.refs.userValue) {
+            this.refs.userValue.value = "";
+          }
           if(id) {
             // Meteor.call("tickets.addOnsite", id, Instances.findOne()._id, this.props.index, (err) => {
             //   if(err) {
@@ -209,7 +211,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
                 Reset Bracket
               </button>
             ) : (
-              this.props.bracket.participants.length > 3 ? (
+              (this.props.bracket.participants || []).length > 3 ? (
                 <button className={opts.buttonClass + " col-1"} onClick={this.props.onStart}>
                   <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
                   Start
