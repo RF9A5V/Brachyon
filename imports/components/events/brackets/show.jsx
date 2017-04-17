@@ -330,7 +330,7 @@ class BracketShowScreen extends Component {
             else {
               this.setState({
                 open: true,
-                url: window.location.origin + "/!" + data
+                url: data
               })
             }
           });

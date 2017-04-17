@@ -8,7 +8,8 @@ export default class ShortLinkScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: false
+      ready: false,
+      initReady: false
     }
   }
 
@@ -18,7 +19,7 @@ export default class ShortLinkScreen extends Component {
         toastr.error("Error grabbing short URL.");
       }
       this.setState({
-        ready: true,
+        initReady: true,
         url: err ? "/" : data
       })
     });
@@ -27,7 +28,10 @@ export default class ShortLinkScreen extends Component {
   render() {
     if(!this.state.ready) {
       return (
-        <LoaderContainer ready={this.state.ready} onReady={() => { browserHistory.push(this.state.url) }} />
+        <LoaderContainer ready={this.state.initReady} onReady={() => {
+          console.log(this.state.url)
+          browserHistory.push(this.state.url)
+        }} />
       )
     }
     return null;
