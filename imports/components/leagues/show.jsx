@@ -14,6 +14,7 @@ import TiebreakerSlide from "./show/tiebreaker.jsx";
 import StreamSlide from "./show/stream.jsx";
 
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class LeagueShowPage extends Component {
 
@@ -126,10 +127,9 @@ class LeagueShowPage extends Component {
   }
 
   render() {
-    if(!this.props.ready) {
+    if(!this.state.ready){
       return (
-        <div>
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (
