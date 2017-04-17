@@ -3,9 +3,11 @@ import moment from "moment";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
-export default class Bar extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-  status() {
+export default class Bar extends ResponsiveComponent {
+
+  status(opts) {
     var event = this.props.event;
     var instance = Instances.findOne(event.instances[event.instances.length - 1]);
     var bracket = instance.brackets[0];
@@ -18,13 +20,13 @@ export default class Bar extends Component {
     }
     return (
       [
-        <FontAwesome name={icon} style={{color, marginRight: 10}} />,
-        <span style={{color}}>{ text }</span>
+        <FontAwesome name={icon} style={{color, marginRight: 10, fontSize: opts.iconSize}} />,
+        <span style={{color, fontSize: opts.fontSize}}>{ text }</span>
       ]
     )
   }
 
-  render() {
+  renderDesktop() {
     var event = this.props.event;
     var bracket = Instances.findOne(event.instances[event.instances.length - 1]).brackets[0];
     return (
@@ -58,7 +60,10 @@ export default class Bar extends Component {
           </div>
           <div className="row flex-pad x-center" style={{padding: 10, backgroundColor: "#111"}}>
             <div className="row x-center">
-              { this.status() }
+              { this.status({
+                fontSize: "1em",
+                iconSize: "2em"
+              }) }
             </div>
             <div className="event-block-admin-button" style={{width: 100}} onClick={(e) => {
               e.preventDefault();
@@ -67,6 +72,42 @@ export default class Bar extends Component {
             }}>
               View Bracket
             </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderMobile() {
+    var event = this.props.event;
+    var bracket = Instances.findOne(event.instances[event.instances.length - 1]).brackets[0];
+    return (
+      <div className="row" style={{marginBottom: 20}}>
+        <div className="col-1" style={{marginRight: 20, position: "relative"}} onClick={() => {
+          browserHistory.push("/event/" + event.slug)
+        }}>
+          <img src={event.details.bannerUrl || "/images/bg.jpg"} style={{width: "100%", height: "auto"}} />
+          <div className="col center x-center" style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}>
+            <h3 style={{fontSize: "5em", maxWidth: "80%", textOverflow: "ellipsis", overflowX: "hidden"}}>Test</h3>
+            <button className="large-button" style={{fontSize: "3rem", padding: 20}}>
+              View Event
+            </button>
+          </div>
+        </div>
+        <div className="col col-1" style={{backgroundColor: "#333", padding: 20}} onClick={() => {
+          browserHistory.push("/event/" + event.slug + "/brackets")
+        }}>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            <FontAwesome name="users" style={{fontSize: "2em", marginRight: 10}} />
+            <span style={{fontSize: "2em"}}>{ (bracket.participants || []).length }</span>
+          </div>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            { this.status({ iconSize: "2em", fontSize: "2em" }) }
+          </div>
+          <div className="col col-1 center x-center">
+            <button className="large-button" style={{fontSize: "2.5rem", padding: 20}}>
+              View Bracket
+            </button>
           </div>
         </div>
       </div>

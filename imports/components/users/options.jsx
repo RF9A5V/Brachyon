@@ -13,13 +13,15 @@ import OAuthOptionsPanel from "./options/oauth.jsx";
 import ProfileImageSelect from "./options/details/profile_image.jsx";
 import ProfileBannerSelect from "./options/details/profile_banner.jsx";
 import AliasSelect from "./options/details/alias.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class UserOptionsScreen extends TrackerReact(Component) {
 
   constructor(props) {
     super(props);
     this.state = {
-      user: Meteor.subscribe("user", Meteor.userId())
+      user: Meteor.subscribe("user", Meteor.userId()),
+      ready: false
     }
   }
 
@@ -91,10 +93,10 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if(!this.state.user.ready()){
+    if(!this.state.ready){
       return (
-        <div></div>
-      );
+        <LoaderContainer ready={this.state.user.ready()} onReady={() => { this.setState({ready: true}) }} />
+      )
     }
     return (
       <div style={{padding: 20}}>

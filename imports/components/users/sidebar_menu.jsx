@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 import { browserHistory } from "react-router";
 
-export default class SidebarMenu extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-  options() {
+export default class SidebarMenu extends ResponsiveComponent {
+
+  options(ops) {
     var items = [
       {
         icon: "user",
@@ -52,34 +54,62 @@ export default class SidebarMenu extends Component {
     ];
     return items.map(i => {
       return (
-        <div className="row x-center hover-orange" style={{alignSelf: "stretch", padding: 20}} onClick={() => {
+        <div className="row hover-orange x-center" style={{padding: ops.padding, width: "100%"}} onClick={() => {
           (i.action)();
           this.props.onRedirect();
         }}>
-          <FontAwesome name={i.icon} size="2x" style={{width: 50, marginRight: 10}} />
-          <div className="col-3">
-            <span style={{fontSize: 18}}>{ i.name }</span>
+          <div className="col-1"></div>
+          <div className="col-1">
+            <FontAwesome name={i.icon} style={{width: 50, marginRight: ops.marginRight, fontSize: ops.fontSize}} />
           </div>
+          <span className="col-3" style={{fontSize: ops.fontSize}}>{ i.name }</span>
+          <div className="col-1"></div>
         </div>
       )
     })
   }
 
-  render() {
+  renderBase(ops) {
     var user = Meteor.user();
     if(!user) {
       return null;
     }
     return (
-      <div style={{height: "100vh", backgroundColor: "#111", width: 250}}>
-        <div className="col x-center">
-          <div className="col x-center" style={{padding: 20}}>
-            <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100, borderRadius: "100%", marginBottom: 10}}/>
-            <span style={{fontSize: 18}}>{ user.username }</span>
+      <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width, padding: 20}}>
+        <div className="col-1">
+          <div className="row" style={{justifyContent: "flex-end"}}>
+            <FontAwesome name="times" style={{fontSize: ops.fontSize}} onClick={this.props.onRedirect}/>
           </div>
-          { this.options() }
+          <div className="col x-center" style={{padding: ops.padding}}>
+            <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: ops.imgSize, height: ops.imgSize, borderRadius: "100%", marginBottom: 10}}/>
+            <span style={{fontSize: ops.fontSize}}>{ user.username }</span>
+          </div>
         </div>
+        <div className="col center x-center">
+          { this.options(ops) }
+        </div>
+        <div className="col-1"></div>
       </div>
     )
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      width: "75vw",
+      imgSize: "30vw",
+      fontSize: "6rem",
+      padding: "5em",
+      marginRight: 30
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      width: 250,
+      imgSize: 100,
+      fontSize: 18,
+      padding: 20,
+      marginRight: 10
+    })
   }
 }

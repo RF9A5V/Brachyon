@@ -11,6 +11,12 @@ import BracketMain from "./modules/bracket/edit.jsx";
 import AddBracket from "./modules/bracket/add.jsx";
 import EditBracket from "./modules/bracket/edit.jsx";
 
+import Title from "./create/title.jsx";
+import ImageForm from "../public/img_form.jsx";
+import Editor from "../public/editor.jsx";
+import DateTimeSelector from "../public/datetime_selector.jsx";
+import Location from "../events/create/location_select.jsx";
+
 import DescriptionPage from "./modules/details/description.jsx";
 import LocationPage from "./modules/details/location.jsx";
 import DatetimePage from "./modules/details/datetime.jsx";
@@ -48,32 +54,42 @@ export default class EditEventScreen extends TrackerReact(React.Component){
   }
 
   detailItems() {
+    const event = Events.findOne();
     return {
       text: "Details",
       icon: "file-text",
       subitems: [
         {
-          component: Main,
+          component: Title,
           text: "Overview",
           args: {
             name: "Details"
           }
         },
         {
-          component: DescriptionPage,
-          text: "Description"
+          component: Editor,
+          text: "Description",
+          args: {
+            value: event.details.description
+          }
         },
         {
-          component: LocationPage,
-          text: "Location"
+          component: Location,
+          args: {
+            ...event.details.location
+          }
         },
         {
-          component: DatetimePage,
-          text: "Date & Time"
+          component: DatetimeSelector,
+          args: {
+            init: event.details.datetime
+          }
         },
         {
-          component: ImagePage,
-          text: "Event Image"
+          component: ImageForm,
+          args: {
+            url: event.details.bannerUrl
+          }
         }
       ]
     }
@@ -231,12 +247,12 @@ export default class EditEventScreen extends TrackerReact(React.Component){
     if(instance.brackets) {
       items.push(this.bracketItems());
     }
-    if(event.crowdfunding) {
-      items.push(this.crowdfundingItems());
-    }
-    if(instance.tickets) {
-      items.push(this.ticketItems());
-    }
+    // if(event.crowdfunding) {
+    //   items.push(this.crowdfundingItems());
+    // }
+    // if(instance.tickets) {
+    //   items.push(this.ticketItems());
+    // }
     if(event.organize) {
       items.push(this.organizeItems());
     }

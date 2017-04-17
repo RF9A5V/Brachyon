@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
-export default class AddPartipantAction extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class SeedDropdown extends ResponsiveComponent {
 
   changeSeeding(e)
   {
@@ -17,12 +19,12 @@ export default class AddPartipantAction extends Component {
     });
   }
 
-  render(){
+  renderBase(opts){
     var seedArray = [];
     for (var x = 0; x < this.props.pSize; x++)
       seedArray.push(x+1);
     return(
-      <select onChange={this.changeSeeding.bind(this)} value={this.props.seedIndex}>
+      <select onChange={this.changeSeeding.bind(this)} value={this.props.seedIndex} style={{fontSize: opts.fontSize}}>
       {
         seedArray.map((seed, i) => {
           return ( <option value={i}>{seed}</option> )
@@ -31,4 +33,17 @@ export default class AddPartipantAction extends Component {
       </select>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em"
+    })
+  }
+
 }

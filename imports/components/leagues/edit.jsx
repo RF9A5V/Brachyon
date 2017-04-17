@@ -14,8 +14,16 @@ import EditBracket from "./modules/brackets/edit.jsx";
 import EditEvent from "./modules/events/edit.jsx";
 
 import EditLeaderboard from "./modules/leaderboard/edit.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class EditLeagueScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false
+    }
+  }
 
   detailItems(league) {
     return {
@@ -63,7 +71,7 @@ class EditLeagueScreen extends Component {
   bracketItems(league) {
 
     var attrs = league.events.map(e => {
-      var event = Events.findOne({slug: e});
+      var event = Events.findOne({slug: e.slug});
       return {
         eventId: event._id,
         bracket: Instances.findOne(event.instances.pop()).brackets[0]
@@ -87,15 +95,16 @@ class EditLeagueScreen extends Component {
   }
 
   eventItems(league) {
-    var subs = league.events.map((slug, i) => {
-      var event = Events.findOne({ slug });
+    var subs = league.events.map((e, i) => {
+      var event = Events.findOne({ slug: e.slug });
+      console.log(event);
       return {
         content: EditEvent,
         name: event.details.name,
         key: i,
         args: {
           id: event._id,
-          startsAt: i == 0 ? null : Events.findOne({ slug: league.events[i - 1] }).details.datetime,
+          startsAt: i == 0 ? null : Events.findOne({ slug: league.events[i - 1].slug }).details.datetime,
           update: this.forceUpdate.bind(this),
           index: i
         }
@@ -114,7 +123,7 @@ class EditLeagueScreen extends Component {
 
     var subs = league.events.map((l, i) => {
 
-      var event = Events.findOne({slug: l});
+      var event = Events.findOne({slug: l.slug});
 
       return {
         name: event.details.name,
@@ -210,16 +219,16 @@ class EditLeagueScreen extends Component {
     return [
       {
         name: "Save All",
+        icon: "floppy-o",
         action: this.save.bind(this)
       }
     ]
   }
 
   render() {
-    if(!this.props.ready) {
+    if(!this.state.ready) {
       return (
-        <div>
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (

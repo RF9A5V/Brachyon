@@ -5,13 +5,15 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import OverviewPanel from "./hubs/overview.jsx";
 
 import Games from "/imports/api/games/games.js";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class GameHubScreen extends TrackerReact(Component) {
 
   constructor(props) {
     super(props);
     this.state = {
-      game: Meteor.subscribe("gamehub", props.params.slug)
+      game: Meteor.subscribe("gamehub", props.params.slug),
+      ready: false
     }
   }
 
@@ -54,8 +56,10 @@ export default class GameHubScreen extends TrackerReact(Component) {
   }
 
   render() {
-    if (!this.state.game.ready()){
-      return (<div></div>)
+    if (!this.state.ready){
+      return (
+        <LoaderContainer ready={this.state.game.ready()} onReady={() => { this.setState({ready: true}) }} />
+      )
     }
     return(
       <div className="row">

@@ -1,0 +1,50 @@
+.animate .brackets {
+    -webkit-animation: rotation 2s infinite linear;
+    -moz-animation: rotation 2s infinite linear;
+    -o-animation: rotation 2s infinite linear;
+    animation: rotation 2s infinite linear;
+    transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+}
+.animate .square {
+    -webkit-animation: brotation 4s infinite linear;
+    -moz-animation: brotation 4s infinite linear;
+    -o-animation: brotation 4s infinite linear;
+    animation: brotation 4s infinite linear;
+    transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+}
+@-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to   {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to   {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to   {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+    from {transform: rotate(0deg);}
+    to   {transform: rotate(359deg);}
+}
+@-webkit-keyframes brotation {
+    from {-webkit-transform: rotate(359deg);}
+    to   {-webkit-transform: rotate(0deg);}
+}
+@-moz-keyframes brotation {
+    from {-moz-transform: rotate(359deg);}
+    to   {-moz-transform: rotate(0deg);}
+}
+@-o-keyframes brotation {
+    from {-o-transform: rotate(359deg);}
+    to   {-o-transform: rotate(0deg);}
+}
+@keyframes brotation {
+    from {transform: rotate(359deg);}
+    to   {transform: rotate(0deg);}
+}

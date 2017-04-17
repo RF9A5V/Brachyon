@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import Games from "/imports/api/games/games.js";
+import FontAwesome from "react-fontawesome";
 
+import Games from "/imports/api/games/games.js";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
-import FontAwesome from "react-fontawesome";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class BracketForm extends Component {
+export default class BracketForm extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    if(!this.state) {
+      this.state = {};
+    }
     var subFormat = null;
     var format = props.format || {};
     if(format.hasOwnProperty("groupFormat")){
@@ -24,50 +28,35 @@ export default class BracketForm extends Component {
     if(game) {
       this.state = {
         id: game._id,
-        name: game.name,
-        bannerUrl: game.bannerUrl,
-        format: subFormat || "NONE"
+        gameName: game.name,
+        bannerUrl: game.bannerUrl
       }
     }
-    else {
-      this.state = {
-        format: "NONE"
-      };
-    }
+    this.state.format = subFormat || "NONE"
   }
 
-  // componentWillReceiveProps(props) {
-  //   var subFormat = null;
-  //   var format = props.format || {};
-  //   if(format.hasOwnProperty("groupFormat")){
-  //     subFormat = "GROUP";
-  //   }
-  //   else if(format.hasOwnProperty("poolFormat")) {
-  //     subFormat = "POOL";
-  //   }
-  //   var game = Games.findOne(props.game) || props.gameObj;
-  //   if(game) {
-  //     this.state = {
-  //       id: game._id,
-  //       name: game.name,
-  //       bannerUrl: game.bannerUrl,
-  //       format: subFormat || "NONE"
-  //     }
-  //   }
-  //   else {
-  //     this.state = {
-  //       format: "NONE"
-  //     };
-  //   }
-  //   for(var i in format){
-  //     this.state[i] = format[i];
-  //   }
-  //
-  //   if(props.format) {
-  //     // Only works for basic bracket formats.
-  //     this.refs.format.value = props.format.baseFormat;
-  //   }
-  // }
+  componentWillReceiveProps(props) {
+    var subFormat = null;
+    var format = props.format || {};
+    if(format.hasOwnProperty("groupFormat")){
+      subFormat = "GROUP";
+    }
+    else if(format.hasOwnProperty("poolFormat")) {
+      subFormat = "POOL";
+    }
+    this.state.format = subFormat || "NONE"
+    var game = Games.findOne(props.game) || props.gameObj;
+    if(game) {
+      this.state.id = game._id;
+      this.state.gameName = game.name;
+      this.state.bannerUrl = game.bannerUrl;
+    }
+
+    if(props.format) {
+      // Only works for basic bracket formats.
+      this.refs.format.value = props.format.baseFormat;
+    }
+  }
 
   onGameSelect(game) {
     if(this.props.onChange) {
@@ -75,7 +64,7 @@ export default class BracketForm extends Component {
     }
     this.setState({
       id: game._id,
-      name: game.name,
+      gameName: game.gameName,
       bannerUrl: game.bannerUrl
     })
   }
@@ -87,7 +76,7 @@ export default class BracketForm extends Component {
     }
   }
 
-  formatForm() {
+  formatForm(opts) {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
@@ -100,7 +89,7 @@ export default class BracketForm extends Component {
               }
               this.props.onChange(game, { baseFormat: e.target.value })
             }
-          }}>
+          }} style={{fontSize: opts.fontSize}}>
             <option value="single_elim">
               Single Elimination
             </option>
@@ -210,19 +199,43 @@ export default class BracketForm extends Component {
       }
     }
     return {
-      game: this.state.id,
+      game: (this.state.game || {})._id,
       format,
       name: this.refs.name.value
     }
   }
 
-  render() {
+  loadGames(value, opts) {
+    if(this.state.game && this.state.game.name != value) {
+      this.state.game = {
+        name: value
+      }
+    }
+    clearTimeout(this.state.to);
+    if(value.length >= 3) {
+      this.state.to = setTimeout(() => {
+        Meteor.call("games.search", value, (err, data) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            this.setState({
+              gameList: data
+            })
+          }
+        });
+      }, 500);
+    }
+  }
+
+  renderBase(opts) {
+    const imgHeight = "340px";
     return (
-      <div className="row" style={{backgroundColor: "#111"}}>
+      <div className={opts.direction} style={{backgroundColor: "#111"}}>
         {
           this.state.bannerUrl ? (
             <div style={{textAlign: "center", position: "relative"}}>
-              <img style={{width: "auto", height: 340, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.bannerUrl} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
               </div>
             </div>
@@ -231,28 +244,50 @@ export default class BracketForm extends Component {
           )
         }
         <div className="col col-1" style={{padding: 20}}>
-          <div className="row flex-pad">
-            <h5>Bracket Name</h5>
+          <div className="row" style={{justifyContent: "flex-end"}}>
             {
               this.props.deletable ? (
                 <FontAwesome name="times" onClick={() => {this.props.delfunc()}} />
               ) : ( "" )
             }
           </div>
-          <input ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0}} />
-          <div className="row">
-            <h5>Game</h5>
-          </div>
-          <AutocompleteForm ref="game" publications={["game_search"]} types={[
+          <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
+          <input className={opts.inputClass} ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+          <div className="col" style={{position: "relative"}}>
+            <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
+            <input type="text" className={opts.inputClass} onChange={(e) => {
+              const value = e.target.value;
+              this.loadGames(value, opts.limit);
+            }} defaultValue={this.state.gameName} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
-              type: Games,
-              template: GameTemplate,
-              name: "Game"
+              this.state.gameList ? (
+                <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
+                {
+                  this.state.gameList.map(g => {
+                    return (
+                      <GameTemplate {...g} onClick={() => {
+                        const game = {
+                          _id: g._id,
+                          name: g.name
+                        }
+                        this.setState({
+                          game,
+                          gameList: null
+                        });
+                        this.refs.game.value = g.name;
+                      }} />
+                    )
+                  })
+                }
+                </div>
+              ) : (
+                null
+              )
             }
-          ]} onChange={this.onGameSelect.bind(this)} value={(this.state.name || "")} id={this.state.id}/>
-          <div style={{border: "solid 2px white", padding: 20, position: "relative", marginTop: 20}}>
-            <div className="row center" style={{position: "absolute", left: 0, top: -12.5, width: "100%"}}>
-              <h5 style={{backgroundColor: "#111", padding: "0 20px"}}>Bracket Format</h5>
+          </div>
+          <div style={{border: "solid 2px white", padding: opts.borderPad, position: "relative", marginTop: 20}}>
+            <div className="row center" style={{position: "absolute", left: 0, top: opts.top, width: "100%"}}>
+              <h5 style={{backgroundColor: "#111", padding: "0 20px", fontSize: opts.fontSize}}>Bracket Format</h5>
             </div>
             {
 
@@ -265,11 +300,34 @@ export default class BracketForm extends Component {
               // </div>
             }
             {
-              this.formatForm()
+              this.formatForm(opts)
             }
           </div>
         </div>
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      inputClass: "",
+      fontSize: "1em",
+      direction: "row",
+      borderPad: 20,
+      top: -12.5,
+      limit: 3
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      inputClass: "large-input",
+      fontSize: "2.5em",
+      direction: "col",
+      borderPad: 40,
+      top: -19.5,
+      limit: 5
+    });
+  }
+
 }

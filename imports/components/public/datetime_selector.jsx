@@ -8,8 +8,15 @@ export default class DatetimeSelector extends Component {
 
   constructor(props) {
     super(props);
+    var date = moment().add(1, "hour").startOf("hour").toDate();
+    if(props.init) {
+      date = moment(props.init).toDate()
+    }
+    else {
+
+    }
     this.state = {
-      currentTime: moment().add(1, "hour").startOf("hour")
+      currentTime: date
     }
   }
 
@@ -31,14 +38,24 @@ export default class DatetimeSelector extends Component {
     return result.toDate();
   }
 
+  setValue(obj) {
+    var date = moment(this.state.currentTime);
+    Object.keys(obj).forEach(k => {
+      date.set(k, obj[k]);
+    });
+    this.setState({
+      currentTime: date.toDate()
+    })
+  }
+
   render() {
     return (
-      <div className="row x-center" style={{padding: 20, backgroundColor: "#111"}}>
-        <div className="row center col-1">
-          <DateInput init={this.state.currentTime} ref="date" startsAt={this.props.startsAt} />
+      <div className="col center x-center" style={{padding: 20}}>
+        <div style={{marginBottom: 10, display: "inline-block"}}>
+          <DateInput init={this.state.currentTime} ref="date" onChange={this.setValue.bind(this)} />
         </div>
-        <div className="row center col-1">
-          <TimeInput init={this.state.currentTime} ref="time" />
+        <div style={{display: "inline-block", clear: "left"}}>
+          <TimeInput init={this.state.currentTime} ref="time" onChange={this.setValue.bind(this)} />
         </div>
       </div>
     )

@@ -9,7 +9,6 @@ import SlideMain from "./preview/slides/slide_main.jsx";
 import TitlePage from "./preview/slides/title.jsx";
 import DescriptionPage from "./preview/slides/description.jsx";
 
-import BracketPage from "./preview/slides/brackets.jsx";
 import BracketOverview from "./preview/slides/bracket_overview.jsx";
 import BracketDetails from "./preview/slides/bracket_details.jsx";
 
@@ -17,6 +16,8 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
 
@@ -25,7 +26,8 @@ class PreviewEventScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasLoaded: false
+      hasLoaded: false,
+      ready: false
     }
   }
 
@@ -84,6 +86,7 @@ class PreviewEventScreen extends Component {
     var pages = [
       {
         name: "Home",
+        icon: "home",
         slides: [
           {
             component: TitlePage
@@ -116,12 +119,14 @@ class PreviewEventScreen extends Component {
       }))
       pages.push({
         name: "Brackets",
+        icon: "sitemap",
         slides
       });
     }
     if(event.stream) {
       pages.push({
         name: "Stream",
+        icon: "video-camera",
         slides: [
           {
             component: StreamPage
@@ -138,9 +143,9 @@ class PreviewEventScreen extends Component {
   }
 
   render() {
-    if(!this.props.ready){
+    if(!this.state.ready){
       return (
-        <div>Loading...</div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     else {

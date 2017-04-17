@@ -11,7 +11,7 @@ export default class LeaderboardEdit extends Component {
   leaderboard() {
     var index = this.props.index;
     var leaderboard = Leagues.findOne().leaderboard;
-    const event = Events.findOne({slug: Leagues.findOne().events[index]});
+    const event = Events.findOne({slug: Leagues.findOne().events[index].slug});
     const instance = Instances.findOne(event.instances[event.instances.length - 1]);
     const bracket = Brackets.findOne(instance.brackets[0].id);
     if(!bracket || !bracket.complete) {

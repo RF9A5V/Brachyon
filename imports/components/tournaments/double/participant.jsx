@@ -90,15 +90,25 @@ function collect2(connect, monitor) {
 class Participant extends Component {
   render() {
     const {connectDragSource, connectDropTarget, isDragging} = this.props;
-    let p1 = this.props.player;
+    let p = this.props.player;
 
     return connectDragSource(connectDropTarget(
       <div className="participant" style={this.props.parStyle}>
-        <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-          { p1.alias || "TBD" }
+        {
+          p.alias ? (
+            <div className="seed row center x-center" style={{fontSize: `calc(${this.props.opts.fontSize} * 0.8)`}}>
+              { this.props.partMap[p.alias] }
+            </div>
+          ) : (
+            null
+          )
+        }
+        <div className={((p.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}
+        style={{fontSize: `calc(${this.props.opts.fontSize} * 0.8)`, paddingLeft: !p.alias ? "calc(10% + 5px)" : 5, fontStyle: p.alias ? "normal" : "italic"}}>
+          { this.props.matchPlaceholder(p.alias, this.props.index) }
         </div>
-        <div className="score">
-          { p1.score || 0 }
+        <div className="score" style={{fontSize: this.props.opts.fontSize}}>
+          { p.score || 0 }
         </div>
       </div>
     ));

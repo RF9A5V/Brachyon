@@ -13,6 +13,7 @@ import LeaderboardAction from "./admin_comps/leaderboard.jsx";
 import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import BracketAction from "../show/bracket.jsx";
 import BracketOptions from "./admin_comps/options.jsx";
+import BracketEdit from "./admin_comps/bracket.jsx";
 
 import Restart from "./admin_comps/restart.jsx";
 import Finalize from "./admin_comps/finalize.jsx";
@@ -20,6 +21,7 @@ import Finalize from "./admin_comps/finalize.jsx";
 import MatchList from "./admin_comps/matches.jsx";
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js";
 
@@ -28,13 +30,14 @@ import Instances from "/imports/api/event/instance.js";
 import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class BracketAdminScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      ready: true
+      ready: false
     }
   }
 
@@ -90,6 +93,11 @@ class BracketAdminScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    var partMap = {};
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    })
     var args = {
       id: bracket.id,
       index,
@@ -98,7 +106,9 @@ class BracketAdminScreen extends Component {
       format: bracket.format.baseFormat,
       rounds,
       complete: bracket.isComplete,
-      page: "admin"
+      page: "admin",
+      partMap,
+      stretch: true
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -122,6 +132,11 @@ class BracketAdminScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
+          },
+          {
+            content: Toggle,
+            name: "",
+            ignoreHeader: true
           }
         ];
         break;
@@ -220,7 +235,7 @@ class BracketAdminScreen extends Component {
       icon: "cog",
       subItems: [
         {
-          content: BracketOptions,
+          content: BracketEdit,
           args: {
             bracket,
             index,
@@ -258,19 +273,50 @@ class BracketAdminScreen extends Component {
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
           default: break;
         }
-        rounds = rounds.map(b => {
-          return b.map(r => {
-            return r.map(m => {
-              if(m) {
-                return {
-                  players: [m.playerOne, m.playerTwo],
-                  winner: null
-                }
+        var count = 1;
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
               }
-              return null;
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
+            return r.map(m => {
+              if(!m.truebye && i <= 1) {
+                return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         var rounds = Brackets.findOne().rounds;
@@ -303,6 +349,7 @@ class BracketAdminScreen extends Component {
     return [
       {
         name: "Back To Event",
+        icon: "arrow-left",
         action: () => {
           browserHistory.push("/event/" + Events.findOne().slug);
         }
@@ -311,17 +358,14 @@ class BracketAdminScreen extends Component {
   }
 
   render() {
-    const { ready } = this.props;
-    if(!ready || !this.state.ready) {
+    if(!this.props.ready) {
       return (
-        <div>
-          Loading...
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (
-      <div style={{padding: 20, height: "100%"}}>
-        <CreateContainer items={this.items()} actions={this.actions()} />
+      <div style={{padding: 10, height: "100%"}}>
+        <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
       </div>
     );
   }

@@ -5,12 +5,14 @@ import { browserHistory } from "react-router";
 import { VelocityComponent } from "velocity-react";
 
 import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 import { Banners } from "/imports/api/event/banners.js";
 import Games from "/imports/api/games/games.js";
 import Instances from "/imports/api/event/instance.js";
 
-export default class EventTitlePage extends Component {
+export default class EventTitlePage extends ResponsiveComponent {
 
   constructor() {
     super();
@@ -23,7 +25,28 @@ export default class EventTitlePage extends Component {
     return img == null ? "/images/profile.png" : img;
   }
 
-  render() {
+  loadShortLink() {
+    if(this.state.shortLink) {
+      this.setState({
+        shareOpen: true
+      })
+    }
+    else {
+      Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            shortLink: data,
+            shareOpen: true
+          })
+        }
+      });
+    }
+  }
+
+  renderDesktop() {
     var event = Events.findOne();
     var tickets = false;
     var brackets = Instances.findOne().brackets;
@@ -33,26 +56,9 @@ export default class EventTitlePage extends Component {
           <div className="col-1">
           </div>
           <div style={{padding: 20}}>
-            {
-              this.state.shortLink ? (
-                <div>
-                  { window.location.origin }/!{ this.state.shortLink }
-                </div>
-              ) : (
-                <button onClick={() => {
-                  Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
-                    if(err) {
-                      toastr.error(err.reason);
-                    }
-                    else {
-                      this.setState({
-                        shortLink: data
-                      })
-                    }
-                  });
-                }}>Generate Short Link</button>
-              )
-            }
+            <button onClick={() => {
+              this.loadShortLink();
+            }}>Generate Short Link</button>
           </div>
         </div>
         <div className="col col-3 center x-center">
@@ -120,7 +126,12 @@ export default class EventTitlePage extends Component {
                   <div className="col">
                     <span>
                       {
-                        event.details.location.locationName ? event.details.location.locationName : event.details.location.streetAddress
+                        event.details.location.locationName
+                      }
+                    </span>
+                    <span>
+                      {
+                        event.details.location.streetAddress
                       }
                     </span>
                     <span>
@@ -135,7 +146,74 @@ export default class EventTitlePage extends Component {
 
           </div>
         </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
       </div>
     )
   }
+
+  renderMobile() {
+    const event = Events.findOne();
+    const instance = Instances.findOne();
+    return (
+      <div className="col" style={{padding: 40}}>
+        <div className="row col-1 flex-pad" style={{alignItems: "flex-start"}}>
+          <FontAwesome name="share-alt" style={{fontSize: "7em"}} onClick={() => {
+            this.loadShortLink()
+          }} />
+          <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
+            <span style={{fontSize: "3em"}}>
+              {
+                event.details.location.online ? (
+                  "Online"
+                ) : (
+                  event.details.location.streetAddress
+                )
+              }
+            </span>
+            {
+              event.details.location.online ? (
+                null
+              ) : (
+                <span style={{fontSize: "3em"}}>
+                  { event.details.location.city + ", " + event.details.location.state }
+                </span>
+              )
+            }
+            <span style={{fontSize: "3em"}}>
+              {
+                moment(event.details.datetime).format("MMMM Do, YYYY")
+              }
+            </span>
+          </div>
+        </div>
+        <div className="col x-center">
+          <h2 style={{fontSize: "6em"}}>{ event.details.name }</h2>
+          <div className="row">
+            {
+              instance.brackets ? (
+                <button style={{fontSize: "3em", marginRight: event.stream ? 30 : 0}} onClick={() => {
+                  this.props.pages("Brackets")
+                }}>View Bracket</button>
+              ) : (
+                null
+              )
+            }
+            {
+              event.stream ? (
+                <button style={{fontSize: "3em"}} onClick={() => {
+                  this.props.pages("Stream")
+                }}>View Stream</button>
+              ) : (
+                null
+              )
+            }
+          </div>
+        </div>
+        <div className="row col-1">
+        </div>
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
+      </div>
+    )
+  }
+
 }

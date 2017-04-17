@@ -20,7 +20,11 @@ import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+
 import OrganizeSuite from "/imports/decorators/organize.js";
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 class BracketShowScreen extends Component {
 
@@ -98,13 +102,19 @@ class BracketShowScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
+    var partMap = {};
+    const participantList = Instances.findOne().brackets[index].participants || [];
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    });
     var args = {
       id: bracket.id,
       eid: this.props.params.eventId,
       format: bracket.format.baseFormat,
       rounds,
       complete: bracket.isComplete,
-      page: "admin"
+      page: "admin",
+      partMap
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -199,19 +209,50 @@ class BracketShowScreen extends Component {
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
           default: break;
         }
-        rounds = rounds.map(b => {
-          return b.map(r => {
-            return r.map(m => {
-              if(m) {
-                return {
-                  players: [m.playerOne, m.playerTwo],
-                  winner: null
-                }
+        var count = 1;
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
               }
-              return null;
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
+            return r.map(m => {
+              if(!m.truebye && i <= 1) {
+                return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         rounds = Brackets.findOne().rounds;
@@ -235,6 +276,14 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
+    items.push({
+      name: "Back to Event",
+      icon: "arrow-left",
+      action: () => {
+        browserHistory.push("/event/" + Events.findOne().slug);
+      }
+    });
+
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
@@ -242,6 +291,7 @@ class BracketShowScreen extends Component {
       if(registered >= 0) {
         items.push({
           name: "Unregister",
+          icon: "user-times",
           action: () => {
             Meteor.call("events.removeParticipant", Events.findOne()._id, index, Meteor.userId(), (err) => {
               if(err) {
@@ -257,6 +307,7 @@ class BracketShowScreen extends Component {
       else {
         items.push({
           name: "Register",
+          icon: "user-plus",
           action: () => {
             Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
               if(err) {
@@ -271,26 +322,27 @@ class BracketShowScreen extends Component {
       }
     }
     items.push({
-      name: "Back to Event",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
-    items.push({
       name: "Generate Short URL",
+      icon: "link",
       action: (e) => {
-
-        Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
-          if(err) {
-            toastr.error(err.reason);
-          }
-          else {
-            this.setState({
-              open: true,
-              url: window.location.origin + "/!" + data
-            })
-          }
-        });
+        if(!this.state.url) {
+          Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.setState({
+                open: true,
+                url: window.location.origin + "/!" + data
+              })
+            }
+          });
+        }
+        else {
+          this.setState({
+            open: true
+          })
+        }
       }
     })
     return items;
@@ -300,19 +352,8 @@ class BracketShowScreen extends Component {
     if(this.props.ready) {
       return (
         <div style={{padding: 20}}>
-          <CreateContainer items={this.items()} actions={this.actions()} />
-          <Modal isOpen={this.state.open} onRequestClose={() => { this.setState({ open: false }) }} style={{
-            content: {
-              width: 300,
-              height: 100
-            }
-          }}>
-            <div className="col center x-center" style={{width: "100%", height: "100%"}}>
-              <input value={this.state.url} style={{fontSize: 12, width: "100%", margin: 0, textAlign: "center", backgroundColor: "black"}} onFocus={(e) => {
-                e.target.select();
-              }} />
-            </div>
-          </Modal>
+          <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+          <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
         </div>
       );
     }
@@ -326,7 +367,7 @@ class BracketShowScreen extends Component {
   }
 }
 
-export default createContainer(({params}) => {
+const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
@@ -352,3 +393,5 @@ export default createContainer(({params}) => {
     }
   }
 }, BracketShowScreen);
+
+export default DragDropContext(HTML5Backend)(x)

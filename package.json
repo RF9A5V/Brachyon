@@ -29,7 +29,7 @@
     "react-dnd": "^2.3.0",
     "react-dnd-html5-backend": "^2.3.0",
     "react-dom": "^15.4.0",
-    "react-dragscroll": "^1.0.21",
+    "react-dragscroll": "EyeWumbo/react-dragscroll",
     "react-dragula": "^1.1.17",
     "react-dropzone": "^3.4.0",
     "react-fontawesome": "^1.1.0",
@@ -42,7 +42,6 @@
     "react-sidebar": "^2.3.0",
     "react-slick": "^0.14.6",
     "react-summernote": "^1.0.4",
-    "react-swipeable": "^3.9.1",
     "request": "^2.75.0",
     "velocity-react": "^1.1.8"
   },

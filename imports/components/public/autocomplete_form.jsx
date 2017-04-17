@@ -1,38 +1,21 @@
 import React, { Component } from 'react';
-import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-export default class AutocompleteForm extends TrackerReact(Component) {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class AutocompleteForm extends ResponsiveComponent {
   constructor(props) {
     super(props);
     this.state = {
       readyList: (new Array(props.publications.length)).fill(false),
       id: this.props.id,
       top: 0,
-      left: 0
+      left: 0,
+      game: null
     }
-  }
-
-  componentWillMount() {
-    var self = this;
-    this.state.pubs = this.props.publications.map(function(pub, index){
-      return Meteor.subscribe(pub, "", {
-        onReady() {
-          self.state.readyList[index] = true;
-          self.forceUpdate();
-        }
-      })
-    });
-    this.state.active = false;
   }
 
   componentDidMount() {
     this.setTemplateLocation();
-  }
-
-  componentWillUnmount() {
-    this.state.pubs.forEach(function(item){
-      item.stop();
-    })
   }
 
   componentWillReceiveProps(next) {
@@ -98,22 +81,11 @@ export default class AutocompleteForm extends TrackerReact(Component) {
   }
 
   search(e) {
-    this.state.pubs.forEach(function(item){
-      item.stop();
-    });
     this.state.readyList = (new Array(this.props.publications.length)).fill(false);
     if(e.target.value != "") {
       var self = this;
       this.state.active = true;
       this.state.readyList = (new Array(this.props.publications.length)).fill(false);
-      this.state.pubs = this.props.publications.map(function(pub, index){
-        return Meteor.subscribe(pub, e.target.value, {
-          onReady() {
-            self.state.readyList[index] = true;
-            self.forceUpdate();
-          }
-        })
-      });
     }
     else {
       this.state.active = false;
@@ -131,10 +103,10 @@ export default class AutocompleteForm extends TrackerReact(Component) {
     }
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <div className="col" style={{position: "relative"}}>
-        <input ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} onKeyPress={ this.onKeyPress.bind(this) } style={{marginRight: 0}} />
+        <input className={opts.inputClass} ref="input" type="text" onChange={this.search.bind(this)} placeholder={this.props.placeholder || ""} defaultValue={this.props.value} onKeyPress={ this.onKeyPress.bind(this) } style={{marginRight: 0, marginTop: 0}} />
         {
           this.state.readyList.every( (value) => {return value} ) && this.state.active ? (
             <div className="template-container" style={{ top: 60, left: 0, width: this.state.width }}>
@@ -146,6 +118,18 @@ export default class AutocompleteForm extends TrackerReact(Component) {
         }
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      inputClass: ""
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      inputClass: "large-input"
+    })
   }
 
 }

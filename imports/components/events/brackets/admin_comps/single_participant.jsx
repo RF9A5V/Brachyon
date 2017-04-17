@@ -4,6 +4,8 @@ import { browserHistory } from "react-router";
 import ReactDOM from 'react-dom';
 import FontAwesome from "react-fontawesome";
 
+import SeedDropdown from "./seeddropdown.jsx";
+
 const participantSource = {
   beginDrag(props) {
     return {
@@ -86,6 +88,9 @@ function collect2(connect, monitor) {
 class SingleParticipant extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      id: Instances.findOne()._id
+    }
   }
 
   imgOrDefault(user) {
@@ -97,29 +102,75 @@ class SingleParticipant extends Component {
     const opacity = ( (index == invisibleIndex) || (isDragging && invisibleIndex == -1) ) ? 0 : 1;
     const user = Meteor.users.findOne(participant.id);
     return (
-      <div className="participant-row row x-center" style={{opacity}} key={index}>
-        <div style={{width: "10%"}}>
-          <div>{index+1}</div>
+      <div className="participant-row row x-center" key={index}>
+        <div className="row center x-center" style={{width: "10%"}}>
+          <SeedDropdown seedIndex={this.props.index} pSize={this.props.pSize} index={this.props.bIndex} id={this.state.id} updateList={this.props.onUpdate} />
         </div>
-        <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
-        <div className="col" style={{width: "15%"}}>
-          <span style={{fontSize: 16}}>{ participant.alias }</span>
-          <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
+        <img src={this.imgOrDefault(user)} style={{width: this.props.opts.imgDim, height: this.props.opts.imgDim, borderRadius: "100%", marginRight: 20}} />
+        <div className="col" style={{width: this.props.opts.mobile ? "25%" : "15%"}}>
+          <span style={{fontSize: this.props.opts.fontSize}}>{ participant.alias }</span>
+          <span style={{fontSize: `calc(${this.props.opts.fontSize} * 3 / 4)`}}>{ user ? user.username : "Anonymous" }</span>
         </div>
-        <div>
+        <div className="row center x-center col-1" style={{opacity}} key={index}>
           {
             participant.checkedIn ? (
-              <span>Checked In</span>
+              this.props.opts.mobile ? (
+                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`, color: "#FF6000"}} />
+              ) : (
+                <span>Checked In</span>
+              )
             ) : (
-              <button onClick={() => {this.props.openDiscount(participant)} }>Check In</button>
+              this.props.opts.mobile ? (
+                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => {
+                  if(instance.tickets) {
+                    this.setState({ discountOpen: true, participant })
+                  }
+                  else {
+                    this.onUserCheckIn(participant);
+                  }
+                }}/>
+              ) : (
+                <button className={this.props.opts.buttonClass} onClick={() => {
+                  if(instance.tickets) {
+                    this.setState({ discountOpen: true, participant })
+                  }
+                  else {
+                    this.onUserCheckIn(participant);
+                  }
+                }}>Check In</button>
+              )
             )
           }
         </div>
-        <div className="col-1" style={{textAlign: "right"}}>
-          <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => {this.props.openOptions(participant)} } />
+        <div style={{marginLeft: 20, textAlign: "right"}}>
+          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
         </div>
       </div>
     )
+    // return (
+    //   <div className="participant-row row x-center" style={{opacity}} key={index}>
+    //     <div style={{width: "10%"}}>
+    //       <div>{index+1}</div>
+    //     </div>
+    //     <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
+    //     <div className="col" style={{width: "15%"}}>
+    //       <span style={{fontSize: 16}}>{ participant.alias }</span>
+    //       <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
+    //     </div>
+    //     <div>
+    //       {
+    //         participant.checkedIn ? (
+    //           <span>Checked In</span>
+    //         ) : (
+    //           <button onClick={() => {this.props.openDiscount(participant)} }>Check In</button>
+    //         )
+    //       }
+    //     </div>
+    //     <div className="col-1" style={{textAlign: "right"}}>
+    //       <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => {this.props.openOptions(participant)} } />
+    //     </div>
+    //   </div>
+    // )
   }
 
   render() {

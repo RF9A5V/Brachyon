@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
-export default class StreamPanel extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class StreamPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -13,13 +15,13 @@ export default class StreamPanel extends Component {
     return this.refs.stream.value;
   }
 
-  itemDescriptions() {
+  itemDescriptions(opts) {
     var descriptions = [
       "Simply enter your Twitch name and we will generate a page on your event for your stream."
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <p>
+        <p style={{fontSize: opts.fontSize}}>
           {
             item
           }
@@ -28,7 +30,7 @@ export default class StreamPanel extends Component {
     });
   }
 
-  render() {
+  renderBase(opts) {
     var tabs = ["Stream"];
     if(window.location.pathname == "/events/create"){
       var eColor = "#00BDFF";
@@ -63,23 +65,21 @@ export default class StreamPanel extends Component {
           active ? (
             <div>
               <div className="row center x-center">
-                <span style={{marginRight: 2}}>https://twitch.tv/</span>
-                <input type="text" placeholder="Stream Name" ref="stream" />
+                <span style={{marginRight: 2, fontSize: opts.fontSize}}>https://twitch.tv/</span>
+                <input className={opts.inputClass} type="text" placeholder="Stream Name" ref="stream" />
               </div>
             </div>
           ) : (
             <div className="row">
-            <div className="col col-1 info-description">
-              <div className="row center">
-              <h3>{ tabs[this.state.item] }</h3>
-              </div>
-              <div style={{margin: "20px 25vw"}} className="row center">
+            <div className="col col-1 center x-center info-description">
+              <h3 style={{fontSize: opts.fontSize}}>{ tabs[this.state.item] }</h3>
+              <div style={{width: opts.descWidth}} className="row center">
                 {
-                  this.itemDescriptions()
+                  this.itemDescriptions(opts)
                 }
               </div>
               <div className="row col-1"></div>
-              <button style={{margin: "0 auto"}} onClick={() => { this.props.setStatus(!active) }}>Create a Stream</button>
+              <button className={opts.buttonClass} style={{margin: "0 auto"}} onClick={() => { this.props.setStatus(!active) }}>Create a Stream</button>
             </div>
           </div>
           )
@@ -87,4 +87,23 @@ export default class StreamPanel extends Component {
       </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2.5em",
+      inputClass: "large-input",
+      buttonClass: "large-button",
+      descWidth: "80%"
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      inputClass: "",
+      buttonClass: "",
+      descWidth: "50%"
+    })
+  }
+
 }

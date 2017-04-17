@@ -5,12 +5,26 @@ import BracketForm from "/imports/components/events/modules/bracket/form.jsx";
 
 import Games from "/imports/api/games/games.js";
 
-export default class BracketsPanel extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class BracketsPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    var brackets = null;
+    if(props.brackets) {
+      brackets = {};
+      props.brackets.forEach((b, i) => {
+        console.log(b);
+        brackets[i] = {
+          name: b.name,
+          game: b.game,
+          format: b.format
+        };
+      })
+    }
     this.state = {
-      brackets: null,
+      brackets,
       item: 0
     }
   }
@@ -32,18 +46,14 @@ export default class BracketsPanel extends Component {
     }
     var brackets = [];
     Object.keys(this.state.brackets).forEach(key => {
-      var bracket = this.state.brackets[key];
-      var gameObj = bracket.gameObj;
-      if(!gameObj || !bracket.format) {
+      const brackObj = this.refs[key].value();
+      console.log(brackObj);
+      if(!brackObj.game) {
         toastr.error("Each bracket given requires a game!");
         throw new Error("Bracket at key " + key + " requires a game.");
       }
       else {
-        var temp = {
-          format: bracket.format,
-          game: bracket.gameObj._id
-        }
-        brackets.push(temp);
+        brackets.push(brackObj);
       }
     })
     return brackets;
@@ -53,8 +63,15 @@ export default class BracketsPanel extends Component {
     if(!this.state.brackets) {
       this.state.brackets = { }
     }
+    if(this.props.isLeague) {
+      return;
+    }
     var bracketIndex = Math.max.apply(null, Object.keys(this.state.brackets).map(k => { return parseInt(k) }));
+    if(bracketIndex < 0) {
+      bracketIndex = 0;
+    }
     this.state.brackets[++bracketIndex] = { };
+    console.log(this.state.brackets);
     this.props.setStatus(true);
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
@@ -64,13 +81,13 @@ export default class BracketsPanel extends Component {
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
 
-  itemDescriptions() {
+  itemDescriptions(opts) {
     var descriptions = [
       "Choose from Single Elimination, Double Elimination, Round Robin and Swiss. After you publish your event, a bracket page will be generated where participants can be added manually and/or users can request to join (in which case you will receive notification."
     ];
     return descriptions[this.state.item].split("\n").map(item => {
       return (
-        <div className="text-description border-blue">
+        <div className="text-description border-blue" style={{fontSize: opts.fontSize, width: opts.fontWidth}}>
           {
             item
           }
@@ -79,17 +96,17 @@ export default class BracketsPanel extends Component {
     });
   }
 
-  render() {
+  renderBase(opts) {
     var tabs = ["Bracket"];
     var active = this.props.status;
     var eColor, fColor;
-    if(window.location.pathname == "/events/create"){
+    if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
-      fColor = "#333";
+      fColor = "#111";
     }
-    else if(window.location.pathname == "/leagues/create"){
+    else if(window.location.pathname.indexOf("league") >= 0){
       eColor = "#FF6000";
-      fColor = "#FFF";
+      fColor = "#111";
     }
     else{}
     return (
@@ -97,7 +114,7 @@ export default class BracketsPanel extends Component {
         <div className="row flex-pad" style={{marginBottom: 10}}>
           <div>
           </div>
-          <div className="row x-center module-toggle" onClick={() => {
+          <div className="row x-center module-toggle" style={{width: opts.toggleWidth, height: opts.toggleWidth / 3}} onClick={() => {
             if(!active) {
               this.addBracket();
             }
@@ -108,8 +125,8 @@ export default class BracketsPanel extends Component {
               this.props.setStatus(false);
             }
           }}>
-            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: 45, height: 20, position: "relative", left: active ? 50 : 5}}>
-              <span style={{color: active ? fColor : "#333", fontSize: 12}}>
+            <div className="row center x-center" style={{backgroundColor: active ? eColor : "white", width: (opts.toggleWidth - 5) / 2, height: opts.toggleWidth / 3 - 10, position: "relative", left: active ? opts.toggleWidth / 2 - 2.5 : 5}}>
+              <span style={{color: active ? fColor : "#333", fontSize: opts.fontSize}}>
                 {
                   active ? (
                     "ON"
@@ -150,6 +167,7 @@ export default class BracketsPanel extends Component {
                   if(bracket == null){
                     return "";
                   }
+                  console.log(bracket);
                   if(Object.keys(this.state.brackets).length > 1){
                     return (
                       <div className="game-bracket-container">
@@ -170,10 +188,27 @@ export default class BracketsPanel extends Component {
               </div>
             </div>
           ) : (
-            this.itemDescriptions()
+            this.itemDescriptions(opts)
           )
       }
     </div>
     );
   }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "2em",
+      fontWidth: "90%",
+      toggleWidth: 200
+    });
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      fontWidth: "50%",
+      toggleWidth: 100
+    });
+  }
+
 }

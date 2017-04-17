@@ -4,7 +4,9 @@ import FontAwesome from "react-fontawesome";
 
 import Matches from "/imports/api/event/matches.js";
 
-export default class TournamentModal extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class TournamentModal extends ResponsiveComponent {
 
   getProfileImage(id) {
     var user = Meteor.users.findOne(id);
@@ -58,27 +60,27 @@ export default class TournamentModal extends Component {
     })
   }
 
-  userScoreColumn(player, i) {
+  userScoreColumn(player, i, opts) {
     var match = Matches.findOne(this.props.id);
     var maxScore = Math.max.apply(null, match.players.map(p => { return p.score }));
     return (
       <div className="col x-center col-1">
-        <img src={this.getProfileImage(player.id)} style={{borderRadius: "100%", width: 100, height: "auto", marginBottom: 20}} />
+        <img src={this.getProfileImage(player.id)} style={{borderRadius: "100%", width: opts.imgDim, height: "auto", marginBottom: 20}} />
         <h5 className={player.alias.length < 15 ? "" : "marquee"}
-          style={{color: "#FF6000", width: "125px", textAlign:"center"}}>{ player.alias }
+          style={{color: "#FF6000", textAlign:"center", fontSize: opts.fontSize}}>{ player.alias }
         </h5>
         <div className="col center x-center col-1">
           <div className="row center x-center" style={{marginTop:10}}>
-            <FontAwesome className ="pointerChange" style={{fontSize: 40,marginRight:10}} name="caret-left" onClick={() => {
+            <FontAwesome className ="pointerChange" style={{fontSize: opts.iconSize,marginRight:10}} name="caret-left" onClick={() => {
               if(player.score <= 0) {
                 return;
               }
               this.updateMatchScore(this.props.id, i, false)
             }} />
-            <div className="row center x-center button-score">
+            <div className="row center x-center button-score" style={{fontSize: opts.iconSize}}>
               { player.score }
             </div>
-            <FontAwesome className="pointerChange" style={{fontSize: 40,marginLeft:10}} name="caret-right" onClick={() => {
+            <FontAwesome className="pointerChange" style={{fontSize: opts.iconSize,marginLeft:10}} name="caret-right" onClick={() => {
               this.updateMatchScore(this.props.id, i, true)
             }} />
           </div>
@@ -86,30 +88,30 @@ export default class TournamentModal extends Component {
         </div>
         {
           match.players.every((p,j) => { return player.score > p.score || j == i }) ? (
-            <button onClick={this.advanceMatch.bind(this)}>Declare Winner</button>
+            <button className={opts.buttonClass} onClick={this.advanceMatch.bind(this)}>Declare Winner</button>
           ) : (
-            <button style={{opacity: 0.3}}>Declare Winner</button>
+            <button className={opts.buttonClass} style={{opacity: 0.3}}>Declare Winner</button>
           )
         }
       </div>
     )
   }
 
-  updateScoreContent() {
+  updateScoreContent(opts) {
     var match = Matches.findOne(this.props.id);
     return (
-      <div className="col" style={{height: "100%"}}>
-        <div className="row col-1">
+      <div className="col center x-center" style={{height: "100%"}}>
+        <div className="row" style={{justifyContent: "space-between", width: "100%"}}>
           {
             match.players.map((p, i) => {
-              return this.userScoreColumn(p, i)
+              return this.userScoreColumn(p, i, opts)
             })
           }
         </div>
         {
           Events.findOne() ? (
             <div className="row center">
-              <button onClick={ () => {
+              <button className={opts.buttonClass} onClick={ () => {
                 var event = Events.findOne();
                 var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
                 if(brackIndex < 0) {
@@ -126,7 +128,7 @@ export default class TournamentModal extends Component {
     )
   }
 
-  render() {
+  renderBase(opts) {
     var event = Events.findOne();
     if(!event) {
       var instance = Instances.findOne();
@@ -144,24 +146,24 @@ export default class TournamentModal extends Component {
     }
     var match = Matches.findOne(this.props.id);
     return (
-      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={() => {
+      <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={() => {
         this.props.closeModal()
       }} contentLabel="Match Updater">
-        <div className="self-end">
-          <FontAwesome className ="pointerChange" name="times" size="2x" onClick={() => {
+        <div className="row" style={{justifyContent: "flex-end"}}>
+          <FontAwesome className ="pointerChange" name="times" onClick={() => {
             this.props.closeModal()
-          }} />
+          }} style={{fontSize: opts.iconSize}} />
         </div>
         {
           match.winner == null ? (
-            this.updateScoreContent()
+            this.updateScoreContent(opts)
           ):(
-            <div className="col" style={{height: "100%"}}>
-              <div className="row x-center">
-                <button style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
+            <div className="col center x-center" style={{height: "100%"}}>
+              <div className="row center x-center">
+                <button className={opts.buttonClass} style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
                 {
                   Events.findOne() ? (
-                    <button onClick={ () => {
+                    <button className={opts.buttonClass} onClick={ () => {
                       var event = Events.findOne();
                       var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
                       browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.id}`)
@@ -176,5 +178,27 @@ export default class TournamentModal extends Component {
         }
       </Modal>
     );
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      modalClass: "create-modal",
+      overlayClass: "overlay-class",
+      fontSize: "1em",
+      iconSize: "2.5em",
+      buttonClass: "",
+      imgDim: 150
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      modalClass: "overlay-only-modal",
+      overlayClass: "overlay-only",
+      fontSize: "3em",
+      iconSize: "5em",
+      buttonClass: "large-button",
+      imgDim: 300
+    });
   }
 }

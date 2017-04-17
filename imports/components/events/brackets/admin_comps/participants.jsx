@@ -11,8 +11,9 @@ import Brackets from "/imports/api/brackets/brackets.js";
 import StartBracketAction from "./start.jsx";
 import SingleParticipant from "./single_participant.jsx";
 
-export default class AddParticipantAction extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
+export default class AddPartipantAction extends ResponsiveComponent {
   constructor(props) {
     super(props);
     var instance = Instances.findOne();
@@ -85,8 +86,9 @@ export default class AddParticipantAction extends Component {
         }
       })
     }
-    if(participant.id) {
-      Meteor.call("tickets.charge", Instances.findOne()._id, this.props.index, participant.id, (err) => {
+    const instance = Instances.findOne();
+    if(participant.id && instance.tickets) {
+      Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
         if(err) {
           onCheckedIn(false);
           return toastr.error(err.reason);
@@ -107,15 +109,15 @@ export default class AddParticipantAction extends Component {
     })
   }
 
-  render() {
+  renderBase(opts) {
     const instance = Instances.findOne();
     return (
-      <div className="row">
+      <div className="col">
         {
           this.props.bracket.isComplete ? (
             ""
           ) : (
-            <div className="col col-1" style={{marginRight: 20}}>
+            <div className="col col-1 center" style={{width: opts.mobile ? "100%" : "50%", margin: "0 auto 20px"}}>
               <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
@@ -129,10 +131,14 @@ export default class AddParticipantAction extends Component {
             </div>
           )
         }
-        <div className="col-3 participant-table" style={{maxHeight: 500, overflowY: "auto"}}>
+        <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
           {
             this.state.participants.map((participant, index) => {
-              return(<SingleParticipant participant={participant} completed={this.state.completed} index={index} invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)} openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}/>);
+              return(<SingleParticipant
+                participant={participant}
+                completed={this.state.completed} index={index}
+                invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)}
+                openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)} opts={opts} pSize={this.state.participants.length} onUpdate={this.updateParticipants.bind(this)} bIndex={this.props.index}/>);
             })
           }
         </div>
@@ -148,4 +154,27 @@ export default class AddParticipantAction extends Component {
       </div>
     )
   }
+
+  renderMobile() {
+    return this.renderBase({
+      mobile: true,
+      fontSize: "2.5em",
+      imgDim: 100,
+      maxHeight: 750,
+      buttonClass: "large-button",
+      mobile: true
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      mobile: false,
+      fontSize: "16px",
+      imgDim: 50,
+      maxHeight: 500,
+      buttonClass: "",
+      mobile: false
+    })
+  }
+
 }

@@ -1,11 +1,11 @@
 import React from 'react'
 import TrackerReact from "meteor/ultimatejs:tracker-react";
-import { render } from 'react-dom';
-import ShowUserScreen from '../users/show.jsx';
 import { browserHistory, Link } from 'react-router';
 import FontAwesome from "react-fontawesome";
 
-export default class SignUpScreen extends TrackerReact(React.Component) {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
 
   constructor() {
     super();
@@ -21,7 +21,7 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
     if(this.refs.password.value != this.refs.confirmPassword.value) {
       return toastr.error("Passwords must match!", "Error!");
     }
-    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, function(err, rez) {
+    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, (err, rez) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
@@ -29,9 +29,16 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
         toastr.error("Issue generating login token.", "Call an Admin!");
       }
       else {
-        Meteor.loginWithToken(rez.token);
-        toastr.success("Successfully created your account!", "Success!");
-        browserHistory.push('/discover');
+        Meteor.loginWithToken(rez.token, (err, data) => {
+          toastr.success("Successfully created your account!", "Success!");
+          if(this.props.onSuccess) {
+            this.props.onSuccess();
+          }
+          else {
+            browserHistory.push('/discover');
+          }
+        });
+
       }
     });
   }
@@ -66,7 +73,7 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
     })
   }
 
-  render() {
+  renderBase(ops) {
     var icon, bgColor;
     var emailBgColor, emailIcon;
     if(this.state.userValid.ready()){
@@ -82,37 +89,56 @@ export default class SignUpScreen extends TrackerReact(React.Component) {
     return (
       <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
-          <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} autoComplete="off" />
-            <div className="row center x-center cred-form-status" style={{backgroundColor: emailBgColor}}>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            <input className={"col-1 " + ops.inputClassName} type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} autoComplete="off" />
+            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: emailBgColor}}>
               <FontAwesome name={emailIcon} />
             </div>
           </div>
-          <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} autoComplete="off" />
-            <div className="row center x-center cred-form-status" style={{backgroundColor: bgColor}}>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            <input className={"col-1 " + ops.inputClassName} type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} autoComplete="off" />
+            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: bgColor}}>
               <FontAwesome name={icon} />
             </div>
           </div>
-          <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="password" name="password" placeholder="Password" ref="password" onChange={this.onPasswordChange.bind(this)} />
-            <div className="row center x-center cred-form-status" style={{backgroundColor: this.state.passValid ? "#00BDFF" : "none"}}>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            <input className={"col-1 " + ops.inputClassName} type="password" name="password" placeholder="Password" ref="password" onChange={this.onPasswordChange.bind(this)} />
+            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: this.state.passValid ? "#00BDFF" : "none"}}>
               <FontAwesome name={this.state.passValid ? "check" : "times"} />
             </div>
           </div>
-          <div className="row x-center" style={{alignItems: "flex-end"}}>
-            <input className="col-1" type="password" name="confirm_password" placeholder="Confirm Password" ref="confirmPassword" onChange={this.onPassConfChange.bind(this)} />
-            <div className="row center x-center cred-form-status" style={{backgroundColor: this.state.passConfValid ? "#00BDFF" : "none"}}>
+          <div className="row x-center" style={{marginBottom: 20}}>
+            <input className={"col-1 " + ops.inputClassName} type="password" name="confirm_password" placeholder="Confirm Password" ref="confirmPassword" onChange={this.onPassConfChange.bind(this)} />
+            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: this.state.passConfValid ? "#00BDFF" : "none"}}>
               <FontAwesome name={this.state.passConfValid ? "check" : "times"} />
             </div>
           </div>
 
-          <span style={{fontSize: "0.7em", marginTop: 20}}>By signing up for Brachyon, you agree to our&nbsp;
+          <span style={{fontSize: ops.fontSize, marginTop: ops.marginTop}}>By signing up for Brachyon, you agree to our&nbsp;
             <Link to="/terms">Terms of Service</Link>.
           </span>
-          <input type="submit" value="Sign Up" />
+          <input className={ops.inputClassName} type="submit" value="Sign Up" />
         </form>
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      inputClassName: "",
+      fontSize: "0.7em",
+      marginTop: 20,
+      credFormSize: "small"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      inputClassName: "large-input",
+      fontSize: "3rem",
+      marginTop: "2rem",
+      credFormSize: "large"
+    });
+  }
+
 }
