@@ -12,7 +12,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
   constructor(props) {
     super(props);
     var event = Events.findOne();
-
+    var bracket = Brackets.findOne();
     this.state = {
       leagueOpen: event && event.league && bracket && bracket.complete && this.props.active,
       dragging: false,

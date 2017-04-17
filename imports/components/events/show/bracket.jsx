@@ -78,7 +78,6 @@ export default class BracketPanel extends Component {
       }
     }
     else {
-      var bracket = Brackets.findOne();
       var rounds = bracket.rounds;
       var rec;
       if(this.props.format == "swiss") {

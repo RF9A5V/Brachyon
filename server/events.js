@@ -86,7 +86,9 @@ Meteor.methods({
     });
     if(event && event.league) {
       var league = Leagues.findOne(event.league);
-      var leaderboardIndex = league.events.indexOf(event.slug);
+      var leaderboardIndex = league.events.findIndex((e) => {
+        return e.slug == event.slug;
+      });
       var setObj = {
         [`leaderboard.${leaderboardIndex}.${userID}`]: {
           score: 0,
@@ -112,7 +114,9 @@ Meteor.methods({
 
     if(event.league) {
       var league = Leagues.findOne(event.league);
-      var leaderboardIndex = league.events.indexOf(event.slug);
+      var leaderboardIndex = league.events.findIndex((e) => {
+        return e.slug == event.slug
+      });
       Leagues.update(event.league, {
         $unset: {
           [`leaderboard.${leaderboardIndex}.${userId}`]: 1

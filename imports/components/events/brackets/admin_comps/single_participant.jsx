@@ -122,20 +122,22 @@ class SingleParticipant extends Component {
             ) : (
               this.props.opts.mobile ? (
                 <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => {
+                  const instance = Instances.findOne();
                   if(instance.tickets) {
                     this.setState({ discountOpen: true, participant })
                   }
                   else {
-                    this.onUserCheckIn(participant);
+                    this.props.onCheckIn(participant, this.props.index);
                   }
                 }}/>
               ) : (
                 <button className={this.props.opts.buttonClass} onClick={() => {
+                  const instance = Instances.findOne();
                   if(instance.tickets) {
                     this.setState({ discountOpen: true, participant })
                   }
                   else {
-                    this.onUserCheckIn(participant);
+                    this.props.onCheckIn(participant, this.props.index);
                   }
                 }}>Check In</button>
               )
@@ -147,30 +149,6 @@ class SingleParticipant extends Component {
         </div>
       </div>
     )
-    // return (
-    //   <div className="participant-row row x-center" style={{opacity}} key={index}>
-    //     <div style={{width: "10%"}}>
-    //       <div>{index+1}</div>
-    //     </div>
-    //     <img src={this.imgOrDefault(user)} style={{width: 50, height: 50, borderRadius: "100%", marginRight: 20}} />
-    //     <div className="col" style={{width: "15%"}}>
-    //       <span style={{fontSize: 16}}>{ participant.alias }</span>
-    //       <span style={{fontSize: 12}}>{ user ? user.username : "Anonymous" }</span>
-    //     </div>
-    //     <div>
-    //       {
-    //         participant.checkedIn ? (
-    //           <span>Checked In</span>
-    //         ) : (
-    //           <button onClick={() => {this.props.openDiscount(participant)} }>Check In</button>
-    //         )
-    //       }
-    //     </div>
-    //     <div className="col-1" style={{textAlign: "right"}}>
-    //       <FontAwesome name="cog" size="2x" style={{cursor: "pointer"}} onClick={() => {this.props.openOptions(participant)} } />
-    //     </div>
-    //   </div>
-    // )
   }
 
   render() {

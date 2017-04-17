@@ -95,7 +95,7 @@ export default class Description extends ResponsiveComponent {
             open: true
           })
         }}>
-          <div style={{fontSize: "3em", maxHeight: "30vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
+          <div style={{fontSize: "3em", maxHeight: "20vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
           </div>
           <div className="row center x-center">
             <span style={{fontSize: "2.5em", color: "#00BDFF", marginRight: 15}}>Show More</span>
