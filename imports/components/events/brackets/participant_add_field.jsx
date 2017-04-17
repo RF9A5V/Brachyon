@@ -31,7 +31,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
 
   userTemplate(user, index, opts) {
     return (
-      <div className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
+      <div className="row x-center hover-lg user-template" style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
         <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
         <span style={{fontSize: opts.fontSize, textAlign: "left"}}>
           { user.username }
@@ -176,7 +176,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
         <div style={{backgroundColor: "#111", height: 150, overflowY: "auto", width: "100%", marginBottom: 10}}>
           {
             this.state.query.length >= 3 ? (
-              <div ref="anon" className="row x-center hover-lg user-template" style={{padding: 20, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
+              <div ref="anon" className="row x-center hover-lg user-template" style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
                 <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
                 <div className="col">
                   <span style={{fontSize: opts.fontSize, textAlign: "left"}}>{ this.state.query }</span>

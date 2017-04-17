@@ -179,7 +179,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
       mobile: false,
       fontSize: "16px",
       imgDim: 50,
-      maxHeight: 500,
+      maxHeight: 450,
       buttonClass: "",
       mobile: false
     })
