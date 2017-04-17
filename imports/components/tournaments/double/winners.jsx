@@ -18,6 +18,11 @@ export default class DoubleElimWinnersBracket extends Component {
     };
   }
 
+  swapParticipant(dragIndex, hoverIndex) {
+    Meteor.call("participants.swapPlayers", Instances.findOne()._id, this.props.index, dragIndex, hoverIndex);
+    this.props.update();
+  }
+
   onDrag(e) {
     if(this.refs.headers && this.refs.dragger) {
       this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
@@ -110,7 +115,7 @@ export default class DoubleElimWinnersBracket extends Component {
                             match = Matches.findOne(match.id);
                           }
                           return (
-                            <MatchBlock key={i + " " + j} match={match} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
+                            <MatchBlock key={i + " " + j} match={match} swapParticipant={this.swapParticipant.bind(this)} bracket={0} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} />
                           );
                         })
                       }
@@ -151,6 +156,33 @@ export default class DoubleElimWinnersBracket extends Component {
       )
     }
 
+    let draggableDiv, draggable;
+    if (Brackets.findOne()) {
+      draggableDiv = (
+          <DragScroll width={"100%"} height={"100%"} ref="dragger">
+            { this.mainBracket() }
+          </DragScroll>
+      )
+      draggable = this.state.dragging ? "grabbing" : "grab"
+    }
+    else {
+      draggableDiv = (
+        this.mainBracket()
+      )
+      draggable = "";
+    }
+
+    let bracketDiv = this.props.page == "admin" ? (
+      <div className={draggable} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
+        { draggableDiv }
+      </div>
+    ) : (
+      <div className={draggable} style={{height: "calc(97vh - 300px)"}}>
+          { draggableDiv }
+      </div>
+    );
+
+
     return (
       <div onWheel={(e) => {
         e.stopPropagation();
@@ -158,21 +190,9 @@ export default class DoubleElimWinnersBracket extends Component {
         <div style={{whiteSpace: "nowrap", overflowX: "hidden", margin: -20, marginBottom: 10, backgroundColor: "#222", width: "calc(100% + 40px)"}} ref="headers">
           { headers }
         </div>
-        {
-          this.props.page == "admin" ? (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)", margin: -20, marginTop: 0}}>
-              <DragScroll width={"100%"} height={"100%"} ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
-            </div>
-          ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: "calc(97vh - 300px)"}}>
-              <DragScroll width="100%" height="100%" ref="dragger">
-                { this.mainBracket() }
-              </DragScroll>
-            </div>
-          )
-        }
+        { bracketDiv }
+
+
         {
           this.props.id && !this.props.complete ? (
             <EventModal

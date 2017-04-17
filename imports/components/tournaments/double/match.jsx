@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FontAwesome from "react-fontawesome";
+import Participant from "./participant.jsx";
 import { browserHistory } from "react-router";
 
 import Matches from "/imports/api/event/matches.js";
@@ -29,6 +30,19 @@ export default class MatchBlock extends Component {
       top += Math.pow(2, i) * 10;
     }
     return { height, top }
+  }
+
+  participant(p, s) {
+    return (
+      <div className="participant" style={s}>
+        <div className={((p.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
+          { p.alias || "TBD" }
+        </div>
+        <div className="score">
+          { p.score || 0 }
+        </div>
+      </div>
+    )
   }
 
   render() {
@@ -83,31 +97,22 @@ export default class MatchBlock extends Component {
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
 
+    let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}
+    let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}
+    var p1participant = !(Brackets.findOne()) && p1.alias ? (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} />) : ( this.participant(p1, parStyle1) )
+    var p2participant = !(Brackets.findOne()) && p2.alias ? (<Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} />) : ( this.participant(p2, parStyle2) )
+
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
+      <div className={`row x-center`} style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
         {
           [
             <div className="match" onClick={() => {
               this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
             }}>
-              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p1.alias || "TBD" }
-                </div>
-                <div className="score">
-                  { p1.score || 0 }
-                </div>
-              </div>
+              { p1participant }
               <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
-              <div className="participant" style={{height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}}>
-                <div className={((p2.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-                  { p2.alias || "TBD" }
-                </div>
-                <div className="score">
-                  { p2.score || 0 }
-                </div>
-              </div>
+              { p2participant }
 
             </div>,
             (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
@@ -126,6 +131,6 @@ export default class MatchBlock extends Component {
           ]
         }
       </div>
-    )
+    );
   }
-}
+};
