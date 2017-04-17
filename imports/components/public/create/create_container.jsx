@@ -74,7 +74,6 @@ export default class CreateContainer extends Component {
     else if(window.location.pathname.indexOf("league" >= 0)){
       eColor = "#FF6000";
     }
-    console.log(this.props.actions);
     return (
       <div className="row x-center" style={{width: "100vw", height: 50, position: "fixed", backgroundColor: "#111", bottom: 0, left: 0, right: 0}}>
         {
