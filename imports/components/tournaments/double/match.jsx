@@ -140,13 +140,14 @@ export default class MatchBlock extends ResponsiveComponent {
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
 
+    const bObj = Brackets.findOne();
+
     let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none"}
     let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none"}
-    var p1participant = !(Brackets.findOne()) && p1.alias ? (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={0} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />) : ( this.participant(p1, parStyle1, 0, opts) )
-    var p2participant = !(Brackets.findOne()) && p2.alias ? (
+    var p1participant = !bObj && p1.alias ? (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={0} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />) : ( this.participant(p1, parStyle1, 0, opts) )
+    var p2participant = !bObj && p2.alias ? (
       <Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={1} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />
       ) : ( this.participant(p2, parStyle2, 1, opts) )
-
     return (
       <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}>
         {

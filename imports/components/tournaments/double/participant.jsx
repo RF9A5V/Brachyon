@@ -111,14 +111,6 @@ class Participant extends Component {
           { p.score || 0 }
         </div>
       </div>
-      // <div className="participant" style={this.props.parStyle}>
-      //   <div className={((p1.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-      //     { p1.alias || "TBD" }
-      //   </div>
-      //   <div className="score">
-      //     { p1.score || 0 }
-      //   </div>
-      // </div>
     ));
   }
 }

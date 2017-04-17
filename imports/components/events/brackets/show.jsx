@@ -276,6 +276,14 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
+    items.push({
+      name: "Back to Event",
+      icon: "arrow-left",
+      action: () => {
+        browserHistory.push("/event/" + Events.findOne().slug);
+      }
+    });
+
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
@@ -283,6 +291,7 @@ class BracketShowScreen extends Component {
       if(registered >= 0) {
         items.push({
           name: "Unregister",
+          icon: "user-times",
           action: () => {
             Meteor.call("events.removeParticipant", Events.findOne()._id, index, Meteor.userId(), (err) => {
               if(err) {
@@ -298,6 +307,7 @@ class BracketShowScreen extends Component {
       else {
         items.push({
           name: "Register",
+          icon: "user-plus",
           action: () => {
             Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
               if(err) {
@@ -312,13 +322,8 @@ class BracketShowScreen extends Component {
       }
     }
     items.push({
-      name: "Back to Event",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
-    items.push({
       name: "Generate Short URL",
+      icon: "link",
       action: (e) => {
         if(!this.state.url) {
           Meteor.call("generateShortLink", window.location.pathname, (err, data) => {

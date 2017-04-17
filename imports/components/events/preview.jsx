@@ -16,6 +16,8 @@ import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
 
@@ -24,7 +26,8 @@ class PreviewEventScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasLoaded: false
+      hasLoaded: false,
+      ready: false
     }
   }
 
@@ -140,9 +143,9 @@ class PreviewEventScreen extends Component {
   }
 
   render() {
-    if(!this.props.ready){
+    if(!this.state.ready){
       return (
-        <div>Loading...</div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     else {

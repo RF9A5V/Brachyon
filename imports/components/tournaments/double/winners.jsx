@@ -296,13 +296,13 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     }
     const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
     let draggableDiv, draggable;
-    if (!bracket || this.props.useDrag) {
+    if (bracket || this.props.useDrag) {
       draggableDiv = (
         <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
           const el = document.getElementById("winner-header");
           el.scrollLeft -= dx;
         }}>
-          <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
+          <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 120 : 0}} ref="content">
             { this.mainBracket(opts) }
           </div>
         </DragScroll>
@@ -317,7 +317,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     }
 
     let bracketDiv = opts.mobile ? (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 40, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", paddingTop: 60, height: opts.dragHeight, width: "100%",  overflow: "auto"}} onScroll={(e) => {
         const node = document.getElementById("winner-header");
         this.setState({
           headerTop: e.target.scrollTop
@@ -343,7 +343,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         </div>
       </div>
     ) : (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{position: "relative", marginBottom: 20}}>
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: this.props.height || bracket ? opts.dragHeight : "", position: "relative", marginBottom: 20, paddingTop: 40}}>
         <div style={{
           backgroundColor: "#222",
           position: "absolute",

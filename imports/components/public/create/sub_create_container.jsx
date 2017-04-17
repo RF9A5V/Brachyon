@@ -57,7 +57,7 @@ export default class SubContainer extends ResponsiveComponent {
                   <item.content id={item.key} ref={item.key} {...item.args} status={this.props.status} setStatus={this.props.setStatus} getRefValue={this.props.getRefValue} active={this.props.active} />
                   {
                     i < this.props.items.length - 1 ? (
-                      <hr style={{width: "95%"}} className="user-divider" />
+                      <hr style={{width: "95%", marginTop: opts.vertSpace, marginBottom: opts.vertSpace}} className="user-divider" />
                     ) : (
                       null
                     )
@@ -73,11 +73,15 @@ export default class SubContainer extends ResponsiveComponent {
   }
 
   renderDesktop() {
-    return this.renderBase()
+    return this.renderBase({
+      vertSpace: 20
+    })
   }
 
   renderMobile() {
-    return this.renderBase()
+    return this.renderBase({
+      vertSpace: 40
+    })
   }
 
 }

@@ -9,6 +9,8 @@ import CreateContainer from "/imports/components/public/create/create_container.
 
 import { createContainer } from "meteor/react-meteor-data";
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 // Details stuff
 import DescriptionPage from "./modules/details/description.jsx";
 import LocationPage from "./modules/details/location.jsx";
@@ -51,7 +53,8 @@ class EventAdminPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      ready: false
     };
   }
 
@@ -178,7 +181,7 @@ class EventAdminPage extends Component {
       name: "",
       key: "stream",
       args: {
-        stream: event.stream.name
+        stream: (event.stream || {}).name
       }
     }];
 
@@ -325,10 +328,12 @@ class EventAdminPage extends Component {
     return [
       {
         name: "Save All",
+        icon: "floppy-o",
         action: this.save.bind(this)
       },
       {
         name: "Rerun",
+        icon: "refresh",
         action: () => {
           this.setState({
             rerunOpen: true
@@ -337,6 +342,7 @@ class EventAdminPage extends Component {
       },
       {
         name: "Close",
+        icon: "times",
         action: () => {
           this.setState({
             open: true
@@ -347,10 +353,10 @@ class EventAdminPage extends Component {
   }
 
   render() {
-    if(!this.props.ready){
+    if(!this.state.ready){
       return (
-        <div>
-          Loading...
+        <div className="col center x-center" style={{width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.8)", position: "fixed"}}>
+          <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ ready: true }) }} />
         </div>
       )
     }

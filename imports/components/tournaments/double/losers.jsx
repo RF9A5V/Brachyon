@@ -122,12 +122,6 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
 
   mainBracket() {
     this.setMatchMap(this.props.rounds);
-    var hasInactiveFirstRound = this.props.rounds[1].every(m => {
-      return m == null;
-    })
-    if(hasInactiveFirstRound) {
-      headers.pop();
-    }
 
     return (
       <div className="col" >
@@ -177,12 +171,12 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-    const firstRoundNull = this.props.rounds[1][1].every(m => {
+    const firstRoundNull = this.props.rounds[1][0].every(m => {
       return m == null;
     });
     const funcFirst = firstRoundNull ? 1 : 0;
     var headers = this.props.rounds[1].map((r, i) => {
-      if(i <= funcFirst) {
+      if(i < funcFirst) {
         return null;
       }
       const matchCount = r.filter(m => {
@@ -199,10 +193,17 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         text = "Quarter-Finals";
       }
       else {
-        text = "Round " + (i - funcFirst);
+        text = "Round " + (i - funcFirst + 1);
+      }
+      var width = opts.headerWidth;
+      if(i > funcFirst) {
+        width += opts.headerSpacing;
+        if((i - funcFirst) % 2 == 0) {
+          width += opts.headerDiff || 5;
+        }
       }
       return (
-        <h4 style={{width: opts.headerWidth + (i == funcFirst ? 0 : opts.headerSpacing), display: "inline-block", fontSize: opts.fontSize}}>
+        <h4 style={{width, display: "inline-block", fontSize: opts.fontSize}}>
           Losers { text }
         </h4>
       )
@@ -257,7 +258,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
                 const el = document.getElementById("loser-header");
                 el.scrollLeft -= dx;
               }}>
-                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 80 : 0}} ref="content">
+                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 120 : 0}} ref="content">
                   { this.mainBracket(opts) }
                 </div>
               </DragScroll>
@@ -298,8 +299,9 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       dragHeight: "calc(97vh - 150px)",
-      headerWidth: 245,
-      headerSpacing: 15,
+      headerWidth: 240,
+      headerSpacing: 20,
+      headerDiff: 5,
       fontSize: "1em",
       mobile: false
     });
