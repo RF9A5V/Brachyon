@@ -374,7 +374,25 @@ const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
-    const eventHandle = Meteor.subscribe("event", slug);
+    const eventHandle = Meteor.subscribe("event", slug, {
+      onReady: () => {
+        fbDescriptionParser = (description) => {
+          var startIndex = description.indexOf("<p>");
+          var endIndex = description.indexOf("</p>", startIndex);
+          var tempDesc = description.substring(startIndex + 3, endIndex);
+          if(tempDesc.length > 200) {
+            tempDesc = tempDesc.substring(0, 196) + "...";
+          }
+          return tempDesc;
+        }
+        const event = Events.findOne();
+        var title = event.details.name;
+        var desc = fbDescriptionParser(event.details.description);
+        var img = event.details.bannerUrl || "/images/bg.jpg";
+        var url = window.location.href;
+        generateMetaTags(title, desc, img, url);
+      }
+    });
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
       return {
