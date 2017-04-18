@@ -219,7 +219,6 @@ export default class BracketForm extends ResponsiveComponent {
             toastr.error(err.reason);
           }
           else {
-            console.log(data);
             this.setState({
               gameList: data
             })
@@ -230,7 +229,6 @@ export default class BracketForm extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-    console.log(this.state);
     const imgHeight = "340px";
     return (
       <div className={opts.direction} style={{backgroundColor: "#111"}}>

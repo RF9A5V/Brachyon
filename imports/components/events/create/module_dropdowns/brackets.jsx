@@ -15,7 +15,6 @@ export default class BracketsPanel extends ResponsiveComponent {
     if(props.brackets) {
       brackets = {};
       props.brackets.forEach((b, i) => {
-        console.log(b);
         brackets[i] = {
           name: b.name,
           game: b.game,
@@ -47,7 +46,6 @@ export default class BracketsPanel extends ResponsiveComponent {
     var brackets = [];
     Object.keys(this.state.brackets).forEach(key => {
       const brackObj = this.refs[key].value();
-      console.log(brackObj);
       if(!brackObj.game) {
         toastr.error("Each bracket given requires a game!");
         throw new Error("Bracket at key " + key + " requires a game.");
@@ -71,7 +69,6 @@ export default class BracketsPanel extends ResponsiveComponent {
       bracketIndex = 0;
     }
     this.state.brackets[++bracketIndex] = { };
-    console.log(this.state.brackets);
     this.props.setStatus(true);
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
   }
@@ -102,11 +99,11 @@ export default class BracketsPanel extends ResponsiveComponent {
     var eColor, fColor;
     if(window.location.pathname.indexOf("event") >= 0){
       eColor = "#00BDFF";
-      fColor = "#333";
+      fColor = "#111";
     }
     else if(window.location.pathname.indexOf("league") >= 0){
       eColor = "#FF6000";
-      fColor = "#FFF";
+      fColor = "#111";
     }
     else{}
     return (
@@ -167,7 +164,6 @@ export default class BracketsPanel extends ResponsiveComponent {
                   if(bracket == null){
                     return "";
                   }
-                  console.log(bracket);
                   if(Object.keys(this.state.brackets).length > 1){
                     return (
                       <div className="game-bracket-container">
@@ -197,8 +193,8 @@ export default class BracketsPanel extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "3em",
-      fontWidth: "100%",
+      fontSize: "2em",
+      fontWidth: "90%",
       toggleWidth: 200
     });
   }

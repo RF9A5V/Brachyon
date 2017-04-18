@@ -14,8 +14,16 @@ import EditBracket from "./modules/brackets/edit.jsx";
 import EditEvent from "./modules/events/edit.jsx";
 
 import EditLeaderboard from "./modules/leaderboard/edit.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class EditLeagueScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false
+    }
+  }
 
   detailItems(league) {
     return {
@@ -89,7 +97,6 @@ class EditLeagueScreen extends Component {
   eventItems(league) {
     var subs = league.events.map((e, i) => {
       var event = Events.findOne({ slug: e.slug });
-      console.log(event);
       return {
         content: EditEvent,
         name: event.details.name,
@@ -211,16 +218,16 @@ class EditLeagueScreen extends Component {
     return [
       {
         name: "Save All",
+        icon: "floppy-o",
         action: this.save.bind(this)
       }
     ]
   }
 
   render() {
-    if(!this.props.ready) {
+    if(!this.state.ready) {
       return (
-        <div>
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (

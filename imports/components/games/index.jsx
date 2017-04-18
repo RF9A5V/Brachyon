@@ -9,6 +9,8 @@ import ImageForm from "/imports/components/public/img_form.jsx";
 import Games from "/imports/api/games/games.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 export default class GamesIndex extends Component {
 
   constructor(props) {
@@ -16,9 +18,10 @@ export default class GamesIndex extends Component {
     this.state = {
       games: Meteor.subscribe("games", {
         onReady: () => {
-          this.setState({ ready: true })
+          this.setState({ initReady: true })
         }
       }),
+      initReady: false,
       ready: false,
       open: false
     }
@@ -142,6 +145,11 @@ export default class GamesIndex extends Component {
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
     return (
       <div className="col" style={{marginTop: 20}}>
         <div className="row center">

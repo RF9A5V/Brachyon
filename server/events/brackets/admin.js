@@ -23,10 +23,10 @@ Meteor.methods({
         [`brackets.${index}.participants`]: {
           alias
         }
-      },
-      $unset: {
-        [`tickets.payables.${user._id}`]: 1
       }
+      // $unset: {
+      //   [`tickets.payables.${user._id}`]: 1
+      // }
     })
   },
   "brackets.removeParticipant"(id, alias) {

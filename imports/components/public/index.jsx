@@ -1,21 +1,30 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
-import { Link } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import RegModal from "/imports/components/public/reg_modal.jsx";
 import Loader from "/imports/components/public/loader.jsx";
+
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class LandingScreen extends ResponsiveComponent {
 
   constructor() {
     super();
     this.state = {
-      open: false
+      open: false,
+      initReady: true,
+      ready: false
     }
   }
 
   renderBase(opts) {
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
     return (
       <div className="landing-screen">
         <div className="img-background"></div>
@@ -53,7 +62,7 @@ export default class LandingScreen extends ResponsiveComponent {
           </div>
         </div>
         <div className="row x-center footer-buttons" style={{backgroundColor: "rgba(0,0,0,0.5"}}>
-          <div className={`create-container-option col-1 orange title footer-bar ${opts.mobile ? "mobile" : "desktop"}`} style={{fontSize: opts.fontSize}}>
+          <div className={`create-container-option col-1 orange title footer-bar ${opts.mobile ? "mobile" : "desktop"} noselect`} style={{fontSize: opts.fontSize}}>
             WHAT IS THIS PLACE?
           </div>
         </div>
@@ -61,7 +70,9 @@ export default class LandingScreen extends ResponsiveComponent {
           this.setState({
             open: false
           })
-        }} content={this.state.content} />
+        }} content={this.state.content} onSuccess={() => {
+          browserHistory.push("/dashboard");
+        }} />
       </div>
     );
   }

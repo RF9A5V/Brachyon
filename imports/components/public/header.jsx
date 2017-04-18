@@ -181,7 +181,12 @@ class Header extends ResponsiveComponent {
         </Sidebar>
         <RegModal open={this.state.regOpen} content={this.state.content} onClose={() => {
           this.setState({ regOpen: false })
-        }} onSuccess={() => {}} />
+        }} onSuccess={() => {
+          if(window.location.pathname == "/") {
+            browserHistory.push("/dashboard");
+            this.setState({ regOpen: false })
+          }
+        }} />
       </div>
     )
   }

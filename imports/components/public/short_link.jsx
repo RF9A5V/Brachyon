@@ -1,31 +1,38 @@
 import React, { Component } from "react";
 import { browserHistory } from "react-router";
 
-import Loading from "/imports/components/public/loading.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class ShortLinkScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      ready: false,
+      initReady: false
+    }
   }
 
   componentDidMount() {
-    Meteor.call("getLongUrl", props.params.id, (err, data) => {
+    Meteor.call("getLongUrl", this.props.params.id, (err, data) => {
       if(err) {
         toastr.error("Error grabbing short URL.");
-        browserHistory.push("/");
       }
-      else {
-        browserHistory.push(data);
-      }
+      this.setState({
+        initReady: true,
+        url: err ? "/" : data
+      })
     });
   }
 
   render() {
-    return (
-      <div className="col center x-center">
-        <Loading />
-      </div>
-    );
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => {
+          browserHistory.push(this.state.url)
+        }} />
+      )
+    }
+    return null;
   }
 }

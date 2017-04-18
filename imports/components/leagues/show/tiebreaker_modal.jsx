@@ -8,8 +8,24 @@ export default class TiebreakerModal extends Component {
     const league = Leagues.findOne();
     const events = Events.find().fetch();
     const isOwner = Meteor.userId() == league.owner;
+    var userToScore = {};
+    league.leaderboard.forEach(l => {
+      Object.keys(l).forEach(k => {
+        userToScore[k] = userToScore[k] ? userToScore[k] + l[k] : l[k];
+      })
+    })
+    var scoreToUser = {};
+    Object.keys(userToScore).forEach(u => {
+      if(scoreToUser[userToScore[u]]) {
+        scoreToUser[userToScore[u]].push(u);
+      }
+      else {
+        scoreToUser[userToScore[u]] = [u];
+      }
+    })
+    const maxScore = Math.max.apply(null, Object.keys(scoreToUser));
     this.state = {
-      open: events.every(e => { return e.isComplete }) && !league.tiebreaker && isOwner
+      open: events.every(e => { return e.isComplete }) && !league.tiebreaker && isOwner && (scoreToUser[maxScore] || []).length > 1
     }
   }
 

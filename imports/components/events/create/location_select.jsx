@@ -139,13 +139,11 @@ export default class LocationSelect extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div>
-        <div>
-          <div className="row x-center" style={{margin: "10px 0"}}>
-            <h5 style={{fontSize: opts.fontSize}}>
-              Is this event online?
-            </h5>
-            <input type="checkbox" onChange={this.updateValue.bind(this)} defaultChecked={this.state.online} style={{width: opts.checkboxDims, height: opts.checkboxDims}} />
-          </div>
+        <div className="row x-center" style={{marginBottom: opts.margin}}>
+          <h5 style={{fontSize: opts.fontSize, marginRight: opts.margin}}>
+            Is this event online?
+          </h5>
+          <input type="checkbox" onChange={this.updateValue.bind(this)} defaultChecked={this.state.online} style={{width: opts.checkboxDims, height: opts.checkboxDims, margin: 0}} />
         </div>
         <div className="col" style={{display: this.state.online ? "none" : ""}}>
           <label style={{fontSize: opts.fontSize}} className="input-label">Location Name</label>
@@ -175,7 +173,8 @@ export default class LocationSelect extends ResponsiveComponent {
     return this.renderBase({
       fontSize: "2.5em",
       inputClass: "large-input",
-      checkboxDims: 25
+      checkboxDims: 25,
+      margin: 20
     })
   }
 
@@ -183,7 +182,8 @@ export default class LocationSelect extends ResponsiveComponent {
     return this.renderBase({
       fontSize: "1em",
       inputClass: "",
-      checkboxDims: 10
+      checkboxDims: 10,
+      margin: 10
     })
   }
 

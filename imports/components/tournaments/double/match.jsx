@@ -5,7 +5,12 @@ import { browserHistory } from "react-router";
 
 import Matches from "/imports/api/event/matches.js";
 
-export default class MatchBlock extends Component {
+import { numToAlpha } from "/imports/decorators/num_to_alpha.js";
+
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class MatchBlock extends ResponsiveComponent {
+
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -32,32 +37,70 @@ export default class MatchBlock extends Component {
     return { height, top }
   }
 
-  participant(p, s) {
+  matchPlaceholder(alias, playerIndex) {
+    if(alias) {
+      return alias;
+    }
+    const id = this.props.match._id || this.props.match.id;
+    const data = this.props.matchMap[id];
+    const source = data.source.slice().sort((a, b) => {
+      if(a.lost && !b.lost) {
+        return -1;
+      }
+      else if(!a.lost && b.lost) {
+        return 1;
+      }
+      else if(a.lost && b.lost) {
+        return (a.number - b.number) / Math.abs(a.number - b.number) * -1;
+      }
+      else {
+        return (a.number - b.number) / Math.abs(a.number - b.number);
+      }
+    })
+    var dataSource = source[playerIndex];
+    if(!dataSource) {
+      return "Unknown";
+    }
+    const number = this.props.matchMap[dataSource.id].number;
+    return (dataSource.lost ? "Loser" : "Winner") + " of " + numToAlpha(number);
+  }
+
+  participant(p, s, i, opts) {
     return (
       <div className="participant" style={s}>
-        <div className={((p.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}>
-          { p.alias || "TBD" }
+        {
+          p.alias ? (
+            <div className="seed row center x-center" style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
+              { this.props.partMap[p.alias] }
+            </div>
+          ) : (
+            null
+          )
+        }
+        <div className={((p.alias || "TBD").length > 19 ? "marquee" : "") + " col-1 player"}
+        style={{fontSize: `calc(${opts.fontSize} * 0.8)`, paddingLeft: !p.alias ? "calc(10% + 5px)" : 5, fontStyle: p.alias ? "normal" : "italic"}}>
+          { this.matchPlaceholder(p.alias, i) }
         </div>
-        <div className="score">
+        <div className="score" style={{fontSize: opts.fontSize}}>
           { p.score || 0 }
         </div>
       </div>
     )
   }
 
-  render() {
+  renderBase(opts) {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
     var [i, j] = [this.props.roundNumber, this.props.matchNumber];
     var k = this.props.bracket ? Math.floor(i/2):i;
 
-    var height = 35;
+    var height = opts.height;
     var margin = 0;
 
-    var lineHeight = 5;
+    var lineHeight = opts.lineHeight;
 
     var blockHeight = height * 2 + margin * 2 + lineHeight;
-    var blockMargin = 20;
+    var blockMargin = opts.blockMargin;
 
     var vLineBase = blockHeight + blockMargin;
     var vLineHeight = Math.pow(2, i - 1) * vLineBase + lineHeight;
@@ -65,7 +108,7 @@ export default class MatchBlock extends Component {
       vLineHeight = Math.pow(2, parseInt(i / 2) - 1) * vLineBase + lineHeight
     }
 
-    var participantWidth = 200;
+    var participantWidth = opts.pWidth;
 
     if(!match || (match.players[0] == null && match.players[1] == null && this.props.roundNumber == 0 && this.props.bracket == 0)) {
       return (
@@ -97,23 +140,42 @@ export default class MatchBlock extends Component {
       isFunctionalFirstRound = (allr1Null && i == 1) || (!allr1Null && i == 0);
     }
 
-    let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none", marginLeft: prevMatchesNull ? 0 : 20}
-    let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none", marginLeft: prevMatchesNull ? 0 : 20}
-    var p1participant = !(Brackets.findOne()) && p1.alias ? (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} />) : ( this.participant(p1, parStyle1) )
-    var p2participant = !(Brackets.findOne()) && p2.alias ? (<Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} />) : ( this.participant(p2, parStyle2) )
+    const bObj = Brackets.findOne();
 
+    let parStyle1 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p1) ? 0.5 : 1, borderBottom: "none"}
+    let parStyle2 = {height, width: participantWidth, opacity: this.props.isFutureLoser || isLoser(p2) ? 0.5 : 1, borderTop: "none"}
+    var p1participant = !bObj && p1.alias ? (<Participant player={p1} parStyle={parStyle1} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={0} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />) : ( this.participant(p1, parStyle1, 0, opts) )
+    var p2participant = !bObj && p2.alias ? (
+      <Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={1} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />
+      ) : ( this.participant(p2, parStyle2, 1, opts) )
     return (
-      <div className={`row x-center`} style={{marginBottom: blockMargin, position: "relative", left: !isFunctionalFirstRound && prevMatchesNull ? 20 : 0}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}>
+        {
+          prevMatchesNull ? (
+            null
+          ) : (
+            <div style={{width: blockMargin, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+            </div>
+          )
+        }
+        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: "black", border: "solid 2px white", borderRight: "none"}}>
+          { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
+            return (
+              <span style={{fontSize: opts.fontSize}}>
+                { c }
+              </span>
+            )
+          }) }
+        </div>
         {
           [
             <div className="match" onClick={() => {
               this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
             }}>
               { p1participant }
-              <div style={{width: participantWidth + (prevMatchesNull ? 20 : 40), height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
+              <div style={{width: participantWidth + blockMargin, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
               { p2participant }
-
             </div>,
             (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
               ""
@@ -123,7 +185,7 @@ export default class MatchBlock extends Component {
                 height: vLineHeight,
                 backgroundColor: this.props.isFutureLoser ? "#999" : "white",
                 position: "relative",
-                zIndex: this.props.isFutureLoser ? 0 : 1,
+                zIndex: this.props.isFutureLoser ? 0 : 0,
                 top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
               }}>
               </div>
@@ -133,4 +195,24 @@ export default class MatchBlock extends Component {
       </div>
     );
   }
-};
+
+  renderDesktop() {
+    return this.renderBase({
+      height: 35,
+      lineHeight: 5,
+      blockMargin: 20,
+      fontSize: "1em",
+      pWidth: 200
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      height: 70,
+      lineHeight: 10,
+      blockMargin: 40,
+      fontSize: "2em",
+      pWidth: 350
+    })
+  }
+}

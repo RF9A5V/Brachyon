@@ -8,6 +8,7 @@ import BracketPanel from "../show/bracket.jsx";
 
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
+import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
@@ -23,6 +24,8 @@ import TabController from "/imports/components/public/side_tabs/tab_controller.j
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 class BracketShowScreen extends Component {
 
@@ -40,9 +43,6 @@ class BracketShowScreen extends Component {
   componentWillUnmount() {
     if(this.state.event) {
       this.state.event.stop();
-    }
-    if(this.state.bracket) {
-      this.state.bracket.stop();
     }
     if(this.refs.hiddenLink) {
       this.refs.hiddenLink.removeEventListener("click");
@@ -136,6 +136,11 @@ class BracketShowScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
+          },
+          {
+            content: Toggle,
+            name: "toggle",
+            ignoreHeader: true
           }
         ];
         break;
@@ -207,20 +212,50 @@ class BracketShowScreen extends Component {
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
           default: break;
         }
-        rounds = rounds.map(b => {
-          return b.map(r => {
-            return r.map(m => {
-              if(m) {
-                return {
-                  players: [m.playerOne, m.playerTwo],
-                  winner: null,
-                  _id: parseInt(new Date().getTime() / 1000) + parseInt(Math.random() * 1000)
-                }
+        var count = 1;
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
               }
-              return null;
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
+            return r.map(m => {
+              if(!m.truebye && i <= 1) {
+                return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         rounds = Brackets.findOne().rounds;
@@ -244,6 +279,14 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
+    items.push({
+      name: "Back to Event",
+      icon: "arrow-left",
+      action: () => {
+        browserHistory.push("/event/" + Events.findOne().slug);
+      }
+    });
+
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
@@ -251,6 +294,7 @@ class BracketShowScreen extends Component {
       if(registered >= 0) {
         items.push({
           name: "Unregister",
+          icon: "user-times",
           action: () => {
             Meteor.call("events.removeParticipant", Events.findOne()._id, index, Meteor.userId(), (err) => {
               if(err) {
@@ -266,6 +310,7 @@ class BracketShowScreen extends Component {
       else {
         items.push({
           name: "Register",
+          icon: "user-plus",
           action: () => {
             Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
               if(err) {
@@ -280,13 +325,8 @@ class BracketShowScreen extends Component {
       }
     }
     items.push({
-      name: "Back to Event",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
-    items.push({
-      name: "Generate Short URL",
+      name: "Short URL",
+      icon: "link",
       action: (e) => {
         if(!this.state.url) {
           Meteor.call("generateShortLink", window.location.pathname, (err, data) => {
@@ -296,7 +336,7 @@ class BracketShowScreen extends Component {
             else {
               this.setState({
                 open: true,
-                url: window.location.origin + "/!" + data
+                url: data
               })
             }
           });
@@ -330,11 +370,29 @@ class BracketShowScreen extends Component {
   }
 }
 
-export default createContainer(({params}) => {
+const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
-    const eventHandle = Meteor.subscribe("event", slug);
+    const eventHandle = Meteor.subscribe("event", slug, {
+      onReady: () => {
+        fbDescriptionParser = (description) => {
+          var startIndex = description.indexOf("<p>");
+          var endIndex = description.indexOf("</p>", startIndex);
+          var tempDesc = description.substring(startIndex + 3, endIndex);
+          if(tempDesc.length > 200) {
+            tempDesc = tempDesc.substring(0, 196) + "...";
+          }
+          return tempDesc;
+        }
+        const event = Events.findOne();
+        var title = event.details.name;
+        var desc = fbDescriptionParser(event.details.description);
+        var img = event.details.bannerUrl || "/images/bg.jpg";
+        var url = window.location.href;
+        generateMetaTags(title, desc, img, url);
+      }
+    });
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
       return {
@@ -356,3 +414,5 @@ export default createContainer(({params}) => {
     }
   }
 }, BracketShowScreen);
+
+export default DragDropContext(HTML5Backend)(x)
