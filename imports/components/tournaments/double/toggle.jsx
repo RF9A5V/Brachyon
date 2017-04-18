@@ -21,7 +21,7 @@ export default class ToggleBracket extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      top: 50,
+      top: 140,
       padding: 10,
       buttonClass: ""
     });
@@ -29,9 +29,9 @@ export default class ToggleBracket extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      top: 126,
+      top: 180,
       padding: 20,
-      buttonClass: "large-button"
+      buttonClass: "mid-button"
     });
   }
 

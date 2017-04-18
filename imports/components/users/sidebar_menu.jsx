@@ -78,7 +78,7 @@ export default class SidebarMenu extends ResponsiveComponent {
       <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width, padding: 20}}>
         <div className="col-1">
           <div className="row" style={{justifyContent: "flex-end"}}>
-            <FontAwesome name="times" style={{fontSize: ops.fontSize}}/>
+            <FontAwesome name="times" style={{fontSize: ops.fontSize}} onClick={this.props.onRedirect}/>
           </div>
           <div className="col x-center" style={{padding: ops.padding}}>
             <img src={user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png"} style={{width: ops.imgSize, height: ops.imgSize, borderRadius: "100%", marginBottom: 10}}/>

@@ -323,13 +323,13 @@ class BracketDetails extends ResponsiveComponent {
     var partMap = {};
     participantList.forEach((p, i) => {
       partMap[p.alias] = i + 1;
-    })
-    if (this.state.win == true){
-      return <WinnersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
-    }
-    else{
-      return <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} />
-    }
+    });
+    const comp = this.state.win ? (
+      <WinnersBracket height={"calc(100vh - 350px)"} rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
+    ) : (
+      <LosersBracket rounds={bracket.rounds} id={bracket._id} eid = {event._id} format={bracketMeta.format.baseFormat} partMap={partMap} addPadding={true} />
+    )
+    return comp;
   }
 
   winnersBracket(obj){

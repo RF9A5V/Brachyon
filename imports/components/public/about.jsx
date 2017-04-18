@@ -14,6 +14,8 @@ import LogInScreen from './login.jsx';
 import SignUpScreen from './signup.jsx';
 import DisplayDiscover from '/imports/components/events/discover/display_discover.jsx';
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 export default class AboutScreen extends TrackerReact(Component) {
 
   componentWillMount() {
@@ -22,7 +24,8 @@ export default class AboutScreen extends TrackerReact(Component) {
       user: Meteor.subscribe("user", Meteor.userId()),
       events: Meteor.subscribe('discoverEvents'),
       clicked: false,
-      open: false
+      open: false,
+      ready: false
     });
   }
 
@@ -81,10 +84,10 @@ export default class AboutScreen extends TrackerReact(Component) {
 
   render() {
     this.handleResize();
-    if(!this.state.user.ready() || !this.state.events.ready()){
+    if(!this.state.ready){
+      const ready = this.state.user.ready() && this.state.events.ready();
       return (
-        <div>
-        </div>
+        <LoaderContainer ready={ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     var createEvent = "";

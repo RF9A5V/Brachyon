@@ -55,7 +55,6 @@ Meteor.methods({
     Games.remove(gameID);
   },
   "games.search"(queryString, amount = 3) {
-    console.log(queryString);
     const games = Games.find({
       name: {
         $regex: `^${queryString}`,

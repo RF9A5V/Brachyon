@@ -122,6 +122,7 @@ export default class MainSlide extends ResponsiveComponent {
   renderMobile() {
     var league = Leagues.findOne();
     var event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
+    const anyEvent = Events.findOne();
     return (
       <div className="col" style={{padding: 40}}>
         <div className="col-1 row flex-pad" style={{alignItems: "flex-start"}}>
@@ -131,25 +132,29 @@ export default class MainSlide extends ResponsiveComponent {
           <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
             <span style={{fontSize: "3em"}}>
               {
-                event.details.location.online ? (
+                anyEvent.details.location.online ? (
                   "Online"
                 ) : (
-                  event.details.location.streetAddress
+                  anyEvent.details.location.streetAddress
                 )
               }
             </span>
             {
-              event.details.location.online ? (
+              anyEvent.details.location.online ? (
                 null
               ) : (
                 <span style={{fontSize: "3em"}}>
-                  { event.details.location.city + ", " + event.details.location.state }
+                  { anyEvent.details.location.city + ", " + anyEvent.details.location.state }
                 </span>
               )
             }
             <span style={{fontSize: "3em"}}>
               {
-                moment(event.details.datetime).format("MMMM Do, YYYY")
+                event ? (
+                  moment(event.details.datetime).format("MMMM Do, YYYY")
+                ) : (
+                  "League Complete!"
+                )
               }
             </span>
           </div>

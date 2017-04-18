@@ -19,6 +19,8 @@ import UserSections from "./show/sections.jsx";
 import UserStat from "./show/stat.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx"
+
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class ShowUserScreen extends TrackerReact(ResponsiveComponent) {
@@ -32,12 +34,13 @@ export default class ShowUserScreen extends TrackerReact(ResponsiveComponent) {
 
           this.setState({
 
-            ready: true
+            initReady: true
           })
         }
       }),
       open: false,
       ready: false,
+      initReady: false,
       tab: "events",
       game:"overview"
     });
@@ -98,9 +101,7 @@ export default class ShowUserScreen extends TrackerReact(ResponsiveComponent) {
 
     if(!this.state.ready){
       return (
-        <div className="row center x-center" style={{width: "100%", height: "100%"}}>
-          <Loading />
-        </div>
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ ready: true }) }} />
       )
     }
 

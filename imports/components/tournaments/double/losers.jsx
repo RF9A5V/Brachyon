@@ -82,7 +82,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         }
       })
     });
-    this.setState({ matchMap })
+    this.state.matchMap = matchMap;
   }
 
   onDrag(e) {
@@ -97,15 +97,6 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
     }
   }
 
-  componentWillMount() {
-    super.componentWillMount();
-    this.setMatchMap(this.props.rounds);
-  }
-
-  componentWillReceiveProps(next) {
-    this.setMatchMap(next.rounds)
-  }
-
   componentDidMount() {
     const func = this.onDrag.bind(this);
     window.addEventListener("mouseup", func);
@@ -114,6 +105,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     window.removeEventListener("mouseup", this.state.func);
     window.removeEventListener("mousemove", this.state.func);
   }
@@ -129,12 +121,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   mainBracket() {
-    var hasInactiveFirstRound = this.props.rounds[1].every(m => {
-      return m == null;
-    })
-    if(hasInactiveFirstRound) {
-      headers.pop();
-    }
+    this.setMatchMap(this.props.rounds);
 
     return (
       <div className="col" >
@@ -184,17 +171,12 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-    if(!Brackets.findOne()) {
-      return (
-        <i>Preview Disabled For Loser's Bracket Until Bracket Start.</i>
-      );
-    }
-    const firstRoundNull = this.props.rounds[1][1].every(m => {
+    const firstRoundNull = this.props.rounds[1][0].every(m => {
       return m == null;
     });
     const funcFirst = firstRoundNull ? 1 : 0;
     var headers = this.props.rounds[1].map((r, i) => {
-      if(i <= funcFirst) {
+      if(i < funcFirst) {
         return null;
       }
       const matchCount = r.filter(m => {
@@ -211,10 +193,17 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
         text = "Quarter-Finals";
       }
       else {
-        text = "Round " + (i - funcFirst);
+        text = "Round " + (i - funcFirst + 1);
+      }
+      var width = opts.headerWidth;
+      if(i > funcFirst) {
+        width += opts.headerSpacing;
+        if((i - funcFirst) % 2 == 0) {
+          width += opts.headerDiff || 5;
+        }
       }
       return (
-        <h4 style={{width: opts.headerWidth + (i == funcFirst ? 0 : opts.headerSpacing), display: "inline-block", fontSize: opts.fontSize}}>
+        <h4 style={{width, display: "inline-block", fontSize: opts.fontSize}}>
           Losers { text }
         </h4>
       )
@@ -269,7 +258,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
                 const el = document.getElementById("loser-header");
                 el.scrollLeft -= dx;
               }}>
-                <div style={{paddingTop: 40}} ref="content">
+                <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 120 : 0}} ref="content">
                   { this.mainBracket(opts) }
                 </div>
               </DragScroll>
@@ -286,7 +275,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
               match={this.state.match}
               open={this.state.open}
               closeModal={() => { this.setState({open: false}) }}
-              update={this.forceUpdate.bind(this)}
+              update={this.props.update}
               format={this.props.format}
             />
           ) : (
@@ -300,8 +289,8 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       dragHeight: "calc(100vh - 252px)",
-      headerWidth: 440,
-      headerSpacing: 30,
+      headerWidth: 410,
+      headerSpacing: 70,
       fontSize: "3em",
       mobile: true
     });
@@ -310,8 +299,9 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       dragHeight: "calc(97vh - 150px)",
-      headerWidth: 245,
-      headerSpacing: 15,
+      headerWidth: 240,
+      headerSpacing: 20,
+      headerDiff: 5,
       fontSize: "1em",
       mobile: false
     });

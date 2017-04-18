@@ -14,6 +14,7 @@ import TiebreakerSlide from "./show/tiebreaker.jsx";
 import StreamSlide from "./show/stream.jsx";
 
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class LeagueShowPage extends Component {
 
@@ -126,10 +127,9 @@ class LeagueShowPage extends Component {
   }
 
   render() {
-    if(!this.props.ready) {
+    if(!this.state.ready){
       return (
-        <div>
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (
@@ -142,7 +142,25 @@ class LeagueShowPage extends Component {
 
 export default createContainer(props => {
   const slug = props.params.slug;
-  const leagueHandle = Meteor.subscribe("league", slug);
+  const leagueHandle = Meteor.subscribe("league", slug, {
+    onReady: () => {
+      fbDescriptionParser = (description) => {
+        var startIndex = description.indexOf("<p>");
+        var endIndex = description.indexOf("</p>", startIndex);
+        var tempDesc = description.substring(startIndex + 3, endIndex);
+        if(tempDesc.length > 200) {
+          tempDesc = tempDesc.substring(0, 196) + "...";
+        }
+        return tempDesc;
+      }
+      const league = Leagues.findOne();
+      var title = league.details.name;
+      var desc = fbDescriptionParser(league.details.description);
+      var img = league.details.bannerUrl || "/images/bg.jpg";
+      var url = window.location.href;
+      generateMetaTags(title, desc, img, url);
+    }
+  });
   return {
     ready: leagueHandle.ready()
   }

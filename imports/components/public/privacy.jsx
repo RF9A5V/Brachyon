@@ -1,6 +1,16 @@
 import React, { Component } from "react";
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 export default class PrivacyPolicyScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false,
+      initReady: true
+    }
+  }
 
   text() {
     return [
@@ -32,6 +42,11 @@ export default class PrivacyPolicyScreen extends Component {
   }
 
   render() {
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+      )
+    }
     return (
       <div className="row center">
         <div className="col side-tab-panel">

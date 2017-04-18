@@ -2,6 +2,10 @@ import ShortLinks from "/imports/api/meta/short_links.js";
 
 Meteor.methods({
   "generateShortLink"(url) {
+    const hashIndex = url.indexOf("#");
+    if(hashIndex >= 0) {
+      url = url.slice(0, hashIndex);
+    }
     const sLink = ShortLinks.findOne({
       url
     });

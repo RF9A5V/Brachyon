@@ -32,7 +32,8 @@ class LeagueModal extends Component {
 
   boardFormatting(ldrboard) {
     var participantCount = Instances.findOne().brackets[this.state.bracketIndex].participants.length;
-    var eventIndex = Leagues.findOne().events.indexOf(Events.findOne().slug);
+    const eSlug = Events.findOne().slug;
+    var eventIndex = Leagues.findOne().events.findIndex(e => {return e.slug == eSlug});
     var leaderboard = Leagues.findOne().leaderboard[eventIndex];
     var getSuffix = (place) => {
       switch(place % 10) {

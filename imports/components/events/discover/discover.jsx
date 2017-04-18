@@ -7,6 +7,7 @@ import BlockContainer from './block_container.jsx';
 import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class EventDiscoveryScreen extends TrackerReact(ResponsiveComponent) {
 
@@ -17,7 +18,8 @@ export default class EventDiscoveryScreen extends TrackerReact(ResponsiveCompone
       promotedEvents: Meteor.subscribe("promotedEvents"),
       query: {
         league: null
-      }
+      },
+      ready: false
     })
   }
 
@@ -61,8 +63,10 @@ export default class EventDiscoveryScreen extends TrackerReact(ResponsiveCompone
   }
 
   renderBase(opts) {
-    if(!this.state.events.ready()) {
-      return (<div></div>)
+    if(!this.state.ready) {
+      return (
+        <LoaderContainer ready={this.state.events.ready()} onReady={() => { this.setState({ ready: true }) }} />
+      )
     }
     return (
       <div className="col-1 x-center" style={{marginBottom: opts.marginBottom}}>

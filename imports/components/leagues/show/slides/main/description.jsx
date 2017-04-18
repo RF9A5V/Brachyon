@@ -10,7 +10,7 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 export default class Description extends ResponsiveComponent {
   renderDesktop() {
     var league = Leagues.findOne();
-    var event = Events.findOne({ slug: { $in: league.events }, isComplete: false }, { sort: { "details.datetime": -1 } })
+    var event = Events.findOne({ slug: { $in: league.events.map(e => { return e.slug }) }, isComplete: false }, { sort: { "details.datetime": -1 } })
     return (
       <div className="row col-1" style={{padding: 40}}>
         {
@@ -80,17 +80,18 @@ export default class Description extends ResponsiveComponent {
   renderMobile() {
     const league = Leagues.findOne();
     const event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
+    const anyEvent = Events.findOne();
     return (
       <div className="col" style={{width: "100%", padding: 40}}>
         <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 40}}>
-          <span style={{fontSize: "3em"}}>{ moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") }</span>
+          <span style={{fontSize: "3em"}}>{ event ? moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") : "Completed!" }</span>
         </div>
         <div style={{padding: 40, marginBottom: 40, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
           this.setState({
             open: true
           })
         }}>
-          <div style={{fontSize: "3em", maxHeight: "30vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
+          <div style={{fontSize: "3em", maxHeight: "20vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: league.details.description}}>
           </div>
           <div className="row center x-center">
             <span style={{fontSize: "2.5em", color: "#FF6000", marginRight: 15}}>Show More</span>
@@ -98,15 +99,15 @@ export default class Description extends ResponsiveComponent {
           </div>
         </div>
         {
-          event.details.location.online ? (
+          anyEvent.details.location.online ? (
             <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)"}}>
               <span style={{fontSize: "3em"}}>Online</span>
             </div>
           ) : (
             [
               <div className="col" style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", fontSize: "3em", marginBottom: 40}}>
-                <span>{ event.details.location.streetAddress }</span>
-                <span>{ event.details.location.city } { event.details.location.state }</span>
+                <span>{ anyEvent.details.location.streetAddress }</span>
+                <span>{ anyEvent.details.location.city } { anyEvent.details.location.state }</span>
               </div>,
               <div className="col" style={{width: "100%", height: "25vh"}}>
                 <PreviewMap center={event.details.location.coords.reverse()} />

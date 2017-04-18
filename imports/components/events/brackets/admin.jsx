@@ -30,13 +30,14 @@ import Instances from "/imports/api/event/instance.js";
 import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 class BracketAdminScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      ready: true
+      ready: false
     }
   }
 
@@ -273,24 +274,49 @@ class BracketAdminScreen extends Component {
           default: break;
         }
         var count = 1;
-        rounds = rounds.map(b => {
-          return b.map((r, i) => {
-            return r.map(m => {
-              if(m) {
-                if(m.id || m.playerOne || m.playerTwo || i > 0) {
-                  return {
-                    players: [m.playerOne, m.playerTwo],
-                    winner: null,
-                    id: count ++,
-                    losm: m.losm,
-                    losr: m.losr
-                  }
-                }
+
+        var tempRounds = [];
+
+        tempRounds[0] = rounds[0].map((r, i) => {
+          return r.map((m, j) => {
+            const isFirstRound = i == 0 && m.playerOne && m.playerTwo;
+            if(isFirstRound || i > 0) {
+              return {
+                players: [m.playerOne, m.playerTwo],
+                winner: null,
+                id: count ++,
+                losm: m.losm,
+                losr: m.losr
               }
-              return null;
+            }
+            return null;
+          })
+        });
+
+        if(rounds[1]) {
+          tempRounds[1] = rounds[1].map((r, i) => {
+            return r.map(m => {
+              if(!m.truebye && i <= 1) {
+                return null;
+              }
+              return {
+                players: [null, null],
+                winner: null,
+                id: count ++
+              }
             })
           })
-        })
+        }
+        if(rounds[2]) {
+          tempRounds[2] = rounds[2].map(r => {
+            return r.map(m => { return {
+              players: [null, null],
+              winner: null,
+              id: count ++
+            } })
+          })
+        }
+        rounds = tempRounds;
       }
       else {
         var rounds = Brackets.findOne().rounds;
@@ -323,6 +349,7 @@ class BracketAdminScreen extends Component {
     return [
       {
         name: "Back To Event",
+        icon: "arrow-left",
         action: () => {
           browserHistory.push("/event/" + Events.findOne().slug);
         }
@@ -331,12 +358,9 @@ class BracketAdminScreen extends Component {
   }
 
   render() {
-    const { ready } = this.props;
-    if(!ready || !this.state.ready) {
+    if(!this.props.ready) {
       return (
-        <div>
-          Loading...
-        </div>
+        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
     return (

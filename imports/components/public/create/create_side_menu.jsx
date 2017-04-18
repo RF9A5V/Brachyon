@@ -44,7 +44,7 @@ export default class CreateContainerMenu extends Component {
 
   render() {
     const spanStyle = {
-      fontSize: "6rem", marginLeft: 40
+      fontSize: "5rem", marginLeft: 40
     }
     var eColor;
     if(window.location.pathname.indexOf("event") >= 0){
@@ -63,12 +63,13 @@ export default class CreateContainerMenu extends Component {
         position: "fixed",
         left: 0,
         top: 126,
-        zIndex: 1
+        zIndex: 2,
+        paddingTop: "4em"
       }}>
         {
           this.props.items.map((item, i) => {
             return (
-              <div className="row x-center" style={{marginBottom: 40, alignSelf: "flex-start", width: "100%"}} onClick={() => {
+              <div className="row x-center" style={{marginBottom: "4em", alignSelf: "flex-start", width: "100%"}} onClick={() => {
                 this.props.onItemSelect(i)
                 this.setState({
                   maxed: false
