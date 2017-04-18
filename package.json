@@ -29,12 +29,8 @@
     "react-dnd": "^2.3.0",
     "react-dnd-html5-backend": "^2.3.0",
     "react-dom": "^15.4.0",
-<<<<<<< HEAD
     "react-dragscroll": "EyeWumbo/react-dragscroll",
-=======
-    "react-dragscroll": "^1.0.21",
     "react-dragula": "^1.1.17",
->>>>>>> f69b0d91a844401231d5d60b71a7b1f23ca469e0
     "react-dropzone": "^3.4.0",
     "react-fontawesome": "^1.1.0",
     "react-google-maps": "^4.10.1",
