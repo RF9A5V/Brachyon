@@ -18,7 +18,7 @@ export default class TournamentModal extends ResponsiveComponent {
       if(err) {
         return toastr.error(err.reason);
       }
-      this.props.update();
+      this.forceUpdate();
     })
   }
 
@@ -38,6 +38,7 @@ export default class TournamentModal extends ResponsiveComponent {
         return toastr.error(err.reason);
       }
       this.props.closeModal();
+      this.props.update();
     })
   }
 
@@ -57,6 +58,7 @@ export default class TournamentModal extends ResponsiveComponent {
         return toastr.error(err.reason);
       }
       this.props.closeModal();
+      this.props.update();
     })
   }
 

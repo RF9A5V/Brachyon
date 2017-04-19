@@ -30,12 +30,11 @@ export default class SlideMain extends ResponsiveComponent {
       var style = {
         backgroundColor: this.state.activeSlide == index ? (this.props.color || "transparent") : "transparent",
         fontWeight: "bold",
-        color: this.state.activeSlide == index ? "#111" : "white",
         fontSize: opts.navSize,
         padding: opts.navPad
       }
       return (
-        <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""}`} style={style} onClick={() => {
+        <div className={`preview-nav col-1 ${this.state.activeSlide == index ? "active" : ""} ${this.props.color == "#FF6000" ? "orange" : "blue"}`} style={style} onClick={() => {
           this.refs.slider.slickGoTo(index);
         }}>
           {

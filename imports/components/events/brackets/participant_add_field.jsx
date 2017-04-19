@@ -169,7 +169,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
           <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant</label>
           <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
             if(e.key == "Enter") {
-              this.addParticipant(this.state.query, null);
+              this.addParticipant(this.refs.userValue.value, null);
             }
           }} />
         </div>
@@ -212,7 +212,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
               </button>
             ) : (
               (this.props.bracket.participants || []).length > 3 ? (
-                <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.props.onStart}>
+                <button className={opts.buttonClass + " col-1 row x-center center signup-button"} onClick={this.props.onStart}>
                   <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
                   Start
                 </button>
