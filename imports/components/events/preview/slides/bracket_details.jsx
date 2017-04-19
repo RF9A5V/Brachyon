@@ -56,9 +56,9 @@ class BracketDetails extends ResponsiveComponent {
     ];
     if (bracket.format.baseFormat != "swiss" && bracket.format.baseFormat != "round_robin")
     {
-      if(bracket.startedAt != null){
-        tabs.push("Bracket");
-      }
+      // if(bracket.startedAt != null){
+      //   tabs.push("Bracket");
+      // }
       if(bracket.id && !bracket.isComplete) {
         tabs.push("Matches");
       }
@@ -356,7 +356,7 @@ class BracketDetails extends ResponsiveComponent {
     switch(tabs[this.state.index]) {
       case "Participants": return this.participants(obj.participants);
       case "Leaderboard": return this.leaderboard(obj);
-      case "Bracket": return this.winnersBracket(obj);
+      // case "Bracket": return this.winnersBracket(obj);
       case "Matches": return this.matches(obj.id);
       case "Details": return this.details(obj, {
         imgHeight: "300px",

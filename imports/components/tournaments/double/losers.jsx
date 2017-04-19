@@ -243,7 +243,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
               </div>
             </div>
           ) : (
-            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: opts.dragHeight, position: "relative", marginBottom: 20}}>
+            <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: this.props.full ? "" : opts.dragHeight, position: "relative", marginBottom: 20}}>
               <div style={{
                 backgroundColor: "#222",
                 position: "absolute",
@@ -257,6 +257,9 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
               <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
                 const el = document.getElementById("loser-header");
                 el.scrollLeft -= dx;
+                if(this.props.full) {
+                  window.scrollBy(0, -dy);
+                }
               }}>
                 <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 120 : 0}} ref="content">
                   { this.mainBracket(opts) }
