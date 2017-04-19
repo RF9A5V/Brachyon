@@ -98,10 +98,10 @@ export default class MatchList extends ResponsiveComponent {
                       return "";
                     }
                     return (
-                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width}} onClick={() => { this.setState({
+                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width, cursor: "pointer"}} onClick={() => { this.setState({
                         id: m.id, open: true,
                         bIndex: i, rIndex: j, mIndex: k
-                       }) }}>
+                      }) }}>
                         <div className="row match-names">
                           <span style={textStyle}>
                             <sup className="match-seed">

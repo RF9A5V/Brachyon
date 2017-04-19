@@ -101,7 +101,8 @@ class BracketShowScreen extends Component {
       rounds,
       complete: bracket.isComplete,
       page: "admin",
-      partMap
+      partMap,
+      full: true
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
