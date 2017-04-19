@@ -108,7 +108,8 @@ class BracketAdminScreen extends Component {
       complete: bracket.isComplete,
       page: "admin",
       partMap,
-      stretch: true
+      stretch: true,
+      full: true
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -132,12 +133,12 @@ class BracketAdminScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
-          },
-          {
-            content: Toggle,
-            name: "",
-            ignoreHeader: true
           }
+          // {
+          //   content: Toggle,
+          //   name: "",
+          //   ignoreHeader: true
+          // }
         ];
         break;
       default:
@@ -158,6 +159,11 @@ class BracketAdminScreen extends Component {
   }
 
   matchesItem(bracket) {
+    var partMap = {};
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    participantList.forEach((p, i) => {
+      partMap[p.alias] = i + 1;
+    })
     return {
       name: "Matches",
       key: "matches",
@@ -168,7 +174,8 @@ class BracketAdminScreen extends Component {
           name: "Matches",
           args: {
             id: bracket.id,
-            format: bracket.format.baseFormat
+            format: bracket.format.baseFormat,
+            partMap
           }
         }
       ]

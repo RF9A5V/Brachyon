@@ -27,6 +27,8 @@ import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
 class BracketShowScreen extends Component {
 
   constructor(props) {
@@ -61,24 +63,11 @@ class BracketShowScreen extends Component {
   populateMetaTags() {
     var event = Events.findOne();
     var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
-
-    if(!event) {
-      this.setState({
-        hasLoaded: true
-      });
-      return;
-    }
-
     var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
     var url = window.location.href;
-
     generateMetaTags(title, format, img, url);
-
-    this.setState({
-      hasLoaded: true
-    })
   }
 
   participantsItem(bracket) {
@@ -136,12 +125,12 @@ class BracketShowScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
-          },
-          {
-            content: Toggle,
-            name: "toggle",
-            ignoreHeader: true
           }
+          // {
+          //   content: Toggle,
+          //   name: "toggle",
+          //   ignoreHeader: true
+          // }
         ];
         break;
       default:
@@ -352,21 +341,22 @@ class BracketShowScreen extends Component {
   }
 
   render() {
-    if(this.props.ready) {
+    if(!this.props.ready) {
       return (
-        <div style={{padding: 20}}>
-          <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
-          <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
-        </div>
-      );
+        <LoaderContainer ready={this.props.ready} onReady={() => {
+          this.populateMetaTags();
+          this.setState({
+            ready: true
+          })
+        }} />
+      )
     }
-    else {
-      return (
-        <div>
-          Loading...
-        </div>
-      );
-    }
+    return (
+      <div style={{padding: 20}}>
+        <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
+      </div>
+    );
   }
 }
 
@@ -374,25 +364,7 @@ const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
-    const eventHandle = Meteor.subscribe("event", slug, {
-      onReady: () => {
-        fbDescriptionParser = (description) => {
-          var startIndex = description.indexOf("<p>");
-          var endIndex = description.indexOf("</p>", startIndex);
-          var tempDesc = description.substring(startIndex + 3, endIndex);
-          if(tempDesc.length > 200) {
-            tempDesc = tempDesc.substring(0, 196) + "...";
-          }
-          return tempDesc;
-        }
-        const event = Events.findOne();
-        var title = event.details.name;
-        var desc = fbDescriptionParser(event.details.description);
-        var img = event.details.bannerUrl || "/images/bg.jpg";
-        var url = window.location.href;
-        generateMetaTags(title, desc, img, url);
-      }
-    });
+    const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
       return {
