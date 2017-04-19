@@ -37,7 +37,7 @@ const setTwitterHeader = (details) => {
         <meta name="twitter:site" content="@brachyon">
         <meta name="twitter:title" content="${details.name}">
         <meta name="twitter:description" content="${fbDescriptionParser(details.description)}">
-        <meta name="twitter:image" content="${details.bannerUrl ? details.banner : "https://www.brachyon.com/images/card_default.png"}">
+        <meta name="twitter:image" content="${details.banner ? details.banner : "https://www.brachyon.com/images/card_default.png"}">
       </head>
       <body></body>
     </html>
