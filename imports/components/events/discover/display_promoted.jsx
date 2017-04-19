@@ -44,10 +44,10 @@ export default class DisplayPromotedEvent extends Component {
         var id = Meteor.userId();
         e.preventDefault();
         if(event.published || event.underReview || event.active){
-          browserHistory.push(`/${this.props.event.type}/${event.slug}/show`);
+          browserHistory.push(`/${this.props.event.type}/${event.slug}`);
         }
         else {
-          browserHistory.push(`/${this.props.event.type}/${event.slug}/show`);
+          browserHistory.push(`/${this.props.event.type}/${event.slug}`);
         }
       }
     )
