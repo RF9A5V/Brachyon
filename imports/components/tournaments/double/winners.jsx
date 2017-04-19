@@ -345,7 +345,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         </div>
       </div>
     ) : (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: this.props.height || bracket && !this.props.full ? opts.dragHeight : "", position: "relative", marginBottom: 20, paddingTop: 40}}>
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: (this.props.height || bracket) && !this.props.full ? opts.dragHeight : "", position: "relative", marginBottom: 20, paddingTop: 40}}>
         <div style={{
           backgroundColor: "#222",
           position: "absolute",

@@ -184,8 +184,8 @@ class Header extends ResponsiveComponent {
         }} onSuccess={() => {
           if(window.location.pathname == "/") {
             browserHistory.push("/dashboard");
-            this.setState({ regOpen: false })
           }
+          this.setState({ regOpen: false })
         }} />
       </div>
     )
