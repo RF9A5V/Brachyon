@@ -35,6 +35,7 @@ import PrivacyPolicyScreen from "../imports/components/public/privacy.jsx";
 import ForgotPassScreen from "../imports/components/public/forgot_pass.jsx";
 import ResetPassScreen from "../imports/components/public/reset_pass.jsx";
 import ShortLinkScreen from "../imports/components/public/short_link.jsx";
+import UserProfileScreen from "../imports/components/users/profile.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -47,7 +48,10 @@ import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
   if(Meteor.userId()){
-    replace('/dashboard');
+    const username = Meteor.call("getUsername", Meteor.userId(), (_, data) => {
+      const user = data;
+      browserHistory.push("/user/" + data);
+    })
   }
 }
 
@@ -79,6 +83,7 @@ export const renderRoutes = () => (
       <Route path="org/:slug" component={OrganizationShowScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="/!:id" component={ShortLinkScreen} />
+      <Route path="user/:username" component={UserProfileScreen}/>
     </Route>
 
     <Route path="/" component={MainLayout}>

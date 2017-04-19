@@ -11,6 +11,11 @@ var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
 
 Meteor.methods({
 
+  "getUsername"(id) {
+    const user = Meteor.users.findOne(id);
+    return user ? user.username : null;
+  },
+
   "events.save_for_advanced"(attrs) {
     if(!attrs.details){
       throw new Error("Event needs details.");

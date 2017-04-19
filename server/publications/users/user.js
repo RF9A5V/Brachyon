@@ -31,3 +31,9 @@ Meteor.publish("user", (_id) => {
 Meteor.publish("userNotifications", (_id) => {
   return Notifications.find({ recipient: _id }, { limit: 4 });
 })
+
+Meteor.publish("getUserByUsername", (username) => {
+  return Meteor.users.find({
+    username
+  })
+})

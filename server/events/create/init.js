@@ -83,6 +83,7 @@ Meteor.methods({
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
     var requiresReview = false;
+    delete obj.details.render;
     acceptedModules.forEach(mod => {
       if(obj[mod]) {
         if(mod == "crowdfunding") {
