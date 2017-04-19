@@ -166,7 +166,7 @@ export default class BlockContainer extends Component {
       return obj;
     });
     var combo = leagues.concat(events).concat(instances).sort((a, b) => {
-      return moment(a.date).isBefore(b.date) ? -1 : 1;
+      return moment(a.date).isBefore(b.date) ? 1 : -1;
     });
     return combo.map((obj) => {
       return this.singleBracketFormat(obj);

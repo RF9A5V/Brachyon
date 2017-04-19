@@ -7,8 +7,9 @@ Picker.route("/event/:slug", function(params, req, res, next) {
   const event = Events.findOne({
     slug: params.slug
   });
-  var userAgent = req.headers["user-agent"];
-
+  if(!event) {
+    return next();
+  }
   var details = {
     name: event.details.name,
     description: event.details.description,
@@ -16,7 +17,7 @@ Picker.route("/event/:slug", function(params, req, res, next) {
     path: "/event/" + event.slug,
     parse: true
   };
-
+  var userAgent = req.headers["user-agent"];
   if(userAgent.indexOf("facebookexternalhit") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
@@ -34,8 +35,9 @@ Picker.route("/event/:slug/:whatevs", function(params, req, res, next) {
   const event = Events.findOne({
     slug: params.slug
   });
-  var userAgent = req.headers["user-agent"];
-
+  if(!event) {
+    return next();
+  }
   var details = {
     name: event.details.name,
     description: event.details.description,
@@ -43,7 +45,7 @@ Picker.route("/event/:slug/:whatevs", function(params, req, res, next) {
     path: "/event/" + event.slug,
     parse: true
   };
-
+  var userAgent = req.headers["user-agent"];
   if(userAgent.indexOf("facebookexternalhit") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
@@ -61,8 +63,9 @@ Picker.route("/league/:slug", function(params, req, res, next) {
   const league = Leagues.findOne({
     slug: params.slug
   });
-  var userAgent = req.headers["user-agent"];
-
+  if(!league) {
+    return next();
+  }
   var details = {
     name: league.details.name,
     description: league.details.description,
@@ -70,7 +73,7 @@ Picker.route("/league/:slug", function(params, req, res, next) {
     path: "/league/" + league.slug,
     parse: true
   };
-
+  var userAgent = req.headers["user-agent"];
   if(userAgent.indexOf("facebookexternalhit") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
@@ -88,11 +91,13 @@ Picker.route("/event/:slug/bracket/:index", function(params, req, res, next) {
   const event = Events.findOne({
     slug: params.slug
   });
+  if(!event) {
+    return next();
+  }
   const instance = Instances.findOne({
     _id: event.instances.pop()
   });
   const bracketMeta = instance.brackets[params.index];
-
   const details = {
     name: event.details.name,
     description: formatter(bracketMeta.format.baseFormat, false),
@@ -100,7 +105,6 @@ Picker.route("/event/:slug/bracket/:index", function(params, req, res, next) {
     path: "/event/" + event.slug + "/bracket/" + params.index,
     parse: false
   }
-
   var userAgent = req.headers["user-agent"];
   if(userAgent.indexOf("facebookexternalhit") >= 0) {
     res.setHeader("Content-Type", "text/html");
