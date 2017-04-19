@@ -55,6 +55,24 @@ Meteor.methods({
        }
     })
   },
+
+  "user.getSelectedGames"(username) {
+    const user = Meteor.users.findOne({
+      username
+    });
+    const games = Games.find({
+      _id: {
+        $in: user.profile.games || []
+      }
+    }, {
+      fields: {
+        bannerUrl: 1,
+        name: 1
+      }
+    })
+    return games.fetch();
+  },
+
   "users.purchase_currency"(value, toCharge) {
     if(!Meteor.userId()) {
       throw new Meteor.Error(401, "Log in to access currency.");
