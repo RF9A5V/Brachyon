@@ -29,7 +29,7 @@ const setFBHeader = (details) => {
   `)
 }
 
-const setTwitterHeader = (event) => {
+const setTwitterHeader = (details) => {
   return (`
     <html>
       <head>
