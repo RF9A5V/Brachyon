@@ -16,13 +16,11 @@ Picker.route("/event/:slug", function(params, req, res, next) {
   };
 
   if(userAgent.indexOf("facebookexternalhit") >= 0) {
-    console.log("is facebook");
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
     return res.end(setFBHeader(details));
   }
   if(userAgent.indexOf("Twitterbot") >= 0) {
-    console.log("is twitter")
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
     return res.end(setTwitterHeader(details));
