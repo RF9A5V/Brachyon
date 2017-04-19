@@ -115,7 +115,7 @@ Picker.route("/event/:slug/bracket/:index", function(params, req, res, next) {
   next();
 })
 
-Picker.route("/!:sLink", (params, req, res, next) => {
+Picker.route("/_:sLink", (params, req, res, next) => {
   const path = Meteor.call("getLongUrl", params.sLink);
   res.writeHead(301, {
     Location: path
