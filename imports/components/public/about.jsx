@@ -73,10 +73,16 @@ export default class AboutScreen extends TrackerReact(Component) {
   }
 
   promotedEvents() {
-    return Events.find({"promotion.active": {$eq: true}}, {sort: {"promotion.bid": -1}, limit: 1}).fetch();
+    return Events.find({"promotion.active": {$eq: true}}, {sort: {"promotion.bid": -1}, limit: 1}).fetch().map(e => {
+      e.type = "event";
+      return e;
+    });
   }
   events(){
-    return Events.find({"promotion.active": {$ne: true}}, {limit: 1}).fetch();
+    return Events.find({"promotion.active": {$ne: true}}, {limit: 1}).fetch().map(e => {
+      e.type = "event";
+      return e;
+    });
   }
   closeModal(){
       this.setState({open: false});
@@ -148,10 +154,12 @@ export default class AboutScreen extends TrackerReact(Component) {
         <div className="col side-tab-panel">
           <h2 style={{margin: 0}}>What is Brachyon?</h2>
           <div className="about-what">
-            Welcome to Brachyon - the eSports integrated experience where
-            tournament organizers run, fund, and promote events for competitive gamers.
-            Brachyon makes it easy to build successful events, empowering competitive communities from the
-            ground up.
+            <p className="text-description border-blue">
+              Welcome to Brachyon - the eSports integrated experience where
+              tournament organizers run, fund, and promote events for competitive gamers.
+              Brachyon makes it easy to build successful events, empowering competitive communities from the
+              ground up.
+            </p>
           </div>
           <h4>Brachyon Lets You...</h4>
           <div className="col about-what" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
@@ -194,10 +202,12 @@ export default class AboutScreen extends TrackerReact(Component) {
             </div>
           </div>
           <h4>Why?</h4>
-          <div className="about-what center" style={{marginBottom: 0}}>
-            <p>We love competitive gaming. Nothing catered to our needs
-            as competitors, so we built it ourselves.</p>
-            <p>Brachyon formed out of our pure love for the game.</p>
+          <div className="about-what" style={{marginBottom: 0}}>
+            <div className="text-description border-blue">
+              <p>We love competitive gaming. Nothing catered to our needs
+              as competitors, so we built it ourselves.</p>
+              <p>Brachyon formed out of our pure love for the game.</p>
+            </div>
           </div>
         </div>
       </div>
