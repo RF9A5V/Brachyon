@@ -132,7 +132,7 @@ export default class RegisterButton extends Component {
 
   render() {
     var pIndex = (this.props.bracketMeta.participants || []).findIndex((p) => {
-      return p.id == Meteor.userId();
+      return p.id == Meteor.userId() && Meteor.userId() == null;
     });
     var instance = Instances.findOne();
     return (
