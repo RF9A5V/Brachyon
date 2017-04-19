@@ -59,6 +59,7 @@ mdg:seo@1.0.1
 meteor@1.6.0
 meteor-base@1.0.4
 meteorhacks:async@1.0.0
+meteorhacks:picker@1.0.3
 meteortoys:allthings@3.0.0
 meteortoys:authenticate@3.0.0
 meteortoys:autopub@3.0.0
