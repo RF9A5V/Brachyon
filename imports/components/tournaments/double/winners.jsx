@@ -300,6 +300,9 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         <DragScroll width={"100%"} height="100%" ref="dragger" onDrag={(dx, dy) => {
           const el = document.getElementById("winner-header");
           el.scrollLeft -= dx;
+          if(this.props.full) {
+            window.scrollBy(0, -dy);
+          }
         }}>
           <div style={{paddingTop: 40, paddingBottom: this.props.addPadding ? 120 : 0}} ref="content">
             { this.mainBracket(opts) }
@@ -342,7 +345,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
         </div>
       </div>
     ) : (
-      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: this.props.height || bracket ? opts.dragHeight : "", position: "relative", marginBottom: 20, paddingTop: 40}}>
+      <div className={this.state.dragging ? "grabbing" : "grab"} style={{height: (this.props.height || bracket) && !this.props.full ? opts.dragHeight : "", position: "relative", marginBottom: 20, paddingTop: 40}}>
         <div style={{
           backgroundColor: "#222",
           position: "absolute",
