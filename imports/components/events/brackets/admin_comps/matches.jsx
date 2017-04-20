@@ -79,7 +79,8 @@ export default class MatchList extends ResponsiveComponent {
     }
     return (
       <div>
-        <ScoreModal open={this.state.open} closeModal={() => { this.setState({ open: false }) }} id={this.state.id} />
+        <ScoreModal open={this.state.open} closeModal={() => { this.setState({ open: false }) }} id={this.state.id} format={this.props.format}
+         update={this.forceUpdate.bind(this)} bracket={this.state.bIndex} round={this.state.rIndex} match={this.state.mIndex} />
         <div className="row center" style={{marginBottom: 20}}>
           <h5 style={textStyle}>Pending Matches</h5>
         </div>
@@ -97,9 +98,17 @@ export default class MatchList extends ResponsiveComponent {
                       return "";
                     }
                     return (
-                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width}} onClick={() => { this.setState({ id: m.id, open: true }) }}>
+                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width, cursor: "pointer"}} onClick={() => { this.setState({
+                        id: m.id, open: true,
+                        bIndex: i, rIndex: j, mIndex: k
+                      }) }}>
                         <div className="row match-names">
-                          <span style={textStyle}>{ match.players[0].alias }</span>
+                          <span style={textStyle}>
+                            <sup className="match-seed">
+                            [ { this.props.partMap[match.players[0].alias] } ]
+                            </sup>
+                            { match.players[0].alias }
+                          </span>
                         </div>
                         <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
                           <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
@@ -109,7 +118,13 @@ export default class MatchList extends ResponsiveComponent {
                           <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                         </div>
                         <div className="row match-names justify-end">
-                          <span style={textStyle}>{ match.players[1].alias }</span>
+                          <span style={textStyle}>
+                            { match.players[1].alias }
+                            <sub className="match-seed">
+                              [ { this.props.partMap[match.players[1].alias] } ]
+                            </sub>
+                          </span>
+
                         </div>
 
                         <span style={{...textStyle, marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {

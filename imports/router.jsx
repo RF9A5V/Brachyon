@@ -82,8 +82,8 @@ export const renderRoutes = () => (
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
-      <Route path="/!:id" component={ShortLinkScreen} />
       <Route path="user/:username" component={UserProfileScreen}/>
+      <Route path="/_:id" component={ShortLinkScreen} />
     </Route>
 
     <Route path="/" component={MainLayout}>

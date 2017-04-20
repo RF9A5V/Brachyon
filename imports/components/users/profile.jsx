@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import FontAwesome from "react-fontawesome";
+import Modal from "react-modal";
+
+import { ProfileBanners } from "/imports/api/users/profile_banners.js";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
+import ImageForm from "/imports/components/public/img_form.jsx";
 
 import UserBio from "./profile/bio.jsx";
 import UserStats from "./show/stat.jsx";
 import UserEvents from "./profile/events.jsx";
+import UserImage from "./profile/image.jsx";
 
 class UserProfile extends ResponsiveComponent {
 
@@ -15,7 +20,10 @@ class UserProfile extends ResponsiveComponent {
     super(props);
     this.state = {
       ready: false,
-      tab: "bio"
+      tab: "bio",
+      editMode: false,
+      hover: false,
+      open: false
     }
   }
 
@@ -29,10 +37,20 @@ class UserProfile extends ResponsiveComponent {
             const tabStyle = {
               borderBottom: isCurrentTab ?"solid 2px":"",
               borderColor: isCurrentTab ? "#ff6000":"",
-              fontSize: opts.fontSize
+              fontSize: opts.fontSize,
+              color: this.state.editMode && tab != "bio" ? "#666" : "white"
             }
             return (
-              <div className="user-tab title" style={tabStyle} onClick={()=>{this.setState({tab})}}>{tab.toUpperCase()}</div>
+              <div className="user-tab title" style={tabStyle} onClick={() => {
+                if(this.state.editMode) {
+                  return;
+                }
+                this.setState({
+                  tab
+                })
+              }}>
+                {tab.toUpperCase()}
+              </div>
             )
           })
         }
@@ -44,23 +62,43 @@ class UserProfile extends ResponsiveComponent {
     switch(this.state.tab) {
       case "bio":
         return (
-          <UserBio {...this.props.params} />
+          <UserBio {...this.props.params} editMode={this.state.editMode} />
         );
       case "stats":
         return (
-          <UserStats />
+          <UserStats editMode={this.state.editMode} />
         );
       case "T.O.":
         return (
-          <UserEvents type={this.state.tab} {...this.props.params} />
+          <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
         );
       case "player":
         return (
-          <UserEvents type={this.state.tab} {...this.props.params} />
+          <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
         );
       default:
         return null;
     }
+  }
+
+  saveBannerImg() {
+    var { image, meta, type } = this.refs.banner.value();
+    meta.userId = Meteor.userId();
+    ProfileBanners.insert({
+      file: image,
+      meta,
+      fileName: Meteor.userId() + "." + type,
+      onUploaded: (err) => {
+        if(err) {
+          toastr.error(err.reason);
+          throw new Error(err.reason);
+        }
+        toastr.success("Updated profile banner!");
+        this.setState({
+          open: false
+        })
+      }
+    })
   }
 
   renderBase(opts) {
@@ -96,18 +134,60 @@ class UserProfile extends ResponsiveComponent {
 
     const bannerStyle = {
       width: "100%", height: "calc(100vw * 4.5 / 16)",
-      backgroundImage: `url(${user.profile.bannerUrl || "/images/bg.jpg"})`,
-      backgroundSize: "100% auto",
+      backgroundImage: `${this.state.hover ? "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), " : ""} url(${user.profile.bannerUrl || "/images/bg.jpg"})`,
+      backgroundSize: "cover",
       backgroundPositionY: "50%",
       position: "relative", justifyContent: "flex-end"
     }
 
     return (
       <div>
-        <div className="row" style={bannerStyle}>
-          <img src={user.profile.imageUrl || "/images/profile.png"} style={{position: "absolute", width: opts.imgDim, height: opts.imgDim, bottom: -(opts.imgDim / 2), left: (opts.imgDim / 3), borderRadius: "100%"}} />
-          <div className="col" style={{justifyContent: "flex-end"}}>
-            <div className="row">
+        <div className="row" style={bannerStyle} onMouseEnter={() => {
+          if(this.state.editMode) {
+            this.setState({
+              hover: true
+            })
+          }
+        }} onMouseLeave={() => {
+          this.setState({
+            hover: false
+          })
+        }} onClick={() => {
+          if(this.state.editMode) {
+            this.setState({
+              open: true
+            })
+          }
+        }}>
+          <UserImage username={this.props.params.username} editMode={this.state.editMode} />
+          <div className="col col-1 flex-pad">
+            {
+              this.props.params.username == Meteor.user().username ? (
+                <div className="row" style={{justifyContent: "flex-end", padding: 10}}>
+                  <button onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({
+                      editMode: !this.state.editMode,
+                      tab: "bio"
+                    })
+                  }}>
+                    { this.state.editMode ? "View" : "Edit" }
+                  </button>
+                </div>
+              ) : (
+                <div></div>
+              )
+            }
+            {
+              this.state.hover ? (
+                <div className="row center">
+                  <span>Edit Banner</span>
+                </div>
+              ) : (
+                null
+              )
+            }
+            <div className="row" style={{justifyContent: "flex-end"}}>
               { mediaLinks }
             </div>
           </div>
@@ -127,6 +207,20 @@ class UserProfile extends ResponsiveComponent {
             this.userTabContent()
           }
         </div>
+        <Modal isOpen={this.state.open} onRequestClose={() => {
+          this.setState({
+            open: false
+          })
+        }}>
+          <div style={{width: "50%", margin: "0 auto"}}>
+            <ImageForm url={user.profile.bannerUrl} aspectRatio={16/4.5} ref="banner" />
+          </div>
+          <div className="row center">
+            <button onClick={this.saveBannerImg.bind(this)}>
+              Save
+            </button>
+          </div>
+        </Modal>
       </div>
     )
   }
@@ -134,7 +228,6 @@ class UserProfile extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       mobile: false,
-      imgDim: 125,
       iconSize: "2em",
       fontSize: "1em"
     });
@@ -143,9 +236,8 @@ class UserProfile extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       mobile: true,
-      imgDim: 200,
       fontSize: "3.5em",
-      fontSize: "2.5em"
+      iconSize: "2.5em"
     });
   }
 

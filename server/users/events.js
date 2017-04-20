@@ -12,7 +12,6 @@ Meteor.methods({
         _id: 1
       }
     }).fetch();
-    console.log(instances);
     const events = Events.find({
       instances: {
         $in: instances.map(i => { return i._id })
