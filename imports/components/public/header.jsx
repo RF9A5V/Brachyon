@@ -43,7 +43,7 @@ class Header extends ResponsiveComponent {
   }
 
   imgOrDefault() {
-    var user = Meteor.user();
+    var user = Meteor.users.findOne(Meteor.userId());
     if(user.profile.imageUrl) {
       return user.profile.imageUrl;
     }
@@ -184,8 +184,8 @@ class Header extends ResponsiveComponent {
         }} onSuccess={() => {
           if(window.location.pathname == "/") {
             browserHistory.push("/dashboard");
-            this.setState({ regOpen: false })
           }
+          this.setState({ regOpen: false })
         }} />
       </div>
     )

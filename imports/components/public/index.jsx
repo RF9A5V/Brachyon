@@ -61,7 +61,9 @@ export default class LandingScreen extends ResponsiveComponent {
             </Link>
           </div>
         </div>
-        <div className="row x-center footer-buttons" style={{backgroundColor: "rgba(0,0,0,0.5"}}>
+        <div className="row x-center footer-buttons" style={{backgroundColor: "rgba(0,0,0,0.5"}} onClick={() => {
+          browserHistory.push("/about")
+        }}>
           <div className={`create-container-option col-1 orange title footer-bar ${opts.mobile ? "mobile" : "desktop"} noselect`} style={{fontSize: opts.fontSize}}>
             WHAT IS THIS PLACE?
           </div>

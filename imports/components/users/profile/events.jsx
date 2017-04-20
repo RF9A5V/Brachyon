@@ -16,16 +16,27 @@ export default class UserEvents extends ResponsiveComponent {
     }
   }
 
-  componentDidMount() {
-    super.componentDidMount();
+  loadEvents(props) {
+    this.setState({
+      ready: false
+    });
     const limit = this.state.mobile ? 8 : 16;
-    const action = this.props.type == "player" ? "users.getPlayerEvents" : "users.getOwnerEvents";
+    const action = props.type == "player" ? "users.getPlayerEvents" : "users.getOwnerEvents";
     Meteor.call(action, this.props.username, 0, limit, (err, data) => {
       this.setState({
         ready: true,
         data
       })
     })
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.loadEvents(this.props);
+  }
+
+  componentWillReceiveProps(next) {
+    this.loadEvents(next);
   }
 
   renderBase() {

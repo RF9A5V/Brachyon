@@ -48,17 +48,9 @@ export default class MainSlide extends ResponsiveComponent {
             <div className="col-1">
             </div>
             <div style={{padding: 20}}>
-              {
-                this.state.shortLink ? (
-                  <div>
-                    { window.location.origin }/!{ this.state.shortLink }
-                  </div>
-                ) : (
-                  <button onClick={() => {
-                    this.loadShortLink()
-                  }}>Generate Short Link</button>
-                )
-              }
+              <button onClick={() => {
+                this.loadShortLink()
+              }}>Generate Short Link</button>
             </div>
           </div>
           <div className="col-2 row center x-center">
