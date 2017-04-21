@@ -62,7 +62,7 @@ export default class UserBio extends ResponsiveComponent {
                     return (
                       <div className="col col-1" style={{marginRight: ar.length - 1 == i ? 0 : 20}}>
                         <img src={g.bannerUrl} style={{width: "100%", height: "auto"}} />
-                        <span style={{padding: 10, backgroundColor: "#111"}}>{ g.name }</span>
+                        <span style={{padding: 10, backgroundColor: "#111", fontSize: opts.fontSize}}>{ g.name }</span>
                       </div>
                     )
                   })
@@ -99,10 +99,10 @@ export default class UserBio extends ResponsiveComponent {
     })
     const spacing = 20;
     return (
-      <div className="row" style={{padding: spacing}}>
-        <div className="col col-1" style={{marginRight: spacing}}>
+      <div className={opts.mobile ? "col" : "row"} style={{padding: spacing}}>
+        <div className="col col-1" style={{marginRight: opts.mobile ? 0 : spacing, marginBottom: opts.mobile ? spacing : 0}}>
           <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
-            <span style={{textAlign: "center", textTransform: "uppercase"}}>
+            <span style={{textAlign: "center", textTransform: "uppercase", fontSize: opts.fontSize}}>
               User Bio
             </span>
           </label>
@@ -120,7 +120,7 @@ export default class UserBio extends ResponsiveComponent {
               </div>
             ) : (
               <div style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: spacing}}>
-                <div dangerouslySetInnerHTML={{__html: user.profile.bio || ""}}>
+                <div dangerouslySetInnerHTML={{__html: user.profile.bio || ""}} style={{fontSize: opts.fontSize}}>
                 </div>
               </div>
             )
@@ -129,7 +129,7 @@ export default class UserBio extends ResponsiveComponent {
         </div>
         <div className="col col-1">
           <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
-            <span style={{textTransform: "uppercase"}}>
+            <span style={{textTransform: "uppercase", fontSize: opts.fontSize}}>
               Games Played
             </span>
           </label>
@@ -145,13 +145,15 @@ export default class UserBio extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      mobile: true
+      mobile: true,
+      fontSize: "2.5em"
     });
   }
 
   renderDesktop() {
     return this.renderBase({
-      mobile: false
+      mobile: false,
+      fontSize: "1em"
     });
   }
 }

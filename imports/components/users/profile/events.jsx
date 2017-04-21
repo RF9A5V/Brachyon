@@ -4,6 +4,7 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 import Loader from "/imports/components/public/loader.jsx";
 
 import EventResult from "./event_result.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
 
 export default class UserEvents extends ResponsiveComponent {
 
@@ -76,7 +77,7 @@ export default class UserEvents extends ResponsiveComponent {
     )
   }
 
-  renderBase() {
+  renderBase(opts) {
     if(!this.state.ready) {
       return (
         <div className="row center" style={{padding: 50}}>
@@ -89,14 +90,16 @@ export default class UserEvents extends ResponsiveComponent {
         <div className="row center">
           { this.typeSelector() }
         </div>
-        <div className="row" style={{flexWrap: "wrap", padding: 20}}>
-          {
-            (this.state.data).map(e => {
-              return (
-                <EventResult {...e} />
-              )
-            })
-          }
+        <div style={{padding: 20}}>
+          <RowLayout length={opts.mobile ? 1 : 4}>
+            {
+              (this.state.data).map(e => {
+                return (
+                  <EventResult {...e} />
+                )
+              })
+            }
+          </RowLayout>
         </div>
       </div>
     );

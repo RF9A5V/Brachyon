@@ -38,7 +38,8 @@ class UserProfile extends ResponsiveComponent {
               borderBottom: isCurrentTab ?"solid 2px":"",
               borderColor: isCurrentTab ? "#ff6000":"",
               fontSize: opts.fontSize,
-              color: this.state.editMode && tab != "bio" ? "#666" : "white"
+              color: this.state.editMode && tab != "bio" ? "#666" : "white",
+              marginTop: opts.mobile ? 30 : 0
             }
             return (
               <div className="user-tab title" style={tabStyle} onClick={() => {
@@ -112,10 +113,10 @@ class UserProfile extends ResponsiveComponent {
       username: this.props.params.username
     });
     const mediaStyle = {
-      width: 35,
-      height: 35,
+      width: opts.mobile ? 80 : 35,
+      height: opts.mobile ? 80 : 35,
       padding: 5,
-      backgroundColor: "#111"
+      backgroundColor: "rgba(0, 0, 0, 0.5)"
     }
     const mediaLinks = (() => {
       const types = [
@@ -196,9 +197,9 @@ class UserProfile extends ResponsiveComponent {
           </div>
         </div>
         <div className="row" style={{justifyContent: "flex-end"}}>
-          <div className="col" style={{width: 210}}>
-            <span style={{fontSize: 22}}>~{user.profile.alias || user.username}</span>
-            <span style={{fontSize: 14}}>@{user.username}</span>
+          <div className="col" style={{width: opts.mobile ? 80 * 6 : 35 * 6}}>
+            <span style={{fontSize: `calc(${opts.fontSize} * 1.2)`}}>~{user.profile.alias || user.username}</span>
+            <span style={{fontSize: `calc(${opts.fontSize} * 0.6)`}}>@{user.username}</span>
           </div>
         </div>
         {
@@ -240,7 +241,7 @@ class UserProfile extends ResponsiveComponent {
     return this.renderBase({
       mobile: true,
       fontSize: "3.5em",
-      iconSize: "2.5em"
+      iconSize: "4em"
     });
   }
 
