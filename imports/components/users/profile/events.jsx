@@ -36,7 +36,9 @@ export default class UserEvents extends ResponsiveComponent {
   }
 
   componentWillReceiveProps(next) {
-    this.loadEvents(next);
+    if(next.type != this.props.type) {
+      this.loadEvents(next);
+    }
   }
 
   renderBase() {
@@ -50,7 +52,7 @@ export default class UserEvents extends ResponsiveComponent {
     return (
       <div className="row" style={{flexWrap: "wrap", padding: 20}}>
         {
-          this.state.data.map(e => {
+          (this.state.data || []).map(e => {
             return (
               <EventResult {...e} />
             )

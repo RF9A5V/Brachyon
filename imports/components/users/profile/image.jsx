@@ -58,9 +58,11 @@ export default class UserImage extends ResponsiveComponent {
           })
         }
       }} onMouseLeave={() => {
-        this.setState({
-          hover: false
-        })
+        if(this.props.editMode) {
+          this.setState({
+            hover: false
+          })
+        }
       }} onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
