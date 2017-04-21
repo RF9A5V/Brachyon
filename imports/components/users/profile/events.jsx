@@ -22,7 +22,8 @@ export default class UserEvents extends ResponsiveComponent {
     });
     const limit = this.state.mobile ? 8 : 16;
     const action = props.type == "player" ? "users.getPlayerEvents" : "users.getOwnerEvents";
-    Meteor.call(action, this.props.username, 0, limit, (err, data) => {
+    Meteor.call(action, this.props.username, 0, limit, { type: this.state.action }, (err, data) => {
+      console.log(this.state.action);
       this.setState({
         ready: true,
         data
@@ -41,6 +42,40 @@ export default class UserEvents extends ResponsiveComponent {
     }
   }
 
+  setNewData(val) {
+    this.loadEvents(this.props)
+  }
+
+  typeSelector() {
+    var options;
+    if(this.props.type == "player") {
+      options = ["All", "Active", "Completed"].map(i => {
+        return (
+          <option value={i.toLowerCase()}>
+            { i }
+          </option>
+        )
+      })
+    }
+    else {
+      options = ["All", "Unpublished", "Active", "Completed"].map(i => {
+        return (
+          <option value={i.toLowerCase()}>
+            { i }
+          </option>
+        )
+      })
+    }
+    return (
+      <select value={this.state.action} onChange={(e) => {
+        this.state.action = e.target.value.toLowerCase();
+        this.setNewData(e.target.value);
+      }}>
+        { options }
+      </select>
+    )
+  }
+
   renderBase() {
     if(!this.state.ready) {
       return (
@@ -50,14 +85,19 @@ export default class UserEvents extends ResponsiveComponent {
       )
     }
     return (
-      <div className="row" style={{flexWrap: "wrap", padding: 20}}>
-        {
-          (this.state.data || []).map(e => {
-            return (
-              <EventResult {...e} />
-            )
-          })
-        }
+      <div className="col">
+        <div className="row center">
+          { this.typeSelector() }
+        </div>
+        <div className="row" style={{flexWrap: "wrap", padding: 20}}>
+          {
+            (this.state.data).map(e => {
+              return (
+                <EventResult {...e} />
+              )
+            })
+          }
+        </div>
       </div>
     );
   }
