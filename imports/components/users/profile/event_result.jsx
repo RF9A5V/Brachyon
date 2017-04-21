@@ -12,26 +12,26 @@ export default class EventResult extends ResponsiveComponent {
 
   renderBase(opts) {
     return (
-      <div className="row" style={{width: opts.imgDim * 2.5, backgroundColor: "#111", marginRight: 20, marginBottom: 20, cursor: "pointer"}} onClick={() => {
+      <div className="row" style={{width: "100%", backgroundColor: "#111", cursor: "pointer"}} onClick={() => {
         browserHistory.push("/" + this.props.type + "/" + this.props.slug)
       }}>
-        <img src={this.props.bannerUrl || "/images/bg.jpg"} style={{width: opts.imgDim, height: opts.imgDim * 9 / 16}} />
+        <img src={this.props.bannerUrl || "/images/bg.jpg"} style={{width: "45%", height: "90%"}} />
         <div className="col col-1" style={{padding: 20, boxSizing: "border-box"}}>
-          <span style={{wordWrap: "break-word"}}>{ this.props.name }</span>
-          <span style={{fontSize: 12}}>{ this.props.date ? moment(this.props.date).format("M/D/YY h:mmA") : "" }</span>
+          <span style={{wordWrap: "break-word", fontSize: opts.fontSize}}>{ this.props.name }</span>
+          <span style={{fontSize: `calc(${opts.fontSize} * 0.75)`}}>{ this.props.date ? moment(this.props.date).format("M/D/YY h:mmA") : "" }</span>
         </div>
       </div>
     )
   }
   renderDesktop() {
     return this.renderBase({
-      imgDim: 150
+      fontSize: "1em"
     })
   }
 
   renderMobile() {
     return this.renderBase({
-      imgDim: 200
+      fontSize: "2.5em"
     })
   }
 
