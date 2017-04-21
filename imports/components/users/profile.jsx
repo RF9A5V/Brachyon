@@ -66,7 +66,7 @@ class UserProfile extends ResponsiveComponent {
         );
       case "stats":
         return (
-          <UserStats editMode={this.state.editMode} />
+          <UserStats editMode={this.state.editMode} {...this.props.params} />
         );
       case "T.O.":
         return (
@@ -107,7 +107,10 @@ class UserProfile extends ResponsiveComponent {
         <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ ready: true }) }} />
       )
     }
-    const user = Meteor.user();
+
+    const user = Meteor.users.findOne({
+      username: this.props.params.username
+    });
     const mediaStyle = {
       width: 35,
       height: 35,
@@ -162,7 +165,7 @@ class UserProfile extends ResponsiveComponent {
           <UserImage username={this.props.params.username} editMode={this.state.editMode} />
           <div className="col col-1 flex-pad">
             {
-              this.props.params.username == Meteor.user().username ? (
+              user._id == Meteor.userId() ? (
                 <div className="row" style={{justifyContent: "flex-end", padding: 10}}>
                   <button onClick={(e) => {
                     e.preventDefault();
@@ -201,7 +204,7 @@ class UserProfile extends ResponsiveComponent {
         {
           this.userTabs(opts)
         }
-        <hr className="user-divider" />
+        <hr className="user-divider" style={{marginTop: -2}} />
         <div style={{minHeight: "calc(100vh - (100vw * 4.5 / 16) + 10vh)"}}>
           {
             this.userTabContent()

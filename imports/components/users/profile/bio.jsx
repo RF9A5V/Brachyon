@@ -26,7 +26,6 @@ export default class UserBio extends ResponsiveComponent {
 
   userGames(opts) {
     const gameObjs = this.state.games;
-    console.log(gameObjs);
     const gamesPerRow = opts.mobile ? 1 : 2;
     var count = 0;
     var tempObj = [];
@@ -41,8 +40,10 @@ export default class UserBio extends ResponsiveComponent {
       }
       count += 1;
     }
-    if(tempObj[tempObj.length - 1][1] == undefined) {
-      tempObj[tempObj.length - 1][1] = null;
+    if(tempObj.length > 0) {
+      if(tempObj[tempObj.length - 1][1] == undefined) {
+        tempObj[tempObj.length - 1][1] = null;
+      }
     }
     return (
       <div className="col">

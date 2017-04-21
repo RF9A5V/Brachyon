@@ -29,18 +29,16 @@ Meteor.methods({
       },
       skip: skipIndex * limit,
       limit
-    }).fetch();
-    var evs = [];
-    events.forEach(event => {
-      var e = {};
-      e.id = event._id;
-      e.name = event.details.name;
-      e.date = event.details.datetime;
-      e.bannerUrl = event.bannerUrl;
-      e.slug = event.slug;
-      evs.push(e);
-    })
-    return evs;
+    }).fetch().map(e => {
+      return {
+        name: e.details.name,
+        bannerUrl: e.details.bannerUrl,
+        slug: e.slug,
+        type: "league",
+        id: e._id
+      }
+    });
+    return events;
   },
   "users.getOwnerEvents"(username, skip, limit) {
     const user = Meteor.users.findOne({
@@ -65,7 +63,7 @@ Meteor.methods({
         date: e.details.datetime,
         bannerUrl: e.details.bannerUrl,
         slug: e.slug,
-        id: e._id
+        type: "event"
       }
     });
     var leagues = Leagues.find({
@@ -86,6 +84,7 @@ Meteor.methods({
         name: e.details.name,
         bannerUrl: e.details.bannerUrl,
         slug: e.slug,
+        type: "league",
         id: e._id
       }
     });

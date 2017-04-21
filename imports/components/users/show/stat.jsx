@@ -25,9 +25,12 @@ export default class UserStat extends Component {
   	var count =0;
   	var wins =0;
   	var loss = 0;
-  	Object.keys(Meteor.user().stats).map(game =>{
-  		wins += Meteor.user().stats[game].wins;
-  		loss += Meteor.user().stats[game].losses;
+		const user = Meteor.users.findOne({
+			username: this.props.username
+		})
+  	Object.keys(user.stats).map(game =>{
+  		wins += user.stats[game].wins;
+  		loss += user.stats[game].losses;
   		count+=1;
   	})
   	return (
@@ -49,15 +52,18 @@ export default class UserStat extends Component {
   }
 
   showTable(){
-    if (Meteor.user().stats == null){
+		const user = Meteor.users.findOne({
+			username: this.props.username
+		});
+    if (user.stats == null){
     	return (
     		<div className="center" style={{border:"solid", paddingTop:30, paddingBottom:30 ,marginTop:50, marginBottom:50, fontSize:25}}>
-    			You have not played any games 
+    			You have not played any games
     		</div>
     		)
     }
-    var userStat = Meteor.user().stats[this.state.game];
-    var tourney = Meteor.user().tournaments;
+    var userStat = user.stats[this.state.game];
+    var tourney = user.tournaments;
     if (this.state.game=="overview"){
       return (
       	<div>
@@ -144,6 +150,10 @@ export default class UserStat extends Component {
   }
 
   render(){
+		const user = Meteor.users.findOne({
+			username: this.props.username
+		});
+
   	return(
   	<div style={{marginTop:15, marginBottom:15}}>
       <div className="center">
@@ -151,14 +161,15 @@ export default class UserStat extends Component {
         <option value="overview" Selected>
           Overview
         </option>
-          {Meteor.user().stats==null? ("")
+          {user.stats==null? ("")
           	:(
-          		Object.keys(Meteor.user().stats).map(game =>{
-              		return(
-                  		<option value={Games.findOne(game)._id}>
-                    	{Games.findOne(game).name}
-                  		</option>
-                	);
+          		Object.keys(user.stats).map(game => {
+								const g = Games.findOne(game);
+            		return(
+                		<option value={game}>
+                  		{g.name}
+                		</option>
+              	);
             	})
           	)}
         </select>
