@@ -1,7 +1,7 @@
 import moment from "moment";
 
 Meteor.methods({
-  "users.getPlayerEvents"(username, skipIndex, limit) {
+  "users.getPlayerEvents"(username, skipIndex, limit, args) {
     const user = Meteor.users.findOne({
       username
     });
@@ -12,11 +12,26 @@ Meteor.methods({
         _id: 1
       }
     }).fetch();
-    const events = Events.find({
+    var queryObj = {
       instances: {
         $in: instances.map(i => { return i._id })
       }
-    }, {
+    }
+    switch(args.type) {
+      case "active":
+        queryObj.published = true;
+        queryObj.isComplete = false;
+        break;
+      case "completed":
+        queryObj.isComplete = true;
+        break;
+      case "unpublished":
+        queryObj.published = false;
+        break;
+      default:
+        break;
+    }
+    const events = Events.find(queryObj, {
       fields: {
         _id: 1,
         "details.name": 1,
@@ -40,13 +55,28 @@ Meteor.methods({
     });
     return events;
   },
-  "users.getOwnerEvents"(username, skip, limit) {
+  "users.getOwnerEvents"(username, skip, limit, args) {
     const user = Meteor.users.findOne({
       username
     });
-    var events = Events.find({
+    var queryObj = {
       owner: user._id
-    }, {
+    };
+    switch(args.type) {
+      case "active":
+        queryObj.published = true;
+        queryObj.isComplete = false;
+        break;
+      case "completed":
+        queryObj.isComplete = true;
+        break;
+      case "unpublished":
+        queryObj.published = false;
+        break;
+      default:
+        break;
+    }
+    var events = Events.find(queryObj, {
       fields: {
         _id: 1,
         slug: 1,
