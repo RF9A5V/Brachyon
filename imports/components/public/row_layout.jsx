@@ -6,34 +6,33 @@ export default class RowLayout extends Component {
     super(props);
     this.state = {
       itemLength: 0,
-      items: []
+      items: [],
+      itemCount: props.children.length
     }
   }
 
-  setContent(length) {
-    if(this.state.itemLength != length) {
-      var elements = this.props.children;
-      var remainder = elements.length % length;
-      for(var i = 0; i < length - remainder; i ++) {
-        elements.push(null);
-      }
-      var data = [];
-      for(var i = 0; i < elements.length; i += length) {
-        data.push(elements.slice(i, i + length));
-      }
-      this.setState({
-        itemLength: length,
-        items: data
-      })
+  setContent(length, items) {
+    var elements = items;
+    var remainder = elements.length % length;
+    for(var i = 0; i < length - remainder; i ++) {
+      elements.push(null);
     }
+    var data = [];
+    for(var i = 0; i < elements.length; i += length) {
+      data.push(elements.slice(i, i + length));
+    }
+    this.setState({
+      itemLength: length,
+      items: data
+    });
   }
 
   componentWillMount() {
-    this.setContent(this.props.length || 1);
+    this.setContent(this.props.length || 1, this.props.children);
   }
 
   componentWillReceiveProps(next) {
-    this.setContent(next.length || 1)
+    this.setContent(next.length || 1, next.children);
   }
 
   render() {
