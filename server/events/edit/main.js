@@ -35,6 +35,39 @@ Meteor.methods({
     }
     delete attrs.tickets;
 
+    if(attrs.brackets) {
+      const instance = Instances.findOne(event.instances[event.instances.length - 1]);
+      const bracketCount = (instance.brackets || []).length;
+      var updateObj = {};
+      var pushObj = [];
+      attrs.brackets.forEach((b, i) => {
+        if(i >= bracketCount) {
+          pushObj.push(b);
+        }
+        else {
+          updateObj[`brackets.${i}.name`] = b.name;
+          updateObj[`brackets.${i}.game`] = b.game;
+          updateObj[`brackets.${i}.format`] = b.format;
+        }
+      });
+      var query = {};
+      if(Object.keys(updateObj).length > 0) {
+        Instances.update(instance._id, {
+          $set: updateObj
+        });
+      }
+      if(pushObj.length > 0) {
+        Instances.update(instance._id, {
+          $push: {
+            brackets: {
+              $each: pushObj
+            }
+          }
+        });
+      }
+    }
+    delete attrs.brackets;
+
     updateObj = flatten(attrs);
     Events.update(id, {
       $set: updateObj
