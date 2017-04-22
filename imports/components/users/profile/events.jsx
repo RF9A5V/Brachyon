@@ -13,43 +13,78 @@ export default class UserEvents extends ResponsiveComponent {
     this.state = {
       ready: false,
       action: "all",
-      skip: 0
+      skip: 0,
+      done: false
+    };
+    this.onScrollEnd = this.onScrollEnd.bind(this);
+  }
+
+  onScrollEnd(e) {
+    const el = e.target;
+    const target = el.scrollingElement;
+    const scrollTop = target.scrollTop;
+    const scrollHeight = target.scrollHeight || window.scrollHeight;
+    const clientHeight = window.innerHeight;
+    if(scrollHeight - scrollTop - clientHeight == 0) {
+      this.loadEvents(this.props, false);
     }
   }
 
-  loadEvents(props) {
-    this.setState({
-      ready: false
-    });
-    const limit = this.state.mobile ? 8 : 16;
-    const action = props.type == "player" ? "users.getPlayerEvents" : "users.getOwnerEvents";
-    Meteor.call(action, this.props.username, 0, limit, { type: this.state.action }, (err, data) => {
-      console.log(this.state.action);
+  loadEvents(props, reload) {
+    if(this.state.done) {
+      return;
+    }
+    const limit = this.state.render == "mobile" ? 8 : 16;
+    const action = props.type == "playing" ? "users.getPlayerEvents" : "users.getOwnerEvents";
+    var date = new Date();
+    if(!reload && this.state.data.length) {
+      date = this.state.data[this.state.data.length - 1].date;
+    }
+    Meteor.call(action, this.props.username, limit, {
+      type: this.state.action,
+      date
+    }, (err, data) => {
+      if(data.length == 0) {
+        this.setState({
+          done: true
+        })
+      }
+      if(!reload) {
+        data = (this.state.data || []).concat(data);
+      }
+      console.log(data);
       this.setState({
-        ready: true,
-        data
+        data,
+        ready: true
       })
     })
   }
 
   componentDidMount() {
     super.componentDidMount();
-    this.loadEvents(this.props);
+    this.loadEvents(this.props, true);
+    window.addEventListener("scroll", this.onScrollEnd);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    window.removeEventListener("scroll", this.onScrollEnd);
   }
 
   componentWillReceiveProps(next) {
     if(next.type != this.props.type) {
-      this.loadEvents(next);
+      this.state.done = false;
+      this.loadEvents(next, true);
     }
   }
 
   setNewData(val) {
-    this.loadEvents(this.props)
+    this.loadEvents(this.props, true)
   }
 
-  typeSelector() {
+  typeSelector(opts) {
     var options;
-    if(this.props.type == "player") {
+    if(this.props.type == "playing") {
       options = ["All", "Active", "Completed"].map(i => {
         return (
           <option value={i.toLowerCase()}>
@@ -71,7 +106,7 @@ export default class UserEvents extends ResponsiveComponent {
       <select value={this.state.action} onChange={(e) => {
         this.state.action = e.target.value.toLowerCase();
         this.setNewData(e.target.value);
-      }}>
+      }} style={{fontSize: opts.mobile ? "2.5em" : "1em"}}>
         { options }
       </select>
     )
@@ -88,18 +123,27 @@ export default class UserEvents extends ResponsiveComponent {
     return (
       <div className="col">
         <div className="row center">
-          { this.typeSelector() }
+          { this.typeSelector(opts) }
         </div>
         <div style={{padding: 20}}>
           <RowLayout length={opts.mobile ? 1 : 4}>
             {
               (this.state.data).map(e => {
                 return (
-                  <EventResult {...e} />
+                  <EventResult key={e.slug} {...e} />
                 )
               })
             }
           </RowLayout>
+          {
+            this.state.done ? (
+              <div className="row center">
+                <span style={{fontSize: opts.mobile ? "2.5em" : "1em"}}>No More Events</span>
+              </div>
+            ) : (
+              null
+            )
+          }
         </div>
       </div>
     );

@@ -28,7 +28,7 @@ class UserProfile extends ResponsiveComponent {
   }
 
   userTabs(opts) {
-    const tabs = ["bio", "stats", "T.O.", "player"];
+    const tabs = ["bio", "stats", "hosting", "playing"];
     return (
       <div className="row center">
         {
@@ -69,11 +69,11 @@ class UserProfile extends ResponsiveComponent {
         return (
           <UserStats editMode={this.state.editMode} {...this.props.params} />
         );
-      case "T.O.":
+      case "hosting":
         return (
           <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
         );
-      case "player":
+      case "playing":
         return (
           <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
         );
