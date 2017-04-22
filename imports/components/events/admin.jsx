@@ -151,7 +151,8 @@ class EventAdminPage extends Component {
       content: BracketPanel,
       args: {
         brackets: instance.brackets || null,
-        isLeague: event.league != null
+        isLeague: event.league != null,
+        onBracketNumberChange: () => {}
       }
     }];
     return {
@@ -181,7 +182,7 @@ class EventAdminPage extends Component {
       name: "",
       key: "stream",
       args: {
-        stream: (event.stream || {}).name
+        stream: ((event.stream || {}).twitchStream || {}).name
       }
     }];
 
@@ -279,8 +280,10 @@ class EventAdminPage extends Component {
     details.name = details.description.name;
     details.description = details.description.description;
 
+    console.log(attrs.brackets);
+
     // Temporarily disabling global bracket edit
-    delete attrs.brackets;
+    // delete attrs.brackets;
 
     Object.keys(event.details).forEach(k => {
       if(event.details[k] == details[k]) {
