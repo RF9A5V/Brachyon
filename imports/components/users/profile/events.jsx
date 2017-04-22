@@ -31,6 +31,9 @@ export default class UserEvents extends ResponsiveComponent {
   }
 
   loadEvents(props, reload) {
+    if(reload) {
+      this.state.done = false;
+    }
     if(this.state.done) {
       return;
     }
@@ -52,7 +55,6 @@ export default class UserEvents extends ResponsiveComponent {
       if(!reload) {
         data = (this.state.data || []).concat(data);
       }
-      console.log(data);
       this.setState({
         data,
         ready: true
@@ -78,10 +80,6 @@ export default class UserEvents extends ResponsiveComponent {
     }
   }
 
-  setNewData(val) {
-    this.loadEvents(this.props, true)
-  }
-
   typeSelector(opts) {
     var options;
     if(this.props.type == "playing") {
@@ -105,7 +103,7 @@ export default class UserEvents extends ResponsiveComponent {
     return (
       <select value={this.state.action} onChange={(e) => {
         this.state.action = e.target.value.toLowerCase();
-        this.setNewData(e.target.value);
+        this.loadEvents(this.props, true);
       }} style={{fontSize: opts.mobile ? "2.5em" : "1em"}}>
         { options }
       </select>

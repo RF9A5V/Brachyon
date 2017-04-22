@@ -199,7 +199,7 @@ class UserProfile extends ResponsiveComponent {
         <div className="row" style={{justifyContent: "flex-end"}}>
           <div className="col" style={{width: opts.mobile ? 80 * 6 : 35 * 6}}>
             <span style={{fontSize: `calc(${opts.fontSize} * 1.2)`}}>~{user.profile.alias || user.username}</span>
-            <span style={{fontSize: `calc(${opts.fontSize} * 0.6)`}}>@{user.username}</span>
+            <span style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>@{user.username}</span>
           </div>
         </div>
         {
