@@ -25,12 +25,7 @@ export default class RerunModal extends Component {
       }
       else {
         toastr.success("Event has been reinstantiated!");
-        const sub = Meteor.subscribe("event", this.props.id, {
-          onReady: () => {
-            this.props.onComplete(sub);
-          }
-        })
-
+        this.props.onComplete(data);
       }
     })
   }
