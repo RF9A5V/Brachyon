@@ -47,11 +47,8 @@ import CreateBracketScreen from "../imports/components/brackets/create.jsx";
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
 function isLoggedIn(nextState, replace){
-  if(Meteor.userId()){
-    const username = Meteor.call("getUsername", Meteor.userId(), (_, data) => {
-      const user = data;
-      browserHistory.push("/user/" + data);
-    })
+  if(Meteor.userId()) {
+    replace("/dashboard");
   }
 }
 
