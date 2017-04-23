@@ -318,7 +318,15 @@ Meteor.methods({
               obj.losm = m.losm;
               pipes[m.losr] ? pipes[m.losr].push(m.losm) : (pipes[m.losr] = [m.losm]);
             }
-            var match = Matches.insert({ players });
+            const allPlayersPresent = players.every(p => {
+              return p && p.alias != null;
+            });
+            var match = Matches.insert({
+              players,
+              establishedAt: allPlayersPresent ? new Date() : null,
+              startedAt: null,
+              status: allPlayersPresent ? 1 : 0
+            });
             obj.id = match;
             return obj;
           })
@@ -400,13 +408,16 @@ Meteor.methods({
       var nextId = bracket.rounds[0][round + 1][Math.floor(index / 2)].id;
       var nextMatch = Matches.findOne(nextId);
       if(nextMatch) {
+        const nextHasPlayer = nextMatch.players.some(p => { return p && p.alias })
         Matches.update(nextId, {
           $set: {
             [`players.${index % 2}`]: {
               id: players[0].id,
               alias: players[0].alias,
               score: 0
-            }
+            },
+            status: nextHasPlayer ? 1 : 0,
+            establishedAt: nextHasPlayer ? new Date() : null
           }
         });
       }
@@ -424,7 +435,8 @@ Meteor.methods({
         winner: {
           alias: players[0].alias,
           id: players[0].id
-        }
+        },
+        status: 3
       }
     });
   },
@@ -447,7 +459,8 @@ Meteor.methods({
           winner: {
             alias: players[0].alias,
             id: players[0].id
-          }
+          },
+          status: 3
         }
       });
     })
@@ -495,7 +508,9 @@ Meteor.methods({
                 id: match.players[1].id,
                 score: 0
               }
-            ]
+            ],
+            status: 1,
+            establishedAt: new Date()
           }
         });
         return;
@@ -503,26 +518,29 @@ Meteor.methods({
     }
     // END Grand Final Results
     var advIndex = Math.floor(index / 2);
-    var winMatch = Matches.findOne(winMatchId);
     if(bracketIndex == 1 && roundIndex % 2 == 0) {
       advIndex = index;
     }
     if(roundIndex + 1 == bracket.rounds[bracketIndex].length) {
       var winMatchId = bracket.rounds[2][0][0].id;
+      var winMatch = Matches.findOne(winMatchId);
+      var hasSomePlayer = winMatch.players.some(p => { return p && p.alias });
       Matches.update(winMatchId, {
         $set: {
           [`players.${bracketIndex}`]: {
             alias: players[0].alias,
             id: players[0].id,
             score: 0
-          }
+          },
+          establishedAt: hasSomePlayer ? new Date() : null,
+          status: hasSomePlayer ? 1 : null
         }
       });
     }
     else {
       var winMatchId = bracket.rounds[bracketIndex][roundIndex + 1][advIndex].id;
       var winMatch = Matches.findOne(winMatchId);
-
+      var hasSomePlayer = winMatch.players.some(p => { return p && p.alias });
       if(winMatch) {
         var playerPos = index % 2;
         if(bracketIndex == 1 && roundIndex % 2 == 0) {
@@ -534,7 +552,9 @@ Meteor.methods({
               alias: players[0].alias,
               id: players[0].id,
               score: 0
-            }
+            },
+            status: hasSomePlayer ? 1 : 0,
+            establishedAt: hasSomePlayer ? new Date() : null
           }
         })
       }
@@ -549,13 +569,16 @@ Meteor.methods({
         if(roundIndex == 0) {
           playerPos = index % 2;
         }
+        var hasSomePlayer = loserMatch.players.some(p => { return p && p.alias });
         Matches.update(loserMatchId, {
           $set: {
             [`players.${playerPos}`]: {
               alias: players[1].alias,
               id: players[1].id,
               score: 0
-            }
+            },
+            status: hasSomePlayer ? 1 : 0,
+            establishedAt: hasSomePlayer ? new Date() : null
           }
         });
       }
@@ -580,7 +603,10 @@ Meteor.methods({
       Matches.update(internalMatch._id, {
         $set: {
           winner: null,
-          [`players.${direction}`]: null
+          [`players.${direction}`]: null,
+          status: 0,
+          establishedAt: null,
+          startedAt: null
         }
       });
       cb(_roundIndex + 1, Math.floor(_index / 2), _index % 2);
@@ -588,7 +614,9 @@ Meteor.methods({
     cb(roundIndex + 1, Math.floor(index / 2), index % 2);
     Matches.update(match._id, {
       $set: {
-        winner: null
+        winner: null,
+        status: 1,
+        establishedAt: null
       }
     });
     Brackets.update(bracketId, {
@@ -615,7 +643,10 @@ Meteor.methods({
       Matches.update(internalMatch._id, {
         $set: {
           winner: null,
-          [`players.${direction}`]: null
+          [`players.${direction}`]: null,
+          status: 0,
+          establishedAt: null,
+          startedAt: null
         }
       });
       var _nextIndex = (_bracketIndex == 0 || _roundIndex % 2) ? Math.floor(_index / 2) : _index;
@@ -633,7 +664,9 @@ Meteor.methods({
     }
     Matches.update(match._id, {
       $set: {
-        winner: null
+        winner: null,
+        status: 1,
+        startedAt: null
       }
     });
     Brackets.update(bracketId, {

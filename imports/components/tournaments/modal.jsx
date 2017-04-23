@@ -130,6 +130,13 @@ export default class TournamentModal extends ResponsiveComponent {
     )
   }
 
+  onMatchStart() {
+    Meteor.call("match.start", this.props.id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
   renderBase(opts) {
     var event = Events.findOne();
     if(!event) {
@@ -157,9 +164,23 @@ export default class TournamentModal extends ResponsiveComponent {
           }} style={{fontSize: opts.iconSize}} />
         </div>
         {
-          match.winner == null ? (
+          match.status == 1 ? (
+            <div className="row center">
+              <button onClick={this.onMatchStart.bind(this)}>Start Match</button>
+            </div>
+          ) : (
+            null
+          )
+        }
+        {
+          match.status == 2 && match.winner == null ? (
             this.updateScoreContent(opts)
           ):(
+            null
+          )
+        }
+        {
+          match.status == 3 ? (
             <div className="col center x-center" style={{height: "100%"}}>
               <div className="row center x-center">
                 <button className={opts.buttonClass} style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
@@ -176,6 +197,8 @@ export default class TournamentModal extends ResponsiveComponent {
                 }
               </div>
             </div>
+          ) : (
+            null
           )
         }
       </Modal>

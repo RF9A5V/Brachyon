@@ -9,5 +9,13 @@ Meteor.methods({
         [`players.${index}.score`]: isInc ? 1 : -1
       }
     });
+  },
+  "match.start"(id) {
+    Matches.update(id, {
+      $set: {
+        status: 2,
+        startedAt: new Date()
+      }
+    })
   }
 })
