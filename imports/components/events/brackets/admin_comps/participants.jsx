@@ -141,7 +141,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
         <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
           {
-            this.state.participants.map((participant, index) => {
+            (this.state.participants || []).map((participant, index) => {
               return(<SingleParticipant
                 participant={participant}
                 completed={this.state.completed} index={index} onCheckIn={this.onUserCheckIn.bind(this)}

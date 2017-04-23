@@ -212,5 +212,6 @@ Meteor.methods({
         "details.datetime": date
       }
     });
+    return Events.findOne(id).slug;
   }
 })

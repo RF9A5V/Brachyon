@@ -19,14 +19,6 @@ Meteor.methods({
       const unfinishedBrackets = brackets.filter(b => {
         return !b.isComplete;
       });
-      if(brackets.length == unfinishedBrackets.length) {
-        Instances.remove(instance._id);
-        instanceGone = true;
-        if(event.instances.length == 0) {
-          Events.remove(id);
-          eventGone = true;
-        }
-      }
       Brackets.remove({
         _id: {
           $in: unfinishedBrackets.map(b => { return b.id })
