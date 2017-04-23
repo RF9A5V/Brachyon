@@ -5,6 +5,7 @@ import FontAwesome from "react-fontawesome";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import ScoreModal from "/imports/components/tournaments/modal.jsx";
+import Timer from "/imports/components/public/timer.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 export default class MatchList extends ResponsiveComponent {
@@ -24,52 +25,24 @@ export default class MatchList extends ResponsiveComponent {
     return "/images/profile.png";
   }
 
-  scoreModalContent() {
-    var match = Matches.findOne(this.state.id);
-    if(!match) {
-      return "";
+  getMatchCount(status) {
+    const bracket = Brackets.findOne();
+    var query = {};
+    if(status >= 0) {
+      query.status = status;
     }
-    var scoreComp = match.players.map((p, i) => {
-
-      var cb = (val) => {
-        Meteor.call("events.brackets.updateMatchScore", this.state.id, i == 0, val, () => {
-          this.forceUpdate();
-        });
+    var matchCount = Matches.find(query).fetch().length;
+    if(bracket.rounds[2]) {
+      const finId = bracket.rounds[2][1][0].id;
+      const m = Matches.findOne(finId);
+      const hasTiebreaker = m.players.some(p => {
+        return p && p.alias
+      });
+      if(!hasTiebreaker && m.status == status) {
+        matchCount--;
       }
-
-      return (
-        <div className="col x-center col-1">
-          <img src={this.profileImageOrDefault(p.id)} style={{width: 200, height: 200, borderRadius: "100%", marginBottom: 20}} />
-          <span style={{fontSize: 20, marginBottom: 20}}>{ p.alias }</span>
-          <div className="row x-center">
-            <FontAwesome name="caret-left" size="3x" onClick={() => { cb(-1) }} />
-            <span style={{fontSize: 24, padding: 10, backgroundColor: "#333", margin: "0 20px"}}>{ p.score }</span>
-            <FontAwesome name="caret-right" size="3x" onClick={() => { cb(1) }} />
-          </div>
-        </div>
-      )
-    });
-    return (
-      <div className="col">
-        <div className="row" style={{marginBottom: 20}}>
-          { scoreComp }
-        </div>
-        <div className="row center">
-          <button style={{marginRight: 10}}>View</button>
-          <button onClick={() => {
-            var func = this.props.format == "single_elim" ? "events.advance_single" : "events.advance_double";
-            Meteor.call(func, Brackets.findOne()._id, this.state.bracket, this.state.round, this.state.match, (err) => {
-              if(err) {
-                return toastr.error(err.reason);
-              }
-              else {
-                this.setState({ open: false });
-              }
-            });
-          }}>End</button>
-        </div>
-      </div>
-    )
+    }
+    return matchCount;
   }
 
   renderBase(opts) {
@@ -81,6 +54,26 @@ export default class MatchList extends ResponsiveComponent {
       <div>
         <ScoreModal open={this.state.open} closeModal={() => { this.setState({ open: false }) }} id={this.state.id} format={this.props.format}
          update={this.forceUpdate.bind(this)} bracket={this.state.bIndex} round={this.state.rIndex} match={this.state.mIndex} />
+        <div className="row center" style={{marginBottom: 10, padding: `0 ${opts.mobile ? 0 : "25%"}`}}>
+          {
+            (() => {
+              var matchCounts = [];
+              for(var i = 0; i < 4; i ++) {
+                matchCounts.push(this.getMatchCount(i));
+              }
+              return ["Waiting", "Ready", "Playing", "Complete"].map((t, i) => {
+                return (
+                  <div className="col col-1" style={{marginRight: i == 3 ? 0 : 10}}>
+                    <label className="input-label" style={textStyle}>{ t }</label>
+                    <div className="row center x-center" style={{padding: 10, backgroundColor: "#666"}}>
+                      <span style={textStyle}>{ matchCounts[i] }</span>
+                    </div>
+                  </div>
+                )
+              })
+            })()
+          }
+        </div>
         <div className="row center" style={{marginBottom: 20}}>
           <h5 style={textStyle}>Pending Matches</h5>
         </div>
@@ -102,46 +95,62 @@ export default class MatchList extends ResponsiveComponent {
                         id: m.id, open: true,
                         bIndex: i, rIndex: j, mIndex: k
                       }) }}>
-                        <div className="row match-names">
-                          <span style={textStyle}>
-                            <sup className="match-seed">
-                            [ { this.props.partMap[match.players[0].alias] } ]
-                            </sup>
-                            { match.players[0].alias }
-                          </span>
+                        <div style={{padding: 5, backgroundColor: "#111"}}>
+                          <span style={{...textStyle, textAlign: "center"}}>{(() => {
+                            switch(i) {
+                              case 0: return "Winner's Bracket";
+                              case 1: return "Loser's Bracket";
+                              default: return "Grand Finals";
+                            }
+                          })()}, {(() => {
+                            var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
+                            switch(b.length - roundNum) {
+                              case 2: return "Quarter Finals";
+                              case 1: return "Semi Finals";
+                              case 0: return "Finals";
+                              default: return "Round " + roundNum;
+                            }
+                          })()}</span>
                         </div>
-                        <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                        <div className="row flex-pad x-center" style={{backgroundColor: "#666", position: "relative"}}>
+                          <div className="row match-names" style={{top: 0}}>
+                            <span style={textStyle}>
+                              <sup className="match-seed">
+                              [ { this.props.partMap[match.players[0].alias] } ]
+                              </sup>
+                              { match.players[0].alias }
+                            </span>
+                          </div>
                           <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
                           <div className="col-1 col x-center" style={{padding: 10}}>
                             <h5 style={{...textStyle, margin: "10px 0"}}>VERSUS</h5>
                           </div>
                           <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
+                          <div className="row match-names justify-end" style={{bottom: 0}}>
+                            <span style={textStyle}>
+                              { match.players[1].alias }
+                              <sub className="match-seed">
+                                [ { this.props.partMap[match.players[1].alias] } ]
+                              </sub>
+                            </span>
+                          </div>
                         </div>
-                        <div className="row match-names justify-end">
-                          <span style={textStyle}>
-                            { match.players[1].alias }
-                            <sub className="match-seed">
-                              [ { this.props.partMap[match.players[1].alias] } ]
-                            </sub>
-                          </span>
+                        <div className="col" style={{padding: 5, backgroundColor: "#111"}}>
 
+                          <div className="row flex-pad">
+                            <span style={textStyle}>Status: {(() => {
+                              switch(match.status) {
+                                case 0: return "Waiting"
+                                case 1: return "Ready"
+                                case 2: return "Playing"
+                                case 3: return "Complete"
+                              }
+                            })()}</span>
+                            <span style={textStyle}>
+                              <Timer date={match.status == 1 ? match.establishedAt : match.startedAt} />
+                            </span>
+                          </div>
                         </div>
-
-                        <span style={{...textStyle, marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
-                          switch(i) {
-                            case 0: return "Winner's Bracket";
-                            case 1: return "Loser's Bracket";
-                            default: return "Grand Finals";
-                          }
-                        })()}, {(() => {
-                          var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
-                          switch(b.length - roundNum) {
-                            case 2: return "Quarter Finals";
-                            case 1: return "Semi Finals";
-                            case 0: return "Finals";
-                            default: return "Round " + roundNum;
-                          }
-                        })()}</span>
                       </div>
                     )
                   }).filter(m => { return m != "" });
@@ -250,7 +259,8 @@ export default class MatchList extends ResponsiveComponent {
     return this.renderBase({
       fontSize: "2.5em",
       width: "100%",
-      imgDim: 200
+      imgDim: 200,
+      mobile: true
     });
   }
 
@@ -258,7 +268,8 @@ export default class MatchList extends ResponsiveComponent {
     return this.renderBase({
       fontSize: "1em",
       width: 400,
-      imgDim: 100
+      imgDim: 100,
+      mobile: false
     });
   }
 
