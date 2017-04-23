@@ -258,7 +258,7 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id && bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim") {
+    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
       defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
