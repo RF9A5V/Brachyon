@@ -23,6 +23,8 @@ import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
 import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+
 import Brackets from "/imports/api/brackets/brackets.js";
 
 import Instances from "/imports/api/event/instance.js";
@@ -358,15 +360,44 @@ class BracketAdminScreen extends Component {
   }
 
   actions() {
-    return [
-      {
+    var actions = [];
+    const event = Events.findOne();
+    if(event) {
+      actions.push({
         name: "Back To Event",
         icon: "arrow-left",
         action: () => {
           browserHistory.push("/event/" + Events.findOne().slug);
         }
+      })
+    }
+    actions.push({
+      name: "Short URL",
+      icon: "link",
+      action: (e) => {
+        if(!this.state.url) {
+          var path = window.location.pathname;
+          path = path.substring(0, path.indexOf("/admin"));
+          Meteor.call("generateShortLink", path, (err, data) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.setState({
+                open: true,
+                url: data
+              })
+            }
+          });
+        }
+        else {
+          this.setState({
+            open: true
+          })
+        }
       }
-    ]
+    })
+    return actions;
   }
 
   render() {
@@ -378,6 +409,7 @@ class BracketAdminScreen extends Component {
     return (
       <div style={{padding: 10, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
       </div>
     );
   }
