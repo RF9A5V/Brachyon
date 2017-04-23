@@ -52,7 +52,7 @@ export default class RerunModal extends Component {
           <div style={{maxHeight: "70vh", overflowY: "auto", padding: "0 80px"}}>
             <h1 style={{textAlign: "center"}}>Rerun Event</h1>
             {
-              !allBracketsClosed ? (
+              !allBracketsClosed && !event.isComplete ? (
                 <div>
                   <p style={{textAlign: "center", margin: "20px 0"}}>
                     The event you are attempting to rerun has open brackets. Close them here in order to save the results and generate stats. Closing the event now will delete your open brackets.
