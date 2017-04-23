@@ -9,7 +9,7 @@ Meteor.methods({
     }
     var event = Events.findOne({instances: id});
     var user = Meteor.users.findOne({username: alias});
-    if(event.league) {
+    if(event && event.league) {
       var league = Leagues.findOne(event.league);
       var eventIndex = league.events.indexOf(event.slug);
       Leagues.update(event.league, {

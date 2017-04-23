@@ -73,6 +73,7 @@ export const renderRoutes = () => (
       <Route path="league/:slug" component={ShowLeagueScreen} />
       <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
       <Route path="bracket/:id" component={BracketShowScreen} />
+      <Route path="bracket/:id/admin" component={BracketAdminScreen} />
       <Route path="event/:slug/bracket/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
       <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />

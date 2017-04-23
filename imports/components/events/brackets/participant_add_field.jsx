@@ -121,7 +121,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
   addParticipant(alias, id) {
 
     const cb = () => {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.index, id, alias, true, (e) => {
+      Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
         if(e) {
           toastr.error(e.reason);
         }
