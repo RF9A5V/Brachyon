@@ -6,9 +6,10 @@ export default class StreamPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       item: 0,
-      stream: ""
+      stream: props.stream || ""
     }
   }
 
@@ -70,7 +71,7 @@ export default class StreamPanel extends ResponsiveComponent {
             <div>
               <div className="row center x-center">
                 <span style={{marginRight: 2, fontSize: opts.fontSize}}>https://twitch.tv/</span>
-                <input defaultValue={this.props.stream} className={opts.inputClass} type="text" placeholder="Stream Name" ref="stream" defaultValue={this.state.stream} />
+                <input className={opts.inputClass} type="text" placeholder="Stream Name" ref="stream" defaultValue={this.state.stream} />
               </div>
             </div>
           ) : (

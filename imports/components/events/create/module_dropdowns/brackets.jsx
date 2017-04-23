@@ -44,6 +44,7 @@ export default class BracketsPanel extends ResponsiveComponent {
       return null;
     }
     var brackets = [];
+    const min = Math.min.apply(null, Object.keys(this.state.brackets).map(i => { return parseInt(i) }));
     Object.keys(this.state.brackets).forEach(key => {
       const brackObj = this.refs[key].value();
       if(!brackObj.game) {
@@ -51,9 +52,10 @@ export default class BracketsPanel extends ResponsiveComponent {
         throw new Error("Bracket at key " + key + " requires a game.");
       }
       else {
+        brackObj.index = parseInt(key) - min;
         brackets.push(brackObj);
       }
-    })
+    });
     return brackets;
   }
 
@@ -76,6 +78,7 @@ export default class BracketsPanel extends ResponsiveComponent {
   deleteBracket(key) {
     delete this.state.brackets[key];
     this.props.onBracketNumberChange(Object.keys(this.state.brackets));
+    this.forceUpdate();
   }
 
   itemDescriptions(opts) {
