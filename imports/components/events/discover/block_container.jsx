@@ -141,15 +141,21 @@ export default class BlockContainer extends Component {
                               ""
                             )
                           }
-                          <div className="event-block-admin-button" onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            this.onCloseClick(event);
-                          }} >
-                            <span>
-                              CLOSE
-                            </span>
-                          </div>
+                          {
+                            event.isComplete ? (
+                              null
+                            ) : (
+                              <div className="event-block-admin-button" onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.onCloseClick(event);
+                              }} >
+                                <span>
+                                  CLOSE
+                                </span>
+                              </div>
+                            )
+                          }
                         </div>
                       ) : (
                         ""
