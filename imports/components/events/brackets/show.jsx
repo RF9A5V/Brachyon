@@ -29,6 +29,8 @@ import { DragDropContext } from 'react-dnd';
 
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
+import Games from "/imports/api/games/games.js";
+
 class BracketShowScreen extends Component {
 
   constructor(props) {
@@ -62,8 +64,8 @@ class BracketShowScreen extends Component {
 
   populateMetaTags() {
     var event = Events.findOne();
-    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
-    var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
+    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    var title = event ? event.details.name + (bracket.name ? ` - ${bracket.name}` : "") : bracket.name || formatter(bracket.format.baseFormat);
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
     var url = window.location.href;
@@ -137,7 +139,7 @@ class BracketShowScreen extends Component {
       default:
         subs = [
           {
-            content: BracketAction,
+            content: BracketPanel,
             args
           }
         ];
@@ -256,7 +258,7 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id) {
+    if(bracketMeta.id && bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim") {
       defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
@@ -269,13 +271,16 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
-    items.push({
-      name: "Back to Event",
-      icon: "arrow-left",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
+    const event = Events.findOne();
+    if(event) {
+      items.push({
+        name: "Back to Event",
+        icon: "arrow-left",
+        action: () => {
+          browserHistory.push("/event/" + Events.findOne().slug);
+        }
+      });
+    }
 
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
@@ -353,7 +358,7 @@ class BracketShowScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20}}>
+      <div style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
         <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
       </div>
