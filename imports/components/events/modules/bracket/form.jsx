@@ -36,6 +36,7 @@ export default class BracketForm extends ResponsiveComponent {
       this.state.game = {}
     }
     this.state.format = subFormat || "NONE"
+    this.state.name = props.name || "";
   }
 
   componentWillReceiveProps(props) {
@@ -59,6 +60,7 @@ export default class BracketForm extends ResponsiveComponent {
       // Only works for basic bracket formats.
       this.refs.format.value = props.format.baseFormat;
     }
+    this.state.name = props.name || "";
   }
 
   onNameChange() {
@@ -240,7 +242,7 @@ export default class BracketForm extends ResponsiveComponent {
             }
           </div>
           <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
-          <input className={opts.inputClass} ref="name" defaultValue={this.state.game.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+          <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
           <div className="col" style={{position: "relative"}}>
             <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
             <input type="text" className={opts.inputClass} onChange={(e) => {
