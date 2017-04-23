@@ -97,13 +97,23 @@ class EventAdminPage extends Component {
       key: "details",
       subItems: [
         {
-          name: "Description",
-          key: "description",
+          name: "Title",
+          key: "name",
           content: (
             Title
           ),
           args: {
             title: event.details.name
+          }
+        },
+        {
+          name: "Description",
+          key: "description",
+          content: (
+            Editor
+          ),
+          args: {
+            value: event.details.description
           }
         },
         {
@@ -273,26 +283,16 @@ class EventAdminPage extends Component {
     var attrs = this.refs.editor.value();
     var event = Events.findOne();
 
-    var details = attrs.details;
-
-    // I know, but bear with me.
-    // This is getting refactored in like a month anyways.
-    details.name = details.description.name;
-    details.description = details.description.description;
-
-    console.log(attrs.brackets);
-
-    // Temporarily disabling global bracket edit
-    // delete attrs.brackets;
+    console.log(attrs);
 
     Object.keys(event.details).forEach(k => {
-      if(event.details[k] == details[k]) {
-        delete details[k];
+      if(event.details[k] == attrs.details[k]) {
+        delete attrs.details[k];
       }
     });
 
     var imgTemp;
-    if(details.image != null) {
+    if(attrs.details.image != null) {
       var file = attrs.details.image.image;
       imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
       imgTemp.image = file;

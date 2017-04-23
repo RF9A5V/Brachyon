@@ -91,6 +91,7 @@ Meteor.methods({
     delete attrs.brackets;
 
     updateObj = flatten(attrs);
+    console.log(updateObj);
     Events.update(id, {
       $set: updateObj
     });

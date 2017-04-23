@@ -93,7 +93,7 @@ class BracketAdminScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
-    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [];
     var partMap = {};
     participantList.forEach((p, i) => {
       partMap[p.alias] = i + 1;
@@ -160,7 +160,7 @@ class BracketAdminScreen extends Component {
 
   matchesItem(bracket) {
     var partMap = {};
-    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [];
     participantList.forEach((p, i) => {
       partMap[p.alias] = i + 1;
     })
@@ -273,9 +273,10 @@ class BracketAdminScreen extends Component {
     }
 
     var rounds;
-    if(bracket.participants && bracket.participants.length > 3) {
+    const format = bracket.format.baseFormat;
+    if((format == "single_elim" || format == "double_elim") && bracket.participants && bracket.participants.length > 3) {
       if(!bracket.id) {
-        switch(bracket.format.baseFormat) {
+        switch(format) {
           case "single_elim": rounds = OrganizeSuite.singleElim(bracket.participants || []); break;
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
           default: break;
@@ -328,6 +329,10 @@ class BracketAdminScreen extends Component {
       else {
         var rounds = Brackets.findOne().rounds;
       }
+      defaultItems.push(this.bracketItem(bracket, index, rounds));
+    }
+    if(format == "swiss" || format == "round_robin" && bracket.id) {
+      var rounds = Brackets.findOne().rounds;
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
     defaultItems.push(this.participantItem(bracket));
