@@ -74,6 +74,7 @@ export default class MatchList extends ResponsiveComponent {
             })()
           }
         </div>
+        <hr className="user-divider" />
         <div className="row center" style={{marginBottom: 20}}>
           <h5 style={textStyle}>Pending Matches</h5>
         </div>
