@@ -27,7 +27,7 @@ export default class LandingScreen extends ResponsiveComponent {
     }
     return (
       <div className="landing-screen">
-        <div className="img-background"></div>
+        <div className="img-background noselect"></div>
         <div className="main-content" id="main-content">
           <div className="row center x-center" style={{marginBottom: opts.buttonPadding}}>
             <Loader width={opts.imgDim} animate={false} />
