@@ -7,7 +7,7 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import { Email } from 'meteor/email'
 
-var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+var stripe = {};
 
 Meteor.methods({
   "events.approve"(id){

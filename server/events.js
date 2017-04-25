@@ -1,4 +1,4 @@
-import OrganizeSuite from "./tournament_api.js";
+import OrganizeSuite from "/imports/decorators/organize.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
 import Leagues from "/imports/api/leagues/league.js";
