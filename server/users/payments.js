@@ -1,4 +1,4 @@
-var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+var stripe = {};
 
 Meteor.methods({
   "users.addStripeSource"(userId, obj) {

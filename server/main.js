@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import moment from "moment";
 
-var Stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+var Stripe = {};
 
 import Events from '/imports/api/event/events.js';
 import { ProfileImages } from "/imports/api/users/profile_images.js";
