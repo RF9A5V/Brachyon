@@ -17,5 +17,21 @@ Meteor.methods({
         startedAt: new Date()
       }
     })
+  },
+  "match.unstart"(id) {
+    Matches.update(id, {
+      $set: {
+        status: 1,
+        startedAt: null
+      }
+    })
+  },
+  "match.toggleStream"(id) {
+    const match = Matches.findOne(id);
+    Matches.update(id, {
+      $set: {
+        stream: !match.stream
+      }
+    })
   }
 })
