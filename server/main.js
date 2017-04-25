@@ -10,7 +10,6 @@ import { Banners } from "/imports/api/event/banners.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import { LeagueBanners } from "/imports/api/leagues/banners.js";
 import Games from '/imports/api/games/games.js';
-import Notifications from "/imports/api/users/notifications.js";
 import Instances from "/imports/api/event/instance.js";
 import Leagues from "/imports/api/leagues/league.js"
 
