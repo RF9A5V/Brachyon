@@ -19,7 +19,6 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 

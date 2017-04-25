@@ -12,25 +12,17 @@ import ContactScreen from '../imports/components/public/footer/contact.jsx';
 import FaqScreen from "../imports/components/public/faq.jsx";
 import ShowUserScreen from '../imports/components/users/show.jsx';
 import EditEventScreen from '../imports/components/events/edit.jsx';
-import OrganizeEventScreen from '../imports/components/events/organize.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
-import PublishEventScreen from '../imports/components/events/publish.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
-import ApprovalScreen from '../imports/components/events/approval.jsx';
-import GameSelectScreen from '../imports/components/games/game_select.jsx';
-import GameApprovalScreen from '../imports/components/games/approval.jsx';
 import UserOptionsScreen from "../imports/components/users/options.jsx";
-import CurrencyPurchaseScreen from "../imports/components/public/currency_purchase.jsx";
 import BracketShowScreen from "../imports/components/events/brackets/show.jsx";
 import EventAdminScreen from "../imports/components/events/admin.jsx";
 import BracketAdminScreen from "../imports/components/events/brackets/admin.jsx";
-import CheckoutScreen from "../imports/components/events/checkout_temp.jsx";
 import GamesIndexScreen from "../imports/components/games/index.jsx";
 import OrganizationCreateScreen from "../imports/components/organizations/create.jsx";
 import OrganizationShowScreen from "../imports/components/organizations/show.jsx";
 import GameHubScreen from "../imports/components/games/hub.jsx";
-import MatchShowScreen from "../imports/components/events/brackets/match/show.jsx";
 import PrivacyPolicyScreen from "../imports/components/public/privacy.jsx";
 import ForgotPassScreen from "../imports/components/public/forgot_pass.jsx";
 import ResetPassScreen from "../imports/components/public/reset_pass.jsx";
@@ -74,8 +66,6 @@ export const renderRoutes = () => (
       <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
       <Route path="bracket/:id" component={BracketShowScreen} />
       <Route path="bracket/:id/admin" component={BracketAdminScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex/match/:bracket-:round-:match" component={MatchShowScreen} />
-      <Route path="event/:slug/bracket/:bracketIndex/match/:matchId" component={MatchShowScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
       <Route path="admin" component={AdminFunctionScreen} />
@@ -90,10 +80,7 @@ export const renderRoutes = () => (
       <Route path="terms" component={TermsScreen} />
       <Route path="contact" component={ContactScreen} />
       <Route path="faq" component={FaqScreen} />
-      <Route path="event/:slug/publish" component={PublishEventScreen} />
       <Route path="discover" component={EventDiscoveryScreen} />
-      <Route path="games/select" component={GameSelectScreen} />
-      <Route path="event/:slug/checkout" component={CheckoutScreen} />
       <Route path="games/index" component={GamesIndexScreen} />
       <Route path="create" component={CreateRunnableScreen} />
       <Route path="brackets/create" component={CreateBracketScreen} />

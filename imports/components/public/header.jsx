@@ -9,8 +9,6 @@ import Loader from "/imports/components/public/loader.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-import SignUpModal from './signupmodal.jsx';
-import LogInModal from './loginmodal.jsx';
 import SidebarMenu from "../users/sidebar_menu.jsx";
 import GlobalMenu from "/imports/components/public/global_side_nav.jsx";
 import RegModal from "/imports/components/public/reg_modal.jsx";

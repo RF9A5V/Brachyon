@@ -8,7 +8,6 @@ import StartModal from "./start_modal.jsx";
 import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
-import StartBracketAction from "./start.jsx";
 import SingleParticipant from "./single_participant.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
