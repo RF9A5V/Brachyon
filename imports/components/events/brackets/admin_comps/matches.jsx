@@ -25,9 +25,11 @@ export default class MatchList extends ResponsiveComponent {
     return "/images/profile.png";
   }
 
-  getMatchCount(status) {
+  getMatchCount(status, isStream) {
     const bracket = Brackets.findOne();
-    var query = {};
+    var query = {
+      stream: isStream
+    };
     if(status >= 0) {
       query.status = status;
     }
@@ -59,11 +61,31 @@ export default class MatchList extends ResponsiveComponent {
             (() => {
               var matchCounts = [];
               for(var i = 0; i < 4; i ++) {
-                matchCounts.push(this.getMatchCount(i));
+                matchCounts.push(this.getMatchCount(i, false));
               }
               return ["Waiting", "Ready", "Playing", "Complete"].map((t, i) => {
                 return (
                   <div className="col col-1" style={{marginRight: i == 3 ? 0 : 10}}>
+                    <label className="input-label" style={textStyle}>{ t }</label>
+                    <div className="row center x-center" style={{padding: 10, backgroundColor: "#666"}}>
+                      <span style={textStyle}>{ matchCounts[i] }</span>
+                    </div>
+                  </div>
+                )
+              })
+            })()
+          }
+        </div>
+        <div className="row center" style={{marginBottom: 10, padding: `0 25%`}}>
+          {
+            (() => {
+              var matchCounts = [];
+              for(var i = 1; i < 3; i ++) {
+                matchCounts.push(this.getMatchCount(i, true));
+              }
+              return ["On Deck", "Streaming"].map((t, i) => {
+                return (
+                  <div className="col col-1" style={{marginRight: i == 1 ? 0 : 10}}>
                     <label className="input-label" style={textStyle}>{ t }</label>
                     <div className="row center x-center" style={{padding: 10, backgroundColor: "#666"}}>
                       <span style={textStyle}>{ matchCounts[i] }</span>
@@ -142,8 +164,8 @@ export default class MatchList extends ResponsiveComponent {
                             <span style={textStyle}>Status: {(() => {
                               switch(match.status) {
                                 case 0: return "Waiting"
-                                case 1: return "Ready"
-                                case 2: return "Playing"
+                                case 1: return match.stream ? "On Deck" : "Ready"
+                                case 2: return match.stream ? "Streaming" : "Playing"
                                 case 3: return "Complete"
                               }
                             })()}</span>

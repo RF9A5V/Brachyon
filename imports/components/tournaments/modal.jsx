@@ -110,28 +110,26 @@ export default class TournamentModal extends ResponsiveComponent {
             })
           }
         </div>
-        {
-          Events.findOne() ? (
-            <div className="row center">
-              <button className={opts.buttonClass} onClick={ () => {
-                var event = Events.findOne();
-                var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                if(brackIndex < 0) {
-                  return;
-                }
-                browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.bracket}-${this.props.round}-${this.props.index}`)
-              }}>View</button>
-            </div>
-          ) : (
-            ""
-          )
-        }
       </div>
     )
   }
 
   onMatchStart() {
     Meteor.call("match.start", this.props.id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
+  onMatchUnstart() {
+    Meteor.call("match.unstart", this.props.id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
+  onMatchQueue() {
+    Meteor.call("match.toggleStream", this.props.id, () => {
       this.props.update();
       this.forceUpdate();
     })
@@ -158,49 +156,93 @@ export default class TournamentModal extends ResponsiveComponent {
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={() => {
         this.props.closeModal()
       }} contentLabel="Match Updater">
-        <div className="row" style={{justifyContent: "flex-end"}}>
-          <FontAwesome className ="pointerChange" name="times" onClick={() => {
-            this.props.closeModal()
-          }} style={{fontSize: opts.iconSize}} />
+        <div className="col" style={{height: "100%"}}>
+          <div className="row" style={{justifyContent: "flex-end"}}>
+            <FontAwesome className ="pointerChange" name="times" onClick={() => {
+              this.props.closeModal()
+            }} style={{fontSize: opts.iconSize}} />
+          </div>
+          <div className="row center" style={{marginBottom: 10}}>
+            <span style={{fontSize: opts.fontSize}}>
+              Status: {
+                (() => {
+                  switch(match.status) {
+                    case 0: return "Waiting"
+                    case 1: return match.stream ? "On Deck" : "Ready"
+                    case 2: return match.stream ? "Streaming" : "Playing"
+                    case 3: return "Complete"
+                  }
+                })()
+              }
+            </span>
+          </div>
+          <div className="col center col-1">
+            {
+              match.winner == null ? (
+                <div>
+                  {
+                    this.updateScoreContent(opts)
+                  }
+                  <div className="col x-center" style={{marginTop: 20}}>
+                    <span style={{fontSize: opts.fontSize}}>Status (Optional)</span>
+                    <hr className="user-divider" />
+                    <div className="row center" style={{width: "100%"}}>
+                      {
+                        match.status == 2 ? (
+                          <button className={opts.buttonClass} onClick={this.onMatchUnstart.bind(this)}>
+                            Unset Match
+                          </button>
+                        ) : (
+                          null
+                        )
+                      }
+                      {
+                        match.status == 1 ? (
+                          [
+                            <button className={opts.buttonClass} style={{flex: match.status == 1 ? 1 : null, marginRight: match.status == 1 ? 20 : 0}} onClick={this.onMatchQueue.bind(this)}>
+                              {
+                                match.stream ? (
+                                  "Remove from Stream"
+                                ) : (
+                                  "Queue for Stream"
+                                )
+                              }
+                            </button>,
+                            <button className={opts.buttonClass} style={{flex: 1}} onClick={this.onMatchStart.bind(this)}>
+                              {
+                                match.stream ? (
+                                  "Start Stream Match"
+                                ) : (
+                                  "Start Match"
+                                )
+                              }
+                            </button>
+                          ]
+
+                        ) : (
+                          null
+                        )
+                      }
+                    </div>
+                  </div>
+                </div>
+              ):(
+                null
+              )
+            }
+            {
+              match.status == 3 ? (
+                <div className="col center x-center" style={{height: "100%"}}>
+                  <div className="row center x-center">
+                    <button className={opts.buttonClass} style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
+                  </div>
+                </div>
+              ) : (
+                null
+              )
+            }
+          </div>
         </div>
-        {
-          match.status == 1 ? (
-            <div className="row center">
-              <button onClick={this.onMatchStart.bind(this)}>Start Match</button>
-            </div>
-          ) : (
-            null
-          )
-        }
-        {
-          match.status == 2 && match.winner == null ? (
-            this.updateScoreContent(opts)
-          ):(
-            null
-          )
-        }
-        {
-          match.status == 3 ? (
-            <div className="col center x-center" style={{height: "100%"}}>
-              <div className="row center x-center">
-                <button className={opts.buttonClass} style={{marginRight: 20}} onClick={this.undoMatch.bind(this)}>Undo</button>
-                {
-                  Events.findOne() ? (
-                    <button className={opts.buttonClass} onClick={ () => {
-                      var event = Events.findOne();
-                      var brackIndex = Instances.findOne().brackets.findIndex(o => { return o.id == Brackets.findOne()._id });
-                      browserHistory.push(`/event/${Events.findOne().slug}/bracket/${brackIndex}/match/${this.props.id}`)
-                    }}>View</button>
-                  ) : (
-                    ""
-                  )
-                }
-              </div>
-            </div>
-          ) : (
-            null
-          )
-        }
       </Modal>
     );
   }

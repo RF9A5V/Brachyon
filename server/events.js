@@ -325,7 +325,8 @@ Meteor.methods({
               players,
               establishedAt: allPlayersPresent ? new Date() : null,
               startedAt: null,
-              status: allPlayersPresent ? 1 : 0
+              status: allPlayersPresent ? 1 : 0,
+              stream: false
             });
             obj.id = match;
             return obj;
