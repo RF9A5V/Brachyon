@@ -11,7 +11,6 @@ import TermsScreen from '../imports/components/public/footer/terms.jsx'
 import ContactScreen from '../imports/components/public/footer/contact.jsx';
 import FaqScreen from "../imports/components/public/faq.jsx";
 import ShowUserScreen from '../imports/components/users/show.jsx';
-import EditEventScreen from '../imports/components/events/edit.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
