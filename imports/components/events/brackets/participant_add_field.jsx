@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
-import StartBracketAction from "./admin_comps/start.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import ResetModal from "./admin_comps/reset_modal.jsx";

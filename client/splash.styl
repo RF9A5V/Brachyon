@@ -13,33 +13,9 @@
   top 0
   opacity 0.4
   user-drag none
-  user-select none
-  -moz-user-select none
-  -webkit-user-drag none
-  -webkit-user-select none
-  -ms-user-select none
   pointer-events none
   background url('/images/bg.jpg') center center no-repeat
-  -webkit-background-size cover
-  -moz-background-size cover
-  -o-background-size cover
   background-size cover
-
-.logo-background
-  position fixed
-  width 100%
-  height 100%
-  left 0
-  top 0
-  opacity 0.08
-  user-drag none
-  user-select none
-  -moz-user-select none
-  -webkit-user-drag none
-  -webkit-user-select none
-  -ms-user-select none
-  pointer-events none
-  background url('/images/logo.png') center center no-repeat
 
 .main-content
   z-index 1
@@ -69,20 +45,6 @@
 	padding-bottom 10px
 
 
-.credential-modal
-  width 30%
-  height 50%
-  margin 0 auto
-  background-color rgba(0, 0, 0, 0.9)
-  padding 20px
-  box-sizing border-box
-  z-index 1
-  -webkit-animation-name animcred
-  -webkit-animation-duration 0.4s
-  animation-name animcred
-  animation-duration 0.4s
-
-
 @-webkit-keyframes animcred
     from opacity 0 display none width 50% height 100%
     to  opacity 1 display inline width 30% height 50%
@@ -91,13 +53,6 @@
 @keyframes animcred
     from opacity 0 display none width 50% height 100%
     to opacity 1 display inline width 30% height 50%
-
-
-.discover-box
-  width 100%
-  display flex
-  justify-content center
-
 
 .discover
   border 2px solid #ccc
@@ -116,11 +71,6 @@
   vertical-align middle
   padding-right 3px
 
-
-.credential-modal:focus
-  outline none
-
-
 .credential-overlay, .overlay-only
   position fixed
   top 0
@@ -134,14 +84,3 @@
 
 .overlay-only
   background-color rgba(0,0,0,0.8)
-
-// .fb:not(.inactive):hover
-//   -moz-box-shadow 0 0 10px #3B5998
-// 	-webkit-box-shadow 0 0 10px #3B5998
-// 	box-shadow 0 0 10px #3B5998
-
-
-// .gplus:not(.inactive):hover
-//   -moz-box-shadow 0 0 10px #f44336
-// 	-webkit-box-shadow 0 0 10px #f44336
-// 	box-shadow 0 0 10px #f44336

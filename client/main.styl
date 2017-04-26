@@ -24,41 +24,6 @@ button:focus
 figure
   margin: 0
 
-.bracket-line-h
-  height 5px;
-  width 20px;
-  background-color white;
-
-.bracket-line-v
-  width 5px
-  background-color white
-  position absolute
-  right 0
-
-
-.match-block
-  width 150px
-  min-height 50px
-  margin 40px 0px
-  position relative
-  text-align left
-
-
-.match-participant
-  padding 10px 5px
-  width: 100%
-
-.match-participant span
-  border solid 2px white
-  padding 5px
-  font-size 12px
-  width calc(100% - 30px)
-  display inline-block
-  overflow-x hidden
-  white-space nowrap
-  text-overflow ellipsis
-
-
 .marquee
   overflow-x hidden
   overflow-y hidden
@@ -73,22 +38,11 @@ figure
   to    { text-indent: -120% }
 }
 
-.footer-button
-  width 100px
-  height 100%
-  letter-spacing: 1px;
-  display flex
-  justify-content center
-  align-items center
-
 .footer-bar.mobile
   height 126px
 
 .pointerChange
   cursor:pointer
-
-.match-highlight:hover
-  box-shadow 0 0  10px  white
 
 .reset-highlight
   border-color #FF6000
@@ -96,29 +50,8 @@ figure
 .reset-highlight:hover
   box-shadow 0 0 10px  #FF6000
 
-.match-highlight:hover .marquee
-  animation marquee 5s linear infinite
-
-.bracket-match-spacing
-  margin-bottom 40px
-
 .round-spacing
   min-width 186px;
-
-.create-mod
-  width 800px
-  backgroud-color black
-
-.match-active
-  cursor pointer
-
-.match-participant:first-child
-  border-bottom solid 5px white
-  margin-top -10px
-
-.match-participant:last-child
-  margin-bottom -15px
-  margin-top 5px
 
 .spacing
   margin-right 18px
@@ -126,16 +59,6 @@ figure
 
 .start-button-hide
   display none
-
-.inline-button
-  display inline-block
-
-.logistic-layout
-  border: solid
-  width: 80%
-  margin 0 auto
-  margin-top 20px
-  margin-bottom 20px
 
 .button-score
   font-size 24px
@@ -151,17 +74,6 @@ figure
   flex-flow column
   min-height calc(100vh - 100px)
   position: relative;
-
-.participant-active
-  color red
-  font-size 25px
-  cursor pointer
-
-
-.participant-inactive
-  color white
-  font-size 25px
-  cursor pointer
 
 .content
   margin-bottom 50px
@@ -329,29 +241,6 @@ label
   margin-right 10px
 
 
-.custom-file-upload
-  border 1px solid #ccc
-  display inline-block
-  padding 6px 12px
-  cursor pointer
-
-
-.font-stretch-big
-  font-size calc(2vw  2vmin)
-
-
-.font-stretch-mid
-  font-size calc(0.5vw  0.5vmin  0.1vh)
-
-
-.font-stretch-small
-  font-size calc(0.5vw  0.5vmin)
-
-
-.bold
-  font-weight bold
-
-
 /* Hacky thing to remove Chrome backgrounds for autofills */
 input-webkit-autofill
   -webkit-box-shadow none
@@ -422,26 +311,6 @@ textarea
 textarea:focus
   outline none
 
-
-.hover-block
-  position absolute
-  display flex
-  z-index 3
-
-
-.hover-block-arrow
-  width 0
-  height 0
-  margin-top 20px
-  border-style solid
-  border-width 12.5px 21.7px 12.5px 0
-  border-color transparent #111 transparent transparent
-
-
-.hover-block-content
-  background-color #111
-  padding 10px
-
 .accordion-base
   margin-bottom 20px
 
@@ -457,7 +326,6 @@ textarea:focus
 .accordion-content
   background-color #666
   padding: 10px
-
 
 label
   margin-bottom 15px
@@ -570,6 +438,9 @@ label
 +below(480px)
   .grabbing > *, .grab > *
     overflow: auto !important
+
+.template-container
+  z-index 2
 
 .sidebar
   z-index 5 !important

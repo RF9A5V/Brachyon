@@ -1,6 +1,6 @@
 import Instances from "/imports/api/event/instance.js";
 import Leagues from "/imports/api/leagues/league.js";
-import OrganizeSuite from "/server/tournament_api.js";
+import OrganizeSuite from "/imports/decorators/organize.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
 Meteor.methods({
