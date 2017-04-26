@@ -132,16 +132,21 @@ export default class RegisterButton extends Component {
 
   render() {
     var pIndex = (this.props.bracketMeta.participants || []).findIndex((p) => {
-      return p.id == Meteor.userId() && Meteor.userId() == null;
+      return p.id == Meteor.userId();
     });
     var instance = Instances.findOne();
     return (
       <div>
         <button style={this.props.style} onClick={() => {
-          pIndex >= 0 ? this.unregister() : this.register();
+          if(pIndex < 0 || !Meteor.userId()) {
+            this.register();
+          }
+          else {
+            this.unregister();
+          }
         }}>
           {
-            pIndex >= 0 ? (
+            pIndex >= 0 && Meteor.userId() ? (
               "Unregister"
             ) : (
               "Register"

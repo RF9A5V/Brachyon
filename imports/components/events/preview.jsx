@@ -12,7 +12,6 @@ import DescriptionPage from "./preview/slides/description.jsx";
 import BracketOverview from "./preview/slides/bracket_overview.jsx";
 import BracketDetails from "./preview/slides/bracket_details.jsx";
 
-import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";

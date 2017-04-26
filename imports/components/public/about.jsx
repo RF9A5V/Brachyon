@@ -4,8 +4,6 @@ import FontAwesome from 'react-fontawesome';
 import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
 
-import SignUpModal from './signupmodal.jsx';
-import LogInModal from './loginmodal.jsx';
 import BlockContainer from '/imports/components/events/discover/block_container.jsx';
 import AltBlockContainer from "/imports/components/generic/block_container.jsx";
 

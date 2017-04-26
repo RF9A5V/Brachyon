@@ -19,9 +19,9 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -258,7 +258,7 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id && bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim") {
+    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
       defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
@@ -286,7 +286,7 @@ class BracketShowScreen extends Component {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
       })
-      if(registered >= 0) {
+      if(registered >= 0 && Meteor.userId()) {
         items.push({
           name: "Unregister",
           icon: "user-times",
@@ -307,14 +307,14 @@ class BracketShowScreen extends Component {
           name: "Register",
           icon: "user-plus",
           action: () => {
-            Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
-              if(err) {
-                toastr.error(err.reason);
-              }
-              else {
-                toastr.success("Registered for event!");
-              }
-            })
+            if(Meteor.userId()) {
+              this.registerUser();
+            }
+            else {
+              this.setState({
+                open: true
+              })
+            }
           }
         })
       }
@@ -346,6 +346,17 @@ class BracketShowScreen extends Component {
     return items;
   }
 
+  registerUser() {
+    Meteor.call("events.registerUser", Events.findOne()._id, this.props.params.bracketIndex || 0, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Registered for event!");
+      }
+    })
+  }
+
   render() {
     if(!this.props.ready) {
       return (
@@ -361,6 +372,7 @@ class BracketShowScreen extends Component {
       <div style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
         <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
+        <RegModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} onSuccess={this.registerUser.bind(this)} />
       </div>
     );
   }

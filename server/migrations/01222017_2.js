@@ -1,5 +1,5 @@
 import Matches from "/imports/api/event/matches.js";
-import OrganizeSuite from "/server/tournament_api.js";
+import OrganizeSuite from "/imports/decorators/organize.js";
 
 Migrations.add({
   version: 2,
@@ -17,7 +17,7 @@ Migrations.add({
         }
       ]
     });
-    
+
     bracketInstances.forEach(i => {
       i.brackets.forEach(idContainer => {
         var bracket = Brackets.findOne(idContainer.id);
