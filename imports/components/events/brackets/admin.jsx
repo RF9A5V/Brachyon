@@ -3,14 +3,11 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { browserHistory } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
-
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import ParticipantAction from "./admin_comps/participants.jsx";
 import AdvancedAction from "./admin_comps/advanced_action.jsx";
 import LeaderboardAction from "./admin_comps/leaderboard.jsx";
-import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import BracketAction from "../show/bracket.jsx";
 import BracketOptions from "./admin_comps/options.jsx";
 import BracketEdit from "./admin_comps/bracket.jsx";

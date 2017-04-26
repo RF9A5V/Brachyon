@@ -17,6 +17,7 @@ export default class LogInScreen extends ResponsiveComponent {
         toastr.success("Successfully logged in!", "Success!");
         if(this.props.onSuccess) {
           this.props.onSuccess();
+          this.props.onClose();
         }
         else {
           browserHistory.push("/discover");

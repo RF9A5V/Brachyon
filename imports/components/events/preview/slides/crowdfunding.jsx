@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
-import PaymentContainer from "../../crowdfunding/payment_container.jsx";
-import SkillTree from "../stretch.jsx";
-import TierPaymentContainer from "../tier_payment_container.jsx";
 import CFModal from "../cf_modal.jsx";
 import Loading from "/imports/components/public/loading.jsx";
 import RewardTooltip from "../reward_tooltip.jsx";
