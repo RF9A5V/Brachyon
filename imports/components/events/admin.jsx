@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { withRouter, browserHistory } from "react-router"
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import Main from "./modules/main.jsx";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";

@@ -1,4 +1,4 @@
-var stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
+var stripe = {};
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 import Games from "/imports/api/games/games.js";
 
