@@ -33,6 +33,7 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
           toastr.success("Successfully created your account!", "Success!");
           if(this.props.onSuccess) {
             this.props.onSuccess();
+            this.props.onClose();
           }
           else {
             browserHistory.push('/discover');
