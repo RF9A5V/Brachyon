@@ -57,6 +57,7 @@ Meteor.methods({
           updateObj[`brackets.${bracketIndex}.name`] = b.name;
           updateObj[`brackets.${bracketIndex}.game`] = b.game;
           updateObj[`brackets.${bracketIndex}.format`] = b.format;
+          updateObj[`brackets.${bracketIndex}.options`] = b.options;
         }
       });
       if(Object.keys(updateObj).length > 0) {
