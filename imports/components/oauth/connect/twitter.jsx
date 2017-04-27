@@ -6,12 +6,13 @@ export default class TwitterConnect extends Component {
   onClick(e) {
     e.preventDefault();
     Meteor.linkWithTwitter({
-    }, function(err){
+    }, (err) => {
       if(err){
         toastr.error(err.reason, "Error!");
       }
       else {
         toastr.success("Integrated with Twitter!", "Success!");
+        this.forceUpdate();
       }
     })
   }
@@ -28,7 +29,19 @@ export default class TwitterConnect extends Component {
     }
     else {
       return (
-        <div>Already connected to Twitter!</div>
+        <button onClick={() => {
+          Meteor.call("user.unlinkTwitter", (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              toastr.success("Successfully unlinked Twitter account!");
+              this.forceUpdate();
+            }
+          })
+        }}>
+          Unlink Account
+        </button>
       )
     }
   }
