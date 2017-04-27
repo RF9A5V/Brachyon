@@ -42,8 +42,8 @@ export default class OptionsModal extends ResponsiveComponent {
 
     const setAlias = () => {
       const value = this.refs.alias.value;
-      if(value.length < 3) {
-        return toastr.error("Alias name has to be greater than 3 characters.");
+      if(value.length == 0) {
+        return toastr.error("You must provide an alias.");
       }
       Meteor.call("events.brackets.setAlias", Instances.findOne()._id, this.props.index, this.props.participant.alias, value, (err) => {
         if(err) {

@@ -1,12 +1,4 @@
-var stripe;
-if(Meteor.isDevelopment) {
-  stripe = StripeAPI(Meteor.settings.private.stripe.testSecretKey);
-}
-else {
-  // Failsafe for keeping from live.
-  // Implement when tested on localhost.
-  stripe = {};
-}
+var stripe = {};
 
 Meteor.methods({
   "tickets.charge"(instanceId, index, userId) {

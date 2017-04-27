@@ -19,15 +19,17 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
+import Games from "/imports/api/games/games.js";
 
 class BracketShowScreen extends Component {
 
@@ -62,8 +64,8 @@ class BracketShowScreen extends Component {
 
   populateMetaTags() {
     var event = Events.findOne();
-    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
-    var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
+    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    var title = event ? event.details.name + (bracket.name ? ` - ${bracket.name}` : "") : bracket.name || formatter(bracket.format.baseFormat);
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
     var url = window.location.href;
@@ -137,7 +139,7 @@ class BracketShowScreen extends Component {
       default:
         subs = [
           {
-            content: BracketAction,
+            content: BracketPanel,
             args
           }
         ];
@@ -256,7 +258,7 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id) {
+    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
       defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
@@ -269,19 +271,22 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
-    items.push({
-      name: "Back to Event",
-      icon: "arrow-left",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
+    const event = Events.findOne();
+    if(event) {
+      items.push({
+        name: "Back to Event",
+        icon: "arrow-left",
+        action: () => {
+          browserHistory.push("/event/" + Events.findOne().slug);
+        }
+      });
+    }
 
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
       })
-      if(registered >= 0) {
+      if(registered >= 0 && Meteor.userId()) {
         items.push({
           name: "Unregister",
           icon: "user-times",
@@ -302,14 +307,14 @@ class BracketShowScreen extends Component {
           name: "Register",
           icon: "user-plus",
           action: () => {
-            Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
-              if(err) {
-                toastr.error(err.reason);
-              }
-              else {
-                toastr.success("Registered for event!");
-              }
-            })
+            if(Meteor.userId()) {
+              this.registerUser();
+            }
+            else {
+              this.setState({
+                open: true
+              })
+            }
           }
         })
       }
@@ -341,6 +346,17 @@ class BracketShowScreen extends Component {
     return items;
   }
 
+  registerUser() {
+    Meteor.call("events.registerUser", Events.findOne()._id, this.props.params.bracketIndex || 0, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Registered for event!");
+      }
+    })
+  }
+
   render() {
     if(!this.props.ready) {
       return (
@@ -353,9 +369,10 @@ class BracketShowScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20}}>
+      <div style={{padding: 10}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
         <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
+        <RegModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} onSuccess={this.registerUser.bind(this)} />
       </div>
     );
   }

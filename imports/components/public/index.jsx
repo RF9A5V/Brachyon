@@ -27,7 +27,7 @@ export default class LandingScreen extends ResponsiveComponent {
     }
     return (
       <div className="landing-screen">
-        <div className="img-background"></div>
+        <div className="img-background noselect"></div>
         <div className="main-content" id="main-content">
           <div className="row center x-center" style={{marginBottom: opts.buttonPadding}}>
             <Loader width={opts.imgDim} animate={false} />
@@ -50,10 +50,6 @@ export default class LandingScreen extends ResponsiveComponent {
               }}>
                 Sign Up
               </button>
-              {
-              // <LogInModal />
-              // <SignUpModal />
-              }
             </div>
             <Link to="/discover" className="discover row center x-center" style={{width: "100%", padding: `calc(${opts.buttonPadding} / ${opts.mobile ? 1 : 2})`, marginTop: 0}}>
               <span className="fa fa-compass compass" style={{fontSize: opts.fontSize}}></span>

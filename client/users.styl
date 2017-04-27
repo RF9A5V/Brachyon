@@ -1,38 +1,10 @@
-.user-details
-  background-color: #222;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 40px 20px;
-  padding-top: 30px;
-  box-sizing: border-box;
-
-
-.user-details > *
-  margin-bottom: 20px;
-
-
-.event-details
-  padding: 0 50px;
-  box-sizing: border-box;
-  display flex
-  flex-direction column
-  margin-bottom 30px
-
-
-.event-list
-  display flex
-  flex-wrap wrap
-  margin-top 20px
-
-
-.event-block-container, .bracket-container
+.event-block-container
   display flex
   flex-wrap wrap
   position relative
 
 
-.event-block, .bracket-block
+.event-block
   width calc((100% - 20px) / 3)
   position relative
   margin-bottom 10px
@@ -72,12 +44,6 @@
   border-bottom none
   box-sizing border-box
 
-.bracket-block span
-  position absolute
-  left 20px
-  bottom 20px
-  background-color rgba(0, 0, 0, 0.7)
-
 
 .event-block-title
   color white
@@ -110,82 +76,12 @@
 .event-block-nav .fa:last-child
   margin-right 0
 
-.event-display
-  height calc(33vh - 40px)
-  margin-top 40px
-
-.event-display-img
-  height 100%
-  width auto
-  float left
-  margin-right 2.5%
-
-
-.event-display-details
-  float left
-  width 45%
-
-
-.event-title
-  font-weight bold
-  font-size 24px
-  margin-bottom 10px
-
 .promoted-event-block
   width 50.5%
   +between(1000px, 1400px)
     width 80%
   +below(1000px)
     width 100%
-
-.description-container
-  margin-bottom 20px
-  line-height 1.5em
-
-
-.description-container img
-  margin 0 auto
-  display block
-  max-width 100%
-  height auto
-
-ul.error-container
-  padding 10px
-  border solid white 2px
-  display inline-block
-  margin 20px
-  max-width 33%
-  list-style-type none
-
-
-.error-container li
-  margin-bottom 10px
-  line-height 1.2em
-
-
-.profile-photo
-  width 200px
-  height 200px
-  border-radius 100%
-  position relative
-
-
-.image-overlay
-  width 100%
-  height 100%
-  border-radius 100%
-  background-color rgba(0, 0, 0, 0.7)
-  position absolute
-  top 0
-  left 0
-  display flex
-  justify-content center
-  align-items center
-
-
-.image-overlay:hover
-  cursor pointer
-
 
 .user-divider
   width 75%
@@ -200,7 +96,7 @@ ul.error-container
   margin-right 10px
   border-color rgba(255,96,0,0.1)
 
-  
+
 .user-tab:hover
   cursor pointer
   -webkit-transition border-bottom 0.5s ease-out
@@ -208,7 +104,7 @@ ul.error-container
   -o-transition border-bottom 0.5s ease-out
   transition border-bottom 0.5s ease-out
   border-bottom rgba(255,96,0,0.5) 2px solid
-   
+
 .user-tab:focus
    color white
 
@@ -217,10 +113,9 @@ ul.error-container
 
 .user-template
   background-color: #222
-  
+
 .blue:hover
   border-color #00BDFF
-  
+
 .orange:hover
   border-color #FF6000
-

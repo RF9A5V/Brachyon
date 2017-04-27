@@ -9,7 +9,7 @@ Meteor.methods({
     }
     var event = Events.findOne({instances: id});
     var user = Meteor.users.findOne({username: alias});
-    if(event.league) {
+    if(event && event.league) {
       var league = Leagues.findOne(event.league);
       var eventIndex = league.events.indexOf(event.slug);
       Leagues.update(event.league, {
@@ -27,27 +27,6 @@ Meteor.methods({
       // $unset: {
       //   [`tickets.payables.${user._id}`]: 1
       // }
-    })
-  },
-  "brackets.removeParticipant"(id, alias) {
-    Instances.update(id, {
-      $pull: {
-        [`brackets.0.participants`]: {
-          alias
-        }
-      }
-    })
-  },
-  "events.brackets.startBracket"(id, index) {
-    var event = Events.findOne(id);
-    var instance = Instances.findOne(event.instances[event.instances.length - 1]);
-    if(!event) {
-      throw new Meteor.Error(404, "Event not found.");
-    }
-    Instances.update(instance._id, {
-      $set: {
-        [`brackets.${index}.inProgress`]: true
-      }
     })
   },
   "events.brackets.updateMatchScore"(id, useP1, value) {
