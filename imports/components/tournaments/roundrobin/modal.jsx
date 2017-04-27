@@ -22,10 +22,11 @@ export default class RoundModal extends Component {
     }
     var match = this.getMatch();
     var multi = inc === true ? 1 : -1;
-    var scoreOne = Math.max(match.players[0].score + (fieldToUpdate == "p1" ? 1 * multi : 0), 0);
-    var scoreTwo = Math.max(match.players[1].score + (fieldToUpdate == "p2" ? 1 * multi : 0), 0);
-    var ties = Math.max(match.ties + (fieldToUpdate == "ties" ? 1 * multi : 0), 0);
+    var scoreOne = fieldToUpdate == "p1" ? multi : 0;
+    var scoreTwo = fieldToUpdate == "p2" ? multi : 0;
+    var ties = fieldToUpdate == "ties" ? multi : 0;
     this.state.active = true;
+    console.log(scoreOne, scoreTwo);
     Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, scoreOne, scoreTwo, ties, (err) => {
 
       this.state.active = false;

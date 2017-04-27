@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
-import StartBracketAction from "./admin_comps/start.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import ResetModal from "./admin_comps/reset_modal.jsx";
@@ -121,7 +120,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
   addParticipant(alias, id) {
 
     const cb = () => {
-      Meteor.call("events.addParticipant", Events.findOne()._id, this.props.index, id, alias, true, (e) => {
+      Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
         if(e) {
           toastr.error(e.reason);
         }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import OverviewPanel from "./hubs/overview.jsx";
 
 import Games from "/imports/api/games/games.js";
@@ -70,15 +69,4 @@ export default class GameHubScreen extends TrackerReact(Component) {
       </div>
       )
   }
-  // render() {
-  //   if(!this.state.game.ready()) {
-  //     return (
-  //       <div>
-  //       </div>
-  //     )
-  //   }
-  //   return (
-  //     <TabController items={this.items()} componentHeader={this.componentHeader()} extra={"dont-show"}/>
-  //   )
-  // }
 }

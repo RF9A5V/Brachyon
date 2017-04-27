@@ -8,7 +8,6 @@ import StartModal from "./start_modal.jsx";
 import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
 
-import StartBracketAction from "./start.jsx";
 import SingleParticipant from "./single_participant.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
@@ -141,7 +140,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
         <div className="col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
           {
-            this.state.participants.map((participant, index) => {
+            (this.state.participants || []).map((participant, index) => {
               return(<SingleParticipant
                 participant={participant}
                 completed={this.state.completed} index={index} onCheckIn={this.onUserCheckIn.bind(this)}

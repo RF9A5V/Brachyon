@@ -21,23 +21,6 @@ Meteor.publish("event_participants", (slug) => {
   }
 })
 
-Meteor.publish("event_sponsors", (slug) => {
-  var event = Events.findOne({slug: slug});
-  if(event.crowdfunding && event.crowdfunding.sponsors) {
-    var userIds = event.crowdfunding.sponsors.map(obj => {
-      return obj.id;
-    });
-    return Meteor.users.find({
-      _id: {
-        $in: userIds
-      }
-    });
-  }
-  else {
-    return Meteor.users.find({ _id: null })
-  }
-})
-
 Meteor.publish("bracket", (eventID, bracketIndex) => {
   var event = Events.findOne(eventID);
   if(!event) {
@@ -89,10 +72,6 @@ Meteor.publish('userEvents', (id) => {
     Instances.find({ _id: { $in: instances } })
   ];
 })
-
-Meteor.publish("profileImage", (id) => {
-  return ProfileImages.find({_id: id});
-});
 
 Meteor.smartPublish("discoverEvents", () => {
   var events = Events.find({published: true});

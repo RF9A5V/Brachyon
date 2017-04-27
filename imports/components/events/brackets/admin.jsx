@@ -3,14 +3,11 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { browserHistory } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
-
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import ParticipantAction from "./admin_comps/participants.jsx";
 import AdvancedAction from "./admin_comps/advanced_action.jsx";
 import LeaderboardAction from "./admin_comps/leaderboard.jsx";
-import EditStaffAction from "./admin_comps/edit_staff.jsx";
 import BracketAction from "../show/bracket.jsx";
 import BracketOptions from "./admin_comps/options.jsx";
 import BracketEdit from "./admin_comps/bracket.jsx";
@@ -22,6 +19,8 @@ import MatchList from "./admin_comps/matches.jsx";
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
 import Toggle from "/imports/components/tournaments/double/toggle.jsx";
+
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
 import Brackets from "/imports/api/brackets/brackets.js";
 
@@ -93,7 +92,7 @@ class BracketAdminScreen extends Component {
 
   bracketItem(bracket, index, rounds) {
     var subs;
-    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [];
     var partMap = {};
     participantList.forEach((p, i) => {
       partMap[p.alias] = i + 1;
@@ -160,7 +159,7 @@ class BracketAdminScreen extends Component {
 
   matchesItem(bracket) {
     var partMap = {};
-    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex].participants || [];
+    const participantList = Instances.findOne().brackets[this.props.params.bracketIndex || 0].participants || [];
     participantList.forEach((p, i) => {
       partMap[p.alias] = i + 1;
     })
@@ -273,9 +272,10 @@ class BracketAdminScreen extends Component {
     }
 
     var rounds;
-    if(bracket.participants && bracket.participants.length > 3) {
+    const format = bracket.format.baseFormat;
+    if((format == "single_elim" || format == "double_elim") && bracket.participants && bracket.participants.length > 3) {
       if(!bracket.id) {
-        switch(bracket.format.baseFormat) {
+        switch(format) {
           case "single_elim": rounds = OrganizeSuite.singleElim(bracket.participants || []); break;
           case "double_elim": rounds = OrganizeSuite.doubleElim(bracket.participants || []); break;
           default: break;
@@ -330,6 +330,10 @@ class BracketAdminScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
+    if(format == "swiss" || format == "round_robin" && bracket.id) {
+      var rounds = Brackets.findOne().rounds;
+      defaultItems.push(this.bracketItem(bracket, index, rounds));
+    }
     defaultItems.push(this.participantItem(bracket));
     if (bracket.format.baseFormat == "swiss")
       defaultItems.push(this.advancedItem(bracket));
@@ -353,15 +357,44 @@ class BracketAdminScreen extends Component {
   }
 
   actions() {
-    return [
-      {
+    var actions = [];
+    const event = Events.findOne();
+    if(event) {
+      actions.push({
         name: "Back To Event",
         icon: "arrow-left",
         action: () => {
           browserHistory.push("/event/" + Events.findOne().slug);
         }
+      })
+    }
+    actions.push({
+      name: "Short URL",
+      icon: "link",
+      action: (e) => {
+        if(!this.state.url) {
+          var path = window.location.pathname;
+          path = path.substring(0, path.indexOf("/admin"));
+          Meteor.call("generateShortLink", path, (err, data) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              this.setState({
+                open: true,
+                url: data
+              })
+            }
+          });
+        }
+        else {
+          this.setState({
+            open: true
+          })
+        }
       }
-    ]
+    })
+    return actions;
   }
 
   render() {
@@ -373,6 +406,7 @@ class BracketAdminScreen extends Component {
     return (
       <div style={{padding: 10, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
       </div>
     );
   }
