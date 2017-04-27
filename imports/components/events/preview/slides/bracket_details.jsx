@@ -30,8 +30,16 @@ class BracketDetails extends ResponsiveComponent {
     var text = "";
     var icon = "circle";
     if(!bracket.id) {
-      text = "Registration Open";
-      icon = "clock-o";
+      if(bracket.options && bracket.options.limit) {
+        const remainCount = bracket.options.limit - bracket.participants.length;
+        text = `${remainCount || "No"} Slot${remainCount == 1 ? "" : "s"} Remaining!`;
+        icon = "users";
+      }
+      else {
+        text = "Registration Open";
+        icon = "clock-o";
+      }
+
     }
     else if(!bracket.isComplete) {
       text = "Running";
