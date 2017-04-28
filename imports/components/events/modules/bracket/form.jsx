@@ -26,13 +26,17 @@ export default class BracketForm extends ResponsiveComponent {
     }
     var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
-      this.state = {
+      this.state.game = {
         id: game._id,
         gameName: game.name,
         bannerUrl: game.bannerUrl
       }
     }
+    else {
+      this.state.game = {}
+    }
     this.state.format = subFormat || "NONE"
+    this.state.name = props.name || "";
   }
 
   componentWillReceiveProps(props) {
@@ -47,26 +51,16 @@ export default class BracketForm extends ResponsiveComponent {
     this.state.format = subFormat || "NONE"
     var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
-      this.state.id = game._id;
-      this.state.gameName = game.name;
-      this.state.bannerUrl = game.bannerUrl;
+      this.state.game.id = game._id;
+      this.state.game.gameName = game.name;
+      this.state.game.bannerUrl = game.bannerUrl;
     }
 
     if(props.format) {
       // Only works for basic bracket formats.
       this.refs.format.value = props.format.baseFormat;
     }
-  }
-
-  onGameSelect(game) {
-    if(this.props.onChange) {
-      this.props.onChange(game, { baseFormat: this.refs.format.value });
-    }
-    this.setState({
-      id: game._id,
-      gameName: game.gameName,
-      bannerUrl: game.bannerUrl
-    })
+    this.state.name = props.name || "";
   }
 
   onNameChange() {
@@ -82,11 +76,7 @@ export default class BracketForm extends ResponsiveComponent {
         <div className="col">
           <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
             if(this.props.onChange) {
-              var game = {
-                _id: this.state.id,
-                name: this.state.name,
-                bannerUrl: this.state.bannerUrl
-              }
+              var game = this.state.game;
               this.props.onChange(game, { baseFormat: e.target.value })
             }
           }} style={{fontSize: opts.fontSize}}>
@@ -199,7 +189,7 @@ export default class BracketForm extends ResponsiveComponent {
       }
     }
     return {
-      game: (this.state.game || {})._id,
+      game: (this.state.game || {}).id,
       format,
       name: this.refs.name.value
     }
@@ -233,7 +223,7 @@ export default class BracketForm extends ResponsiveComponent {
     return (
       <div className={opts.direction} style={{backgroundColor: "#111"}}>
         {
-          this.state.bannerUrl ? (
+          this.state.game && this.state.game.bannerUrl ? (
             <div style={{textAlign: "center", position: "relative"}}>
               <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.bannerUrl} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
@@ -252,13 +242,13 @@ export default class BracketForm extends ResponsiveComponent {
             }
           </div>
           <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
-          <input className={opts.inputClass} ref="name" defaultValue={this.props.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+          <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
           <div className="col" style={{position: "relative"}}>
             <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
             <input type="text" className={opts.inputClass} onChange={(e) => {
               const value = e.target.value;
               this.loadGames(value, opts.limit);
-            }} defaultValue={this.state.gameName} style={{marginRight: 0, marginTop: 0}} ref="game" />
+            }} defaultValue={this.state.game.gameName} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
               this.state.gameList ? (
                 <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
@@ -267,8 +257,9 @@ export default class BracketForm extends ResponsiveComponent {
                     return (
                       <GameTemplate {...g} onClick={() => {
                         const game = {
-                          _id: g._id,
-                          name: g.name
+                          id: g._id,
+                          name: g.name,
+                          bannerUrl: g.bannerUrl
                         }
                         this.setState({
                           game,

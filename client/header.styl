@@ -15,6 +15,7 @@ header
   justify-content flex-end
   height 50px
   background rgba(0, 0, 0, 0.9)
+  box-shadow: 0 2px 5px #111;
 
 
 header img
@@ -75,15 +76,6 @@ header img:hover
   transform translateY(0%)
 
 
-.head-credentials
-  display flex
-  flex-direction row-reverse
-
-
-.header-button-margin
-  margin 12px 5px
-
-
 .hub:hover
   cursor pointer
   -webkit-transition border-bottom 0.5s ease-out
@@ -110,30 +102,3 @@ header img:hover
 
 .hub:first-child
   margin-left 0px
-
-.org-sidebar
-  position: fixed
-  height: calc(100vh - 50px);
-  background-color: #111
-  right: 0;
-  top: 50px;
-  padding 0 10px
-
-.org-option
-  padding: 10px
-  padding-right 0;
-
-.org-option img
-  width 50px;
-  height 50px;
-  border-radius: 100%;
-  margin-right: 10px;
-
-.org-option span
-  text-overflow ellipsis
-
-.org-option:hover
-  cursor: pointer
-
-.org-option:hover span
-  color: #AAA

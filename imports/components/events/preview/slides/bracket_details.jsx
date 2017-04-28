@@ -64,7 +64,6 @@ class BracketDetails extends ResponsiveComponent {
       }
       if(bracket.id) {
         tabs.push("Leaderboard");
-        // tabs.push("Bracket");
       }
     }
     return (

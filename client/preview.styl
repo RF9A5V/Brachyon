@@ -1,50 +1,3 @@
-.description-container
-  padding 40px
-
-
-.location-container
-  position fixed
-  top 0
-  padding 20px
-  padding-top 120px
-  background-color #666
-  height 100%
-  box-sizing border-box
-
-
-.tier-block, .ticket-block
-  padding 20px
-  background-color #333
-  margin 10px
-  margin-left 0
-  width 250px
-
-
-.payment-option:hover
-  cursor pointer
-  background-color #333
-
-
-.payment-amount
-  padding 5px
-  font-size 2em
-
-
-.payment-amount:last-child
-  border-top solid 2px white
-
-
-.ticket-modal
-  position absolute
-  right 80px
-  top 10px
-  z-index 2
-  opacity 0.3
-  padding 10px
-
-
-.ticket-modal:hover
-  opacity 1
 
 .preview-nav
   font-size 14px
@@ -54,9 +7,18 @@
   display flex;
   justify-content center;
   align-items: center;
+  box-shadow 0 -2px 5px -5px #111
+
+.preview-nav.active.blue
+  box-shadow 0 -2px 5px -5px #00BDFF
+
+.preview-nav.active.orange
+  box-shadow 0 -2px 5px -5px #FF6000
 
 .preview-nav.active
-  color #FF6000
+  color #111
+  *
+    color #111
 
 .preview-nav:first-child
   margin-left 0
@@ -66,109 +28,3 @@
 
 .preview-nav:hover
   cursor pointer
-
-.bracket
-  margin-right: 20px;
-  margin-bottom: 20px;
-  width: calc((100% - 40px) / 3);
-  min-height: calc((100vw - 40px) * 4 / 9 * 0.8);
-  position: relative
-  +between(500px, 1100px)
-    width: calc((100% - 20px) / 2)
-    min-height: calc((100vw - 20px) / 6 * 4 * 0.8);
-  +below(500px)
-    width: 100%
-    min-height: calc(100vw * 3 / 4 * 0.9)
-    margin-right: 0
-
-.bracket-overlay
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  padding: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-
-.bracket-register-button
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left 20px
-  padding 20px
-  flex 1
-  border solid 2px #FF6000
-
-.bracket-register-button .fa
-  font-size: 32px;
-
-.bracket-view-button
-  padding 20px
-  margin: 0 auto
-  border solid 2px white
-
-.bracket-view-button .fa
-  font-size 32px
-
-.bracket:hover
-  cursor default
-
-.bracket-view-button:hover, .bracket-register-button:hover
-  cursor pointer
-
-.bracket-button
-  bottom 0
-  background-color rgba(0, 0, 0, 0.8)
-  width 100%
-
-.bracket-details
-  display: flex
-  flex-direction: column;
-  width: 50%
-  margin: 0 auto
-  justify-content: center
-  flex: 1
-  min-height 50%
-
-.bracket-detail-row
-  display: flex
-  border-bottom: solid 2px white
-
-.bracket-detail-row:last-child
-  border-bottom: none
-
-.bracket-detail-item
-  display: flex
-  justify-content: center;
-  align-items: center
-  padding: 20px
-  width: 50%
-
-.bracket-detail-item:first-child
-  border-right: solid 2px white
-
-.bracket-detail-item .fa
-  font-size: 38px;
-
-.bracket-detail-item span
-  font-size 16px
-
-+above(1100px)
-  .bracket:nth-child(3n)
-    margin-right 0
-
-+between(500px, 1100px)
-  .bracket:nth-child(2n)
-    margin-right 0
-  .bracket-detail-item .fa
-    font-size 24px
-  .bracket-detail-item span
-    font-size 14px
-  .bracket-details
-    width: 80%
-
-.started
-  background-color rgba(0, 0, 0, 0.6)

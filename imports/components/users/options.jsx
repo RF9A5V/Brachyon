@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import TrackerReact from "meteor/ultimatejs:tracker-react";
 
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import SideTabs from "../public/side_tabs.jsx";
 import UserDetailsPanel from "./options/user_details.jsx";
 import EventOptionsPanel from "./options/event_options.jsx";
 import GameOptionsPanel from "./options/games_played.jsx";

@@ -87,7 +87,7 @@ export default class BlockContainer extends Component {
         <h3 style={{marginBottom: 10}}>{this.props.title || ""}</h3>
         <div className='event-block-container'>
           {
-            (this.props.events.reverse() || []).map((event, i) => {
+            (this.props.events || []).map((event, i) => {
               var e = Events.findOne(event._id);
               var instance = Instances.findOne(event.instances[event.instances.length - 1]) || {};
               var count = (() => {
@@ -141,15 +141,21 @@ export default class BlockContainer extends Component {
                               ""
                             )
                           }
-                          <div className="event-block-admin-button" onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            this.onCloseClick(event);
-                          }} >
-                            <span>
-                              CLOSE
-                            </span>
-                          </div>
+                          {
+                            event.isComplete ? (
+                              null
+                            ) : (
+                              <div className="event-block-admin-button" onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.onCloseClick(event);
+                              }} >
+                                <span>
+                                  CLOSE
+                                </span>
+                              </div>
+                            )
+                          }
                         </div>
                       ) : (
                         ""
@@ -188,9 +194,8 @@ export default class BlockContainer extends Component {
             })
           }
         </div>
-        <RerunModal {...this.state} onClose={() => { this.setState({ open: false, id: null }) }} onComplete={(sub) => {
-          this.state.subs.push(sub);
-          browserHistory.push(`/event/${Events.findOne(this.state.id).slug}`);
+        <RerunModal {...this.state} onClose={() => { this.setState({ open: false, id: null }) }} onComplete={(slug) => {
+          browserHistory.push(`/event/${slug}`);
           this.setState({ open: false, id: null });
 
         }} />

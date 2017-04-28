@@ -62,7 +62,7 @@ export default class SidebarMenu extends ResponsiveComponent {
           <div className="col-1">
             <FontAwesome name={i.icon} style={{width: 50, marginRight: ops.marginRight, fontSize: ops.fontSize}} />
           </div>
-          <span className="col-3" style={{fontSize: ops.fontSize}}>{ i.name }</span>
+          <span className="col-3" style={{fontSize: ops.fontSize, textAlign: "left"}}>{ i.name }</span>
           <div className="col-1"></div>
         </div>
       )
@@ -75,9 +75,9 @@ export default class SidebarMenu extends ResponsiveComponent {
       return null;
     }
     return (
-      <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width, padding: 20}}>
+      <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width}}>
         <div className="col-1">
-          <div className="row" style={{justifyContent: "flex-end"}}>
+          <div className="row" style={{justifyContent: "flex-end", padding: 20}}>
             <FontAwesome name="times" style={{fontSize: ops.fontSize}} onClick={this.props.onRedirect}/>
           </div>
           <div className="col x-center" style={{padding: ops.padding}}>

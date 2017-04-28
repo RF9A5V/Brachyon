@@ -19,13 +19,17 @@ import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.j
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
-import TabController from "/imports/components/public/side_tabs/tab_controller.jsx";
 
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+import RegModal from "/imports/components/public/reg_modal.jsx";
 
 import OrganizeSuite from "/imports/decorators/organize.js";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
+
+import LoaderContainer from "/imports/components/public/loader_container.jsx";
+
+import Games from "/imports/api/games/games.js";
 
 class BracketShowScreen extends Component {
 
@@ -60,25 +64,12 @@ class BracketShowScreen extends Component {
 
   populateMetaTags() {
     var event = Events.findOne();
-    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex];
-
-    if(!event) {
-      this.setState({
-        hasLoaded: true
-      });
-      return;
-    }
-
-    var title = event.details.name + (bracket.name ? ` - ${bracket.name}` : "");
+    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    var title = event ? event.details.name + (bracket.name ? ` - ${bracket.name}` : "") : bracket.name || formatter(bracket.format.baseFormat);
     var format = formatter(bracket.format.baseFormat);
     var img = this.imgOrDefault();
     var url = window.location.href;
-
     generateMetaTags(title, format, img, url);
-
-    this.setState({
-      hasLoaded: true
-    })
   }
 
   participantsItem(bracket) {
@@ -112,7 +103,8 @@ class BracketShowScreen extends Component {
       rounds,
       complete: bracket.isComplete,
       page: "admin",
-      partMap
+      partMap,
+      full: true
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -136,18 +128,18 @@ class BracketShowScreen extends Component {
             name: "Losers",
             ignoreHeader: true,
             args
-          },
-          {
-            content: Toggle,
-            name: "toggle",
-            ignoreHeader: true
           }
+          // {
+          //   content: Toggle,
+          //   name: "toggle",
+          //   ignoreHeader: true
+          // }
         ];
         break;
       default:
         subs = [
           {
-            content: BracketAction,
+            content: BracketPanel,
             args
           }
         ];
@@ -266,7 +258,7 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id) {
+    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
       defaultItems.push(this.matchesItem(bracketMeta));
     }
     return defaultItems;
@@ -279,19 +271,22 @@ class BracketShowScreen extends Component {
 
     var items = [];
 
-    items.push({
-      name: "Back to Event",
-      icon: "arrow-left",
-      action: () => {
-        browserHistory.push("/event/" + Events.findOne().slug);
-      }
-    });
+    const event = Events.findOne();
+    if(event) {
+      items.push({
+        name: "Back to Event",
+        icon: "arrow-left",
+        action: () => {
+          browserHistory.push("/event/" + Events.findOne().slug);
+        }
+      });
+    }
 
     if(!bracketMeta.id) {
       var registered = (bracketMeta.participants || []).findIndex(p => {
         return p.id == Meteor.userId();
       })
-      if(registered >= 0) {
+      if(registered >= 0 && Meteor.userId()) {
         items.push({
           name: "Unregister",
           icon: "user-times",
@@ -312,14 +307,14 @@ class BracketShowScreen extends Component {
           name: "Register",
           icon: "user-plus",
           action: () => {
-            Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
-              if(err) {
-                toastr.error(err.reason);
-              }
-              else {
-                toastr.success("Registered for event!");
-              }
-            })
+            if(Meteor.userId()) {
+              this.registerUser();
+            }
+            else {
+              this.setState({
+                open: true
+              })
+            }
           }
         })
       }
@@ -351,22 +346,35 @@ class BracketShowScreen extends Component {
     return items;
   }
 
+  registerUser() {
+    Meteor.call("events.registerUser", Events.findOne()._id, this.props.params.bracketIndex || 0, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Registered for event!");
+      }
+    })
+  }
+
   render() {
-    if(this.props.ready) {
+    if(!this.props.ready) {
       return (
-        <div style={{padding: 20}}>
-          <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
-          <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
-        </div>
-      );
+        <LoaderContainer ready={this.props.ready} onReady={() => {
+          this.populateMetaTags();
+          this.setState({
+            ready: true
+          })
+        }} />
+      )
     }
-    else {
-      return (
-        <div>
-          Loading...
-        </div>
-      );
-    }
+    return (
+      <div style={{padding: 10}}>
+        <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
+        <RegModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} onSuccess={this.registerUser.bind(this)} />
+      </div>
+    );
   }
 }
 
@@ -374,25 +382,7 @@ const x = createContainer(({params}) => {
   const { slug, bracketIndex } = params;
 
   if(slug) {
-    const eventHandle = Meteor.subscribe("event", slug, {
-      onReady: () => {
-        fbDescriptionParser = (description) => {
-          var startIndex = description.indexOf("<p>");
-          var endIndex = description.indexOf("</p>", startIndex);
-          var tempDesc = description.substring(startIndex + 3, endIndex);
-          if(tempDesc.length > 200) {
-            tempDesc = tempDesc.substring(0, 196) + "...";
-          }
-          return tempDesc;
-        }
-        const event = Events.findOne();
-        var title = event.details.name;
-        var desc = fbDescriptionParser(event.details.description);
-        var img = event.details.bannerUrl || "/images/bg.jpg";
-        var url = window.location.href;
-        generateMetaTags(title, desc, img, url);
-      }
-    });
+    const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
       return {

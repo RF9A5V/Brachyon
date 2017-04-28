@@ -1,19 +1,3 @@
-.bracket-block
-  width 33%
-  border solid 2px #666
-
-
-.bracket-block:hover
-  cursor pointer
-
-
-.bracket-block img
-  width 100%
-  height auto
-
-.bracket-block div
-  padding 20px
-
 .swiss-tabs
   margin-bottom 20px
 
@@ -92,25 +76,6 @@
   color #FF6000
   opacity 1
 
-.marquee
-  overflow-x hidden
-  overflow-y hidden
-  white-space nowrap
-  text-overflow ellipsis
-
-.marquee:hover
-  animation marquee 5s linear infinite
-
-@keyframes marquee {
-  from  { text-indent:  0% }
-  to    { text-indent: -120% }
-}
-
-.button-score
-  font-size 24px
-  padding 10px
-  background-color #333
-
 .participant
   display: flex
   align-items stretch;
@@ -160,6 +125,16 @@
 .match-names
   background-color rgba(0,0,0,0.7)
   z-index 1
-  padding 0 5px
+  padding 0 10px
   margin -20px 0
   font-weight bold
+
+.match-seed
+  font-size: 9px
+  font-weight normal
+
+sup.match-seed
+  margin-right 5px
+
+sub.match-seed
+  margin-left 5px

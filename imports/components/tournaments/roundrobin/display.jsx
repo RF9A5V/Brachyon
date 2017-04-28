@@ -93,7 +93,7 @@ export default class RoundDisplay extends Component {
     var oldrounds = Brackets.findOne().rounds;
     if (!(this.state.wcount == oldrounds[this.state.page - 1].length))
       toastr.error("Not everyone has played! Only " + this.state.wcount + " out of " + oldrounds[this.state.page - 1].length + "!", "Error!");
-    Meteor.call("events.update_roundrobin", this.state.brid, this.state.page - 1, 3, (err) => {
+    Meteor.call("events.update_roundrobin", Brackets.findOne()._id, this.state.page - 1, 3, (err) => {
       if(err){
 
         toastr.error("Couldn't update the round.", "Error!");
@@ -150,6 +150,8 @@ export default class RoundDisplay extends Component {
   render() {
     var bracket = Brackets.findOne();
     var rounds = bracket.rounds;
+    const event = Events.findOne();
+    const instance = Instances.findOne();
 
     var sortedplayers = bracket.players;
     sortedplayers.sort(function(a, b) {
@@ -235,22 +237,26 @@ export default class RoundDisplay extends Component {
           </div>
           <div>
           {
-            this.state.page >= (this.state.recrounds-1) ? (
-              (this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
-                <button onClick={ () => {this.endTourn()} }>
-                  Finish Tournament
-                </button>
+            (event && event.owner == Meteor.userId()) || (instance && instance.owner == Meteor.userId()) ? (
+              this.state.page >= (this.state.recrounds-1) ? (
+                (this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
+                  <button onClick={ () => {this.endTourn()} }>
+                    Finish Tournament
+                  </button>
+                ) : (
+                  ""
+                )
               ) : (
-                ""
-              )
+                this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
+                  <button onClick={ () => {this.newRound()} }>
+                    Advance Round
+                  </button>
+                ) : (
+                  ""
+                )
             ) : (
-              this.state.page == rounds.length && this.state.wcount == rounds[this.state.page - 1].length) ? (
-                <button onClick={ () => {this.newRound()} }>
-                  Advance Round
-                </button>
-              ) : (
-                ""
-              )
+              null
+            )
           }
           </div>
         </div>
