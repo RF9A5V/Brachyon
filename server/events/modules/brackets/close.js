@@ -108,7 +108,6 @@ Meteor.methods({
       place+=placement[i].length-1;
     }
 
-
     Object.keys(obj).forEach(score => {
       var [wins, loss] = score.split("-").map(i => parseInt(i));
       var updateObject = {
@@ -118,9 +117,11 @@ Meteor.methods({
       };
       obj[score].forEach(player => {
         Meteor.users.update(player.id,{$inc:updateObject});
-        var r = wins+"-"+loss
-        var rank = ranking[player.alias];
-        Meteor.users.update(player.id,{$push: {tournaments:{ eventName:Events.findOne(eventID).slug,game:bracket.game,record:r, ranking:rank }}});
+        if (Events.findOne(eventID)){
+          var r = wins+"-"+loss
+          var rank = ranking[player.alias];
+          Meteor.users.update(player.id,{$push: {tournaments:{ eventName:Events.findOne(eventID).slug,game:bracket.game,record:r, ranking:rank }}});
+        }
       })
     });
 
