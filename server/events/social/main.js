@@ -38,17 +38,19 @@ Meteor.methods({
     if(!user.services.facebook) {
       throw new Meteor.Error(404, "You need to integrate Facebook first!");
     }
-    FBGraph.setAccessToken(user.services.facebook.accessToken);
-    var post = {
-      message: "Check out " + event.details.name + " at " + Meteor.absoluteUrl() + "_" + url + " at Brachyon!",
-    }
+
+    FBGraph.setAccessToken(Meteor.settings.public.facebook.testAppId + "|" + Meteor.settings.private.facebook.testAppSecret);
+    FBGraph.post(`/${user.services.facebook.id}/feed`, {
+      message: "Check out " + event.details.name + " at Brachyon!",
+      link: Meteor.absoluteUrl() + "/event/" + event.slug
+    }, (err, res) => {
+      console.log(res);
+    })
+
     Events.update(eventId, {
       $push: {
         "promotion.facebook": user._id
       }
-    });
-    FBGraph.post(user.services.facebook.id + "/feed", post, (err, res) => {
-      console.log(res);
     });
 
   }
