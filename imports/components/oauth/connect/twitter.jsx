@@ -1,20 +1,15 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
+import { connectTwitter } from "/imports/decorators/social_media.js";
+
 export default class TwitterConnect extends Component {
 
   onClick(e) {
     e.preventDefault();
-    Meteor.linkWithTwitter({
-    }, (err) => {
-      if(err){
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success("Integrated with Twitter!", "Success!");
-        this.forceUpdate();
-      }
-    })
+    connectTwitter(_ => {
+      this.forceUpdate();
+    });
   }
 
   render() {
