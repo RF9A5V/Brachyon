@@ -190,7 +190,7 @@ export default class EventTitlePage extends ResponsiveComponent {
           <div className="row">
             {
               instance.brackets ? (
-                <button style={{fontSize: "3em", marginRight: event.stream ? 30 : 0}} onClick={() => {
+                <button className="large-button" style={{marginRight: event.stream ? 30 : 0}} onClick={() => {
                   this.props.pages("Brackets")
                 }}>View Bracket</button>
               ) : (
@@ -199,7 +199,7 @@ export default class EventTitlePage extends ResponsiveComponent {
             }
             {
               event.stream ? (
-                <button style={{fontSize: "3em"}} onClick={() => {
+                <button className="large-button" onClick={() => {
                   this.props.pages("Stream")
                 }}>View Stream</button>
               ) : (

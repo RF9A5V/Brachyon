@@ -1,21 +1,14 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { connectFB } from "/imports/decorators/social_media.js";
 
 export default class FacebookConnect extends Component {
 
   onClick(e) {
     e.preventDefault();
-    Meteor.linkWithFacebook({
-      requestPermissions: ["email", "public_profile", "user_friends", "publish_actions"]
-    }, (err) => {
-      if(err){
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success("Integrated with Facebook!", "Success!");
-        this.forceUpdate();
-      }
-    })
+    connectFB(_ => {
+      this.forceUpdate();
+    });
   }
 
   render() {
