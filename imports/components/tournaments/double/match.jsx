@@ -11,6 +11,10 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 
 export default class MatchBlock extends ResponsiveComponent {
 
+  constructor(props) {
+    super(props);
+  }
+
   bracketLines() {
     var i = this.props.roundNumber;
     var j = this.props.matchNumber;
@@ -43,24 +47,17 @@ export default class MatchBlock extends ResponsiveComponent {
     }
     const id = this.props.match._id || this.props.match.id;
     const data = this.props.matchMap[id];
-    const source = data.source.slice().sort((a, b) => {
-      if(a.lost && !b.lost) {
-        return -1;
-      }
-      else if(!a.lost && b.lost) {
-        return 1;
-      }
-      else if(a.lost && b.lost) {
-        return (a.number - b.number) / Math.abs(a.number - b.number) * -1;
-      }
-      else {
-        return (a.number - b.number) / Math.abs(a.number - b.number);
-      }
-    })
-    var dataSource = source[playerIndex];
-    if(!dataSource) {
-      return "Unknown";
+    const isAllLosers = data.source.every(s => {
+      return s.lost;
+    });
+    var source;
+    if(isAllLosers && this.props.roundNumber % 2 == 1) {
+      source = data.source.slice().reverse();
     }
+    else {
+      source = data.source;
+    }
+    var dataSource = source[playerIndex];
     const number = this.props.matchMap[dataSource.id].number;
     return (dataSource.lost ? "Loser" : "Winner") + " of " + numToAlpha(number);
   }

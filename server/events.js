@@ -1,4 +1,4 @@
-import OrganizeSuite from "./tournament_api.js";
+import OrganizeSuite from "/imports/decorators/organize.js";
 import Notifications from "/imports/api/users/notifications.js";
 import Brackets from "/imports/api/brackets/brackets.js"
 import Leagues from "/imports/api/leagues/league.js";
@@ -946,7 +946,7 @@ Meteor.methods({
       return;
     match.players[0].score += winfirst;
     match.players[1].score += winsecond;
-    match.ties = ties;
+    match.ties += ties;
     var p1 = bracket.pdic[match.players[0].alias];
     var p2 = bracket.pdic[match.players[1].alias];
     bracket.players[p1].score += bracket.score.wins*winfirst + bracket.score.loss*winsecond + bracket.score.ties*ties;
@@ -982,10 +982,16 @@ Meteor.methods({
         players.push({alias: playerarr[x].name, id: playerarr[x].id, score: 0});
         players.push({alias: playerarr[participants.length - x - 1].name, id: playerarr[participants.length - x - 1].id, score: 0});
 
-        obj.id = Matches.insert({ players, ties: 0 });
-        obj.played = false;
+        const allPlayersExist = players.every(p => {
+          return p.alias != null;
+        })
 
-        temp.push(obj);
+        if(allPlayersExist) {
+          obj.id = Matches.insert({ players, ties: 0 });
+          obj.played = false;
+          temp.push(obj);
+        }
+
       }
     }
     var tempb = JSON.parse(JSON.stringify(playerarr));

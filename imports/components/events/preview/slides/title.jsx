@@ -4,7 +4,6 @@ import moment from "moment";
 import { browserHistory } from "react-router";
 import { VelocityComponent } from "velocity-react";
 
-import TicketPurchaseWrapper from "../ticket_purchase_wrapper.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 

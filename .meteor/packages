@@ -24,9 +24,7 @@ ultimatejs:tracker-react
 chrismbeckett:toastr
 lookback:logger
 u2622:persistent-session
-mrgalaxy:stripe
 meteorhacks:async
-secretninjaman:meteor-accounts-stripe-connect
 secretninjaman:link-accounts
 cfs:graphicsmagick
 percolate:synced-cron
@@ -45,7 +43,6 @@ summernote:standalone
 okgrow:analytics
 mdg:seo
 nitrolabs:cdn
-edgee:slingshot
 ostrio:meteor-root
 email
 mrt:smart-publish
@@ -53,3 +50,4 @@ practicalmeteor:mocha
 dburles:factory
 xolvio:cleaner
 practicalmeteor:chai
+meteorhacks:picker

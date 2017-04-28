@@ -32,7 +32,7 @@ export default class ShareOverlay extends ResponsiveComponent {
             <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center x-center">
-            <input type="text" className={opts.inputClass} value={window.location.origin + "/!" + this.props.url} style={{margin: 0, textAlign: "center"}} onFocus={(e) => {
+            <input type="text" className={opts.inputClass} value={window.location.origin + "/_" + this.props.url} style={{margin: 0, textAlign: "center"}} onFocus={(e) => {
               e.target.select();
             }} />
           </div>

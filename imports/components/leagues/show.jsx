@@ -129,7 +129,10 @@ class LeagueShowPage extends Component {
   render() {
     if(!this.state.ready){
       return (
-        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
+        <LoaderContainer ready={this.props.ready} onReady={() => {
+          this.populateMetaTags();
+          this.setState({ready: true})
+        }} />
       )
     }
     return (
@@ -142,25 +145,7 @@ class LeagueShowPage extends Component {
 
 export default createContainer(props => {
   const slug = props.params.slug;
-  const leagueHandle = Meteor.subscribe("league", slug, {
-    onReady: () => {
-      fbDescriptionParser = (description) => {
-        var startIndex = description.indexOf("<p>");
-        var endIndex = description.indexOf("</p>", startIndex);
-        var tempDesc = description.substring(startIndex + 3, endIndex);
-        if(tempDesc.length > 200) {
-          tempDesc = tempDesc.substring(0, 196) + "...";
-        }
-        return tempDesc;
-      }
-      const league = Leagues.findOne();
-      var title = league.details.name;
-      var desc = fbDescriptionParser(league.details.description);
-      var img = league.details.bannerUrl || "/images/bg.jpg";
-      var url = window.location.href;
-      generateMetaTags(title, desc, img, url);
-    }
-  });
+  const leagueHandle = Meteor.subscribe("league", slug);
   return {
     ready: leagueHandle.ready()
   }

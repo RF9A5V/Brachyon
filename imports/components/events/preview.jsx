@@ -12,7 +12,6 @@ import DescriptionPage from "./preview/slides/description.jsx";
 import BracketOverview from "./preview/slides/bracket_overview.jsx";
 import BracketDetails from "./preview/slides/bracket_details.jsx";
 
-import CFPage from "./preview/slides/crowdfunding.jsx";
 import StreamPage from "./preview/slides/stream.jsx";
 
 import Instances from "/imports/api/event/instance.js";
@@ -111,6 +110,24 @@ class PreviewEventScreen extends Component {
     return pages;
   }
 
+  setMetaTags() {
+    var fbDescriptionParser = (description) => {
+      var startIndex = description.indexOf("<p>");
+      var endIndex = description.indexOf("</p>", startIndex);
+      var tempDesc = description.substring(startIndex + 3, endIndex);
+      if(tempDesc.length > 200) {
+        tempDesc = tempDesc.substring(0, 196) + "...";
+      }
+      return tempDesc;
+    }
+    const event = Events.findOne();
+    var title = event.details.name;
+    var desc = fbDescriptionParser(event.details.description);
+    var img = event.details.bannerUrl || "/images/bg.jpg";
+    var url = window.location.href;
+    generateMetaTags(title, desc, img, url);
+  }
+
   imgOrDefault() {
     var event = this.event();
     return event.details.bannerUrl ? event.details.bannerUrl : "/images/bg.jpg";
@@ -119,7 +136,10 @@ class PreviewEventScreen extends Component {
   render() {
     if(!this.state.ready){
       return (
-        <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
+        <LoaderContainer ready={this.props.ready} onReady={() => {
+          this.setMetaTags();
+          this.setState({ready: true})
+        }} />
       )
     }
     var event = this.event();
@@ -132,25 +152,7 @@ class PreviewEventScreen extends Component {
 }
 
 export default createContainer(({params}) => {
-  const eventSub = Meteor.subscribe("event", params.slug, {
-    onReady: () => {
-      fbDescriptionParser = (description) => {
-        var startIndex = description.indexOf("<p>");
-        var endIndex = description.indexOf("</p>", startIndex);
-        var tempDesc = description.substring(startIndex + 3, endIndex);
-        if(tempDesc.length > 200) {
-          tempDesc = tempDesc.substring(0, 196) + "...";
-        }
-        return tempDesc;
-      }
-      const event = Events.findOne();
-      var title = event.details.name;
-      var desc = fbDescriptionParser(event.details.description);
-      var img = event.details.bannerUrl || "/images/bg.jpg";
-      var url = window.location.href;
-      generateMetaTags(title, desc, img, url);
-    }
-  });
+  const eventSub = Meteor.subscribe("event", params.slug);
   const users = Meteor.subscribe("event_participants", params.slug);
   return {
     ready: eventSub.ready() && users.ready()
