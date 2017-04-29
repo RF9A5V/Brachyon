@@ -73,7 +73,7 @@ export default class UserStat extends Component {
 			          <th className="center">Record</th>
 		          </tr>
 	          {
-	            Object.keys(tourney).map(tour =>{
+	            Object.keys(tourney).reverse().map(tour =>{
 	              return(
 	              	<tr>
 	                  <td>{tourney[tour].eventName}</td>
@@ -123,7 +123,7 @@ export default class UserStat extends Component {
 			          <th className="center">Record</th>
 		          </tr>
 	          {
-	            Object.keys(tourney).map(tour =>{
+	            Object.keys(tourney).reverse().map(tour =>{
 	              if(this.state.game == tourney[tour].game)
 	              	return(
 	              	<tr>
