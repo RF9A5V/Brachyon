@@ -95,7 +95,7 @@ export default class ShareOverlay extends ResponsiveComponent {
               )
             }
 
-            <div className="row center x-center">
+            <div className="row center x-center" style={{marginTop: 10}}>
               <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
                 <FontAwesome name="facebook" style={{marginRight: 10}} />
                 Share

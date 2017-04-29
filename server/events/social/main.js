@@ -57,7 +57,13 @@ Meteor.methods({
     else {
       message = "Check out " + event.details.name + " at Brachyon!"
     }
-    const link = Meteor.absoluteUrl() + "_" + url;
+    var link;
+    if(Meteor.isDevelopment) {
+      link = "https://www.brachyon.com/event/sfv-game-realms";
+    }
+    else {
+      link = Meteor.absoluteUrl() + "_" + url;
+    }
     FBGraph.post(`/${user.services.facebook.id}/feed`, {
       message,
       link
