@@ -210,7 +210,7 @@ export default class EventTitlePage extends ResponsiveComponent {
         </div>
         <div className="row col-1">
         </div>
-        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} registerShare={false} />
       </div>
     )
   }
