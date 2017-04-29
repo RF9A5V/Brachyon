@@ -32,8 +32,9 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnFacebook() {
     const cb = () => {
-      Meteor.call("users.facebook.shareEvent", Events.findOne()._id, this.props.url, {
-        registration: this.props.registerShare
+      Meteor.call("users.facebook.share", Events.findOne()._id, this.props.url, {
+        registration: this.props.registerShare,
+        type: this.props.type
       }, (err) => {
         if(err) {
           toastr.error(err.reason);
@@ -53,8 +54,9 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnTwitter() {
     const cb = () => {
-      Meteor.call("users.twitter.shareEvent", Events.findOne()._id, this.props.url, {
-        registration: this.props.registerShare
+      Meteor.call("users.twitter.share", Events.findOne()._id, this.props.url, {
+        registration: this.props.registerShare,
+        type: this.props.type
       }, (err) => {
         if(err) {
           toastr.error(err.reason);
