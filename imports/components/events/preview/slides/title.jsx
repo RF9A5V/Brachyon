@@ -145,7 +145,7 @@ export default class EventTitlePage extends ResponsiveComponent {
 
           </div>
         </div>
-        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} type="event" />
       </div>
     )
   }
@@ -190,7 +190,7 @@ export default class EventTitlePage extends ResponsiveComponent {
           <div className="row">
             {
               instance.brackets ? (
-                <button style={{fontSize: "3em", marginRight: event.stream ? 30 : 0}} onClick={() => {
+                <button className="large-button" style={{marginRight: event.stream ? 30 : 0}} onClick={() => {
                   this.props.pages("Brackets")
                 }}>View Bracket</button>
               ) : (
@@ -199,7 +199,7 @@ export default class EventTitlePage extends ResponsiveComponent {
             }
             {
               event.stream ? (
-                <button style={{fontSize: "3em"}} onClick={() => {
+                <button className="large-button" onClick={() => {
                   this.props.pages("Stream")
                 }}>View Stream</button>
               ) : (
@@ -210,7 +210,7 @@ export default class EventTitlePage extends ResponsiveComponent {
         </div>
         <div className="row col-1">
         </div>
-        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} />
+        <ShareOverlay open={this.state.shareOpen} onClose={() => { this.setState({ shareOpen: false }) }} url={this.state.shortLink} type="event" />
       </div>
     )
   }

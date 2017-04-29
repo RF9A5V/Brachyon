@@ -35,6 +35,12 @@ Meteor.methods({
       throw new Meteor.Error(404, "Couldn't find this bracket.");
     }
     var bracket = instance.brackets[bracketIndex];
+    if(bracket.options && bracket.options.limit) {
+      const partCount = (bracket.participants || []).length;
+      if(partCount >= bracket.options.limit) {
+        throw new Meteor.Error(404, "This bracket has reached its participant limit. Can't add any more people!");
+      }
+    }
 
     var bracketContainsAlias = (bracket.participants || []).some((player) => {
       return player.alias.toLowerCase() == alias.toLowerCase();

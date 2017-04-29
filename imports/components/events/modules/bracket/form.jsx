@@ -4,6 +4,7 @@ import FontAwesome from "react-fontawesome";
 import Games from "/imports/api/games/games.js";
 import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
+import OptionsModal from "./options_modal.jsx";
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
@@ -16,6 +17,7 @@ export default class BracketForm extends ResponsiveComponent {
     if(!this.state) {
       this.state = {};
     }
+    this.state.open = false;
     var subFormat = null;
     var format = props.format || {};
     if(format.hasOwnProperty("groupFormat")){
@@ -191,7 +193,8 @@ export default class BracketForm extends ResponsiveComponent {
     return {
       game: (this.state.game || {}).id,
       format,
-      name: this.refs.name.value
+      name: this.refs.name.value,
+      options: this.refs.options.value()
     }
   }
 
@@ -234,12 +237,17 @@ export default class BracketForm extends ResponsiveComponent {
           )
         }
         <div className="col col-1" style={{padding: 20}}>
-          <div className="row" style={{justifyContent: "flex-end"}}>
+          <div className="row justify-end">
             {
               this.props.deletable ? (
-                <FontAwesome name="times" onClick={() => {this.props.delfunc()}} />
+                <FontAwesome name="times" onClick={() => {this.props.delfunc()}} style={{fontSize: opts.fontSize}} />
               ) : ( "" )
             }
+            <FontAwesome name="cog" onClick={() => {
+              this.setState({
+                open: true
+              })
+            }} style={{fontSize: opts.fontSize}} />
           </div>
           <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
           <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
@@ -295,6 +303,7 @@ export default class BracketForm extends ResponsiveComponent {
             }
           </div>
         </div>
+        <OptionsModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} ref="options" options={this.props.options || {}} />
       </div>
     )
   }

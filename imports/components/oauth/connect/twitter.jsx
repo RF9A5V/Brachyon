@@ -1,19 +1,15 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
+import { connectTwitter } from "/imports/decorators/social_media.js";
+
 export default class TwitterConnect extends Component {
 
   onClick(e) {
     e.preventDefault();
-    Meteor.linkWithTwitter({
-    }, function(err){
-      if(err){
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success("Integrated with Twitter!", "Success!");
-      }
-    })
+    connectTwitter(_ => {
+      this.forceUpdate();
+    });
   }
 
   render() {
@@ -28,7 +24,19 @@ export default class TwitterConnect extends Component {
     }
     else {
       return (
-        <div>Already connected to Twitter!</div>
+        <button onClick={() => {
+          Meteor.call("user.unlinkTwitter", (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              toastr.success("Successfully unlinked Twitter account!");
+              this.forceUpdate();
+            }
+          })
+        }}>
+          Unlink Account
+        </button>
       )
     }
   }
