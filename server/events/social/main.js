@@ -1,12 +1,23 @@
 Meteor.methods({
-  "users.twitter.share"(eventId, url, options) {
-    const event = Events.findOne(eventId);
+  "users.twitter.share"(text, url, options) {
     const user = Meteor.user();
     if(!user) {
       throw new Meteor.Error(403, "You need to be logged for this!");
     }
     if(!user.services.twitter) {
       throw new Meteor.Error(404, "You need to integrate Twitter first!");
+    }
+
+    var content;
+    switch(options.type) {
+      case "event":
+        content = Events.findOne(options.id);
+        break;
+      case "league":
+        content = Leagues.findOne(options.id);
+        break;
+      default:
+        content = "";
     }
 
     const T = new TwitMaker({
@@ -22,12 +33,12 @@ Meteor.methods({
     });
 
     var status;
-    const link = Meteor.absoluteUrl() + "_" + url;
+    var link = Meteor.absoluteUrl() + "_" + url;
     if(options.registration) {
-      status = "Just registered for " + event.details.name + "! " + link
+      status = "Just registered for " + content.details.name + "! " + link
     }
     else {
-      status = "Check out " + event.details.name + "! " + link;
+      status = "Check out " + content.details.name + "! " + link;
     }
 
     T.post("statuses/update", {
@@ -39,7 +50,6 @@ Meteor.methods({
     })
   },
   "users.facebook.share"(eventId, url, options) {
-    const event = Events.findOne(eventId);
     const user = Meteor.user();
 
     if(!user) {
@@ -49,13 +59,25 @@ Meteor.methods({
       throw new Meteor.Error(404, "You need to integrate Facebook first!");
     }
 
+    var content;
+    switch(options.type) {
+      case "event":
+        content = Events.findOne(options.id);
+        break;
+      case "league":
+        content = Leagues.findOne(options.id);
+        break;
+      default:
+        content = "";
+    }
+
     FBGraph.setAccessToken(Meteor.settings.public.facebook.testAppId + "|" + Meteor.settings.private.facebook.testAppSecret);
     var message;
     if(options.registration) {
-      message = "Just registered for " + event.details.name + "!"
+      message = "Just registered for " + content.details.name + "!"
     }
     else {
-      message = "Check out " + event.details.name + " at Brachyon!"
+      message = "Check out " + content.details.name + " at Brachyon!"
     }
     var link;
     if(Meteor.isDevelopment) {
