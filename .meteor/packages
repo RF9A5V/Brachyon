@@ -6,17 +6,17 @@
 
 meteor-base@1.0.4             # Packages every Meteor app needs to have
 mobile-experience@1.0.4       # Packages for a great mobile UX
-mongo@1.1.14                   # The database Meteor supports right now
+mongo@1.1.16                   # The database Meteor supports right now
 blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
 reactive-var@1.0.11            # Reactive variable for tracker
-tracker@1.1.1                 # Meteor's client-side reactive programming library
+tracker@1.1.2                 # Meteor's client-side reactive programming library
 
-standard-minifier-css@1.3.2   # CSS minifier run for production mode
-standard-minifier-js@1.2.1    # JS minifier run for production mode
+standard-minifier-css@1.3.4   # CSS minifier run for production mode
+standard-minifier-js@2.0.0    # JS minifier run for production mode
 es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
-ecmascript@0.6.1              # Enable ECMAScript2015+ syntax in app code
+ecmascript@0.7.2              # Enable ECMAScript2015+ syntax in app code
 
-accounts-password@1.3.3
+accounts-password@1.3.5
 react-meteor-data
 service-configuration@1.0.11
 meteortoys:allthings
@@ -25,18 +25,16 @@ chrismbeckett:toastr
 lookback:logger
 u2622:persistent-session
 meteorhacks:async
-secretninjaman:link-accounts
 cfs:graphicsmagick
 percolate:synced-cron
-accounts-facebook@1.0.11
-accounts-twitter
-accounts-google@1.0.11
+accounts-twitter@1.2.1
+accounts-google@1.1.2
 alexbeauchemin:accounts-twitch
-shell-server@0.2.1
+shell-server@0.2.3
 ostrio:files
 stolinski:stylus-multi
 percolate:migrations
-force-ssl@1.0.13
+force-ssl@1.0.14
 todda00:friendly-slugs
 session@1.1.7
 summernote:standalone
@@ -44,10 +42,17 @@ okgrow:analytics
 mdg:seo
 nitrolabs:cdn
 ostrio:meteor-root
-email
+email@1.2.0
 mrt:smart-publish
 practicalmeteor:mocha
 dburles:factory
 xolvio:cleaner
 practicalmeteor:chai
 meteorhacks:picker
+facebook-config-ui
+google-config-ui
+twitter-config-ui
+accounts-facebook
+bozhao:link-accounts
+mrt:twit
+stevezhu:fbgraph
