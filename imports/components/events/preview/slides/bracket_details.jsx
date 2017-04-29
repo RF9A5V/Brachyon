@@ -16,6 +16,8 @@ import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
 import BracketPanel from "/imports/components/events/show/bracket.jsx";
 
+import ShareOverlay from "/imports/components/public/share_overlay.jsx";
+
 class BracketDetails extends ResponsiveComponent {
 
   constructor(props) {
@@ -30,8 +32,16 @@ class BracketDetails extends ResponsiveComponent {
     var text = "";
     var icon = "circle";
     if(!bracket.id) {
-      text = "Registration Open";
-      icon = "clock-o";
+      if(bracket.options && bracket.options.limit) {
+        const remainCount = bracket.options.limit - bracket.participants.length;
+        text = `${remainCount || "No"} Slot${remainCount == 1 ? "" : "s"} Remaining!`;
+        icon = "users";
+      }
+      else {
+        text = "Registration Open";
+        icon = "clock-o";
+      }
+
     }
     else if(!bracket.isComplete) {
       text = "Running";
@@ -260,7 +270,7 @@ class BracketDetails extends ResponsiveComponent {
 
   _registrationButton(obj, opts) {
     return (
-      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} />
+      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => { this.setState({open: true}) }}/>
     );
     // return (
     //   <button style={} onClick={() => {
@@ -272,6 +282,27 @@ class BracketDetails extends ResponsiveComponent {
     //     { pIndex >= 0 ? "Unregister" : "Register" }
     //   </button>
     // );
+  }
+
+  loadShortLink() {
+    if(this.state.shortLink) {
+      this.setState({
+        shareOpen: true
+      })
+    }
+    else {
+      Meteor.call("generateShortLink", "/event/" + Events.findOne().details.name, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            shortLink: data,
+            open: true
+          })
+        }
+      });
+    }
   }
 
   details(obj, opts) {
@@ -288,7 +319,7 @@ class BracketDetails extends ResponsiveComponent {
             <span>{ formatter(obj.format.baseFormat) }</span>
           </div>
           { this.status(obj, opts) }
-          <div className="row center">
+          <div className="row center x-center">
             <button style={{fontSize: opts.fontSize}} onClick={() => {
               if(event.owner == Meteor.userId()) {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
@@ -305,7 +336,15 @@ class BracketDetails extends ResponsiveComponent {
               ) : (
                 this._registrationButton(obj, opts)
               )
-
+            }
+            {
+              (obj.participants || []).findIndex(o => {
+                return o.id == Meteor.userId()
+              }) >= 0 ? (
+                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
+              ) : (
+                null
+              )
             }
           </div>
         </div>
@@ -382,6 +421,7 @@ class BracketDetails extends ResponsiveComponent {
         <div className="col col-1" style={{overflow:"hidden",padding: "20px 60px"}}>
           { this.content(bracketMeta) }
         </div>
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({open: false}) }} registerShare={true} url={this.state.shortLink} type="event" />
       </div>
     )
   }

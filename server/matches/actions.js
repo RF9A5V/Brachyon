@@ -9,5 +9,29 @@ Meteor.methods({
         [`players.${index}.score`]: isInc ? 1 : -1
       }
     });
+  },
+  "match.start"(id) {
+    Matches.update(id, {
+      $set: {
+        status: 2,
+        startedAt: new Date()
+      }
+    })
+  },
+  "match.unstart"(id) {
+    Matches.update(id, {
+      $set: {
+        status: 1,
+        startedAt: null
+      }
+    })
+  },
+  "match.toggleStream"(id) {
+    const match = Matches.findOne(id);
+    Matches.update(id, {
+      $set: {
+        stream: !match.stream
+      }
+    })
   }
 })

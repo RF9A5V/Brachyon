@@ -18,9 +18,11 @@ export default class BracketsPanel extends ResponsiveComponent {
         brackets[i] = {
           name: b.name,
           game: b.game,
-          format: b.format
+          format: b.format,
+          options: b.options || {}
         };
       })
+      console.log(brackets);
     }
     this.state = {
       brackets,
