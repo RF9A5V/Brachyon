@@ -10,7 +10,7 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   renderDesktop() {
     return this.renderBase({
-      modalClass: "tiny-modal",
+      modalClass: "",
       overlayClass: "",
       inputClass: "",
       iconSize: "2em",
@@ -32,9 +32,10 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnFacebook() {
     const cb = () => {
-      Meteor.call("users.facebook.share", Events.findOne()._id, this.props.url, {
+      Meteor.call("users.facebook.share", this.refs.text.value, this.props.url, {
         registration: this.props.registerShare,
-        type: this.props.type
+        type: this.props.type,
+        id: Events.findOne()._id
       }, (err) => {
         if(err) {
           toastr.error(err.reason);
@@ -53,10 +54,15 @@ export default class ShareOverlay extends ResponsiveComponent {
   }
 
   shareOnTwitter() {
+    if(this.refs.text.value.length > 140) {
+      toastr.error("Too many characters for Twitter!");
+      throw new Error("Exceeds Twitter character limit of 140.");
+    }
     const cb = () => {
-      Meteor.call("users.twitter.share", Events.findOne()._id, this.props.url, {
+      Meteor.call("users.twitter.share", this.refs.text.value, this.props.url, {
         registration: this.props.registerShare,
-        type: this.props.type
+        type: this.props.type,
+        id: Events.findOne()._id
       }, (err) => {
         if(err) {
           toastr.error(err.reason);
@@ -93,6 +99,12 @@ export default class ShareOverlay extends ResponsiveComponent {
                   }} />
                 ]
               )
+            }
+            {
+              // <div className="col" style={{marginTop: 10}}>
+              //   <p style={{marginBottom: 10}}>Add a message for social media! Maybe something like "Check out this event!".</p>
+              //   <textarea ref="text" style={{margin: 0}} placeholder="Say Something!"></textarea>
+              // </div>
             }
 
             <div className="row center x-center" style={{marginTop: 10}}>
