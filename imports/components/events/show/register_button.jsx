@@ -148,13 +148,15 @@ export default class RegisterButton extends Component {
             this.unregister();
           }
         }}>
-          {
-            pIndex >= 0 && Meteor.userId() ? (
-              "Unregister"
-            ) : (
-              "Register"
-            )
-          }
+          <span>
+            {
+              pIndex >= 0 && Meteor.userId() ? (
+                "Unregister"
+              ) : (
+                "Register"
+              )
+            }
+          </span>
         </button>
         {
           instance.tickets ? (

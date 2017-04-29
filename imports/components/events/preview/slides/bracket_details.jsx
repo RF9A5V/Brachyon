@@ -309,10 +309,10 @@ class BracketDetails extends ResponsiveComponent {
               )
             }
             {
-              obj.participants.findIndex(o => {
+              (obj.participants || []).findIndex(o => {
                 return o.id == Meteor.userId()
               }) >= 0 ? (
-                <button style={{marginLeft: 10}} onClick={() => { this.setState({ open: true }) }}>Share</button>
+                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={() => { this.setState({ open: true }) }}>Share</button>
               ) : (
                 null
               )
