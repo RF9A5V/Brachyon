@@ -23,11 +23,6 @@ import DateTimeSelector from "../public/datetime_selector.jsx";
 import Location from "../events/create/location_select.jsx";
 
 // Bracket Stuff
-import BracketsMain from "./admin/modules/brackets/main.jsx";
-import AddBracket from "./modules/bracket/add.jsx";
-import EditBracket from "./modules/bracket/edit.jsx";
-import BracketInfo from "./modules/bracket/details.jsx";
-
 import BracketPanel from "./create/module_dropdowns/brackets.jsx";
 
 // Stream Stuff
@@ -281,8 +276,6 @@ class EventAdminPage extends Component {
   save() {
     var attrs = this.refs.editor.value();
     var event = Events.findOne();
-
-    console.log(attrs);
 
     Object.keys(event.details).forEach(k => {
       if(event.details[k] == attrs.details[k]) {
