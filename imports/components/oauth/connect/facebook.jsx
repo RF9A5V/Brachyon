@@ -1,21 +1,15 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { connectFB } from "/imports/decorators/social_media.js";
 
 export default class FacebookConnect extends Component {
 
   onClick(e) {
     e.preventDefault();
-    Meteor.linkWithFacebook({
-      requestPermissions: ["email", "public_profile"]
-    }, function(err){
-      if(err){
-        
-        toastr.error(err.reason, "Error!");
-      }
-      else {
-        toastr.success("Integrated with Facebook!", "Success!");
-      }
-    })
+    console.log(connectFB);
+    connectFB(() => {
+      this.forceUpdate();
+    });
   }
 
   render() {
@@ -29,7 +23,17 @@ export default class FacebookConnect extends Component {
     }
     else {
       return (
-        <div>Already connected to Facebook!</div>
+        <button onClick={() => {
+          Meteor.call("user.unlinkFB", (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              toastr.success("Unlinked account!");
+              this.forceUpdate();
+            }
+          })
+        }}>Unlink Account</button>
       )
     }
   }

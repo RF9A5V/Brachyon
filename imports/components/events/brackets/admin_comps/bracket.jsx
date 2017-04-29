@@ -5,8 +5,8 @@ import BracketForm from "/imports/components/events/modules/bracket/form.jsx"
 export default class BracketEditAction extends Component {
 
   saveBracket() {
-    const { name, game, format } = this.refs.form.value();
-    Meteor.call("events.brackets.edit", Instances.findOne()._id, this.props.index, name, game, format, (err) => {
+    const { name, game, format, options } = this.refs.form.value();
+    Meteor.call("events.brackets.edit", Instances.findOne()._id, this.props.index, name, game, format, options, (err) => {
       if(err) {
         toastr.error(err.reason);
       }
