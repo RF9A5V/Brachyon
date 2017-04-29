@@ -1,5 +1,5 @@
 Meteor.methods({
-  "users.twitter.shareEvent"(eventId, url, options) {
+  "users.twitter.share"(eventId, url, options) {
     const event = Events.findOne(eventId);
     const user = Meteor.user();
     if(!user) {
@@ -22,7 +22,7 @@ Meteor.methods({
     });
 
     var status;
-    const link = Meteor.absoluteUrl() + "event/" + event.slug;
+    const link = Meteor.absoluteUrl() + "_" + url;
     if(options.registration) {
       status = "Just registered for " + event.details.name + "! " + link
     }
@@ -38,7 +38,7 @@ Meteor.methods({
       }
     })
   },
-  "users.facebook.shareEvent"(eventId, url, options) {
+  "users.facebook.share"(eventId, url, options) {
     const event = Events.findOne(eventId);
     const user = Meteor.user();
 
@@ -57,10 +57,10 @@ Meteor.methods({
     else {
       message = "Check out " + event.details.name + " at Brachyon!"
     }
-    const link = Meteor.absoluteUrl() + "event/" + event.slug;
+    const link = Meteor.absoluteUrl() + "_" + url;
     FBGraph.post(`/${user.services.facebook.id}/feed`, {
       message,
-      link: "https://www.brachyon.com/event/sfv-game-realms"
+      link
     }, (res) => {
       console.log(res);
     })

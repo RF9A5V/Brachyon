@@ -276,6 +276,27 @@ class BracketDetails extends ResponsiveComponent {
     // );
   }
 
+  loadShortLink() {
+    if(this.state.shortLink) {
+      this.setState({
+        shareOpen: true
+      })
+    }
+    else {
+      Meteor.call("generateShortLink", "/event/" + Events.findOne().details.name, (err, data) => {
+        if(err) {
+          toastr.error(err.reason);
+        }
+        else {
+          this.setState({
+            shortLink: data,
+            open: true
+          })
+        }
+      });
+    }
+  }
+
   details(obj, opts) {
     var event = Events.findOne();
     var bracket = Brackets.findOne(obj.id);
@@ -312,7 +333,7 @@ class BracketDetails extends ResponsiveComponent {
               (obj.participants || []).findIndex(o => {
                 return o.id == Meteor.userId()
               }) >= 0 ? (
-                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={() => { this.setState({ open: true }) }}>Share</button>
+                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
               ) : (
                 null
               )
@@ -392,7 +413,7 @@ class BracketDetails extends ResponsiveComponent {
         <div className="col col-1" style={{overflow:"hidden",padding: "20px 60px"}}>
           { this.content(bracketMeta) }
         </div>
-        <ShareOverlay open={this.state.open} onClose={() => { this.setState({open: false}) }} registerShare={true} />
+        <ShareOverlay open={this.state.open} onClose={() => { this.setState({open: false}) }} registerShare={true} url={this.state.shortLink} type="event" />
       </div>
     )
   }
