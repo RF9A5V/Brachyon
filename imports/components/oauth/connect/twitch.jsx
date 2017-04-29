@@ -7,13 +7,13 @@ export default class FacebookConnect extends Component {
     e.preventDefault();
     Meteor.linkWithTwitch({
       requestPermissions: ["user_read", "user_blocks_read", "user_subscriptions"]
-    }, function(err){
+    }, (err) => {
       if(err){
-        
         toastr.error(err.reason, "Error!");
       }
       else {
         toastr.success("Integrated with Twitch!", "Success!");
+        this.forceUpdate();
       }
     })
   }
@@ -29,7 +29,19 @@ export default class FacebookConnect extends Component {
     }
     else {
       return (
-        <div>Already connected to Twitch!</div>
+        <button onClick={() => {
+          Meteor.call("user.unlinkTwitch", (err) => {
+            if(err) {
+              toastr.error(err.reason);
+            }
+            else {
+              toastr.success("Successfully unlinked from Twitch!");
+              this.forceUpdate();
+            }
+          })
+        }}>
+          Unlink Account
+        </button>
       )
     }
   }
