@@ -76,7 +76,7 @@ export default class CreateContainerMenu extends Component {
                 })
               }}>
                 <div className="col-1">
-                  <FontAwesome name={item.icon} style={{fontSize: "6rem", color: this.props.selected == i ? eColor : "white"}} />
+                  <FontAwesome name={item.icon} style={{fontSize: "5rem", color: this.props.selected == i ? eColor : "white"}} />
                 </div>
                 {
                   this.state.maxed ? (
@@ -110,12 +110,12 @@ export default class CreateContainerMenu extends Component {
               })
             }} >
               <div className="col-1">
-                <FontAwesome name="chevron-left" style={{fontSize: "6rem"}}/>
+                <FontAwesome name="chevron-left" style={{fontSize: "5rem"}}/>
               </div>
               <span className="col-3" style={spanStyle}>Collapse</span>
             </div>
           ) : (
-            <FontAwesome name="chevron-right" style={{fontSize: "6rem"}} onClick={() => {
+            <FontAwesome name="chevron-right" style={{fontSize: "5rem"}} onClick={() => {
               this.setState({
                 maxed: true
               })
