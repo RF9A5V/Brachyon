@@ -26,7 +26,10 @@ export default class RegisterButton extends Component {
           typeOpen: false,
           paymentOpen: false,
           regOpen: false
-        })
+        });
+        if(this.props.onRegistered) {
+          this.props.onRegistered();
+        }
       }
     })
   }
@@ -137,7 +140,7 @@ export default class RegisterButton extends Component {
     var instance = Instances.findOne();
     return (
       <div>
-        <button style={this.props.style} onClick={() => {
+        <button style={{...this.props.style, marginTop: 0, marginBottom: 0}} onClick={() => {
           if(pIndex < 0 || !Meteor.userId()) {
             this.register();
           }

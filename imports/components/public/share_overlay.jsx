@@ -32,7 +32,9 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnFacebook() {
     const cb = () => {
-      Meteor.call("users.facebook.shareEvent", Events.findOne()._id, this.props.url, (err) => {
+      Meteor.call("users.facebook.shareEvent", Events.findOne()._id, this.props.url, {
+        registration: this.props.registerShare
+      }, (err) => {
         if(err) {
           toastr.error(err.reason);
         }
@@ -51,7 +53,9 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnTwitter() {
     const cb = () => {
-      Meteor.call("users.twitter.shareEvent", Events.findOne()._id, this.props.url, (err) => {
+      Meteor.call("users.twitter.shareEvent", Events.findOne()._id, this.props.url, {
+        registration: this.props.registerShare
+      }, (err) => {
         if(err) {
           toastr.error(err.reason);
         }
@@ -76,10 +80,19 @@ export default class ShareOverlay extends ResponsiveComponent {
             <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center">
-            <label className="input-label" style={{fontSize: opts.fontSize}}>Sharable Link</label>
-            <input type="text" className={opts.inputClass} value={window.location.origin + "/_" + this.props.url} style={{margin: 0, textAlign: "center"}} onFocus={(e) => {
-              e.target.select();
-            }} />
+            {
+              this.props.registerShare ? (
+                <p>You just registered for { Events.findOne().details.name }! Share with your friends here!</p>
+              ) : (
+                [
+                  <label className="input-label" style={{fontSize: opts.fontSize}}>Sharable Link</label>,
+                  <input type="text" className={opts.inputClass} value={window.location.origin + "/_" + this.props.url} style={{margin: 0, textAlign: "center"}} onFocus={(e) => {
+                    e.target.select();
+                  }} />
+                ]
+              )
+            }
+
             <div className="row center x-center">
               <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
                 <FontAwesome name="facebook" style={{marginRight: 10}} />
