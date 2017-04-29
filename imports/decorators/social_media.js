@@ -1,6 +1,6 @@
 const connectFB = (cb) => {
   Meteor.linkWithFacebook({
-    requestPermissions: ["email", "public_profile", "user_friends", "publish_actions"]
+    requestPermissions: ["email", "public_profile", "user_friends"]
   }, (err) => {
     if(err){
       toastr.error(err.reason, "Error!");
@@ -25,7 +25,7 @@ const connectTwitter = (cb) => {
   })
 }
 
-export default {
+export {
   connectFB,
   connectTwitter
 }
