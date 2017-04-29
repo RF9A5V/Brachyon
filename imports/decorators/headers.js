@@ -33,11 +33,11 @@ const setTwitterHeader = (details) => {
   return (`
     <html>
       <head>
-        <meta name="twitter:card" content="summary_large_image">
+        <meta name="og:card" content="summary_large_image">
         <meta name="twitter:site" content="@brachyon">
-        <meta name="twitter:title" content="${details.name}">
-        <meta name="twitter:description" content="${fbDescriptionParser(details.description)}">
-        <meta name="twitter:image" content="${details.banner ? details.banner : "https://www.brachyon.com/images/card_default.png"}">
+        <meta name="og:title" content="${details.name}">
+        <meta name="og:description" content="${fbDescriptionParser(details.description)}">
+        <meta name="og:image" content="${details.banner ? details.banner : "https://www.brachyon.com/images/card_default.png"}">
       </head>
       <body></body>
     </html>
