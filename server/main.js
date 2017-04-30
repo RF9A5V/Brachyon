@@ -84,6 +84,16 @@ ServiceConfiguration.configurations.upsert(
   }
 );
 
+ServiceConfiguration.configurations.upsert({
+  service: "instagram",
+}, {
+  $set: {
+    clientId: Meteor.settings.public.instagram.client_id,
+    secret: Meteor.settings.private.instagram.secret,
+    scope: ["basic"]
+  }
+})
+
 Accounts.emailTemplates.siteName = "Brachyon";
 Accounts.emailTemplates.from = "Brachyon Admin <steven@brachyon.com>";
 Accounts.emailTemplates.verifyEmail.subject = (user) => {
