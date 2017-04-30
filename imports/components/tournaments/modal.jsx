@@ -144,7 +144,9 @@ export default class TournamentModal extends ResponsiveComponent {
       }
     }
     else {
-      if(event.owner != Meteor.userId()) {
+      const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
+      console.log(isAdmin);
+      if(event.owner != Meteor.userId() && !isAdmin) {
         return null;
       }
     }
