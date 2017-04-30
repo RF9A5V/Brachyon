@@ -35,6 +35,9 @@ import StreamPanel from "./create/module_dropdowns/stream.jsx";
 import TicketDetails from "./modules/tickets/details.jsx";
 import TicketEdit from "./modules/tickets/edit.jsx";
 
+// Staff
+import Admins from "./modules/organize/admin.jsx";
+
 import CloseModal from "/imports/components/events/admin/close_modal.jsx";
 import RerunModal from "/imports/components/events/admin/rerun_modal.jsx";
 
@@ -269,6 +272,18 @@ class EventAdminPage extends Component {
     items.push(this.detailItems());
     items.push(this.bracketItems());
     items.push(this.streamItems());
+    items.push({
+      name: "Staff",
+      icon: "users",
+      key: "staff",
+      subItems: [
+        {
+          content: Admins,
+          name: "admins",
+          key: "admins"
+        }
+      ]
+    })
     // items.push(this.ticketItems());
     return items;
   }
