@@ -321,7 +321,8 @@ class BracketDetails extends ResponsiveComponent {
           { this.status(obj, opts) }
           <div className="row center x-center">
             <button style={{fontSize: opts.fontSize}} onClick={() => {
-              if(event.owner == Meteor.userId()) {
+              const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
+              if(event.owner == Meteor.userId() || isAdmin) {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
               }
               else {
