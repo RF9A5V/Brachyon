@@ -14,6 +14,8 @@ import UserStats from "./show/stat.jsx";
 import UserEvents from "./profile/events.jsx";
 import UserImage from "./profile/image.jsx";
 
+import ExternLink from "/imports/decorators/get_extern_link.js";
+
 class UserProfile extends ResponsiveComponent {
 
   constructor(props) {
@@ -116,7 +118,8 @@ class UserProfile extends ResponsiveComponent {
       width: opts.mobile ? 80 : 35,
       height: opts.mobile ? 80 : 35,
       padding: 5,
-      backgroundColor: "rgba(0, 0, 0, 0.5)"
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      cursor: "pointer"
     }
     const mediaLinks = (() => {
       const types = [
@@ -128,8 +131,14 @@ class UserProfile extends ResponsiveComponent {
         "youtube"
       ];
       return types.map(t => {
+        const service = user.services[t];
+        if(!service) {
+          return null;
+        }
         return (
-          <div className="row center x-center" style={mediaStyle}>
+          <div className="row center x-center" style={mediaStyle} onClick={(e) => {
+            window.open(ExternLink[t](service));
+          }}>
             <FontAwesome name={t} style={{fontSize: opts.iconSize}} />
           </div>
         )

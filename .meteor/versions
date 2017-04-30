@@ -16,6 +16,7 @@ blaze@2.3.2
 blaze-html-templates@1.1.2
 blaze-tools@1.0.10
 boilerplate-generator@1.0.11
+bozhao:accounts-instagram@0.2.2
 bozhao:link-accounts@1.2.10
 caching-compiler@1.1.9
 caching-html-compiler@1.1.2
