@@ -63,20 +63,28 @@ export default class UserMatches extends Component {
         {
           matches.map(m => {
             var match = Matches.findOne(m.id);
+            console.log(match);
             return (
               <div className="col" style={{margin: "20px 10px 20px 0", width: 400}}>
                 <div className="row match-names">
                   <span>{ match.players[0].alias }</span>
                 </div>
-                <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
+                <div className="row flex-pad x-center" style={{backgroundColor: "#666", position: "relative"}}>
+                  <div className="row match-names" style={{top: 0}}>
+                    <span>
+                      { match.players[0].alias }
+                    </span>
+                  </div>
                   <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: 100, height: 100}} />
                   <div className="col-1 col x-center" style={{padding: 10}}>
                     <h5 style={{margin: "10px 0"}}>VERSUS</h5>
                   </div>
                   <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: 100, height: 100}} />
-                </div>
-                <div className="row match-names justify-end">
-                  <span>{ match.players[1].alias }</span>
+                  <div className="row match-names justify-end" style={{bottom: 0}}>
+                    <span>
+                      { match.players[1].alias }
+                    </span>
+                  </div>
                 </div>
 
                 <span style={{marginTop: 20, padding: 5, textAlign: "center", backgroundColor: "#111"}}>{(() => {
