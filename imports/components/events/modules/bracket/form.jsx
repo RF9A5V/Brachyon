@@ -228,7 +228,7 @@ export default class BracketForm extends ResponsiveComponent {
         {
           this.state.game && this.state.game.bannerUrl ? (
             <div style={{textAlign: "center", position: "relative"}}>
-              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.bannerUrl} />
+              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.game.bannerUrl} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
               </div>
             </div>
@@ -238,16 +238,17 @@ export default class BracketForm extends ResponsiveComponent {
         }
         <div className="col col-1" style={{padding: 20}}>
           <div className="row justify-end">
-            {
-              this.props.deletable ? (
-                <FontAwesome name="times" onClick={() => {this.props.delfunc()}} style={{fontSize: opts.fontSize}} />
-              ) : ( "" )
-            }
             <FontAwesome name="cog" onClick={() => {
               this.setState({
                 open: true
               })
             }} style={{fontSize: opts.fontSize}} />
+            {
+              this.props.deletable ? (
+                <FontAwesome name="times" onClick={() => {this.props.delfunc()}} style={{fontSize: opts.fontSize, marginLeft: 10}} />
+              ) : ( "" )
+            }
+
           </div>
           <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
           <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
