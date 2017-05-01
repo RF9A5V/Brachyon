@@ -165,7 +165,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="col" style={{marginBottom: 10}}>
-          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({this.props.bracket.participants.length}{
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({(this.props.bracket.participants || []).length}{
             (this.props.bracket.options || {}).limit ? (
               ` out of ${this.props.bracket.options.limit}`
             ) : (
