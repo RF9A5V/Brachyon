@@ -33,7 +33,7 @@ class BracketDetails extends ResponsiveComponent {
     var icon = "circle";
     if(!bracket.id) {
       if(bracket.options && bracket.options.limit) {
-        const remainCount = bracket.options.limit - bracket.participants.length;
+        const remainCount = bracket.options.limit - (bracket.participants || []).length;
         text = `${remainCount || "No"} Slot${remainCount == 1 ? "" : "s"} Remaining!`;
         icon = "users";
       }
@@ -270,7 +270,9 @@ class BracketDetails extends ResponsiveComponent {
 
   _registrationButton(obj, opts) {
     return (
-      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => { this.setState({open: true}) }}/>
+      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => {
+        // this.setState({open: true})
+      }}/>
     );
     // return (
     //   <button style={} onClick={() => {
@@ -320,7 +322,7 @@ class BracketDetails extends ResponsiveComponent {
           </div>
           { this.status(obj, opts) }
           <div className="row center x-center">
-            <button style={{fontSize: opts.fontSize}} onClick={() => {
+            <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
               const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
               if(event.owner == Meteor.userId() || isAdmin) {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
@@ -339,13 +341,13 @@ class BracketDetails extends ResponsiveComponent {
               )
             }
             {
-              (obj.participants || []).findIndex(o => {
-                return o.id == Meteor.userId()
-              }) >= 0 ? (
-                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
-              ) : (
-                null
-              )
+              // (obj.participants || []).findIndex(o => {
+              //   return o.id == Meteor.userId()
+              // }) >= 0 ? (
+              //   <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
+              // ) : (
+              //   null
+              // )
             }
           </div>
         </div>
