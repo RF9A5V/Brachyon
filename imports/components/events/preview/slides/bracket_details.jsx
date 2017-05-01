@@ -159,7 +159,7 @@ class BracketDetails extends ResponsiveComponent {
                       var [p1, p2] = match.players.map(p => { return Meteor.users.findOne(p.id) })
                       return (
                         <div className="col" style={{margin: "20px 10px 20px 0", width: 350}}>
-                          <div className="row match-names">
+                          <div className="row match-names" style={{top: 0}}>
                             <span>{ match.players[0].alias }</span>
                           </div>
                           <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
@@ -169,7 +169,7 @@ class BracketDetails extends ResponsiveComponent {
                             </div>
                             <img src={p2 && p2.profile.imageUrl ? p2.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
                           </div>
-                          <div className="row match-names justify-end">
+                          <div className="row match-names justify-end" style={{bottom: 0}}>
                             <span>{ match.players[1].alias }</span>
                           </div>
                         </div>
