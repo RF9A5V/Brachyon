@@ -266,6 +266,8 @@ export default class BracketForm extends ResponsiveComponent {
                   this.state.gameList.map(g => {
                     return (
                       <GameTemplate {...g} onClick={() => {
+                        g.id = g._id;
+                        delete g._id;
                         this.setState({
                           game: g,
                           gameList: null
