@@ -47,7 +47,7 @@ export default class OptionsModal extends ResponsiveComponent {
     return (
       <div style={{display: this.state.tab == "Limit" ? "inherit" : "none"}}>
         <p style={{fontSize: opts.fontSize}}>
-          Content Goes Here!
+          Set your bracket limit here! Set the limit to 0 to remove the limit.
         </p>
         <div className="col">
           <label className="input-label" style={{fontSize: opts.fontSize}}>Bracket Limit</label>

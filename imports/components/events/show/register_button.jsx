@@ -139,7 +139,7 @@ export default class RegisterButton extends Component {
     });
     var instance = Instances.findOne();
     return (
-      <div>
+      <div className="col-1">
         <button style={{...this.props.style, marginTop: 0, marginBottom: 0}} onClick={() => {
           if(pIndex < 0 || !Meteor.userId()) {
             this.register();

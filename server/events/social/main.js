@@ -1,5 +1,5 @@
 Meteor.methods({
-  "users.twitter.share"(text, url, options) {
+  "users.twitter.share"(url, options) {
     const user = Meteor.user();
     if(!user) {
       throw new Meteor.Error(403, "You need to be logged for this!");
@@ -12,6 +12,11 @@ Meteor.methods({
     switch(options.type) {
       case "event":
         content = Events.findOne(options.id);
+        Events.update(options.id, {
+          $addToSet: {
+            "promotion.twitter": user._id
+          }
+        });
         break;
       case "league":
         content = Leagues.findOne(options.id);
@@ -25,11 +30,6 @@ Meteor.methods({
       consumer_secret: Meteor.settings.private.twitter.liveSecretKey,
       access_token: user.services.twitter.accessToken,
       access_token_secret: user.services.twitter.accessTokenSecret
-    });
-    Events.update(eventId, {
-      $addToSet: {
-        "promotion.twitter": user._id
-      }
     });
 
     var status;
