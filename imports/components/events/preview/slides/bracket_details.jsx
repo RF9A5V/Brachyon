@@ -314,7 +314,7 @@ class BracketDetails extends ResponsiveComponent {
     return (
       <div className="col col-1 x-center center" style={{padding: 30, height: "100%"}}>
         <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
-        <div style={{padding: 20}}>
+        <div style={{padding: 20, width: opts.mobile ? "50%" : "25%"}}>
           <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
           <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
             <FontAwesome name="sitemap" style={{marginRight: 10}} />
@@ -436,7 +436,8 @@ class BracketDetails extends ResponsiveComponent {
         {
           this.details(bracketMeta, {
             imgHeight: "50vh",
-            fontSize: "4rem"
+            fontSize: "4rem",
+            mobile: true
           })
         }
       </div>
