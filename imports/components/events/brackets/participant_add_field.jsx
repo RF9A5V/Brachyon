@@ -165,7 +165,14 @@ export default class ParticipantAddField extends ResponsiveComponent {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="col" style={{marginBottom: 10}}>
-          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant</label>
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({(this.props.bracket.participants || []).length}{
+            (this.props.bracket.options || {}).limit ? (
+              ` out of ${this.props.bracket.options.limit}`
+            ) : (
+              ""
+            )
+          })
+          </label>
           <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
             if(e.key == "Enter") {
               this.addParticipant(this.refs.userValue.value, null);

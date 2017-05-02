@@ -57,7 +57,7 @@ export default class EventTitlePage extends ResponsiveComponent {
           <div style={{padding: 20}}>
             <button onClick={() => {
               this.loadShortLink();
-            }}>Generate Short Link</button>
+            }}>Share</button>
           </div>
         </div>
         <div className="col col-3 center x-center">

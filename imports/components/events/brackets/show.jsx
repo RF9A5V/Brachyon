@@ -12,7 +12,7 @@ import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
-import MatchList from "./show/matches.jsx";
+import MatchList from "./admin_comps/matches.jsx";
 
 import { formatter } from "/imports/decorators/formatter.js";
 import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
@@ -258,9 +258,9 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
-      defaultItems.push(this.matchesItem(bracketMeta));
-    }
+    // if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
+    //   defaultItems.push(this.matchesItem(bracketMeta));
+    // }
     return defaultItems;
   }
 
