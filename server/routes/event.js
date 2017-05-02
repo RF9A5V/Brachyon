@@ -97,10 +97,10 @@ Picker.route("/event/:slug/bracket/:index", function(params, req, res, next) {
   const instance = Instances.findOne({
     _id: event.instances.pop()
   });
-  const bracketMeta = instance.brackets[params.index];
+  const bracketMeta = instance.brackets[parseInt(params.index)];
   const details = {
     name: event.details.name,
-    description: formatter(bracketMeta.format.baseFormat, false),
+    description: event.details.description,
     banner: event.details.bannerUrl,
     path: "/event/" + event.slug + "/bracket/" + params.index,
     parse: false
