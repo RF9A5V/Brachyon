@@ -326,7 +326,8 @@ class BracketAdminScreen extends Component {
         rounds = tempRounds;
       }
       else {
-        var rounds = Brackets.findOne().rounds;
+        console.log(Brackets.findOne());
+        rounds = Brackets.findOne(bracket.id).rounds;
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }

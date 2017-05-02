@@ -16,8 +16,8 @@ export default class UserTab extends ResponsiveComponent {
     else {
       obj = {
         id: this.props._id,
-        img: this.props.profile.imageUrl,
-        alias: this.props.username
+        img: (this.props.profile || {}).imageUrl,
+        alias: this.props.username || this.props.alias
       };
     }
     return (
