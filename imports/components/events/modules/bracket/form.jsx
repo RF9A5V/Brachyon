@@ -190,7 +190,6 @@ export default class BracketForm extends ResponsiveComponent {
         finalFormat: this.refs.finalFormat.value
       }
     }
-    console.log(this.state);
     return {
       game: (this.state.game || {}).id,
       format,
