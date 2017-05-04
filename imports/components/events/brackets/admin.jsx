@@ -65,7 +65,8 @@ class BracketAdminScreen extends Component {
                   this.forceUpdate();
                 }
               })
-            }
+            },
+            update: this.forceUpdate.bind(this)
           }
         }
       ]
@@ -411,18 +412,14 @@ class BracketAdminScreen extends Component {
   }
 }
 
-const x = createContainer(({params}) => {
-  const { slug, bracketIndex } = params;
-
-  if(slug) {
+const x = createContainer((props) => {
+  const { slug, bracketIndex } = props.params;
+  if(props.location.pathname.indexOf("event") >= 0) {
     const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
       return {
-        ready: instanceHandle.ready(),
-        instance: Instances.findOne(),
-        bracket: Brackets.findOne(),
-        event: Events.findOne()
+        ready: instanceHandle.ready()
       }
     }
     return {
@@ -430,8 +427,7 @@ const x = createContainer(({params}) => {
     }
   }
   else {
-    const { id } = params;
-    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0);
     return {
       ready: instanceHandle.ready()
     }

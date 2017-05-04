@@ -118,6 +118,8 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   renderBase(opts) {
     const instance = Instances.findOne();
+    const bracket = this.props.bracket;
+    const partCount = this.state.participants.length
     return (
       <div className="col">
         {
@@ -125,7 +127,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
             ""
           ) : (
             <div className="col col-1 center" style={{width: opts.mobile ? "100%" : "50%", margin: "0 auto 20px"}}>
-              <ParticipantAddField index={this.props.index} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
+              <ParticipantAddField index={this.props.index} participantCount={partCount} bracket={this.props.bracket} onStart={() => { this.setState({ startOpen: true }) }} onParticipantAdd={(p) => {
                 this.setState({
                   participant: p,
                   discountOpen: true
@@ -134,7 +136,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
                 this.setState({
                   startOpen: true
                 })
-              }} onUpdateParticipants={this.updateParticipants.bind(this)} />
+              }} onUpdateParticipants={this.updateParticipants.bind(this)} onReset={this.props.onStart} update={this.props.update} />
             </div>
           )
         }
@@ -156,7 +158,10 @@ export default class AddPartipantAction extends ResponsiveComponent {
             ""
           )
         }
-        <OptionsModal open={this.state.optionsOpen} onClose={() => { this.setState({ optionsOpen: false }) }} participant={this.state.participant} index={this.props.index} />
+        <OptionsModal open={this.state.optionsOpen} onClose={() => {
+          this.updateParticipants();
+          this.setState({ optionsOpen: false })
+         }} participant={this.state.participant} index={this.props.index} />
         <StartModal open={this.state.startOpen} onClose={() => { this.setState({ startOpen: false }) }} index={this.props.index} onStart={this.props.onStart} />
       </div>
     )
