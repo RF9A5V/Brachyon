@@ -636,7 +636,7 @@ Meteor.methods({
           winner: null,
           [`players.${direction}`]: null,
           status: 0,
-          establishedAt: null,
+          establishedAt: new null,
           startedAt: null
         }
       });
@@ -647,7 +647,7 @@ Meteor.methods({
       $set: {
         winner: null,
         status: 1,
-        establishedAt: null
+        establishedAt: new Date()
       }
     });
     Brackets.update(bracketId, {
