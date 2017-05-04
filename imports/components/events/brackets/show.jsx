@@ -378,10 +378,10 @@ class BracketShowScreen extends Component {
   }
 }
 
-const x = createContainer(({params}) => {
-  const { slug, bracketIndex } = params;
+const x = createContainer((props) => {
+  const { slug, bracketIndex } = props.params;
 
-  if(slug) {
+  if(props.location.pathname) {
     const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
@@ -397,8 +397,7 @@ const x = createContainer(({params}) => {
     }
   }
   else {
-    const { id } = params;
-    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0);
     return {
       ready: instanceHandle.ready()
     }
