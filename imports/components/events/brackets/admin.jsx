@@ -60,6 +60,9 @@ class BracketAdminScreen extends Component {
             bracket,
             onStart: () => {
               var instanceId = Instances.findOne()._id;
+              if(this.state.sub) {
+                this.state.sub.stop();
+              }
               this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
                 onReady: () => {
                   this.forceUpdate();
