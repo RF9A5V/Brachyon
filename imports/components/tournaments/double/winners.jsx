@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DragScroll from "react-dragscroll";
+import { Element } from "react-scroll"
 
 import MatchBlock from './match.jsx';
 import EventModal from "../modal.jsx";
@@ -362,7 +363,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
 
 
     return (
-      <div id="winners" onWheel={(e) => {
+      <Element name="winners" onWheel={(e) => {
         e.stopPropagation();
       }}>
         { bracketDiv }
@@ -396,7 +397,7 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
             ""
           )
         }
-      </div>
+      </Element>
     );
   }
 
