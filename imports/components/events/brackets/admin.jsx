@@ -19,6 +19,7 @@ import MatchList from "./admin_comps/matches.jsx";
 import WinnersBracket from "/imports/components/tournaments/double/winners.jsx";
 import LosersBracket from "/imports/components/tournaments/double/losers.jsx";
 import Toggle from "/imports/components/tournaments/double/toggle.jsx";
+import SlideOption from "/imports/components/brackets/slide_option.jsx";
 
 import ShareOverlay from "/imports/components/public/share_overlay.jsx";
 
@@ -153,6 +154,27 @@ class BracketAdminScreen extends Component {
         ];
         break;
     }
+    subs = [
+      {
+        content: SlideOption,
+        args: {
+          bracket,
+          index: this.props.params.bracketIndex,
+          onStart: () => {
+            var instanceId = Instances.findOne()._id;
+            if(this.state.sub) {
+              this.state.sub.stop();
+            }
+            this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
+              onReady: () => {
+                this.forceUpdate();
+              }
+            })
+          }
+        }
+      }
+    ].concat(subs);
+
     return {
       name: "Bracket",
       icon: "sitemap",
