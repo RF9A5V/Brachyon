@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { scroller } from "react-scroll";
 
 import StartModal from "/imports/components/events/brackets/admin_comps/start_modal.jsx";
 
@@ -20,13 +21,22 @@ export default class SlideOption extends Component {
         <button onClick={() => { this.setState({ open: true }) }}>Start Bracket</button>
       )
     }
+    const scrollOptions = {
+      smooth: true,
+      duration: 500,
+      delay: 100
+    }
     switch(this.props.bracket.format.baseFormat) {
       case "single_elim":
         return null
       case "double_elim":
         return [
-          <button>Winners</button>,
-          <button>Losers</button>
+          <button style={{marginRight: 10}} onClick={() => {
+            scroller.scrollTo("winners", scrollOptions);
+          }}>Winners</button>,
+          <button onClick={() => {
+            scroller.scrollTo("losers", scrollOptions);
+          }}>Losers</button>
         ]
       default:
         return null
@@ -57,7 +67,7 @@ export default class SlideOption extends Component {
             null
           )
         }
-        <StartModal index={this.props.index} open={this.state.open} onClose={() => { this.setState({ open: false }) }} />
+        <StartModal index={this.props.index} open={this.state.open} onClose={() => { this.setState({ open: false }) }} onStart={this.props.onStart} />
       </div>
     )
   }

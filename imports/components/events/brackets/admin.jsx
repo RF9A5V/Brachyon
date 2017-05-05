@@ -159,7 +159,7 @@ class BracketAdminScreen extends Component {
         content: SlideOption,
         args: {
           bracket,
-          index: this.props.params.bracketIndex,
+          index,
           onStart: () => {
             var instanceId = Instances.findOne()._id;
             if(this.state.sub) {
