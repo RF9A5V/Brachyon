@@ -44,9 +44,7 @@ Meteor.methods({
     T.post("statuses/update", {
       status
     }, (err, data, res) => {
-      if(err) {
-        console.log(err);
-      }
+
     })
   },
   "users.facebook.share"(eventId, url, options) {
@@ -90,7 +88,6 @@ Meteor.methods({
       message,
       link
     }, (res) => {
-      console.log(res);
     })
 
     Events.update(eventId, {

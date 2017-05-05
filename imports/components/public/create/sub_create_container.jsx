@@ -21,7 +21,6 @@ export default class SubContainer extends ResponsiveComponent {
   value() {
     var obj = {};
     this.props.items.forEach((item, i) => {
-      console.log(this.refs[item.key]);
       if(this.refs[item.key].value) {
         obj[item.key] = this.refs[item.key].value();
       }

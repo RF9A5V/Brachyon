@@ -63,7 +63,6 @@ export default class UserMatches extends Component {
         {
           matches.map(m => {
             var match = Matches.findOne(m.id);
-            console.log(match);
             return (
               <div className="col" style={{margin: "20px 10px 20px 0", width: 400}}>
                 <div className="row match-names">
