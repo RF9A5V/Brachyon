@@ -6,7 +6,6 @@ export default class FacebookConnect extends Component {
 
   onClick(e) {
     e.preventDefault();
-    console.log(connectFB);
     connectFB(() => {
       this.forceUpdate();
     });
