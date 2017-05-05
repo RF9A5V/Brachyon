@@ -153,55 +153,13 @@ Meteor.methods({
           name, game, format
         };
         obj.brackets.push(bracketObj);
-        if(bracket.id && !bracket.isComplete) {
-          Meteor.call("brackets.delete", bracket.id, bracket.format.baseFormat);
-        }
       })
     }
-    // if(prevInstance.tickets) {
-    //   obj.tickets = prevInstance.tickets;
-    // }
-    var instance = Instances.insert(obj);
-    var indexFilter = [];
-    prevInstance.brackets.forEach((b, i) => {
-      if(!b.isComplete) {
-        indexFilter.push(b.id);
+    Instances.update(prevInstance._id, {
+      $set: {
+        datetime: event.details.datetime
       }
     });
-    var removePrev = false;
-    if(indexFilter.length == prevInstance.brackets.length) {
-      Instances.remove(prevInstance._id);
-      removePrev = true;
-    }
-    else if(indexFilter.length > 0) {
-      Instances.update(prevInstance._id, {
-        $set: {
-          datetime: event.details.datetime
-        },
-        $pull: {
-          brackets: {
-            id: {
-              $in: indexFilter
-            }
-          }
-        }
-      });
-    }
-    else {
-      Instances.update(prevInstance._id, {
-        $set: {
-          datetime: event.details.datetime
-        }
-      });
-    }
-
-    if(removePrev) {
-      Events.update(id, {
-        $pull: {
-          instances: prevInstance
-        }
-      });
-    }
     Events.update(id, {
       $push: {
         instances: instance
