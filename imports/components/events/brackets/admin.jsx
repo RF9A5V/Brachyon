@@ -334,7 +334,7 @@ class BracketAdminScreen extends Component {
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
-    if(format == "swiss" || format == "round_robin" && bracket.id) {
+    if( (format == "swiss" || format == "round_robin") && bracket.id) {
       var rounds = Brackets.findOne().rounds;
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
