@@ -330,7 +330,6 @@ class BracketAdminScreen extends Component {
         rounds = tempRounds;
       }
       else {
-        console.log(Brackets.findOne());
         rounds = Brackets.findOne(bracket.id).rounds;
       }
       defaultItems.push(this.bracketItem(bracket, index, rounds));

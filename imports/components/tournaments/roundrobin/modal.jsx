@@ -26,7 +26,6 @@ export default class RoundModal extends Component {
     var scoreTwo = fieldToUpdate == "p2" ? multi : 0;
     var ties = fieldToUpdate == "ties" ? multi : 0;
     this.state.active = true;
-    console.log(scoreOne, scoreTwo);
     Meteor.call("events.update_roundmatch", Brackets.findOne()._id, this.props.page, this.props.i, scoreOne, scoreTwo, ties, (err) => {
 
       this.state.active = false;

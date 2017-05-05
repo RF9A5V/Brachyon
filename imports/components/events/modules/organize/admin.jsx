@@ -8,7 +8,6 @@ export default class AdminAddAction extends ResponsiveComponent {
   constructor(props) {
     super(props);
     Meteor.call("event.staff.admins", Events.findOne()._id, (err, data) => {
-      console.log(data);
       this.setState({
         admins: data,
         ready: true
@@ -25,7 +24,6 @@ export default class AdminAddAction extends ResponsiveComponent {
     if(value.length >= 3) {
       this.state.timer = setTimeout(() => {
         Meteor.call("event.staff.loadAdminCandidates", value, (err, data) => {
-          console.log(data);
           this.setState({
             candidates: data
           })
