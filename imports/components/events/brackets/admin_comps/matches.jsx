@@ -117,7 +117,7 @@ export default class MatchList extends ResponsiveComponent {
                         $eq: null
                       }
                     });
-                    if(match) {
+                    if(match && match.players.every(p => { return p })) {
                       match.k = k;
                       return match;
                     }
@@ -201,7 +201,7 @@ export default class MatchList extends ResponsiveComponent {
                       $ne: null
                     }
                   });
-                  if(match) {
+                  if(match && match.players.every(p => { return p })) {
                     match.k = k;
                     return match;
                   }
