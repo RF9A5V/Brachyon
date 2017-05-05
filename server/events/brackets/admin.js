@@ -49,6 +49,33 @@ Meteor.methods({
     const participantIndex = bracket.participants.findIndex(p => {
       return p.alias == oldAlias;
     });
+    if(bracket.id) {
+      const bObj = Brackets.findOne(bracket.id);
+      var matches = [];
+      if(bracket.format.baseFormat == "single_elim" || bracket.format.baseFormat == "double_elim") {
+        bObj.rounds.forEach(b => {
+          b.forEach(r => {
+            r.forEach(m => {
+              if(m) {
+                matches.push(m.id);
+              }
+            })
+          })
+        })
+      }
+      Matches.update({
+        _id: {
+          $in: matches
+        },
+        [`players.alias`]: oldAlias
+      }, {
+        $set: {
+          "players.$.alias": alias
+        }
+      }, {
+        multi: true
+      })
+    }
     Instances.update(instanceId, {
       $set: {
         [`brackets.${bracketIndex}.participants.${participantIndex}.alias`]: alias

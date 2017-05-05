@@ -11,16 +11,13 @@ export default class ParticipantAddField extends ResponsiveComponent {
     super(props);
     this.state = {
       query: "",
-      showUsers: false,
-      users: null,
-      subs: []
+      users: [],
+      subs: [],
+      index: -1
     };
   }
 
   componentWillUnmount() {
-    if(this.state.users) {
-      this.state.users.stop();
-    }
     if(this.state.subs){
       this.state.subs.forEach(u => {
         u.stop();
@@ -30,7 +27,8 @@ export default class ParticipantAddField extends ResponsiveComponent {
 
   userTemplate(user, index, opts) {
     return (
-      <div className="row x-center hover-lg user-template" style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
+      <div className={`row x-center hover-lg user-template ${this.state.index == index ? "active" : ""}`}
+       style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
         <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
         <span style={{fontSize: opts.fontSize, textAlign: "left"}}>
           { user.username }
@@ -45,26 +43,21 @@ export default class ParticipantAddField extends ResponsiveComponent {
       clearTimeout(this.state.timer);
     }
     if(request.length < 3) {
-      if(this.state.users) {
-        this.state.users.stop();
-        this.setState({
-          query: "",
-          showUsers: false
-        })
-      }
+      this.setState({
+        users: [],
+        index: -1
+      })
       return;
     }
     this.state.query = request;
     this.state.timer = setTimeout(() => {
-      if(this.state.users) {
-        this.state.users.stop();
-      }
-      this.state.users = Meteor.subscribe("searchAndFilterUserByParticipation", request, Instances.findOne()._id, this.props.index, {
-        onReady: () => {
-          this.setState({
-            showUsers: true
-          });
-        }
+      const instanceId = Instances.findOne()._id;
+      const index = this.props.index;
+      Meteor.call("events.brackets.findPlayerCandidates", instanceId, index, request, (err, data) => {
+        this.setState({
+          users: data,
+          index: -1
+        })
       })
     }, 500);
   }
@@ -103,18 +96,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   getUsers() {
-    if(!this.state.showUsers) {
-      return [];
-    }
-    const participants = (this.props.bracket.participants || []).map(p => {
-      return p.id;
-    });
-    return Meteor.users.find({
-      username: new RegExp(this.state.query, "i"),
-      _id: {
-        $nin: participants
-      }
-    })
+    return this.state.users;
   }
 
   addParticipant(alias, id) {
@@ -128,23 +110,11 @@ export default class ParticipantAddField extends ResponsiveComponent {
           toastr.success("Successfully added participant!");
           this.setState({
             query: "",
-            showUsers: false
+            users: [],
+            index: -1
           });
           if(this.refs.userValue) {
             this.refs.userValue.value = "";
-          }
-          if(id) {
-            // Meteor.call("tickets.addOnsite", id, Instances.findOne()._id, this.props.index, (err) => {
-            //   if(err) {
-            //     return toastr.error(err.reason);
-            //   }
-            //   else {
-            //     this.props.onParticipantAdd({
-            //       id,
-            //       alias
-            //     })
-            //   }
-            // })
           }
           this.props.onUpdateParticipants();
         }
@@ -164,8 +134,8 @@ export default class ParticipantAddField extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
-        <div className="col" style={{marginBottom: 10}}>
-          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({(this.props.bracket.participants || []).length}{
+        <div className="col" style={{marginBottom: 10, position: "relative"}}>
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({this.props.participantCount}{
             (this.props.bracket.options || {}).limit ? (
               ` out of ${this.props.bracket.options.limit}`
             ) : (
@@ -175,28 +145,53 @@ export default class ParticipantAddField extends ResponsiveComponent {
           </label>
           <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
             if(e.key == "Enter") {
-              this.addParticipant(this.refs.userValue.value, null);
+              const user = this.state.users[this.state.index];
+              if(!user) {
+                this.addParticipant(this.refs.userValue.value, null);
+              }
+              else {
+                this.addParticipant(user.username, user._id);
+              }
+
+            }
+          }} onKeyDown={(e) => {
+            if(e.keyCode == "38") {
+              this.setState({
+                index: Math.max(-1, this.state.index - 1)
+              })
+            }
+            else if(e.keyCode == "40") {
+              this.setState({
+                index: Math.min(this.state.users.length, this.state.index + 1)
+              })
             }
           }} />
-        </div>
-        <div style={{backgroundColor: "#111", height: 150, overflowY: "auto", width: "100%", marginBottom: 10}}>
           {
-            this.state.query.length >= 3 ? (
-              <div ref="anon" className="row x-center hover-lg user-template" style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
-                <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
-                <div className="col">
-                  <span style={{fontSize: opts.fontSize, textAlign: "left"}}>{ this.state.query }</span>
-                  <span style={{fontSize: opts.fontSize, textAlign: "left"}}>Add As Anonymous User</span>
-                </div>
+            this.state.users.length ? (
+              <div style={{backgroundColor: "#111", position: "absolute", top: 72, width: "100%", maxHeight: "20vh", overflowY: "auto", border: "solid 2px #111"}}>
+                {
+                  this.getUsers().map((user, i) => {
+                    return this.userTemplate(user, i, opts)
+                  })
+                }
+                {
+                  this.state.query.length >= 3 ? (
+                    <div ref="anon" className={`row x-center hover-lg user-template ${this.state.index == this.state.users.length ? "active" : ""}`}
+                    style={{padding: 10, cursor: "pointer", maxWidth: "100%"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
+                      <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
+                      <div className="col">
+                        <span style={{fontSize: opts.fontSize, textAlign: "left"}}>{ this.state.query }</span>
+                        <span style={{fontSize: opts.fontSize, textAlign: "left"}}>Add As Anonymous User</span>
+                      </div>
+                    </div>
+                  ) : (
+                    null
+                  )
+                }
               </div>
             ) : (
-              ""
+              null
             )
-          }
-          {
-            this.getUsers().map((user, i) => {
-              return this.userTemplate(user, i, opts)
-            })
           }
         </div>
         <div className="row x-center">
@@ -204,7 +199,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
             this.props.bracket.isComplete ? (
               ""
             ) : (
-              <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginRight: 10}} onClick={this.randomizeSeeding.bind(this)}>
+              <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
                 <FontAwesome name="random" style={{fontSize: opts.fontSize, marginRight: 10}} />
                 Randomize
               </button>
@@ -212,13 +207,13 @@ export default class ParticipantAddField extends ResponsiveComponent {
           }
           {
             this.props.bracket.id ? (
-              <button className={opts.buttonClass + " col-1 row x-center center"} onClick={() => { this.setState({ resetOpen: true }) }}>
+              <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginLeft: 10}} onClick={() => { this.setState({ resetOpen: true }) }}>
                 <FontAwesome name="refresh" style={{fontSize: opts.fontSize, marginRight: 10}} />
                 Reset Bracket
               </button>
             ) : (
-              (this.props.bracket.participants || []).length > 3 ? (
-                <button className={opts.buttonClass + " col-1 row x-center center signup-button"} onClick={this.props.onStart}>
+              this.props.participantCount > 3 ? (
+                <button className={opts.buttonClass + " col-1 row x-center center signup-button"} style={{marginLeft: 10}} onClick={this.props.onStart}>
                   <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
                   Start
                 </button>
@@ -230,7 +225,10 @@ export default class ParticipantAddField extends ResponsiveComponent {
           }
         </div>
         <ResetModal open={this.state.resetOpen} onClose={() => { this.setState({ resetOpen: false }) }} onStart={() => {
-          location.reload();
+          Meteor.call("events.stop_event", Instances.findOne()._id, this.props.index, () => {
+            this.props.onUpdateParticipants();
+            this.props.update();
+          })
         }} index={this.props.index} />
       </div>
     );

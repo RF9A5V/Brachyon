@@ -8,6 +8,8 @@ import ScoreModal from "/imports/components/tournaments/modal.jsx";
 import Timer from "/imports/components/public/timer.jsx";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
+import Match from "/imports/components/tournaments/match.jsx";
+
 export default class MatchList extends ResponsiveComponent {
 
   constructor(props) {
@@ -102,93 +104,77 @@ export default class MatchList extends ResponsiveComponent {
         </div>
         <div className="row" style={{flexWrap: "wrap", marginBottom: 20}}>
           {
-            (() => {
-              var content = bracket.rounds.map((b, i) => {
-                return b.map((r, j) => {
-                  return r.map((m, k) => {
-                    if(!m || !m.id) {
-                      return "";
+            bracket.rounds.map((b, i) => {
+              return b.map((r, j) => {
+                const matchesInRound = r.map((m, k) => {
+                  if(m){
+                    var match = Matches.findOne({
+                      _id: m.id,
+                      players: {
+                        $ne: null
+                      },
+                      winner: {
+                        $eq: null
+                      }
+                    });
+                    if(match) {
+                      match.k = k;
+                      return match;
                     }
-                    var match = Matches.findOne(m.id);
-                    if(match.players[0] == null || match.players[1] == null || match.winner != null) {
-                      return "";
+                  }
+                  return null;
+                }).filter((m) => {
+                  return m
+                });
+                return matchesInRound.map(match => {
+                  var header = (() => {
+                    switch(i) {
+                      case 0: return "Winner's Bracket";
+                      case 1: return "Loser's Bracket";
+                      default: return "Grand Finals";
                     }
-                    return (
-                      <div className="col" style={{margin: "20px 10px 20px 0", width: opts.width, cursor: "pointer"}} onClick={() => { this.setState({
-                        id: m.id, open: true,
-                        bIndex: i, rIndex: j, mIndex: k
-                      }) }}>
-                        <div style={{padding: 5, backgroundColor: "#111"}}>
-                          <span style={{...textStyle, textAlign: "center"}}>{(() => {
-                            switch(i) {
-                              case 0: return "Winner's Bracket";
-                              case 1: return "Loser's Bracket";
-                              default: return "Grand Finals";
-                            }
-                          })()}, {(() => {
-                            var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
-                            switch(b.length - roundNum) {
-                              case 2: return "Quarter Finals";
-                              case 1: return "Semi Finals";
-                              case 0: return "Finals";
-                              default: return "Round " + roundNum;
-                            }
-                          })()}</span>
-                        </div>
-                        <div className="row flex-pad x-center" style={{backgroundColor: "#666", position: "relative"}}>
-                          <div className="row match-names" style={{top: 0}}>
-                            <span style={textStyle}>
-                              <sup className="match-seed">
-                              [ { this.props.partMap[match.players[0].alias] } ]
-                              </sup>
-                              { match.players[0].alias }
-                            </span>
-                          </div>
-                          <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
-                          <div className="col-1 col x-center" style={{padding: 10}}>
-                            <h5 style={{...textStyle, margin: "10px 0"}}>VERSUS</h5>
-                          </div>
-                          <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
-                          <div className="row match-names justify-end" style={{bottom: 0}}>
-                            <span style={textStyle}>
-                              { match.players[1].alias }
-                              <sub className="match-seed">
-                                [ { this.props.partMap[match.players[1].alias] } ]
-                              </sub>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="col" style={{padding: 5, backgroundColor: "#111"}}>
+                  })() + ", " + (() => {
+                    var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
+                    switch(b.length - roundNum) {
+                      case 2: return "Quarter Finals";
+                      case 1: return "Semi Finals";
+                      case 0: return "Finals";
+                      default: return "Round " + roundNum;
+                    }
+                  })();
 
-                          <div className="row flex-pad">
-                            <span style={textStyle}>Status: {(() => {
-                              switch(match.status) {
-                                case 0: return "Waiting"
-                                case 1: return match.stream ? "On Deck" : "Ready"
-                                case 2: return match.stream ? "Streaming" : "Playing"
-                                case 3: return "Complete"
-                              }
-                            })()}</span>
-                            <span style={textStyle}>
-                              <Timer date={match.status == 1 ? match.establishedAt : match.startedAt} />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  }).filter(m => { return m != "" });
-                }).filter(r => { return r.length != 0 });
-              }).filter(b => { return b.length != 0 });
-              if(content.length > 0) {
-                return content;
-              }
-              return (
-                <div className="row center" style={textStyle}>
-                  No more matches pending. This bracket has finished!
-                </div>
-              )
-            })()
+                  var status = "Status: " + (() => {
+                    switch(match.status) {
+                      case 0: return "Waiting"
+                      case 1: return match.stream ? "On Deck" : "Ready"
+                      case 2: return match.stream ? "Streaming" : "Playing"
+                      case 3: return "Complete"
+                    }
+                  })();
 
+                  var footer = [
+                    <span>{status}</span>,
+                    <Timer date={match.status == 1 ? match.establishedAt : match.startedAt} />
+                  ]
+
+                  var players = match.players.map(p => {
+                    p.seed = this.props.partMap[p.alias];
+                    return p;
+                  })
+                  return (
+                    <Match id={match._id} players={players} header={header} footer={footer} onClick={() => {
+                      this.setState({
+                        open: true,
+                        id: match._id,
+                        bIndex: i,
+                        rIndex: j,
+                        mIndex: match.k
+                      })
+                    }} />
+                  )
+                });
+              })
+            })
           }
         </div>
         <div className="row center" style={{marginBottom: 20}}>
@@ -206,6 +192,26 @@ export default class MatchList extends ResponsiveComponent {
             return b.map((r, j) => {
               if(i == 1 && j == 0) {
                 return "";
+              }
+              const matchesInRound = r.map((m, k) => {
+                if(m){
+                  var match = Matches.findOne({
+                    _id: m.id,
+                    winner: {
+                      $ne: null
+                    }
+                  });
+                  if(match) {
+                    match.k = k;
+                    return match;
+                  }
+                }
+                return null;
+              }).filter((m) => {
+                return m
+              });
+              if(!matchesInRound.length) {
+                return null;
               }
               return (
                 <div className="accordion-base">
@@ -233,39 +239,53 @@ export default class MatchList extends ResponsiveComponent {
                   <div className="accordion-content" style={{display: this.state.bTab == i && this.state.rTab == j ? "inherit" : "none"}}>
                     <div className="row" style={{flexWrap: "wrap"}}>
                     {
-                      (() => {
-                        var content = r.map((m, k) => {
-                          if(!m || !m.id) {
-                            return "";
+                      matchesInRound.map(match => {
+                        var header = (() => {
+                          switch(i) {
+                            case 0: return "Winner's Bracket";
+                            case 1: return "Loser's Bracket";
+                            default: return "Grand Finals";
                           }
-                          var match = Matches.findOne(m.id);
-                          if(!match.winner) {
-                            return "";
+                        })() + ", " + (() => {
+                          var roundNum = (i == 1 && bracket.rounds[1][0].filter((m) => { return m != null }).length == 0 ? j : (j + 1));
+                          switch(b.length - roundNum) {
+                            case 2: return "Quarter Finals";
+                            case 1: return "Semi Finals";
+                            case 0: return "Finals";
+                            default: return "Round " + roundNum;
                           }
-                          var winnerIndex = match.players[0].alias == match.winner.alias ? 0 : 1;
-                          return (
-                            <div className="col" style={{marginBottom: 10, width: opts.width, marginRight: 10}}>
-                              <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
-                                <img src={this.profileImageOrDefault(match.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
-                                <div className="col-1 col x-center" style={{padding: 10}}>
-                                  <span style={{...textStyle, alignSelf: "flex-start"}}>{ match.players[0].alias }</span>
-                                  <h5 style={{...textStyle, margin: "10px 0"}}>VERSUS</h5>
-                                  <span style={{...textStyle, alignSelf: "flex-end"}}>{ match.players[1].alias }</span>
-                                </div>
-                                <img src={this.profileImageOrDefault(match.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
-                              </div>
-                              <div className="row">
-                                <span className="col-1" style={{...textStyle, backgroundColor: winnerIndex == 0 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 0 ? "Winner" : "" }</span>
-                                <span className="col-1" style={{...textStyle, textAlign: "right", backgroundColor: winnerIndex == 1 ? "#FF6000" : "#111", padding: 5}}>{ winnerIndex == 1 ? "Winner" : "" }</span>
-                              </div>
-                            </div>
-                          )
-                        }).filter(m => { return m != "" });
-                        if(content.length > 0) {
-                          return content;
-                        }
-                        return "No matches for this round!";
-                      })()
+                        })();
+
+                        var status = "Status: " + (() => {
+                          switch(match.status) {
+                            case 0: return "Waiting"
+                            case 1: return match.stream ? "On Deck" : "Ready"
+                            case 2: return match.stream ? "Streaming" : "Playing"
+                            case 3: return "Complete"
+                          }
+                        })();
+
+                        var footer = [
+                          <span>{status}</span>,
+                          <span>Done!</span>
+                        ]
+
+                        var players = match.players.map(p => {
+                          p.seed = this.props.partMap[p.alias];
+                          return p;
+                        })
+                        return (
+                          <Match id={match._id} players={players} header={header} footer={footer} onClick={() => {
+                            this.setState({
+                              open: true,
+                              id: match._id,
+                              bIndex: i,
+                              rIndex: j,
+                              mIndex: match.k
+                            })
+                          }} />
+                        )
+                      })
                     }
                     </div>
                   </div>

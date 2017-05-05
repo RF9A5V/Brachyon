@@ -46,6 +46,11 @@ Meteor.publish('brackets', (_id) => {
 Meteor.publish("bracketContainer", (_id, index) => {
   var instance = Instances.findOne(_id);
   if(!instance) {
+    instance = Instances.findOne({
+      slug: _id
+    });
+  }
+  if(!instance) {
     return [];
   }
   var partIds = (instance.brackets[index].participants || []).map(b => { return b.id });
@@ -74,7 +79,7 @@ Meteor.publish("bracketContainer", (_id, index) => {
     })
   }
   return [
-    Instances.find({_id}),
+    Instances.find({_id: instance._id}),
     Brackets.find({ _id: instance.brackets[index].id }),
     Meteor.users.find({ _id: { $in: partIds } }),
     Matches.find({ _id: {
