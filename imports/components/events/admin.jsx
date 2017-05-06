@@ -303,6 +303,7 @@ class EventAdminPage extends Component {
       var file = attrs.details.image.image;
       imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
       imgTemp.image = file;
+      console.log(imgTemp);
     }
     delete attrs.details.image;
 
@@ -324,6 +325,7 @@ class EventAdminPage extends Component {
       Banners.insert({
         file: imgTemp.image,
         meta: imgTemp.meta,
+        fileName: event._id + "." + imgTemp.type,
         onUploaded: (err, data) => {
           if(err) {
             return toastr.error(err.reason, "Error!");
