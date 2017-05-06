@@ -324,7 +324,7 @@ class EventAdminPage extends Component {
       Banners.insert({
         file: imgTemp.image,
         meta: imgTemp.meta,
-        fileName: event.details._id + "." + imgTemp.type,
+        fileName: event._id + "." + imgTemp.type,
         onUploaded: (err, data) => {
           if(err) {
             return toastr.error(err.reason, "Error!");
