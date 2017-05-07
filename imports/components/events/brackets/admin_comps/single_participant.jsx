@@ -115,13 +115,13 @@ class SingleParticipant extends Component {
           {
             participant.checkedIn ? (
               this.props.opts.mobile ? (
-                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`, color: "#FF6000"}} />
+                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize} * 1.5)`, color: "#FF6000"}} />
               ) : (
                 <span>Checked In</span>
               )
             ) : (
               this.props.opts.mobile ? (
-                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => {
+                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 1.5)`}} onClick={() => {
                   const instance = Instances.findOne();
                   if(instance.tickets) {
                     this.setState({ discountOpen: true, participant })
@@ -145,7 +145,7 @@ class SingleParticipant extends Component {
           }
         </div>
         <div style={{marginLeft: 20, textAlign: "right"}}>
-          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
+          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 1.5)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
         </div>
       </div>
     )

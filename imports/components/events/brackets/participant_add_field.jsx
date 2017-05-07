@@ -200,7 +200,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
               ""
             ) : (
               <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
-                <FontAwesome name="random" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                <FontAwesome name="random" style={{fontSize: `calc(${opts.fontSize} * 0.5)`, marginRight: 10}} />
                 Randomize
               </button>
             )
@@ -208,13 +208,13 @@ export default class ParticipantAddField extends ResponsiveComponent {
           {
             this.props.bracket.id ? (
               <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginLeft: 10}} onClick={() => { this.setState({ resetOpen: true }) }}>
-                <FontAwesome name="refresh" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                <FontAwesome name="refresh" style={{fontSize: `calc(${opts.fontSize} * 0.5)`, marginRight: 10}} />
                 Reset Bracket
               </button>
             ) : (
               this.props.participantCount > 3 ? (
                 <button className={opts.buttonClass + " col-1 row x-center center signup-button"} style={{marginLeft: 10}} onClick={this.props.onStart}>
-                  <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                  <FontAwesome name="play" style={{fontSize: `calc(${opts.fontSize} * 0.5)`, marginRight: 10}} />
                   Start
                 </button>
               ) : (
