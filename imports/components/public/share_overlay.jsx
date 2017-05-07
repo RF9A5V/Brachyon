@@ -54,12 +54,8 @@ export default class ShareOverlay extends ResponsiveComponent {
   }
 
   shareOnTwitter() {
-    if(this.refs.text.value.length > 140) {
-      toastr.error("Too many characters for Twitter!");
-      throw new Error("Exceeds Twitter character limit of 140.");
-    }
     const cb = () => {
-      Meteor.call("users.twitter.share", this.refs.text.value, this.props.url, {
+      Meteor.call("users.twitter.share", this.props.url, {
         registration: this.props.registerShare,
         type: this.props.type,
         id: Events.findOne()._id
@@ -107,11 +103,13 @@ export default class ShareOverlay extends ResponsiveComponent {
               // </div>
             }
 
-            <div className="row center x-center" style={{marginTop: 10}}>
-              <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
-                <FontAwesome name="facebook" style={{marginRight: 10}} />
-                Share
-              </button>
+            <div className="row center x-center" style={{width: "45%", margin: "10px auto 0"}}>
+              {
+                // <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
+                //   <FontAwesome name="facebook" style={{marginRight: 10}} />
+                //   Share
+                // </button>
+              }
               <button className={`twitter-button col-1 ${opts.buttonClass}`} onClick={this.shareOnTwitter.bind(this)}>
                 <FontAwesome name="twitter" style={{marginRight: 10}} />
                 Share

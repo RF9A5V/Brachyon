@@ -6,7 +6,6 @@ export default class StreamPanel extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       item: 0,
       stream: props.stream || ""

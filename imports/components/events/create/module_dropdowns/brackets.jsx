@@ -22,7 +22,6 @@ export default class BracketsPanel extends ResponsiveComponent {
           options: b.options || {}
         };
       })
-      console.log(brackets);
     }
     this.state = {
       brackets,

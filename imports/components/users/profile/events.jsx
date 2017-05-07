@@ -104,7 +104,7 @@ export default class UserEvents extends ResponsiveComponent {
       <select value={this.state.action} onChange={(e) => {
         this.state.action = e.target.value.toLowerCase();
         this.loadEvents(this.props, true);
-      }} style={{fontSize: opts.mobile ? "2.5em" : "1em"}}>
+      }} style={{fontSize: opts.mobile ? "2.5em" : "1em", margin: 20, width: 300}}>
         { options }
       </select>
     )

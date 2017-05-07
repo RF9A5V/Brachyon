@@ -61,7 +61,12 @@ Meteor.methods({
         $options: "ims"
       }
     }, {
-      limit: amount
+      limit: amount,
+      fields: {
+        _id: 1,
+        name: 1,
+        bannerUrl: 1
+      }
     });
     return games.fetch();
   }

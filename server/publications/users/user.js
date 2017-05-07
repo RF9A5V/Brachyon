@@ -33,6 +33,7 @@ Meteor.publish("userNotifications", (_id) => {
 })
 
 Meteor.publish("getUserByUsername", (username) => {
+  console.log(username);
   const user = Meteor.users.findOne({
     username
   });
@@ -42,7 +43,7 @@ Meteor.publish("getUserByUsername", (username) => {
     }),
     Games.find({
       _id: {
-        $in: Object.keys(user.stats)
+        $in: Object.keys(user.stats || {})
       }
     })
   ]

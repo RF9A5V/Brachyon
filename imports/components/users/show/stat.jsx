@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 
 import Games from '/imports/api/games/games.js';
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class UserStat extends Component {
+export default class UserStat extends ResponsiveComponent {
 	constructor(props) {
     super(props);
     this.state = {
@@ -11,6 +12,7 @@ export default class UserStat extends Component {
   }
 
   componentWillMount() {
+		super.componentWillMount();
     this.setState({
       game:"overview"
     });
@@ -149,7 +151,7 @@ export default class UserStat extends Component {
     }
   }
 
-  render(){
+  renderBase(opts){
 		const user = Meteor.users.findOne({
 			username: this.props.username
 		});
@@ -157,7 +159,7 @@ export default class UserStat extends Component {
   	return(
   	<div style={{marginTop:15, marginBottom:15}}>
       <div className="center">
-        <select className="center" ref="game" onChange={(e)=> {this.selectGame()} }style={{width:300, border:"solid", margin:20}}>
+        <select className="center" ref="game" onChange={(e)=> {this.selectGame()} }style={{fontSize: opts.mobile ? "2.5em" : "1em",width:300, margin:20}}>
         <option value="overview" Selected>
           Overview
         </option>
@@ -178,7 +180,18 @@ export default class UserStat extends Component {
        {this.showTable()}
       </div>
     </div>
-
   )}
+
+	renderDesktop() {
+		return this.renderBase({
+			mobile: false
+		})
+	}
+
+	renderMobile() {
+		return this.renderBase({
+			mobile: true
+		})
+	}
 
 }
