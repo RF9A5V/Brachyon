@@ -39,7 +39,7 @@ export default class UserEvents extends ResponsiveComponent {
     }
     const limit = this.state.render == "mobile" ? 8 : 16;
     const action = props.type == "playing" ? "users.getPlayerEvents" : "users.getOwnerEvents";
-    var date = new Date();
+    var date = null;
     if(!reload && this.state.data.length) {
       date = this.state.data[this.state.data.length - 1].date;
     }

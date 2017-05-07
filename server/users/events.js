@@ -15,10 +15,12 @@ Meteor.methods({
     var queryObj = {
       instances: {
         $in: instances.map(i => { return i._id })
-      },
-      "details.datetime": {
-        $lt: args.date
       }
+    }
+    if(args.date) {
+      queryObj["details.datetime"] = {
+        $lt: args.date
+      };
     }
     switch(args.type) {
       case "active":
@@ -66,13 +68,15 @@ Meteor.methods({
     });
     var queryObj = {
       owner: user._id,
-      "details.datetime": {
-        $lt: args.date
-      },
       league: {
         $eq: null
       }
     };
+    if(args.date) {
+      queryObj["details.datetime"] = {
+        $lt: args.date
+      };
+    }
     switch(args.type) {
       case "active":
         queryObj.published = true;
