@@ -39,7 +39,7 @@ class UserProfile extends ResponsiveComponent {
             const tabStyle = {
               borderBottom: isCurrentTab ?"solid 2px":"",
               borderColor: isCurrentTab ? "#ff6000":"",
-              fontSize: opts.fontSize,
+              fontSize: opts.mobile ? "3em" : "1em",
               color: this.state.editMode && tab != "bio" ? "#666" : "white",
               marginTop: opts.mobile ? 30 : 0
             }
