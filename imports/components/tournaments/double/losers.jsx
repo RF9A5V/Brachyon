@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Element } from "react-scroll";
 
 import EventModal from "../modal.jsx";
 import MatchBlock from './match.jsx';
@@ -212,7 +213,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
     const width = opts.headerWidth + ((opts.headerWidth + opts.headerSpacing) * (headers.length - 1));
 
     return (
-      <div id="losers" onWheel={(e) => {
+      <Element name="losers" onWheel={(e) => {
         e.stopPropagation();
       }}>
         {
@@ -285,7 +286,7 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
             ""
           )
         }
-      </div>
+      </Element>
     );
   }
 
