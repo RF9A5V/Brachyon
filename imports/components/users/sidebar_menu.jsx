@@ -75,7 +75,7 @@ export default class SidebarMenu extends ResponsiveComponent {
       return null;
     }
     return (
-      <div className="col" style={{height: "100vh", backgroundColor: "black", width: ops.width}}>
+      <div className="col" style={{height: "100%", backgroundColor: "black", width: ops.width}}>
         <div className="col-1">
           <div className="row" style={{justifyContent: "flex-end", padding: 20}}>
             <FontAwesome name="times" style={{fontSize: ops.fontSize}} onClick={this.props.onRedirect}/>
