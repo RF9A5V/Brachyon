@@ -33,7 +33,7 @@ class BracketDetails extends ResponsiveComponent {
     var icon = "circle";
     if(!bracket.id) {
       if(bracket.options && bracket.options.limit) {
-        const remainCount = bracket.options.limit - bracket.participants.length;
+        const remainCount = bracket.options.limit - (bracket.participants || []).length;
         text = `${remainCount || "No"} Slot${remainCount == 1 ? "" : "s"} Remaining!`;
         icon = "users";
       }
@@ -159,7 +159,7 @@ class BracketDetails extends ResponsiveComponent {
                       var [p1, p2] = match.players.map(p => { return Meteor.users.findOne(p.id) })
                       return (
                         <div className="col" style={{margin: "20px 10px 20px 0", width: 350}}>
-                          <div className="row match-names">
+                          <div className="row match-names" style={{top: 0}}>
                             <span>{ match.players[0].alias }</span>
                           </div>
                           <div className="row flex-pad x-center" style={{backgroundColor: "#666"}}>
@@ -169,7 +169,7 @@ class BracketDetails extends ResponsiveComponent {
                             </div>
                             <img src={p2 && p2.profile.imageUrl ? p2.profile.imageUrl : "/images/profile.png"} style={{width: 100, height: 100}} />
                           </div>
-                          <div className="row match-names justify-end">
+                          <div className="row match-names justify-end" style={{bottom: 0}}>
                             <span>{ match.players[1].alias }</span>
                           </div>
                         </div>
@@ -270,7 +270,9 @@ class BracketDetails extends ResponsiveComponent {
 
   _registrationButton(obj, opts) {
     return (
-      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => { this.setState({open: true}) }}/>
+      <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => {
+        // this.setState({open: true})
+      }}/>
     );
     // return (
     //   <button style={} onClick={() => {
@@ -312,7 +314,7 @@ class BracketDetails extends ResponsiveComponent {
     return (
       <div className="col col-1 x-center center" style={{padding: 30, height: "100%"}}>
         <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
-        <div style={{padding: 20}}>
+        <div style={{padding: 20, width: opts.mobile ? "50%" : "25%"}}>
           <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
           <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
             <FontAwesome name="sitemap" style={{marginRight: 10}} />
@@ -320,8 +322,9 @@ class BracketDetails extends ResponsiveComponent {
           </div>
           { this.status(obj, opts) }
           <div className="row center x-center">
-            <button style={{fontSize: opts.fontSize}} onClick={() => {
-              if(event.owner == Meteor.userId()) {
+            <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
+              const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
+              if(event.owner == Meteor.userId() || isAdmin) {
                 browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
               }
               else {
@@ -338,13 +341,13 @@ class BracketDetails extends ResponsiveComponent {
               )
             }
             {
-              (obj.participants || []).findIndex(o => {
-                return o.id == Meteor.userId()
-              }) >= 0 ? (
-                <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
-              ) : (
-                null
-              )
+              // (obj.participants || []).findIndex(o => {
+              //   return o.id == Meteor.userId()
+              // }) >= 0 ? (
+              //   <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
+              // ) : (
+              //   null
+              // )
             }
           </div>
         </div>
@@ -433,7 +436,8 @@ class BracketDetails extends ResponsiveComponent {
         {
           this.details(bracketMeta, {
             imgHeight: "50vh",
-            fontSize: "4rem"
+            fontSize: "4rem",
+            mobile: true
           })
         }
       </div>

@@ -392,7 +392,31 @@ Meteor.methods({
         }
       })
     }
+  },
 
+  "events.stop_event"(id, index){
+    const instance = Instances.findOne(id);
+    const format = instance.brackets[index].format.baseFormat;
+    const bracket = Brackets.findOne(instance.brackets[index].id);
+    if(format == "single_elim" || format == "double_elim") {
+      var matches = [];
+      bracket.rounds.map(b => {
+        b.map(r => {
+          r.map(m => {
+            if(m) {
+              matches.push(m.id);
+            }
+          })
+        })
+      })
+      Matches.remove({ _id: { $in: matches } });
+      Brackets.remove(bracket._id);
+      Instances.update(id, {
+        $unset: {
+          [`brackets.${index}.id`]: 1
+        }
+      })
+    }
   },
 
   "events.advance_single"(bracketId, bracketIndex, round, index) {
@@ -612,7 +636,7 @@ Meteor.methods({
           winner: null,
           [`players.${direction}`]: null,
           status: 0,
-          establishedAt: null,
+          establishedAt: new null,
           startedAt: null
         }
       });
@@ -623,7 +647,7 @@ Meteor.methods({
       $set: {
         winner: null,
         status: 1,
-        establishedAt: null
+        establishedAt: new Date()
       }
     });
     Brackets.update(bracketId, {

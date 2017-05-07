@@ -139,71 +139,71 @@ export default class RegisterButton extends Component {
     });
     var instance = Instances.findOne();
     return (
-      <div>
-        <button style={{...this.props.style, marginTop: 0, marginBottom: 0}} onClick={() => {
-          if(pIndex < 0 || !Meteor.userId()) {
-            this.register();
-          }
-          else {
-            this.unregister();
-          }
-        }}>
-          <span>
-            {
-              pIndex >= 0 && Meteor.userId() ? (
-                "Unregister"
-              ) : (
-                "Register"
-              )
-            }
-          </span>
-        </button>
-        {
-          instance.tickets ? (
-            [
-              <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={(tickets) => {
-                Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, tickets, (err) => {
-                  if(err) {
-                    return toastr.error(err.reason);
-                  }
-                  else {
-                    const instance = Instances.findOne();
-                    Object.keys(tickets).forEach(k => {
-                      if(!isNaN(k) && pIndex < 0) {
-                        this.registerCB(parseInt(k))
-                      }
-                    });
-                    this.forceUpdate();
-                  }
-                })
-              }} onAcceptOnline={(tickets) => {
-                this.setState({
-                  typeOpen: false,
-                  paymentOpen: true,
-                  tickets
-                })
-              }} />,
-              <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} breakdown={(() => {
-                var costs = [];
-                if(!this.state.tickets) {
-                  return costs;
-                }
-                this.state.tickets.forEach(k => {
-                  const tickObj = instance.tickets.fees[k];
-                  costs.push({
-                    name: isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1),
-                    price: tickObj.price
-                  });
-                });
-                return costs;
-              })()} />
-            ]
-          ) : (
-            ""
-          )
+      <button className="col-1" style={{...this.props.style, marginTop: 0, marginBottom: 0}} onClick={() => {
+        if(pIndex < 0 || !Meteor.userId()) {
+          this.register();
         }
-        <RegModal open={this.state.regOpen} onClose={() => { this.setState({ regOpen: false }) }} onSuccess={this.register.bind(this)} />
-      </div>
+        else {
+          this.unregister();
+        }
+      }}>
+        <span>
+          {
+            pIndex >= 0 && Meteor.userId() ? (
+              "Unregister"
+            ) : (
+              "Register"
+            )
+          }
+        </span>
+        <div>
+          {
+            instance.tickets ? (
+              [
+                <TicketTypeModal open={this.state.typeOpen} onClose={() => { this.setState({typeOpen: false}) }} index={this.props.metaIndex} onAcceptOnsite={(tickets) => {
+                  Meteor.call("tickets.addOnsite", Meteor.userId(), Instances.findOne()._id, tickets, (err) => {
+                    if(err) {
+                      return toastr.error(err.reason);
+                    }
+                    else {
+                      const instance = Instances.findOne();
+                      Object.keys(tickets).forEach(k => {
+                        if(!isNaN(k) && pIndex < 0) {
+                          this.registerCB(parseInt(k))
+                        }
+                      });
+                      this.forceUpdate();
+                    }
+                  })
+                }} onAcceptOnline={(tickets) => {
+                  this.setState({
+                    typeOpen: false,
+                    paymentOpen: true,
+                    tickets
+                  })
+                }} />,
+                <PaymentModal open={this.state.paymentOpen} onClose={() => { this.setState({ paymentOpen: false }) }} items={this.paymentItems()} submit={this.processPayment.bind(this)} breakdown={(() => {
+                  var costs = [];
+                  if(!this.state.tickets) {
+                    return costs;
+                  }
+                  this.state.tickets.forEach(k => {
+                    const tickObj = instance.tickets.fees[k];
+                    costs.push({
+                      name: isNaN(k) ? k[0].toUpperCase() + k.slice(1) : "Entry to Bracket " + (parseInt(k) + 1),
+                      price: tickObj.price
+                    });
+                  });
+                  return costs;
+                })()} />
+              ]
+            ) : (
+              ""
+            )
+          }
+          <RegModal open={this.state.regOpen} onClose={() => { this.setState({ regOpen: false }) }} onSuccess={this.register.bind(this)} />
+        </div>
+      </button>
     )
   }
 }

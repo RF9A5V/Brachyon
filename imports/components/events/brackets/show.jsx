@@ -12,10 +12,9 @@ import Toggle from "/imports/components/tournaments/double/toggle.jsx";
 
 import ParticipantList from "../show/participant_list.jsx";
 import OptionsPanel from "./options.jsx";
-import MatchList from "./show/matches.jsx";
+import MatchList from "./admin_comps/matches.jsx";
 
 import { formatter } from "/imports/decorators/formatter.js";
-import { generateMetaTags, resetMetaTags } from "/imports/decorators/meta_tags.js";
 
 import Brackets from "/imports/api/brackets/brackets.js"
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
@@ -40,10 +39,6 @@ class BracketShowScreen extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    this.populateMetaTags();
-  }
-
   componentWillUnmount() {
     if(this.state.event) {
       this.state.event.stop();
@@ -51,7 +46,6 @@ class BracketShowScreen extends Component {
     if(this.refs.hiddenLink) {
       this.refs.hiddenLink.removeEventListener("click");
     }
-    resetMetaTags();
   }
 
   imgOrDefault() {
@@ -60,16 +54,6 @@ class BracketShowScreen extends Component {
       return event.details.bannerUrl;
     }
     return "/images/brachyon_logo.png";
-  }
-
-  populateMetaTags() {
-    var event = Events.findOne();
-    var bracket = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
-    var title = event ? event.details.name + (bracket.name ? ` - ${bracket.name}` : "") : bracket.name || formatter(bracket.format.baseFormat);
-    var format = formatter(bracket.format.baseFormat);
-    var img = this.imgOrDefault();
-    var url = window.location.href;
-    generateMetaTags(title, format, img, url);
   }
 
   participantsItem(bracket) {
@@ -258,9 +242,9 @@ class BracketShowScreen extends Component {
     if(bracketMeta.isComplete) {
       defaultItems.push(this.leaderboardItem(bracketMeta, this.props.params.bracketIndex || 0));
     }
-    if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
-      defaultItems.push(this.matchesItem(bracketMeta));
-    }
+    // if(bracketMeta.id && (bracketMeta.format.baseFormat == "single_elim" || bracketMeta.format.baseFormat == "double_elim")) {
+    //   defaultItems.push(this.matchesItem(bracketMeta));
+    // }
     return defaultItems;
   }
 
@@ -378,10 +362,10 @@ class BracketShowScreen extends Component {
   }
 }
 
-const x = createContainer(({params}) => {
-  const { slug, bracketIndex } = params;
+const x = createContainer((props) => {
+  const { slug, bracketIndex } = props.params;
 
-  if(slug) {
+  if(props.location.pathname) {
     const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
@@ -397,8 +381,7 @@ const x = createContainer(({params}) => {
     }
   }
   else {
-    const { id } = params;
-    const instanceHandle = Meteor.subscribe("bracketContainer", id, 0);
+    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0);
     return {
       ready: instanceHandle.ready()
     }

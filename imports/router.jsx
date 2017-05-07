@@ -64,8 +64,8 @@ export const renderRoutes = () => (
       <Route path="league/:slug/admin" component={EditLeagueScreen} />
       <Route path="league/:slug" component={ShowLeagueScreen} />
       <Route path="league/:slug/:slide" component={ShowLeagueScreen} />
-      <Route path="bracket/:id" component={BracketShowScreen} />
-      <Route path="bracket/:id/admin" component={BracketAdminScreen} />
+      <Route path="bracket/:slug" component={BracketShowScreen} />
+      <Route path="bracket/:slug/admin" component={BracketAdminScreen} />
       <Route path="orgs/create" component={OrganizationCreateScreen} />
       <Route path="org/:slug" component={OrganizationShowScreen} />
       <Route path="admin" component={AdminFunctionScreen} />

@@ -1,5 +1,5 @@
 Meteor.methods({
-  "users.twitter.share"(text, url, options) {
+  "users.twitter.share"(url, options) {
     const user = Meteor.user();
     if(!user) {
       throw new Meteor.Error(403, "You need to be logged for this!");
@@ -12,6 +12,11 @@ Meteor.methods({
     switch(options.type) {
       case "event":
         content = Events.findOne(options.id);
+        Events.update(options.id, {
+          $addToSet: {
+            "promotion.twitter": user._id
+          }
+        });
         break;
       case "league":
         content = Leagues.findOne(options.id);
@@ -26,11 +31,6 @@ Meteor.methods({
       access_token: user.services.twitter.accessToken,
       access_token_secret: user.services.twitter.accessTokenSecret
     });
-    Events.update(eventId, {
-      $addToSet: {
-        "promotion.twitter": user._id
-      }
-    });
 
     var status;
     var link = Meteor.absoluteUrl() + "_" + url;
@@ -44,9 +44,7 @@ Meteor.methods({
     T.post("statuses/update", {
       status
     }, (err, data, res) => {
-      if(err) {
-        console.log(err);
-      }
+
     })
   },
   "users.facebook.share"(eventId, url, options) {
@@ -90,7 +88,6 @@ Meteor.methods({
       message,
       link
     }, (res) => {
-      console.log(res);
     })
 
     Events.update(eventId, {
