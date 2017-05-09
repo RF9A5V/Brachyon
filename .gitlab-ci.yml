@@ -1,0 +1,11 @@
+before_script:
+  - apt-get update -qq && apt-get install -y -qq imagemagick
+
+stages:
+  - build
+  - test
+  - deploy
+
+test-build:
+  stage: build
+  script: meteor --settings settings.json
