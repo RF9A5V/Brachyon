@@ -200,7 +200,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
               ""
             ) : (
               <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
-                <FontAwesome name="random" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                <FontAwesome name="random" style={{fontSize: opts.iconSize, marginRight: 10}} />
                 Randomize
               </button>
             )
@@ -208,13 +208,13 @@ export default class ParticipantAddField extends ResponsiveComponent {
           {
             this.props.bracket.id ? (
               <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginLeft: 10}} onClick={() => { this.setState({ resetOpen: true }) }}>
-                <FontAwesome name="refresh" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                <FontAwesome name="refresh" style={{fontSize: opts.iconSize, marginRight: 10}} />
                 Reset Bracket
               </button>
             ) : (
               this.props.participantCount > 3 ? (
                 <button className={opts.buttonClass + " col-1 row x-center center signup-button"} style={{marginLeft: 10}} onClick={this.props.onStart}>
-                  <FontAwesome name="play" style={{fontSize: opts.fontSize, marginRight: 10}} />
+                  <FontAwesome name="play" style={{fontSize: opts.iconSize, marginRight: 10}} />
                   Start
                 </button>
               ) : (
@@ -236,11 +236,11 @@ export default class ParticipantAddField extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em",
+      fontSize: "2.5rem",
       inputClass: "large-input",
       buttonClass: "large-button",
       imgDim: 100,
-      fontSize: "2.5em"
+      iconSize: "4rem"
     });
   }
 
@@ -250,7 +250,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
       inputClass: "",
       buttonClass: "",
       imgDim: 50,
-      fontSize: "1em"
+      iconSize: "1em"
     });
   }
 

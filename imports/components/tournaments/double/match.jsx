@@ -155,10 +155,10 @@ export default class MatchBlock extends ResponsiveComponent {
             </div>
           )
         }
-        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: "black", border: "solid 2px white", borderRight: "none"}}>
+        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: match.status == 2 ? "#FF6000" : "black", border: "solid 2px white", borderRight: "none"}}>
           { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
             return (
-              <span style={{fontSize: opts.fontSize}}>
+              <span style={{fontSize: opts.fontSize, color: match.status == 2 ? "black" : "white"}}>
                 { c }
               </span>
             )
