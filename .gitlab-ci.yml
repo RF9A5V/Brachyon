@@ -1,5 +1,7 @@
 before_script:
   - apt-get update -qq && apt-get install -y -qq imagemagick
+  - curl https://install.meteor.com/ | sh
+  - meteor npm i
 
 stages:
   - build
