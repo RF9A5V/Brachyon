@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import FontAwesome from "react-fontawesome";
 
 import SeedDropdown from "./seeddropdown.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 const participantSource = {
   beginDrag(props) {
@@ -85,7 +86,7 @@ function collect2(connect, monitor) {
   };
 }
 
-class SingleParticipant extends Component {
+class SingleParticipant extends ResponsiveComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,7 +103,7 @@ class SingleParticipant extends Component {
     const opacity = ( (index == invisibleIndex) || (isDragging && invisibleIndex == -1) ) ? 0 : 1;
     const user = Meteor.users.findOne(participant.id);
     return (
-      <div className="participant-row row x-center" key={index}>
+      <div className="participant-row row x-center" style={{width: this.state.render == "mobile" ? "100%" : "80%"}} key={index}>
         <div className="row center x-center" style={{width: "10%"}}>
           <SeedDropdown seedIndex={this.props.index} pSize={this.props.pSize} index={this.props.bIndex} id={this.state.id} updateList={this.props.onUpdate} />
         </div>
@@ -115,13 +116,13 @@ class SingleParticipant extends Component {
           {
             participant.checkedIn ? (
               this.props.opts.mobile ? (
-                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`, color: "#FF6000"}} />
+                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize})`, color: "#FF6000"}} />
               ) : (
                 <span>Checked In</span>
               )
             ) : (
               this.props.opts.mobile ? (
-                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => {
+                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize})`}} onClick={() => {
                   const instance = Instances.findOne();
                   if(instance.tickets) {
                     this.setState({ discountOpen: true, participant })
@@ -145,7 +146,7 @@ class SingleParticipant extends Component {
           }
         </div>
         <div style={{marginLeft: 20, textAlign: "right"}}>
-          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 2)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
+          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize})`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
         </div>
       </div>
     )
