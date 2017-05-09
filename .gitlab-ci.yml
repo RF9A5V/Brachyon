@@ -1,6 +1,7 @@
+image: node:4.8.2
+
 before_script:
   - apt-get update -qq && apt-get install -y -qq imagemagick
-  - curl https://install.meteor.com/ | sh
   - meteor npm i
 
 stages:
@@ -10,4 +11,4 @@ stages:
 
 test-build:
   stage: build
-  script: npm run dev
+  script: npm run test
