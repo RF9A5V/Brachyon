@@ -2,7 +2,9 @@
   "name": "brachyon",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "dev": "meteor --settings settings.json",
+    "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",
@@ -32,6 +34,7 @@
     "react-modal": "^1.3.0",
     "react-mounter": "^1.2.0",
     "react-router": "^2.4.1",
+    "react-scroll": "^1.5.2",
     "react-sidebar": "^2.3.0",
     "react-slick": "^0.14.6",
     "react-summernote": "^1.0.4",

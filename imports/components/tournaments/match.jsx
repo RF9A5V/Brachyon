@@ -1,15 +1,16 @@
 import React, { Component } from "react";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 // Requires match ID
 
-export default class Match extends Component {
+export default class Match extends ResponsiveComponent {
 
   profileImageOrDefault(id) {
     const user = Meteor.users.findOne(id);
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
-  render() {
+  renderBase(opts) {
     const match = Matches.findOne(this.props.id);
     if(!match) {
       return null;
@@ -17,39 +18,53 @@ export default class Match extends Component {
     const isP1Winner = match.winner && match.winner.alias == this.props.players[0].alias;
     const isP2Winner = match.winner && match.winner.alias == this.props.players[1].alias;
     return (
-      <div className="col" style={{width: 400, marginLeft: 10, marginBottom: 10, cursor: "pointer"}} onClick={this.props.onClick}>
-        <div style={{padding: 5, backgroundColor: "#111"}}>
+      <div className="col" style={{width: this.state.render == "mobile" ? "100%" : 400, marginLeft: 10, marginBottom: 10, cursor: "pointer"}} onClick={this.props.onClick}>
+        <div style={{padding: 5, backgroundColor: "#111", fontSize: opts.fontSize}}>
           { this.props.header }
         </div>
         <div className="row flex-pad x-center" style={{backgroundColor: "#666", position: "relative"}}>
           <div className={`row match-names ${isP1Winner ? "winner" : ""}`} style={{top: 0}}>
-            <span>
-              <sup className="match-seed">
+            <span style={{fontSize: opts.fontSize}}>
+              <sup className="match-seed" style={{fontSize: opts.fontSize}}>
               [ { this.props.players[0].seed } ]
               </sup>
               { this.props.players[0].alias }
             </span>
           </div>
-          <img src={this.profileImageOrDefault(this.props.players[0].id)} style={{width: 100, height: 100}} />
+          <img src={this.profileImageOrDefault(this.props.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
           <div className="col-1 col x-center" style={{padding: 10}}>
-            <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+            <h5 style={{margin: "10px 0", fontSize: opts.fontSize}}>VERSUS</h5>
           </div>
-          <img src={this.profileImageOrDefault(this.props.players[1].id)} style={{width: 100, height: 100}} />
+          <img src={this.profileImageOrDefault(this.props.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
           <div className={`row match-names justify-end ${isP2Winner ? "winner" : ""}`} style={{bottom: 0}}>
-            <span>
+            <span style={{fontSize: opts.fontSize}}>
               { this.props.players[1].alias }
-              <sub className="match-seed">
+              <sub className="match-seed" style={{fontSize: opts.fontSize}}>
                 [ { this.props.players[1].seed } ]
               </sub>
             </span>
           </div>
         </div>
         <div style={{padding: 5, backgroundColor: "#111"}}>
-          <div className="row flex-pad">
+          <div className="row flex-pad" style={{fontSize: opts.fontSize}}>
             { this.props.footer }
           </div>
         </div>
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      imgDim: 100
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "3.5rem",
+      imgDim: 200
+    });
   }
 }

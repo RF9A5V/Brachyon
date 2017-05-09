@@ -303,6 +303,7 @@ class EventAdminPage extends Component {
       var file = attrs.details.image.image;
       imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
       imgTemp.image = file;
+      console.log(imgTemp);
     }
     delete attrs.details.image;
 
