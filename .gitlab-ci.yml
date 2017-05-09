@@ -10,4 +10,4 @@ stages:
 
 test-build:
   stage: build
-  script: meteor test
+  script: meteor test --unsafe-perm --driver-package practicalmeteor:mocha
