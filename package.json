@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "dev": "meteor --settings settings.json"
+    "dev": "meteor --settings settings.json",
+    "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",
