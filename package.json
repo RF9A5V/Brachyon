@@ -2,7 +2,8 @@
   "name": "brachyon",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "dev": "meteor --settings settings.json"
   },
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",

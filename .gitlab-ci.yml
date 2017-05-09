@@ -10,4 +10,4 @@ stages:
 
 test-build:
   stage: build
-  script: meteor --settings settings.json
+  script: npm run dev
