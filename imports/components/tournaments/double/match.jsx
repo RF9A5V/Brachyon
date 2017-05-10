@@ -64,7 +64,11 @@ export default class MatchBlock extends ResponsiveComponent {
 
   participant(p, s, i, opts) {
     return (
-      <div className="participant" style={s}>
+      <div className={`participant ${this.props.activeAlias == p.alias && this.props.activeAlias != null ? "active" : ""}`} style={s} onMouseEnter={(e) => {
+        this.props.onParticipantHover(p.alias)
+      }} onMouseLeave={(e) => {
+        this.props.onParticipantHover(null)
+      }}>
         {
           p.alias ? (
             <div className="seed row center x-center" style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>
