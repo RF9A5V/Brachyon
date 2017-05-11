@@ -37,8 +37,14 @@ export default class TournamentModal extends ResponsiveComponent {
       if(err) {
         return toastr.error(err.reason);
       }
-      this.props.closeModal();
-      this.props.update();
+      else {
+        // Hacky but fixes the issue with not live uploading.
+        // TODO: WHY? There is no reason that we should have to do this?
+        setTimeout(() => {
+          this.props.update();
+          this.props.closeModal();
+        }, 250)
+      }
     })
   }
 
