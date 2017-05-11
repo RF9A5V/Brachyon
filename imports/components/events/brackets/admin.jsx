@@ -443,7 +443,8 @@ class BracketAdminScreen extends Component {
       )
     }
     const bracket = Brackets.findOne();
-    const complete = bracket && bracket.complete;
+    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex];
+    const complete = bracket && bracket.complete && !bracketMeta.isComplete;
     return (
       <div style={{padding: 10, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
