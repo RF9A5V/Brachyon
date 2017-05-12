@@ -188,6 +188,33 @@ export default class MatchBlock extends ResponsiveComponent {
     )
   }
 
+  bottomActions(status) {
+    const actionStyle = {
+      padding: 2.5,
+      backgroundColor: "#111"
+    }
+    const containerStyle = {
+      width: "calc(100% - 20px)",
+      position: "absolute",
+      bottom: -19,
+      cursor: "pointer",
+      fontSize: 10
+    }
+    if(status == 0 || !this.state.hoverActive) {
+      return null;
+    }
+    return (
+      <div className="row" style={containerStyle}>
+        <div className="row center x-center col-1" style={actionStyle}>
+          Facebook
+        </div>
+        <div className="row center x-center col-1" style={actionStyle}>
+          Twitter
+        </div>
+      </div>
+    )
+  }
+
   renderBase(opts) {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
@@ -250,7 +277,11 @@ export default class MatchBlock extends ResponsiveComponent {
       ) : ( this.participant(p2, parStyle2, 1, opts) )
     return (
       <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}
-      onMouseEnter={() => { this.setState({hoverActive: true}) }} onMouseLeave={() => { this.setState({ hoverActive: false }) }}>
+      onMouseEnter={() => {
+        if(bObj) {
+          this.setState({hoverActive: true})
+        }
+      }} onMouseLeave={() => { this.setState({ hoverActive: false }) }}>
         {
           prevMatchesNull ? (
             null
@@ -282,6 +313,9 @@ export default class MatchBlock extends ResponsiveComponent {
               { p2participant }
             </div>
           </div>
+          {
+            this.bottomActions(match.status)
+          }
         </div>
         {
           (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
