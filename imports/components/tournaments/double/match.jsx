@@ -89,6 +89,105 @@ export default class MatchBlock extends ResponsiveComponent {
     )
   }
 
+  onMatchStart(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Meteor.call("match.start", this.props.match._id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
+  onMatchUnstart(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Meteor.call("match.unstart", this.props.match._id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
+  onMatchQueue(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Meteor.call("match.toggleStream", this.props.match._id, () => {
+      this.props.update();
+      this.forceUpdate();
+    })
+  }
+
+  undoMatch() {
+    const bracket = Brackets.findOne();
+    const bracketSize = bracket.rounds.length;
+    var func = bracketSize == 1 ? "events.undo_single" : "events.undo_double";
+    if(func.length == 0) {
+      toastr.error("Modal not set up for swiss and RR");
+      return;
+    }
+    Meteor.call(func, bracket._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber, (err) => {
+      if(err) {
+        return toastr.error(err.reason);
+      }
+      this.props.update();
+    })
+  }
+
+  topActions(status) {
+    const actionStyle = {
+      padding: 2.5,
+      backgroundColor: "#111"
+    }
+    const containerStyle = {
+      width: "calc(100% - 20px)",
+      position: "absolute",
+      top: -19,
+      cursor: "pointer",
+      fontSize: 10
+    }
+
+    var content;
+
+    if(status == 0 || !this.state.hoverActive) {
+      return null;
+    }
+
+    else if(status == 1) {
+      content = (
+        [
+          <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchQueue.bind(this)}>
+            { this.props.match.stream ? "Not Stream" : "Stream" }
+          </div>,
+          <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchStart.bind(this)}>
+            Start
+          </div>
+        ]
+      )
+    }
+    else if(status == 2) {
+      content = (
+        <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchUnstart.bind(this)}>
+          Stop
+        </div>
+      )
+    }
+    else {
+      content = (
+        <div className="row center x-center col-1" style={actionStyle} onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.undoMatch()
+        }}>
+          Undo
+        </div>
+      )
+    }
+    return (
+      <div className="row" style={containerStyle}>
+        { content }
+      </div>
+    )
+  }
+
   renderBase(opts) {
     var match = this.props.match;
     var emptyWinnersMatch = (this.props.bracket == 0 && !match);
@@ -150,7 +249,8 @@ export default class MatchBlock extends ResponsiveComponent {
       <Participant player={p2} parStyle={parStyle2} swapParticipant={this.props.swapParticipant} partMap={this.props.partMap} index={1} opts={opts} matchPlaceholder={this.matchPlaceholder.bind(this)} />
       ) : ( this.participant(p2, parStyle2, 1, opts) )
     return (
-      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}>
+      <div className="row x-center" style={{marginBottom: blockMargin, position: "relative", left: prevMatchesNull && !isFunctionalFirstRound ? blockMargin : 0}}
+      onMouseEnter={() => { this.setState({hoverActive: true}) }} onMouseLeave={() => { this.setState({ hoverActive: false }) }}>
         {
           prevMatchesNull ? (
             null
@@ -159,17 +259,20 @@ export default class MatchBlock extends ResponsiveComponent {
             </div>
           )
         }
-        <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: match.status == 2 ? "#FF6000" : "black", border: "solid 2px white", borderRight: "none"}}>
-          { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
-            return (
-              <span style={{fontSize: opts.fontSize, color: match.status == 2 ? "black" : "white"}}>
-                { c }
-              </span>
-            )
-          }) }
-        </div>
-        {
-          [
+        <div className="col" style={{position: "relative"}}>
+          {
+            this.topActions(match.status)
+          }
+          <div className="row">
+            <div className="col center x-center" style={{padding: 5, fontSize: 12, width: blockMargin, height: height * 2 + lineHeight, backgroundColor: match.status == 2 ? "#FF6000" : "black", border: "solid 2px white", borderRight: "none"}}>
+              { numToAlpha(this.props.matchMap[this.props.match._id || this.props.match.id].number).split("").map(c => {
+                return (
+                  <span style={{fontSize: opts.fontSize, color: match.status == 2 ? "black" : "white"}}>
+                    { c }
+                  </span>
+                )
+              }) }
+            </div>
             <div className="match" onClick={() => {
               this.props.onMatchClick(match._id, this.props.bracket, this.props.roundNumber, this.props.matchNumber)
             }}>
@@ -177,21 +280,23 @@ export default class MatchBlock extends ResponsiveComponent {
               <div style={{width: participantWidth + blockMargin, height: lineHeight, backgroundColor: this.props.isFutureLoser ? "#999" : "white"}}>
               </div>
               { p2participant }
-            </div>,
-            (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
-              ""
-            ) : (
-              <div style={{
-                width: lineHeight,
-                height: vLineHeight,
-                backgroundColor: this.props.isFutureLoser ? "#999" : "white",
-                position: "relative",
-                zIndex: this.props.isFutureLoser ? 0 : 0,
-                top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
-              }}>
-              </div>
-            )
-          ]
+            </div>
+          </div>
+        </div>
+        {
+          (this.props.roundNumber == this.props.roundSize - 1) || (this.props.bracket == 1 && this.props.roundNumber % 2 == 0) || this.props.bracket == 2 ? (
+            ""
+          ) : (
+            <div style={{
+              width: lineHeight,
+              height: vLineHeight,
+              backgroundColor: this.props.isFutureLoser ? "#999" : "white",
+              position: "relative",
+              zIndex: this.props.isFutureLoser ? 0 : 0,
+              top: ((vLineHeight / 2 - lineHeight / 2) * (j % 2 == 0 ? 1 : -1))
+            }}>
+            </div>
+          )
         }
       </div>
     );
