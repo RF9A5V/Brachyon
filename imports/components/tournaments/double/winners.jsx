@@ -164,6 +164,21 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
     });
   }
 
+  onParticipantHover(alias) {
+    if(this.props.setLocalValue) {
+      this.props.setLocalValue("activeAlias", alias);
+    }
+    else {
+      this.setState({
+        activeAlias: alias
+      });
+    }
+  }
+
+  getActiveAlias() {
+    return this.props.localValues ? this.props.localValues.activeAlias : this.state.activeAlias;
+  }
+
   finals() {
     return (
       <div className="row">
@@ -186,8 +201,11 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                       }
                       return (
                         <MatchBlock
-                          key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[2].length} update={this.props.update}
-                          onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}/>
+                          key={i + " " + j} match={match} bracket={2} roundNumber={i} matchNumber={j}
+                          roundSize={this.props.rounds[2].length} update={this.props.update}
+                          onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}
+                          onParticipantHover={this.onParticipantHover.bind(this)} activeAlias={this.getActiveAlias()}
+                        />
                       );
                     })
                   }
@@ -223,7 +241,13 @@ export default class DoubleElimWinnersBracket extends ResponsiveComponent {
                               match={match}
                               bracket={0}
                               roundNumber={i} matchNumber={j}
-                              roundSize={this.props.rounds[0].length} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} numDecorator={count++} matchMap={this.state.matchMap} partMap={this.props.partMap} swapParticipant={this.swapParticipant.bind(this)} />
+                              roundSize={this.props.rounds[0].length}
+                              update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}
+                              numDecorator={count++} matchMap={this.state.matchMap} partMap={this.props.partMap}
+                              swapParticipant={this.swapParticipant.bind(this)}
+                              onParticipantHover={this.onParticipantHover.bind(this)}
+                              activeAlias={this.getActiveAlias()}
+                            />
                           );
                         })
                       }

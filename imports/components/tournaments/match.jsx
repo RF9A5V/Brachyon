@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
@@ -37,7 +38,7 @@ export default class Match extends ResponsiveComponent {
           </div>
           <img src={this.profileImageOrDefault(this.props.players[0].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
           <div className="col-1 col x-center" style={{padding: 10}}>
-            <h5 style={{margin: "10px 0"}}>VERSUS</h5>
+            <h5 style={{margin: "10px 0", fontSize: opts.fontSize}}>VERSUS</h5>
           </div>
           <img src={this.profileImageOrDefault(this.props.players[1].id)} style={{width: opts.imgDim, height: opts.imgDim}} />
           <div className={`row match-names justify-end ${isP2Winner ? "winner" : ""}`} style={{bottom: 0}}>

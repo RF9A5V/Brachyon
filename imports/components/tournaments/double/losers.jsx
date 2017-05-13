@@ -86,29 +86,19 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
     this.state.matchMap = matchMap;
   }
 
-  onDrag(e) {
-    if(this.refs.headers && this.refs.dragger) {
-      this.refs.headers.scrollLeft = this.refs.dragger.refs.container.scrollLeft;
-      const isDragging = this.refs.dragger.state.dragging;
-      if(this.state.dragging != isDragging) {
-        this.setState({
-          dragging: isDragging
-        })
-      }
+  onParticipantHover(alias) {
+    if(this.props.setLocalValue) {
+      this.props.setLocalValue("activeAlias", alias);
+    }
+    else {
+      this.setState({
+        activeAlias: alias
+      });
     }
   }
 
-  componentDidMount() {
-    const func = this.onDrag.bind(this);
-    window.addEventListener("mouseup", func);
-    window.addEventListener("mousemove", func);
-    this.state.func = func;
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount();
-    window.removeEventListener("mouseup", this.state.func);
-    window.removeEventListener("mousemove", this.state.func);
+  getActiveAlias() {
+    return this.props.localValues ? this.props.localValues.activeAlias : this.state.activeAlias;
   }
 
   toggleModal(id, b, r, i) {
@@ -156,7 +146,13 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
                               }
                             }
                             return (
-                              <MatchBlock match={match} bracket={1} roundNumber={i} matchNumber={j} roundSize={this.props.rounds[1].length}  isFutureLoser={isFutureLoser} update={this.props.update} onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds} matchMap={this.state.matchMap} partMap={this.props.partMap}/>
+                              <MatchBlock match={match} bracket={1} roundNumber={i}
+                                matchNumber={j} roundSize={this.props.rounds[1].length}
+                                isFutureLoser={isFutureLoser} update={this.props.update}
+                                onMatchClick={this.toggleModal.bind(this)} rounds={this.props.rounds}
+                                matchMap={this.state.matchMap} partMap={this.props.partMap}
+                                onParticipantHover={this.onParticipantHover.bind(this)} activeAlias={this.getActiveAlias()}
+                              />
                             );
                           })
                         }
