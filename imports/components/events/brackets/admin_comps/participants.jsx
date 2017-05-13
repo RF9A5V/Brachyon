@@ -140,7 +140,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
             </div>
           )
         }
-        <div className="col x-center col-3 participant-table" style={{maxHeight: opts.maxHeight, overflowY: "auto"}}>
+        <div className="col x-center col-3 participant-table" style={{overflowY: "auto"}}>
           {
             (this.state.participants || []).map((participant, index) => {
               return(<SingleParticipant
