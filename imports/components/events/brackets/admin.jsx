@@ -3,6 +3,8 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 import { browserHistory } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
 
+import { isComplete } from "/imports/decorators/bracket_complete.js";
+
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import ParticipantAction from "./admin_comps/participants.jsx";
@@ -32,18 +34,30 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
+import CloseModal from "/imports/components/brackets/close_modal.jsx";
+
 class BracketAdminScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      ready: false
+      ready: false,
+      shouldClose: true
     }
   }
 
   componentWillUnmount() {
     if(this.state.sub){
       this.state.sub.stop();
+    }
+  }
+
+  componentWillUpdate() {
+    const bracket = Brackets.findOne();
+    if(bracket && bracket.complete) {
+      if(!this.state.shouldClose) {
+        this.state.shouldClose = true;
+      }
     }
   }
 
@@ -113,7 +127,8 @@ class BracketAdminScreen extends Component {
       page: "admin",
       partMap,
       stretch: true,
-      full: true
+      full: true,
+      openModal: () => { this.setState({ shouldClose: true }) }
     };
     switch(bracket.format.baseFormat) {
       case "single_elim":
@@ -427,10 +442,14 @@ class BracketAdminScreen extends Component {
         <LoaderContainer ready={this.props.ready} onReady={() => { this.setState({ready: true}) }} />
       )
     }
+    const bracket = Brackets.findOne();
+    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex];
+    const complete = bracket && bracket.complete && !bracketMeta.isComplete;
     return (
       <div style={{padding: 10, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
         <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
+        <CloseModal open={complete && this.state.shouldClose} onClose={() => { this.setState({ shouldClose: false }) }} index={this.props.params.bracketIndex} />
       </div>
     );
   }

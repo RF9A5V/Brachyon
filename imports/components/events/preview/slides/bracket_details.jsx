@@ -312,43 +312,45 @@ class BracketDetails extends ResponsiveComponent {
     var bracket = Brackets.findOne(obj.id);
     const game = Games.findOne(obj.game);
     return (
-      <div className="col col-1 x-center center" style={{padding: 30, height: "100%"}}>
-        <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
-        <div style={{padding: 20, width: opts.mobile ? "50%" : "25%"}}>
-          <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
-          <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
-            <FontAwesome name="sitemap" style={{marginRight: 10}} />
-            <span>{ formatter(obj.format.baseFormat) }</span>
-          </div>
-          { this.status(obj, opts) }
-          <div className="row center x-center">
-            <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
-              const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
-              if(event.owner == Meteor.userId() || isAdmin) {
-                browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
+      <div className="col col-1 x-center center" style={{padding: 30, height: "100%", position: "relative"}}>
+        <div style={{position: "relative"}}>
+          <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
+          <div style={{padding: 20, width: opts.mobile ? "50%" : "25%", position: opts.mobile ? "absolute" : "relative", bottom: 0, width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
+            <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
+            <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
+              <FontAwesome name="sitemap" style={{marginRight: 10}} />
+              <span>{ formatter(obj.format.baseFormat) }</span>
+            </div>
+            { this.status(obj, opts) }
+            <div className="row center x-center">
+              <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
+                const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
+                if(event.owner == Meteor.userId() || isAdmin) {
+                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
+                }
+                else {
+                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
+                }
+              }}>
+                <span style={{fontSize: opts.fontSize}}>View</span>
+              </button>
+              {
+                obj.id ? (
+                  ""
+                ) : (
+                  this._registrationButton(obj, opts)
+                )
               }
-              else {
-                browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
+              {
+                // (obj.participants || []).findIndex(o => {
+                //   return o.id == Meteor.userId()
+                // }) >= 0 ? (
+                //   <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
+                // ) : (
+                //   null
+                // )
               }
-            }}>
-              <span style={{fontSize: opts.fontSize}}>View</span>
-            </button>
-            {
-              obj.id ? (
-                ""
-              ) : (
-                this._registrationButton(obj, opts)
-              )
-            }
-            {
-              // (obj.participants || []).findIndex(o => {
-              //   return o.id == Meteor.userId()
-              // }) >= 0 ? (
-              //   <button style={{marginLeft: 10, fontSize: opts.fontSize}} onClick={this.loadShortLink.bind(this)}>Share</button>
-              // ) : (
-              //   null
-              // )
-            }
+            </div>
           </div>
         </div>
       </div>

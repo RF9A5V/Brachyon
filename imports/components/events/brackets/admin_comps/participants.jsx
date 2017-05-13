@@ -140,7 +140,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
             </div>
           )
         }
-        <div className="col-3 participant-table" style={{overflowY: "auto"}}>
+        <div className="col x-center col-3 participant-table">
           {
             (this.state.participants || []).map((participant, index) => {
               return(<SingleParticipant
@@ -171,7 +171,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
     return this.renderBase({
       mobile: true,
       fontSize: "2.5em",
-      imgDim: 100,
+      imgDim: 50,
       maxHeight: 750,
       buttonClass: "large-button",
       mobile: true
@@ -182,7 +182,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
     return this.renderBase({
       mobile: false,
       fontSize: "16px",
-      imgDim: 50,
+      imgDim: 25,
       maxHeight: 450,
       buttonClass: "",
       mobile: false
