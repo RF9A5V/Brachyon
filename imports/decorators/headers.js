@@ -1,4 +1,5 @@
 const fbDescriptionParser = (description) => {
+  description = description.replace("<br>", "");
   var startIndex = description.indexOf("<p>");
   if(startIndex == -1) {
     return "No description available.";
