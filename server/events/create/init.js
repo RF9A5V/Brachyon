@@ -160,6 +160,7 @@ Meteor.methods({
         datetime: event.details.datetime
       }
     });
+    const instance = Instances.insert(obj);
     Events.update(id, {
       $push: {
         instances: instance
