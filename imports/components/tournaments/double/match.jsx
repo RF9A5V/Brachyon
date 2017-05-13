@@ -6,6 +6,7 @@ import { browserHistory } from "react-router";
 import Matches from "/imports/api/event/matches.js";
 
 import { numToAlpha } from "/imports/decorators/num_to_alpha.js";
+import { openTweet, openFB } from "/imports/decorators/open_social.js";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
@@ -188,6 +189,37 @@ export default class MatchBlock extends ResponsiveComponent {
     )
   }
 
+  shareAction(type) {
+    const match = this.props.match;
+    if(match.status == 0) {
+      return null;
+    }
+    var text;
+    const players = match.players.map(p => {
+      if(p.id) {
+        var user = Meteor.users.findOne(p.id);
+        if(user.services.twitter && type == "twitter") {
+          return "@" + user.services.twitter.screenName;
+        }
+      }
+      return p.alias;
+    });
+    if(match.status == 1) {
+      text = `${players[0][0] == "@" ? "." : ""}${players[0]} vs. ${players[1]} on Brachyon!`;
+    }
+    else if(match.status == 2) {
+      text = `${players[0][0] == "@" ? "." : ""}${players[0]} vs. ${players[1]} happening now on Brachyon!`;
+    }
+    else {
+      const winner = match.winner;
+      const loserIndex = match.players.findIndex(o => { return o.alias != winner.alias });
+      const loser = match.players[loserIndex];
+      text = `${players[1 - loserIndex][0] == "@" ? "." : ""}${players[1 - loserIndex]} beats ${players[loserIndex]} ${match.players[1-loserIndex].score}-${match.players[loserIndex].score}!`;
+    }
+    var url = window.location.href.slice(0, window.location.href.indexOf("/admin"));
+    type == "twitter" ? openTweet(text, url) : openFB(text, url);
+  }
+
   bottomActions(status) {
     const actionStyle = {
       padding: 2.5,
@@ -205,10 +237,10 @@ export default class MatchBlock extends ResponsiveComponent {
     }
     return (
       <div className="row" style={containerStyle}>
-        <div className="row center x-center col-1" style={actionStyle}>
+        <div className="row center x-center col-1" style={actionStyle} onClick={() => { this.shareAction("fb") }}>
           Facebook
         </div>
-        <div className="row center x-center col-1" style={actionStyle}>
+        <div className="row center x-center col-1" style={actionStyle} onClick={() => { this.shareAction("twitter") }}>
           Twitter
         </div>
       </div>
