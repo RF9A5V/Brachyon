@@ -148,7 +148,9 @@ export default class MatchBlock extends ResponsiveComponent {
 
     var content;
 
-    if(status == 0 || !this.state.hoverActive) {
+    const organizable = Events.findOne() || Instances.findOne();
+
+    if(status == 0 || !this.state.hoverActive || Meteor.userId() != organizable.owner) {
       return null;
     }
 
