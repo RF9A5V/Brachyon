@@ -38,8 +38,23 @@ const connectInsta = (cb) => {
   })
 }
 
+const connectTwitch = (cb) => {
+  Meteor.linkWithTwitch({
+    requestPermissions: ["user_read", "user_blocks_read", "user_subscriptions"]
+  }, (err) => {
+    if(err){
+      toastr.error(err.reason, "Error!");
+    }
+    else {
+      toastr.success("Integrated with Twitch!", "Success!");
+      cb();
+    }
+  })
+}
+
 export {
   connectFB,
   connectTwitter,
-  connectInsta
+  connectInsta,
+  connectTwitch
 }

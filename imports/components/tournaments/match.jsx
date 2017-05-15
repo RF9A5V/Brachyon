@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
-
 // Requires match ID
 
 export default class Match extends ResponsiveComponent {

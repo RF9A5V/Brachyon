@@ -41,11 +41,11 @@ export default class RowLayout extends Component {
         {
           this.state.items.map((i, iIn) => {
             return (
-              <div className="row" style={{marginBottom: iIn < this.state.items.length - 1 ? 20 : 0}}>
+              <div className="row" style={{marginBottom: iIn < this.state.items.length - 1 ? 10 : 0}}>
                 {
                   i.map((j, jIn) => {
                     return (
-                      <div className="col-1" style={{marginRight: jIn < i.length - 1 ? 20 : 0}}>
+                      <div className="col-1" style={{marginRight: jIn < i.length - 1 ? 10 : 0}}>
                         { j }
                       </div>
                     )
