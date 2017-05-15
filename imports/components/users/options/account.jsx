@@ -39,6 +39,47 @@ export default class UserAccount extends ResponsiveComponent {
     )
   }
 
+  changeUsername() {
+    const username = this.refs.username.value;
+    Meteor.call("user.updateUsername", username, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated username!");
+      }
+    })
+  }
+
+  changeEmail() {
+    const email = this.refs.email.value;
+    Meteor.call("user.updateEmail", email, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated email!");
+      }
+    })
+  }
+
+  changePassword() {
+    const currentPW = this.refs.pw.value;
+    const newPW = this.refs.newPW.value;
+    const confirmPW = this.refs.confirm.value;
+    if(newPW != confirmPW) {
+      return toastr.error("Passwords must match!");
+    }
+    Accounts.changePassword(currentPW, newPW, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated password!");
+      }
+    });
+  }
+
   render() {
     const user = Meteor.user();
     return (
@@ -47,15 +88,24 @@ export default class UserAccount extends ResponsiveComponent {
         {
           this.socialComponents()
         }
+        <label>Username</label>
+        <div className="row" style={{marginBottom: 10}}>
+          <input className="col-1" type="text" ref="username" defaultValue={user.username} style={{margin: 0}} />
+          <button style={{marginLeft: 10}} onClick={this.changeUsername.bind(this)}>Save</button>
+        </div>
         <label>Email</label>
         <div className="row" style={{marginBottom: 10}}>
-          <input className="col-1" type="text" defaultValue={user.emails[0].address} style={{margin: 0}} />
-          <button style={{marginLeft: 10}}>Save</button>
+          <input className="col-1" type="text" ref="email" defaultValue={user.emails[0].address} style={{margin: 0}} />
+          <button style={{marginLeft: 10}} onClick={this.changeEmail.bind(this)}>Save</button>
         </div>
-        <label>Username</label>
-        <div className="row">
-          <input className="col-1" type="text" defaultValue={user.username} style={{margin: 0}} />
-          <button style={{marginLeft: 10}}>Save</button>
+        <label>Change Password</label>
+        <div className="col col-1" style={{marginBottom: 10}}>
+          <input type="password" ref="pw" placeholder="Your Current Password" style={{margin: 0, marginBottom: 10}} />
+          <input type="password" ref="newPW" placeholder="Your New Password" style={{margin: 0, marginBottom: 10}} />
+          <input type="password" ref="confirm" placeholder="Confirm New Password" style={{margin: 0}} />
+        </div>
+        <div className="row center">
+          <button onClick={this.changePassword.bind(this)}>Save</button>
         </div>
       </div>
     )

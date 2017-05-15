@@ -37,14 +37,17 @@ Meteor.publish("getUserByUsername", (username) => {
   const user = Meteor.users.findOne({
     username
   });
-  return [
+  var cursors = [
     Meteor.users.find({
       username
-    }),
-    Games.find({
+    })
+  ];
+  if(user) {
+    cursors.push(Games.find({
       _id: {
         $in: Object.keys(user.stats || {})
       }
-    })
-  ]
+    }))
+  }
+  return cursors;
 })
