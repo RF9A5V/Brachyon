@@ -21,27 +21,28 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
     if(this.refs.password.value != this.refs.confirmPassword.value) {
       return toastr.error("Passwords must match!", "Error!");
     }
-    Meteor.call("users.create", this.refs.email.value, this.refs.username.value, this.refs.password.value, (err, rez) => {
-      if(err){
-        toastr.error(err.reason, "Error!");
+    Meteor.call("users.validate", this.refs.email.value, this.refs.username.value, (err, rez) => {
+      if(err) {
+        return toastr.error(err.reason);
       }
-      else if (rez == null){
-        toastr.error("Issue generating login token.", "Call an Admin!");
-      }
-      else {
-        Meteor.loginWithToken(rez.token, (err, data) => {
-          toastr.success("Successfully created your account!", "Success!");
-          if(this.props.onSuccess) {
-            this.props.onSuccess();
-            this.props.onClose();
-          }
-          else {
-            browserHistory.push('/discover');
-          }
-        });
+      Accounts.createUser({
+        email: this.refs.email.value,
+        username: this.refs.username.value,
+        password: this.refs.password.value,
+        profile: {
+          games: []
+        }
+      }, (err) => {
+        if(err) {
+          return toastr.error(err.reason);
+        }
+        if(this.props.onClose) {
+          this.props.onClose()
+        }
+        browserHistory.push("/dashboard");
+      });
 
-      }
-    });
+    })
   }
 
   onUsernameInputChange() {
@@ -74,7 +75,7 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
     })
   }
 
-  renderBase(ops) {
+  renderBase(opts) {
     var icon, bgColor;
     var emailBgColor, emailIcon;
     if(this.state.userValid.ready()){
@@ -91,34 +92,34 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
       <div className="col center modal-pad">
         <form onSubmit={this.onSubmit.bind(this)} className="col center cred-form">
           <div className="row x-center" style={{marginBottom: 20}}>
-            <input className={"col-1 " + ops.inputClassName} type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} autoComplete="off" />
-            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: emailBgColor}}>
-              <FontAwesome name={emailIcon} />
+            <input className={"col-1 " + opts.inputClassName} type="text" name="email" placeholder="Email" ref="email" onChange={this.onEmailChange.bind(this)} autoComplete="off" />
+            <div className={"row center x-center cred-form-status " + opts.credFormSize} style={{backgroundColor: emailBgColor}}>
+              <FontAwesome name={emailIcon} style={{fontSize: opts.fontSize}} />
             </div>
           </div>
           <div className="row x-center" style={{marginBottom: 20}}>
-            <input className={"col-1 " + ops.inputClassName} type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} autoComplete="off" />
-            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: bgColor}}>
-              <FontAwesome name={icon} />
+            <input className={"col-1 " + opts.inputClassName} type="text" name="username" placeholder="Username" ref="username" onChange={this.onUsernameInputChange.bind(this)} autoComplete="off" />
+            <div className={"row center x-center cred-form-status " + opts.credFormSize} style={{backgroundColor: bgColor}}>
+              <FontAwesome name={icon} style={{fontSize: opts.fontSize}} />
             </div>
           </div>
           <div className="row x-center" style={{marginBottom: 20}}>
-            <input className={"col-1 " + ops.inputClassName} type="password" name="password" placeholder="Password" ref="password" onChange={this.onPasswordChange.bind(this)} />
-            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: this.state.passValid ? "#00BDFF" : "none"}}>
-              <FontAwesome name={this.state.passValid ? "check" : "times"} />
+            <input className={"col-1 " + opts.inputClassName} type="password" name="password" placeholder="Password" ref="password" onChange={this.onPasswordChange.bind(this)} />
+            <div className={"row center x-center cred-form-status " + opts.credFormSize} style={{backgroundColor: this.state.passValid ? "#00BDFF" : "none"}}>
+              <FontAwesome name={this.state.passValid ? "check" : "times"} style={{fontSize: opts.fontSize}} />
             </div>
           </div>
           <div className="row x-center" style={{marginBottom: 20}}>
-            <input className={"col-1 " + ops.inputClassName} type="password" name="confirm_password" placeholder="Confirm Password" ref="confirmPassword" onChange={this.onPassConfChange.bind(this)} />
-            <div className={"row center x-center cred-form-status " + ops.credFormSize} style={{backgroundColor: this.state.passConfValid ? "#00BDFF" : "none"}}>
-              <FontAwesome name={this.state.passConfValid ? "check" : "times"} />
+            <input className={"col-1 " + opts.inputClassName} type="password" name="confirm_password" placeholder="Confirm Password" ref="confirmPassword" onChange={this.onPassConfChange.bind(this)} />
+            <div className={"row center x-center cred-form-status " + opts.credFormSize} style={{backgroundColor: this.state.passConfValid ? "#00BDFF" : "none"}}>
+              <FontAwesome name={this.state.passConfValid ? "check" : "times"} style={{fontSize: opts.fontSize}} />
             </div>
           </div>
 
-          <span style={{fontSize: ops.fontSize, marginTop: ops.marginTop}}>By signing up for Brachyon, you agree to our&nbsp;
+          <span style={{fontSize: opts.fontSize, marginTop: opts.marginTop}}>By signing up for Brachyon, you agree to our&nbsp;
             <Link to="/terms">Terms of Service</Link>.
           </span>
-          <input className={ops.inputClassName} type="submit" value="Sign Up" />
+          <input className={opts.inputClassName} type="submit" value="Sign Up" />
         </form>
       </div>
     )
