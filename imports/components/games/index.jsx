@@ -12,6 +12,7 @@ import { GameBanners } from "/imports/api/games/game_banner.js";
 import Block from "./block.jsx";
 
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
 
 export default class GamesIndex extends Component {
 
@@ -52,14 +53,18 @@ export default class GamesIndex extends Component {
       )
     }
     return (
-      <div className="row" style={{flexWrap: "wrap", padding: 20}}>
-        {
-          Games.find().map((game) => {
-            return (
-              <Block game={game} />
-            )
-          })
-        }
+      <div style={{padding: 10}}>
+        <RowLayout length={5}>
+          {
+            Games.find().map((game) => {
+              return (
+                <Block game={game} onClick={() => {
+                  browserHistory.push("/game/" + game.slug)
+                }} />
+              )
+            })
+          }
+        </RowLayout>
       </div>
     )
   }

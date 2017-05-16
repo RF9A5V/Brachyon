@@ -5,7 +5,7 @@ export default class GameBlock extends Component {
   render() {
     const game = this.props.game;
     return (
-      <div className="game" onClick={ () => { browserHistory.push("/game/" + game.slug) } }>
+      <div className="game col-1" onClick={this.props.onClick}>
         <img src={game.bannerUrl} />
         <div className="col game-description">
           <span ref={game.name} className="game-title">
