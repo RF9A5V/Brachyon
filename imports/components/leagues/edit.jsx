@@ -16,6 +16,8 @@ import EditEvent from "./modules/events/edit.jsx";
 import EditLeaderboard from "./modules/leaderboard/edit.jsx";
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
+import { LeagueBanners } from "/imports/api/leagues/banners.js"
+
 class EditLeagueScreen extends Component {
 
   constructor(props) {
@@ -198,15 +200,20 @@ class EditLeagueScreen extends Component {
         toastr.success("Successfully updated league!");
       }
     });
-
+    console.log(imgTemp);
     if(imgTemp) {
       imgTemp.meta.slug = Leagues.findOne().slug;
+      toastr.warning("Updating image.")
       LeagueBanners.insert({
         file: imgTemp.image,
         meta: imgTemp.meta,
+        fileName: Leagues.findOne()._id + "." + imgTemp.type,
         onUploaded: (err) => {
           if(err) {
             toastr.error(err.reason);
+          }
+          else {
+            toastr.success("Updated banner image.");
           }
         }
       })
