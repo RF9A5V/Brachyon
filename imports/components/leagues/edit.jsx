@@ -200,7 +200,6 @@ class EditLeagueScreen extends Component {
         toastr.success("Successfully updated league!");
       }
     });
-    console.log(imgTemp);
     if(imgTemp) {
       imgTemp.meta.slug = Leagues.findOne().slug;
       toastr.warning("Updating image.")

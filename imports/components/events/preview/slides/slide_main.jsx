@@ -66,7 +66,7 @@ export default class SlideMain extends ResponsiveComponent {
     return (
       <div>
         <Slider dots={false} initialSlide={this.state.activeSlide} infinite={false} arrows={false} style={{display: "flex"}} ref="slider" afterChange={(current) => {
-          window.history.pushState(null, null, this.props.baseUrl + this.props.slides[current].name.toLowerCase());
+          window.history.pushState(null, null, this.props.baseUrl + this.props.slides[current].name.toLowerCase() + "#" + (this.refs[current].getCurrent() + 1));
           this.state.activeSlide = current;
           this.forceUpdate();
         }} draggable={false} slidesToScroll={1}>
@@ -74,7 +74,7 @@ export default class SlideMain extends ResponsiveComponent {
             this.props.slides.map((item, i) => {
               return (
                 <div className="slide">
-                  <SubSlideContainer items={item.slides} ref={i} onAnimDone={this.forceUpdate.bind(this)} backgroundImage={this.props.backgroundImage || null} pages={this.props.pages} />
+                  <SubSlideContainer active={i == this.state.activeSlide} items={item.slides} ref={i} onAnimDone={this.forceUpdate.bind(this)} backgroundImage={this.props.backgroundImage || null} pages={this.props.pages} />
                 </div>
               )
             })
@@ -87,12 +87,14 @@ export default class SlideMain extends ResponsiveComponent {
                 current.slides.map((item, i) => {
                   var icon;
                   var currentRef = this.refs[this.state.activeSlide];
+                  console.log(currentRef);
                   if(currentRef) {
                     currentRef = currentRef.getCurrent();
                   }
                   else {
-                    currentRef = 0;
+                    currentRef = window.location.hash ? parseInt(window.location.hash.slice(1)) - 1 : 0;
                   }
+                  console.log(currentRef);
                   if(!item.icon) {
                     icon = (
                       <div className={`slide-controller-tab icon`} onClick={() => {

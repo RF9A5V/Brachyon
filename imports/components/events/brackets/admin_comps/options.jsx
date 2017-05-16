@@ -9,7 +9,16 @@ export default class OptionsModal extends ResponsiveComponent {
   constructor(props) {
     super(props);
     this.state = {
-      tab: "Alias"
+      tab: "Alias",
+      amount: 0
+    }
+  }
+
+  componentWillReceiveProps(next) {
+    if(next.participant && next.participant.paymentAmount) {
+      this.setState({
+        amount: next.participant.paymentAmount
+      })
     }
   }
 
@@ -17,11 +26,9 @@ export default class OptionsModal extends ResponsiveComponent {
     const instance = Instances.findOne();
     var tabs = [
       "Alias",
-      "Remove"
+      "Remove",
+      "Payment"
     ];
-    if(instance.tickets && this.props.participant.id && !this.props.participant.checkedIn) {
-      tabs.push("Discounts");
-    }
 
     return (
       <div className="row">
@@ -110,52 +117,35 @@ export default class OptionsModal extends ResponsiveComponent {
     )
   }
 
-  discountTab() {
-    const instance = Instances.findOne();
-    const discounts = instance.tickets.discounts;
-
-    const toggleDiscount = (d, i) => {
-      if(d.qualifiers[this.props.participant.id]) {
-        Meteor.call("tickets.deactivateDiscount", instance._id, this.props.index, i, this.props.participant.id, (err) => {
-          if(err) {
-            toastr.error(err.reason);
-          }
-        })
-      }
-      else {
-        Meteor.call("tickets.activateDiscount", instance._id, this.props.index, i, this.props.participant.id, (err) => {
-          if(err) {
-            toastr.error(err.reason);
-          }
-        })
-      }
-    }
-
+  paymentTab(opts) {
     return (
       <div className="col">
-        {
-          discounts.map((d, i) => {
-            return (
-              <div className="row center x-center">
-                <div className="col-1">
-                  <span>{ d.name }</span>
-                </div>
-                <div className="col-1">
-                  <button onClick={() => { toggleDiscount(d, i) }}>
-                    {
-                      d.qualifiers[this.props.participant.id] == null ? (
-                        "Apply Discount"
-                      ) : (
-                        "Remove Discount"
-                      )
-                    }
-                  </button>
-                </div>
-              </div>
-            )
-          })
-        }
-
+        <label style={{fontSize: opts.fontSize}}>Set Payment Amount</label>
+        <div className="row">
+          <div className="row center x-center" style={{padding: 10, backgroundColor: "#666", fontSize: opts.fontSize}}>
+            $
+          </div>
+          <input className={`col-1 ${opts.inputClass}`} type="text" style={{margin: 0}} value={this.state.amount} onChange={(e) => {
+            const amount = parseFloat(e.target.value);
+            if(isNaN(amount)) {
+              return;
+            }
+            this.setState({
+              amount
+            })
+          }} onBlur={(e) => {
+            this.setState({
+              amount: parseFloat(e.target.value).toFixed(2)
+            })
+          }} />
+          <button className={opts.buttonClass} style={{marginLeft: 10}} onClick={() => {
+            Meteor.call("events.brackets.setPaymentInfo", Instances.findOne()._id, this.props.index, this.props.participant.alias, this.state.amount, (err) => {
+              if(err) {
+                toastr.error(err.reason);
+              }
+            })
+          }}>Paid</button>
+        </div>
       </div>
     )
   }
@@ -166,8 +156,8 @@ export default class OptionsModal extends ResponsiveComponent {
         return this.aliasTab(opts)
       case "Remove":
         return this.removeTab(opts)
-      case "Discounts":
-        return this.discountTab(opts)
+      case "Payment":
+        return this.paymentTab(opts)
       default:
         return null
     }
