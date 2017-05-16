@@ -28,7 +28,7 @@ export default class GlobalSideNav extends Component {
     const faSize = "6rem";
 
     return (
-      <div className="col" style={{width: "75vw", height: "100vh", backgroundColor: "black"}}>
+      <div className="col" style={{width: "75vw", height: "100%", backgroundColor: "black"}}>
         <div style={{paddingTop: 30, paddingLeft: 20}}>
           <FontAwesome name="times" style={{fontSize: "8rem"}} onClick={() => {
             closeMenu()

@@ -9,7 +9,10 @@ import ImageForm from "/imports/components/public/img_form.jsx";
 import Games from "/imports/api/games/games.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
+import Block from "./block.jsx";
+
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
 
 export default class GamesIndex extends Component {
 
@@ -50,31 +53,18 @@ export default class GamesIndex extends Component {
       )
     }
     return (
-      <div className="row" style={{flexWrap: "wrap", padding: 20}}>
-        {
-          Games.find().map((game) => {
-            return (
-              <div className="game" onClick={ () => { browserHistory.push("/game/" + game.slug) } }>
-                <img src={game.bannerUrl} />
-                <div className="col game-description">
-                  <span ref={game.name} className="game-title">
-                    { game.name }
-                  </span>
-                  <div className="row center">
-                    <span className="game-count col-1">
-                      <FontAwesome name="users" style={{marginRight: 10}} />
-                      { game.playerCount || 0 }
-                    </span>
-                    <span className="game-count col-1">
-                      <FontAwesome name="clone" style={{marginRight: 10}} />
-                      { game.eventCount || 0 }
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )
-          })
-        }
+      <div style={{padding: 10}}>
+        <RowLayout length={5}>
+          {
+            Games.find().map((game) => {
+              return (
+                <Block game={game} onClick={() => {
+                  browserHistory.push("/game/" + game.slug)
+                }} />
+              )
+            })
+          }
+        </RowLayout>
       </div>
     )
   }

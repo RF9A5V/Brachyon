@@ -5,6 +5,7 @@ import FacebookConnect from "../../oauth/connect/facebook.jsx";
 import TwitchConnect from "../../oauth/connect/twitch.jsx";
 import TwitterConnect from "../../oauth/connect/twitter.jsx";
 import GoogleConnect from "../../oauth/connect/google.jsx";
+import InstaConnect from "../../oauth/connect/instagram.jsx";
 
 export default class OAuthOptionsPanel extends Component {
   render() {
@@ -35,6 +36,12 @@ export default class OAuthOptionsPanel extends Component {
         <div className="about-what center">
           <div>
             <TwitterConnect />
+          </div>
+        </div>
+        <h4>Instagram</h4>
+        <div className="about-what center">
+          <div>
+            <InstaConnect />
           </div>
         </div>
       </div>

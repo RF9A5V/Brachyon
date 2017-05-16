@@ -3,14 +3,14 @@ import TrackerReact from "meteor/ultimatejs:tracker-react";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
+import UserProfilePanel from "./options/profile.jsx";
 import UserDetailsPanel from "./options/user_details.jsx";
 import EventOptionsPanel from "./options/event_options.jsx";
 import GameOptionsPanel from "./options/games_played.jsx";
 import OAuthOptionsPanel from "./options/oauth.jsx";
 
-import ProfileImageSelect from "./options/details/profile_image.jsx";
-import ProfileBannerSelect from "./options/details/profile_banner.jsx";
-import AliasSelect from "./options/details/alias.jsx";
+import UserAccountPanel from "./options/account.jsx";
+
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 export default class UserOptionsScreen extends TrackerReact(Component) {
@@ -41,16 +41,8 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       key: "details",
       subItems: [
         {
-          content: ProfileImageSelect,
-          name: "Image"
-        },
-        {
-          content: ProfileBannerSelect,
-          name: "Banner"
-        },
-        {
-          content: AliasSelect,
-          name: "Alias"
+          content: UserProfilePanel,
+          name: "profile"
         }
       ]
     }
@@ -76,7 +68,7 @@ export default class UserOptionsScreen extends TrackerReact(Component) {
       key: "accounts",
       subItems: [
         {
-          content: OAuthOptionsPanel
+          content: UserAccountPanel
         }
       ]
     }

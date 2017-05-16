@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 
 import AutocompleteForm from "../../public/autocomplete_form.jsx";
-import GameResultTemplate from "../../public/search_results/game_template.jsx";
+import GameTemplate from "../../public/search_results/game_template.jsx";
 
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from "/imports/api/games/games.js";
+
+import GameBlock from "/imports/components/games/block.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
 
 class GameOption extends Component {
   render() {
@@ -27,73 +30,83 @@ export default class GameOptionsPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      game: null,
-      image: null
-    };
+      gameList: null
+    }
   }
 
-  onGameSelect(game) {
-    this.setState({
-      game: game._id,
-      image: game.banner
+  saveGame(g) {
+    Meteor.call("users.add_game", g, function(err){
+      if(err){
+        toastr.error("Couldn't update your games!", "Error!");
+      }
+      else {
+        toastr.success("Updated your game list!", "Success!");
+      }
     })
   }
 
-  selectedImage() {
-    if(this.state.image){
-      return (
-        <img style={{width: 400, height: "auto"}} src={Games.findOne(game).bannerUrl} />
-      )
-    }
-    return "";
-  }
-
-  saveGame(e) {
-    e.preventDefault();
-    if(this.state.game){
-      Meteor.call("users.add_game", this.state.game, function(err){
-        if(err){
-          toastr.error("Couldn't update your games!", "Error!");
-        }
-        else {
-          toastr.success("Updated your game list!", "Success!");
-        }
-      })
-    }
-    else {
-      toastr.warning("Specify a game to add first.", "Warning!");
+  loadGames(value, opts) {
+    clearTimeout(this.state.to);
+    if(value.length >= 3) {
+      this.state.to = setTimeout(() => {
+        Meteor.call("games.search", value, (err, data) => {
+          if(err) {
+            toastr.error(err.reason);
+          }
+          else {
+            this.setState({
+              gameList: data
+            })
+          }
+        });
+      }, 500);
     }
   }
 
   render() {
     return (
-      <div className="col side-tab-panel" style={{margin:"auto", paddingTop:20}}>
-          {
-            (Meteor.user().profile.games || []).map(function(id){
-              return (
-                <div className="about-what">
-                  <GameOption {...Games.findOne(id)} />
-                </div>
-              );
-            })
-          }
+      <div>
         <h4 className="col-1">Add Games</h4>
-        <div className="about-what">
-          <div style={{display:"flex", justifyContent:"flex-end"}}>
-            <button onClick={this.saveGame.bind(this)}>Save</button>
-          </div>
-          {
-            this.selectedImage()
-          }
-          <AutocompleteForm ref="game" publications={[
-            "game_search"
-          ]} types={[
+        <div style={{padding: 10, backgroundColor: "#666"}}>
+          <div className="col" style={{position: "relative"}}>
+            <label className="input-label">Game</label>
+            <input type="text" onChange={(e) => {
+              const value = e.target.value;
+              this.loadGames(value, 3);
+            }} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
-              type: Games,
-              template: GameResultTemplate,
-              name: "Game"
+              this.state.gameList ? (
+                <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
+                {
+                  this.state.gameList.map(g => {
+                    return (
+                      <GameTemplate {...g} onClick={() => {
+                        const game = {
+                          _id: g._id,
+                          name: g.name
+                        }
+                        this.saveGame(g._id);
+                      }} />
+                    )
+                  })
+                }
+                </div>
+              ) : (
+                null
+              )
             }
-          ]} onChange={this.onGameSelect.bind(this)} />
+          </div>
+        </div>
+        <div style={{margin: "10px 0"}}>
+          <RowLayout length={4}>
+            {
+              (Meteor.user().profile.games || []).map(function(id){
+                return (
+                  <GameBlock game={Games.findOne(id)} onClick={() => {}} />
+                );
+              })
+            }
+          </RowLayout>
         </div>
       </div>
     );

@@ -10,6 +10,11 @@ import { Email } from 'meteor/email'
 var stripe = {};
 
 Meteor.methods({
+  "getUsername"(id) {
+    const user = Meteor.users.findOne(id);
+    return user ? user.username : null;
+  },
+
   "events.approve"(id){
     Events.update(id, {
       $set: {
@@ -76,7 +81,27 @@ Meteor.methods({
     Games.remove(id);
   },
 
-  "users.create"(email, username, password) {
+  "users.validate"(email, username) {
+    if(!Meteor.isDevelopment) {
+      var response = Meteor.http.post(`https://apilayer.net/api/check?access_key=${Meteor.settings.private.mailboxlayer.key}&email=${email}`);
+      response = response.data;
+      if(response.format_valid && response.mx_found && response.smtp_check && !response.disposable) {
+        return;
+      }
+      else {
+        throw new Meteor.Error(403, "Need valid email.");
+      }
+    }
+    if(username.length < 3 || username.length > 16) {
+      throw new Meteor.Error(400, "Username length must be greater than 3, less than 17");
+    }
+    const user = Meteor.users.findOne(username);
+    if(user) {
+      throw new Meteor.Error(400, "Username already taken.");
+    }
+  },
+
+  "users.create"(email, username) {
     var createUser = () => {
       var user;
       try {
@@ -92,12 +117,7 @@ Meteor.methods({
           }
         });
         if(user){
-          if(!Meteor.isDevelopment){
-            Accounts.sendVerificationEmail(user);
-          }
-          var token = Accounts._generateStampedLoginToken();
-          Accounts._insertLoginToken(user, token);
-          return token;
+
         }
         else {
           return null;
@@ -107,18 +127,6 @@ Meteor.methods({
         throw e;
       }
     }
-    if(!Meteor.isDevelopment) {
-      var response = Meteor.http.post(`https://apilayer.net/api/check?access_key=${Meteor.settings.private.mailboxlayer.key}&email=${email}`);
-      response = response.data;
-      if(response.format_valid && response.mx_found && response.smtp_check && !response.disposable) {
-        return createUser();
-      }
-      else {
-        throw new Meteor.Error(403, "Need valid email.");
-      }
-    }
-    else {
-      return createUser();
-    }
+
   }
 })

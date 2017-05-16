@@ -44,9 +44,8 @@
     "google": {
       "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
     },
-    "dropbox": {
-      "key": "97pn9fbf7ilojha",
-      "alphaKey": "ufay143lf5yq8rj"
+    "instagram": {
+      "client_id": "350131a9230c4cffbaed51ded20c5feb"
     }
   },
   "private": {
@@ -78,6 +77,9 @@
     },
     "mailboxlayer": {
       "key": "f0e7b179aa5867fc252af237509cad8b"
+    },
+    "instagram": {
+      "secret": "ad7d766bf1d345879c67e2b407c0730e"
     }
   }
 
