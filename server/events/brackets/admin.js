@@ -81,5 +81,20 @@ Meteor.methods({
         [`brackets.${bracketIndex}.participants.${participantIndex}.alias`]: alias
       }
     })
+  },
+  "events.brackets.setPaymentInfo"(instanceId, bracketIndex, alias, amount) {
+    const instance = Instances.findOne(instanceId);
+    const bracketMeta = instance.brackets[bracketIndex];
+    const participantIndex = bracketMeta.participants.findIndex(o => {
+      return o.alias == alias;
+    });
+    const participant = bracketMeta.participants[participantIndex];
+    Instances.update(instanceId, {
+      $set: {
+        [`brackets.${bracketIndex}.participants.${participantIndex}.paid`]: true,
+        [`brackets.${bracketIndex}.participants.${participantIndex}.paymentAmount`]: amount,
+      }
+    })
+    console.log(participant);
   }
 })

@@ -8,8 +8,12 @@ export default class SubSlideContainer extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
+    var current;
+    if(window.location.hash) {
+      current = parseInt(window.location.hash.slice(1));
+    }
     this.state = {
-      currentItem: 0,
+      currentItem: props.active && current ? current - 1 : 0,
       swiping: false
     };
   }
@@ -28,12 +32,16 @@ export default class SubSlideContainer extends ResponsiveComponent {
 
   renderBase(opts) {
     return (
-      <Slider arrows={false} autoplay={false} dots={false} vertical={true} verticalSwiping={true} infinite={false} afterChange={
+      <Slider initialSlide={this.state.currentItem} arrows={false} autoplay={false} dots={false} vertical={true} verticalSwiping={true} infinite={false} afterChange={
         (current) => {
           this.state.currentItem = current;
           this.props.onAnimDone();
           setTimeout(() => {
             this.state.swiping = false;
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const path = window.location.pathname;
+            window.history.pushState(null, null, `${protocol}//${host}${path}#${current + 1}`);
           }, 500);
         }
       } ref="slider" draggable={false} slidesToScroll={1}>
