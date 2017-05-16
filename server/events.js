@@ -19,6 +19,9 @@ Meteor.methods({
     else {
       var instance = Instances.findOne(eventID);
     }
+    event = Events.findOne({
+      instances: instance._id
+    });
 
     if(userID) {
       alias = Meteor.users.findOne(userID).username;
