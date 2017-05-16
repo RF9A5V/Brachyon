@@ -6,6 +6,9 @@ import GameTemplate from "../../public/search_results/game_template.jsx";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 import Games from "/imports/api/games/games.js";
 
+import GameBlock from "/imports/components/games/block.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
+
 class GameOption extends Component {
   render() {
     return (
@@ -62,18 +65,9 @@ export default class GameOptionsPanel extends Component {
 
   render() {
     return (
-      <div className="col side-tab-panel" style={{margin:"auto", paddingTop:20}}>
-          {
-            (Meteor.user().profile.games || []).map(function(id){
-              return (
-                <div className="about-what">
-                  <GameOption {...Games.findOne(id)} />
-                </div>
-              );
-            })
-          }
+      <div>
         <h4 className="col-1">Add Games</h4>
-        <div className="about-what">
+        <div style={{padding: 10, backgroundColor: "#666"}}>
           <div className="col" style={{position: "relative"}}>
             <label className="input-label">Game</label>
             <input type="text" onChange={(e) => {
@@ -102,6 +96,17 @@ export default class GameOptionsPanel extends Component {
               )
             }
           </div>
+        </div>
+        <div style={{margin: "10px 0"}}>
+          <RowLayout length={4}>
+            {
+              (Meteor.user().profile.games || []).map(function(id){
+                return (
+                  <GameBlock game={Games.findOne(id)} onClick={() => {}} />
+                );
+              })
+            }
+          </RowLayout>
         </div>
       </div>
     );
