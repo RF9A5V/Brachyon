@@ -44,9 +44,8 @@
     "google": {
       "client_id": "***REMOVED***"
     },
-    "dropbox": {
-      "key": "97pn9fbf7ilojha",
-      "alphaKey": "ufay143lf5yq8rj"
+    "instagram": {
+      "client_id": "***REMOVED***"
     }
   },
   "private": {
@@ -78,6 +77,9 @@
     },
     "mailboxlayer": {
       "key": "***REMOVED***"
+    },
+    "instagram": {
+      "secret": "***REMOVED***"
     }
   }
 

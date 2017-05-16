@@ -141,6 +141,18 @@ export default class TournamentModal extends ResponsiveComponent {
     })
   }
 
+  setMatchStation(e) {
+    var value = e.target.value || null;
+    const match = Matches.findOne(this.props.id);
+    if(value && value != match.station) {
+      Meteor.call("match.setStation", this.props.id, e.target.value, () => {
+        this.props.update();
+        this.forceUpdate();
+      })
+    }
+
+  }
+
   renderBase(opts) {
     var event = Events.findOne();
     if(!event) {
@@ -158,7 +170,7 @@ export default class TournamentModal extends ResponsiveComponent {
     if(!this.props.id) {
       return null;
     }
-    var match = Matches.findOne(this.props.id);
+    const match = Matches.findOne(this.props.id);
     return (
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={() => {
         this.props.closeModal()
@@ -191,8 +203,14 @@ export default class TournamentModal extends ResponsiveComponent {
                     this.updateScoreContent(opts)
                   }
                   <div className="col x-center" style={{marginTop: 20}}>
-                    <span style={{fontSize: opts.fontSize}}>Status (Optional)</span>
+                    <span style={{fontSize: opts.fontSize}}>Set Status (Optional)</span>
                     <hr className="user-divider" />
+                    <div className="row center" style={{width: "100%", marginBottom: 20}}>
+                      <label className="input-label row center x-center">
+                        Station
+                      </label>
+                      <input type="text" className={`col-1 ${opts.inputClass}`} style={{margin: 0}} onBlur={this.setMatchStation.bind(this)} defaultValue={match.station}/>
+                    </div>
                     <div className="row center" style={{width: "100%"}}>
                       {
                         match.status == 2 ? (
@@ -261,7 +279,8 @@ export default class TournamentModal extends ResponsiveComponent {
       fontSize: "1em",
       iconSize: "2.5em",
       buttonClass: "",
-      imgDim: 150
+      imgDim: 150,
+      inputClass: ""
     });
   }
 
@@ -272,7 +291,8 @@ export default class TournamentModal extends ResponsiveComponent {
       fontSize: "3em",
       iconSize: "5em",
       buttonClass: "large-button",
-      imgDim: 300
+      imgDim: 300,
+      inputClass: "large-input"
     });
   }
 }

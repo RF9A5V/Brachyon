@@ -216,6 +216,7 @@ export default class CreateContainer extends ResponsiveComponent {
           })
         }}
         selected={this.state.selected}
+        actions={this.props.actions}
       />
     )
     return this.renderBase({

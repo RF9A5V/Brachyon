@@ -7,5 +7,8 @@ Meteor.methods({
   },
   "user.unlinkTwitch"() {
     Accounts.unlinkService(Meteor.userId(), "twitch");
+  },
+  "user.unlinkInsta"() {
+    Accounts.unlinkService(Meteor.userId(), "instagram");
   }
 })

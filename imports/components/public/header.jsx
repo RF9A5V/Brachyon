@@ -41,7 +41,7 @@ class Header extends ResponsiveComponent {
   }
 
   imgOrDefault() {
-    var user = Meteor.user();
+    var user = Meteor.users.findOne(Meteor.userId());
     if(user.profile.imageUrl) {
       return user.profile.imageUrl;
     }

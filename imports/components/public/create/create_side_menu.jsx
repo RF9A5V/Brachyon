@@ -76,7 +76,7 @@ export default class CreateContainerMenu extends Component {
                 })
               }}>
                 <div className="col-1">
-                  <FontAwesome name={item.icon} style={{fontSize: "5rem", color: this.props.selected == i ? eColor : "white"}} />
+                  <FontAwesome name={item.icon} style={{fontSize: "4.5rem", color: this.props.selected == i ? eColor : "white"}} />
                 </div>
                 {
                   this.state.maxed ? (
@@ -104,18 +104,35 @@ export default class CreateContainerMenu extends Component {
         <div className="col-1"></div>
         {
           this.state.maxed ? (
-            <div className="row x-center" style={{alignSelf: "flex-start", width: "100%"}} onClick={() => {
-              this.setState({
-                maxed: false
-              })
-            }} >
-              <div className="col-1">
-                <FontAwesome name="chevron-left" style={{fontSize: "5rem"}}/>
+            <div className="col" style={{width: "100%"}}>
+              {
+                this.props.actions.map(a => {
+                  return (
+                    <div className="row x-center" style={{alignSelf: "flex-start", width: "100%"}} onClick={a.action}>
+                      <div className="col-1">
+                        <FontAwesome name={a.icon} style={{fontSize: "4.5rem"}}/>
+                        <FontAwesome name={a.icon} />
+                      </div>
+                      <span className="col-3" style={spanStyle}>{a.name}</span>
+                      <div style={{width: "10vw", marginRight: 80}}></div>
+                    </div>
+                  )
+                })
+              }
+              <div className="row x-center" style={{alignSelf: "flex-start", width: "100%"}} onClick={() => {
+                this.setState({
+                  maxed: false
+                })
+              }} >
+                <div className="col-1">
+                  <FontAwesome name="chevron-left" style={{fontSize: "4.5rem"}}/>
+                </div>
+                <span className="col-3" style={spanStyle}>Collapse</span>
+                <div style={{width: "10vw", marginRight: 80}}></div>
               </div>
-              <span className="col-3" style={spanStyle}>Collapse</span>
             </div>
           ) : (
-            <FontAwesome name="chevron-right" style={{fontSize: "5rem"}} onClick={() => {
+            <FontAwesome name="chevron-right" style={{fontSize: "4.5rem"}} onClick={() => {
               this.setState({
                 maxed: true
               })

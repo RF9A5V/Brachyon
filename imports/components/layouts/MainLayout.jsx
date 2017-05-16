@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import Header from '../public/header.jsx';
 import Footer from '../public/footer/footer.jsx';
 import { Session } from 'meteor/session';
-
 import { VelocityComponent } from "velocity-react";
+
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
 import moment from 'moment';
 
-export default class MainLayout extends Component {
+export default class MainLayout extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -15,12 +16,20 @@ export default class MainLayout extends Component {
       fadeIn: false,
       component: this.props.children
     };
+    this.resize = () => {
+      if(this.state.render == "mobile") {
+        this.forceUpdate();
+      }
+    }
+    window.addEventListener("resize", this.resize);
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     this.setState({
       fadeIn: false
     });
+    window.removeEventListener("resize", this.resize);
   }
 
   onHeaderLoaded() {
@@ -50,12 +59,12 @@ export default class MainLayout extends Component {
     }, 400)
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <div>
         <Header ref="header" onLoad={this.onHeaderLoaded.bind(this)} />
         <VelocityComponent animation={{opacity: this.state.fadeIn ? 1 : 0}} duration={400}>
-          <div className="box row content">
+          <div className="box row content" style={{minHeight: opts.height}}>
             { this.state.component }
           </div>
         </VelocityComponent>
@@ -65,4 +74,17 @@ export default class MainLayout extends Component {
       </div>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      height: "calc(100vh - 50px)"
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      height: window.innerHeight - 126
+    });
+  }
+
 }
