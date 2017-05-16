@@ -145,6 +145,15 @@ class SingleParticipant extends ResponsiveComponent {
             )
           }
         </div>
+        <div className="row center x-center col-1">
+          {
+            participant.paid ? (
+              <span>Paid ${participant.paymentAmount}</span>
+            ) : (
+              <span>Unpaid</span>
+            )
+          }
+        </div>
         <div style={{marginLeft: 20, textAlign: "right"}}>
           <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 1.5)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
         </div>

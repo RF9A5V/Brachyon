@@ -28,30 +28,32 @@ export default class StartModal extends ResponsiveComponent {
             <FontAwesome name="times" style={{fontSize: `calc(${opts.fontSize} * 2)`}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center x-center">
-          {
-            nonChecked.length == 0 ? (
-              <div className="col">
-                <span style={{fontSize: opts.fontSize}}>Starting bracket with {participants.length} players!</span>
-                <span style={{fontSize: opts.fontSize}}>User options from this point on will be disabled.</span>
-                <div className="row center">
-                  <button className={opts.buttonClass} onClick={this.onBracketStart.bind(this)}>Start</button>
-                </div>
+            <div className="col">
+              {
+                nonChecked.length == 0 ? (
+                  null
+                ) : (
+                  <div style={{fontSize: opts.fontSize}}>
+                    These participants have not checked in yet.
+                    {
+                      nonChecked.map(p => {
+                        return (
+                          <div style={{fontSize: "1em"}}>
+                            { p.alias }
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                )
+              }
+              <span style={{fontSize: opts.fontSize}}>Starting bracket with {participants.length} players!</span>
+              <span style={{fontSize: opts.fontSize}}>User options from this point on will be disabled.</span>
+              <div className="row center">
+                <button className={opts.buttonClass} onClick={this.onBracketStart.bind(this)}>Start</button>
               </div>
-            ) : (
-              <div style={{fontSize: opts.fontSize}}>
-                These participants have not checked in yet.
-                {
-                  nonChecked.map(p => {
-                    return (
-                      <div style={{fontSize: "1em"}}>
-                        { p.alias }
-                      </div>
-                    )
-                  })
-                }
-              </div>
-            )
-          }
+            </div>
+
           </div>
         </div>
       </Modal>
