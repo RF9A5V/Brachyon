@@ -42,7 +42,7 @@ class BracketAdminScreen extends Component {
     super(props);
     this.state = {
       ready: false,
-      shouldClose: true
+      shouldClose: false
     }
   }
 
@@ -54,7 +54,9 @@ class BracketAdminScreen extends Component {
 
   componentWillUpdate() {
     const bracket = Brackets.findOne();
-    if(bracket && bracket.complete) {
+    const event = Events.findOne();
+    const isLeague = event && event.league;
+    if(bracket && bracket.complete && !isLeague) {
       if(!this.state.shouldClose) {
         this.state.shouldClose = true;
       }
