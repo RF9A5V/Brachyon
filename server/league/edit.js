@@ -19,7 +19,7 @@ Meteor.methods({
     });
     if(brackets) {
       Object.keys(brackets).forEach(k => {
-        var slug = league.events[k];
+        var slug = league.events[k].slug;
         var instanceId = Events.findOne({ slug }).instances.pop();
         var flattened = flatten(brackets[k]);
         var nextAttrs = {};
