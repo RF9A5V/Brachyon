@@ -80,6 +80,21 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
+    console.log(obj)
+    obj.brackets.forEach(brack => {
+      if (brack.game == null){
+        Games.insert({
+          name: brack.gameName,
+          description: "",
+          approved: true,
+          bannerUrl:"/images/bg.jpg",
+          temp:true
+        })
+      }
+      var newGame = Games.findOne({name: brack.gameName});
+      console.log(newGame)
+      brack.game = newGame._id;
+    })
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
     var requiresReview = false;
