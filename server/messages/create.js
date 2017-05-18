@@ -12,17 +12,35 @@ else {
 }
 
 Meteor.methods({
-  "messages.create"(text) {
-    console.log(text);
-    const to = Meteor.isDevelopment ? "+14108675309" : "+19496789288";
+  "messages.notifyAll"(userIds, text) {
+    const users = Meteor.users.find({
+      _id: {
+        $in: userIds
+      },
+      "profile.phoneNumber": {
+        $ne: null
+      }
+    }, {
+      fields: {
+        "username": 1,
+        "profile.phoneNumber": 1
+      }
+    });
     const from = Meteor.isDevelopment ? "+15005550006" : "+19492429093";
-    client.messages.create({
-      to,
-      from,
-      body: text
-    }, (err, message) => {
-      console.log(err);
-      console.log(message);
+    console.log(text);
+    users.forEach(u => {
+      client.messages.create({
+        to: u.profile.phoneNumber,
+        from,
+        body: text
+      }, (err) => {
+        if(err) {
+          console.log("Failed to send to user: " + u.username);
+        }
+        else {
+          console.log("Successfully sent to user: " + u.username);
+        }
+      })
     })
   }
 })
