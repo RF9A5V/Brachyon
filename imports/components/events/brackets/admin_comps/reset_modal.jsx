@@ -7,15 +7,8 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 export default class ResetModal extends ResponsiveComponent {
 
   resetEventHandler() {
-    var id;
-    var event = Events.findOne();
-    if(!event) {
-      id = Instances.findOne()._id;
-    }
-    else {
-      id = event._id;
-    }
-    Meteor.call("events.start_event", id, this.props.index || 0, (err) => {
+    const id = Instances.findOne()._id;
+    Meteor.call("events.stop_event", id, this.props.index || 0, (err) => {
       if(err){
         return toastr.error(err.reason, "Error!");
       }
