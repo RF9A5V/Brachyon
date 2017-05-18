@@ -1,4 +1,4 @@
-import { setFBHeader, setTwitterHeader } from "/imports/decorators/headers.js";
+import { setHeader } from "/imports/decorators/headers.js";
 import { formatter } from "/imports/decorators/formatter.js";
 
 import ShortLinks from "/imports/api/meta/short_links.js";
@@ -18,15 +18,10 @@ Picker.route("/event/:slug", function(params, req, res, next) {
     parse: true
   };
   var userAgent = req.headers["user-agent"];
-  if(userAgent.indexOf("facebookexternalhit") >= 0) {
+  if(userAgent.indexOf("facebookexternalhit") >= 0 || userAgent.indexOf("Twitterbot") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
-    return res.end(setFBHeader(details));
-  }
-  if(userAgent.indexOf("Twitterbot") >= 0) {
-    res.setHeader("Content-Type", "text/html");
-    res.statusCode = 200;
-    return res.end(setTwitterHeader(details));
+    return res.end(setHeader(details));
   }
   next();
 })
@@ -46,15 +41,10 @@ Picker.route("/event/:slug/:whatevs", function(params, req, res, next) {
     parse: true
   };
   var userAgent = req.headers["user-agent"];
-  if(userAgent.indexOf("facebookexternalhit") >= 0) {
+  if(userAgent.indexOf("facebookexternalhit") >= 0 || userAgent.indexOf("Twitterbot") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
-    return res.end(setFBHeader(details));
-  }
-  if(userAgent.indexOf("Twitterbot") >= 0) {
-    res.setHeader("Content-Type", "text/html");
-    res.statusCode = 200;
-    return res.end(setTwitterHeader(details));
+    return res.end(setHeader(details));
   }
   next();
 })
@@ -74,15 +64,10 @@ Picker.route("/league/:slug", function(params, req, res, next) {
     parse: true
   };
   var userAgent = req.headers["user-agent"];
-  if(userAgent.indexOf("facebookexternalhit") >= 0) {
+  if(userAgent.indexOf("facebookexternalhit") >= 0 || userAgent.indexOf("Twitterbot") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
-    return res.end(setFBHeader(details));
-  }
-  if(userAgent.indexOf("Twitterbot") >= 0) {
-    res.setHeader("Content-Type", "text/html");
-    res.statusCode = 200;
-    return res.end(setTwitterHeader(details));
+    return res.end(setHeader(details));
   }
   next();
 })
@@ -103,18 +88,13 @@ Picker.route("/event/:slug/bracket/:index", function(params, req, res, next) {
     description: event.details.description,
     banner: event.details.bannerUrl,
     path: "/event/" + event.slug + "/bracket/" + params.index,
-    parse: false
+    parse: true
   }
   var userAgent = req.headers["user-agent"];
-  if(userAgent.indexOf("facebookexternalhit") >= 0) {
+  if(userAgent.indexOf("facebookexternalhit") >= 0 || userAgent.indexOf("Twitterbot") >= 0) {
     res.setHeader("Content-Type", "text/html");
     res.statusCode = 200;
-    return res.end(setFBHeader(details));
-  }
-  if(userAgent.indexOf("Twitterbot") >= 0) {
-    res.setHeader("Content-Type", "text/html");
-    res.statusCode = 200;
-    return res.end(setTwitterHeader(details));
+    return res.end(setHeader(details));
   }
   next();
 })

@@ -28,9 +28,8 @@ export default class ShowUserScreen extends TrackerReact(ResponsiveComponent) {
     this.setState({
       user: Meteor.subscribe("user", Meteor.userId(), {
         onReady: () => {
-
+          // browserHistory.push("/user/" + Meteor.user().username);
           this.setState({
-
             initReady: true
           })
         }

@@ -25,10 +25,10 @@ export default class ProfileBanner extends Component {
     const userImage = user && user.profile.imageUrl ? user.profile.bannerUrl : null;
     return (
       <div className="col">
-        <ImageForm url={userImage} ref="img" aspectRatio={16/4.5} />
-        <div className="row center">
-          <button onClick={this.onSave.bind(this)}>Save</button>
-        </div>
+        <label>Profile Banner</label>
+        <ImageForm url={userImage} ref="img" aspectRatio={16/4.5}>
+          <button style={{marginLeft: 10}} onClick={this.onSave.bind(this)}>Save</button>
+        </ImageForm>
       </div>
     )
   }

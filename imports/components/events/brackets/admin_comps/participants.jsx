@@ -121,7 +121,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
     const bracket = this.props.bracket;
     const partCount = this.state.participants.length
     return (
-      <div className="col">
+      <div className="col" style={{marginBottom: 10}}>
         {
           this.props.bracket.isComplete ? (
             ""
@@ -140,7 +140,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
             </div>
           )
         }
-        <div className="col x-center col-3 participant-table" style={{overflowY: "auto"}}>
+        <div className="col x-center col-3 participant-table">
           {
             (this.state.participants || []).map((participant, index) => {
               return(<SingleParticipant

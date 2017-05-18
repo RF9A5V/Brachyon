@@ -62,7 +62,7 @@ export default class Bar extends ResponsiveComponent {
             <div className="row x-center">
               { this.status({
                 fontSize: "1em",
-                iconSize: "2em"
+                iconSize: "1em"
               }) }
             </div>
             <div className="event-block-admin-button" style={{width: 100}} onClick={(e) => {

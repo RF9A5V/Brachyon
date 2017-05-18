@@ -5,7 +5,7 @@ import Leagues from "/imports/api/leagues/league.js";
 
 Meteor.publish("event_participants", (slug) => {
   var event = Events.findOne({slug: slug});
-  if(event.brackets && event.brackets[0]) {
+  if(event && event.brackets && event.brackets[0]) {
     var users = Meteor.users.find({
       _id: {
         $in: event.brackets[0].participants || []
@@ -105,7 +105,7 @@ Meteor.smartPublish("discoverEvents", () => {
   var leagueEvents = Events.find({ league: { $in: leagues.map(l => l._id) }});
   return [
     Events.find({published: true}),
-    Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1}}),
+    Meteor.users.find({_id:{$in: userIds}}, {fields: {"username":1, "profile.image": 1, "profile.imageUrl": 1}}),
     Organizations.find({ _id: { $in: orgIds } }),
     games,
     instances,
@@ -176,11 +176,6 @@ Meteor.publish('unapproved_games', function() {
     Banners.find({_id: { $in: games }}).cursor
   ];
 })
-
-Meteor.publish("getUserByUsername", function(query) {
-  var user = Meteor.users.find({username: query});
-  return user;
-});
 
 Meteor.publish("getOrganizationByOwner", function(id) {
   var org = Organizations.find({owner: id});

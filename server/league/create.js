@@ -15,6 +15,7 @@ Meteor.methods({
       attrs.owner = attrs.creator.id;
       attrs.orgEvent = true;
     }
+    attrs.details.datetime = attrs.events[0];
     var crObj = {};
     crObj.id = attrs.creator.id;
     crObj.type = attrs.creator.type;
