@@ -171,6 +171,13 @@ export default class TournamentModal extends ResponsiveComponent {
       return null;
     }
     const match = Matches.findOne(this.props.id);
+    var color = "#FFFFFF";
+    if(match.status == 2) {
+      color = "#00BDFF";
+    }
+    else if(match.status == 3) {
+      color = "#FF6000";
+    }
     return (
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={() => {
         this.props.closeModal()
@@ -183,7 +190,7 @@ export default class TournamentModal extends ResponsiveComponent {
           </div>
           <div className="row center" style={{marginBottom: 10}}>
             <span style={{fontSize: opts.fontSize}}>
-              Status: {
+              Status: <span style={{color}}>{
                 (() => {
                   switch(match.status) {
                     case 0: return "Waiting"
@@ -192,7 +199,7 @@ export default class TournamentModal extends ResponsiveComponent {
                     case 3: return "Complete"
                   }
                 })()
-              }
+              }</span>
             </span>
           </div>
           <div className="col center col-1">

@@ -26,7 +26,7 @@ const openTweet = (text, url) => {
 
 const openFB = (_, url) => {
   const isDev = Meteor.isDevelopment;
-  const fbLink = isDev ? "https://www.brachyon.com/event/world-8-arena-umvc3-pot-bonus" : encodeURI(url);
+  const fbLink = encodeURI(url);
   const appId = isDev ? 1033113610129174 : 1033113360129199;
   PopupCenter(`https://www.facebook.com/dialog/feed?app_id=${appId}&display=popup&link=${fbLink}`, "_blank", 500, 300);
 }

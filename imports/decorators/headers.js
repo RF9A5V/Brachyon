@@ -12,11 +12,13 @@ const fbDescriptionParser = (description) => {
   return tempDesc;
 }
 
-const setFBHeader = (details) => {
+const setHeader = (details) => {
   return (`
     <html>
       <head>
         <meta property="fb:app_id" content="1033113360129199">
+        <meta name="twitter:site" content="@brachyon">
+        <meta name="og:card" content="summary_large_image">
         <meta property="og:type" content="website">
         <meta property="og:title" content="${details.name}">
         <meta property="og:description" content="${details.parse ? fbDescriptionParser(details.description) : details.description}">
@@ -30,19 +32,4 @@ const setFBHeader = (details) => {
   `)
 }
 
-const setTwitterHeader = (details) => {
-  return (`
-    <html>
-      <head>
-        <meta name="og:card" content="summary_large_image">
-        <meta name="twitter:site" content="@brachyon">
-        <meta name="og:title" content="${details.name}">
-        <meta name="og:description" content="${fbDescriptionParser(details.description)}">
-        <meta name="og:image" content="${details.banner ? details.banner : "https://www.brachyon.com/images/card_default.png"}">
-      </head>
-      <body></body>
-    </html>
-  `)
-}
-
-export { setFBHeader, setTwitterHeader }
+export { setHeader }
