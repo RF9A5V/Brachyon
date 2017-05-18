@@ -9,9 +9,10 @@ Meteor.methods({
     }
     var event = Events.findOne({instances: id});
     var user = Meteor.users.findOne({username: alias});
+    console.log(event);
     if(event && event.league) {
       var league = Leagues.findOne(event.league);
-      var eventIndex = league.events.indexOf(event.slug);
+      var eventIndex = league.events.findIndex(o => { return o.id == event._id});
       Leagues.update(event.league, {
         $unset: {
           [`leaderboard.${eventIndex}.${user._id}`]: 1
