@@ -365,7 +365,7 @@ class BracketShowScreen extends Component {
 const x = createContainer((props) => {
   const { slug, bracketIndex } = props.params;
 
-  if(props.location.pathname) {
+  if(props.location.pathname.indexOf("event") >= 0) {
     const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
       const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);

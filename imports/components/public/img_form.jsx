@@ -143,6 +143,9 @@ export default class ImageForm extends ResponsiveComponent {
               <button className={opts.buttonClass} onClick={() => { this.refs.file.click() }}>{ this.props.buttonText || "Choose Image" }</button>
             )
           }
+          {
+            this.props.children
+          }
         </div>
       </div>
     )

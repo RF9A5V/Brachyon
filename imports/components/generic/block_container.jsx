@@ -9,6 +9,7 @@ export default class BlockContainer extends Component {
 
   profileImageOrDefault(id) {
     var user = Meteor.users.findOne(id);
+    console.log(user);
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 

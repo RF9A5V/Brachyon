@@ -69,7 +69,7 @@ export default class LandingScreen extends ResponsiveComponent {
             open: false
           })
         }} content={this.state.content} onSuccess={() => {
-          browserHistory.push("/dashboard");
+          browserHistory.push("/");
         }} />
       </div>
     );

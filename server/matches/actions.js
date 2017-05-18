@@ -33,5 +33,13 @@ Meteor.methods({
         stream: !match.stream
       }
     })
+  },
+  "match.setStation"(id, value) {
+    value = value || null;
+    Matches.update(id, {
+      $set: {
+        station: value
+      }
+    })
   }
 })
