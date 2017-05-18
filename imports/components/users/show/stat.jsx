@@ -73,16 +73,18 @@ export default class UserStat extends Component {
 			          <th className="center">Record</th>
 		          </tr>
 	          {
-	            Object.keys(tourney).reverse().map(tour =>{
-	              return(
-	              	<tr>
-	                  <td>{tourney[tour].eventName}</td>
-	                  <td>{Games.findOne(tourney[tour].game).name}</td>
-	                  <td>{tourney[tour].ranking}</td>
-	                  <td>{tourney[tour].record}</td>
-	                </tr>
-	                );
-	            })
+	          	tourney==null?(""):(
+		            Object.keys(tourney).reverse().map(tour =>{
+		              return(
+		              	<tr>
+		                  <td>{tourney[tour].eventName}</td>
+		                  <td>{Games.findOne(tourney[tour].game).name}</td>
+		                  <td>{tourney[tour].ranking}</td>
+		                  <td>{tourney[tour].record}</td>
+		                </tr>
+		                );
+		            })
+	            )
 	          }
 	          </table>
 	        </div>
@@ -123,18 +125,20 @@ export default class UserStat extends Component {
 			          <th className="center">Record</th>
 		          </tr>
 	          {
-	            Object.keys(tourney).reverse().map(tour =>{
-	              if(this.state.game == tourney[tour].game)
-	              	return(
-	              	<tr>
-	                  <td>{tourney[tour].eventName}</td>
-	                  <td>{Games.findOne(tourney[tour].game).name}</td>
-	                  <td>{tourney[tour].ranking}</td>
-	                  <td>{tourney[tour].record}</td>
-	                 </tr>
-	                );
-	              else{return}
-	            })
+	          	tourney==null?(""):(
+		            Object.keys(tourney).reverse().map(tour =>{
+		              if(this.state.game == tourney[tour].game)
+		              	return(
+		              	<tr>
+		                  <td>{tourney[tour].eventName}</td>
+		                  <td>{Games.findOne(tourney[tour].game).name}</td>
+		                  <td>{tourney[tour].ranking}</td>
+		                  <td>{tourney[tour].record}</td>
+		                 </tr>
+		                );
+		              else{return}
+		            })
+	            )
 	          }
 	          </table>
 	        </div>

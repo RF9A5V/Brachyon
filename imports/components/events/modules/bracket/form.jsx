@@ -17,6 +17,8 @@ export default class BracketForm extends ResponsiveComponent {
     if(!this.state) {
       this.state = {};
     }
+    this.state.count = 0;
+    this.state.oldID = null;
     this.state.open = false;
     var subFormat = null;
     var format = props.format || {};
@@ -39,6 +41,11 @@ export default class BracketForm extends ResponsiveComponent {
     }
     this.state.format = subFormat || "NONE"
     this.state.name = props.name || "";
+    this.state.games = Meteor.subscribe("games", {
+      onReady: () => {
+        this.setState({ initReady: true })
+      }
+    })
   }
 
   componentWillReceiveProps(props) {
@@ -189,9 +196,10 @@ export default class BracketForm extends ResponsiveComponent {
         poolFormat: this.refs.poolFormat.value,
         finalFormat: this.refs.finalFormat.value
       }
-    }
+    } 
     return {
       game: (this.state.game || {}).id,
+      gameName: this.state.game.name,
       format,
       name: this.refs.name.value,
       options: this.refs.options.value()
@@ -212,6 +220,11 @@ export default class BracketForm extends ResponsiveComponent {
             toastr.error(err.reason);
           }
           else {
+            var searchVal = {
+              name:(value + " (Anonymous)"),
+              bannerUrl:"/images/bg.jpg"
+            }
+            data.push(searchVal);
             this.setState({
               gameList: data
             })
@@ -282,8 +295,8 @@ export default class BracketForm extends ResponsiveComponent {
               )
             }
           </div>
-          <div style={{border: "solid 2px white", padding: opts.borderPad, position: "relative", marginTop: 20}}>
-            <div className="row center" style={{position: "absolute", left: 0, top: opts.top, width: "100%"}}>
+          <div style={{padding: opts.borderPad, position: "relative"}}>
+            <div style={{float:"left", margin:"auto"}}>
               <h5 style={{backgroundColor: "#111", padding: "0 20px", fontSize: opts.fontSize}}>Bracket Format</h5>
             </div>
             {
@@ -296,9 +309,11 @@ export default class BracketForm extends ResponsiveComponent {
               //   <span className={`format-select ${this.state.format == "GROUP" ? "active" : ""}`} onClick={() => { this.setState({format: "GROUP"}) }}>GROUP</span>
               // </div>
             }
+            <div>
             {
               this.formatForm(opts)
             }
+            </div>
           </div>
         </div>
         <OptionsModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} ref="options" options={this.props.options || {}} />

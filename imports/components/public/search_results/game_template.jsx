@@ -11,7 +11,7 @@ export default class GameResultTemplate extends ResponsiveComponent {
 
   renderBase(opts) {
     return (
-      <div className="game-result-template row x-center" onClick={this.onClick.bind(this)}>
+      <div className="game-result-template row x-center" style={{marginBottom:0}}onClick={this.onClick.bind(this)}>
         <img src={this.props.bannerUrl} style={{width: opts.width, height: `calc(${opts.width} * 4 / 3)`}} />
         <span style={{marginLeft: 10, fontSize: opts.fontSize}}>
           { this.props.name }

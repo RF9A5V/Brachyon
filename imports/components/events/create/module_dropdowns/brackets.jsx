@@ -48,7 +48,7 @@ export default class BracketsPanel extends ResponsiveComponent {
     const min = Math.min.apply(null, Object.keys(this.state.brackets).map(i => { return parseInt(i) }));
     Object.keys(this.state.brackets).forEach(key => {
       const brackObj = this.refs[key].value();
-      if(!brackObj.game) {
+      if(!brackObj.gameName) {
         toastr.error("Each bracket given requires a game!");
         throw new Error("Bracket at key " + key + " requires a game.");
       }
