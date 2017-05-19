@@ -18,10 +18,10 @@ export default class BracketForm extends Component {
     if(props.game){
       var game = Games.findOne(props.game);
       this.state.game = {
-        id: game._id,
         name: game.name,
         banner: game.bannerUrl
       }
+      this.state.id = game._id;
     }
     if(props.format) {
       if(props.format.hasOwnProperty("baseFormat")) {
@@ -44,10 +44,10 @@ export default class BracketForm extends Component {
   onGameSelect(game){
     this.setState({
       game: {
-        id: game._id,
         name: game.name,
         banner: game.bannerUrl
-      }
+      },
+      id: game._id
     });
   }
 
@@ -180,7 +180,7 @@ export default class BracketForm extends Component {
     }
     return {
       name: this.refs.bracketName.value,
-      game: this.state.game.id,
+      game: this.state.id,
       format: format
     }
   }
