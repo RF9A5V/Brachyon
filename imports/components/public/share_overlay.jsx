@@ -3,6 +3,7 @@ import FontAwesome from "react-fontawesome";
 import Modal from "react-modal";
 
 import { connectFB, connectTwitter } from "/imports/decorators/social_media.js";
+import { openTweet, openFB } from "/imports/decorators/open_social.js";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
@@ -32,18 +33,7 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnFacebook() {
     const cb = () => {
-      Meteor.call("users.facebook.share", this.refs.text.value, this.props.url, {
-        registration: this.props.registerShare,
-        type: this.props.type,
-        id: Events.findOne()._id
-      }, (err) => {
-        if(err) {
-          toastr.error(err.reason);
-        }
-        else {
-          toastr.success("Successfully shared on Facebook!");
-        }
-      })
+      openFB(null, window.location.href);
     }
     if(Meteor.user().services.facebook) {
       cb();
@@ -55,18 +45,7 @@ export default class ShareOverlay extends ResponsiveComponent {
 
   shareOnTwitter() {
     const cb = () => {
-      Meteor.call("users.twitter.share", this.props.url, {
-        registration: this.props.registerShare,
-        type: this.props.type,
-        id: Events.findOne()._id
-      }, (err) => {
-        if(err) {
-          toastr.error(err.reason);
-        }
-        else {
-          toastr.success("Successfully tweeted event!");
-        }
-      })
+      openTweet("Check out this event!", window.location.href);
     }
     if(Meteor.user().services.twitter) {
       cb();
@@ -76,7 +55,24 @@ export default class ShareOverlay extends ResponsiveComponent {
     }
   }
 
+  changePhone() {
+    const number = this.refs.phone.value.replace(/[\(-\)]/g, "");
+    if(number.length != 10) {
+      return toastr.error("Number must be 9 digits long.");
+    }
+    Meteor.call("user.updatePhoneNumber", number, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated phone number.");
+        this.forceUpdate();
+      }
+    })
+  }
+
   renderBase(opts) {
+    const user = Meteor.user();
     return (
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={this.props.onClose}>
         <div className="col" style={{height: "100%"}}>
@@ -84,6 +80,27 @@ export default class ShareOverlay extends ResponsiveComponent {
             <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center">
+            <div className="col center x-center" style={{marginBottom: 10}}>
+              {
+                user.profile.phoneNumber ? (
+                  <span>
+                    We've got your number, so we'll text you on updates to the event!
+                  </span>
+                ) : (
+                  [
+                    <p>
+                      You can give us your number if you want, and we can send you notifications on the event through text! Otherwise, you're good to go!
+                    </p>,
+                    <div className="row">
+                      <input className="col-1" style={{margin: 0, marginRight: 10}} type="text" ref="phone" placeholder="555-555-5555" ref="phone" />
+                      <button onClick={this.changePhone.bind(this)}>Save</button>
+                    </div>
+                  ]
+                )
+              }
+              <p></p>
+            </div>
+            <hr className="user-divider" />
             {
               this.props.registerShare ? (
                 <p>You just registered for { Events.findOne().details.name }! Share with your friends here!</p>
@@ -96,20 +113,11 @@ export default class ShareOverlay extends ResponsiveComponent {
                 ]
               )
             }
-            {
-              // <div className="col" style={{marginTop: 10}}>
-              //   <p style={{marginBottom: 10}}>Add a message for social media! Maybe something like "Check out this event!".</p>
-              //   <textarea ref="text" style={{margin: 0}} placeholder="Say Something!"></textarea>
-              // </div>
-            }
-
             <div className="row center x-center" style={{width: "45%", margin: "10px auto 0"}}>
-              {
-                // <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
-                //   <FontAwesome name="facebook" style={{marginRight: 10}} />
-                //   Share
-                // </button>
-              }
+              <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
+                <FontAwesome name="facebook" style={{marginRight: 10}} />
+                Share
+              </button>
               <button className={`twitter-button col-1 ${opts.buttonClass}`} onClick={this.shareOnTwitter.bind(this)}>
                 <FontAwesome name="twitter" style={{marginRight: 10}} />
                 Share

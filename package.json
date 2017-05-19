@@ -38,6 +38,7 @@
     "react-sidebar": "^2.3.0",
     "react-slick": "^0.14.6",
     "react-summernote": "^1.0.4",
+    "twilio": "^3.0.0",
     "velocity-react": "^1.1.8"
   },
   "devDependencies": {
