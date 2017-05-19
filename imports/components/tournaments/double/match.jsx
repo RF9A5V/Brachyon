@@ -143,7 +143,8 @@ export default class MatchBlock extends ResponsiveComponent {
       position: "absolute",
       top: -19,
       cursor: "pointer",
-      fontSize: 10
+      fontSize: 10,
+      border: "solid 1px white"
     }
 
     var content;
@@ -157,10 +158,10 @@ export default class MatchBlock extends ResponsiveComponent {
     else if(status == 1) {
       content = (
         [
-          <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchQueue.bind(this)}>
+          <div className="row center x-center col-1 hover-blue" style={{...actionStyle, borderRight: "solid 2px white"}} onClick={this.onMatchQueue.bind(this)}>
             { this.props.match.stream ? "Not Stream" : "Stream" }
           </div>,
-          <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchStart.bind(this)}>
+          <div className="row center x-center col-1 hover-blue" style={actionStyle} onClick={this.onMatchStart.bind(this)}>
             Start
           </div>
         ]
@@ -168,14 +169,14 @@ export default class MatchBlock extends ResponsiveComponent {
     }
     else if(status == 2) {
       content = (
-        <div className="row center x-center col-1" style={actionStyle} onClick={this.onMatchUnstart.bind(this)}>
+        <div className="row center x-center col-1 hover-blue" style={actionStyle} onClick={this.onMatchUnstart.bind(this)}>
           Stop
         </div>
       )
     }
     else {
       content = (
-        <div className="row center x-center col-1" style={actionStyle} onClick={(e) => {
+        <div className="row center x-center col-1 hover-blue" style={actionStyle} onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           this.undoMatch()
@@ -232,18 +233,21 @@ export default class MatchBlock extends ResponsiveComponent {
       position: "absolute",
       bottom: -19,
       cursor: "pointer",
-      fontSize: 10
+      fontSize: 10,
+      border: "solid 1px white"
     }
     if(status == 0 || !this.state.hoverActive) {
       return null;
     }
     return (
       <div className="row" style={containerStyle}>
-        <div className="row center x-center col-1" style={actionStyle} onClick={() => { this.shareAction("fb") }}>
-          Facebook
+        <div className="row center x-center col-1 hover-fb" style={{...actionStyle, borderRight: "solid 1px white"}} onClick={() => { this.shareAction("fb") }}>
+          <FontAwesome name="facebook" style={{marginRight: 5, color: "inherit"}} />
+          Share
         </div>
-        <div className="row center x-center col-1" style={actionStyle} onClick={() => { this.shareAction("twitter") }}>
-          Twitter
+        <div className="row center x-center col-1 hover-twitter" style={actionStyle} onClick={() => { this.shareAction("twitter") }}>
+          <FontAwesome name="twitter" style={{marginRight: 5, color: "inherit"}} />
+          Tweet
         </div>
       </div>
     )

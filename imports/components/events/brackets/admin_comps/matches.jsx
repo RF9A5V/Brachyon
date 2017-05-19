@@ -66,9 +66,16 @@ export default class MatchList extends ResponsiveComponent {
                 matchCounts.push(this.getMatchCount(i, false));
               }
               return ["Waiting", "Ready", "Playing", "Complete"].map((t, i) => {
+                var color = "#FFFFFF";
+                if(i == 2) {
+                  color = "#00BDFF";
+                }
+                else if(i == 3) {
+                  color = "#FF6000";
+                }
                 return (
                   <div className="col col-1" style={{marginRight: i == 3 ? 0 : 10}}>
-                    <label className="input-label" style={textStyle}>{ t }</label>
+                    <label className="input-label" style={{...textStyle, color }}>{ t }</label>
                     <div className="row center x-center" style={{padding: 10, backgroundColor: "#666"}}>
                       <span style={textStyle}>{ matchCounts[i] }</span>
                     </div>
@@ -88,7 +95,7 @@ export default class MatchList extends ResponsiveComponent {
               return ["On Deck", "Streaming"].map((t, i) => {
                 return (
                   <div className="col col-1" style={{marginRight: i == 1 ? 0 : 10}}>
-                    <label className="input-label" style={textStyle}>{ t }</label>
+                    <label className="input-label" style={{...textStyle, color: i < 1 ? "#FFFFFF" : "#00BDFF"}}>{ t }</label>
                     <div className="row center x-center" style={{padding: 10, backgroundColor: "#666"}}>
                       <span style={textStyle}>{ matchCounts[i] }</span>
                     </div>
@@ -143,7 +150,7 @@ export default class MatchList extends ResponsiveComponent {
                     }
                   })();
 
-                  var status = "Status: " + (() => {
+                  var status = (() => {
                     switch(match.status) {
                       case 0: return "Waiting"
                       case 1: return match.stream ? "On Deck" : "Ready"
@@ -152,8 +159,16 @@ export default class MatchList extends ResponsiveComponent {
                     }
                   })();
 
+                  var color = "#FFFFFF";
+                  if(match.status == 2) {
+                    color = "#00BDFF";
+                  }
+                  else if(match.status == 3) {
+                    color = "#FF6000";
+                  }
+
                   var footer = [
-                    <span>{status}</span>,
+                    <span>Status: <span style={{color}}>{status}</span></span>,
                     <Timer date={match.status == 1 ? match.establishedAt : match.startedAt} />
                   ]
 
@@ -256,7 +271,7 @@ export default class MatchList extends ResponsiveComponent {
                           }
                         })();
 
-                        var status = "Status: " + (() => {
+                        var status = (() => {
                           switch(match.status) {
                             case 0: return "Waiting"
                             case 1: return match.stream ? "On Deck" : "Ready"
@@ -266,7 +281,7 @@ export default class MatchList extends ResponsiveComponent {
                         })();
 
                         var footer = [
-                          <span>{status}</span>,
+                          <span>Status: <span style={{color: "#FF6000"}}>{status}</span></span>,
                           <span>Done!</span>
                         ]
 
