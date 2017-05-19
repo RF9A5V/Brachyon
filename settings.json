@@ -20,6 +20,7 @@
      }
    },
 
+
   "public": {
     "analyticsSettings": {
       "Google Analytics" : {
@@ -80,6 +81,12 @@
     },
     "instagram": {
       "secret": "ad7d766bf1d345879c67e2b407c0730e"
+    },
+    "twilio": {
+      "accountSid": "ACcca60e26cf822fd80acb223ee4c45efb",
+      "authToken": "2ac06bf63784134f4f55c4a078213876",
+      "testAccountSid": "ACa6dc9b1c7d3493f1363061ef85a4012c",
+      "testAuthToken": "7f87aa326597682cd0d6d7c0875e10ad"
     }
   }
 

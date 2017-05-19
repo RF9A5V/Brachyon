@@ -271,7 +271,7 @@ class BracketDetails extends ResponsiveComponent {
   _registrationButton(obj, opts) {
     return (
       <RegisterButton style={{marginLeft: 10, borderColor: "#FF6000", fontSize: opts.fontSize}} bracketMeta={obj} metaIndex={this.props.index} onRegistered={() => {
-        // this.setState({open: true})
+        this.setState({open: true})
       }}/>
     );
     // return (
