@@ -80,6 +80,31 @@ export default class UserAccount extends ResponsiveComponent {
     });
   }
 
+  changePhone() {
+    const number = this.refs.phone.value.replace(/[\(-\)]/g, "");
+    if(number.length != 10) {
+      return toastr.error("Number must be 9 digits long.");
+    }
+    Meteor.call("user.updatePhoneNumber", number, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        toastr.success("Successfully updated phone number.");
+      }
+    })
+  }
+
+  parsePhone() {
+    const user = Meteor.user();
+    if(!user.profile.phoneNumber) {
+      return null;
+    }
+    var number = user.profile.phoneNumber.slice(2);
+    console.log(number);
+    return number.substr(0, 3) + "-" + number.substr(3, 3) + "-" + number.substr(6, 4);
+  }
+
   render() {
     const user = Meteor.user();
     return (
@@ -97,6 +122,11 @@ export default class UserAccount extends ResponsiveComponent {
         <div className="row" style={{marginBottom: 10}}>
           <input className="col-1" type="text" ref="email" defaultValue={user.emails[0].address} style={{margin: 0}} />
           <button style={{marginLeft: 10}} onClick={this.changeEmail.bind(this)}>Save</button>
+        </div>
+        <label>Phone Number</label>
+        <div className="row" style={{marginBottom: 10}}>
+          <input className="col-1" type="text" ref="phone" placeholder="555-555-5555" defaultValue={this.parsePhone(user.profile.phoneNumber)} style={{margin: 0}} />
+          <button style={{marginLeft: 10}} onClick={this.changePhone.bind(this)}>Save</button>
         </div>
         <label>Change Password</label>
         <div className="col col-1" style={{marginBottom: 10}}>

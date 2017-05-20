@@ -445,7 +445,7 @@ class BracketAdminScreen extends Component {
       )
     }
     const bracket = Brackets.findOne();
-    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex];
+    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
     const complete = bracket && bracket.complete && !bracketMeta.isComplete;
     return (
       <div style={{padding: 10, height: "100%"}}>

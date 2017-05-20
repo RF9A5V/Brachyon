@@ -20,6 +20,7 @@
      }
    },
 
+
   "public": {
     "analyticsSettings": {
       "Google Analytics" : {
@@ -80,6 +81,12 @@
     },
     "instagram": {
       "secret": "***REMOVED***"
+    },
+    "twilio": {
+      "accountSid": "***REMOVED***",
+      "authToken": "***REMOVED***",
+      "testAccountSid": "***REMOVED***",
+      "testAuthToken": "***REMOVED***"
     }
   }
 
