@@ -13,25 +13,6 @@ Meteor.methods({
     })
   },
 
-  "anon.createGame"(name, description, bannerUrl){
-    if(!name) {
-      throw new Meteor.Error(403, "Can't create game with no name!");
-    }
-    var gameName = Games.findOne({'name':name});
-    if(gameName){
-      if(gameName.name == name)
-        throw new Meteor.Error(403, "Game Already Exist!");
-    }
-        
-    return Games.insert({
-      name,
-      description,
-      approved: true,
-      bannerUrl:bannerUrl,
-      temp:true
-    })
-  },
-
   "games.addTag"(gameID, tag) {
     var tagTest = Tags.findOne(tag);
     if(!tagTest) {

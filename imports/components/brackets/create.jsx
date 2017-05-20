@@ -19,7 +19,6 @@ export default class BracketCreate extends Component {
     e.preventDefault();
     var value = this.refs.bracket.value();
     const obj = value;
-    console.log(obj);
     Meteor.call("brackets.create", this.state.url, obj, (err, val) => {
       if(err) {
         return toastr.error(err.reason);

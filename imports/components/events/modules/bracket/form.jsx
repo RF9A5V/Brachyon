@@ -17,8 +17,6 @@ export default class BracketForm extends ResponsiveComponent {
     if(!this.state) {
       this.state = {};
     }
-    this.state.count = 0;
-    this.state.oldID = null;
     this.state.open = false;
     var subFormat = null;
     var format = props.format || {};
@@ -32,6 +30,7 @@ export default class BracketForm extends ResponsiveComponent {
     if(game) {
       this.state.game = {
         id: game._id,
+        name: null,
         gameName: game.name,
         bannerUrl: game.bannerUrl
       }
@@ -197,9 +196,14 @@ export default class BracketForm extends ResponsiveComponent {
         finalFormat: this.refs.finalFormat.value
       }
     } 
+    if (this.state.game.name == null && this.state.game){
+      console.log("hello")
+      toastr.error("Each bracket given requires a game!");
+      throw new Error("Bracket requires a game.");
+    }
     return {
       game: (this.state.game || {}).id,
-      gameName: this.state.game.name,
+      gameName: this.state.game.name.slice(0,(this.state.game.name.length-12)),
       format,
       name: this.refs.name.value,
       options: this.refs.options.value()
