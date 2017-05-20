@@ -100,7 +100,7 @@ Meteor.methods({
         "details.bannerUrl": 1
       },
       sort: {
-        "details.datetime": -1
+        "details.datetime": 1
       },
       limit
     }).fetch().map(e => {
@@ -112,12 +112,12 @@ Meteor.methods({
         type: "event",
         isLeague: false
       }
-    }).reverse();
+    });
     var leagueQuery = {
-      owner: user._id,
-      "details.datetime": {
-        $lt: args.date
-      }
+      owner: user._id
+    }
+    if(args.date) {
+      leagueQuery["details.datetime"] = args.date;
     }
     var leagues = Leagues.find(leagueQuery, {
       fields: {
@@ -129,7 +129,7 @@ Meteor.methods({
         events: 1
       },
       sort: {
-        "details.datetime": -1
+        "details.datetime": 1
       },
       limit
     }).fetch().map(e => {
@@ -142,7 +142,26 @@ Meteor.methods({
         id: e._id,
         isLeague: true
       }
-    }).reverse();
+    });
+    var qBracketQuery = {
+      owner: user._id
+    }
+    if(args.type == "active") {
+      qBracketQuery["brackets.0.inProgress"] = true;
+    }
+    else if(args.type == "completed") {
+      qBracketQuery["brackets.0.inProgress"] = false;
+    }
+    var qBrackets = Instances.find(qBracketQuery, {
+      fields: {
+        _id: 1,
+        slug: 1,
+        "brackets.0.name": 1,
+        "brackets.0.game": 1,
+        "brackets.0.startedAt": 1
+      }
+    }).fetch();
+    console.log(qBrackets);
     leagues = leagues.concat(events).sort((a, b) => {
       if(moment(a.date).isBefore(moment(b.date))) {
         return 1;
