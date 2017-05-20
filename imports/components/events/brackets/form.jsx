@@ -46,9 +46,8 @@ export default class BracketForm extends Component {
       game: {
         id: game._id,
         name: game.name,
-        banner: GameBanners.findOne(game.banner).link()
-      },
-
+        banner: game.bannerUrl
+      }
     });
   }
 

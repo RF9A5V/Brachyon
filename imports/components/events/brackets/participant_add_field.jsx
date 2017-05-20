@@ -167,7 +167,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
             }
           }} />
           {
-            this.state.users.length ? (
+            this.state.users.length || this.state.query.length >= 3 ? (
               <div style={{backgroundColor: "#111", position: "absolute", top: 72, width: "100%", maxHeight: "20vh", overflowY: "auto", border: "solid 2px #111"}}>
                 {
                   this.getUsers().map((user, i) => {
