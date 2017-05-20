@@ -47,6 +47,7 @@ var sortPlacement = (format, rounds) => {
 Meteor.methods({
   "events.brackets.close"(eventID, bracketIndex) {
     var event = Events.findOne(eventID);
+    console.log(event)
     var instance;
     if(!event) {
       instance = Instances.findOne(eventID);

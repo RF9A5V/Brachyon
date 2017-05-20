@@ -13,7 +13,7 @@ export default class BracketsPanel extends Component {
 
   value() {
     const obj = this.refs.bracket.value()
-    if(!obj.game){
+    if(!obj.gameName && !obj.game){
       toastr.error("Bracket requires a game!");
       throw new Error("Bracket game must be defined.");
     }

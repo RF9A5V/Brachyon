@@ -31,8 +31,6 @@ export default class EventCreate extends Component {
 
   create() {
     var obj = this.refs.create.value();
-    //console.log("we here")
-    //console.log(obj)
     Object.keys(obj).forEach(key1 => {
       if(obj[key1] == null) {
         delete obj[key1];
