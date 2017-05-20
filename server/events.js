@@ -264,10 +264,14 @@ Meteor.methods({
   },
 
   "events.start_event"(id, index) {
-    const event = Events.findOne(id);
+    var event = Events.findOne(id);
     var instance;
+    var staggeredMessages = [];
     if(!event) {
       instance = Instances.findOne(id);
+      event = Events.findOne({
+        instances: id
+      });
     }
     else {
       instance = Instances.findOne(event.instances.pop());
@@ -330,6 +334,15 @@ Meteor.methods({
             const allPlayersPresent = players.every(p => {
               return p && p.alias != null;
             });
+            if(allPlayersPresent) {
+              staggeredMessages.push({
+                ids: [
+                  players[0].id,
+                  players[1].id
+                ],
+                text: `Your match is ready! ${players[0].alias} vs. ${players[1].alias} is ready to play!`
+              });
+            }
             var match = Matches.insert({
               players,
               establishedAt: allPlayersPresent ? new Date() : null,
@@ -337,6 +350,7 @@ Meteor.methods({
               status: allPlayersPresent ? 1 : 0,
               stream: false
             });
+
             obj.id = match;
             return obj;
           })
@@ -395,12 +409,30 @@ Meteor.methods({
         }
       })
     }
+
+    // Notifications to players that bracket has started goes here.
+    var notificationString = "";
+    if(event) {
+      notificationString = `/event/${event.slug}/bracket/${index}`;
+    }
+    else {
+      notificationString = `/bracket/${instance.slug}`;
+    }
+    Meteor.call("messages.notifyAll", instance.brackets[index].participants.map(p => { return p.id }),
+      `Bracket's started on Brachyon! Check it out at https://www.brachyon.com${notificationString}`
+    );
+    staggeredMessages.forEach(m => {
+      Meteor.call("messages.notifyAll", m.ids, m.text);
+    })
   },
 
   "events.stop_event"(id, index){
     const instance = Instances.findOne(id);
     const format = instance.brackets[index].format.baseFormat;
     const bracket = Brackets.findOne(instance.brackets[index].id);
+    if(!bracket) {
+      return null;
+    }
     if(format == "single_elim" || format == "double_elim") {
       var matches = [];
       bracket.rounds.map(b => {
@@ -416,7 +448,8 @@ Meteor.methods({
       Brackets.remove(bracket._id);
       Instances.update(id, {
         $unset: {
-          [`brackets.${index}.id`]: 1
+          [`brackets.${index}.id`]: 1,
+          [`brackets.${index}.startedAt`]: 1
         }
       })
     }
@@ -442,7 +475,14 @@ Meteor.methods({
       var nextId = bracket.rounds[0][round + 1][Math.floor(index / 2)].id;
       var nextMatch = Matches.findOne(nextId);
       if(nextMatch) {
-        const nextHasPlayer = nextMatch.players.some(p => { return p && p.alias })
+        const nextHasPlayer = nextMatch.players.some(p => { return p && p.alias });
+        if(nextHasPlayer) {
+          var nextPlayers = nextMatch.players.filter(p => { return p }).concat([players[0]]);
+          var ids = nextPlayers.map(p => { return p.id })
+          Meteor.call("messages.notifyAll", ids,
+            `Your match is ready! ${nextPlayers[0].alias} vs. ${nextPlayers[1].alias} is ready to play! You will be notified when you should play.`
+          );
+        }
         Matches.update(nextId, {
           $set: {
             [`players.${index % 2}`]: {
@@ -555,10 +595,20 @@ Meteor.methods({
     if(bracketIndex == 1 && roundIndex % 2 == 0) {
       advIndex = index;
     }
+    // For piping into grand finals.
     if(roundIndex + 1 == bracket.rounds[bracketIndex].length) {
       var winMatchId = bracket.rounds[2][0][0].id;
       var winMatch = Matches.findOne(winMatchId);
       var hasSomePlayer = winMatch.players.some(p => { return p && p.alias });
+      // Notifications to players that their match is ready goes here (for winner's bracket).
+      if(hasSomePlayer) {
+        var objs = winMatch.players.filter(p => { return p }).concat([players[0]]);
+        var aliases = objs.map(o => { return o.alias });
+        var ids = objs.map(o => { return o.id });
+        Meteor.call("messages.notifyAll", ids,
+          `Your match is ready! ${aliases[0]} vs. ${aliases[1]} is ready to play! You will be notified when you should play.`
+        );
+      }
       Matches.update(winMatchId, {
         $set: {
           [`players.${bracketIndex}`]: {
@@ -579,6 +629,15 @@ Meteor.methods({
         var playerPos = index % 2;
         if(bracketIndex == 1 && roundIndex % 2 == 0) {
           playerPos = 1;
+        }
+        // Notifications to players that their match is ready goes here (for winner's bracket).
+        if(hasSomePlayer) {
+          var objs = winMatch.players.filter(p => { return p }).concat([players[0]]);
+          var aliases = objs.map(o => { return o.alias });
+          var ids = objs.map(o => { return o.id });
+          Meteor.call("messages.notifyAll", ids,
+            `Your match is ready! ${aliases[0]} vs. ${aliases[1]} is ready to play! You will be notified when you should play.`
+          );
         }
         Matches.update(winMatchId, {
           $set: {
@@ -604,6 +663,16 @@ Meteor.methods({
           playerPos = index % 2;
         }
         var hasSomePlayer = loserMatch.players.some(p => { return p && p.alias });
+
+        // Notification that match is ready goes here (loser's bracket).
+        if(hasSomePlayer) {
+          var objs = loserMatch.players.filter(p => { return p }).concat([players[0]]);
+          var aliases = objs.map(o => { return o.alias });
+          var ids = objs.map(o => { return o.id });
+          Meteor.call("messages.notifyAll", ids,
+            `Your match is ready! ${aliases[0]} vs. ${aliases[1]} is ready to play! You will be notified when you should play.`
+          );
+        }
         Matches.update(loserMatchId, {
           $set: {
             [`players.${playerPos}`]: {

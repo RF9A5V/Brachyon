@@ -27,7 +27,6 @@ import ForgotPassScreen from "../imports/components/public/forgot_pass.jsx";
 import ResetPassScreen from "../imports/components/public/reset_pass.jsx";
 import ShortLinkScreen from "../imports/components/public/short_link.jsx";
 import UserProfileScreen from "../imports/components/users/profile.jsx";
-import MessageTestScreen from "../imports/components/sandbox/message.jsx";
 
 import CreateRunnableScreen from "../imports/components/generic/create_runnable.jsx";
 import CreateLeagueScreen from "../imports/components/leagues/create.jsx";
@@ -72,7 +71,6 @@ export const renderRoutes = () => (
       <Route path="admin" component={AdminFunctionScreen} />
       <Route path="user/:username" component={UserProfileScreen}/>
       <Route path="/_:id" component={ShortLinkScreen} />
-      <Route path="/sandbox" component={MessageTestScreen} />
     </Route>
 
     <Route path="/" component={MainLayout}>

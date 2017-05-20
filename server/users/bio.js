@@ -47,5 +47,16 @@ Meteor.methods({
     }
     Accounts.addEmail(Meteor.userId(), email);
     Accounts.removeEmail(Meteor.userId(), oldEmail);
+  },
+  "user.updatePhoneNumber"(number) {
+    if(number.length != 10) {
+      throw new Meteor.Error("Issue with phone number. Must be 9 characters.");
+    }
+    number = "+1" + number;
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        "profile.phoneNumber": number
+      }
+    });
   }
 })
