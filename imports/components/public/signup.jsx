@@ -37,9 +37,11 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
           return toastr.error(err.reason);
         }
         if(this.props.onClose) {
+          if(this.props.onSuccess){
+            this.props.onSuccess();
+          }
           this.props.onClose()
         }
-        browserHistory.push("/dashboard");
       });
 
     })

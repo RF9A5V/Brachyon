@@ -46,18 +46,22 @@ export default class UserImage extends ResponsiveComponent {
         position: "absolute",
         width: opts.imgDim,
         height: opts.imgDim,
-        bottom: -(opts.imgDim / 2),
+        top: -(opts.imgDim / 2),
         left: (opts.imgDim / 3),
         borderRadius: "100%",
         backgroundImage: `${this.state.hover ? "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))," : ""} url(${user.profile.imageUrl || "/images/profile.png"})`,
         backgroundSize: "100% 100%"
-      }} onMouseEnter={() => {
+      }} onMouseEnter={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if(this.props.editMode) {
           this.setState({
             hover: true
           })
         }
-      }} onMouseLeave={() => {
+      }} onMouseLeave={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if(this.props.editMode) {
           this.setState({
             hover: false
@@ -87,13 +91,17 @@ export default class UserImage extends ResponsiveComponent {
           })
         }}>
           <div className="row" style={{justifyContent: "flex-end"}}>
-            <FontAwesome name="times" style={{fontSize: opts.iconSize}} />
+            <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={() => {
+              this.setState({ open: false })
+            }} />
           </div>
-          <div style={{width: "30%", margin: "0 auto"}}>
-            <ImageForm aspectRatio={1} url={user.profile.imageUrl || "/images/profile.png"} ref="img" />
+          <div style={{width: "50%", margin: "0 auto"}}>
+            <ImageForm aspectRatio={1} url={user.profile.imageUrl || "/images/profile.png"} ref="img">
+              <button onClick={this.onImageUpload.bind(this)} className={opts.buttonClass} style={{marginLeft: 10}}>Save</button>
+            </ImageForm>
           </div>
           <div className="row center">
-            <button onClick={this.onImageUpload.bind(this)}>Save</button>
+
           </div>
         </Modal>
       </div>
@@ -105,7 +113,8 @@ export default class UserImage extends ResponsiveComponent {
       imgDim: 200,
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      iconSize: "5em"
+      iconSize: "5em",
+      buttonClass: "large-button"
     });
   }
 
@@ -114,7 +123,8 @@ export default class UserImage extends ResponsiveComponent {
       imgDim: 150,
       modalClass: "",
       overlayClass: "",
-      iconSize: "3em"
+      iconSize: "2em",
+      buttonClass: ""
     });
   }
 

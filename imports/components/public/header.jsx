@@ -72,7 +72,9 @@ class Header extends ResponsiveComponent {
               }}/>
             </div>
             <div onClick={() => {
-              browserHistory.push("/");
+              if(user) {
+                browserHistory.push("/user/" + user.username);
+              }
             }}>
               <Loader width={100} />
             </div>
@@ -108,6 +110,7 @@ class Header extends ResponsiveComponent {
       )
     }
     var userCred = "";
+    const user = Meteor.user();
     if(Meteor.userId()){
       userCred = (
         <div style={{position: "relative"}} className="row x-center">
@@ -150,7 +153,9 @@ class Header extends ResponsiveComponent {
                     <a href="#" className={`hub ${createPath.indexOf(window.location.pathname) >= 0 ? "active" : ""}`} onClick={ (e) => {
                       e.preventDefault();
                       toastr.warning("Please log in or sign up before creating an event!", "Warning!");
-                      browserHistory.push("/")
+                      if(user) {
+                        browserHistory.push("/user/" + user.username);
+                      }
                     } }>
                       CREATE
                     </a>
@@ -166,7 +171,9 @@ class Header extends ResponsiveComponent {
               </div>
             </div>
             <div className="row center x-center" onClick={() => {
-              browserHistory.push("/");
+              if(user) {
+                browserHistory.push("/user/" + user.username);
+              }
             }} style={{cursor: "pointer"}}>
               <Loader width={40} />
             </div>
@@ -181,7 +188,7 @@ class Header extends ResponsiveComponent {
           this.setState({ regOpen: false })
         }} onSuccess={() => {
           if(window.location.pathname == "/") {
-            browserHistory.push("/dashboard");
+            browserHistory.push("/discover");
           }
           this.setState({ regOpen: false })
         }} />
