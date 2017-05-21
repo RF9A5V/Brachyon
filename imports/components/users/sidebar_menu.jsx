@@ -12,7 +12,10 @@ export default class SidebarMenu extends ResponsiveComponent {
         icon: "user",
         name: "Profile",
         action: () => {
-          browserHistory.push("/dashboard");
+          const user = Meteor.user();
+          if(user) {
+            browserHistory.push("/user/" + user.username);
+          }
         }
       },
       {

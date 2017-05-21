@@ -54,7 +54,15 @@ export default class BracketCreate extends Component {
         }
       })
     }, 500)
+  }
 
+  randomizeSlug() {
+    const part1 = parseInt(Math.random() * 10000);
+    const part2 = parseInt(Math.random() * 10000);
+    var comp = part1 + "" + part2;
+    this.setState({
+      url: comp
+    });
   }
 
   render() {
@@ -67,7 +75,8 @@ export default class BracketCreate extends Component {
           <BracketForm ref="bracket" />
           <div className="row" style={{marginTop: 10}}>
             <label className="row x-center input-label">https://www.brachyon.com/bracket/</label>
-            <input type="text" className="col-1" onChange={this.onSlugChange.bind(this)} style={{margin: 0}} />
+            <input type="text" ref="slug" className="col-1" value={this.state.url} onChange={this.onSlugChange.bind(this)} style={{margin: 0}} />
+            <button style={{marginLeft: 10}} onClick={this.randomizeSlug.bind(this)}>Randomize</button>
           </div>
           {
             this.state.url.length ? (

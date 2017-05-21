@@ -87,14 +87,12 @@ export default class SlideMain extends ResponsiveComponent {
                 current.slides.map((item, i) => {
                   var icon;
                   var currentRef = this.refs[this.state.activeSlide];
-                  console.log(currentRef);
                   if(currentRef) {
                     currentRef = currentRef.getCurrent();
                   }
                   else {
                     currentRef = window.location.hash ? parseInt(window.location.hash.slice(1)) - 1 : 0;
                   }
-                  console.log(currentRef);
                   if(!item.icon) {
                     icon = (
                       <div className={`slide-controller-tab icon`} onClick={() => {

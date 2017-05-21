@@ -33,6 +33,7 @@ export default class UserEvents extends ResponsiveComponent {
   loadEvents(props, reload) {
     if(reload) {
       this.state.done = false;
+      this.state.data = [];
     }
     if(this.state.done) {
       return;
@@ -73,17 +74,10 @@ export default class UserEvents extends ResponsiveComponent {
     window.removeEventListener("scroll", this.onScrollEnd);
   }
 
-  componentWillReceiveProps(next) {
-    if(next.type != this.props.type) {
-      this.state.done = false;
-      this.loadEvents(next, true);
-    }
-  }
-
   typeSelector(opts) {
     var options;
     if(this.props.type == "playing") {
-      options = ["All", "Active", "Completed"].map(i => {
+      options = ["All", "Active", "Completed", "Leagues", "Quick Brackets"].map(i => {
         return (
           <option value={i.toLowerCase()}>
             { i }
@@ -92,7 +86,7 @@ export default class UserEvents extends ResponsiveComponent {
       })
     }
     else {
-      options = ["All", "Unpublished", "Active", "Completed"].map(i => {
+      options = ["All", "Unpublished", "Active", "Completed", "Leagues", "Quick Brackets"].map(i => {
         return (
           <option value={i.toLowerCase()}>
             { i }
@@ -133,15 +127,6 @@ export default class UserEvents extends ResponsiveComponent {
               })
             }
           </RowLayout>
-          {
-            this.state.done ? (
-              <div className="row center">
-                <span style={{fontSize: opts.mobile ? "2.5em" : "1em"}}>No More Events</span>
-              </div>
-            ) : (
-              null
-            )
-          }
         </div>
       </div>
     );

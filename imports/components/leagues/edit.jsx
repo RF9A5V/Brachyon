@@ -237,7 +237,7 @@ class EditLeagueScreen extends Component {
       )
     }
     return (
-      <div style={{padding: 20}}>
+      <div>
         <CreateContainer ref="create" items={this.items()} actions={this.actions()} />
       </div>
     )
