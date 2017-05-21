@@ -197,7 +197,6 @@ export default class BracketForm extends ResponsiveComponent {
       }
     } 
     if (this.state.game.name == null && this.state.game){
-      console.log("hello")
       toastr.error("Each bracket given requires a game!");
       throw new Error("Bracket requires a game.");
     }
