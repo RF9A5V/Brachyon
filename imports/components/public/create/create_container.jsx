@@ -176,7 +176,8 @@ export default class CreateContainer extends ResponsiveComponent {
                   backgroundColor: this.state.selected == i ? "#111" : "#666",
                   marginRight: 10,
                   width: 175,
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  boxShadow: this.state.selected == i ? "0 0 2px black" : "0 0 5px black"
                 }}>
                   <FontAwesome name={item.icon} style={{marginRight: 10, color: this.state.selected == i ? eColor : "white", fontSize: "1.5em"}} />
                   <span className="title">{ item.name }</span>
