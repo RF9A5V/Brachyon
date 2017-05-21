@@ -67,7 +67,12 @@ Meteor.methods({
         name: 1,
         bannerUrl: 1
       }
+    }).fetch().map(g => {
+      var id = g._id;
+      g.id = id;
+      delete g._id;
+      return g;
     });
-    return games.fetch();
+    return games;
   }
 })
