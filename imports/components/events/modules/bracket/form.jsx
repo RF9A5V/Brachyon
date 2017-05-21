@@ -30,7 +30,7 @@ export default class BracketForm extends ResponsiveComponent {
     if(game) {
       this.state.game = {
         id: game._id,
-        gameName: game.name,
+        name: game.name,
         bannerUrl: game.bannerUrl
       }
     }
@@ -54,7 +54,7 @@ export default class BracketForm extends ResponsiveComponent {
     var game = Games.findOne(props.game) || props.gameObj;
     if(game) {
       this.state.game.id = game._id;
-      this.state.game.gameName = game.name;
+      this.state.game.name = game.name;
       this.state.game.bannerUrl = game.bannerUrl;
     }
 
@@ -257,7 +257,7 @@ export default class BracketForm extends ResponsiveComponent {
             <input type="text" className={opts.inputClass} onChange={(e) => {
               const value = e.target.value;
               this.loadGames(value, opts.limit);
-            }} defaultValue={this.state.game.gameName} style={{marginRight: 0, marginTop: 0}} ref="game" />
+            }} defaultValue={this.state.game.name} style={{marginRight: 0, marginTop: 0}} ref="game" />
             {
               this.state.gameList ? (
                 <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
@@ -265,8 +265,6 @@ export default class BracketForm extends ResponsiveComponent {
                   this.state.gameList.map(g => {
                     return (
                       <GameTemplate {...g} onClick={() => {
-                        g.id = g._id;
-                        delete g._id;
                         this.setState({
                           game: g,
                           gameList: null
