@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import { browserHistory, Link } from 'react-router';
+import { createContainer } from "meteor/react-meteor-data";
 
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import RegModal from "/imports/components/public/reg_modal.jsx";
@@ -8,7 +9,7 @@ import Loader from "/imports/components/public/loader.jsx";
 
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
-export default class LandingScreen extends ResponsiveComponent {
+class LandingScreen extends ResponsiveComponent {
 
   constructor() {
     super();
@@ -22,7 +23,14 @@ export default class LandingScreen extends ResponsiveComponent {
   renderBase(opts) {
     if(!this.state.ready) {
       return (
-        <LoaderContainer ready={this.state.initReady} onReady={() => { this.setState({ready: true}) }} />
+        <LoaderContainer ready={this.props.ready} onReady={() => {
+          if(Meteor.userId()) {
+            browserHistory.push("/user/" + Meteor.user().username);
+          }
+          else {
+            this.setState({ready: true})
+          }
+        }} />
       )
     }
     return (
@@ -69,7 +77,7 @@ export default class LandingScreen extends ResponsiveComponent {
             open: false
           })
         }} content={this.state.content} onSuccess={() => {
-          browserHistory.push("/");
+          browserHistory.push("/discover");
         }} />
       </div>
     );
@@ -95,3 +103,16 @@ export default class LandingScreen extends ResponsiveComponent {
     });
   }
 }
+
+export default createContainer(() => {
+  const userId = Meteor.userId();
+  if(!userId) {
+    return {
+      ready: true
+    }
+  }
+  const sub = Meteor.subscribe("user", Meteor.userId());
+  return {
+    ready: sub.ready()
+  }
+}, LandingScreen)

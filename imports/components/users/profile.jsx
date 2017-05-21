@@ -25,7 +25,9 @@ class UserProfile extends ResponsiveComponent {
       tab: "bio",
       editMode: false,
       hover: false,
-      open: false
+      open: false,
+      preview: null,
+      progress: 0
     }
   }
 
@@ -39,12 +41,13 @@ class UserProfile extends ResponsiveComponent {
             const tabStyle = {
               borderBottom: isCurrentTab ?"solid 2px":"",
               borderColor: isCurrentTab ? "#ff6000":"",
-              fontSize: opts.mobile ? "3em" : "1em",
+              fontSize: opts.mobile ? "2.5em" : "1em",
               color: this.state.editMode && tab != "bio" ? "#666" : "white",
-              marginTop: opts.mobile ? 30 : 0
+              marginTop: opts.mobile ? 30 : 0,
+              padding: "1em"
             }
             return (
-              <div className="user-tab title" style={tabStyle} onClick={() => {
+              <div className="user-tab title noselect" style={tabStyle} onClick={() => {
                 if(this.state.editMode) {
                   return;
                 }
@@ -62,43 +65,74 @@ class UserProfile extends ResponsiveComponent {
   }
 
   userTabContent() {
-    switch(this.state.tab) {
-      case "bio":
-        return (
-          <UserBio {...this.props.params} editMode={this.state.editMode} />
-        );
-      case "stats":
-        return (
-          <UserStats editMode={this.state.editMode} {...this.props.params} />
-        );
-      case "hosting":
-        return (
-          <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
-        );
-      case "playing":
-        return (
-          <UserEvents type={this.state.tab} {...this.props.params} editMode={this.state.editMode} />
-        );
-      default:
-        return null;
-    }
+    const tabs = [
+      {
+        ref: "bio",
+        comp: UserBio
+      },
+      {
+        ref: "stats",
+        comp: UserStats
+      },
+      {
+        ref: "hosting",
+        comp: UserEvents
+      },
+      {
+        ref: "playing",
+        comp: UserEvents
+      }
+    ];
+    return tabs.map(t => {
+      return (
+        <div style={{display: this.state.tab == t.ref ? "inherit" : "none"}}>
+          <t.comp {...this.props.params} editMode={this.state.editMode} type={t.ref} ref={t.ref} />
+        </div>
+      )
+    })
   }
 
   saveBannerImg() {
+    var preview = this.refs.banner.getPreview();
     var { image, meta, type } = this.refs.banner.value();
     meta.userId = Meteor.userId();
-    ProfileBanners.insert({
-      file: image,
-      meta,
-      fileName: Meteor.userId() + "." + type,
-      onUploaded: (err) => {
-        if(err) {
-          toastr.error(err.reason);
-          throw new Error(err.reason);
+    this.setState({
+      preview
+    }, () => {
+      ProfileBanners.insert({
+        file: image,
+        meta,
+        fileName: Meteor.userId() + "." + type,
+        onUploaded: (err) => {
+          if(err) {
+            toastr.error(err.reason);
+            throw new Error(err.reason);
+          }
+          toastr.success("Updated profile banner!");
+          this.setState({
+            open: false
+          })
+        },
+        onProgress: (prog, file) => {
+          this.setState({
+            progress: prog
+          });
         }
-        toastr.success("Updated profile banner!");
+      })
+    })
+  }
+
+  saveAll() {
+    var bioDetails = this.refs.bio.value();
+    bioDetails.username = this.refs.username.value;
+    bioDetails.alias = this.refs.alias.value;
+    Meteor.call("user.saveProfileDetails", bioDetails, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
         this.setState({
-          open: false
+          editMode: false
         })
       }
     })
@@ -150,7 +184,8 @@ class UserProfile extends ResponsiveComponent {
       backgroundImage: `${this.state.hover ? "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), " : ""} url(${user.profile.bannerUrl || "/images/bg.jpg"})`,
       backgroundSize: "cover",
       backgroundPositionY: "50%",
-      position: "relative", justifyContent: "flex-end"
+      position: "relative",
+      justifyContent: "flex-end"
     }
 
     return (
@@ -172,20 +207,32 @@ class UserProfile extends ResponsiveComponent {
             })
           }
         }}>
-          <UserImage username={this.props.params.username} editMode={this.state.editMode} />
           <div className="col col-1 flex-pad">
             {
               user._id == Meteor.userId() ? (
-                <div className="row" style={{justifyContent: "flex-end", padding: 10}}>
-                  <button onClick={(e) => {
-                    e.preventDefault();
-                    this.setState({
-                      editMode: !this.state.editMode,
-                      tab: "bio"
-                    })
-                  }}>
-                    { this.state.editMode ? "View" : "Edit" }
-                  </button>
+                <div className="row" style={{justifyContent: "flex-end", padding: 10, backgroundColor: "rgba(0, 0, 0, 0.7)"}}>
+                  <div className="col">
+                    {
+                      this.state.editMode ? (
+                        <div className="row" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                          <div className="col" style={{marginRight: 10}}>
+                            <label className="input-label">Alias</label>
+                            <input type="text" defaultValue={user.profile.alias || user.username} style={{margin: 0}} ref="alias" />
+                          </div>
+                          <div className="col">
+                            <label className="input-label">Username</label>
+                            <input type="text" defaultValue={user.username} style={{margin: 0}} ref="username" />
+                          </div>
+                        </div>
+                      ) : (
+                        [
+                          <span style={{fontSize: opts.aliasFontSize}}>~{user.profile.alias || user.username}</span>,
+                          <span style={{fontSize: opts.userFontSize}}>@{user.username}</span>
+                        ]
+                      )
+                    }
+
+                  </div>
                 </div>
               ) : (
                 <div></div>
@@ -205,11 +252,36 @@ class UserProfile extends ResponsiveComponent {
             </div>
           </div>
         </div>
-        <div className="row" style={{justifyContent: "flex-end"}}>
-          <div className="col" style={{width: opts.mobile ? 80 * 6 : 35 * 6}}>
-            <span style={{fontSize: `calc(${opts.fontSize} * 1.2)`}}>~{user.profile.alias || user.username}</span>
-            <span style={{fontSize: `calc(${opts.fontSize} * 0.8)`}}>@{user.username}</span>
-          </div>
+        <div className="row" style={{justifyContent: "flex-end", padding: 10, position: "relative"}}>
+          <UserImage username={this.props.params.username} editMode={this.state.editMode} />
+          <button onClick={(e) => {
+            e.preventDefault();
+            if(this.state.editMode) {
+              this.saveAll();
+            }
+            else {
+              this.setState({
+                editMode: true,
+                tab: "bio"
+              });
+            }
+          }}>
+            <div className="row x-center">
+              {
+                this.state.editMode ? (
+                  [
+                    <FontAwesome name="floppy-o" style={{marginRight: 10}} />,
+                    <span>Save Profile</span>
+                  ]
+                ) : (
+                  [
+                    <FontAwesome name="pencil" style={{marginRight: 10}} />,
+                    <span>Edit Profile</span>
+                  ]
+                )
+              }
+            </div>
+          </button>
         </div>
         {
           this.userTabs(opts)
@@ -226,12 +298,26 @@ class UserProfile extends ResponsiveComponent {
           })
         }}>
           <div style={{width: "50%", margin: "0 auto"}}>
-            <ImageForm url={user.profile.bannerUrl} aspectRatio={16/4.5} ref="banner" />
-          </div>
-          <div className="row center">
-            <button onClick={this.saveBannerImg.bind(this)}>
-              Save
-            </button>
+            {
+              this.state.preview ? (
+                <div>
+                  <div className="row flex-end" style={{position: "relative"}}>
+                    <img src={this.state.preview} style={{width: "100%", height: "auto", alignSelf: "flex-start"}} />
+                    <div style={{position: "absolute", top: 0, right: 0, width: `${100 - this.state.progress}%`, height: "100%", backgroundColor: "rgba(0, 0, 0, 0.8)"}}>
+                    </div>
+                  </div>
+                  <div className="row center" style={{marginTop: 10}}>
+                    <span>Uploading...</span>
+                  </div>
+                </div>
+              ) : (
+                <ImageForm url={user.profile.bannerUrl} aspectRatio={16/4.5} ref="banner">
+                  <button onClick={this.saveBannerImg.bind(this)} style={{marginLeft: 10}} className={opts.buttonClass}>
+                    Save
+                  </button>
+                </ImageForm>
+              )
+            }
           </div>
         </Modal>
       </div>
@@ -241,8 +327,11 @@ class UserProfile extends ResponsiveComponent {
   renderDesktop() {
     return this.renderBase({
       mobile: false,
-      iconSize: "2em",
-      fontSize: "1em"
+      iconSize: "1.2em",
+      fontSize: "1em",
+      userFontSize: "1em",
+      aliasFontSize: "1.2em",
+      buttonClass: ""
     });
   }
 
@@ -250,7 +339,10 @@ class UserProfile extends ResponsiveComponent {
     return this.renderBase({
       mobile: true,
       fontSize: "3.5em",
-      iconSize: "4em"
+      iconSize: "3em",
+      userFontSize: "2em",
+      aliasFontSize: "2.5em",
+      buttonClass: "large-button"
     });
   }
 

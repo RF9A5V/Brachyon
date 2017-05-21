@@ -101,7 +101,6 @@ export default class UserAccount extends ResponsiveComponent {
       return null;
     }
     var number = user.profile.phoneNumber.slice(2);
-    console.log(number);
     return number.substr(0, 3) + "-" + number.substr(3, 3) + "-" + number.substr(6, 4);
   }
 
