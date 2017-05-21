@@ -27,7 +27,6 @@ Meteor.methods({
       }
     });
     const from = Meteor.isDevelopment ? "+15005550006" : "+19492429093";
-    console.log(text);
     users.forEach(u => {
       client.messages.create({
         to: u.profile.phoneNumber,

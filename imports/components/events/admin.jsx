@@ -372,7 +372,7 @@ class EventAdminPage extends Component {
       )
     }
     return (
-      <div className="box col" style={{padding: 10}}>
+      <div className="box col">
         <CreateContainer ref="editor" items={this.items()} actions={this.actions()} />
         <CloseModal open={this.state.open} id={Events.findOne()._id} onClose={() => { this.setState({ open: false }) }} onComplete={() => {
           browserHistory.push("/");
