@@ -34,6 +34,10 @@ export default class ImageForm extends ResponsiveComponent {
     return false;
   }
 
+  getPreview() {
+    return this.refs.cropper.getCroppedCanvas().toDataURL();
+  }
+
   dimensions() {
     var imageData = this.refs.cropper.getImageData();
     var widthRatio = imageData.naturalWidth / imageData.width;

@@ -1,10 +1,17 @@
 import moment from "moment";
 
 Meteor.methods({
-  "user.editBio"(id, bio) {
-    Meteor.users.update(id, {
+  "user.saveProfileDetails"(bio) {
+    const user = Meteor.user();
+    if(!user) {
+      return;
+    }
+    Accounts.setUsername(Meteor.userId(), bio.username);
+    Meteor.users.update(Meteor.userId(), {
       $set: {
-        "profile.bio": bio
+        "profile.bio": bio.description,
+        "profile.youtubeEmbed": bio.youtubeEmbed,
+        "profile.alias": bio.alias
       }
     });
   },

@@ -10,7 +10,6 @@ import AdvertiseScreen from '../imports/components/public/footer/advertise.jsx';
 import TermsScreen from '../imports/components/public/footer/terms.jsx'
 import ContactScreen from '../imports/components/public/footer/contact.jsx';
 import FaqScreen from "../imports/components/public/faq.jsx";
-import ShowUserScreen from '../imports/components/users/show.jsx';
 import EventDiscoveryScreen from '../imports/components/events/discover/discover.jsx';
 import PreviewEventScreen from '../imports/components/events/preview.jsx';
 import EventCreateScreen from '../imports/components/events/create.jsx';
@@ -37,12 +36,6 @@ import CreateBracketScreen from "../imports/components/brackets/create.jsx";
 
 import AdminFunctionScreen from "../imports/components/admin/main.jsx";
 
-function isLoggedIn(nextState, replace){
-  if(Meteor.userId()) {
-    replace("/dashboard");
-  }
-}
-
 function verifyUser(nextState, replace) {
   if(!Meteor.userId()){
     replace('/');
@@ -52,7 +45,7 @@ function verifyUser(nextState, replace) {
 export const renderRoutes = () => (
   <Router history={browserHistory}>
     <Route path="/" component={NoFooter}>
-      <IndexRoute component={LandingScreen} onEnter={isLoggedIn} />
+      <IndexRoute component={LandingScreen} />
       <Route path="events/create" component={EventCreateScreen} />
       <Route path="event/:slug/edit" component={EventAdminScreen} />
       <Route path="event/:slug" component={PreviewEventScreen} />
@@ -74,7 +67,6 @@ export const renderRoutes = () => (
     </Route>
 
     <Route path="/" component={MainLayout}>
-      <Route path="dashboard" component={ShowUserScreen} onEnter={verifyUser} />
       <Route path="options" component={UserOptionsScreen} onEnter={verifyUser} />
       <Route path="about" component={AboutScreen} />
       <Route path="advertise" component={AdvertiseScreen} />

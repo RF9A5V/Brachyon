@@ -81,11 +81,7 @@ export default class GameOptionsPanel extends Component {
                   this.state.gameList.map(g => {
                     return (
                       <GameTemplate {...g} onClick={() => {
-                        const game = {
-                          _id: g._id,
-                          name: g.name
-                        }
-                        this.saveGame(g._id);
+                        this.saveGame(g.id);
                       }} />
                     )
                   })

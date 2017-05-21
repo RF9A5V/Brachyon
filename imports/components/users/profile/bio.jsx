@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 import Loader from "/imports/components/public/loader.jsx";
 import Editor from "/imports/components/public/editor.jsx";
+import RowLayout from "/imports/components/public/row_layout.jsx";
 
 export default class UserBio extends ResponsiveComponent {
 
@@ -25,65 +26,49 @@ export default class UserBio extends ResponsiveComponent {
   }
 
   userGames(opts) {
-    const gameObjs = this.state.games;
-    const gamesPerRow = opts.mobile ? 1 : 2;
-    var count = 0;
-    var tempObj = [];
-    while(count < gameObjs.length) {
-      var index = Math.floor(count / 2);
-      var subIndex = count % 2;
-      if(subIndex == 0) {
-        tempObj[index] = [gameObjs[count]];
-      }
-      else {
-        tempObj[index].push(gameObjs[count]);
-      }
-      count += 1;
-    }
-    if(tempObj.length > 0) {
-      if(tempObj[tempObj.length - 1][1] == undefined) {
-        tempObj[tempObj.length - 1][1] = null;
-      }
-    }
     return (
-      <div className="col">
+      <RowLayout length={opts.mobile ? 1 : 3}>
         {
-          tempObj.map((ar, j) => {
+          this.state.games.map(g => {
             return (
-              <div className="row" style={{marginBottom: j == tempObj.length - 1 ? 0 : 20}}>
-                {
-                  ar.map((g, i) => {
-                    if(g == null) {
-                      return (
-                        <div className="col-1">
-                        </div>
-                      )
-                    }
-                    return (
-                      <div className="col col-1" style={{marginRight: ar.length - 1 == i ? 0 : 20}}>
-                        <img src={g.bannerUrl} style={{width: "100%", height: "auto"}} />
-                        <span style={{padding: 10, backgroundColor: "#111", fontSize: opts.fontSize}}>{ g.name }</span>
-                      </div>
-                    )
-                  })
-                }
+              <div className="col col-1 game">
+                <img src={g.bannerUrl} style={{width: "100%", height: "auto"}} />
+                <span className="game-title" style={{padding: 10, backgroundColor: "#111", fontSize: opts.fontSize}}>{ g.name }</span>
               </div>
             )
           })
         }
-      </div>
+      </RowLayout>
     )
   }
 
-  onProfileSave() {
-    Meteor.call("user.editBio", Meteor.userId(), this.refs.editor.value(), (err) => {
-      if(err) {
-        toastr.error(err.reason);
-      }
-      else {
-        toastr.success("Successfully updated bio!");
-      }
-    })
+  promoVideo() {
+    const user = Meteor.user();
+    if(this.props.editMode) {
+      return (
+        <div className="col">
+          <label className="input-label">Youtube Embed</label>
+          <input type="text" ref="youtubeEmbed" defaultValue={`https://youtu.be/${user.profile.youtubeEmbed}`} style={{margin: 0, minWidth: 300}} onBlur={this.value.bind(this)} />
+        </div>
+      )
+    }
+    return user.profile.youtubeEmbed ? (
+      <iframe width="560" height="315" src={`https://www.youtube.com/embed/${user.profile.youtubeEmbed}`} frameBorder="0" allowfullscreen></iframe>
+    ) : (
+      null
+    )
+  }
+
+  value() {
+
+    var ytLink = this.refs.youtubeEmbed.value;
+    var regex = /.*youtube\.com\/watch\?v=(.+).*/;
+    var backup = /.*youtu\.be\/(.*).*/;
+    var match = regex.exec(ytLink) || backup.exec(ytLink);
+    return {
+      description: this.refs.editor.value(),
+      youtubeEmbed: match ? match[1] : match
+    }
   }
 
   renderBase(opts) {
@@ -94,49 +79,49 @@ export default class UserBio extends ResponsiveComponent {
         </div>
       )
     }
-    const user = Meteor.users.findOne({
-      username: this.props.username
-    })
+    const user = Meteor.user()
     const spacing = 20;
     return (
-      <div className={opts.mobile ? "col" : "row"} style={{padding: spacing}}>
-        <div className="col col-1" style={{marginRight: opts.mobile ? 0 : spacing, marginBottom: opts.mobile ? spacing : 0}}>
-          <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
-            <span style={{textAlign: "center", textTransform: "uppercase", fontSize: opts.fontSize}}>
-              User Bio
-            </span>
-          </label>
+      <div>
+        <div className="row center">
           {
-            this.props.editMode ? (
-              <div className="col x-center" style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: spacing}}>
-                <div style={{width: "100%"}}>
-                  <Editor value={user.profile.bio || ""} ref="editor" />
-                </div>
-                <button style={{marginTop: spacing}} onClick={() => {
-                  this.onProfileSave()
-                }}>
-                  Save
-                </button>
-              </div>
-            ) : (
-              <div style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: spacing}}>
-                <div dangerouslySetInnerHTML={{__html: user.profile.bio || ""}} style={{fontSize: opts.fontSize}}>
-                </div>
-              </div>
-            )
+            this.promoVideo()
           }
-
         </div>
-        <div className="col col-1">
-          <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
-            <span style={{textTransform: "uppercase", fontSize: opts.fontSize}}>
-              Games Played
-            </span>
-          </label>
-          <div style={{padding: spacing, backgroundColor: "rgba(0, 0, 0, 0.8)"}}>
+        <div className={opts.mobile ? "col" : "row"} style={{padding: spacing}}>
+          <div className="col col-1" style={{marginRight: opts.mobile ? 0 : spacing, marginBottom: opts.mobile ? spacing : 0}}>
+            <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
+              <span style={{textAlign: "center", textTransform: "uppercase", fontSize: opts.fontSize}}>
+                User Bio
+              </span>
+            </label>
             {
-              this.userGames(opts)
+              this.props.editMode ? (
+                <div className="col x-center" style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: spacing}}>
+                  <div style={{width: "100%"}}>
+                    <Editor value={user.profile.bio || ""} ref="editor" />
+                  </div>
+                </div>
+              ) : (
+                <div style={{backgroundColor: "rgba(0, 0, 0, 0.8)", padding: spacing}}>
+                  <div dangerouslySetInnerHTML={{__html: user.profile.bio || ""}} style={{fontSize: opts.fontSize}}>
+                  </div>
+                </div>
+              )
             }
+
+          </div>
+          <div className="col col-1">
+            <label className="input-label" style={{textAlign: "center", backgroundColor: "#666"}}>
+              <span style={{textTransform: "uppercase", fontSize: opts.fontSize}}>
+                Games Played
+              </span>
+            </label>
+            <div style={{padding: spacing, backgroundColor: "rgba(0, 0, 0, 0.8)"}}>
+              {
+                this.userGames(opts)
+              }
+            </div>
           </div>
         </div>
       </div>

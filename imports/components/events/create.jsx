@@ -212,7 +212,7 @@ export default class EventCreate extends Component {
       )
     }
     return (
-      <div className="col col-1" style={{padding: 10}}>
+      <div className="col col-1">
         <CreateContainer items={this.items()} actions={this.actions()} ref="create" />
       </div>
     )
