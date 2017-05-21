@@ -12,7 +12,11 @@ Meteor.methods({
       if (obj.gameName == null)
         throw new Meteor.Error(404, "Game not found!");
       var names = obj.gameName;
-      Games.insert({
+      if (Games.findOne({name:names})){
+        game = Games.findOne({name:names});
+      }
+      else{
+        Games.insert({
         name: names,
         description: "description",
         approved: true,
@@ -20,6 +24,7 @@ Meteor.methods({
         temp:true
       })
       game = Games.findOne({name:names});
+      }
     }
     var brackets = [{game: obj.game, format: obj.format, name: obj.name}];
     if (obj.format.baseFormat == "swiss" || obj.format.baseFormat == "round_robin")

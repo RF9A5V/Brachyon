@@ -93,6 +93,10 @@ Meteor.methods({
           var newGame = Games.findOne({name: brack.gameName});
           brack.game = newGame._id;
         }
+        else{
+          var newGame = Games.findOne({name: brack.gameName});
+          brack.game = newGame._id;
+        }
       }
       
     })

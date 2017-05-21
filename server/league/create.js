@@ -15,6 +15,10 @@ Meteor.methods({
           var newGame = Games.findOne({name: attrs.brackets.gameName});
           attrs.brackets.game = newGame._id;
         }
+        else{
+          var newGame = Games.findOne({name: attrs.brackets.gameName});
+          attrs.brackets.game = newGame._id;
+        }
       }
     var events = attrs.events;
     var bracket = JSON.parse(JSON.stringify(attrs.brackets));
