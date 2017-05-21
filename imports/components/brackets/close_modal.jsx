@@ -26,7 +26,6 @@ export default class CloseModal extends Component {
 
   topPlayers() {
     var leaderboard = getTopPlayers(Brackets.findOne()._id);
-    console.log(leaderboard);
     return (
       leaderboard.map((p, i) => {
         return (
@@ -48,7 +47,6 @@ export default class CloseModal extends Component {
 
   render() {
     const bracket = Brackets.findOne();
-    console.log(this.props.open);
     if(!this.props.open) {
       return null;
     }

@@ -9,7 +9,6 @@ Meteor.methods({
     }
     var event = Events.findOne({instances: id});
     var user = Meteor.users.findOne({username: alias});
-    console.log(event);
     if(event && event.league) {
       var league = Leagues.findOne(event.league);
       var eventIndex = league.events.findIndex(o => { return o.id == event._id});
@@ -96,6 +95,5 @@ Meteor.methods({
         [`brackets.${bracketIndex}.participants.${participantIndex}.paymentAmount`]: amount,
       }
     })
-    console.log(participant);
   }
 })

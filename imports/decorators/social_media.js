@@ -28,7 +28,6 @@ const connectTwitter = (cb) => {
 const connectInsta = (cb) => {
   Meteor.linkWithInstagram(err => {
     if(err) {
-      console.log(err);
       toastr.error(err.reason);
     }
     else {
