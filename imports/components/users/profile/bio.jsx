@@ -43,7 +43,9 @@ export default class UserBio extends ResponsiveComponent {
   }
 
   promoVideo() {
-    const user = Meteor.users.findOne();
+    const user = Meteor.users.findOne({
+      username: this.props.username
+    });
     if(this.props.editMode) {
       return (
         <div className="col">
@@ -79,7 +81,9 @@ export default class UserBio extends ResponsiveComponent {
         </div>
       )
     }
-    const user = Meteor.user()
+    const user = Meteor.users.findOne({
+      username: this.props.username
+    })
     const spacing = 20;
     return (
       <div>
