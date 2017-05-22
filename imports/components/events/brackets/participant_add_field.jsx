@@ -30,9 +30,14 @@ export default class ParticipantAddField extends ResponsiveComponent {
       <div className={`row x-center hover-lg user-template ${this.state.index == index ? "active" : ""}`}
        style={{padding: 10, cursor: "pointer", maxWidth: "100%", borderBottom: "solid 2px #111"}} onClick={() => { this.addParticipant(user.username, user._id) }}>
         <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={user.profile.imageUrl || "/images/profile.png"} />
-        <span style={{fontSize: opts.fontSize, textAlign: "left"}}>
-          { user.username }
-        </span>
+        <div className="col">
+          <span style={{fontSize: opts.fontSize, textAlign: "left"}}>
+            ~{ user.profile.alias || user.username }
+          </span>
+          <span style={{fontSize: `calc(${opts.fontSize} * 0.8)`, textAlign: "left"}}>
+            @{ user.username }
+          </span>
+        </div>
       </div>
     )
   }
@@ -82,7 +87,8 @@ export default class ParticipantAddField extends ResponsiveComponent {
 
       return array;
     }
-    var nparticipants = shuffle(this.props.bracket.participants); //We might need to find a way to return the participants from the backend rather than put the work on the frontend
+    const participants = Instances.findOne().brackets[this.props.index].participants;
+    var nparticipants = shuffle(participants); //We might need to find a way to return the participants from the backend rather than put the work on the frontend
     //For now though, we need to get the same list of participants on both front and back end.
     Meteor.call("events.shuffle_seeding", Instances.findOne()._id, this.props.index, nparticipants, (err) => {
       if(err){
@@ -132,6 +138,8 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   renderBase(opts) {
+    const event = Events.findOne();
+    const isLeague = event.league != null;
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="col" style={{marginBottom: 10, position: "relative"}}>
@@ -175,7 +183,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
                   })
                 }
                 {
-                  this.state.query.length >= 3 ? (
+                  this.state.query.length >= 3 && !isLeague ? (
                     <div ref="anon" className={`row x-center hover-lg user-template ${this.state.index == this.state.users.length ? "active" : ""}`}
                     style={{padding: 10, cursor: "pointer", maxWidth: "100%"}} onClick={() => { this.addParticipant(this.state.query, null) }}>
                       <img style={{width: opts.imgDim, height: opts.imgDim, marginRight: 20, borderRadius: "100%"}} src={"/images/profile.png"} />
