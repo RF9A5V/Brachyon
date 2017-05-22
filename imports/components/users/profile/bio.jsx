@@ -33,7 +33,7 @@ export default class UserBio extends ResponsiveComponent {
             return (
               <div className="col col-1 game">
                 <img src={g.bannerUrl} style={{width: "100%", height: "auto"}} />
-                <span className="game-title" style={{padding: 10, backgroundColor: "#111", fontSize: opts.fontSize}}>{ g.name }</span>
+                <span className="game-title" style={{padding: 10, backgroundColor: "#111", fontSize: opts.fontSize, marginBottom: 0}}>{ g.name }</span>
               </div>
             )
           })
@@ -43,12 +43,14 @@ export default class UserBio extends ResponsiveComponent {
   }
 
   promoVideo() {
-    const user = Meteor.user();
+    const user = Meteor.users.findOne({
+      username: this.props.username
+    });
     if(this.props.editMode) {
       return (
         <div className="col">
           <label className="input-label">Youtube Embed</label>
-          <input type="text" ref="youtubeEmbed" defaultValue={`https://youtu.be/${user.profile.youtubeEmbed}`} style={{margin: 0, minWidth: 300}} onBlur={this.value.bind(this)} />
+          <input type="text" ref="youtubeEmbed" placeholder="Paste YouTube URL Here" defaultValue={user.profile.youtubeEmbed ? `https://youtu.be/${user.profile.youtubeEmbed}` : ""} style={{margin: 0, minWidth: 300}} onBlur={this.value.bind(this)} />
         </div>
       )
     }
@@ -79,7 +81,9 @@ export default class UserBio extends ResponsiveComponent {
         </div>
       )
     }
-    const user = Meteor.user()
+    const user = Meteor.users.findOne({
+      username: this.props.username
+    })
     const spacing = 20;
     return (
       <div>
