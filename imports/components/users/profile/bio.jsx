@@ -43,7 +43,7 @@ export default class UserBio extends ResponsiveComponent {
   }
 
   promoVideo() {
-    const user = Meteor.user();
+    const user = Meteor.users.findOne();
     if(this.props.editMode) {
       return (
         <div className="col">
