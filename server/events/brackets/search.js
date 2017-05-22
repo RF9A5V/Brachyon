@@ -9,7 +9,15 @@ Meteor.methods({
       _id: {
         $nin: partIds
       },
-      username: new RegExp("^" + request, "i")
+      $or: [
+        {
+          username: new RegExp("^" + request, "i")
+        },
+        {
+          "profile.alias": new RegExp("^" + request, "i")
+        }
+      ]
+
     }, {
       fields: {
         username: 1,
