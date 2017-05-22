@@ -4,13 +4,16 @@ var singlePlacement = (rounds) => {
   var placement = [];
   var finals = Matches.findOne(rounds[0].pop()[0].id);
   placement.push([finals.winner]);
-  placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
-  rounds[0].reverse().map(r => {
+  placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]]);
+  rounds[0].reverse().forEach(r => {
     var losers = [];
-    r.map(m => Matches.findOne((m || {}).id)).forEach(m => {
-      if(!m) return;
+    r.forEach(m => {
+      if(!m) {
+        return null;
+      }
+      m = Matches.findOne(m.id);
       losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
-    });
+    })
     placement.push(losers);
   });
   return placement;
@@ -25,8 +28,9 @@ var doublePlacement = (rounds) => {
   rounds[1].reverse().forEach(round => {
     var losers = [];
     round.map(m => Matches.findOne((m || {}).id)).forEach(m => {
-      if(!m) return;
-      losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+      if(m) {
+        losers.push(m.winner.alias == m.players[0].alias ? m.players[1] : m.players[0]);
+      }
     });
     if(losers.length > 0) {
       placement.push(losers);
@@ -134,8 +138,6 @@ Meteor.methods({
 
     // League update
     if(event && event.league) {
-      var placement = sortPlacement(bracket.format.baseFormat, roundobj.rounds);
-
       var updateObj = {};
       var league = Leagues.findOne(event.league);
       var totalScore = bracket.participants.length;
@@ -149,7 +151,7 @@ Meteor.methods({
           }) >= 0;
         });
         updateObj[`leaderboard.${leaderboardIndex}.${id}.score`] = totalScore - negIndex;
-      })
+      });
       Leagues.update(event.league, {
         $set: updateObj
       });
@@ -159,7 +161,7 @@ Meteor.methods({
   },
   "leagues.leaderboard.setBonusByPlacement"(id, index, points, rank) {
     const league = Leagues.findOne(id);
-    const event = Events.findOne({slug: league.events[index]});
+    const event = Events.findOne({slug: league.events[index].slug});
     const instance = Instances.findOne(event.instances[event.instances.length - 1]);
     const bracket = Brackets.findOne(instance.brackets[0].id);
     var placement = sortPlacement(instance.brackets[0].format.baseFormat, bracket.rounds);

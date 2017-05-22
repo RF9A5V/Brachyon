@@ -66,7 +66,9 @@ Meteor.methods({
       fields: {
         _id: 1,
         name: 1,
-        bannerUrl: 1
+        bannerUrl: 1,
+        playerCount: 1,
+        eventCount: 1
       }
     }).fetch().map(g => {
       var id = g._id;
