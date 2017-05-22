@@ -72,12 +72,7 @@ export default class ShareOverlay extends ResponsiveComponent {
   }
 
   renderBase(opts) {
-    const user = Meteor.users.findOne({
-      _id: Meteor.userId()
-    });
-    if(!user) {
-      return null;
-    }
+    const user = Meteor.user();
     return (
       <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={this.props.onClose}>
         <div className="col" style={{height: "100%"}}>
