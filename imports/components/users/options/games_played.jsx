@@ -9,39 +9,33 @@ import Games from "/imports/api/games/games.js";
 import GameBlock from "/imports/components/games/block.jsx";
 import RowLayout from "/imports/components/public/row_layout.jsx";
 
-class GameOption extends Component {
-  render() {
-    return (
-      <div className="side-tab-panel">
-        <div className="row x-center">
-          <span className="col-1">Edit Game</span>
-          <button style={{marginRight: 10}}>Remove</button>
-          <button>Save</button>
-        </div>
-        <label>{ this.props.name }</label>
-        <img src={this.props.bannerUrl} style={{width: 400, height: "auto"}} />
-      </div>
-    )
-  }
-}
-
 export default class GameOptionsPanel extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      gameList: null
+      gameList: null,
+      userGames: Games.find({
+        _id: {
+          $in: Meteor.user().profile.games || []
+        }
+      }).fetch()
     }
   }
 
   saveGame(g) {
-    Meteor.call("users.add_game", g, function(err){
+    Meteor.call("users.add_game", g, (err) => {
       if(err){
         toastr.error("Couldn't update your games!", "Error!");
       }
       else {
         toastr.success("Updated your game list!", "Success!");
+        this.state.userGames.push(g);
       }
+      this.setState({
+        gameList: null
+      });
+      this.refs.game.value = "";
     })
   }
 
@@ -96,9 +90,9 @@ export default class GameOptionsPanel extends Component {
         <div style={{margin: "10px 0"}}>
           <RowLayout length={4}>
             {
-              (Meteor.user().profile.games || []).map(function(id){
+              this.state.userGames.map(function(g){
                 return (
-                  <GameBlock game={Games.findOne(id)} onClick={() => {}} />
+                  <GameBlock game={g} onClick={() => {}} />
                 );
               })
             }
