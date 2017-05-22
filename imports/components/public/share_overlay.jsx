@@ -82,7 +82,7 @@ export default class ShareOverlay extends ResponsiveComponent {
           <div className="col col-1 center">
             <div className="col center x-center" style={{marginBottom: 10}}>
               {
-                user.profile.phoneNumber ? (
+                user && user.profile.phoneNumber ? (
                   <span>
                     We've got your number, so we'll text you on updates to the event!
                   </span>
