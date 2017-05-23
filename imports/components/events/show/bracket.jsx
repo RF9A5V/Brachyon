@@ -99,7 +99,7 @@ export default class BracketPanel extends Component {
               round={this.state.round}
               match={this.state.match}
               open={this.state.open}
-              closeModal={() => { this.setState({open: false}) }}
+              closeModal={() => { this.setState({open: false, id: null}) }}
               update={this.forceUpdate.bind(this)}
               format={this.props.format}
             />

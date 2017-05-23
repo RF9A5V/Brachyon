@@ -694,32 +694,41 @@ Meteor.methods({
 
   "events.undo_single"(bracketId, bracketIndex, roundIndex, index) {
     var bracket = Brackets.findOne(bracketId);
-    var match = Matches.findOne(bracket.rounds[bracketIndex][roundIndex][index].id);
-    var cb = (_roundIndex, _index, direction) => {
-      if(_roundIndex >= bracket.rounds[bracketIndex].length) {
+    var metadata = bracket.rounds[bracketIndex][roundIndex][index];
+    var match = Matches.findOne(metadata.id);
+    var cb = (_bracketIndex, _roundIndex, _index, alias) => {
+      var internalMeta = bracket.rounds[_bracketIndex][_roundIndex][_index];
+      var internalMatch = Matches.findOne(internalMeta.id);
+      if(!internalMatch) {
         return;
       }
-      var internalMatch = Matches.findOne(bracket.rounds[bracketIndex][_roundIndex][_index].id);
-      if(internalMatch.players[direction] == null) {
-        return;
-      }
-      Matches.update(internalMatch._id, {
+      Matches.update({
+        _id: internalMeta.id,
+        "players.alias": alias
+      }, {
         $set: {
           winner: null,
-          [`players.${direction}`]: null,
+          "players.$": null,
           status: 0,
-          establishedAt: new null,
+          establishedAt: null,
           startedAt: null
         }
       });
-      cb(_roundIndex + 1, Math.floor(_index / 2), _index % 2);
+      var _nextIndex = Math.floor(_index / 2);
+      if(internalMatch.winner && _roundIndex < bracket.rounds[bracketIndex].length - 1) {
+        var winnerAlias = internalMatch.winner.alias;
+        var loserAlias = internalMatch.players.filter(p => { return p.alias != winnerAlias })[0].alias;
+        cb(_bracketIndex, _roundIndex + 1, _nextIndex, winnerAlias);
+      }
     }
-    cb(roundIndex + 1, Math.floor(index / 2), index % 2);
+    var nextIndex = Math.floor(index / 2);
+    var winnerAlias = match.winner.alias;
+    cb(bracketIndex, roundIndex + 1, nextIndex, winnerAlias);
     Matches.update(match._id, {
       $set: {
         winner: null,
         status: 1,
-        establishedAt: new Date()
+        startedAt: null
       }
     });
     Brackets.update(bracketId, {
@@ -733,37 +742,45 @@ Meteor.methods({
     var bracket = Brackets.findOne(bracketId);
     var metadata = bracket.rounds[bracketIndex][roundIndex][index];
     var match = Matches.findOne(metadata.id);
-    var cb = (_bracketIndex, _roundIndex, _index, direction) => {
+
+    var cb = (_bracketIndex, _roundIndex, _index, alias) => {
       if(_roundIndex >= bracket.rounds[_bracketIndex].length) {
         cb(2, 0, 0, _bracketIndex);
         return;
       }
       var internalMeta = bracket.rounds[_bracketIndex][_roundIndex][_index];
       var internalMatch = Matches.findOne(internalMeta.id);
-      if(internalMatch.players[direction] == null) {
+      if(!internalMatch) {
         return;
       }
-      Matches.update(internalMatch._id, {
+      Matches.update({
+        _id: internalMeta.id,
+        "players.alias": alias
+      }, {
         $set: {
           winner: null,
-          [`players.${direction}`]: null,
+          "players.$": null,
           status: 0,
           establishedAt: null,
           startedAt: null
         }
       });
       var _nextIndex = (_bracketIndex == 0 || _roundIndex % 2) ? Math.floor(_index / 2) : _index;
-      var _nextPos = (_bracketIndex == 0 || _roundIndex % 2) ? _index % 2 : 1;
-      cb(_bracketIndex, _roundIndex + 1, _nextIndex, _nextPos);
-      if(_bracketIndex == 0) {
-        cb(1, internalMeta.losr, internalMeta.losm, 0);
+      if(internalMatch.winner) {
+        var winnerAlias = internalMatch.winner.alias;
+        var loserAlias = internalMatch.players.filter(p => { return p.alias != winnerAlias })[0].alias;
+        cb(_bracketIndex, _roundIndex + 1, _nextIndex, winnerAlias);
+        if(_bracketIndex == 0) {
+          cb(1, internalMeta.losr, internalMeta.losm, loserAlias);
+        }
       }
     }
     var nextIndex = (bracketIndex == 0 || roundIndex % 2) ? Math.floor(index / 2) : index;
-    var nextPos = (bracketIndex == 0 || roundIndex % 2) ? index % 2 : 1;
-    cb(bracketIndex, roundIndex + 1, nextIndex, nextPos);
+    var winnerAlias = match.winner.alias;
+    var loserAlias = match.players.filter(p => { return p.alias != winnerAlias })[0].alias;
+    cb(bracketIndex, roundIndex + 1, nextIndex, winnerAlias);
     if(bracketIndex == 0) {
-      cb(1, metadata.losr, metadata.losm, roundIndex == 0 ? index % 2 : 0);
+      cb(1, metadata.losr, metadata.losm, loserAlias);
     }
     Matches.update(match._id, {
       $set: {
