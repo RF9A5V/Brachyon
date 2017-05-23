@@ -138,13 +138,42 @@ export default class RegisterButton extends Component {
       return p.id == Meteor.userId();
     });
     var instance = Instances.findOne();
+    const event = Events.findOne();
+    const privacy = event.details.privacy || {
+      type: "public"
+    };
+    var buttonText = "Register";
+    if(pIndex >= 0 && Meteor.userId() && privacy.type == "public") {
+      buttonText = "Unregister";
+    }
+    if(privacy.type == "private") {
+      if(privacy.contactLink) {
+        buttonText = "Contact";
+      }
+      else {
+        buttonText = null;
+      }
+    }
+    if(!buttonText) {
+      return null;
+    }
     return (
       <button className="col-1" style={{...this.props.style, marginTop: 0, marginBottom: 0}} onClick={() => {
-        if(pIndex < 0 || !Meteor.userId()) {
-          this.register();
+        if(privacy.type == "public") {
+          if(pIndex < 0 || !Meteor.userId()) {
+            this.register();
+          }
+          else {
+            this.unregister();
+          }
         }
         else {
-          this.unregister();
+          if(privacy.contactLink) {
+            window.open(privacy.contactLink);
+          }
+          else {
+            toastr.error("This event is private. You can only join by invitation only.");
+          }
         }
       }}>
         <span>
@@ -152,7 +181,15 @@ export default class RegisterButton extends Component {
             pIndex >= 0 && Meteor.userId() ? (
               "Unregister"
             ) : (
-              "Register"
+              privacy.type == "public" ? (
+                "Register"
+              ) : (
+                privacy.contactLink ? (
+                  "Contact"
+                ) : (
+                  ""
+                )
+              )
             )
           }
         </span>
