@@ -5,8 +5,10 @@ export default class PrivacyOptions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      privacy: props.privacy || "public"
+      privacy: props.type || "public",
+      contactLink: props.contactLink || ""
     }
+    console.log(this.state);
   }
 
   value() {
@@ -36,7 +38,7 @@ export default class PrivacyOptions extends Component {
     return options.map(o => {
       return (
         <div className="row x-center" style={{marginRight: 20}}>
-          <input style={{margin: 0, marginRight: 10}} name="privacy" type="radio" value={o} checked={this.state.privacy == o} onChange={() => { this.setState({ privacy: o }) }} />
+          <input style={{margin: 0, marginRight: 10}} type="radio" value={o} checked={this.state.privacy == o} onChange={() => { this.setState({ privacy: o }) }} />
           <span>{ o[0].toUpperCase() + o.slice(1) }</span>
         </div>
       )
@@ -59,7 +61,7 @@ export default class PrivacyOptions extends Component {
             <span style={{marginBottom: 10}}>Only you can add participants to your event. Add an additional contact link for players to ask you to enter the event if you'd like.</span>
             <div className="col">
               <label className="input-label">Contact Link</label>
-              <input type="text" style={{margin: 0}} ref="link" />
+              <input defaultValue={this.state.contactLink} type="text" style={{margin: 0}} ref="link" />
             </div>
           </div>
         )
