@@ -1,7 +1,25 @@
 import Leagues from "/imports/api/leagues/league.js";
+import Games from "/imports/api/games/games.js";
 
 Meteor.methods({
   "leagues.create"(attrs) {
+    if (attrs.brackets.game == null){
+        if(Games.findOne({name:attrs.brackets.gameName}) == null){
+          Games.insert({
+            name: attrs.brackets.gameName,
+            description: "",
+            approved: true,
+            bannerUrl:"/images/bg.jpg",
+            temp:true
+          })
+          var newGame = Games.findOne({name: attrs.brackets.gameName});
+          attrs.brackets.game = newGame._id;
+        }
+        else{
+          var newGame = Games.findOne({name: attrs.brackets.gameName});
+          attrs.brackets.game = newGame._id;
+        }
+      }
     var events = attrs.events;
     var bracket = JSON.parse(JSON.stringify(attrs.brackets));
     delete attrs.brackets;
