@@ -12,6 +12,7 @@ Meteor.methods({
       approved: false
     })
   },
+
   "games.addTag"(gameID, tag) {
     var tagTest = Tags.findOne(tag);
     if(!tagTest) {
