@@ -59,7 +59,9 @@ export default class TournamentModal extends ResponsiveComponent {
       toastr.error("Modal not set up for swiss and RR");
       return;
     }
+    console.log("WTF IS GOING ON")
     Meteor.call(func, Brackets.findOne()._id, this.props.bracket, this.props.round, this.props.match, (err) => {
+      console.log(err);
       if(err) {
         return toastr.error(err.reason);
       }
@@ -70,6 +72,9 @@ export default class TournamentModal extends ResponsiveComponent {
 
   userScoreColumn(player, i, opts) {
     var match = Matches.findOne(this.props.id);
+    if(!match) {
+      return null;
+    }
     var maxScore = Math.max.apply(null, match.players.map(p => { return p.score }));
     return (
       <div className="col x-center col-1">
@@ -171,6 +176,9 @@ export default class TournamentModal extends ResponsiveComponent {
       return null;
     }
     const match = Matches.findOne(this.props.id);
+    if(!match) {
+      return null;
+    }
     var color = "#FFFFFF";
     if(match.status == 2) {
       color = "#00BDFF";

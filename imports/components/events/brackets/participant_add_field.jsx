@@ -139,7 +139,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
 
   renderBase(opts) {
     const event = Events.findOne();
-    const isLeague = event.league != null;
+    const isLeague = event && event.league != null;
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="col" style={{marginBottom: 10, position: "relative"}}>
