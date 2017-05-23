@@ -17,6 +17,7 @@ import DatetimePage from "./modules/details/datetime.jsx";
 import ImagePage from "./modules/details/image.jsx";
 
 import Title from "./create/title.jsx";
+import Privacy from "./create/privacy.jsx";
 import ImageForm from "../public/img_form.jsx";
 import Editor from "../public/editor.jsx";
 import DateTimeSelector from "../public/datetime_selector.jsx";
@@ -101,6 +102,16 @@ class EventAdminPage extends Component {
           ),
           args: {
             title: event.details.name
+          }
+        },
+        {
+          name: "Privacy",
+          key: "privacy",
+          content: (
+            Privacy
+          ),
+          args: {
+            ...(event.details.privacy || {})
           }
         },
         {
