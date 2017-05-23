@@ -39,7 +39,7 @@ export default class BlockContainer extends Component {
     var username = Meteor.users.findOne(obj.owner) ? Meteor.users.findOne(obj.owner).username : "";
     var participantCount = (obj.type == "instance" || obj.type == "event") ? (
       (() => {
-        if(obj.instances.length == 0) {
+        if(!obj.instances || obj.instances.length == 0) {
           return 0;
         }
         var instId = obj.instances[obj.instances.length - 1];
