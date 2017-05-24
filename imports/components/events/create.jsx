@@ -5,6 +5,7 @@ import { browserHistory } from "react-router";
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
 import Title from "./create/title.jsx";
+import Privacy from "./create/privacy.jsx";
 import ImageForm from "../public/img_form.jsx";
 import Editor from "../public/editor.jsx";
 import DateTimeSelector from "../public/datetime_selector.jsx";
@@ -89,6 +90,13 @@ export default class EventCreate extends Component {
             key: "name",
             content: (
               Title
+            )
+          },
+          {
+            name: "Privacy",
+            key: "privacy",
+            content: (
+              Privacy
             )
           },
           {
