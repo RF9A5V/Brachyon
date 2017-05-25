@@ -61,7 +61,7 @@
       "liveSecretKey": "***REMOVED***"
     },
     "twitter": {
-      "liveSecretKey": "***REMOVED***"
+      "consumerSecret": "***REMOVED***"
     },
     "google": {
       "liveSecretKey": "***REMOVED***"
