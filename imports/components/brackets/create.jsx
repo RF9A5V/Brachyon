@@ -32,7 +32,7 @@ export default class BracketCreate extends Component {
     const value = this.state.url;
     clearTimeout(this.state.timer);
     this.setState({
-      url: value
+      url: e.target.value
     })
     this.state.timer = setTimeout(() => {
       this.setState({
@@ -60,7 +60,11 @@ export default class BracketCreate extends Component {
     const part2 = parseInt(Math.random() * 10000);
     var comp = part1 + "" + part2;
     this.state.url = comp;
-    this.onSlugChange();
+    this.onSlugChange({
+      target: {
+        value: this.state.url
+      }
+    });
   }
 
   render() {
