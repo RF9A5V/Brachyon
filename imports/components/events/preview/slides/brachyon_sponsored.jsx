@@ -52,7 +52,7 @@ export default class BrachyonSponsoredSlide extends Component {
                   this.event.crowdfunding.users.map(u => {
                     const user = this.state.users[u];
                     return (
-                      <div className="row col-1" style={{width: 150, backgroundColor: "#666"}}>
+                      <div className="row col-1" style={{backgroundColor: "#666"}}>
                         <img src={user.profileImage || "/images/profile.png"} style={{width: 50, height: 50}} />
                         <div style={{padding: 10}}>
                           <span>{ user.username }</span>
