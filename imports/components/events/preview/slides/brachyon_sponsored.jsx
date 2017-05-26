@@ -3,8 +3,9 @@ import React, { Component } from "react";
 import SponsorModal from "../sponsor_modal.jsx";
 import RegModal from "/imports/components/public/reg_modal.jsx";
 import RowLayout from "/imports/components/public/row_layout.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class BrachyonSponsoredSlide extends Component {
+export default class BrachyonSponsoredSlide extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -38,24 +39,27 @@ export default class BrachyonSponsoredSlide extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <div className="col center x-center" style={{padding: 10}}>
-        <div className="row center" style={{marginBottom: 10}}>
-          <button onClick={this.openModal.bind(this)}>Share Event</button>
+        <div className="row center">
+          <button className={opts.buttonClass} onClick={this.openModal.bind(this)}>Share Event</button>
+        </div>
+        <div className="row center">
+          <h2 style={{marginTop: 10, fontSize: opts.fontSize}}>1 Share = $1+ To Pot Bonus</h2>
         </div>
         <div style={{width: "100%", height: "60%", backgroundColor: "rgba(0, 0, 0, 0.75)", padding: 10, overflowY: "auto", alignItems: "flex-start"}}>
           {
             this.state.users ? (
-              <RowLayout length={6}>
+              <RowLayout length={opts.rowLength}>
                 {
                   this.event.crowdfunding.users.map(u => {
                     const user = this.state.users[u];
                     return (
                       <div className="row col-1" style={{backgroundColor: "#666"}}>
-                        <img src={user.profileImage || "/images/profile.png"} style={{width: 50, height: 50}} />
-                        <div style={{padding: 10}}>
-                          <span>{ user.username }</span>
+                        <img src={user.profileImage || "/images/profile.png"} style={{width: opts.imgDim, height: opts.imgDim}} />
+                        <div className="row col-1" style={{padding: 10}}>
+                          <span className="marquee" style={{fontSize: `calc(${opts.fontSize} * 0.75)`}}>{ user.username }</span>
                         </div>
                       </div>
                     )
@@ -73,5 +77,23 @@ export default class BrachyonSponsoredSlide extends Component {
         }} />
       </div>
     )
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em",
+      buttonClass: "",
+      rowLength: 6,
+      imgDim: 50
+    });
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      fontSize: "5em",
+      buttonClass: "large-button",
+      rowLength: 1,
+      imgDim: 200
+    })
   }
 }
