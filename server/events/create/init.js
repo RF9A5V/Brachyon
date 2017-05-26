@@ -80,7 +80,7 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
-    obj.brackets.forEach(brack => {
+    (obj.brackets || []).forEach(brack => {
       if (brack.game == null){
         if(Games.findOne({name:brack.gameName}) == null){
           Games.insert({
@@ -98,7 +98,7 @@ Meteor.methods({
           brack.game = newGame._id;
         }
       }
-      
+
     })
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
