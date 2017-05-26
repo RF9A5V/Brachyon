@@ -54,6 +54,34 @@ class Header extends ResponsiveComponent {
     });
   }
 
+  statusIcon() {
+    var color = "#5BD74D";
+    return (
+      <div className="row x-center col-1">
+        <div style={{width: 10, height: 10, backgroundColor: color, marginRight: 10}}>
+        </div>
+        <span style={{fontSize: "1.1rem"}}>Online</span>
+      </div>
+    )
+  }
+
+  userStatus() {
+    const user = Meteor.user();
+    return (
+      <div className="row" style={{width: 230, cursor: "pointer"}} onClick={() => {
+        this.setState({ userMenuOpen: true })
+      }}>
+        <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: 40, height: 40, borderRadius: "100%", marginRight: 10}} />
+        <div className="col">
+          <span style={{fontSize: "1.4rem", fontWeight: "bold"}}>{ user.username }</span>
+          {
+            this.statusIcon()
+          }
+        </div>
+      </div>
+    )
+  }
+
   renderMobile() {
     if(!this.props.ready){
       return (
@@ -113,14 +141,14 @@ class Header extends ResponsiveComponent {
     const user = Meteor.user();
     if(Meteor.userId()){
       userCred = (
-        <div style={{position: "relative"}} className="row x-center">
-          <div className="row x-center" onClick={(e) => {
-            e.preventDefault();this.setState({userMenuOpen: true})
-          }}>
-            <div style={{position: "relative"}}>
-              <img style={{width: 40, height: 40, borderRadius: "100%"}} src={this.imgOrDefault()} />
-            </div>
-          </div>
+        <div className="col-1 row" style={{justifyContent: "flex-end"}}>
+          {
+            user ? (
+              this.userStatus()
+            ) : (
+              null
+            )
+          }
         </div>
       );
     }
