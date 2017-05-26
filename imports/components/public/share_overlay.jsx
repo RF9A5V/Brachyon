@@ -80,27 +80,34 @@ export default class ShareOverlay extends ResponsiveComponent {
             <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={this.props.onClose} />
           </div>
           <div className="col col-1 center">
-            <div className="col center x-center" style={{marginBottom: 10}}>
-              {
-                user && user.profile.phoneNumber ? (
-                  <span>
-                    We've got your number, so we'll text you on updates to the event!
-                  </span>
-                ) : (
-                  [
-                    <p>
-                      You can give us your number if you want, and we can send you notifications on the event through text! Otherwise, you're good to go!
-                    </p>,
-                    <div className="row">
-                      <input className="col-1" style={{margin: 0, marginRight: 10}} type="text" ref="phone" placeholder="555-555-5555" ref="phone" />
-                      <button onClick={this.changePhone.bind(this)}>Save</button>
-                    </div>
-                  ]
-                )
-              }
-              <p></p>
-            </div>
-            <hr className="user-divider" />
+            {
+              this.props.registerShare ? (
+                [
+                  <div className="col center x-center" style={{marginBottom: 10}}>
+                    {
+                      user && user.profile.phoneNumber ? (
+                        <span>
+                          We've got your number, so we'll text you on updates to the event!
+                        </span>
+                      ) : (
+                        [
+                          <p>
+                            You can give us your number if you want, and we can send you notifications on the event through text! Otherwise, you're good to go!
+                          </p>,
+                          <div className="row">
+                            <input className="col-1" style={{margin: 0, marginRight: 10}} type="text" ref="phone" placeholder="555-555-5555" ref="phone" />
+                            <button onClick={this.changePhone.bind(this)}>Save</button>
+                          </div>
+                        ]
+                      )
+                    }
+                  </div>,
+                  <hr className="user-divider" />
+                ]
+              ) : (
+                null
+              )
+            }
             {
               this.props.registerShare ? (
                 <p>You just registered for { Events.findOne().details.name }! Share with your friends here!</p>

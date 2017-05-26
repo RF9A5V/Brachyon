@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
 
 import Games from "/imports/api/games/games.js";
-import AutocompleteForm from "/imports/components/public/autocomplete_form.jsx";
 import GameTemplate from "/imports/components/public/search_results/game_template.jsx";
 import OptionsModal from "./options_modal.jsx";
 
@@ -44,7 +43,8 @@ export default class BracketForm extends ResponsiveComponent {
       onReady: () => {
         this.setState({ initReady: true })
       }
-    })
+    });
+    this.state.showGames = true;
   }
 
   componentWillReceiveProps(props) {
@@ -82,6 +82,7 @@ export default class BracketForm extends ResponsiveComponent {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
+          <label className="input-label">Bracket Format</label>
           <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
             if(this.props.onChange) {
               var game = this.state.game;
@@ -195,7 +196,7 @@ export default class BracketForm extends ResponsiveComponent {
         poolFormat: this.refs.poolFormat.value,
         finalFormat: this.refs.finalFormat.value
       }
-    } 
+    }
     if (this.state.game.name == null && this.state.game){
       toastr.error("Each bracket given requires a game!");
       throw new Error("Bracket requires a game.");
@@ -225,7 +226,7 @@ export default class BracketForm extends ResponsiveComponent {
           else {
             var searchVal = {
               name:(value + " (Anonymous)"),
-              bannerUrl:"/images/bg.jpg"
+              bannerUrl:"/images/default_game.png"
             }
             data.push(searchVal);
             this.setState({
@@ -270,12 +271,22 @@ export default class BracketForm extends ResponsiveComponent {
           <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
           <div className="col" style={{position: "relative"}}>
             <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
-            <input type="text" className={opts.inputClass} onChange={(e) => {
-              const value = e.target.value;
-              this.loadGames(value, opts.limit);
-            }} defaultValue={this.state.game.name} style={{marginRight: 0, marginTop: 0}} ref="game" />
+            <input type="text"
+              className={opts.inputClass}
+              onChange={(e) => {
+                const value = e.target.value;
+                this.loadGames(value, opts.limit);
+              }}
+              onFocus={() => { this.setState({showGames: true}) }}
+              onBlur={() => {
+                setTimeout(() => {
+                  this.setState({ showGames: false })
+                }, 500);
+              }}
+              defaultValue={this.state.game.name} style={{marginRight: 0, marginTop: 0}} ref="game"
+            />
             {
-              this.state.gameList ? (
+              this.state.gameList && this.state.showGames ? (
                 <div style={{position: "absolute", top: "calc(100% - 20px)", width: "100%", zIndex: 2}}>
                 {
                   this.state.gameList.map(g => {
@@ -296,10 +307,7 @@ export default class BracketForm extends ResponsiveComponent {
               )
             }
           </div>
-          <div style={{padding: opts.borderPad, position: "relative"}}>
-            <div style={{float:"left", margin:"auto"}}>
-              <h5 style={{backgroundColor: "#111", padding: "0 20px", fontSize: opts.fontSize}}>Bracket Format</h5>
-            </div>
+          <div style={{position: "relative"}}>
             {
 
               // <div className="row center x-center" style={{margin: "20px 0"}}>
