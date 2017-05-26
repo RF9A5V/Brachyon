@@ -40,7 +40,7 @@ export default class Description extends ResponsiveComponent {
                       event.details.location.online ? (
                         <span style={{fontSize: 16}}>Online</span>
                       ) : (
-                        <div className="col">
+                        <div className="col" style={{textAlign: "left"}}>
                           <div>
                             <span style={{fontSize: 16}}>{ event.details.location.locationName }</span>
                           </div>

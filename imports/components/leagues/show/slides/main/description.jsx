@@ -40,7 +40,7 @@ export default class Description extends ResponsiveComponent {
                       league.details.location.online ? (
                         <span style={{fontSize: 16}}>Online</span>
                       ) : (
-                        <div className="col">
+                        <div className="col" style={{textAlign: "left"}}>
                           <span style={{fontSize: 16}}>{ league.details.location.locationName }</span>
                           <span style={{fontSize: 16}}>{ league.details.location.streetAddress }</span>
                           <span style={{fontSize: 16}}>{ league.details.location.city + " " + league.details.location.state + ", " + league.details.location.zip }</span>
