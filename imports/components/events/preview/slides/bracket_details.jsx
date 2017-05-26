@@ -44,8 +44,7 @@ class BracketDetails extends ResponsiveComponent {
 
     }
     else if(!bracket.isComplete) {
-      text = "Running";
-      icon = "ellipsis-h";
+      return null;
     }
     else {
       text = "Complete";
