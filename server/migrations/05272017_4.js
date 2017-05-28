@@ -40,11 +40,11 @@ Migrations.add({
         }
       }
       var count = 0;
-      i.brackets.forEach((b, n) => {
+      (i.brackets || []).forEach((b, n) => {
         var name;
         if(!b.slug) {
           if(b.name) {
-            name = b.toLowerCase().replace(/\s/g, "-");
+            name = b.name.toLowerCase().replace(/\s/g, "-");
           }
           else if(b.game) {
             name = Games.findOne(b.game).slug;
@@ -57,10 +57,12 @@ Migrations.add({
         if(!b.hash) {
           updateObj[`brackets.${n}.hash`] = Meteor.call("brackets.generateHash", count++);
         }
-      })
-      Instances.update(i._id, {
-        $set: updateObj
       });
+      if(Object.keys(updateObj).length > 0) {
+        Instances.update(i._id, {
+          $set: updateObj
+        });
+      }
     })
   }
 })
