@@ -37,14 +37,11 @@ export default class BracketForm extends ResponsiveComponent {
     else {
       this.state.game = {}
     }
-    this.state.format = subFormat || "NONE"
+    this.state.format = subFormat || "NONE";
     this.state.name = props.name || "";
-    this.state.games = Meteor.subscribe("games", {
-      onReady: () => {
-        this.setState({ initReady: true })
-      }
-    });
     this.state.showGames = true;
+    this.state.showValidation = false;
+    this.state.slug = props.slug;
   }
 
   componentWillReceiveProps(props) {
@@ -73,16 +70,62 @@ export default class BracketForm extends ResponsiveComponent {
 
   onNameChange() {
     var name = this.refs.name.value;
+    if(!this.state.hasValue) {
+      const slug = name.toLowerCase().replace(/\s/g, "-");
+      this.onSlugChange(slug, false);
+    }
     if(this.props.onChange) {
       this.props.onChange(null, { name });
     }
+  }
+
+  onSlugChange(value, isManual) {
+    clearTimeout(this.state.timer);
+    if(value.length == 0) {
+      this.setState({
+        hasValue: false,
+        showValidation: false
+      })
+    }
+    else {
+      this.setState({
+        showValidation: true
+      })
+    }
+    if(isManual && !this.state.hasValue) {
+      this.setState({
+        hasValue: true
+      })
+    }
+    this.setState({
+      slug: value
+    })
+    this.state.timer = setTimeout(() => {
+      this.setState({
+        loading: true
+      });
+      Meteor.call("brackets.checkSlug", value, (err) => {
+        if(err) {
+          this.setState({
+            loading: false,
+            urlAvailable: false
+          })
+        }
+        else {
+          this.setState({
+            loading: false,
+            urlAvailable: true
+          })
+        }
+      })
+    }, 500)
   }
 
   formatForm(opts) {
     if(this.state.format == "NONE") {
       return (
         <div className="col">
-          <label className="input-label">Bracket Format</label>
+          <label className="input-label" style={{fontSize: opts.fontSize}}>Bracket Format</label>
           <select ref="format" defaultValue={(this.props.format || {}).baseFormat} onChange={(e) => {
             if(this.props.onChange) {
               var game = this.state.game;
@@ -206,6 +249,7 @@ export default class BracketForm extends ResponsiveComponent {
       gameName: this.state.game.name.slice(0,(this.state.game.name.length-12)),
       format,
       name: this.refs.name.value,
+      slug: this.refs.slug.value,
       options: this.refs.options.value()
     }
   }
@@ -267,8 +311,34 @@ export default class BracketForm extends ResponsiveComponent {
             }
 
           </div>
-          <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
-          <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+          <div className={opts.direction}>
+            <div className="col col-1" style={{marginRight: opts.direction == "row" ? 10 : 0}}>
+              <label style={{fontSize: opts.fontSize}} className="input-label">Bracket Name</label>
+              <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
+            </div>
+            <div className="col col-1">
+              <label style={{fontSize: opts.fontSize}} className="input-label">Bracket URL {
+                this.state.showValidation ? (
+                  <span style={{marginBottom: 10}}>
+                    ({
+                      this.state.loading ? (
+                        "Loading..."
+                      ) : (
+                        this.state.urlAvailable ? (
+                          "Available"
+                        ) : (
+                          "Taken"
+                        )
+                      )
+                    })
+                  </span>
+                ) : (
+                  null
+                )
+              }</label>
+              <input className={opts.inputClass} style={{marginRight: 0, marginTop: 0}} type="text" ref="slug" value={this.state.slug} onChange={(e) => { this.onSlugChange(e.target.value, true) }} />
+            </div>
+          </div>
           <div className="col" style={{position: "relative"}}>
             <label style={{fontSize: opts.fontSize}} className="input-label">Game</label>
             <input type="text"
@@ -292,10 +362,20 @@ export default class BracketForm extends ResponsiveComponent {
                   this.state.gameList.map(g => {
                     return (
                       <GameTemplate {...g} onClick={() => {
+                        if(!g.bannerUrl) {
+                          g.bannerUrl = "/images/default_game.png";
+                        }
                         this.setState({
                           game: g,
                           gameList: null
                         });
+                        if(!this.state.hasValue) {
+                          var name = g.name;
+                          if(!g._id) {
+                            name = name.slice(0, -12);
+                          }
+                          this.onSlugChange(name, false);
+                        }
                         this.refs.game.value = g.name;
                       }} />
                     )

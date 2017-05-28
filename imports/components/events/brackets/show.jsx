@@ -363,48 +363,22 @@ class BracketShowScreen extends Component {
 }
 
 const x = createContainer((props) => {
-  const { slug, bracketIndex } = props.params;
-
-  if(props.location.pathname.indexOf("event") >= 0) {
-    const eventHandle = Meteor.subscribe("event", slug);
-    if(eventHandle && eventHandle.ready()) {
-      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex, {
-        onReady: () => {
-          const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
-          if(bracketMeta.name){
-            document.title=bracketMeta.name+ " | Brachyon"
-          }
-          else {
-            document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
-          }
-        }
-      });
-      return {
-        ready: instanceHandle.ready(),
-        instance: Instances.findOne(),
-        bracket: Brackets.findOne(),
-        event: Events.findOne()
+  const { slug, hash } = props.params;
+  const instanceHandle = Meteor.subscribe("bracketContainer", slug, hash, {
+    onReady: () => {
+      const instance = Instances.findOne();
+      const index = instance.brackets.findIndex(o => { return o.slug == slug && o.hash == hash });
+      const bracketMeta = Instances.findOne().brackets[index];
+      if(bracketMeta.name){
+        document.title=bracketMeta.name+ " | Brachyon"
+      }
+      else {
+        document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
       }
     }
-    return {
-      ready: false
-    }
-  }
-  else {
-    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0, {
-      onReady: () => {
-        const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
-        if(bracketMeta.name){
-          document.title=bracketMeta.name+ " | Brachyon"
-        }
-        else {
-          document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
-        }
-      }
-    });
-    return {
-      ready: instanceHandle.ready()
-    }
+  });
+  return {
+    ready: instanceHandle.ready()
   }
 }, BracketShowScreen);
 

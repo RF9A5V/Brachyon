@@ -325,10 +325,10 @@ class BracketDetails extends ResponsiveComponent {
               <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
                 const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
                 if(event.owner == Meteor.userId() || isAdmin) {
-                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}/admin`)
+                  browserHistory.push(`/bracket/${this.props.slug}-${this.props.hash}/admin`)
                 }
                 else {
-                  browserHistory.push(`/event/${event.slug}/bracket/${this.props.index}`);
+                  browserHistory.push(`/bracket/${this.props.slug}-${this.props.hash}`);
                 }
               }}>
                 <span style={{fontSize: opts.fontSize}}>View</span>

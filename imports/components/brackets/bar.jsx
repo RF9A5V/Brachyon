@@ -31,7 +31,7 @@ export default class BracketBar extends ResponsiveComponent {
               e.preventDefault();
               e.stopPropagation();
               var event = Events.findOne();
-              browserHistory.push("/event/" + event.slug + "/bracket/" + this.props.index + (event.owner == Meteor.userId() ? "/admin" : ""));
+              browserHistory.push(`/bracket/${bracket.slug}-${bracket.hash}/${event.owner == Meteor.userId() ? "admin" : ""}`);
             }}>
               View
             </div>
