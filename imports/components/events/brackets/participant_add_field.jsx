@@ -5,6 +5,8 @@ import ResponsiveComponent from "/imports/components/public/responsive_component
 
 import ResetModal from "./admin_comps/reset_modal.jsx";
 
+import Games from "/imports/api/games/games.js";
+
 export default class ParticipantAddField extends ResponsiveComponent {
 
   constructor(props) {
@@ -143,7 +145,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
     return (
       <div className="col" style={{padding: 20, backgroundColor: "black"}}>
         <div className="col" style={{marginBottom: 10, position: "relative"}}>
-          <label className="input-label" style={{fontSize: opts.fontSize}}>Add A Participant ({this.props.participantCount}{
+          <label className="input-label" style={{fontSize: opts.fontSize}}>{this.props.bracket.name? (this.props.bracket.name+" "):(Games.findOne({_id:this.props.bracket.game}).name + " ")}({this.props.participantCount}{
             (this.props.bracket.options || {}).limit ? (
               ` out of ${this.props.bracket.options.limit}`
             ) : (
@@ -151,7 +153,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
             )
           })
           </label>
-          <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
+          <input className={`col-1 ${opts.inputClass}`} ref="userValue" type="text" placeholder="Add Participant" style={{margin: 0}} onChange={this.loadUsers.bind(this)} onKeyPress={(e) => {
             if(e.key == "Enter") {
               const user = this.state.users[this.state.index];
               if(!user) {

@@ -1,6 +1,7 @@
 import Brackets from "/imports/api/brackets/brackets.js";
 import Instances from "/imports/api/event/instance.js";
 import Matches from "/imports/api/event/matches.js";
+import Games from "/imports/api/games/games.js";
 
 Meteor.publish('brackets', (_id) => {
   var bracket = Brackets.findOne(_id);
@@ -84,7 +85,10 @@ Meteor.publish("bracketContainer", (_id, index) => {
     Meteor.users.find({ _id: { $in: partIds } }),
     Matches.find({ _id: {
       $in: matches
-    } })
+    } }),
+    Games.find({
+      _id: instance.brackets[index].game
+    })
   ]
 });
 

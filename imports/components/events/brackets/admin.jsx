@@ -36,6 +36,8 @@ import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 import CloseModal from "/imports/components/brackets/close_modal.jsx";
 
+import Games from "/imports/api/games/games.js";
+
 class BracketAdminScreen extends Component {
 
   constructor(props) {
@@ -50,6 +52,7 @@ class BracketAdminScreen extends Component {
     if(this.state.sub){
       this.state.sub.stop();
     }
+    document.title="Brachyon"
   }
 
   componentWillUpdate() {
@@ -462,7 +465,17 @@ const x = createContainer((props) => {
   if(props.location.pathname.indexOf("event") >= 0) {
     const eventHandle = Meteor.subscribe("event", slug);
     if(eventHandle && eventHandle.ready()) {
-      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex);
+      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex, {
+        onReady: () => {
+          const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
+          if(bracketMeta.name){
+            document.title=bracketMeta.name+ " | Brachyon"
+          }
+          else {
+            document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
+          }
+        }
+      });
       return {
         ready: instanceHandle.ready()
       }
@@ -472,7 +485,17 @@ const x = createContainer((props) => {
     }
   }
   else {
-    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0);
+    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0, {
+      onReady: () => {
+        const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
+        if(bracketMeta.name){
+          document.title=bracketMeta.name+ " | Brachyon"
+        }
+        else {
+          document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
+        }
+      }
+    });
     return {
       ready: instanceHandle.ready()
     }
