@@ -59,9 +59,7 @@ export default class TournamentModal extends ResponsiveComponent {
       toastr.error("Modal not set up for swiss and RR");
       return;
     }
-    console.log("WTF IS GOING ON")
     Meteor.call(func, Brackets.findOne()._id, this.props.bracket, this.props.round, this.props.match, (err) => {
-      console.log(err);
       if(err) {
         return toastr.error(err.reason);
       }

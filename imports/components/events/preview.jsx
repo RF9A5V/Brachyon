@@ -86,7 +86,9 @@ class PreviewEventScreen extends Component {
         return {
           component: BracketDetails,
           args: {
-            index: i
+            index: i,
+            slug: b.slug,
+            hash: b.hash
           }
         }
       }))

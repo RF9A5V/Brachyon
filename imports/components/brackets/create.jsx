@@ -28,45 +28,6 @@ export default class BracketCreate extends Component {
     })
   }
 
-  onSlugChange(e) {
-    const value = this.state.url;
-    clearTimeout(this.state.timer);
-    this.setState({
-      url: e.target.value
-    })
-    this.state.timer = setTimeout(() => {
-      this.setState({
-        loading: true
-      });
-      Meteor.call("brackets.checkSlug", value, (err) => {
-        if(err) {
-          this.setState({
-            loading: false,
-            urlAvailable: false
-          })
-        }
-        else {
-          this.setState({
-            loading: false,
-            urlAvailable: true
-          })
-        }
-      })
-    }, 500)
-  }
-
-  randomizeSlug() {
-    const part1 = parseInt(Math.random() * 10000);
-    const part2 = parseInt(Math.random() * 10000);
-    var comp = part1 + "" + part2;
-    this.state.url = comp;
-    this.onSlugChange({
-      target: {
-        value: this.state.url
-      }
-    });
-  }
-
   render() {
     return (
       <div className="box col center x-center">
@@ -75,34 +36,6 @@ export default class BracketCreate extends Component {
             <h5>Bracket Create</h5>
           </div>
           <BracketForm ref="bracket" />
-          <div className="row" style={{marginTop: 10}}>
-            <label className="row x-center input-label">https://www.brachyon.com/bracket/</label>
-            <input type="text" ref="slug" className="col-1" value={this.state.url} onChange={this.onSlugChange.bind(this)} style={{margin: 0}} />
-            <button style={{marginLeft: 10}} onClick={this.randomizeSlug.bind(this)}>Randomize</button>
-          </div>
-          {
-            this.state.url.length ? (
-              this.state.loading ? (
-                <div>
-                  Loading...
-                </div>
-              ) : (
-                this.state.urlAvailable ? (
-                  <div className="row x-center">
-                    <FontAwesome style={{marginRight: 10}} name="check" />
-                    <span>This URL is available!</span>
-                  </div>
-                ) : (
-                  <div className="row x-center">
-                    <FontAwesome style={{marginRight: 10}} name="times" />
-                    <span>This URL is unavailable!</span>
-                  </div>
-                )
-              )
-            ) : (
-              null
-            )
-          }
           <div className="row center" style={{marginTop: 10}}>
             <button onClick={this.onBracketCreate.bind(this)}>
               Create Bracket

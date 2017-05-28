@@ -2,7 +2,6 @@ import { flatten } from "flat";
 
 Meteor.methods({
   "events.edit"(id, attrs) {
-    console.log(attrs);
     var event = Events.findOne(id);
 
     if(attrs.stream == "" || attrs.stream == null) {

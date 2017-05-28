@@ -208,36 +208,29 @@ class UserProfile extends ResponsiveComponent {
           }
         }}>
           <div className="col col-1 flex-pad">
-            {
-              user._id == Meteor.userId() ? (
-                <div className="row" style={{justifyContent: "flex-end", padding: 10, backgroundColor: "rgba(0, 0, 0, 0.7)"}}>
-                  <div className="col">
-                    {
-                      this.state.editMode ? (
-                        <div className="row" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                          <div className="col" style={{marginRight: 10}}>
-                            <label className="input-label">Alias</label>
-                            <input type="text" defaultValue={user.profile.alias || user.username} style={{margin: 0}} ref="alias" />
-                          </div>
-                          <div className="col">
-                            <label className="input-label">Username</label>
-                            <input type="text" defaultValue={user.username} style={{margin: 0}} ref="username" />
-                          </div>
-                        </div>
-                      ) : (
-                        [
-                          <span style={{fontSize: opts.aliasFontSize}}>~{user.profile.alias || user.username}</span>,
-                          <span style={{fontSize: opts.userFontSize}}>@{user.username}</span>
-                        ]
-                      )
-                    }
-
-                  </div>
-                </div>
-              ) : (
-                <div></div>
-              )
-            }
+            <div className="row" style={{justifyContent: "flex-end", padding: 10, backgroundColor: "rgba(0, 0, 0, 0.7)"}}>
+              <div className="col">
+                {
+                  this.state.editMode ? (
+                    <div className="row" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                      <div className="col" style={{marginRight: 10}}>
+                        <label className="input-label">Alias</label>
+                        <input type="text" defaultValue={user.profile.alias || user.username} style={{margin: 0}} ref="alias" />
+                      </div>
+                      <div className="col">
+                        <label className="input-label">Username</label>
+                        <input type="text" defaultValue={user.username} style={{margin: 0}} ref="username" />
+                      </div>
+                    </div>
+                  ) : (
+                    [
+                      <span style={{fontSize: opts.aliasFontSize}}>~{user.profile.alias || user.username}</span>,
+                      <span style={{fontSize: opts.userFontSize}}>@{user.username}</span>
+                    ]
+                  )
+                }
+              </div>
+            </div>
             {
               this.state.hover ? (
                 <div className="row center">
@@ -254,34 +247,57 @@ class UserProfile extends ResponsiveComponent {
         </div>
         <div className="row" style={{justifyContent: "flex-end", padding: 10, position: "relative"}}>
           <UserImage username={this.props.params.username} editMode={this.state.editMode} />
-          <button onClick={(e) => {
-            e.preventDefault();
-            if(this.state.editMode) {
-              this.saveAll();
-            }
-            else {
-              this.setState({
-                editMode: true,
-                tab: "bio"
-              });
-            }
-          }}>
-            <div className="row x-center">
-              {
-                this.state.editMode ? (
-                  [
-                    <FontAwesome name="floppy-o" style={{marginRight: 10}} />,
-                    <span>Save Profile</span>
-                  ]
-                ) : (
-                  [
-                    <FontAwesome name="pencil" style={{marginRight: 10}} />,
-                    <span>Edit Profile</span>
-                  ]
-                )
-              }
-            </div>
-          </button>
+          {
+            this.state.editMode ? (
+              <button onClick={() => {
+                this.setState({
+                  editMode: false
+                })
+              }}>
+                <FontAwesome name="times" style={{marginRight: 10}} />
+                <span>
+                  Cancel
+                </span>
+              </button>
+            ) : (
+              null
+            )
+          }
+          {
+            user._id == Meteor.userId() ? (
+              <button style={{marginRight: 10}} onClick={(e) => {
+                e.preventDefault();
+                if(this.state.editMode) {
+                  this.saveAll();
+                }
+                else {
+                  this.setState({
+                    editMode: true,
+                    tab: "bio"
+                  });
+                }
+              }}>
+                <div className="row x-center">
+                  {
+                    this.state.editMode ? (
+                      [
+                        <FontAwesome name="floppy-o" style={{marginRight: 10}} />,
+                        <span>Save Profile</span>
+                      ]
+                    ) : (
+                      [
+                        <FontAwesome name="pencil" style={{marginRight: 10}} />,
+                        <span>Edit Profile</span>
+                      ]
+                    )
+                  }
+                </div>
+              </button>
+            ) : (
+              null
+            )
+          }
+
         </div>
         {
           this.userTabs(opts)
