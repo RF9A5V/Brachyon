@@ -13,6 +13,12 @@ export default class EventResult extends ResponsiveComponent {
       case "league": this.color = "#FF6000"; break;
       default: this.color = "#FFFFFF"; break;
     }
+    if(props.type == "event" || props.type == "league") {
+      this.link = `/${props.type}/${props.slug}`;
+    }
+    else {
+      this.link = `/${props.type}/${props.slug}-${props.hash}`;
+    }
   }
 
   type() {
@@ -26,7 +32,7 @@ export default class EventResult extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div className="row" style={{width: "100%", backgroundColor: "#111", cursor: "pointer", borderLeft: `solid 2px ${this.color}`}} onClick={() => {
-        browserHistory.push("/" + this.props.type + "/" + this.props.slug)
+        browserHistory.push(this.link)
       }}>
         <img src={this.props.bannerUrl || "/images/bg.jpg"} style={{width: "45%", height: "90%"}} />
         <div className="col col-1" style={{padding: 20, boxSizing: "border-box"}}>

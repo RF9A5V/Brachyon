@@ -34,7 +34,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   componentWillReceiveProps(next) {
     this.setState({
-      participants: Instances.findOne().brackets[this.props.index].participants
+      participants: Instances.findOne().brackets[this.props.index].participants || []
     })
   }
 

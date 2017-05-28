@@ -65,14 +65,17 @@ var getQBs = function(query, limit) {
       slug: 1,
       "brackets.name": 1,
       "brackets.game": 1,
-      "brackets.startedAt": 1
+      "brackets.startedAt": 1,
+      "brackets.slug": 1,
+      "brackets.hash": 1
     }
   }).fetch().map(b => {
     return {
       name: b.name || (Games.findOne(b.brackets[0].game) || {}).name,
       date: b.brackets[0].startedAt || new Date(),
       type: "bracket",
-      slug: b.slug,
+      slug: b.brackets[0].slug,
+      hash: b.brackets[0].hash,
       id: b._id
     }
   });
