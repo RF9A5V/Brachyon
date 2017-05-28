@@ -45,11 +45,20 @@ class BracketAdminScreen extends Component {
       shouldClose: false
     }
   }
+  componentDidMount() {
+    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    document.title=bracketMeta.name+ " | Brachyon"
+  }
+  componentWillReceiveProps(nextProps) {
+    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    document.title=bracketMeta.name+ " | Brachyon"
+  }
 
   componentWillUnmount() {
     if(this.state.sub){
       this.state.sub.stop();
     }
+    document.title="Brachyon"
   }
 
   componentWillUpdate() {
