@@ -36,6 +36,8 @@ import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
 import CloseModal from "/imports/components/brackets/close_modal.jsx";
 
+import Games from "/imports/api/games/games.js";
+
 class BracketAdminScreen extends Component {
 
   constructor(props) {
@@ -47,11 +49,21 @@ class BracketAdminScreen extends Component {
   }
   componentDidMount() {
     const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    if(bracketMeta.name){
     document.title=bracketMeta.name+ " | Brachyon"
+    }
+    else{
+      document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
+    }
   }
   componentWillReceiveProps(nextProps) {
     const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    if(bracketMeta.name){
     document.title=bracketMeta.name+ " | Brachyon"
+    }
+    else{
+      document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
+    }
   }
 
   componentWillUnmount() {
