@@ -96,7 +96,7 @@ class Header extends ResponsiveComponent {
           <div className="row x-center" style={{backgroundColor: "black", height: "9em", width: "100vw", padding: 20, zIndex: 5}}>
             <div className="col-1">
               <FontAwesome name="bars" style={{fontSize: "5em"}} onClick={() => {
-                this.setState({ navMenuOpen: true })
+                this.setState({ navMenuOpen: true, userMenuOpen: false })
               }}/>
             </div>
             <div onClick={() => {
@@ -110,7 +110,7 @@ class Header extends ResponsiveComponent {
               {
                 user ? (
                   <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: "7.5em", height: "7.5em", borderRadius: "100%"}} onClick={() => {
-                    this.setState({ userMenuOpen: true })
+                    this.setState({ userMenuOpen: true, navMenuOpen: false })
                   }} />
                 ) : (
                   null
@@ -123,7 +123,7 @@ class Header extends ResponsiveComponent {
         <Sidebar sidebar={
           <GlobalMenu closeMenu={() => { this.setState({navMenuOpen: false}) }} />
         } open={this.state.navMenuOpen} onSetOpen={() => {
-          this.setState({ navMenuOpen: !this.state.navMenuOpen })
+          this.setState({ navMenuOpen: true })
         }} pullRight={false} sidebarClassName="sidebar">
         </Sidebar>
       </div>

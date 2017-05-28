@@ -66,7 +66,7 @@ class BracketAdminScreen extends Component {
     }
   }
 
-  participantItem(bracket) {
+  participantItem(bracket, index) {
     return {
       name: "Participants",
       icon: "users",
@@ -76,14 +76,14 @@ class BracketAdminScreen extends Component {
           content: ParticipantAction,
           name: "Participants",
           args: {
-            index: this.props.params.bracketIndex || 0,
+            index,
             bracket,
             onStart: () => {
               var instanceId = Instances.findOne()._id;
               if(this.state.sub) {
                 this.state.sub.stop();
               }
-              this.state.sub = Meteor.subscribe("bracketContainer", instanceId, this.props.params.bracketIndex || 0, {
+              this.state.sub = Meteor.subscribe("bracketContainer", this.props.params.slug, this.props.params.hash, {
                 onReady: () => {
                   this.forceUpdate();
                 }
@@ -310,7 +310,7 @@ class BracketAdminScreen extends Component {
 
   items() {
     const instance = Instances.findOne();
-    var index = this.props.params.bracketIndex || 0;
+    const index = instance.brackets.findIndex(o => { return o.slug == this.props.params.slug }) || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
     if(bracket.isComplete) {
@@ -380,7 +380,7 @@ class BracketAdminScreen extends Component {
       var rounds = Brackets.findOne().rounds;
       defaultItems.push(this.bracketItem(bracket, index, rounds));
     }
-    defaultItems.push(this.participantItem(bracket));
+    defaultItems.push(this.participantItem(bracket, index));
     if (bracket.format.baseFormat == "swiss") {
       defaultItems.push(this.advancedItem(bracket));
     }
@@ -448,60 +448,38 @@ class BracketAdminScreen extends Component {
       )
     }
     const bracket = Brackets.findOne();
-    const bracketMeta = Instances.findOne().brackets[this.props.params.bracketIndex || 0];
+    const instance = Instances.findOne();
+    const index = instance.brackets.findIndex(o => { return o.slug == this.props.params.slug }) || 0;
+    const bracketMeta = Instances.findOne().brackets[index];
     const complete = bracket && bracket.complete && !bracketMeta.isComplete;
     return (
       <div style={{padding: 10, height: "100%"}}>
         <CreateContainer items={this.items()} actions={this.actions()} stretch={true} />
         <ShareOverlay open={this.state.open} onClose={() => { this.setState({ open: false }) }} url={this.state.url} />
-        <CloseModal open={complete && this.state.shouldClose} onClose={() => { this.setState({ shouldClose: false }) }} index={this.props.params.bracketIndex} />
+        <CloseModal open={complete && this.state.shouldClose} onClose={() => { this.setState({ shouldClose: false }) }} index={index} />
       </div>
     );
   }
 }
 
 const x = createContainer((props) => {
-  const { slug, bracketIndex } = props.params;
-  if(props.location.pathname.indexOf("event") >= 0) {
-    const eventHandle = Meteor.subscribe("event", slug);
-    if(eventHandle && eventHandle.ready()) {
-      const instanceHandle = Meteor.subscribe("bracketContainer", Events.findOne().instances.pop(), bracketIndex, {
-        onReady: () => {
-          const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
-          if(bracketMeta.name){
-            document.title=bracketMeta.name+ " | Brachyon"
-          }
-          else {
-            document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
-          }
-        }
-      });
-      return {
-        ready: instanceHandle.ready()
+  const { slug, hash } = props.params;
+  const instanceHandle = Meteor.subscribe("bracketContainer", slug, hash, {
+    onReady: () => {
+      const instance = Instances.findOne();
+      const index = instance.brackets.findIndex(o => { return o.slug == slug && o.hash == hash });
+      const bracketMeta = Instances.findOne().brackets[index];
+      if(bracketMeta.name){
+        document.title=bracketMeta.name+ " | Brachyon"
+      }
+      else {
+        document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
       }
     }
-    return {
-      ready: false
-    }
+  });
+  return {
+    ready: instanceHandle.ready()
   }
-  else {
-    const instanceHandle = Meteor.subscribe("bracketContainer", slug, 0, {
-      onReady: () => {
-        const bracketMeta = Instances.findOne().brackets[bracketIndex || 0];
-        if(bracketMeta.name){
-          document.title=bracketMeta.name+ " | Brachyon"
-        }
-        else {
-          document.title = Games.findOne({_id:bracketMeta.game}).name + " | Brachyon"
-        }
-      }
-    });
-    return {
-      ready: instanceHandle.ready()
-    }
-  }
-
-
 }, BracketAdminScreen);
 
 export default DragDropContext(HTML5Backend)(x)

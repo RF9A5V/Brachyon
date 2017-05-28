@@ -1,25 +1,25 @@
 import Leagues from "/imports/api/leagues/league.js";
 import Games from "/imports/api/games/games.js";
 
+import { bracketHashGenerator } from "/imports/decorators/gen_bracket_hash.js";
+
 Meteor.methods({
   "leagues.create"(attrs) {
     if (attrs.brackets.game == null){
-        if(Games.findOne({name:attrs.brackets.gameName}) == null){
-          Games.insert({
-            name: attrs.brackets.gameName,
-            description: "",
-            approved: true,
-            bannerUrl:"/images/bg.jpg",
-            temp:true
-          })
-          var newGame = Games.findOne({name: attrs.brackets.gameName});
-          attrs.brackets.game = newGame._id;
-        }
-        else{
-          var newGame = Games.findOne({name: attrs.brackets.gameName});
-          attrs.brackets.game = newGame._id;
-        }
+      var game = Games.findOne({
+        name: attrs.brackets.gameName
+      })._id;
+      if(!game){
+        game = Games.insert({
+          name: attrs.brackets.gameName,
+          description: "",
+          approved: true,
+          bannerUrl:null,
+          temp:true
+        })
       }
+      attrs.brackets.game = game;
+    }
     var events = attrs.events;
     var bracket = JSON.parse(JSON.stringify(attrs.brackets));
     delete attrs.brackets;
@@ -45,10 +45,11 @@ Meteor.methods({
       delete attrs.tickets;
     }
     var league = Leagues.insert(attrs);
-    events.forEach((e) => {
+    events.forEach((e, i) => {
       var createObj = {};
       createObj.details = attrs.details;
       createObj.details.datetime = e;
+      bracket.hash = Meteor.call("brackets.generateHash", bracket.slug);
       createObj.brackets = [bracket];
       createObj.creator = crObj;
       if(tickObj) {
