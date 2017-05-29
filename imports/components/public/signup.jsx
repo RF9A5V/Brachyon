@@ -137,12 +137,13 @@ export default class SignUpScreen extends TrackerReact(ResponsiveComponent) {
   }
 
   renderMobile() {
-    return this.renderBase({
-      inputClassName: "large-input",
-      fontSize: "3rem",
-      marginTop: "2rem",
-      credFormSize: "large"
-    });
+    // return this.renderBase({
+    //   inputClassName: "large-input",
+    //   fontSize: "3rem",
+    //   marginTop: "2rem",
+    //   credFormSize: "large"
+    // });
+    return this.renderDesktop();
   }
 
 }

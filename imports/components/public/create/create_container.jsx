@@ -72,15 +72,14 @@ export default class CreateContainer extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div className="col x-center col-1" style={{
-        padding: 20,
-        paddingBottom: opts.mobile ? 146 : 20,
+        padding: opts.mobile ? "10px 0" : 20,
         width: "100%",
         maxWidth: this.props.stretch ? "100%" : 1000,
         margin: "0 auto",
-        backgroundColor: "#444",
+        backgroundColor: opts.mobile ? "none" : "#444",
         minHeight: "calc(100vh - 90px)",
-        boxShadow: "0 5px 5px #111"}}
-      >
+        boxShadow: opts.mobile ? null : "0 5px 5px #111"
+      }}>
         <div className="row" style={{justifyContent: "flex-end"}}>
           {
             Organizations.find().fetch().length > 0 ? (
@@ -232,7 +231,7 @@ export default class CreateContainer extends ResponsiveComponent {
     return this.renderBase({
       navComp,
       eColor,
-      fontSize: "4rem",
+      fontSize: "1.5rem",
       mobile: true
     });
   }

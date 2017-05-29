@@ -41,8 +41,7 @@ export default class FinalizeBracket extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em",
-      buttonClass: "large-button"
+      fontSize: "1em"
     })
   }
 }

@@ -164,6 +164,7 @@ export default class ImageForm extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       buttonClass: "large-button",
       width: 800,

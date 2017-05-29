@@ -28,7 +28,7 @@ export default class LoaderContainer extends Component {
   render() {
     return (
       <div className="col center x-center" style={{backgroundColor: "rgba(0, 0, 0, 0.5)", position: "fixed", top: 0, left: 0, bottom: 0, right: 0}}>
-        <Loader width={500} animate={true} />
+        <Loader width={Math.min(window.innerWidth, window.innerHeight) * 0.75} animate={true} />
       </div>
     )
   }

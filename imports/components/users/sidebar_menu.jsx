@@ -97,13 +97,14 @@ export default class SidebarMenu extends ResponsiveComponent {
   }
 
   renderMobile() {
-    return this.renderBase({
-      width: "75vw",
-      imgSize: "30vw",
-      fontSize: "6rem",
-      padding: "5em",
-      marginRight: 30
-    })
+    // return this.renderBase({
+    //   width: "75vw",
+    //   imgSize: "30vw",
+    //   fontSize: "6rem",
+    //   padding: "5em",
+    //   marginRight: 30
+    // })
+    return this.renderDesktop();
   }
 
   renderDesktop() {

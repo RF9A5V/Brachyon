@@ -99,8 +99,8 @@ export default class RegModal extends ResponsiveComponent {
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
       closesOnOverlayClick: false,
-      iconSize: "8rem",
-      fontSize: "6rem"
+      iconSize: "2rem",
+      fontSize: "1rem"
     });
   }
 }

@@ -182,11 +182,9 @@ export default class OptionsModal extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em",
+      fontSize: "1em",
       modalClass: "overlay-only-modal",
-      overlayClass: "overlay-only",
-      inputClass: "large-input",
-      buttonClass: "large-button"
+      overlayClass: "overlay-only"
     });
   }
 

@@ -17,7 +17,7 @@ export default class GlobalSideNav extends Component {
   render() {
     const user = Meteor.user();
     const style = {
-      fontSize: "4em",
+      fontSize: "1.5em",
       padding: "1em",
       width: "100%"
     }
@@ -25,12 +25,12 @@ export default class GlobalSideNav extends Component {
       this.props.closeMenu()
     }
 
-    const faSize = "6rem";
+    const faSize = "2.5rem";
 
     return (
       <div className="col" style={{width: "75vw", height: "100%", backgroundColor: "black"}}>
-        <div style={{paddingTop: 30, paddingLeft: 20}}>
-          <FontAwesome name="times" style={{fontSize: "8rem"}} onClick={() => {
+        <div className="row" style={{padding: 10, paddingBottom: 0}}>
+          <FontAwesome name="times" style={{fontSize: 18}} onClick={() => {
             closeMenu()
           }} />
         </div>
