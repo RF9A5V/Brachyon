@@ -115,13 +115,13 @@ export default class MainSlide extends ResponsiveComponent {
     var event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
     const anyEvent = Events.findOne();
     return (
-      <div className="col" style={{padding: 40}}>
+      <div className="col" style={{padding: 10}}>
         <div className="col-1 row flex-pad" style={{alignItems: "flex-start"}}>
-          <FontAwesome name="share-alt" style={{fontSize: "7em"}} onClick={() => {
+          <FontAwesome name="share-alt" style={{fontSize: "2.5em"}} onClick={() => {
             this.loadShortLink()
           }} />
-          <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
-            <span style={{fontSize: "3em"}}>
+          <div className="col" style={{padding: 10, backgroundColor: "#333"}}>
+            <span style={{fontSize: "1em"}}>
               {
                 anyEvent.details.location.online ? (
                   "Online"
@@ -134,12 +134,12 @@ export default class MainSlide extends ResponsiveComponent {
               anyEvent.details.location.online ? (
                 null
               ) : (
-                <span style={{fontSize: "3em"}}>
+                <span style={{fontSize: "1em"}}>
                   { anyEvent.details.location.city + ", " + anyEvent.details.location.state }
                 </span>
               )
             }
-            <span style={{fontSize: "3em"}}>
+            <span style={{fontSize: "1em"}}>
               {
                 event ? (
                   moment(event.details.datetime).format("MMMM Do, YYYY")
@@ -151,7 +151,7 @@ export default class MainSlide extends ResponsiveComponent {
           </div>
         </div>
         <div className="col center x-center">
-          <h2 style={{fontSize: "6em", color: "#FF6000"}}>{ league.details.name }</h2>
+          <h2 style={{fontSize: "2em", color: "#FF6000"}}>{ league.details.name }</h2>
         </div>
         <div className="row col-1">
         </div>

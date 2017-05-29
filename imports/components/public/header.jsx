@@ -93,23 +93,23 @@ class Header extends ResponsiveComponent {
     return (
       <div>
         <Headroom id="header" disableInlineStyles={true}>
-          <div className="row x-center" style={{backgroundColor: "black", height: "9em", width: "100vw", padding: 20, zIndex: 5}}>
-            <div className="col-1">
-              <FontAwesome name="bars" style={{fontSize: "5em"}} onClick={() => {
+          <div className="row x-center" style={{backgroundColor: "black", width: "100vw", padding: 20, zIndex: 5, height: 50}}>
+            <div className="row x-center col-1">
+              <FontAwesome name="bars" style={{fontSize: "1.5em"}} onClick={() => {
                 this.setState({ navMenuOpen: true, userMenuOpen: false })
               }}/>
             </div>
-            <div onClick={() => {
+            <div className="row x-center" onClick={() => {
               if(user) {
                 browserHistory.push("/user/" + user.username);
               }
             }}>
-              <Loader width={100} />
+              <Loader width={30} />
             </div>
-            <div className="col-1 row" style={{justifyContent: "flex-end"}}>
+            <div className="col-1 row x-center" style={{justifyContent: "flex-end"}}>
               {
                 user ? (
-                  <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: "7.5em", height: "7.5em", borderRadius: "100%"}} onClick={() => {
+                  <img src={user.profile.imageUrl || "/images/profile.png"} style={{width: 30, height: 30, borderRadius: "100%"}} onClick={() => {
                     this.setState({ userMenuOpen: true, navMenuOpen: false })
                   }} />
                 ) : (
@@ -123,7 +123,7 @@ class Header extends ResponsiveComponent {
         <Sidebar sidebar={
           <GlobalMenu closeMenu={() => { this.setState({navMenuOpen: false}) }} />
         } open={this.state.navMenuOpen} onSetOpen={() => {
-          this.setState({ navMenuOpen: true })
+          this.setState({ navMenuOpen: !this.state.navMenuOpen })
         }} pullRight={false} sidebarClassName="sidebar">
         </Sidebar>
       </div>

@@ -163,7 +163,7 @@ export default class UserStat extends ResponsiveComponent {
   	return(
   	<div style={{marginTop:15, marginBottom:15}}>
       <div className="center">
-        <select className="center" ref="game" onChange={(e)=> {this.selectGame()} }style={{fontSize: opts.mobile ? "2.5em" : "1em",width:300, margin:20}}>
+        <select className="center" ref="game" onChange={(e)=> {this.selectGame()} }style={{fontSize: "1em",width:300, margin:20}}>
         <option value="overview" Selected>
           Overview
         </option>
@@ -180,7 +180,7 @@ export default class UserStat extends ResponsiveComponent {
           	)}
         </select>
       </div>
-      <div className="center" style={{width:"50vw", margin:"auto"}}>
+      <div className="center" style={{width: opts.mobile ? "80vw" : "50vw", margin:"auto"}}>
        {this.showTable()}
       </div>
     </div>

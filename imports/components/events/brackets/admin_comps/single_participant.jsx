@@ -104,7 +104,7 @@ class SingleParticipant extends ResponsiveComponent {
     const user = Meteor.users.findOne(participant.id);
     return (
       <div className="participant-row row x-center" style={{width: this.state.render == "mobile" ? "100%" : "80%"}} key={index}>
-        <div className="row center x-center" style={{width: "10%"}}>
+        <div className="row x-center" style={{width: this.props.opts.mobile ? "20%" : "10%"}}>
           <SeedDropdown seedIndex={this.props.index} pSize={this.props.pSize} index={this.props.bIndex} id={this.state.id} updateList={this.props.onUpdate} />
         </div>
         <img src={this.imgOrDefault(user)} style={{width: this.props.opts.imgDim, height: this.props.opts.imgDim, borderRadius: "100%", marginRight: 20}} />

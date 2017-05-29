@@ -385,6 +385,7 @@ export default class MatchBlock extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       height: 70,
       lineHeight: 10,

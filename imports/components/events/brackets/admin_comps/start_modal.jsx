@@ -73,8 +73,7 @@ export default class StartModal extends ResponsiveComponent {
     return this.renderBase({
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      fontSize: "2.5em",
-      buttonClass: "large-button"
+      fontSize: "1em"
     });
   }
 }

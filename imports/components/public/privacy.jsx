@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-export default class PrivacyPolicyScreen extends Component {
+export default class PrivacyPolicyScreen extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -48,23 +49,21 @@ export default class PrivacyPolicyScreen extends Component {
       )
     }
     return (
-      <div className="row center">
-        <div className="col side-tab-panel">
-          <h2 style={{margin: "0 0 20px 0"}}>Privacy Policy</h2>
-          {
-            this.text().map(val => {
-              return (
-                [
-                  (<h4>{ val.title }</h4>)
-                ].concat(
-                  val.text.split("\n").map(t => {
-                    return (<div className="about-what">{ t }</div>)
-                  })
-                )
+      <div className={`col ${this.state.render == "mobile" ? "" : "side-tab-panel"}`} style={{padding: this.state.render == "mobile" ? 10 : 0}}>
+        <h2 style={{marginBottom: 20, textAlign: "center"}}>Privacy Policy</h2>
+        {
+          this.text().map(val => {
+            return (
+              [
+                (<h4>{ val.title }</h4>)
+              ].concat(
+                val.text.split("\n").map(t => {
+                  return (<div className="about-what">{ t }</div>)
+                })
               )
-            })
-          }
-        </div>
+            )
+          })
+        }
       </div>
     )
   }

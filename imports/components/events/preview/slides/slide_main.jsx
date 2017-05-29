@@ -145,12 +145,12 @@ export default class SlideMain extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      navSize: "7rem",
-      navPad: 30,
+      navSize: "3rem",
+      navPad: 10,
       useIcons: true,
-      sideNavSize: "3em",
-      sideNavTop: null,
-      sideNavBottom: "140px"
+      sideNavSize: "1.2em",
+      sideNavTop: "calc(50vh - 50px)",
+      sideNavBottom: null
     });
   }
 }

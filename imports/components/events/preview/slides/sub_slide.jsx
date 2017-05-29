@@ -79,6 +79,7 @@ export default class SubSlideContainer extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       slideHeight: "calc(100vh - 230px)"
     });

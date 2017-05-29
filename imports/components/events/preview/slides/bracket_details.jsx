@@ -437,8 +437,8 @@ class BracketDetails extends ResponsiveComponent {
         {
           this.details(bracketMeta, {
             imgHeight: "50vh",
-            fontSize: "4rem",
-            mobile: true
+            fontSize: "1.5rem",
+            mobile: false
           })
         }
       </div>

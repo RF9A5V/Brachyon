@@ -82,30 +82,30 @@ export default class Description extends ResponsiveComponent {
     const event = Events.findOne({ isComplete: false }, { sort: { "details.datetime": -1 } });
     const anyEvent = Events.findOne();
     return (
-      <div className="col" style={{width: "100%", padding: 40}}>
-        <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 40}}>
-          <span style={{fontSize: "3em"}}>{ event ? moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") : "Completed!" }</span>
+      <div className="col" style={{width: "100%", padding: 10}}>
+        <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 10}}>
+          <span style={{fontSize: "1.5em"}}>{ event ? moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") : "Completed!" }</span>
         </div>
-        <div style={{padding: 40, marginBottom: 40, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
+        <div style={{padding: 10, marginBottom: 10, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
           this.setState({
             open: true
           })
         }}>
-          <div style={{fontSize: "3em", maxHeight: "20vh", marginBottom: 40, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: league.details.description}}>
+          <div style={{fontSize: "1.5em", maxHeight: "20vh", marginBottom: 10, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: league.details.description}}>
           </div>
           <div className="row center x-center">
-            <span style={{fontSize: "2.5em", color: "#FF6000", marginRight: 15}}>Show More</span>
-            <FontAwesome name="caret-down" style={{fontSize: "4em", color: "#FF6000"}} />
+            <span style={{fontSize: "1.5em", color: "#FF6000", marginRight: 15}}>Show More</span>
+            <FontAwesome name="caret-down" style={{fontSize: "2em", color: "#FF6000"}} />
           </div>
         </div>
         {
           anyEvent.details.location.online ? (
-            <div style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)"}}>
-              <span style={{fontSize: "3em"}}>Online</span>
+            <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)"}}>
+              <span style={{fontSize: "1.5em"}}>Online</span>
             </div>
           ) : (
             [
-              <div className="col" style={{padding: 40, backgroundColor: "rgba(0,0,0,0.8)", fontSize: "3em", marginBottom: 40}}>
+              <div className="col" style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", fontSize: "3em", marginBottom: 10}}>
                 <span>{ anyEvent.details.location.streetAddress }</span>
                 <span>{ anyEvent.details.location.city } { anyEvent.details.location.state }</span>
               </div>,

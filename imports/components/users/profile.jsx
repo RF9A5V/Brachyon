@@ -41,7 +41,7 @@ class UserProfile extends ResponsiveComponent {
             const tabStyle = {
               borderBottom: isCurrentTab ?"solid 2px":"",
               borderColor: isCurrentTab ? "#ff6000":"",
-              fontSize: opts.mobile ? "2.5em" : "1em",
+              fontSize: "1em",
               color: this.state.editMode && tab != "bio" ? "#666" : "white",
               marginTop: opts.mobile ? 30 : 0,
               padding: "1em"
@@ -149,8 +149,8 @@ class UserProfile extends ResponsiveComponent {
       username: this.props.params.username
     });
     const mediaStyle = {
-      width: opts.mobile ? 80 : 35,
-      height: opts.mobile ? 80 : 35,
+      width: 35,
+      height: 35,
       padding: 5,
       backgroundColor: "rgba(0, 0, 0, 0.5)",
       cursor: "pointer"
@@ -213,11 +213,11 @@ class UserProfile extends ResponsiveComponent {
                 {
                   this.state.editMode ? (
                     <div className="row" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                      <div className="col" style={{marginRight: 10}}>
+                      <div className="col col-1" style={{marginRight: 10}}>
                         <label className="input-label">Alias</label>
                         <input type="text" defaultValue={user.profile.alias || user.username} style={{margin: 0}} ref="alias" />
                       </div>
-                      <div className="col">
+                      <div className="col col-1">
                         <label className="input-label">Username</label>
                         <input type="text" defaultValue={user.username} style={{margin: 0}} ref="username" />
                       </div>
@@ -253,7 +253,7 @@ class UserProfile extends ResponsiveComponent {
                 this.setState({
                   editMode: false
                 })
-              }}>
+              }} style={{marginRight: 10}}>
                 <FontAwesome name="times" style={{marginRight: 10}} />
                 <span>
                   Cancel
@@ -265,7 +265,7 @@ class UserProfile extends ResponsiveComponent {
           }
           {
             user._id == Meteor.userId() ? (
-              <button style={{marginRight: 10}} onClick={(e) => {
+              <button onClick={(e) => {
                 e.preventDefault();
                 if(this.state.editMode) {
                   this.saveAll();
@@ -354,11 +354,10 @@ class UserProfile extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       mobile: true,
-      fontSize: "3.5em",
-      iconSize: "3em",
-      userFontSize: "2em",
-      aliasFontSize: "2.5em",
-      buttonClass: "large-button"
+      fontSize: "1.2em",
+      iconSize: "1em",
+      userFontSize: "1em",
+      aliasFontSize: "1.2em"
     });
   }
 
