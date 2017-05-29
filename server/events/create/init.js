@@ -86,8 +86,11 @@ Meteor.methods({
       if (brack.game == null){
         brack.game = Games.findOne({
           name: brack.gameName
-        })._id;
-        if(!brack.game){
+        });
+        if(brack.game) {
+          brack.game = game._id;
+        }
+        else {
           brack.game = Games.insert({
             name: brack.gameName,
             description: "",

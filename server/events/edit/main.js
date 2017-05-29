@@ -80,13 +80,22 @@ Meteor.methods({
         });
       }
       if(pushObj.length > 0) {
-        Instances.update(instance._id, {
-          $push: {
-            brackets: {
-              $each: pushObj
+        if(!instance.brackets) {
+          Instances.update(instance._id, {
+            $set: {
+              brackets: pushObj
             }
-          }
-        });
+          });
+        }
+        else {
+          Instances.update(instance._id, {
+            $push: {
+              brackets: {
+                $each: pushObj
+              }
+            }
+          });
+        }
       }
     }
     delete attrs.brackets;
