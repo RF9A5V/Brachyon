@@ -196,6 +196,7 @@ export default class BracketsPanel extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "2em",
       fontWidth: "90%",

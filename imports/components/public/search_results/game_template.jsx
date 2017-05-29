@@ -28,6 +28,7 @@ export default class GameResultTemplate extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "3em",
       width: "200px"

@@ -79,7 +79,7 @@ export default class EventDiscoveryScreen extends TrackerReact(ResponsiveCompone
         }
         <div className="row col-1"><hr className="discover-divider"></hr></div>
         {/*<DiscoverSearch handler={this.setSubscription.bind(this)} ref="search" />*/}
-        <div style={{padding: "0 5em"}}>
+        <div style={{padding: `0 ${opts.pad}`}}>
           {
             this.state.events.ready() ? (
               <AltBlockContainer />
@@ -94,13 +94,15 @@ export default class EventDiscoveryScreen extends TrackerReact(ResponsiveCompone
 
   renderMobile() {
     return this.renderBase({
-      marginBottom: 200
+      marginBottom: 200,
+      pad: "10px"
     })
   }
 
   renderDesktop() {
     return this.renderBase({
-      marginBottom: 200
+      marginBottom: 200,
+      pad: "5em"
     })
   }
 }

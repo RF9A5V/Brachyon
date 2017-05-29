@@ -31,7 +31,7 @@ export default class Title extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div className={opts.orientation}>
-        <div className="col col-1" style={{marginRight: opts.orientation == "row" ? 10 : 0}}>
+        <div className="col col-1" style={{marginRight: opts.orientation == "row" ? 10 : 0, marginBottom: opts.orientation == "col" ? 10 : 0}}>
           <label style={{fontSize: opts.fontSize}} className="input-label">Title { this.state.title.length } / 50</label>
           <input className={opts.inputClass} type="text" ref="title" onChange={(e) => {
             this.onChange(e, "title")
@@ -58,8 +58,7 @@ export default class Title extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       orientation: "col",
-      fontSize: "2.5em",
-      inputClass: "large-input"
+      fontSize: "1em"
     })
   }
 }

@@ -159,11 +159,11 @@ export default class UserImage extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      imgDim: 200,
+      imgDim: 100,
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      iconSize: "5em",
-      buttonClass: "large-button"
+      iconSize: "2em",
+      buttonClass: ""
     });
   }
 

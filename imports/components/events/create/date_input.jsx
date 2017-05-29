@@ -178,6 +178,7 @@ export default class DateInput extends ResponsiveComponent {
   }
 
   renderMobile(opts) {
+    return this.renderDesktop();
     const dayWidth = 96;
     return this.renderBase({
       fontSize: "2.5em",

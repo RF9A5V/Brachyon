@@ -423,11 +423,11 @@ export default class BracketForm extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      inputClass: "large-input",
-      fontSize: "2.5em",
+      inputClass: "",
+      fontSize: "1em",
       direction: "col",
-      borderPad: 40,
-      top: -19.5,
+      borderPad: 20,
+      top: -12.5,
       limit: 5
     });
   }

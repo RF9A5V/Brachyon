@@ -83,9 +83,9 @@ export default class Footer extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       useSocial: false,
-      fontSize: "3rem",
+      fontSize: "1rem",
       justify: "center",
-      height: "126px"
+      height: "50px"
     })
   }
 
