@@ -245,6 +245,7 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "2.5rem",
       inputClass: "large-input",

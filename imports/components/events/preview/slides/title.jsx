@@ -154,13 +154,13 @@ export default class EventTitlePage extends ResponsiveComponent {
     const event = Events.findOne();
     const instance = Instances.findOne();
     return (
-      <div className="col" style={{padding: 40}}>
+      <div className="col" style={{padding: 10}}>
         <div className="row col-1 flex-pad" style={{alignItems: "flex-start"}}>
-          <FontAwesome name="share-alt" style={{fontSize: "7em"}} onClick={() => {
+          <FontAwesome name="share-alt" style={{fontSize: "2em"}} onClick={() => {
             this.loadShortLink()
           }} />
-          <div className="col" style={{padding: 20, backgroundColor: "#333"}}>
-            <span style={{fontSize: "3em"}}>
+          <div className="col" style={{padding: 10, backgroundColor: "#333"}}>
+            <span style={{fontSize: "1em"}}>
               {
                 event.details.location.online ? (
                   "Online"
@@ -173,12 +173,12 @@ export default class EventTitlePage extends ResponsiveComponent {
               event.details.location.online ? (
                 null
               ) : (
-                <span style={{fontSize: "3em"}}>
+                <span style={{fontSize: "1em"}}>
                   { event.details.location.city + ", " + event.details.location.state }
                 </span>
               )
             }
-            <span style={{fontSize: "3em"}}>
+            <span style={{fontSize: "1em"}}>
               {
                 moment(event.details.datetime).format("MMMM Do, YYYY")
               }
@@ -186,11 +186,11 @@ export default class EventTitlePage extends ResponsiveComponent {
           </div>
         </div>
         <div className="col x-center">
-          <h2 style={{fontSize: "6em"}}>{ event.details.name }</h2>
+          <h2 style={{fontSize: "2em"}}>{ event.details.name }</h2>
           <div className="row">
             {
               instance.brackets ? (
-                <button className="large-button" style={{marginRight: event.stream ? 30 : 0}} onClick={() => {
+                <button style={{marginRight: event.stream ? 10 : 0}} onClick={() => {
                   this.props.pages("Brackets")
                 }}>View Bracket</button>
               ) : (
@@ -199,7 +199,7 @@ export default class EventTitlePage extends ResponsiveComponent {
             }
             {
               event.stream ? (
-                <button className="large-button" onClick={() => {
+                <button onClick={() => {
                   this.props.pages("Stream")
                 }}>View Stream</button>
               ) : (

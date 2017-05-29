@@ -40,7 +40,7 @@ export default class RestartAction extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em"
+      fontSize: "1em"
     });
   }
 

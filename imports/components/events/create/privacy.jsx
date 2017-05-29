@@ -96,6 +96,7 @@ export default class PrivacyOptions extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "2.5em",
       inputClass: "large-input"

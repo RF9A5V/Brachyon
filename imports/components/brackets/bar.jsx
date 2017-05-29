@@ -96,6 +96,7 @@ export default class BracketBar extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "4rem",
       imgHeight: "300px",

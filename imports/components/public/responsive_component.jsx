@@ -12,14 +12,14 @@ export default class ResponsiveComponent extends Component {
   }
 
   componentWillMount() {
-    const mql = window.matchMedia("(max-device-width: 480px)");
+    const mql = window.matchMedia("(max-device-width: 520px)");
     this.setState({
       render: mql.matches ? "mobile" : "desktop"
     })
   }
 
   setRenderSize() {
-    const mql = window.matchMedia("(max-device-width: 480px)");
+    const mql = window.matchMedia("(max-device-width: 520px)");
     this.setState({
       render: mql.matches ? "mobile" : "desktop"
     })

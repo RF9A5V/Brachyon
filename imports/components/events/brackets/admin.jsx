@@ -449,7 +449,7 @@ class BracketAdminScreen extends Component {
     }
     const bracket = Brackets.findOne();
     const instance = Instances.findOne();
-    const index = instance.brackets.findIndex(o => { return o.slug == this.props.params.slug }) || 0;
+    const index = instance.brackets.findIndex(o => { return o.slug == this.props.params.slug && o.hash == this.props.params.hash }) || 0;
     const bracketMeta = Instances.findOne().brackets[index];
     const complete = bracket && bracket.complete && !bracketMeta.isComplete;
     return (

@@ -135,7 +135,7 @@ export default class UserBio extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       mobile: true,
-      fontSize: "2.5em"
+      fontSize: "1em"
     });
   }
 

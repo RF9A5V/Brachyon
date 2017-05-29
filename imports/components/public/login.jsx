@@ -45,11 +45,12 @@ export default class LogInScreen extends ResponsiveComponent {
   }
 
   renderMobile(){
-    return this.renderBase({
-      inputClassName: "large-input",
-      fontSize: "3rem",
-      marginTop: "2rem"
-    });
+    // return this.renderBase({
+    //   inputClassName: "large-input",
+    //   fontSize: "1rem",
+    //   marginTop: "2rem"
+    // });
+    return this.renderDesktop();
   }
 
   renderDesktop() {

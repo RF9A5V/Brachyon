@@ -42,7 +42,7 @@ export default class SeedDropdown extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em"
+      fontSize: "1em"
     })
   }
 
