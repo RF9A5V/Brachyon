@@ -110,7 +110,7 @@ export default class EventsPanel extends ResponsiveComponent {
           <h5 style={{fontSize: opts.fontSize}}>{ ((this.state.title || "Default") + " " + (this.state.season || 1) + "." + (this.state.option + 1)) }</h5>
         </div>
         <div className="col x-center center" style={{padding: 20, backgroundColor: "#111"}}>
-          <div style={{marginRight: 20}}>
+          <div>
             <DateInput init={event.date} onChange={(date) => {
               var e = moment(event.date);
               Object.keys(date).forEach(key => {
@@ -154,6 +154,7 @@ export default class EventsPanel extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "3em",
       iconSize: "5rem"

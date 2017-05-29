@@ -174,7 +174,7 @@ Meteor.startup(() => {
     }
   });
 
-  Migrations.migrateTo(2);
+  Migrations.migrateTo(4);
   // SyncedCron.add({
   //   name: "Clear Test Brackets",
   //   schedule: (parser) => {

@@ -85,10 +85,10 @@ class LandingScreen extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      imgDim: 400,
-      fontSize: "2.5em",
-      btnContainerSize: "60vw",
-      buttonPadding: "2rem",
+      imgDim: 150,
+      fontSize: "1em",
+      btnContainerSize: "70vw",
+      buttonPadding: 10,
       mobile: true
     });
   }

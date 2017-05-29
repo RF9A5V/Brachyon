@@ -33,7 +33,7 @@ Meteor.methods({
   },
 
   "events.validate_brackets"(ary) {
-    ary.forEach((bracket, i) => {
+    var brackets = ary.map((bracket, i) => {
       // if(!bracket.name || bracket.name.length < 3) {
       //   throw new Meteor.Error(403, "Bracket at " + i + " has to have a name longer than three characters.");
       // }
@@ -42,9 +42,11 @@ Meteor.methods({
       if(!bracket.game) {
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
+      delete bracket.gameName;
+      bracket.hash = Meteor.call("brackets.generateHash", bracket.slug);
+      return bracket;
     });
-
-    return ary;
+    return brackets;
   },
 
   "events.validate_crowdfunding"(obj) {
@@ -80,25 +82,21 @@ Meteor.methods({
   },
 
   "events.create"(obj, leagueID) {
-    obj.brackets.forEach(brack => {
+    (obj.brackets || []).forEach(brack => {
       if (brack.game == null){
-        if(Games.findOne({name:brack.gameName}) == null){
-          Games.insert({
+        brack.game = Games.findOne({
+          name: brack.gameName
+        })._id;
+        if(!brack.game){
+          brack.game = Games.insert({
             name: brack.gameName,
             description: "",
             approved: true,
-            bannerUrl:"/images/bg.jpg",
-            temp:true
+            bannerUrl: null,
+            temp: true
           })
-          var newGame = Games.findOne({name: brack.gameName});
-          brack.game = newGame._id;
-        }
-        else{
-          var newGame = Games.findOne({name: brack.gameName});
-          brack.game = newGame._id;
         }
       }
-      
     })
     var endObj = {};
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
@@ -127,15 +125,22 @@ Meteor.methods({
       endObj.owner = obj.creator.id;
       endObj.orgEvent = true;
     }
-    var instance = Instances.insert({
+    var instObj = {
       brackets: endObj.brackets,
       tickets: endObj.tickets,
       startedAt: endObj.details.datetime
-    });
+    };
+    var instance = Instances.insert(instObj);
     delete(endObj.brackets);
     delete(endObj.tickets);
     endObj.instances = [instance];
     var eventId = Events.insert(endObj);
+    Instances.update(instance, {
+      $set: {
+        event: eventId,
+        league: leagueID
+      }
+    })
     if(endObj.brackets) {
       endObj.brackets.forEach((bracket) => {
         Games.update(bracket.game, {
@@ -165,7 +170,9 @@ Meteor.methods({
     }
     var prevInstance = Instances.findOne(event.instances.pop());
     var obj = {
-      brackets: []
+      brackets: [],
+      event: id,
+      league: event.league
     };
     if(prevInstance.brackets) {
       prevInstance.brackets.forEach(bracket => {

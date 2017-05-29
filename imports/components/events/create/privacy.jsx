@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
-export default class PrivacyOptions extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class PrivacyOptions extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -8,7 +10,6 @@ export default class PrivacyOptions extends Component {
       privacy: props.type || "public",
       contactLink: props.contactLink || ""
     }
-    console.log(this.state);
   }
 
   value() {
@@ -33,24 +34,24 @@ export default class PrivacyOptions extends Component {
     return opts;
   }
 
-  options() {
+  options(opts) {
     var options = ["public", "private"];
     return options.map(o => {
       return (
         <div className="row x-center" style={{marginRight: 20}}>
-          <input style={{margin: 0, marginRight: 10}} type="radio" value={o} checked={this.state.privacy == o} onChange={() => { this.setState({ privacy: o }) }} />
-          <span>{ o[0].toUpperCase() + o.slice(1) }</span>
+          <input className={opts.inputClass} style={{margin: 0, marginRight: 10}} type="radio" value={o} checked={this.state.privacy == o} onChange={() => { this.setState({ privacy: o }) }} />
+          <span style={{fontSize: opts.fontSize}}>{ o[0].toUpperCase() + o.slice(1) }</span>
         </div>
       )
     })
   }
 
-  info() {
+  info(opts) {
     switch(this.state.privacy) {
       case "public":
         return (
           <div className="col">
-            <span>
+            <span style={{fontSize: opts.fontSize}}>
               Anybody can register for your event through Brachyon.
             </span>
           </div>
@@ -58,10 +59,10 @@ export default class PrivacyOptions extends Component {
       case "private":
         return (
           <div className="col">
-            <span style={{marginBottom: 10}}>Only you can add participants to your event. Add an additional contact link for players to ask you to enter the event if you'd like.</span>
+            <span style={{marginBottom: 10, fontSize: opts.fontSize}}>Only you can add participants to your event. Add an additional contact link for players to ask you to enter the event if you'd like.</span>
             <div className="col">
-              <label className="input-label">Contact Link</label>
-              <input defaultValue={this.state.contactLink} type="text" style={{margin: 0}} ref="link" />
+              <label className="input-label" style={{fontSize: opts.fontSize}}>Contact Link</label>
+              <input className={opts.inputClass} defaultValue={this.state.contactLink} type="text" style={{margin: 0}} ref="link" />
             </div>
           </div>
         )
@@ -72,25 +73,40 @@ export default class PrivacyOptions extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     return (
       <div className="col">
-        <label className="input-label">
+        <label className="input-label" style={{fontSize: opts.fontSize}}>
           Privacy Settings
         </label>
         <div className="col" style={{backgroundColor: "#333"}}>
           <div className="row x-center" style={{padding: 10}}>
             {
-              this.options()
+              this.options(opts)
             }
           </div>
           <div style={{padding: 10}} className="col-3">
             {
-              this.info()
+              this.info(opts)
             }
           </div>
         </div>
       </div>
     )
+  }
+
+  renderMobile() {
+    return this.renderDesktop();
+    return this.renderBase({
+      fontSize: "2.5em",
+      inputClass: "large-input"
+    });
+  }
+
+
+  renderDesktop() {
+    return this.renderBase({
+      fontSize: "1em"
+    })
   }
 }

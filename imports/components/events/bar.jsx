@@ -82,30 +82,34 @@ export default class Bar extends ResponsiveComponent {
     var event = this.props.event;
     var bracket = Instances.findOne(event.instances[event.instances.length - 1]).brackets[0];
     return (
-      <div className="row" style={{marginBottom: 20}}>
-        <div className="col-1" style={{marginRight: 20, position: "relative"}} onClick={() => {
+      <div className="row" style={{marginBottom: 10}}>
+        <div className="col-1" style={{marginRight: 10, position: "relative"}} onClick={() => {
           browserHistory.push("/event/" + event.slug)
         }}>
           <img src={event.details.bannerUrl || "/images/bg.jpg"} style={{width: "100%", height: "auto"}} />
           <div className="col center x-center" style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}>
-            <h3 style={{fontSize: "5em", maxWidth: "80%", textOverflow: "ellipsis", overflowX: "hidden"}}>Test</h3>
-            <button className="large-button" style={{fontSize: "3rem", padding: 20}}>
+            <h3 style={{fontSize: "2em", maxWidth: "80%", textOverflow: "ellipsis", overflowX: "hidden"}}>
+              {
+                event.details.name
+              }
+            </h3>
+            <button style={{fontSize: "1rem"}}>
               View Event
             </button>
           </div>
         </div>
-        <div className="col col-1" style={{backgroundColor: "#333", padding: 20}} onClick={() => {
+        <div className="col col-1" style={{backgroundColor: "#333", padding: 10}} onClick={() => {
           browserHistory.push("/event/" + event.slug + "/brackets")
         }}>
-          <div className="row x-center" style={{marginBottom: 20}}>
-            <FontAwesome name="users" style={{fontSize: "2em", marginRight: 10}} />
-            <span style={{fontSize: "2em"}}>{ (bracket.participants || []).length }</span>
+          <div className="row x-center" style={{marginBottom: 10}}>
+            <FontAwesome name="users" style={{fontSize: "1em", marginRight: 10}} />
+            <span style={{fontSize: "1em"}}>{ (bracket.participants || []).length }</span>
           </div>
-          <div className="row x-center" style={{marginBottom: 20}}>
-            { this.status({ iconSize: "2em", fontSize: "2em" }) }
+          <div className="row x-center" style={{marginBottom: 10}}>
+            { this.status({ iconSize: "1em", fontSize: "1em" }) }
           </div>
           <div className="col col-1 center x-center">
-            <button className="large-button" style={{fontSize: "2.5rem", padding: 20}}>
+            <button style={{fontSize: "1rem"}}>
               View Bracket
             </button>
           </div>
