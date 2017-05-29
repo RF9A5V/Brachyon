@@ -73,12 +73,12 @@ export default class CreateRunnableScreen extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      headerSize: "3em",
-      pSize: "2em",
-      blockSize: "50vw",
-      iconSize: "8rem",
+      headerSize: "1em",
+      pSize: "1em",
+      blockSize: "80vw",
+      iconSize: "5.5rem",
       mobile: true,
-      textPad: 20
+      textPad: 0
     });
   }
 

@@ -34,7 +34,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   componentWillReceiveProps(next) {
     this.setState({
-      participants: Instances.findOne().brackets[this.props.index].participants
+      participants: Instances.findOne().brackets[this.props.index].participants || []
     })
   }
 
@@ -170,10 +170,10 @@ export default class AddPartipantAction extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       mobile: true,
-      fontSize: "2.5em",
-      imgDim: 50,
-      maxHeight: 750,
-      buttonClass: "large-button",
+      fontSize: "14px",
+      imgDim: 25,
+      maxHeight: 450,
+      buttonClass: "",
       mobile: true
     })
   }

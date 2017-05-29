@@ -31,17 +31,17 @@ export default class Title extends ResponsiveComponent {
   renderBase(opts) {
     return (
       <div className={opts.orientation}>
-        <div className="col col-1">
+        <div className="col col-1" style={{marginRight: opts.orientation == "row" ? 10 : 0, marginBottom: opts.orientation == "col" ? 10 : 0}}>
           <label style={{fontSize: opts.fontSize}} className="input-label">Title { this.state.title.length } / 50</label>
           <input className={opts.inputClass} type="text" ref="title" onChange={(e) => {
             this.onChange(e, "title")
-          }} value={this.state.title} style={{marginTop: 0, marginRight: 0}} />
+          }} value={this.state.title} style={{marginTop: 0, marginRight: 0, marginBottom: 0}} />
         </div>
         <div className="col col-1">
           <label className="input-label" style={{fontSize: opts.fontSize}}>Season { this.state.season.length } / 50</label>
           <input className={opts.inputClass} type="text" ref="season" onChange={(e) => {
             this.onChange(e, "season")
-          }} value={this.state.season} style={{marginTop: 0, marginRight: 0}} />
+          }} value={this.state.season} style={{marginTop: 0, marginRight: 0, marginBottom: 0}} />
         </div>
       </div>
     )
@@ -58,8 +58,7 @@ export default class Title extends ResponsiveComponent {
   renderMobile() {
     return this.renderBase({
       orientation: "col",
-      fontSize: "2.5em",
-      inputClass: "large-input"
+      fontSize: "1em"
     })
   }
 }

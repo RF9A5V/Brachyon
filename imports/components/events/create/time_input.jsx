@@ -122,6 +122,7 @@ export default class TimeInput extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "3em",
       margin: 30,

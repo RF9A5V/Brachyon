@@ -1,6 +1,7 @@
 import Brackets from "/imports/api/brackets/brackets.js";
 import Instances from "/imports/api/event/instance.js";
 import Matches from "/imports/api/event/matches.js";
+import Games from "/imports/api/games/games.js";
 
 Meteor.publish('brackets', (_id) => {
   var bracket = Brackets.findOne(_id);
@@ -43,16 +44,17 @@ Meteor.publish('brackets', (_id) => {
   ];
 });
 
-Meteor.publish("bracketContainer", (_id, index) => {
-  var instance = Instances.findOne(_id);
-  if(!instance) {
-    instance = Instances.findOne({
-      slug: _id
-    });
-  }
+Meteor.publish("bracketContainer", (slug, hash) => {
+  var instance = Instances.findOne({
+    "brackets.slug": slug,
+    "brackets.hash": hash
+  });
   if(!instance) {
     return [];
   }
+  const index = instance.brackets.findIndex(o => {
+    return o.slug == slug && o.hash == hash;
+  })
   var partIds = (instance.brackets[index].participants || []).map(b => { return b.id });
   var matches = [];
   var format = instance.brackets[index].format.baseFormat;
@@ -84,7 +86,12 @@ Meteor.publish("bracketContainer", (_id, index) => {
     Meteor.users.find({ _id: { $in: partIds } }),
     Matches.find({ _id: {
       $in: matches
-    } })
+    } }),
+    Events.find({_id: instance.event}),
+    Leagues.find({ _id: instance.league }),
+    Games.find({
+      _id: instance.brackets[index].game
+    })
   ]
 });
 

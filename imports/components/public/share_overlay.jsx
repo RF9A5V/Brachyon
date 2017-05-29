@@ -24,10 +24,8 @@ export default class ShareOverlay extends ResponsiveComponent {
     return this.renderBase({
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      inputClass: "large-input",
-      iconSize: "7em",
-      fontSize: "2.5em",
-      buttonClass: "large-button"
+      iconSize: "2em",
+      fontSize: "1em"
     })
   }
 
@@ -120,12 +118,12 @@ export default class ShareOverlay extends ResponsiveComponent {
                 ]
               )
             }
-            <div className="row center x-center" style={{width: "45%", margin: "10px auto 0"}}>
-              <button className={`facebook-button col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
+            <div className="row center x-center" style={{margin: "10px 0"}}>
+              <button className={`facebook-button col-1`} style={{marginRight: 10}} onClick={this.shareOnFacebook.bind(this)}>
                 <FontAwesome name="facebook" style={{marginRight: 10}} />
                 Share
               </button>
-              <button className={`twitter-button col-1 ${opts.buttonClass}`} onClick={this.shareOnTwitter.bind(this)}>
+              <button className={`twitter-button col-1`} onClick={this.shareOnTwitter.bind(this)}>
                 <FontAwesome name="twitter" style={{marginRight: 10}} />
                 Share
               </button>

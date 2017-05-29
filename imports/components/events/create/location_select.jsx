@@ -170,6 +170,7 @@ export default class LocationSelect extends ResponsiveComponent {
   }
 
   renderMobile(opts) {
+    return this.renderDesktop();
     return this.renderBase({
       fontSize: "2.5em",
       inputClass: "large-input",

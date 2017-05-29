@@ -15,10 +15,6 @@ export default class Editor extends Component {
   }
 
   value() {
-    if(this.state.value.length == 0) {
-      toastr.error("Description must be given!");
-      throw new Error("Description for item cannot be zero-length. Please provide a brief description.");
-    }
     return this.state.value;
   }
 

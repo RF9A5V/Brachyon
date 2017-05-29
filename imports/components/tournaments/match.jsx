@@ -66,6 +66,7 @@ export default class Match extends ResponsiveComponent {
   }
 
   renderMobile() {
+    return this.renderDesktop();
     return this.renderBase({
       mobile: true,
       fontSize: "2.5rem",
