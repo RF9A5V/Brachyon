@@ -14,6 +14,8 @@ import BracketDetails from "./preview/slides/bracket_details.jsx";
 
 import StreamPage from "./preview/slides/stream.jsx";
 
+import BrachyonSponsoredSlide from "./preview/slides/brachyon_sponsored.jsx";
+
 import Instances from "/imports/api/event/instance.js";
 import LoaderContainer from "/imports/components/public/loader_container.jsx";
 
@@ -46,6 +48,9 @@ class PreviewEventScreen extends Component {
     }
     if(event.stream) {
       pages.push("Stream");
+    }
+    if(event.crowdfunding) {
+      pages.push("Crowdfunding");
     }
     return (key) => {
       this.refs.slider.setMain(pages.indexOf(key));
@@ -108,6 +113,17 @@ class PreviewEventScreen extends Component {
           }
         ]
       });
+    }
+    if(event.crowdfunding) {
+      pages.push({
+        name: "Crowdfunding",
+        icon: "usd",
+        slides: [
+          {
+            component: BrachyonSponsoredSlide
+          }
+        ]
+      })
     }
     return pages;
   }

@@ -55,8 +55,39 @@ Meteor.methods({
     number = "+1" + number;
     Meteor.users.update(Meteor.userId(), {
       $set: {
-        "profile.phoneNumber": number
+        "profile.phoneNumber": number,
+        "profile.phoneVerified": false
       }
     });
+    Meteor.call("user.sendNumberValidation");
+  },
+  "user.sendNumberValidation"() {
+    const user = Meteor.user();
+    if(user.profile.phoneNumber && !user.profile.phoneVerified) {
+      var verificationCode = parseInt(Math.random() * 10000) + 1000;
+      Meteor.users.update(Meteor.userId(), {
+        $set: {
+          "profile.phoneVerification": verificationCode
+        }
+      });
+
+      console.log(verificationCode);
+    }
+  },
+  "user.validateNumber"(value) {
+    const user = Meteor.user();
+    if(user && user.profile.phoneVerification == value) {
+      Meteor.users.update(Meteor.userId(), {
+        $set: {
+          "profile.phoneVerified": true
+        },
+        $unset: {
+          "profile.phoneVerification": 1
+        }
+      });
+    }
+    else {
+      throw new Meteor.Error(400, "Incorrect verification code.");
+    }
   }
 })
