@@ -43,12 +43,18 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
     return (
       <div className="col center x-center" style={{padding: 10}}>
         <div className="row center">
+          <h1>${this.event.crowdfunding.users.length} Raised!</h1>
+        </div>
+        <div className="row center">
           <button className={opts.buttonClass} onClick={this.openModal.bind(this)}>Share Event</button>
         </div>
         <div className="row center">
           <h2 style={{marginTop: 10, fontSize: opts.fontSize}}>1 Share = $1+ To Pot Bonus</h2>
         </div>
-        <div style={{width: "100%", height: "60%", backgroundColor: "rgba(0, 0, 0, 0.75)", padding: 10, overflowY: "auto", alignItems: "flex-start"}}>
+        <div style={{width: "100%", height: "60%", backgroundColor: "rgba(0, 0, 0, 0.75)", padding: 10, overflowY: "auto", alignItems: "flex-start"}} onWheel={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}>
           {
             this.state.users ? (
               <RowLayout length={opts.rowLength}>
@@ -59,7 +65,7 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
                       <div className="row col-1" style={{backgroundColor: "#666"}}>
                         <img src={user.profileImage || "/images/profile.png"} style={{width: opts.imgDim, height: opts.imgDim}} />
                         <div className="row col-1" style={{padding: 10}}>
-                          <span className="marquee" style={{fontSize: `calc(${opts.fontSize} * 0.75)`}}>{ user.username }</span>
+                          <span className="marquee" style={{fontSize: opts.fontSize}}>{ user.username }</span>
                         </div>
                       </div>
                     )
@@ -90,10 +96,9 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "5em",
-      buttonClass: "large-button",
+      fontSize: "1.5em",
       rowLength: 1,
-      imgDim: 200
+      imgDim: 100
     })
   }
 }

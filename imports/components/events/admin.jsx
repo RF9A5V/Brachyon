@@ -308,7 +308,8 @@ class EventAdminPage extends Component {
         delete attrs.details[k];
       }
     });
-
+    console.log(attrs);
+    debugger;
     var imgTemp;
     if(attrs.details.image != null) {
       var file = attrs.details.image.image;
