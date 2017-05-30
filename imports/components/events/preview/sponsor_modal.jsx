@@ -168,6 +168,9 @@ export default class SponsorModal extends ResponsiveComponent {
     const fontStyle = {
       fontSize: opts.fontSize
     };
+    if(!user) {
+      return null;
+    }
     return (
       <div style={{padding: opts.mobile ? 40: 0, overflowY: "auto"}}>
         <div className="col col-1">

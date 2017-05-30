@@ -9,22 +9,35 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
-    this.event = Events.findOne();
+    const event = Events.findOne();
 
-    Meteor.call("events.getPromoters", this.event.crowdfunding.users, (err, data) => {
-      var users = {};
-      data.forEach(d => {
-        users[d._id] = {
+    Meteor.call("events.getPromoters", event.crowdfunding.users, (err, data) => {
+      this.state.users = data.map(d => {
+        return {
           username: d.username,
           profileImage: d.profile.imageUrl
         }
       });
-      this.state.users = users;
       this.forceUpdate();
     });
+    this.intervalId = setInterval(_ => {
+      if(this.state.loading) {
+        return;
+      }
+      var temp = Events.findOne();
+      var sponsors = temp.crowdfunding.users;
+      if(this.state.users && this.state.users.length < sponsors.length) {
+        this.updateSponsors();
+        this.state.loading = true;
+      }
+    }, 1000)
     this.state = {
       open: false
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   openModal() {
@@ -39,11 +52,29 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
     }
   }
 
+  updateSponsors() {
+    const event = Events.findOne();
+    const users = event.crowdfunding.users;
+    Meteor.call("events.getPromoters", users.slice(this.state.users.length || 0), (err, data) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      this.state.users = this.state.users.concat(data.map(d => {
+        return {
+          username: d.username,
+          profileImage: d.profile.imageUrl
+        }
+      }));
+      this.forceUpdate();
+    })
+  }
+
   renderBase(opts) {
+    const event = Events.findOne();
     return (
       <div className="col center x-center" style={{padding: 10}}>
         <div className="row center">
-          <h1>${this.event.crowdfunding.users.length} Raised!</h1>
+          <h1>${event.crowdfunding.users.length} Raised!</h1>
         </div>
         <div className="row center">
           <button className={opts.buttonClass} onClick={this.openModal.bind(this)}>Share Event</button>
@@ -59,8 +90,7 @@ export default class BrachyonSponsoredSlide extends ResponsiveComponent {
             this.state.users ? (
               <RowLayout length={opts.rowLength}>
                 {
-                  this.event.crowdfunding.users.map(u => {
-                    const user = this.state.users[u];
+                  this.state.users.map(user => {
                     return (
                       <div className="row col-1" style={{backgroundColor: "#666"}}>
                         <img src={user.profileImage || "/images/profile.png"} style={{width: opts.imgDim, height: opts.imgDim}} />
