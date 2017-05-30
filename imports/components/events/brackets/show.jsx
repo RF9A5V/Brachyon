@@ -48,14 +48,6 @@ class BracketShowScreen extends Component {
     }
   }
 
-  imgOrDefault() {
-    var event = Events.findOne();
-    if(event && event.details.bannerUrl) {
-      return event.details.bannerUrl;
-    }
-    return "/images/brachyon_logo.png";
-  }
-
   participantsItem(bracket) {
     return {
       name: "Participants",

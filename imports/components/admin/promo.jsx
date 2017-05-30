@@ -19,6 +19,7 @@ class Promo extends Component {
             <div className="col-3">Event Name</div>
             <div className="col-1">Bid Value</div>
             <div className="col-1">Active</div>
+            <div className="col-1">Sponsored</div>
           </div>
           {
             Events.find({}, { sort: { "promotion.bid": -1 } }).map(e => {
@@ -35,6 +36,11 @@ class Promo extends Component {
                   <div className="col-1">
                     <input type="checkbox" defaultChecked={(e.promotion || {}).active} onClick={(ev) => {
                       Meteor.call("events.setPromotionActive", e._id, !(e.promotion || {}).active);
+                    }} />
+                  </div>
+                  <div className="col-1">
+                    <input type="checkbox" defaultChecked={e.crowdfunding} onClick={() => {
+                      Meteor.call("events.setBrachyonPromoted", e._id);
                     }} />
                   </div>
                 </div>

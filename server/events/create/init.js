@@ -179,9 +179,10 @@ Meteor.methods({
     };
     if(prevInstance.brackets) {
       prevInstance.brackets.forEach(bracket => {
-        var { name, game, format } = bracket;
+        var { name, game, format, slug } = bracket;
         var bracketObj = {
-          name, game, format
+          name, game, format, slug,
+          hash: Meteor.call("brackets.generateHash", slug)
         };
         obj.brackets.push(bracketObj);
       })

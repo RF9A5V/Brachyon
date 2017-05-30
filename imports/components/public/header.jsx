@@ -58,7 +58,7 @@ class Header extends ResponsiveComponent {
     var color = "#5BD74D";
     return (
       <div className="row x-center col-1">
-        <div style={{width: 10, height: 10, backgroundColor: color, marginRight: 10}}>
+        <div style={{width: 10, height: 10, backgroundColor: color, marginRight: 5}}>
         </div>
         <span style={{fontSize: "1.1rem"}}>Online</span>
       </div>

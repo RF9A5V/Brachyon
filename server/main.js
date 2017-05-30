@@ -69,7 +69,7 @@ ServiceConfiguration.configurations.upsert(
   {
     $set: {
       consumerKey: Meteor.settings.public.twitter.consumerKey,
-      secret: Meteor.settings.private.twitter.liveSecretKey
+      secret: Meteor.settings.private.twitter.consumerSecret
     }
   }
 );

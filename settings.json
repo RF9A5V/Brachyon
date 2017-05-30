@@ -61,7 +61,7 @@
       "liveSecretKey": "s78zcg4hatsuvwbzybah43bmm6ujuz8"
     },
     "twitter": {
-      "liveSecretKey": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8"
+      "consumerSecret": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8"
     },
     "google": {
       "liveSecretKey": "XUgerKtBpHS6Qu8rrBuD2KjM"
