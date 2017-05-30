@@ -197,7 +197,7 @@ export default class SponsorModal extends ResponsiveComponent {
             </button>
             <button className={`col-1 ${opts.buttonClass}`} onClick={this.shareToFacebook.bind(this)}>
               <FontAwesome name="facebook" style={{marginRight: 10}} />
-              <span>Share on Facebook</span>
+              <span>Share</span>
             </button>
           </div>
           {
@@ -242,13 +242,15 @@ export default class SponsorModal extends ResponsiveComponent {
         <div className="row" style={{justifyContent: "flex-end"}} onClick={this.close.bind(this)}>
           <FontAwesome name="times" size="2x" />
         </div>
-        {
-          this.state.showMobileVerification ? (
-            this.renderValidationForMobile(opts)
-          ) : (
-            this.renderMain(opts)
-          )
-        }
+        <div style={{maxHeight: "80vh", overflowY: "auto"}}>
+          {
+            this.state.showMobileVerification ? (
+              this.renderValidationForMobile(opts)
+            ) : (
+              this.renderMain(opts)
+            )
+          }
+        </div>
       </Modal>
     )
   }
