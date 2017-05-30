@@ -358,7 +358,10 @@ const x = createContainer((props) => {
   const { slug, hash } = props.params;
   const instanceHandle = Meteor.subscribe("bracketContainer", slug, hash, {
     onReady: () => {
-      const instance = Instances.findOne();
+      const instance = Instances.findOne({
+        "brackets.slug": slug,
+        "brackets.hash": hash
+      });
       const index = instance.brackets.findIndex(o => { return o.slug == slug && o.hash == hash });
       const bracketMeta = Instances.findOne().brackets[index];
       if(bracketMeta.name){
