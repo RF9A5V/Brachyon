@@ -55,7 +55,7 @@ Migrations.add({
           updateObj[`brackets.${n}.slug`] = name;
         }
         if(!b.hash) {
-          updateObj[`brackets.${n}.hash`] = Meteor.call("brackets.generateHash", count++);
+          updateObj[`brackets.${n}.hash`] = Meteor.call("brackets.generateHash", name);
         }
       });
       if(Object.keys(updateObj).length > 0) {

@@ -150,9 +150,6 @@ export default class SponsorModal extends ResponsiveComponent {
   renderValidationForMobile() {
     return (
       <div className="col">
-        <div className="row" style={{justifyContent: "flex-end", marginBottom: 10}}>
-          <FontAwesome name="times" size="2x" onClick={this.close.bind(this)} />
-        </div>
         <label className="input-label">
           Verification Code
         </label>
@@ -172,10 +169,7 @@ export default class SponsorModal extends ResponsiveComponent {
       fontSize: opts.fontSize
     };
     return (
-      <div className="col" style={{padding: opts.mobile ? 40: 0}}>
-        <div className="row" style={{justifyContent: "flex-end", marginBottom: 10}}>
-          <FontAwesome name="times" style={{fontSize: opts.iconSize}} onClick={this.close.bind(this)} />
-        </div>
+      <div style={{padding: opts.mobile ? 40: 0, overflowY: "auto"}}>
         <div className="col col-1">
           <p style={{marginBottom: 0, fontWeight: "bold", textAlign: "center", fontSize: opts.fontSize}}>For every share, we'll put a dollar into the prize pool!</p>
           <hr className="user-divider" />
@@ -242,6 +236,9 @@ export default class SponsorModal extends ResponsiveComponent {
     const user = Meteor.user();
     return (
       <Modal isOpen={this.state.open} onRequestClose={this.close.bind(this)} className={opts.modalClass} overlayClassName={opts.overlayClass}>
+        <div className="row" style={{justifyContent: "flex-end"}} onClick={this.close.bind(this)}>
+          <FontAwesome name="times" size="2x" />
+        </div>
         {
           this.state.showMobileVerification ? (
             this.renderValidationForMobile(opts)
@@ -267,13 +264,11 @@ export default class SponsorModal extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      modalClass: "overlay-modal",
+      modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      inputClass: "large-input",
-      buttonClass: "large-button",
-      fontSize: "3em",
+      fontSize: "1em",
       mobile: true,
-      iconSize: "3.5em"
+      iconSize: "2em"
     })
   }
 }
