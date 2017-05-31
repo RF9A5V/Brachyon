@@ -174,6 +174,8 @@ class EditLeagueScreen extends Component {
     }
     delete attrs.events;
     delete attrs.details.image;
+    attrs.slug = attrs.details.name.slug;
+    attrs.details.name = attrs.details.name.title;
 
     Object.keys(attrs.brackets).forEach(k => {
       if(!attrs.brackets[k]) {
@@ -198,6 +200,9 @@ class EditLeagueScreen extends Component {
       }
       else {
         toastr.success("Successfully updated league!");
+        if(!imgTemp && attrs.slug != league.slug) {
+          window.location = `/league/${attrs.slug}/edit`;
+        }
       }
     });
     if(imgTemp) {
@@ -213,6 +218,9 @@ class EditLeagueScreen extends Component {
           }
           else {
             toastr.success("Updated banner image.");
+            if(attrs.slug != league.slug) {
+              window.location = `/league/${attrs.slug}/edit`;
+            }
           }
         }
       })

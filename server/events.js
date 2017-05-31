@@ -28,7 +28,7 @@ Meteor.methods({
     }
     else {
       if(event && event.league) {
-        throw new Meteor.Error("Can't add a non-user player to a league event!");
+        throw new Meteor.Error(404, "Can't add a non-user player to a league event!");
       }
     }
     if(alias == "" || alias == null) {
