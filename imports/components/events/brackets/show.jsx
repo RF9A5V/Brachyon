@@ -46,6 +46,7 @@ class BracketShowScreen extends Component {
     if(this.refs.hiddenLink) {
       this.refs.hiddenLink.removeEventListener("click");
     }
+    document.title="Brachyon"
   }
 
   participantsItem(bracket) {
