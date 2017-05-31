@@ -16,7 +16,7 @@ Meteor.methods({
       var names = obj.gameName;
       var game = Games.findOne({
         name: names
-      })
+      });
       if(!game) {
         game = Games.insert({
           name: names,
@@ -26,13 +26,19 @@ Meteor.methods({
           temp:true
         })
       }
+      else {
+        game = game._id;
+      }
+    }
+    else {
+      game = game._id;
     }
     var brackets = [
       {
         game: obj.game,
         format: obj.format,
         name: obj.name,
-        slug: Meteor.call("brackets.generateHash", obj.slug)
+        slug: Meteor.call("brackets.generateHash", obj.slug || Games.findOne(game).slug)
       }
     ];
     if (obj.format.baseFormat == "swiss" || obj.format.baseFormat == "round_robin")

@@ -54,7 +54,7 @@ Meteor.methods({
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
       delete bracket.gameName;
-      bracket.slug = Meteor.call("brackets.generateHash", bracket.slug);
+      bracket.slug = Meteor.call("brackets.generateHash", bracket.slug || Games.findOne(bracket.game).slug);
       return bracket;
     });
     return brackets;
