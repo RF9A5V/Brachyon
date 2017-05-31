@@ -48,7 +48,7 @@ export default class BracketBar extends ResponsiveComponent {
     var format;
     return (
       <div className="row bracket-bar" onClick={this.props.onBracketSelect} style={{fontSize: opts.fontSize}}>
-        <img src={game.bannerUrl} style={{height: opts.imgHeight, width: `calc(3 * ${opts.imgHeight} / 4)`}} />
+        <img src={game.bannerUrl || "/images/default_game.png"} style={{height: opts.imgHeight, width: `calc(3 * ${opts.imgHeight} / 4)`}} />
         <div className="col col-1" style={{backgroundColor: "#333"}}>
           <div className="col col-1" style={{padding: 10}}>
             <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ bracket.name || game.name }</h5>

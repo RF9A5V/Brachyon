@@ -68,7 +68,7 @@ export default class Bar extends ResponsiveComponent {
             <div className="event-block-admin-button" style={{width: 100}} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              browserHistory.push("/event/" + event.slug + "/brackets")
+              browserHistory.push(`/bracket/${bracket.slug}/${Meteor.userId() == event.owner ? "admin" : ""}`)
             }}>
               View Bracket
             </div>
