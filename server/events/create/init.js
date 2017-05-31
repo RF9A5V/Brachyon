@@ -3,7 +3,18 @@ import Instances from "/imports/api/event/instance.js";
 import Games from "/imports/api/games/games.js";
 import moment from "moment";
 
+import { bracketHashGenerator } from "/imports/decorators/gen_bracket_hash.js";
+
 Meteor.methods({
+
+  "events.validateSlug"(slug) {
+    var event = Events.findOne({
+      slug: slug
+    });
+    if(event) {
+      throw new Meteor.Error(400, "Slug taken.");
+    }
+  },
 
   "events.validate_details"(obj) {
     if(!obj.name || obj.name.length < 3) {
@@ -43,7 +54,7 @@ Meteor.methods({
         throw new Meteor.Error(403, "Bracket has to have an associated game!");
       }
       delete bracket.gameName;
-      bracket.hash = Meteor.call("brackets.generateHash", bracket.slug);
+      bracket.slug = Meteor.call("brackets.generateHash", bracket.slug);
       return bracket;
     });
     return brackets;
@@ -81,14 +92,39 @@ Meteor.methods({
     return ticketObj;
   },
 
+  "events.generateHash"(slug) {
+    var tok = bracketHashGenerator(parseInt(Math.random() * 100));
+    const conflictingEvent = Events.findOne({
+      slug: slug + "-" + tok
+    });
+    if(conflictingEvent) {
+      return Meteor.call("events.generateHash", slug);
+    }
+    return slug + "-" + tok;
+  },
+
   "events.create"(obj, leagueID) {
+    if(obj.isCustomSlug) {
+      var conflict = Events.findOne({
+        slug: obj.slug
+      });
+      if(conflict) {
+        throw new Meteor.Error(400, "Slug is already taken.");
+      }
+    }
+    else {
+      obj.slug = Meteor.call("events.generateHash", obj.slug);
+    }
+    delete obj.isCustomSlug;
+    console.log(obj.brackets);
+    throw new Meteor.Error();
     (obj.brackets || []).forEach(brack => {
       if (brack.game == null){
         brack.game = Games.findOne({
           name: brack.gameName
         });
         if(brack.game) {
-          brack.game = game._id;
+          brack.game = brack.game._id;
         }
         else {
           brack.game = Games.insert({
@@ -100,8 +136,10 @@ Meteor.methods({
           })
         }
       }
-    })
-    var endObj = {};
+    });
+    var endObj = {
+      slug: obj.slug
+    };
     var acceptedModules = ["details", "brackets", "organize", "crowdfunding", "stream", "tickets"];
     var requiresReview = false;
     delete obj.details.render;

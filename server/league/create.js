@@ -4,11 +4,45 @@ import Games from "/imports/api/games/games.js";
 import { bracketHashGenerator } from "/imports/decorators/gen_bracket_hash.js";
 
 Meteor.methods({
+
+  "leagues.validateSlug"(slug) {
+    const league = Leagues.findOne({
+      slug
+    });
+    if(league) {
+      throw new Meteor.Error(400, "Slug taken.");
+    }
+  },
+
+  "leagues.generateHash"(slug) {
+    var tok = bracketHashGenerator(parseInt(Math.random() * 100));
+    const conflictingEvent = Events.findOne({
+      slug: slug + "-" + tok
+    });
+    if(conflictingEvent) {
+      return Meteor.call("events.generateHash", slug);
+    }
+    return slug + "-" + tok;
+  },
+
   "leagues.create"(attrs) {
+    var slugCopy = attrs.slug.slice();
+    if(attrs.isCustomSlug) {
+      const conflict = Leagues.findOne({
+        slug: attrs.slug
+      });
+      if(conflict) {
+        throw new Meteor.Error(400, "Slug taken.");
+      }
+    }
+    else {
+      attrs.slug = Meteor.call("leagues.generateHash", attrs.slug);
+    }
+    delete attrs.isCustomSlug;
     if (attrs.brackets.game == null){
       var game = Games.findOne({
         name: attrs.brackets.gameName
-      })._id;
+      });
       if(!game){
         game = Games.insert({
           name: attrs.brackets.gameName,
@@ -18,7 +52,8 @@ Meteor.methods({
           temp:true
         })
       }
-      attrs.brackets.game = game;
+      delete attrs.brackets.gameName;
+      attrs.brackets.game = game._id;
     }
     var events = attrs.events;
     var bracket = JSON.parse(JSON.stringify(attrs.brackets));
@@ -49,7 +84,7 @@ Meteor.methods({
       var createObj = {};
       createObj.details = attrs.details;
       createObj.details.datetime = e;
-      bracket.hash = Meteor.call("brackets.generateHash", bracket.slug);
+      createObj.slug = slugCopy;
       createObj.brackets = [bracket];
       createObj.creator = crObj;
       if(tickObj) {
@@ -72,6 +107,6 @@ Meteor.methods({
       }
     })
 
-    return Leagues.findOne(league).slug;
+    return attrs.slug;
   }
 })

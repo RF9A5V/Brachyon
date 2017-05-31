@@ -4,7 +4,7 @@ import { createContainer } from "meteor/react-meteor-data";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import LeagueNameInput from "./modules/details/name.jsx";
+import Title from "/imports/components/leagues/create/title.jsx";
 import LeagueDescription from "./modules/details/description.jsx";
 import LeagueLocation from "./modules/details/location.jsx";
 import LeagueImage from "./modules/details/image.jsx";
@@ -36,10 +36,10 @@ class EditLeagueScreen extends Component {
         {
           name: "Name",
           key: "name",
-          content: LeagueNameInput,
+          content: Title,
           args: {
-            name: league.details.name,
-            season: league.details.season
+            title: league.details.name,
+            slug: league.slug
           }
         },
         {

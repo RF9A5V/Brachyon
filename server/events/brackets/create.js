@@ -5,7 +5,7 @@ import Instances from "/imports/api/event/instance.js";
 import { bracketHashGenerator } from "/imports/decorators/gen_bracket_hash.js";
 
 Meteor.methods({
-  "brackets.create"(url, obj) {
+  "brackets.create"(obj) {
     var game = Games.findOne(obj.game);
     if(!Meteor.userId()) {
       throw new Meteor.Error(403, "Can't create bracket while not logged in!");
@@ -27,14 +27,12 @@ Meteor.methods({
         })
       }
     }
-    var hash = Meteor.call("brackets.generateHash", obj.slug);
     var brackets = [
       {
         game: obj.game,
         format: obj.format,
         name: obj.name,
-        slug: obj.slug,
-        hash
+        slug: Meteor.call("brackets.generateHash", obj.slug)
       }
     ];
     if (obj.format.baseFormat == "swiss" || obj.format.baseFormat == "round_robin")
@@ -46,6 +44,6 @@ Meteor.methods({
       owner: Meteor.userId(),
       date: new Date()
     });
-    return obj.slug + "-" + hash;
+    return brackets[0].slug;
   }
 })

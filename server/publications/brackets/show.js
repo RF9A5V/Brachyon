@@ -44,16 +44,15 @@ Meteor.publish('brackets', (_id) => {
   ];
 });
 
-Meteor.publish("bracketContainer", (slug, hash) => {
+Meteor.publish("bracketContainer", (slug) => {
   var instance = Instances.findOne({
-    "brackets.slug": slug,
-    "brackets.hash": hash
+    "brackets.slug": slug
   });
   if(!instance) {
     return [];
   }
   const index = instance.brackets.findIndex(o => {
-    return o.slug == slug && o.hash == hash;
+    return o.slug == slug;
   })
   var partIds = (instance.brackets[index].participants || []).map(b => { return b.id });
   var matches = [];

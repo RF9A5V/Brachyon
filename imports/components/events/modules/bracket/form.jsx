@@ -26,10 +26,10 @@ export default class BracketForm extends ResponsiveComponent {
       subFormat = "POOL";
     }
     var game = Games.findOne(props.game) || props.gameObj;
+    console.log(game);
     if(game) {
       this.state.game = {
         id: game._id,
-        gameName: game.name,
         name: game.name,
         bannerUrl: game.bannerUrl
       }
@@ -68,57 +68,61 @@ export default class BracketForm extends ResponsiveComponent {
     this.state.name = props.name || "";
   }
 
-  onNameChange() {
-    var name = this.refs.name.value;
-    if(!this.state.hasValue) {
-      const slug = name.toLowerCase().replace(/\s/g, "-");
-      this.onSlugChange(slug, false);
+  onNameChange(e) {
+    var { value } = e.target;
+    if(value.length > 50) {
+      value = value.slice(0, 50);
     }
+    this.setState({
+      value,
+      slug: !this.state.customSlug ? value.toLowerCase().replace(/\s/g, "-").replace(/[^\w\d-]+/g, "") : this.state.slug
+    });
     if(this.props.onChange) {
       this.props.onChange(null, { name });
     }
   }
 
-  onSlugChange(value, isManual) {
-    clearTimeout(this.state.timer);
-    if(value.length == 0) {
-      this.setState({
-        hasValue: false,
-        showValidation: false
-      })
-    }
-    else {
-      this.setState({
-        showValidation: true
-      })
-    }
-    if(isManual && !this.state.hasValue) {
-      this.setState({
-        hasValue: true
-      })
-    }
+  onSlugChange(e) {
+    var slug = e.target.value;
     this.setState({
-      slug: value
+      customSlug: slug != "",
+      slug: slug.toLowerCase().replace(/\s+/g, "-").replace(/[^\w\d-]+/g, ""),
+      loadingSlug: true
+    }, () => {
+      if(this.timer) {
+        clearTimeout(this.timer);
+      }
+      if(this.state.slug == "") {
+        this.setState({
+          slug: this.refs.name.value.replace(/\s/g, "-").replace(/[^\w\d-]+/g, "")
+        })
+      }
+      this.timer = setTimeout(_ => {
+        if(this.state.customSlug) {
+          Meteor.call("events.validateSlug", slug, (err) => {
+            this.setState({
+              validSlug: err == null,
+              loadingSlug: false
+            })
+          })
+        }
+
+      }, 500);
     })
-    this.state.timer = setTimeout(() => {
-      this.setState({
-        loading: true
-      });
-      Meteor.call("brackets.checkSlug", value, (err) => {
-        if(err) {
-          this.setState({
-            loading: false,
-            urlAvailable: false
-          })
-        }
-        else {
-          this.setState({
-            loading: false,
-            urlAvailable: true
-          })
-        }
-      })
-    }, 500)
+  }
+
+  slugStatus() {
+    if(this.state.customSlug) {
+      var text;
+      if(this.state.loadingSlug) {
+        text = "Loading..."
+      }
+      else {
+        text = this.state.validSlug ? "Available" : "Taken";
+      }
+      return `(${text})`;
+    }
+    return null;
   }
 
   formatForm(opts) {
@@ -246,7 +250,7 @@ export default class BracketForm extends ResponsiveComponent {
     }
     return {
       game: (this.state.game || {}).id,
-      gameName: this.state.game.name.slice(0,(this.state.game.name.length-12)),
+      gameName: this.state.game.id ? this.state.game.name : this.state.game.name.slice(0, -12),
       format,
       name: this.refs.name.value,
       slug: this.refs.slug.value,
@@ -287,9 +291,9 @@ export default class BracketForm extends ResponsiveComponent {
     return (
       <div className={opts.direction} style={{backgroundColor: "#111"}}>
         {
-          this.state.game && this.state.game.bannerUrl ? (
+          this.state.game.id ? (
             <div style={{textAlign: "center", position: "relative"}}>
-              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.game.bannerUrl} />
+              <img style={{width: `calc(${imgHeight} * 3 / 4)`, height: imgHeight, border: "solid 4px #111"}} src={this.state.game.bannerUrl || "/images/default_game.png"} />
               <div style={{width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #111)", position: "absolute", top: 0, left: 0}}>
               </div>
             </div>
@@ -317,26 +321,8 @@ export default class BracketForm extends ResponsiveComponent {
               <input className={opts.inputClass} ref="name" defaultValue={this.state.name} onChange={this.onNameChange.bind(this)} style={{marginRight: 0, marginTop: 0}} type="text" />
             </div>
             <div className="col col-1">
-              <label style={{fontSize: opts.fontSize}} className="input-label">Bracket URL {
-                this.state.showValidation ? (
-                  <span style={{marginBottom: 10}}>
-                    ({
-                      this.state.loading ? (
-                        "Loading..."
-                      ) : (
-                        this.state.urlAvailable ? (
-                          "Available"
-                        ) : (
-                          "Taken"
-                        )
-                      )
-                    })
-                  </span>
-                ) : (
-                  null
-                )
-              }</label>
-              <input className={opts.inputClass} style={{marginRight: 0, marginTop: 0}} type="text" ref="slug" value={this.state.slug} onChange={(e) => { this.onSlugChange(e.target.value, true) }} />
+              <label style={{fontSize: opts.fontSize}} className="input-label">Bracket URL {this.slugStatus()}</label>
+              <input className={opts.inputClass} style={{marginRight: 0, marginTop: 0}} type="text" ref="slug" value={this.state.slug} onChange={this.onSlugChange.bind(this)} />
             </div>
           </div>
           <div className="col" style={{position: "relative"}}>
@@ -369,13 +355,6 @@ export default class BracketForm extends ResponsiveComponent {
                           game: g,
                           gameList: null
                         });
-                        if(!this.state.hasValue) {
-                          var name = g.name;
-                          if(!g._id) {
-                            name = name.slice(0, -12);
-                          }
-                          this.onSlugChange(name, false);
-                        }
                         this.refs.game.value = g.name;
                       }} />
                     )
