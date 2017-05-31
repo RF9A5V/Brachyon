@@ -7,14 +7,22 @@ import OrganizeSuite from "/imports/decorators/organize.js";
 Meteor.methods({
   "leagues.edit"(id, attrs) {
     var league = Leagues.findOne(id);
-    console.log(attrs);
-    throw new Meteor.Error();
     var brackets;
     if(attrs.brackets) {
       brackets = JSON.parse(JSON.stringify(attrs.brackets));
       delete attrs.brackets;
     }
-
+    if(attrs.slug) {
+      const leagueConflict = Leagues.findOne({
+        _id: {
+          $ne: id
+        },
+        slug: attrs.slug
+      });
+      if(leagueConflict) {
+        throw new Meteor.Error("Slug is taken.");
+      }
+    }
     Leagues.update(id, {
       $set: flatten(attrs)
     });
@@ -22,6 +30,15 @@ Meteor.methods({
       Object.keys(brackets).forEach(k => {
         var slug = league.events[k].slug;
         var instanceId = Events.findOne({ slug }).instances.pop();
+        const conflict = Instances.findOne({
+          "brackets.slug": brackets[k].slug,
+          _id: {
+            $ne: instanceId
+          }
+        });
+        if(conflict) {
+          throw new Meteor.Error(400, "Slug is taken.");
+        }
         var flattened = flatten(brackets[k]);
         var nextAttrs = {};
         Object.keys(flattened).forEach(k => { nextAttrs["brackets.0." + k] = flattened[k] });
@@ -30,6 +47,7 @@ Meteor.methods({
         });
       })
     }
+    return attrs.slug;
   },
   "leagues.addEvent"(id, date) {
     var league = Leagues.findOne(id);

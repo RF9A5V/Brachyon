@@ -116,8 +116,6 @@ Meteor.methods({
       obj.slug = Meteor.call("events.generateHash", obj.slug);
     }
     delete obj.isCustomSlug;
-    console.log(obj.brackets);
-    throw new Meteor.Error();
     (obj.brackets || []).forEach(brack => {
       if (brack.game == null){
         brack.game = Games.findOne({

@@ -313,7 +313,7 @@ class BracketDetails extends ResponsiveComponent {
     return (
       <div className="col col-1 x-center center" style={{padding: 30, height: "100%", position: "relative"}}>
         <div style={{position: "relative"}}>
-          <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
+          <img src={game.bannerUrl || "/images/default_game.png"} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
           <div style={{padding: 20, width: opts.mobile ? "50%" : "25%", position: opts.mobile ? "absolute" : "relative", bottom: 0, width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
             <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
