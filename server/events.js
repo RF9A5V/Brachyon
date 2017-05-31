@@ -655,13 +655,29 @@ Meteor.methods({
     if(bracketIndex == 0) {
       var losr = bracket.rounds[bracketIndex][roundIndex][index].losr;
       var losm = bracket.rounds[bracketIndex][roundIndex][index].losm;
+      var endRezzes = [];
       var loserMatchId = bracket.rounds[1][losr][losm].id;
       var loserMatch = Matches.findOne(loserMatchId);
-      if(loserMatch) {
-        var playerPos = loserMatch.players[0] == null ? 0 : 1;
-        if(roundIndex == 0) {
-          playerPos = index % 2;
+      bracket.rounds[bracketIndex].forEach((_r, i) => {
+        _r.forEach((_m, j) => {
+          if(_m && _m.losr == losr && _m.losm == losm) {
+            endRezzes.push({
+              round: i,
+              match: j
+            });
+          }
+        });
+      });
+      endRezzes = endRezzes.sort((a, b) => {
+        if(a.round != b.round) {
+          return b.round - a.round;
         }
+        else {
+          return a.match - b.match;
+        }
+      });
+      if(loserMatch) {
+        const playerPos = endRezzes.findIndex(o => { return o.round == roundIndex && o.match == index });
         var hasSomePlayer = loserMatch.players.some(p => { return p && p.alias });
 
         // Notification that match is ready goes here (loser's bracket).
