@@ -1,10 +1,4 @@
-const leftPadZero = function(str, len) {
-  const expected = len - str.length;
-  for(var i = 0; i < expected; i ++) {
-    str = "0" + str;
-  }
-  return str;
-}
+import { bracketHashGenerator } from "/imports/decorators/gen_bracket_hash.js";
 
 Meteor.methods({
   "brackets.checkSlug"(slug) {
@@ -17,33 +11,13 @@ Meteor.methods({
     const instances = Instances.find({
       "brackets.slug": slug
     });
-    var count = 0;
-    instances.forEach(i => {
-      count += i.brackets.filter(o => {
-        return o.slug == slug;
-      }).length;
+    const tok = bracketHashGenerator(parseInt(Math.random() * 100));
+    const conflict = Instances.findOne({
+      "brackets.slug": slug + "-" + tok
     });
-    const min = Math.pow(56, 3);
-  	const max = Math.pow(56, 4);
-  	var counter = leftPadZero((count % 91 + 1).toString(), 2);
-  	var rando = leftPadZero(parseInt(Math.random() * 10000).toString(), 3);
-  	var dateComp = leftPadZero(((new Date()).getTime() % 100).toString(), 2);
-  	const token = parseInt(counter + rando + dateComp);
-  	var hash = (token + (min)) % (max + min);
-  	const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  	const charSet = alphabet + alphabet.toUpperCase() + "0123456789";
-  	var tok = "";
-  	while(hash > 0) {
-  		tok += charSet[hash % 56];
-  		hash = parseInt(hash / 56);
-  	}
-    const instance = Instances.findOne({
-      "brackets.slug": slug,
-      "brackets.hash": tok
-    });
-    if(instance) {
+    if(conflict) {
       return Meteor.call("brackets.generateHash", slug);
     }
-  	return tok;
+  	return slug + "-" + tok;
   }
 })

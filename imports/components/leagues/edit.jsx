@@ -4,7 +4,7 @@ import { createContainer } from "meteor/react-meteor-data";
 
 import CreateContainer from "/imports/components/public/create/create_container.jsx";
 
-import LeagueNameInput from "./modules/details/name.jsx";
+import Title from "/imports/components/leagues/create/title.jsx";
 import LeagueDescription from "./modules/details/description.jsx";
 import LeagueLocation from "./modules/details/location.jsx";
 import LeagueImage from "./modules/details/image.jsx";
@@ -36,10 +36,10 @@ class EditLeagueScreen extends Component {
         {
           name: "Name",
           key: "name",
-          content: LeagueNameInput,
+          content: Title,
           args: {
-            name: league.details.name,
-            season: league.details.season
+            title: league.details.name,
+            slug: league.slug
           }
         },
         {
@@ -174,6 +174,8 @@ class EditLeagueScreen extends Component {
     }
     delete attrs.events;
     delete attrs.details.image;
+    attrs.slug = attrs.details.name.slug;
+    attrs.details.name = attrs.details.name.title;
 
     Object.keys(attrs.brackets).forEach(k => {
       if(!attrs.brackets[k]) {
@@ -198,6 +200,9 @@ class EditLeagueScreen extends Component {
       }
       else {
         toastr.success("Successfully updated league!");
+        if(!imgTemp && attrs.slug != league.slug) {
+          window.location = `/league/${attrs.slug}/edit`;
+        }
       }
     });
     if(imgTemp) {
@@ -213,6 +218,9 @@ class EditLeagueScreen extends Component {
           }
           else {
             toastr.success("Updated banner image.");
+            if(attrs.slug != league.slug) {
+              window.location = `/league/${attrs.slug}/edit`;
+            }
           }
         }
       })
