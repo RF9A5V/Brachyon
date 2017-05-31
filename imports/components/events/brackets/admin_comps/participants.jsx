@@ -113,7 +113,8 @@ export default class AddPartipantAction extends ResponsiveComponent {
   updateParticipants() {
     this.setState({
       participants: Instances.findOne().brackets[this.props.index].participants
-    })
+    });
+    this.props.update();
   }
 
   renderBase(opts) {
