@@ -88,7 +88,7 @@ Meteor.methods({
           name: brack.gameName
         });
         if(brack.game) {
-          brack.game = game._id;
+          brack.game = brack.game._id;
         }
         else {
           brack.game = Games.insert({
