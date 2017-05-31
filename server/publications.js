@@ -3,8 +3,14 @@ import Instances from "/imports/api/event/instance.js";
 import Organizations from "/imports/api/organizations/organizations.js";
 import Leagues from "/imports/api/leagues/league.js";
 
-Meteor.publish("event_participants", (slug) => {
-  var event = Events.findOne({slug: slug});
+Meteor.publish("event_participants", (slug, hash) => {
+  var query = {
+    slug
+  }
+  if(hash) {
+    query.hash = hash;
+  }
+  var event = Events.findOne(query);
   if(event && event.brackets && event.brackets[0]) {
     var users = Meteor.users.find({
       _id: {

@@ -313,7 +313,7 @@ class BracketDetails extends ResponsiveComponent {
     return (
       <div className="col col-1 x-center center" style={{padding: 30, height: "100%", position: "relative"}}>
         <div style={{position: "relative"}}>
-          <img src={game.bannerUrl} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
+          <img src={game.bannerUrl || "/images/default_game.png"} style={{width: `calc(${opts.imgHeight} * 3 / 4)`, height: opts.imgHeight}} />
           <div style={{padding: 20, width: opts.mobile ? "50%" : "25%", position: opts.mobile ? "absolute" : "relative", bottom: 0, width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
             <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ obj.name || game.name }</h5>
             <div className="row center x-center" style={{marginBottom: 10, fontSize: opts.fontSize}}>
@@ -325,10 +325,10 @@ class BracketDetails extends ResponsiveComponent {
               <button className="col-1" style={{fontSize: opts.fontSize}} onClick={() => {
                 const isAdmin = event.staff && event.staff.admins && event.staff.admins.indexOf(Meteor.userId()) >= 0;
                 if(event.owner == Meteor.userId() || isAdmin) {
-                  browserHistory.push(`/bracket/${this.props.slug}-${this.props.hash}/admin`)
+                  browserHistory.push(`/bracket/${this.props.slug}/admin`)
                 }
                 else {
-                  browserHistory.push(`/bracket/${this.props.slug}-${this.props.hash}`);
+                  browserHistory.push(`/bracket/${this.props.slug}`);
                 }
               }}>
                 <span style={{fontSize: opts.fontSize}}>View</span>

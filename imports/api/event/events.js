@@ -10,6 +10,4 @@ Events = new Mongo.Collection('events', {
   }
 });
 
-Events.friendlySlugs("details.name");
-
 export default Events;

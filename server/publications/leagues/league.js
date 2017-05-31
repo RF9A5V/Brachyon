@@ -4,6 +4,9 @@ Meteor.publish("league", (slug) => {
   var league = Leagues.findOne({slug});
   var events = Events.find({ slug: { $in: league.events.map(e => { return e.slug; }) } });
   var instances = Instances.find({ _id: { $in: events.map(e => { return e.instances.pop() }) } });
+  const games = instances.fetch().map(i => {
+    return i.brackets[0].game;
+  })
   var ids = {};
   league.leaderboard.forEach(board => {
     Object.keys(board).forEach(id => {
@@ -37,7 +40,9 @@ Meteor.publish("league", (slug) => {
   return [
     Leagues.find({ slug }),
     events,
-    Games.find({_id: league.game}),
+    Games.find({_id: {
+      $in: games
+    }}),
     instances,
     Meteor.users.find({ _id: { $in: Object.keys(ids) } }, { username: 1, "profile.imageUrl": 1 }),
     Brackets.find({ _id: { $in: bIds } }),
