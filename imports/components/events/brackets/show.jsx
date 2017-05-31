@@ -355,14 +355,13 @@ class BracketShowScreen extends Component {
 }
 
 const x = createContainer((props) => {
-  const { slug, hash } = props.params;
-  const instanceHandle = Meteor.subscribe("bracketContainer", slug, hash, {
+  const { slug } = props.params;
+  const instanceHandle = Meteor.subscribe("bracketContainer", slug, {
     onReady: () => {
       const instance = Instances.findOne({
-        "brackets.slug": slug,
-        "brackets.hash": hash
+        "brackets.slug": slug
       });
-      const index = instance.brackets.findIndex(o => { return o.slug == slug && o.hash == hash });
+      const index = instance.brackets.findIndex(o => { return o.slug == slug });
       const bracketMeta = Instances.findOne().brackets[index];
       if(bracketMeta.name){
         document.title=bracketMeta.name+ " | Brachyon"

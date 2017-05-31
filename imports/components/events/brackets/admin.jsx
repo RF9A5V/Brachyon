@@ -466,9 +466,11 @@ const x = createContainer((props) => {
   const { slug } = props.params;
   const instanceHandle = Meteor.subscribe("bracketContainer", slug, {
     onReady: () => {
-      const instance = Instances.findOne();
+      const instance = Instances.findOne({
+        "brackets.slug": slug
+      });
       const index = instance.brackets.findIndex(o => { return o.slug == slug });
-      const bracketMeta = Instances.findOne().brackets[index];
+      const bracketMeta = instance.brackets[index];
       if(bracketMeta.name){
         document.title=bracketMeta.name+ " | Brachyon"
       }
