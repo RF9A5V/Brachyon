@@ -216,9 +216,15 @@ Meteor.methods({
     if(prevInstance.brackets) {
       prevInstance.brackets.forEach(bracket => {
         var { name, game, format, slug } = bracket;
+        var nextSlug = slug.split("-");
+        if(nextSlug.length == 1) {
+          nextSlug = nextSlug[0];
+        }
+        else {
+          nextSlug = nextSlug.slice(0, -1).join("-");
+        }
         var bracketObj = {
-          name, game, format, slug,
-          hash: Meteor.call("brackets.generateHash", slug)
+          name, game, format, slug: Meteor.call("brackets.generateHash", nextSlug)
         };
         obj.brackets.push(bracketObj);
       })
