@@ -5,8 +5,12 @@ import { ProfileImages } from "/imports/api/users/profile_images.js";
 import { Icons } from "/imports/api/sponsorship/icon.js";
 import { GameBanners } from "/imports/api/games/game_banner.js";
 
-Meteor.publish('event', (slug) => {
-  var event = Events.findOne({slug: slug});
+Meteor.publish('event', (slug, hash) => {
+  var query = { slug };
+  if(hash) {
+    query.hash = hash;
+  }
+  var event = Events.findOne(query);
   if(!event) {
     return [];
   }

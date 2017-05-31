@@ -36,8 +36,10 @@ export default class EventCreate extends Component {
       if(obj[key1] == null) {
         delete obj[key1];
       }
-    })
-
+    });
+    obj.slug = obj.details.name.slug;
+    obj.isCustomSlug = obj.details.name.isCustom;
+    obj.details.name = obj.details.name.title;
     var imgRef;
     if(obj.details.image != null) {
       imgRef = {
@@ -90,7 +92,10 @@ export default class EventCreate extends Component {
             key: "name",
             content: (
               Title
-            )
+            ),
+            args: {
+              generateFromTitle: true
+            }
           },
           {
             name: "Privacy",

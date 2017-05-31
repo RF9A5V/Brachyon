@@ -18,16 +18,15 @@ export default class EventsPanel extends ResponsiveComponent {
           date: moment().add(1, "hour").startOf("hour").toDate()
         }
       ],
-      title: "",
-      season: ""
+      title: ""
     }
   }
 
   value() {
-    var { title, season } = this.props.getRefValue("details", "name");
-    if(title.length == 0 || season.length == 0) {
-      toastr.error("League or season name can't be empty!");
-      throw new Error("Name or season for league must be defined.");
+    var { title } = this.props.getRefValue("details", "name");
+    if(title.length == 0) {
+      toastr.error("League name can't be empty!");
+      throw new Error("Name for league must be defined.");
     }
     return this.state.events.map(e => {
       return e.date;
@@ -35,10 +34,9 @@ export default class EventsPanel extends ResponsiveComponent {
   }
 
   componentDidMount() {
-    var { title, season } = this.props.getRefValue("details", "name");
+    var { title } = this.props.getRefValue("details", "name");
     this.setState({
-      title: title,
-      season: season
+      title: title
     })
   }
 

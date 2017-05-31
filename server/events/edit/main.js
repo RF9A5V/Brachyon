@@ -14,6 +14,17 @@ Meteor.methods({
         }
       };
     }
+    if(attrs.slug != event.slug) {
+      const conflict = Events.findOne({
+        slug: attrs.slug,
+        _id: {
+          $ne: id
+        }
+      });
+      if(conflict) {
+        throw new Meteor.Error(400, "Slug is taken.");
+      }
+    }
 
     if(attrs.tickets) {
       var updateObj = {};
@@ -106,5 +117,6 @@ Meteor.methods({
     Events.update(id, {
       $set: updateObj
     });
+    return attrs.slug;
   }
 })

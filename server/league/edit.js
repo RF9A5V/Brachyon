@@ -7,7 +7,8 @@ import OrganizeSuite from "/imports/decorators/organize.js";
 Meteor.methods({
   "leagues.edit"(id, attrs) {
     var league = Leagues.findOne(id);
-
+    console.log(attrs);
+    throw new Meteor.Error();
     var brackets;
     if(attrs.brackets) {
       brackets = JSON.parse(JSON.stringify(attrs.brackets));

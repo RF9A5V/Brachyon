@@ -101,7 +101,9 @@ class EventAdminPage extends Component {
             Title
           ),
           args: {
-            title: event.details.name
+            title: event.details.name,
+            slug: event.slug,
+            generateFromTitle: false
           }
         },
         {
@@ -308,25 +310,30 @@ class EventAdminPage extends Component {
         delete attrs.details[k];
       }
     });
-    console.log(attrs);
-    debugger;
     var imgTemp;
     if(attrs.details.image != null) {
       var file = attrs.details.image.image;
       imgTemp = JSON.parse(JSON.stringify(attrs.details.image));
       imgTemp.image = file;
     }
+
+    attrs.slug = attrs.details.name.slug;
+    attrs.details.name = attrs.details.title;
+
     delete attrs.details.image;
 
     if(attrs.creator.id == event.owner) {
       delete attrs.creator;
     }
-
-    Meteor.call("events.edit", event._id, attrs, (err) => {
+    const slugChanged = attrs.slug != event.slug;
+    Meteor.call("events.edit", event._id, attrs, (err, data) => {
       if(err) {
         return toastr.error(err.reason);
       }
       else {
+        if(!imgTemp && slugChanged) {
+          window.location = `/event/${attrs.slug}/edit`;
+        }
         return toastr.success("Saved event info!");
       }
     });
@@ -342,6 +349,9 @@ class EventAdminPage extends Component {
             return toastr.error(err.reason, "Error!");
           }
           toastr.success("Updated event banner!");
+          if(slugChanged) {
+            window.location = `/event/${attrs.slug}/edit`;
+          }
         }
       })
     }

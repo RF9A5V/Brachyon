@@ -29,8 +29,9 @@ export default class LeagueCreate extends Component {
 
   create() {
     var obj = this.refs.create.value();
-
-    obj.details.name = obj.details.name.title + " " + obj.details.name.season;
+    obj.isCustomSlug = obj.details.name.customSlug;
+    obj.slug = obj.details.name.slug;
+    obj.details.name = obj.details.name.title;
     var img = null;
     if(obj.details.image) {
       img = {};
@@ -78,7 +79,10 @@ export default class LeagueCreate extends Component {
           {
             name: "Title",
             key: "name",
-            content: Title
+            content: Title,
+            args: {
+              generateFromTitle: true
+            }
           },
           {
             name: "Description",
