@@ -106,35 +106,30 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   addParticipant(alias, id) {
-
-    const cb = () => {
-      Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
-        if(e) {
-          toastr.error(e.reason);
+    Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
+      if(e) {
+        toastr.error(e.reason);
+      }
+      else {
+        toastr.success("Successfully added participant!");
+        this.setState({
+          query: "",
+          users: [],
+          index: -1
+        });
+        if(this.refs.userValue) {
+          this.refs.userValue.value = "";
         }
-        else {
-          toastr.success("Successfully added participant!");
-          this.setState({
-            query: "",
-            users: [],
-            index: -1
-          });
-          if(this.refs.userValue) {
-            this.refs.userValue.value = "";
-          }
-          this.props.onUpdateParticipants();
+        if(id) {
+          const sub = Meteor.subscribe("user", id, {
+            onReady: () => {
+              this.state.subs.push(sub);
+              this.props.onUpdateParticipants();
+            }
+          })
         }
-      })
-    }
-
-    if(id) {
-      this.state.subs.push(Meteor.subscribe("user", id, {
-        onReady: cb
-      }));
-    }
-    else {
-      cb();
-    }
+      }
+    })
   }
 
   addBye() {
