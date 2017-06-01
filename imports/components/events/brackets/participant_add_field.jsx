@@ -139,6 +139,17 @@ export default class ParticipantAddField extends ResponsiveComponent {
     }
   }
 
+  addBye() {
+    Meteor.call("events.addBye", Instances.findOne()._id, this.props.index, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        this.props.onUpdateParticipants();
+      }
+    })
+  }
+
   renderBase(opts) {
     const event = Events.findOne();
     const isLeague = event && event.league != null;
@@ -204,35 +215,49 @@ export default class ParticipantAddField extends ResponsiveComponent {
             )
           }
         </div>
-        <div className="row x-center">
-          {
-            this.props.bracket.isComplete ? (
-              ""
-            ) : (
-              <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
-                <FontAwesome name="random" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                Randomize
-              </button>
-            )
-          }
-          {
-            this.props.bracket.id ? (
-              <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginLeft: 10}} onClick={() => { this.setState({ resetOpen: true }) }}>
-                <FontAwesome name="refresh" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                Reset Bracket
-              </button>
-            ) : (
-              this.props.participantCount > 3 ? (
-                <button className={opts.buttonClass + " col-1 row x-center center signup-button"} style={{marginLeft: 10}} onClick={this.props.onStart}>
-                  <FontAwesome name="play" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                  Start
+        <div className="col">
+          <div className="row x-center">
+            {
+              this.props.bracket.isComplete ? (
+                ""
+              ) : (
+                <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
+                  <FontAwesome name="random" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Randomize
+                </button>
+              )
+            }
+            {
+              this.props.bracket.isComplete ? (
+                null
+              ) : (
+                <button className="col-1 row x-center center" style={{marginLeft: 10}} onClick={this.addBye.bind(this)}>
+                  <FontAwesome name="user-plus" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Add Bye
+                </button>
+              )
+            }
+          </div>
+          <div className="row x-center" style={{marginTop: 10}}>
+            {
+              this.props.bracket.id ? (
+                <button className={opts.buttonClass + " col-1 row x-center center"} onClick={() => { this.setState({ resetOpen: true }) }}>
+                  <FontAwesome name="refresh" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Reset Bracket
                 </button>
               ) : (
-                null
-              )
+                this.props.participantCount > 3 ? (
+                  <button className={opts.buttonClass + " col-1 row x-center center signup-button"} onClick={this.props.onStart}>
+                    <FontAwesome name="play" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                    Start
+                  </button>
+                ) : (
+                  null
+                )
 
-            )
-          }
+              )
+            }
+          </div>
         </div>
         <ResetModal open={this.state.resetOpen} onClose={() => { this.setState({ resetOpen: false }) }} onStart={() => {
           Meteor.call("events.stop_event", Instances.findOne()._id, this.props.index, () => {

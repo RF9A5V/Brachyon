@@ -141,6 +141,23 @@ Meteor.methods({
     })
   },
 
+  "events.addBye"(instanceId, index) {
+    const instance = Instances.findOne(instanceId);
+    const bracketMeta = instance.brackets[index];
+    const byeCount = (bracketMeta.participants || []).filter(p => {
+      return p.isBye;
+    }).length + 1;
+    Instances.update(instanceId, {
+      $push: {
+        [`brackets.${index}.participants`]: {
+          alias: `Bye ${byeCount}`,
+          id: null,
+          isBye: true
+        }
+      }
+    })
+  },
+
   "events.checkInUser"(eventId, bracketIndex, alias) {
     const event = Events.findOne(eventId);
     const instance = Instances.findOne(event.instances.pop());
@@ -758,7 +775,6 @@ Meteor.methods({
     var bracket = Brackets.findOne(bracketId);
     var metadata = bracket.rounds[bracketIndex][roundIndex][index];
     var match = Matches.findOne(metadata.id);
-
     var cb = (_bracketIndex, _roundIndex, _index, alias) => {
       if(_roundIndex >= bracket.rounds[_bracketIndex].length) {
         cb(2, 0, 0, _bracketIndex);
