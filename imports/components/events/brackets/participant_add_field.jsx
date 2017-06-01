@@ -128,6 +128,9 @@ export default class ParticipantAddField extends ResponsiveComponent {
             }
           })
         }
+        else {
+          this.props.onUpdateParticipants();
+        }
       }
     })
   }
