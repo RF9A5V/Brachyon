@@ -95,5 +95,53 @@ Meteor.methods({
         [`brackets.${bracketIndex}.participants.${participantIndex}.paymentAmount`]: amount,
       }
     })
+  },
+  "brackets.replaceBye"(instanceId, bracketIndex, index, user) {
+    const instance = Instances.findOne(instanceId);
+    if(instance.league && !user.id) {
+      throw new Meteor.Error("League bracket needs a user.");
+    }
+    user.checkedIn = true;
+    const bracketMeta = instance.brackets[bracketIndex];
+    if(bracketMeta.id) {
+      const bracket = Brackets.findOne(bracketMeta.id);
+      // Only works for single and double elim right now
+      var matches = [];
+      bracket.rounds.forEach(b => {
+        b.forEach(r => {
+          r.forEach(m => {
+            if(m) {
+              matches.push(m.id);
+            }
+          })
+        })
+      });
+      const aliasTarget = bracketMeta.participants[index].alias;
+      matches.forEach(m => {
+        var updateObj = {};
+        const match = Matches.findOne(m);
+        const playerIndex = match.players.findIndex(o => {
+          return o && o.alias == aliasTarget;
+        });
+        if(playerIndex >= 0) {
+          updateObj[`players.${playerIndex}.alias`] = user.alias;
+          updateObj[`players.${playerIndex}.id`] = user.id;
+        }
+        if(match.winner && match.winner.alias == user.alias) {
+          updateObj[`winner.alias`] = user.alias;
+          updateObj[`winner.id`] = user.id;
+        }
+        if(Object.keys(updateObj).length) {
+          Matches.update(m, {
+            $set: updateObj
+          });
+        }
+      });
+    }
+    Instances.update(instanceId, {
+      $set: {
+        [`brackets.${bracketIndex}.participants.${index}`]: user
+      }
+    })
   }
 })
