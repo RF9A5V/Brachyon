@@ -777,7 +777,16 @@ Meteor.methods({
     var match = Matches.findOne(metadata.id);
     var cb = (_bracketIndex, _roundIndex, _index, alias) => {
       if(_roundIndex >= bracket.rounds[_bracketIndex].length) {
-        cb(2, 0, 0, _bracketIndex);
+        cb(2, 0, 0, alias);
+        Matches.update(bracket.rounds[2][1][0].id, {
+          $set: {
+            "players": [null, null],
+            winner: null,
+            status: 0,
+            establishedAt: null,
+            startedAt: null
+          }
+        });
         return;
       }
       var internalMeta = bracket.rounds[_bracketIndex][_roundIndex][_index];
