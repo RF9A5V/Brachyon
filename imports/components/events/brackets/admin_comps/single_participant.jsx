@@ -98,6 +98,87 @@ class SingleParticipant extends ResponsiveComponent {
     return user && user.profile.imageUrl ? user.profile.imageUrl : "/images/profile.png";
   }
 
+  partDetails(participant) {
+    const opts = this.props.opts;
+    const user = Meteor.users.findOne(participant.id);
+    const imgSrc = this.imgOrDefault(user);
+    const aliasText = participant.alias;
+    var username;
+    if(user) {
+      username = user.username;
+    }
+    else {
+      username = participant.isBye ? "Placeholder" : "Anonymous";
+    }
+    return [
+      <img src={imgSrc} style={{width: opts.imgDim, height: opts.imgDim, borderRadius: "100%", marginRight: 20}} />,
+      <div className="col" style={{width: opts.mobile ? "25%" : "15%"}}>
+        <span style={{fontSize: opts.fontSize}}>{ participant.alias }</span>
+        <span style={{fontSize: `calc(${opts.fontSize} * 3 / 4)`}}>{ username }</span>
+      </div>
+    ]
+  }
+
+  partActions(participant, index, opacity) {
+    const opts = this.props.opts;
+    if(participant.isBye) {
+      return (
+        <div className="row x-center col-1" style={{justifyContent: "flex-end"}}>
+          <button onClick={() => { this.props.openOptions(participant, index) }}>
+            Set User
+          </button>
+        </div>
+      )
+    }
+    return [
+      <div className="row center x-center col-1" style={{opacity}} key={index}>
+        {
+          participant.checkedIn ? (
+            opts.mobile ? (
+              <FontAwesome name="check" style={{fontSize: `calc(${opts.fontSize} * 1.5)`, color: "#FF6000"}} />
+            ) : (
+              <span>Checked In</span>
+            )
+          ) : (
+            opts.mobile ? (
+              <FontAwesome name="sign-in" style={{fontSize: `calc(${opts.fontSize} * 1.5)`}} onClick={() => {
+                const instance = Instances.findOne();
+                if(instance.tickets) {
+                  this.setState({ discountOpen: true, participant })
+                }
+                else {
+                  this.props.onCheckIn(participant, this.props.index);
+                }
+              }}/>
+            ) : (
+              <button className={opts.buttonClass} onClick={() => {
+                const instance = Instances.findOne();
+                if(instance.tickets) {
+                  this.setState({ discountOpen: true, participant })
+                }
+                else {
+                  this.props.onCheckIn(participant, this.props.index);
+                }
+              }}>Check In</button>
+            )
+          )
+        }
+      </div>,
+      <div className="row center x-center col-1">
+        {
+          participant.paid ? (
+            <span>Paid ${participant.paymentAmount}</span>
+          ) : (
+            <span>Unpaid</span>
+          )
+        }
+      </div>,
+      <div style={{marginLeft: 20, textAlign: "right"}}>
+        <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${opts.fontSize} * 1.5)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
+      </div>
+    ]
+  }
+
   participant() {
     const {index, participant, isDragging, hoverIndex, invisibleIndex} = this.props;
     const opacity = ( (index == invisibleIndex) || (isDragging && invisibleIndex == -1) ) ? 0 : 1;
@@ -107,56 +188,12 @@ class SingleParticipant extends ResponsiveComponent {
         <div className="row x-center" style={{width: this.props.opts.mobile ? "20%" : "10%"}}>
           <SeedDropdown seedIndex={this.props.index} pSize={this.props.pSize} index={this.props.bIndex} id={this.state.id} updateList={this.props.onUpdate} />
         </div>
-        <img src={this.imgOrDefault(user)} style={{width: this.props.opts.imgDim, height: this.props.opts.imgDim, borderRadius: "100%", marginRight: 20}} />
-        <div className="col" style={{width: this.props.opts.mobile ? "25%" : "15%"}}>
-          <span style={{fontSize: this.props.opts.fontSize}}>{ participant.alias }</span>
-          <span style={{fontSize: `calc(${this.props.opts.fontSize} * 3 / 4)`}}>{ user ? user.username : "Anonymous" }</span>
-        </div>
-        <div className="row center x-center col-1" style={{opacity}} key={index}>
-          {
-            participant.checkedIn ? (
-              this.props.opts.mobile ? (
-                <FontAwesome name="check" style={{fontSize: `calc(${this.props.opts.fontSize} * 1.5)`, color: "#FF6000"}} />
-              ) : (
-                <span>Checked In</span>
-              )
-            ) : (
-              this.props.opts.mobile ? (
-                <FontAwesome name="sign-in" style={{fontSize: `calc(${this.props.opts.fontSize} * 1.5)`}} onClick={() => {
-                  const instance = Instances.findOne();
-                  if(instance.tickets) {
-                    this.setState({ discountOpen: true, participant })
-                  }
-                  else {
-                    this.props.onCheckIn(participant, this.props.index);
-                  }
-                }}/>
-              ) : (
-                <button className={this.props.opts.buttonClass} onClick={() => {
-                  const instance = Instances.findOne();
-                  if(instance.tickets) {
-                    this.setState({ discountOpen: true, participant })
-                  }
-                  else {
-                    this.props.onCheckIn(participant, this.props.index);
-                  }
-                }}>Check In</button>
-              )
-            )
-          }
-        </div>
-        <div className="row center x-center col-1">
-          {
-            participant.paid ? (
-              <span>Paid ${participant.paymentAmount}</span>
-            ) : (
-              <span>Unpaid</span>
-            )
-          }
-        </div>
-        <div style={{marginLeft: 20, textAlign: "right"}}>
-          <FontAwesome name="cog" style={{cursor: "pointer", fontSize: `calc(${this.props.opts.fontSize} * 1.5)`}} onClick={() => { this.props.openOptions(this.props.participant) }} />
-        </div>
+        {
+          this.partDetails(participant)
+        }
+        {
+          this.partActions(participant, index, opacity)
+        }
       </div>
     )
   }

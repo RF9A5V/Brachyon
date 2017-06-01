@@ -62,6 +62,9 @@ class LeagueModal extends Component {
             var place = currentPlace;
             currentPlace += users.length;
             var nextPlace = currentPlace - 1;
+            if(users[0].id == null) {
+              return null;
+            }
             return (
               <div className="row x-center" style={{marginBottom: 10}}>
                 <div className="col-2">

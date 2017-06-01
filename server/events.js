@@ -141,6 +141,23 @@ Meteor.methods({
     })
   },
 
+  "events.addBye"(instanceId, index) {
+    const instance = Instances.findOne(instanceId);
+    const bracketMeta = instance.brackets[index];
+    const byeCount = (bracketMeta.participants || []).filter(p => {
+      return p.isBye;
+    }).length + 1;
+    Instances.update(instanceId, {
+      $push: {
+        [`brackets.${index}.participants`]: {
+          alias: `Bye ${byeCount}`,
+          id: null,
+          isBye: true
+        }
+      }
+    })
+  },
+
   "events.checkInUser"(eventId, bracketIndex, alias) {
     const event = Events.findOne(eventId);
     const instance = Instances.findOne(event.instances.pop());
@@ -655,13 +672,29 @@ Meteor.methods({
     if(bracketIndex == 0) {
       var losr = bracket.rounds[bracketIndex][roundIndex][index].losr;
       var losm = bracket.rounds[bracketIndex][roundIndex][index].losm;
+      var endRezzes = [];
       var loserMatchId = bracket.rounds[1][losr][losm].id;
       var loserMatch = Matches.findOne(loserMatchId);
-      if(loserMatch) {
-        var playerPos = loserMatch.players[0] == null ? 0 : 1;
-        if(roundIndex == 0) {
-          playerPos = index % 2;
+      bracket.rounds[bracketIndex].forEach((_r, i) => {
+        _r.forEach((_m, j) => {
+          if(_m && _m.losr == losr && _m.losm == losm) {
+            endRezzes.push({
+              round: i,
+              match: j
+            });
+          }
+        });
+      });
+      endRezzes = endRezzes.sort((a, b) => {
+        if(a.round != b.round) {
+          return b.round - a.round;
         }
+        else {
+          return a.match - b.match;
+        }
+      });
+      if(loserMatch) {
+        const playerPos = endRezzes.findIndex(o => { return o.round == roundIndex && o.match == index });
         var hasSomePlayer = loserMatch.players.some(p => { return p && p.alias });
 
         // Notification that match is ready goes here (loser's bracket).
@@ -742,7 +775,6 @@ Meteor.methods({
     var bracket = Brackets.findOne(bracketId);
     var metadata = bracket.rounds[bracketIndex][roundIndex][index];
     var match = Matches.findOne(metadata.id);
-
     var cb = (_bracketIndex, _roundIndex, _index, alias) => {
       if(_roundIndex >= bracket.rounds[_bracketIndex].length) {
         cb(2, 0, 0, _bracketIndex);
