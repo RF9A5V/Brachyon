@@ -36,7 +36,7 @@ export default class AddPartipantAction extends ResponsiveComponent {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    this.subs.forEach(s => {
+    this.state.subs.forEach(s => {
       s.stop();
     })
   }

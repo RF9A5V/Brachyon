@@ -20,11 +20,9 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   componentWillUnmount() {
-    if(this.state.subs){
-      this.state.subs.forEach(u => {
-        u.stop();
-      });
-    }
+    (this.state.subs || []).forEach(u => {
+      u.stop();
+    });
   }
 
   userTemplate(user, index, opts) {

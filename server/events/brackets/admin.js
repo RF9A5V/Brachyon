@@ -98,8 +98,22 @@ Meteor.methods({
   },
   "brackets.replaceBye"(instanceId, bracketIndex, index, user) {
     const instance = Instances.findOne(instanceId);
-    if(instance.league && !user.id) {
-      throw new Meteor.Error("League bracket needs a user.");
+    if(instance.league) {
+      if(!user.id) {
+        throw new Meteor.Error("League bracket needs a user.");
+      }
+      else {
+        const league = Leagues.findOne(instance.league);
+        const eventIndex = league.events.findIndex(o => { return o.id == instance.event });
+        Leagues.update(instance.league, {
+          $set: {
+            [`leaderboard.${eventIndex}.${user.id}`]: {
+              score: 0,
+              bonus: 0
+            }
+          }
+        })
+      }
     }
     user.checkedIn = true;
     const bracketMeta = instance.brackets[bracketIndex];
