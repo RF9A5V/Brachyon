@@ -20,11 +20,9 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   componentWillUnmount() {
-    if(this.state.subs){
-      this.state.subs.forEach(u => {
-        u.stop();
-      });
-    }
+    (this.state.subs || []).forEach(u => {
+      u.stop();
+    });
   }
 
   userTemplate(user, index, opts) {
@@ -108,35 +106,44 @@ export default class ParticipantAddField extends ResponsiveComponent {
   }
 
   addParticipant(alias, id) {
-
-    const cb = () => {
-      Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
-        if(e) {
-          toastr.error(e.reason);
+    Meteor.call("events.addParticipant", Instances.findOne()._id, this.props.index, id, alias, true, (e) => {
+      if(e) {
+        toastr.error(e.reason);
+      }
+      else {
+        toastr.success("Successfully added participant!");
+        this.setState({
+          query: "",
+          users: [],
+          index: -1
+        });
+        if(this.refs.userValue) {
+          this.refs.userValue.value = "";
+        }
+        if(id) {
+          const sub = Meteor.subscribe("user", id, {
+            onReady: () => {
+              this.state.subs.push(sub);
+              this.props.onUpdateParticipants();
+            }
+          })
         }
         else {
-          toastr.success("Successfully added participant!");
-          this.setState({
-            query: "",
-            users: [],
-            index: -1
-          });
-          if(this.refs.userValue) {
-            this.refs.userValue.value = "";
-          }
           this.props.onUpdateParticipants();
         }
-      })
-    }
+      }
+    })
+  }
 
-    if(id) {
-      this.state.subs.push(Meteor.subscribe("user", id, {
-        onReady: cb
-      }));
-    }
-    else {
-      cb();
-    }
+  addBye() {
+    Meteor.call("events.addBye", Instances.findOne()._id, this.props.index, (err) => {
+      if(err) {
+        toastr.error(err.reason);
+      }
+      else {
+        this.props.onUpdateParticipants();
+      }
+    })
   }
 
   renderBase(opts) {
@@ -204,35 +211,49 @@ export default class ParticipantAddField extends ResponsiveComponent {
             )
           }
         </div>
-        <div className="row x-center">
-          {
-            this.props.bracket.isComplete ? (
-              ""
-            ) : (
-              <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
-                <FontAwesome name="random" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                Randomize
-              </button>
-            )
-          }
-          {
-            this.props.bracket.id ? (
-              <button className={opts.buttonClass + " col-1 row x-center center"} style={{marginLeft: 10}} onClick={() => { this.setState({ resetOpen: true }) }}>
-                <FontAwesome name="refresh" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                Reset Bracket
-              </button>
-            ) : (
-              this.props.participantCount > 3 ? (
-                <button className={opts.buttonClass + " col-1 row x-center center signup-button"} style={{marginLeft: 10}} onClick={this.props.onStart}>
-                  <FontAwesome name="play" style={{fontSize: opts.iconSize, marginRight: 10}} />
-                  Start
+        <div className="col">
+          <div className="row x-center">
+            {
+              this.props.bracket.isComplete ? (
+                ""
+              ) : (
+                <button className={opts.buttonClass + " col-1 row x-center center"} onClick={this.randomizeSeeding.bind(this)}>
+                  <FontAwesome name="random" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Randomize
+                </button>
+              )
+            }
+            {
+              this.props.bracket.isComplete ? (
+                null
+              ) : (
+                <button className="col-1 row x-center center" style={{marginLeft: 10}} onClick={this.addBye.bind(this)}>
+                  <FontAwesome name="user-plus" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Add Bye
+                </button>
+              )
+            }
+          </div>
+          <div className="row x-center" style={{marginTop: 10}}>
+            {
+              this.props.bracket.id ? (
+                <button className={opts.buttonClass + " col-1 row x-center center"} onClick={() => { this.setState({ resetOpen: true }) }}>
+                  <FontAwesome name="refresh" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                  Reset Bracket
                 </button>
               ) : (
-                null
-              )
+                this.props.participantCount > 3 ? (
+                  <button className={opts.buttonClass + " col-1 row x-center center signup-button"} onClick={this.props.onStart}>
+                    <FontAwesome name="play" style={{fontSize: opts.iconSize, marginRight: 10}} />
+                    Start
+                  </button>
+                ) : (
+                  null
+                )
 
-            )
-          }
+              )
+            }
+          </div>
         </div>
         <ResetModal open={this.state.resetOpen} onClose={() => { this.setState({ resetOpen: false }) }} onStart={() => {
           Meteor.call("events.stop_event", Instances.findOne()._id, this.props.index, () => {

@@ -4,6 +4,7 @@ import ParticipantAddField from "../participant_add_field.jsx";
 import TicketDiscountModal from "../ticket_discount_modal.jsx";
 import OptionsModal from "./options.jsx";
 import StartModal from "./start_modal.jsx";
+import ByeReplacementModal from "./bye_replacement_modal.jsx";
 
 import Instances from "/imports/api/event/instance.js";
 import Brackets from "/imports/api/brackets/brackets.js";
@@ -28,8 +29,16 @@ export default class AddPartipantAction extends ResponsiveComponent {
       index: this.props.index,
       discountOpen: false,
       optionsOpen: false,
-      startOpen: false
+      startOpen: false,
+      subs: []
     }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    this.state.subs.forEach(s => {
+      s.stop();
+    })
   }
 
   componentWillReceiveProps(next) {
@@ -77,7 +86,18 @@ export default class AddPartipantAction extends ResponsiveComponent {
     })
   }
 
-  openOptions(participant) { this.setState({ optionsOpen: true, participant }) }
+  openOptions(participant, index) {
+    this.setState({ participant, index }, () => {
+      if(participant.isBye) {
+        this.refs.byeModal.open();
+      }
+      else {
+        this.setState({
+          optionsOpen: true
+        })
+      }
+    })
+  }
 
   onUserCheckIn(participant, index) {
     const cb = () => {
@@ -93,27 +113,14 @@ export default class AddPartipantAction extends ResponsiveComponent {
       })
     }
     const instance = Instances.findOne();
-    // if(participant.id && instance.tickets) {
-    //   Meteor.call("tickets.charge", instance._id, this.props.index, participant.id, (err) => {
-    //     if(err) {
-    //       onCheckedIn(false);
-    //       return toastr.error(err.reason);
-    //     }
-    //     else {
-    //       cb()
-    //     }
-    //   })
-    // }
-    // else {
-    //   cb();
-    // }
     cb();
   }
 
   updateParticipants() {
     this.setState({
       participants: Instances.findOne().brackets[this.props.index].participants
-    })
+    });
+    this.props.update();
   }
 
   renderBase(opts) {
@@ -147,7 +154,8 @@ export default class AddPartipantAction extends ResponsiveComponent {
                 participant={participant}
                 completed={this.state.completed} index={index} onCheckIn={this.onUserCheckIn.bind(this)}
                 invisibleIndex={this.state.invisibleIndex} openOptions={this.openOptions.bind(this)}
-                openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)} opts={opts} pSize={this.state.participants.length} onUpdate={this.updateParticipants.bind(this)} bIndex={this.props.index}/>);
+                openDiscount={this.openDiscount.bind(this)} onDropEffect={this.onDropEffect.bind(this)} onHoverEffect={this.onHoverEffect.bind(this)}
+                opts={opts} pSize={this.state.participants.length} onUpdate={this.updateParticipants.bind(this)} bIndex={this.props.index}/>);
             })
           }
         </div>
@@ -160,9 +168,15 @@ export default class AddPartipantAction extends ResponsiveComponent {
         }
         <OptionsModal open={this.state.optionsOpen} onClose={() => {
           this.updateParticipants();
-          this.setState({ optionsOpen: false })
-         }} participant={this.state.participant} index={this.props.index} />
+          this.setState({ optionsOpen: false });
+        }} participant={this.state.participant} index={this.props.index} />
         <StartModal open={this.state.startOpen} onClose={() => { this.setState({ startOpen: false }) }} index={this.props.index} onStart={this.props.onStart} />
+        <ByeReplacementModal ref="byeModal" participant={this.state.participant} index={this.state.index} bracketIndex={this.props.index} addSub={(sub) => {
+          if(sub) {
+            this.state.subs.push(sub);
+          }
+          this.updateParticipants();
+        }} />
       </div>
     )
   }
