@@ -41,9 +41,9 @@ export default class UserTab extends ResponsiveComponent {
 
   renderMobile() {
     return this.renderBase({
-      fontSize: "2.5em",
-      imgDim: 150,
-      width: "45%"
+      fontSize: "1em",
+      imgDim: 50,
+      width: 150
     });
   }
 
