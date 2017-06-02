@@ -47,8 +47,8 @@ ServiceConfiguration.configurations.upsert(
   {service: "facebook"},
   {
     $set: {
-      appId: Meteor.settings.public.facebook.testAppId,
-      secret: Meteor.settings.private.facebook.testAppSecret
+      appId: Meteor.isDevelopment ? Meteor.settings.public.facebook.testAppId : Meteor.settings.public.facebook.appId,
+      secret: Meteor.isDevelopment ? Meteor.settings.private.facebook.testAppSecret : Meteor.settings.private.facebook.appSecret
     }
   }
 );
@@ -68,8 +68,8 @@ ServiceConfiguration.configurations.upsert(
   {service: "twitter"},
   {
     $set: {
-      consumerKey: Meteor.settings.public.twitter.consumerKey,
-      secret: Meteor.settings.private.twitter.consumerSecret
+      consumerKey: Meteor.isDevelopment ? Meteor.settings.public.twitter.testConsumerKey : Meteor.settings.public.twitter.liveConsumerKey,
+      secret: Meteor.isDevelopment ? Meteor.settings.private.twitter.testConsumerSecret : Meteor.settings.private.twitter.liveConsumerSecret
     }
   }
 );

@@ -26,8 +26,8 @@ Meteor.methods({
       throw new Meteor.Error(400, "You must have Twitter integrated with your account to access this action.");
     }
     var client = new Twitter({
-      consumer_key: Meteor.settings.public.twitter.consumerKey,
-      consumer_secret: Meteor.settings.private.twitter.consumerSecret,
+      consumer_key: Meteor.isDevelopment ? Meteor.settings.public.twitter.testConsumerKey : Meteor.settings.public.twitter.liveConsumerKey,
+      consumer_secret: Meteor.isDevelopment ? Meteor.settings.private.twitter.testConsumerSecret : Meteor.settings.private.twitter.liveConsumerSecret,
       access_token_key: user.services.twitter.accessToken,
       access_token_secret: user.services.twitter.accessTokenSecret
     });

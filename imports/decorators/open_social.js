@@ -20,9 +20,7 @@ function PopupCenter(url, title, w, h) {
 
 const openTweet = (text, url) => {
   const tweetText = encodeURIComponent(text.substr(0, 140));
-  // const tweetLink = encodeURIComponent(url);
-  const tweetLink = encodeURIComponent("https://www.brachyon.com/event/tekken-7-launch-at-world");
-  console.log(tweetLink);
+  const tweetLink = encodeURIComponent(url);
   PopupCenter(`https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetLink}`, "_blank", 500, 300);
 }
 
