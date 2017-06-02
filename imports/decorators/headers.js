@@ -18,7 +18,7 @@ const setHeader = (details) => {
       <head>
         <meta property="fb:app_id" content="1033113360129199">
         <meta name="twitter:site" content="@brachyon">
-        <meta name="og:card" content="summary_large_image">
+        <meta name="twitter:card" content="summary_large_image">
         <meta property="og:type" content="website">
         <meta property="og:title" content="${details.name}">
         <meta property="og:description" content="${details.parse ? fbDescriptionParser(details.description) : details.description}">
