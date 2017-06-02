@@ -1,1 +1,1 @@
-DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy brachyon.com --settings ./settings.json
+TOOL_NODE_FLAGS="--max-old-space-size=4096" DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy brachyon.com --settings ./settings.json

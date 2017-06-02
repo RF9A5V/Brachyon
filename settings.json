@@ -34,13 +34,15 @@
       "client_id": "***REMOVED***"
     },
     "facebook": {
-      "testAppId": "***REMOVED***"
+      "testAppId": "***REMOVED***",
+      "appId": "***REMOVED***"
     },
     "twitch": {
       "client_id": "***REMOVED***"
     },
     "twitter": {
-      "consumerKey": "***REMOVED***"
+      "testConsumerKey": "***REMOVED***",
+      "liveConsumerKey": "XWFR3B2Eoy6qpIj42ha01FEVr"
     },
     "google": {
       "client_id": "***REMOVED***"
@@ -55,13 +57,15 @@
       "liveSecretKey": "***REMOVED***"
     },
     "facebook": {
-      "testAppSecret": "***REMOVED***"
+      "testAppSecret": "***REMOVED***",
+      "appSecret": "***REMOVED***"
     },
     "twitch": {
       "liveSecretKey": "***REMOVED***"
     },
     "twitter": {
-      "consumerSecret": "***REMOVED***"
+      "testConsumerSecret": "***REMOVED***",
+      "liveConsumerSecret": "FyqqWP0Sb2VqzibM9C7VLIYJRwKVvmnWNKq7xoLs1RksKNhBZG"
     },
     "google": {
       "liveSecretKey": "***REMOVED***"
