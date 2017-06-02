@@ -5,8 +5,9 @@ import { browserHistory } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
 
 import Matches from "/imports/api/event/matches.js";
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
 
-class LeagueModal extends Component {
+class LeagueModal extends ResponsiveComponent {
 
   constructor(props) {
     super(props);
@@ -162,7 +163,7 @@ class LeagueModal extends Component {
     }
   }
 
-  render() {
+  renderBase(opts) {
     if(!this.props.ready) {
       return (
         <div>
@@ -174,7 +175,7 @@ class LeagueModal extends Component {
       return null;
     }
     return (
-      <Modal className="create-modal" overlayClassName="overlay-class" isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
+      <Modal className={opts.modalClass} overlayClassName={opts.overlayClass} isOpen={this.props.open} onRequestClose={this.closeModal.bind(this)}>
         <div className="row">
           <div className="col-1"></div>
           <FontAwesome name="times" size="2x" onClick={this.closeModal.bind(this)} />
@@ -227,6 +228,21 @@ class LeagueModal extends Component {
       </Modal>
     )
   }
+
+  renderDesktop() {
+    return this.renderBase({
+      modalClass: "create-modal",
+      overlayClass: "overlay-class"
+    })
+  }
+
+  renderMobile() {
+    return this.renderBase({
+      modalClass: "overlay-only-modal",
+      overlayClass: "overlay-only"
+    })
+  }
+
 }
 
 export default createContainer((props) => {

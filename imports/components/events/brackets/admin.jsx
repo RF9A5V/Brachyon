@@ -313,8 +313,11 @@ class BracketAdminScreen extends Component {
     const index = instance.brackets.findIndex(o => { return o.slug == this.props.params.slug }) || 0;
     var bracket = instance.brackets[index];
     var defaultItems = [];
-    if(bracket.isComplete) {
-      defaultItems.push(this.leaderboardItem(bracket, index));
+    if(bracket.id && bracket.isComplete) {
+      const b = Brackets.findOne();
+      if(b && b.complete) {
+        defaultItems.push(this.leaderboardItem(bracket, index));
+      }
     }
 
     var rounds;
