@@ -65,12 +65,7 @@ Meteor.methods({
           pushObj.push(b);
         }
         else {
-          updateObj[`brackets.${bracketIndex}.name`] = b.name;
-          updateObj[`brackets.${bracketIndex}.game`] = b.game;
-          updateObj[`brackets.${bracketIndex}.format`] = b.format;
-          updateObj[`brackets.${bracketIndex}.options`] = b.options;
-          updateObj[`brackets.${bracketIndex}.options`] = b.slug;
-          updateObj[`brackets.${bracketIndex}.hash`] = Meteor.call("brackets.generateHash", b.slug);
+          Meteor.call("events.brackets.edit", instance._id, i, b);
         }
       });
       if(Object.keys(updateObj).length > 0) {
