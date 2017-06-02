@@ -85,6 +85,7 @@ export default class LeaderboardPanel extends TrackerReact(Component) {
       var content;
       if(format == "single_elim") {
         var finals = Matches.findOne(rounds[0].pop()[0].id);
+        console.log(finals);
         placement.push([finals.winner]);
         placement.push([finals.winner.alias == finals.players[0].alias ? finals.players[1] : finals.players[0]])
         rounds[0].reverse().map(r => {

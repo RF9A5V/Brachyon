@@ -19,8 +19,8 @@ function PopupCenter(url, title, w, h) {
 }
 
 const openTweet = (text, url) => {
-  const tweetText = encodeURI(text.substr(0, 140));
-  const tweetLink = encodeURI(url);
+  const tweetText = encodeURIComponent(text.substr(0, 140));
+  const tweetLink = encodeURIComponent(url);
   PopupCenter(`https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetLink}`, "_blank", 500, 300);
 }
 

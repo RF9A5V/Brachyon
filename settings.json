@@ -34,13 +34,15 @@
       "client_id": "ca_8dMdapsTG16ZRZfHQ3i10KvxTB6yzxqP"
     },
     "facebook": {
-      "testAppId": "1033113610129174"
+      "testAppId": "1033113610129174",
+      "appId": "1033113360129199"
     },
     "twitch": {
       "client_id": "dtd7tnwg9h6kpdm6169qwdv4wpwu66"
     },
     "twitter": {
-      "consumerKey": "DPnvY6SAUe0pwgfNPky1r2WaP"
+      "testConsumerKey": "DPnvY6SAUe0pwgfNPky1r2WaP",
+      "liveConsumerKey": "XWFR3B2Eoy6qpIj42ha01FEVr"
     },
     "google": {
       "client_id": "665195620107-tubek775kie4j3e77dv9kq36ah7fotrq.apps.googleusercontent.com"
@@ -55,13 +57,15 @@
       "liveSecretKey": "sk_live_kBq9nemn0mBwUvHKVC3w5tci"
     },
     "facebook": {
-      "testAppSecret": "65357189ff78915a8d752da87b4a30e9"
+      "testAppSecret": "65357189ff78915a8d752da87b4a30e9",
+      "appSecret": "6ef03e71be3b9f51e0dc3a217fd587fb"
     },
     "twitch": {
       "liveSecretKey": "s78zcg4hatsuvwbzybah43bmm6ujuz8"
     },
     "twitter": {
-      "consumerSecret": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8"
+      "testConsumerSecret": "yXKGg5qvqrI80w1x8Ez46xAlOCZRDbHnqk6I4b9eZhhcBL8TD8",
+      "liveConsumerSecret": "FyqqWP0Sb2VqzibM9C7VLIYJRwKVvmnWNKq7xoLs1RksKNhBZG"
     },
     "google": {
       "liveSecretKey": "XUgerKtBpHS6Qu8rrBuD2KjM"
