@@ -301,11 +301,9 @@ export default class TournamentModal extends ResponsiveComponent {
     return this.renderBase({
       modalClass: "overlay-only-modal",
       overlayClass: "overlay-only",
-      fontSize: "3em",
-      iconSize: "5em",
-      buttonClass: "large-button",
-      imgDim: 300,
-      inputClass: "large-input"
+      fontSize: "1em",
+      iconSize: "2.5em",
+      imgDim: 150
     });
   }
 }
