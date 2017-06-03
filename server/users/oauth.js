@@ -36,7 +36,7 @@ Meteor.methods({
       status: tweet
     });
   },
-  "user.shareViaFacebook"(text) {
+  "user.shareViaFacebook"(text, link) {
     const user = Meteor.user();
     if(!user) {
       throw new Meteor.Error(400, "You must be logged in to access this action.");
@@ -45,7 +45,7 @@ Meteor.methods({
       throw new Meteor.Error(400, "You must have Facebook integrated with your account to access this action.");
     }
     FB.setAccessToken(user.services.facebook.accessToken);
-    FB.api("me/feed", "post", { message: text }, (res) => {
+    FB.api("me/feed", "post", { message: text, link }, (res) => {
       console.log(res);
     })
   }

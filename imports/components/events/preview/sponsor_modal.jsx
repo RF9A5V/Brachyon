@@ -76,11 +76,8 @@ export default class SponsorModal extends ResponsiveComponent {
 
   shareToFacebook() {
     const user = Meteor.user();
-    if(this.refs.facebookInput.value.indexOf(this.link) < 0) {
-      return toastr.error("Please include the link for this event as part of your post.");
-    }
     var cb = () => {
-      Meteor.call("user.shareViaFacebook", this.refs.facebookInput.value, (err) => {
+      Meteor.call("user.shareViaFacebook", this.refs.facebookInput.value, this.link, (err) => {
         if(err) {
           toastr.error(err.reason);
         }
@@ -102,14 +99,6 @@ export default class SponsorModal extends ResponsiveComponent {
     }
     else {
       cb();
-    }
-  }
-
-  addLinkToFacebookPost() {
-    // This exists because of FB Platform policy.
-    // Dumb but necessary.
-    if(this.refs.facebookInput.value.indexOf(this.link) < 0) {
-      this.refs.facebookInput.value += " " + this.link;
     }
   }
 
@@ -191,13 +180,9 @@ export default class SponsorModal extends ResponsiveComponent {
           <label style={fontStyle} className="input-label">Facebook Content</label>
           <textarea ref="facebookInput" style={{margin: 0, fontSize: opts.fontSize, marginBottom: 10}} placeholder="Share this on Facebook"></textarea>
           <div className="row center x-center">
-            <button className={`col-1 ${opts.buttonClass}`} style={{marginRight: 10}} onClick={this.addLinkToFacebookPost.bind(this)}>
-              <FontAwesome name="link" style={{marginRight: 10}} />
-              <span>Add Link</span>
-            </button>
             <button className={`col-1 ${opts.buttonClass}`} onClick={this.shareToFacebook.bind(this)}>
               <FontAwesome name="facebook" style={{marginRight: 10}} />
-              <span>Share</span>
+              <span>Share To Facebook</span>
             </button>
           </div>
           {
