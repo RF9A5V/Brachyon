@@ -7,7 +7,9 @@ import { browserHistory } from "react-router";
 import { Banners } from "/imports/api/event/banners.js";
 import { ProfileImages } from "/imports/api/users/profile_images.js";
 
-export default class DisplayPromotedEvent extends Component {
+import ResponsiveComponent from "/imports/components/public/responsive_component.jsx";
+
+export default class DisplayPromotedEvent extends ResponsiveComponent {
   imgOrDefault(event) {
 
     if(event.details.bannerUrl) {
@@ -16,7 +18,7 @@ export default class DisplayPromotedEvent extends Component {
     return "/images/bg.jpg";
   }
 
-  ownerDetails(event) {
+  ownerDetails(event,opts) {
     var imgUrl, name;
     if(event.orgEvent) {
       var org = Organizations.findOne(event.owner);
@@ -32,8 +34,8 @@ export default class DisplayPromotedEvent extends Component {
       imgUrl = "/images/profile.png";
     }
     return (
-      <div className="row x-center" style={{fontSize: 12}}>
-        <img src={imgUrl} style={{width: 12.5, height: "auto", marginRight: 5}} />{ name }
+      <div className="row x-center" style={{fontSize:opts.fontSize}}>
+        <img src={imgUrl} style={{width: 12.5, height: "auto", marginRight: 5, marginLeft:opts.margin}} />{ name }
       </div>
     )
   }
@@ -61,7 +63,7 @@ export default class DisplayPromotedEvent extends Component {
     return "/images/profile.png";
   }
 
-  render(){
+  renderBase(opts){
     if(!this.props.active) {
       return (
         <div></div>
@@ -115,11 +117,11 @@ export default class DisplayPromotedEvent extends Component {
       }
     }
     return (
-      <div className="row center col-1" style={{width: "60vw", padding: 10}}>
+      <div className="row center col-1" style={{width: opts.width, padding: 10}}>
         <div className="promoted-event-block">
           <div className={`event-block ${this.props.event.type}`} style={{width: "100%", margin: 0}} onClick={this.selectEvent(event).bind(this)} key={event._id}>
             <div style={{border: "solid 2px #666"}}>
-              <h2 className="event-block-title">{ event.details.name }</h2>
+              <h2 className="event-block-title" style={{fontSize:opts.mobile?(20):(30), padding:opts.padding}}>{ event.details.name }</h2>
               {
                 Meteor.userId() == event.owner ? (
                   <div className="event-block-admin-row">
@@ -134,29 +136,29 @@ export default class DisplayPromotedEvent extends Component {
             </div>
             <div className="event-block-img" style={{backgroundImage: `url(${this.imgOrDefault(event)})`}}>
             </div>
-            <div className="event-block-content" style={{position: "relative"}}>
+            <div className="event-block-content" style={{position: "relative", height:opts.height}}>
               <div className="col col-1">
                 <div className="row flex-pad x-center" style={{marginBottom: 10}}>
-                  <div className="row x-center" style={{fontSize: 12}}>
-                    { this.ownerDetails(event) }
+                  <div className="row x-center" style={{fontSize:opts.fontSize}}>
+                    { this.ownerDetails(event, opts) }
                   </div>
-                  <span style={{fontSize: 12}}>
+                  <span style={{fontSize:opts.fontSize}}>
                     {participantCount}
-                  <FontAwesome name="users" style={{marginLeft: 5}} /></span>
+                  <FontAwesome name="users" style={{marginLeft: 5, marginRight:opts.margin}}/></span>
                 </div>
                 <div className="row flex-pad">
                   {
                     event.details.location.online ? (
-                      <div style={{fontSize: 12}}><FontAwesome name="signal" /> Online Event</div>
+                      <div style={{fontSize:opts.fontSize, marginLeft:opts.margin}}><FontAwesome name="signal" /> Online Event</div>
                     ) : (
-                      <div style={{fontSize: 12}}>
+                      <div style={{fontSize:opts.fontSize, marginLeft:opts.margin}}>
                         <FontAwesome name="map-marker" /> {event.details.location.city}, {event.details.location.state}
                       </div>
                     )
                   }
-                  <span style={{fontSize: 12}}>
+                  <span style={{fontSize:opts.fontSize}}>
                     {moment(event.details.datetime).format("MMM Do, YYYY")}
-                    <FontAwesome name="calendar" style={{marginLeft: 5}} />
+                    <FontAwesome name="calendar" style={{marginLeft: 5, marginRight:opts.margin}} />
                   </span>
                 </div>
               </div>
@@ -165,5 +167,26 @@ export default class DisplayPromotedEvent extends Component {
         </div>
       </div>
     )
+  }
+  renderMobile() {
+    return this.renderBase({
+      mobile: true,
+      fontSize: 12,
+      margin: -8,
+      height:"95px",
+      padding:"20px 10px",
+      width:"100vw"
+    })
+  }
+
+  renderDesktop() {
+    return this.renderBase({
+      mobile: false,
+      fontSize:12,
+      margin: 0,
+      height:"95px",
+      padding:"29px 20px",
+      width:"60vw"
+    })
   }
 }

@@ -73,7 +73,7 @@ export default class EventTitlePage extends ResponsiveComponent {
                   }) || brackets.every(bracket => {
                     return bracket.isComplete;
                   }) ? (
-                    <button style={{marginRight: event.stream ? 10 : 0, width: 140}} onClick={() => { browserHistory.push(`/event/${event.slug}/bracket/0`) }}>
+                    <button style={{marginRight: event.stream ? 10 : 0, width: 140}} onClick={() => { this.props.pages("Brackets") }}>
                       View Bracket
                     </button>
                   ) : (

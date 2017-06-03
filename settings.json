@@ -42,7 +42,7 @@
     },
     "twitter": {
       "testConsumerKey": "***REMOVED***",
-      "liveConsumerKey": "XWFR3B2Eoy6qpIj42ha01FEVr"
+      "liveConsumerKey": "***REMOVED***"
     },
     "google": {
       "client_id": "***REMOVED***"
@@ -65,7 +65,7 @@
     },
     "twitter": {
       "testConsumerSecret": "***REMOVED***",
-      "liveConsumerSecret": "FyqqWP0Sb2VqzibM9C7VLIYJRwKVvmnWNKq7xoLs1RksKNhBZG"
+      "liveConsumerSecret": "***REMOVED***"
     },
     "google": {
       "liveSecretKey": "***REMOVED***"

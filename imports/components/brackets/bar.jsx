@@ -52,11 +52,6 @@ export default class BracketBar extends ResponsiveComponent {
         <div className="col col-1" style={{backgroundColor: "#333"}}>
           <div className="col col-1" style={{padding: 10}}>
             <h5 style={{marginBottom: 10, fontSize: opts.fontSize}}>{ bracket.name || game.name }</h5>
-            {
-              bracket.name ? (
-                <span>Playing: {game.name}</span>
-              ) : ( "" )
-            }
             <div className="row x-center">
               <div className="col col-1">
                 <div className="row x-center" style={{marginBottom: 10}}>
