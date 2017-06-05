@@ -88,25 +88,25 @@ export default class Description extends ResponsiveComponent {
     return (
       <div className="col" style={{width: "100%", padding: 10}}>
         <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 10}}>
-          <span style={{fontSize: "1em"}}>{ moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") }</span>
+          <span>{ moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") }</span>
         </div>
         <div style={{padding: 10, marginBottom: 10, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
           this.setState({
             open: true
           })
         }}>
-          <div style={{fontSize: "1em", maxHeight: "20vh", marginBottom: 10, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
+          <div style={{maxHeight: "20vh", marginBottom: 10, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: event.details.description}}>
           </div>
           <div className="row center x-center">
-            <span style={{fontSize: "1.5em", color: "#00BDFF", marginRight: 15}}>Show More</span>
-            <FontAwesome name="caret-down" style={{fontSize: "2em", color: "#00BDFF"}} />
+            <span style={{color: "#00BDFF", marginRight: 15}}>Show More</span>
+            <FontAwesome name="caret-down" size="2x" style={{color: "#00BDFF"}} />
           </div>
         </div>
 
         {
           event.details.location.online ? (
             <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)"}}>
-              <span style={{fontSize: "1em"}}>Online</span>
+              <span>Online</span>
             </div>
           ) : (
             [

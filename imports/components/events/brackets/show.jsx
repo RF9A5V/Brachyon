@@ -291,20 +291,35 @@ class BracketShowScreen extends Component {
         })
       }
       else {
-        items.push({
-          name: "Register",
-          icon: "user-plus",
-          action: () => {
-            if(Meteor.userId()) {
-              this.registerUser();
-            }
-            else {
-              this.setState({
-                open: true
-              })
-            }
+        const event = Events.findOne();
+        if(event) {
+          if(event.details.privacy.type == "public") {
+            items.push({
+              name: "Register",
+              icon: "user-plus",
+              action: () => {
+                if(Meteor.userId()) {
+                  this.registerUser();
+                }
+                else {
+                  this.setState({
+                    open: true
+                  })
+                }
+              }
+            })
           }
-        })
+          else if(event.details.privacy.type == "private" && event.details.privacy.contactLink) {
+            items.push({
+              name: "Contact",
+              icon: "phone",
+              action: () => {
+                window.open(event.details.privacy.contactLink);
+              }
+            })
+          }
+        }
+
       }
     }
     items.push({

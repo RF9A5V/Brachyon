@@ -84,28 +84,28 @@ export default class Description extends ResponsiveComponent {
     return (
       <div className="col" style={{width: "100%", padding: 10}}>
         <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 10}}>
-          <span style={{fontSize: "1.5em"}}>{ event ? moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") : "Completed!" }</span>
+          <span>{ event ? moment(event.details.datetime).format("MMMM Do, YYYY h:mmA") : "Completed!" }</span>
         </div>
         <div style={{padding: 10, marginBottom: 10, backgroundColor: "rgba(0,0,0,0.8)"}} onClick={() => {
           this.setState({
             open: true
           })
         }}>
-          <div style={{fontSize: "1.5em", maxHeight: "20vh", marginBottom: 10, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: league.details.description}}>
+          <div style={{maxHeight: "20vh", marginBottom: 10, overflowY: "hidden"}} dangerouslySetInnerHTML={{__html: league.details.description}}>
           </div>
           <div className="row center x-center">
-            <span style={{fontSize: "1.5em", color: "#FF6000", marginRight: 15}}>Show More</span>
-            <FontAwesome name="caret-down" style={{fontSize: "2em", color: "#FF6000"}} />
+            <span style={{color: "#FF6000", marginRight: 15}}>Show More</span>
+            <FontAwesome name="caret-down" style={{color: "#FF6000"}} />
           </div>
         </div>
         {
           anyEvent.details.location.online ? (
             <div style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)"}}>
-              <span style={{fontSize: "1.5em"}}>Online</span>
+              <span>Online</span>
             </div>
           ) : (
             [
-              <div className="col" style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", fontSize: "3em", marginBottom: 10}}>
+              <div className="col" style={{padding: 10, backgroundColor: "rgba(0,0,0,0.8)", marginBottom: 10}}>
                 <span>{ anyEvent.details.location.streetAddress }</span>
                 <span>{ anyEvent.details.location.city } { anyEvent.details.location.state }</span>
               </div>,
