@@ -167,28 +167,23 @@ class BracketShowScreen extends Component {
     }
   }
 
-  findIndex(bracket,slug){
-    for(var i = 0 ; i < bracket.length; i++){
-      if (bracket[i].slug == slug){
-        return bracket[i].index;
-      }
-    }
-  }
-
   items() {
     var instance = Instances.findOne();
     var bracket = Brackets.findOne() || {};
-    var index = this.findIndex(instance.brackets,this.props.params.slug);
+    var index = instance.brackets.findIndex(o => {
+      return o.slug == this.props.params.slug;
+    }) || 0;
+    console.log(index);
     var bracketMeta = instance.brackets[index];
     var defaultItems = [];
     var id = bracketMeta.id;
 
     var rounds;
     if(bracketMeta.participants && bracketMeta.participants.length > 3) {
-      if(!bracketMeta.id) {
+      if(!id) {
         switch(bracketMeta.format.baseFormat) {
-          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants); break;
-          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants); break;
+          case "single_elim": rounds = OrganizeSuite.singleElim(bracketMeta.participants || []); break;
+          case "double_elim": rounds = OrganizeSuite.doubleElim(bracketMeta.participants || []); break;
           default: break;
         }
         var count = 1;
@@ -237,7 +232,7 @@ class BracketShowScreen extends Component {
         rounds = tempRounds;
       }
       else {
-        rounds = Brackets.findOne(instance.brackets[index].id).rounds;
+        rounds = Brackets.findOne(id).rounds;
       }
       defaultItems.push(this.bracketItem(bracketMeta, index, rounds));
     }
@@ -254,7 +249,9 @@ class BracketShowScreen extends Component {
   actions() {
     //var index = this.props.params.bracketIndex || 0;
     var instance = Instances.findOne();
-    var index = this.findIndex(instance.brackets,this.props.params.slug);
+    var index = instance.brackets.findIndex(o => {
+      return o.slug == this.props.params.slug;
+    }) || 0;
     var bracketMeta = instance.brackets[index];
 
     var items = [];
@@ -351,7 +348,9 @@ class BracketShowScreen extends Component {
 
   registerUser() {
     var instance = Instances.findOne();
-    var index = this.findIndex(instance.brackets,this.props.params.slug);
+    var index = instance.brackets.findIndex(o => {
+      return o.slug == this.props.params.slug;
+    }) || 0;
     Meteor.call("events.registerUser", Events.findOne()._id, index, (err) => {
       if(err) {
         toastr.error(err.reason);

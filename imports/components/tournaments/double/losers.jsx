@@ -77,6 +77,8 @@ export default class DoubleElimLosersBracket extends ResponsiveComponent {
               }
             }
           }
+          console.log(m.id);
+          console.log(matchMap);
           if(matchMap[m.id].number == null) {
             matchMap[m.id].number = count++;
           }
