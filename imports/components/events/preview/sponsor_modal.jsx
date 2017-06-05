@@ -44,8 +44,11 @@ export default class SponsorModal extends ResponsiveComponent {
   shareToTwitter() {
     const user = Meteor.user();
     if(this.state.tweet.indexOf(this.link) < 0) {
-      if(this.state.tweet.length + this.link.length > 140) {
+      if(this.state.tweet.length + this.link.length + 1 > 140) {
         this.state.tweet = this.state.tweet.slice(0, 140 - this.link.length - 4) + "... " + this.link;
+      }
+      else {
+        this.state.tweet += " " + this.link;
       }
     }
     var cb = () => {
