@@ -13,12 +13,7 @@ export default class EventResult extends ResponsiveComponent {
       case "league": this.color = "#FF6000"; break;
       default: this.color = "#FFFFFF"; break;
     }
-    if(props.type == "event" || props.type == "league") {
-      this.link = `/${props.type}/${props.slug}`;
-    }
-    else {
-      this.link = `/${props.type}/${props.slug}-${props.hash}`;
-    }
+    this.link = `/${props.type}/${props.slug}`;
   }
 
   type() {
