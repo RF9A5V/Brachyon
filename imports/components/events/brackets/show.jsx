@@ -290,7 +290,8 @@ class BracketShowScreen extends Component {
       else {
         const event = Events.findOne();
         if(event) {
-          if(event.details.privacy.type == "public") {
+          const privacy = (event.details.privacy || {}).type || "public";
+          if(privacy == "public") {
             items.push({
               name: "Register",
               icon: "user-plus",
@@ -306,7 +307,7 @@ class BracketShowScreen extends Component {
               }
             })
           }
-          else if(event.details.privacy.type == "private" && event.details.privacy.contactLink) {
+          else if(privacy == "private" && event.details.privacy.contactLink) {
             items.push({
               name: "Contact",
               icon: "phone",
