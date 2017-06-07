@@ -4,8 +4,9 @@ dependencies:
   override:
     - meteor || curl https://install.meteor.com | /bin/sh
     - meteor npm install
+    - meteor npm install --save-dev phantomjs-prebuilt
     - meteor npm install --save babel-runtime
 
 test:
   override:
-    - meteor test --once --driver-package dispatch:mocha
+    - TEST_BROWSER_DRIVER=phantomjs meteor test --once --driver-package dispatch:mocha
