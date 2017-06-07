@@ -58,3 +58,4 @@ bozhao:accounts-instagram
 ostrio:files@=1.7.11
 dynamic-import
 standard-minifier-js
+dispatch:mocha
